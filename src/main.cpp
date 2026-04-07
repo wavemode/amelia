@@ -1,6 +1,7 @@
 #include <iostream>
 
 int main() {
-    std::cout << "Hello, Amelia!" << std::endl;
-    return 0;
+  int x = 1;
+  std::cout << "Hello, Amelia!" << std::endl;
+  return 0;
 }
