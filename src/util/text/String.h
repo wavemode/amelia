@@ -2,8 +2,8 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <span>
 #include <string>
-
 
 namespace amelia {
 
@@ -21,11 +21,11 @@ public:
   String() noexcept;
 
   /**
-   * @brief Constructs a String from a null-terminated C-style string. Must be valid UTF-8.
-   * @param str A null-terminated C-style string.
-   * @throws InvalidUTF8Error if the input string is not valid UTF-8.
+   * @brief Constructs a String from a string literal or sequence of bytes. Must be valid UTF-8.
    */
-  String(const char *str);
+  template <size_t N> String(const char (&str)[N]) : String(static_cast<const char *>(str)) {
+    CharIterator::validate(str, str + N);
+  }
 
   /**
    * @return A pointer to a null-terminated C-style string. The pointer is valid
@@ -44,7 +44,7 @@ public:
    * @param str A null-terminated C-style string to append.
    * @throws InvalidUTF8Error if the input string is not valid UTF-8.
    */
-  void append(const char *str);
+  void append(std::span<const char> str);
 
   /**
    * @brief Appends another String to this String.
@@ -110,6 +110,13 @@ public:
   bool operator>=(const String &other) const;
 
 private:
+  /**
+   * @brief Constructs a String from a null-terminated C-style string. Must be valid UTF-8.
+   * @param str A null-terminated C-style string.
+   * @throws InvalidUTF8Error if the input string is not valid UTF-8.
+   */
+  String(const char *str);
+
   std::string data;
 };
 

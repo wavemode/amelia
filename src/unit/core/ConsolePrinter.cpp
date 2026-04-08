@@ -5,7 +5,7 @@
 #include <windows.h>
 #endif
 
-#include "util/string/String.h"
+#include "util/text/String.h"
 
 amelia::ConsolePrinter::ConsolePrinter() {
 #if defined(_WIN32)

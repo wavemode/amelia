@@ -1,8 +1,8 @@
 #include <cstring>
 #include <vendor/doctest.h>
 
-#include "util/string/InvalidUTF8Error.h"
-#include "util/string/String.h"
+#include "util/text/InvalidUTF8Error.h"
+#include "util/text/String.h"
 
 TEST_SUITE_BEGIN("String");
 

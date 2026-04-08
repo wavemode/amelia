@@ -1,4 +1,5 @@
 #include <cstdint>
+#include <cstring>
 #include <string>
 #include <utility>
 
@@ -9,14 +10,14 @@ namespace amelia {
 
 String::String() noexcept = default;
 
-String::String(const char *str) : data(str) { CharIterator::validate(str); }
+String::String(const char *str) : data(str) { CharIterator::validate(str, str + std::strlen(str)); }
 
 const char *String::c_str() const noexcept { return data.c_str(); }
 
 size_t String::size() const noexcept { return data.size(); }
 
 void String::append(const char *str) {
-  CharIterator::validate(str);
+  CharIterator::validate(str, str + std::strlen(str));
   data.append(str);
 }
 
@@ -24,9 +25,14 @@ void String::append(const String &other) { append(other.c_str()); }
 
 void String::append(uint32_t code_point) { CharIterator::append(code_point, data); }
 
-CharIterator String::begin() const { return CharIterator(c_str()); }
+CharIterator String::begin() const {
+  return CharIterator(data.c_str(), data.c_str() + data.size());
+}
 
-CharIterator String::end() const { return CharIterator(c_str() + size()); }
+CharIterator String::end() const {
+  const char *str_end = c_str() + size();
+  return CharIterator(str_end, str_end);
+}
 
 String String::operator+(const String &other) const {
   String result(*this);

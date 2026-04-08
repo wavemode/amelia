@@ -4,26 +4,29 @@
 #include <cstdint>
 #include <string>
 
-namespace amelia {
+#include "util/slice/Slice.h"
 
-class String;
+namespace amelia {
 
 /**
  * @class CharIterator
- * @brief An iterator over the unicode code points in a String.
+ * @brief An iterator over the unicode code points in a UTF-8 string.
  */
 class CharIterator {
 public:
-  CharIterator(const char *str);
+  /**
+   * @brief Constructs an iterator over the UTF-8 code points in the given span.
+   */
+  CharIterator(Slice<const char> str);
 
   /**
-   * @return The next Unicode code point in the string and advances the iterator.
+   * @return The next UTF-8 code point in the string and advances the iterator.
    * @throws InvalidUTF8Error if the iterator is not currently pointing to a valid UTF-8 sequence.
    */
   uint32_t operator++();
 
   /**
-   * @return The current Unicode code point in the string without advancing the iterator.
+   * @return The current UTF-8 code point in the string without advancing the iterator.
    * @throws InvalidUTF8Error if the iterator is not currently pointing to a valid UTF-8 sequence.
    */
   uint32_t operator*() const;
@@ -41,10 +44,15 @@ public:
   bool operator!=(const CharIterator &other) const;
 
   /**
-   * @brief Validates that the given C-style string is valid UTF-8.
-   * @throws InvalidUTF8Error if the input string is not valid UTF-8, from beginning to end.
+   * @brief Checks if the iterator has reached the end of the span.
    */
-  static void validate(const char *str);
+  bool at_end() const;
+
+  /**
+   * @brief Validates that the given span of bytes is valid UTF-8.
+   * @throws InvalidUTF8Error if the input span is not valid UTF-8 from beginning to end.
+   */
+  static void validate(Slice<const char> str);
 
   /**
    * @brief Appends a single UTF32 code point value to a std::string as UTF-8.
@@ -52,8 +60,10 @@ public:
    * resulting str is not valid UTF-8.
    */
   static void append(uint32_t code_point, std::string &str);
+
 private:
-  const char *current;
+  Slice<const char>::Iterator current;
+  Slice<const char>::Iterator end;
 };
 
 } // namespace amelia
