@@ -3,14 +3,22 @@
 #include "CharIterator.h"
 #include "InvalidUTF8Error.h"
 
-amelia::CharIterator::CharIterator(Slice<const char> str) : current(str.begin()), end(str.end()) {}
+amelia::CharIterator::CharIterator(Slice<const char> str) noexcept
+    : current(str.begin()), end(str.end()) {}
 
-uint32_t amelia::CharIterator::operator++() {
+amelia::CharIterator &amelia::CharIterator::operator++() {
   try {
-    return utf8::next(current, end);
+    utf8::next(current, end);
   } catch (...) {
     throw amelia::InvalidUTF8Error();
   }
+  return *this;
+}
+
+amelia::CharIterator amelia::CharIterator::operator++(int) {
+  CharIterator temp = *this;
+  ++(*this);
+  return temp;
 }
 
 uint32_t amelia::CharIterator::operator*() const {

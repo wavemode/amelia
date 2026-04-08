@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cstddef>
-#include <exception>
+#include <stdexcept>
 
 namespace amelia {
 
@@ -10,66 +10,91 @@ namespace amelia {
  */
 template <typename T> class Slice {
 public:
-  Slice(T *data, size_t size) noexcept : data(data), size(size) {}
-
-  template <size_t N> Slice(T (&array)[N]) noexcept : data(array), size(N) {}
-
   class Iterator {
   public:
     Iterator(const Slice<T> &slice) : slice(slice) {}
 
     T &operator*() const { return slice[0]; }
-    Iterator<T> &operator++() {
+
+    Iterator &operator+=(size_t offset) {
+      *this = *this + offset;
+      return *this;
+    }
+
+    Iterator &operator++() {
       slice += 1;
       return *this;
     }
-    Iterator<T> operator+(size_t offset) const { return Iterator(slice + offset); }
-    bool operator==(const Iterator<T> &other) const noexcept {
-      return slice.data == other.slice.data;
-    }
-    bool operator!=(const Iterator<T> &other) const noexcept { return !(*this == other); }
 
-    bool at_end() const noexcept { return slice.size == 0; }
+    Iterator operator+(size_t offset) const { return Iterator(slice + offset); }
+
+    bool operator==(const Iterator &other) const noexcept { return slice.data == other.slice.data; }
+
+    bool operator!=(const Iterator &other) const noexcept { return !(*this == other); }
+
+    bool at_end() const noexcept { return slice.length == 0; }
 
   private:
-    const Slice slice;
+    Slice slice;
   };
 
-  Iterator<T> begin() const { return Iterator(*this); }
-  Iterator<T> end() const {
-    return Iterator(Slice(data + size,
+  Slice(T *data, size_t length) noexcept : data(data), length(length) {}
 
-                          0));
-  }
+  template <size_t N> explicit Slice(T (&array)[N]) noexcept : data(array), length(N) {}
 
-  size_t size() const noexcept { return size; }
+  Iterator begin() const { return Iterator(*this); }
+
+  Iterator end() const { return Iterator(Slice(data + length, 0)); }
+
+  size_t size() const noexcept { return length; }
 
   T &operator[](size_t index) const {
-    if (index >= size) {
+    if (index >= length) {
       throw std::out_of_range("Slice index out of range");
     }
     return data[index];
   }
+
+  Slice<T> &operator+=(size_t offset) {
+    *this = *this + offset;
+    return *this;
+  }
+
   Slice<T> &operator++() {
     *this += 1;
     return *this;
   }
 
+  Slice<T> operator++(int) {
+    Slice<T> temp = *this;
+    ++(*this);
+    return temp;
+  }
+
   Slice<T> operator+(size_t offset) const {
-    if (offset > size) {
+    if (offset > length) {
       throw std::out_of_range("Slice offset out of range");
     }
-    return Slice(data + offset, size - offset);
+    return Slice(data + offset, length - offset);
   }
 
   bool operator==(const Slice<T> &other) const noexcept {
-    return data == other.data && size == other.size;
+    if (length != other.length) {
+      return false;
+    }
+    for (size_t i = 0; i < length; ++i) {
+      if (data[i] != other.data[i]) {
+        return false;
+      }
+    }
+    return true;
   }
+
   bool operator!=(const Slice<T> &other) const noexcept { return !(*this == other); }
 
 private:
   T *data;
-  size_t size;
+  size_t length;
 };
 
 } // namespace amelia

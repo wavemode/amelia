@@ -10,28 +10,39 @@ namespace amelia {
 
 String::String() noexcept = default;
 
-String::String(const char *str) : data(str) { CharIterator::validate(str, str + std::strlen(str)); }
+String::String(Slice<const char> str) {
+  CharIterator::validate(str);
+  if (str.size() > 0)
+    data.assign(&*str.begin(), str.size());
+}
 
 const char *String::c_str() const noexcept { return data.c_str(); }
 
 size_t String::size() const noexcept { return data.size(); }
 
-void String::append(const char *str) {
-  CharIterator::validate(str, str + std::strlen(str));
-  data.append(str);
+String &String::append(Slice<const char> str) {
+  CharIterator::validate(str);
+  if (str.size() > 0)
+    data.append(&*str.begin(), str.size());
+  return *this;
 }
 
-void String::append(const String &other) { append(other.c_str()); }
+String &String::append(const String &other) {
+  data.append(other.data);
+  return *this;
+}
 
-void String::append(uint32_t code_point) { CharIterator::append(code_point, data); }
+String &String::append(uint32_t code_point) {
+  CharIterator::append(code_point, data);
+  return *this;
+}
 
 CharIterator String::begin() const {
-  return CharIterator(data.c_str(), data.c_str() + data.size());
+  return CharIterator(Slice<const char>(data.data(), data.size()));
 }
 
 CharIterator String::end() const {
-  const char *str_end = c_str() + size();
-  return CharIterator(str_end, str_end);
+  return CharIterator(Slice<const char>(data.data() + data.size(), 0));
 }
 
 String String::operator+(const String &other) const {

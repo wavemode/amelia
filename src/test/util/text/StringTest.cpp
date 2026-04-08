@@ -1,6 +1,7 @@
 #include <cstring>
 #include <vendor/doctest.h>
 
+#include "util/slice/Slice.h"
 #include "util/text/InvalidUTF8Error.h"
 #include "util/text/String.h"
 
@@ -13,9 +14,15 @@ TEST_CASE("default is empty") {
 }
 
 TEST_CASE("can be constructed from a C-style string") {
-  amelia::String str("Hello, world!");
+  amelia::String str = "Hello, world!";
   CHECK(str.size() == 13);
   CHECK(std::strcmp(str.c_str(), "Hello, world!") == 0);
+}
+
+TEST_CASE("can be constructed from an empty C-style string") {
+  amelia::String str("");
+  CHECK(str.size() == 0);
+  CHECK(std::strcmp(str.c_str(), "") == 0);
 }
 
 TEST_CASE("can be constructed from another String") {
@@ -38,6 +45,45 @@ TEST_CASE("can be assigned from another String") {
   str2 = str1;
   CHECK(str2.size() == 13);
   CHECK(std::strcmp(str2.c_str(), "Hello, world!") == 0);
+}
+
+TEST_CASE("can be constructed from a Slice of bytes") {
+  const char data[] = {'H', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l', 'd', '!'};
+  REQUIRE(sizeof(data) == 13);
+
+  amelia::String str = amelia::String(amelia::Slice(data));
+  CHECK(str.size() == 13);
+  CHECK(std::strcmp(str.c_str(), "Hello, world!") == 0);
+
+  const char data2[] = "Hello, world!";
+  REQUIRE(sizeof(data2) == 14);
+  amelia::String str2 = amelia::String(amelia::Slice(data2));
+
+  // String will actually have a NULL character at the end, since the Slice does.
+  CHECK(str2.size() == 14);
+  CHECK(str2.c_str()[13] == '\0');
+}
+
+TEST_CASE("can be iterated over") {
+  amelia::String str("Hello");
+  auto iter = str.begin();
+  auto end = str.end();
+  CHECK(iter != end);
+  CHECK(*iter == 'H');
+  ++iter;
+  CHECK(iter != end);
+  CHECK(*iter == 'e');
+  ++iter;
+  CHECK(iter != end);
+  CHECK(*iter == 'l');
+  ++iter;
+  CHECK(iter != end);
+  CHECK(*iter == 'l');
+  ++iter;
+  CHECK(iter != end);
+  CHECK(*iter == 'o');
+  ++iter;
+  CHECK(iter == end);
 }
 
 TEST_CASE("can be appended with a C-style string") {

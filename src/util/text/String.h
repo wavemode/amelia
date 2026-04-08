@@ -2,12 +2,12 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <span>
 #include <string>
 
-namespace amelia {
+#include "util/slice/Slice.h"
+#include "util/text/CharIterator.h"
 
-class CharIterator;
+namespace amelia {
 
 /**
  * @class String
@@ -16,16 +16,30 @@ class CharIterator;
 class String {
 public:
   /**
-   * @brief Constructs an empty String.
+   * @brief Construct an empty String.
    */
   String() noexcept;
 
   /**
-   * @brief Constructs a String from a string literal or sequence of bytes. Must be valid UTF-8.
+   * @brief Construct a String from a string literal or sequence of bytes. Must be valid UTF-8.
    */
-  template <size_t N> String(const char (&str)[N]) : String(static_cast<const char *>(str)) {
-    CharIterator::validate(str, str + N);
+  template <size_t N> String(const char (&str)[N]) {
+    if (N == 0) {
+      data = "";
+      return;
+    }
+
+    if (str[N - 1] == '\0') {
+      *this = String(Slice(str, N - 1));
+    } else {
+      *this = String(Slice(str, N));
+    }
   }
+
+  /**
+   * @brief Construct a String from a sequence of bytes. Must be valid UTF-8.
+   */
+  explicit String(Slice<const char> str);
 
   /**
    * @return A pointer to a null-terminated C-style string. The pointer is valid
@@ -44,19 +58,19 @@ public:
    * @param str A null-terminated C-style string to append.
    * @throws InvalidUTF8Error if the input string is not valid UTF-8.
    */
-  void append(std::span<const char> str);
+  String &append(Slice<const char> str);
 
   /**
    * @brief Appends another String to this String.
    * @param other The String to append.
    */
-  void append(const String &other);
+  String &append(const String &other);
 
   /**
    * @brief Append a single Unicode code point to this String.
    * @param codePoint The Unicode code point to append.
    */
-  void append(uint32_t code_point);
+  String &append(uint32_t code_point);
 
   /**
    * @return An iterator pointing to the first Unicode code point in the string.
@@ -110,13 +124,6 @@ public:
   bool operator>=(const String &other) const;
 
 private:
-  /**
-   * @brief Constructs a String from a null-terminated C-style string. Must be valid UTF-8.
-   * @param str A null-terminated C-style string.
-   * @throws InvalidUTF8Error if the input string is not valid UTF-8.
-   */
-  String(const char *str);
-
   std::string data;
 };
 

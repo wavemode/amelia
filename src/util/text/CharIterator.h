@@ -17,13 +17,14 @@ public:
   /**
    * @brief Constructs an iterator over the UTF-8 code points in the given span.
    */
-  CharIterator(Slice<const char> str);
+  CharIterator(Slice<const char> str) noexcept;
 
   /**
-   * @return The next UTF-8 code point in the string and advances the iterator.
+   * @return Advances the iterator.
    * @throws InvalidUTF8Error if the iterator is not currently pointing to a valid UTF-8 sequence.
    */
-  uint32_t operator++();
+  CharIterator &operator++();
+  CharIterator operator++(int);
 
   /**
    * @return The current UTF-8 code point in the string without advancing the iterator.
@@ -35,18 +36,18 @@ public:
    * @brief Compares this iterator with another for equality. Two iterators are equal if they point
    * to the same position in the same string.
    */
-  bool operator==(const CharIterator &other) const;
+  bool operator==(const CharIterator &other) const noexcept;
 
   /**
    * @brief Compares this iterator with another for inequality. Two iterators are not equal if
    * they do not point to the same position in the same string.
    */
-  bool operator!=(const CharIterator &other) const;
+  bool operator!=(const CharIterator &other) const noexcept;
 
   /**
    * @brief Checks if the iterator has reached the end of the span.
    */
-  bool at_end() const;
+  bool at_end() const noexcept;
 
   /**
    * @brief Validates that the given span of bytes is valid UTF-8.
@@ -55,9 +56,8 @@ public:
   static void validate(Slice<const char> str);
 
   /**
-   * @brief Appends a single UTF32 code point value to a std::string as UTF-8.
-   * @throws InvalidUTF8Error if the value is not a valid UTF32 code point, or if the
-   * resulting str is not valid UTF-8.
+   * @brief Appends a single Unicode code point value to a std::string as UTF-8.
+   * @throws InvalidUTF8Error if the value is not a valid Unicode code point.
    */
   static void append(uint32_t code_point, std::string &str);
 
