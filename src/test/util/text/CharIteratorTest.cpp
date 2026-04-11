@@ -21,6 +21,7 @@ TEST_CASE("can iterate over a String - ASCII") {
   CHECK(iter != end);
   CHECK(*iter == 'l');
   ++iter;
+
   CHECK(iter != end);
   CHECK(*iter == 'l');
   ++iter;

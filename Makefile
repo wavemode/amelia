@@ -13,4 +13,4 @@ test: build-test
 format:
 	find src -path src/vendor -prune -o -iname '*.h' -print0 -o -iname '*.cpp' -print0 | xargs -0 clang-format -i
 
-.PHONY: format configure build test build-test
+.PHONY: format configure build test build-test tidy

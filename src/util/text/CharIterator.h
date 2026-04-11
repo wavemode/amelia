@@ -17,7 +17,7 @@ public:
   /**
    * @brief Constructs an iterator over the UTF-8 code points in the given span.
    */
-  CharIterator(Slice<const char> str) noexcept;
+  explicit CharIterator(Slice<const char> str) noexcept;
 
   /**
    * @return Advances the iterator.
