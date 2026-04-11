@@ -56,39 +56,13 @@ bool String::operator==(const String &other) const { return data == other.data; 
 bool String::operator!=(const String &other) const { return !(*this == other); }
 
 bool String::operator<(const String &other) const {
-  auto self_iter = begin();
-  auto self_end = end();
-  auto other_iter = other.begin();
-  auto other_end = other.end();
-  while (self_iter != self_end && other_iter != other_end) {
-    if (*self_iter < *other_iter) {
-      return true;
-    } else if (*self_iter > *other_iter) {
-      return false;
-    }
-    ++self_iter;
-    ++other_iter;
-  }
-  return self_iter == self_end && other_iter != other_end;
+  return CharIterator::compare(Slice(data.data(), data.size()),
+                               Slice(other.data.data(), other.data.size())) < 0;
 }
 
 bool String::operator<=(const String &other) const {
-  auto self_iter = begin();
-  auto self_end = end();
-  auto other_iter = other.begin();
-  auto other_end = other.end();
-  while (self_iter != self_end && other_iter != other_end) {
-    if (*self_iter < *other_iter) {
-      return true;
-    } else if (*self_iter > *other_iter) {
-      return false;
-    }
-    ++self_iter;
-    ++other_iter;
-  }
-  // at this point, either both iterators are at their end (which means the Strings are equal),
-  // or one of them is not (which means it is not less than the other String)
-  return self_iter == self_end;
+  return CharIterator::compare(Slice(data.data(), data.size()),
+                               Slice(other.data.data(), other.data.size())) <= 0;
 }
 
 bool String::operator>(const String &other) const { return !(*this <= other); }

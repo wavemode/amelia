@@ -8,6 +8,8 @@
 
 namespace amelia {
 
+class Char;
+
 /**
  * @class CharIterator
  * @brief An iterator over the unicode code points in a UTF-8 string.
@@ -31,6 +33,18 @@ public:
    * @throws InvalidUTF8Error if the iterator is not currently pointing to a valid UTF-8 sequence.
    */
   uint32_t operator*() const;
+
+  /**
+   * @brief Returns the next UTF-8 code point in the string without advancing the iterator.
+   * @throws InvalidUTF8Error if the iterator is not currently pointing to a valid UTF-8 sequence.
+   */
+  uint32_t peek() const;
+
+  /**
+   * @brief Returns the next UTF-8 code point in the string and advances the iterator.
+   * @throws InvalidUTF8Error if the iterator is not currently pointing to a valid UTF-8 sequence.
+   */
+  uint32_t next();
 
   /**
    * @brief Compares this iterator with another for equality. Two iterators are equal if they point
@@ -60,6 +74,13 @@ public:
    * @throws InvalidUTF8Error if the value is not a valid Unicode code point.
    */
   static void append(uint32_t code_point, std::string &str);
+
+  /**
+   * @brief Compares two UTF-8 encoded slices lexicographically by Unicode code points.
+   * @return A signed char indicating the result of the comparison: negative if a < b, zero if a ==
+   * b, positive if a > b.
+   */
+  static signed char compare(Slice<const char> a, Slice<const char> b);
 
 private:
   Slice<const char>::Iterator current;

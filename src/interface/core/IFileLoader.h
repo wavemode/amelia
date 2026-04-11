@@ -4,9 +4,9 @@ namespace amelia {
 
 class String;
 
-class IFileReader {
+class IFileLoader {
 public:
-  virtual String read_file(const String &filePath) = 0;
+  virtual String load_file(const String &file_path) = 0;
 };
 
 } // namespace amelia

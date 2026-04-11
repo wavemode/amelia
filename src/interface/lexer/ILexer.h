@@ -2,16 +2,17 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <vector>
 
 namespace amelia {
 
 template <typename T> class Slice;
+class Token;
 class Char;
 
-class ISourceManager {
+class ILexer {
 public:
-  virtual size_t store_source(Slice<Char>) = 0;
-  virtual Slice<Char> get_source(size_t) = 0;
+  virtual void tokenize(Slice<Char> input, std::vector<Token> &output) = 0;
 };
 
 } // namespace amelia

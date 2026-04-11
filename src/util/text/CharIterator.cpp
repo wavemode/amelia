@@ -3,25 +3,24 @@
 #include "CharIterator.h"
 #include "InvalidUTF8Error.h"
 
-amelia::CharIterator::CharIterator(Slice<const char> str) noexcept
-    : current(str.begin()), end(str.end()) {}
+namespace amelia {
 
-amelia::CharIterator &amelia::CharIterator::operator++() {
-  try {
-    utf8::next(current, end);
-  } catch (...) {
-    throw amelia::InvalidUTF8Error();
-  }
+CharIterator::CharIterator(Slice<const char> str) noexcept : current(str.begin()), end(str.end()) {}
+
+CharIterator &CharIterator::operator++() {
+  next();
   return *this;
 }
 
-amelia::CharIterator amelia::CharIterator::operator++(int) {
+CharIterator CharIterator::operator++(int) {
   CharIterator temp = *this;
   ++(*this);
   return temp;
 }
 
-uint32_t amelia::CharIterator::operator*() const {
+uint32_t CharIterator::operator*() const { return peek(); }
+
+uint32_t CharIterator::peek() const {
   try {
     return utf8::peek_next(current, end);
   } catch (...) {
@@ -29,17 +28,25 @@ uint32_t amelia::CharIterator::operator*() const {
   }
 }
 
-bool amelia::CharIterator::operator==(const CharIterator &other) const noexcept {
+uint32_t CharIterator::next() {
+  try {
+    return utf8::next(current, end);
+  } catch (...) {
+    throw amelia::InvalidUTF8Error();
+  }
+}
+
+bool CharIterator::operator==(const CharIterator &other) const noexcept {
   return current == other.current;
 }
 
-bool amelia::CharIterator::operator!=(const CharIterator &other) const noexcept {
+bool CharIterator::operator!=(const CharIterator &other) const noexcept {
   return !(*this == other);
 }
 
-bool amelia::CharIterator::at_end() const noexcept { return current == end; }
+bool CharIterator::at_end() const noexcept { return current == end; }
 
-void amelia::CharIterator::validate(Slice<const char> str) {
+void CharIterator::validate(Slice<const char> str) {
   auto begin = str.begin();
   auto end = str.end();
   while (begin != end) {
@@ -51,10 +58,31 @@ void amelia::CharIterator::validate(Slice<const char> str) {
   }
 }
 
-void amelia::CharIterator::append(uint32_t code_point, std::string &str) {
+void CharIterator::append(uint32_t code_point, std::string &str) {
   try {
     utf8::append(code_point, std::back_inserter(str));
   } catch (...) {
     throw amelia::InvalidUTF8Error();
   }
 }
+
+signed char CharIterator::compare(Slice<const char> a, Slice<const char> b) {
+  auto self_iter = CharIterator(a);
+  auto self_end = CharIterator(a + a.size());
+  auto other_iter = CharIterator(b);
+  auto other_end = CharIterator(b + b.size());
+  while (self_iter != self_end && other_iter != other_end) {
+    uint32_t self_cp = self_iter.next();
+    uint32_t other_cp = other_iter.next();
+    if (self_cp < other_cp) {
+      return -1;
+    } else if (self_cp > other_cp) {
+      return 1;
+    }
+  }
+  if (self_iter == self_end && other_iter == other_end)
+    return 0;
+  return self_iter == self_end ? -1 : 1;
+}
+
+} // namespace amelia

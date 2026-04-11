@@ -28,7 +28,9 @@ public:
 
     Iterator operator+(size_t offset) const { return Iterator(slice + offset); }
 
-    bool operator==(const Iterator &other) const noexcept { return slice.data == other.slice.data; }
+    bool operator==(const Iterator &other) const noexcept {
+      return slice.data_ptr == other.slice.data_ptr;
+    }
 
     bool operator!=(const Iterator &other) const noexcept { return !(*this == other); }
 
@@ -38,13 +40,15 @@ public:
     Slice slice;
   };
 
-  Slice(T *data, size_t length) noexcept : data(data), length(length) {}
+  Slice(T *data_ptr, size_t length) noexcept : data_ptr(data_ptr), length(length) {}
 
-  template <size_t N> explicit Slice(T (&array)[N]) noexcept : data(array), length(N) {}
+  template <size_t N> explicit Slice(T (&array)[N]) noexcept : data_ptr(array), length(N) {}
 
   Iterator begin() const { return Iterator(*this); }
 
-  Iterator end() const { return Iterator(Slice(data + length, 0)); }
+  Iterator end() const { return Iterator(Slice(data_ptr + length, 0)); }
+
+  T *data() const noexcept { return data_ptr; }
 
   size_t size() const noexcept { return length; }
 
@@ -52,7 +56,7 @@ public:
     if (index >= length) {
       throw std::out_of_range("Slice index out of range");
     }
-    return data[index];
+    return data_ptr[index];
   }
 
   Slice<T> &operator+=(size_t offset) {
@@ -75,7 +79,7 @@ public:
     if (offset > length) {
       throw std::out_of_range("Slice offset out of range");
     }
-    return Slice(data + offset, length - offset);
+    return Slice(data_ptr + offset, length - offset);
   }
 
   bool operator==(const Slice<T> &other) const noexcept {
@@ -83,7 +87,7 @@ public:
       return false;
     }
     for (size_t i = 0; i < length; ++i) {
-      if (data[i] != other.data[i]) {
+      if (data_ptr[i] != other.data_ptr[i]) {
         return false;
       }
     }
@@ -93,7 +97,7 @@ public:
   bool operator!=(const Slice<T> &other) const noexcept { return !(*this == other); }
 
 private:
-  T *data;
+  T *data_ptr;
   size_t length;
 };
 
