@@ -7,6 +7,7 @@
 namespace amelia {
 
 class CharIterator;
+class String;
 
 /**
  * @class Text
@@ -20,7 +21,7 @@ public:
    */
   template <size_t N> Text(const char (&str)[N]) {
     if (N == 0) {
-      data = Slice(str, 0);
+      data_slice = Slice(str, 0);
       return;
     }
 
@@ -35,6 +36,17 @@ public:
    * @brief Construct a Text from a sequence of bytes. Must be valid UTF-8.
    */
   explicit Text(Slice<const char> str);
+
+  /**
+   * @brief Construct a Text from a String.
+   */
+  Text(const String &str);
+
+  /**
+   * @return A Slice representing the underlying UTF-8 data of this Text.
+   * The slice is valid until the next non-const method call on this Text instance.
+   */
+  Slice<const char> data() const noexcept;
 
   /**
    * @return The size of the Text in bytes, not including the null
@@ -89,7 +101,7 @@ public:
   bool operator>=(const Text &other) const;
 
 private:
-  Slice<const char> data;
+  Slice<const char> data_slice;
 };
 
 } // namespace amelia

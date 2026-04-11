@@ -13,36 +13,38 @@ String::String() noexcept = default;
 String::String(Slice<const char> str) {
   CharIterator::validate(str);
   if (str.size() > 0)
-    data.assign(&*str.begin(), str.size());
+    data_str.assign(&*str.begin(), str.size());
 }
 
-const char *String::c_str() const noexcept { return data.c_str(); }
+const char *String::c_str() const noexcept { return data_str.c_str(); }
 
-size_t String::size() const noexcept { return data.size(); }
+Slice<const char> String::data() const noexcept { return Slice(data_str.data(), data_str.size()); }
+
+size_t String::size() const noexcept { return data_str.size(); }
 
 String &String::append(Slice<const char> str) {
   CharIterator::validate(str);
   if (str.size() > 0)
-    data.append(&*str.begin(), str.size());
+    data_str.append(&*str.begin(), str.size());
   return *this;
 }
 
 String &String::append(const String &other) {
-  data.append(other.data);
+  data_str.append(other.data_str);
   return *this;
 }
 
 String &String::append(uint32_t code_point) {
-  CharIterator::append(code_point, data);
+  CharIterator::append(code_point, data_str);
   return *this;
 }
 
 CharIterator String::begin() const {
-  return CharIterator(Slice<const char>(data.data(), data.size()));
+  return CharIterator(Slice<const char>(data_str.data(), data_str.size()));
 }
 
 CharIterator String::end() const {
-  return CharIterator(Slice<const char>(data.data() + data.size(), 0));
+  return CharIterator(Slice<const char>(data_str.data() + data_str.size(), 0));
 }
 
 String String::operator+(const String &other) const {
@@ -51,18 +53,18 @@ String String::operator+(const String &other) const {
   return result;
 }
 
-bool String::operator==(const String &other) const { return data == other.data; }
+bool String::operator==(const String &other) const { return data_str == other.data_str; }
 
 bool String::operator!=(const String &other) const { return !(*this == other); }
 
 bool String::operator<(const String &other) const {
-  return CharIterator::compare(Slice(data.data(), data.size()),
-                               Slice(other.data.data(), other.data.size())) < 0;
+  return CharIterator::compare(Slice(data_str.data(), data_str.size()),
+                               Slice(other.data_str.data(), other.data_str.size())) < 0;
 }
 
 bool String::operator<=(const String &other) const {
-  return CharIterator::compare(Slice(data.data(), data.size()),
-                               Slice(other.data.data(), other.data.size())) <= 0;
+  return CharIterator::compare(Slice(data_str.data(), data_str.size()),
+                               Slice(other.data_str.data(), other.data_str.size())) <= 0;
 }
 
 bool String::operator>(const String &other) const { return !(*this <= other); }

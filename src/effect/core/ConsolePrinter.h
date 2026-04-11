@@ -4,16 +4,16 @@
 
 namespace amelia {
 
-class String;
+class Text;
 
 class ConsolePrinter : public IPrinter {
 public:
   ConsolePrinter();
 
-  void print(const String &) override;
-  void println(const String &) override;
-  void err_print(const String &) override;
-  void err_println(const String &) override;
+  void print(Text) override;
+  void println(Text) override;
+  void err_print(Text) override;
+  void err_println(Text) override;
 };
 
 } // namespace amelia

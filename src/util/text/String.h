@@ -25,7 +25,7 @@ public:
    */
   template <size_t N> String(const char (&str)[N]) {
     if (N == 0) {
-      data = "";
+      data_str = "";
       return;
     }
 
@@ -46,6 +46,12 @@ public:
    * until the next non-const method call on this String instance.
    */
   const char *c_str() const noexcept;
+
+  /**
+   * @return A Slice representing the underlying UTF-8 data of this String.
+   * The slice is valid until the next non-const method call on this String instance.
+   */
+  Slice<const char> data() const noexcept;
 
   /**
    * @return The length of the string in bytes, not including the null
@@ -124,7 +130,7 @@ public:
   bool operator>=(const String &other) const;
 
 private:
-  std::string data;
+  std::string data_str;
 };
 
 } // namespace amelia
