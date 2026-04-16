@@ -15,7 +15,7 @@ amelia::ConsolePrinter::ConsolePrinter() {
 }
 
 void amelia::ConsolePrinter::print(Text str) {
-  std::cout.write(str.data().data(), str.data().size());
+  std::cout.write(str.data().ptr(), str.data().size());
 }
 
 void amelia::ConsolePrinter::println(Text str) {
@@ -24,7 +24,7 @@ void amelia::ConsolePrinter::println(Text str) {
 }
 
 void amelia::ConsolePrinter::err_print(Text str) {
-  std::cerr.write(str.data().data(), str.data().size());
+  std::cerr.write(str.data().ptr(), str.data().size());
 }
 
 void amelia::ConsolePrinter::err_println(Text str) {

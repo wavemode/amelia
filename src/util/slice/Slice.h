@@ -48,7 +48,7 @@ public:
 
   Iterator end() const { return Iterator(Slice(data_ptr + length, 0)); }
 
-  T *data() const noexcept { return data_ptr; }
+  T *ptr() const noexcept { return data_ptr; }
 
   size_t size() const noexcept { return length; }
 

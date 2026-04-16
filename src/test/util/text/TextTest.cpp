@@ -11,41 +11,41 @@ TEST_SUITE_BEGIN("Text");
 TEST_CASE("can be constructed from a string literal") {
   amelia::Text text = "Hello, world!";
   CHECK(text.size() == 13);
-  CHECK(std::memcmp(text.data().data(), "Hello, world!", 13) == 0);
+  CHECK(std::memcmp(text.data().ptr(), "Hello, world!", 13) == 0);
 }
 
 TEST_CASE("can be constructed from an empty string literal") {
   amelia::Text text("");
   CHECK(text.size() == 0);
-  CHECK(text.data().data() != nullptr);
+  CHECK(text.data().ptr() != nullptr);
 }
 
 TEST_CASE("can be constructed from an array of characters") {
   char arr[] = {'H', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l', 'd', '!'};
   amelia::Text text = arr;
   CHECK(text.size() == 13);
-  CHECK(std::memcmp(text.data().data(), arr, 13) == 0);
+  CHECK(std::memcmp(text.data().ptr(), arr, 13) == 0);
 }
 
 TEST_CASE("can be constructed from a null-terminated array of characters") {
   char arr[] = {'H', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l', 'd', '!', '\0'};
   amelia::Text text = arr;
   CHECK(text.size() == 13);
-  CHECK(std::memcmp(text.data().data(), arr, 13) == 0);
+  CHECK(std::memcmp(text.data().ptr(), arr, 13) == 0);
 }
 
 TEST_CASE("can be constructed from a String") {
   amelia::String str("Hello, world!");
   amelia::Text text = str;
   CHECK(text.size() == 13);
-  CHECK(std::memcmp(text.data().data(), "Hello, world!", 13) == 0);
+  CHECK(std::memcmp(text.data().ptr(), "Hello, world!", 13) == 0);
 }
 
 TEST_CASE("can be constructed from a Slice<const char>") {
   const char arr[] = "Hello, world!";
   amelia::Text text(amelia::Slice(arr, 13));
   CHECK(text.size() == 13);
-  CHECK(std::memcmp(text.data().data(), arr, 13) == 0);
+  CHECK(std::memcmp(text.data().ptr(), arr, 13) == 0);
 }
 
 TEST_CASE("raises InvalidUTF8Error when constructed from invalid UTF-8 data") {

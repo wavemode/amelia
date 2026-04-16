@@ -1,11 +1,11 @@
 build:
-	cmake --build build --target amelia
+	cmake --build build --target amelia --parallel
 
 configure:
 	cmake -B build
 
 build-test:
-	cmake --build build --target amelia_test
+	cmake --build build --target amelia_test --parallel
 
 test: build-test
 	./build/amelia_test $(ARGS)
@@ -13,4 +13,7 @@ test: build-test
 format:
 	find src -path src/vendor -prune -o -iname '*.h' -print0 -o -iname '*.cpp' -print0 | xargs -0 clang-format -i
 
-.PHONY: format configure build test build-test
+clean:
+	rm -rf build
+
+.PHONY: format configure build test build-test clean
