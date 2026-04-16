@@ -3,11 +3,10 @@
 namespace amelia {
 
 class String;
-class Text;
 
 class IFileLoader {
 public:
-  virtual String load_file(const Text &file_path) = 0;
+  virtual String load_file(const String &file_path) = 0;
 };
 
 } // namespace amelia

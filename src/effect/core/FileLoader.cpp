@@ -6,12 +6,11 @@
 
 #include "util/slice/Slice.h"
 #include "util/text/String.h"
-#include "util/text/Text.h"
 
 namespace amelia {
 
-String FileLoader::load_file(const Text &file_path) {
-  std::ifstream file(std::string(file_path.data().ptr(), file_path.data().size()));
+String FileLoader::load_file(const String &file_path) {
+  std::ifstream file(file_path.c_str());
   std::ostringstream ss;
   ss << file.rdbuf();
   std::string str = ss.str();

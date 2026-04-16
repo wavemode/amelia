@@ -5,11 +5,10 @@
 namespace amelia {
 
 class String;
-class Text;
 
 class FileLoader : public IFileLoader {
 public:
-  String load_file(const Text &file_path) override;
+  String load_file(const String &file_path) override;
 };
 
 } // namespace amelia

@@ -135,6 +135,12 @@ public:
    */
   bool operator>=(const String &other) const;
 
+  /**
+   * @brief Constructs a String from a std::string. The input string must be valid UTF-8.
+   * @throws InvalidUTF8Error if the input string is not valid UTF-8.
+   */
+  static String from(std::string str);
+
 private:
   std::string data_str;
 };

@@ -74,4 +74,11 @@ bool String::operator>(const String &other) const { return !(*this <= other); }
 
 bool String::operator>=(const String &other) const { return !(*this < other); }
 
+String String::from(std::string str) {
+  CharIterator::validate(Slice(str.c_str(), str.size()));
+  String result;
+  result.data_str = std::move(str);
+  return result;
+}
+
 } // namespace amelia
