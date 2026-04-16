@@ -20,18 +20,8 @@ public:
    * optionally be null-terminated.
    * @throws InvalidUTF8Error if the input slice is not valid UTF-8 from beginning to end.
    */
-  template <size_t N> Text(const char (&str)[N]) {
-    if (N == 0) {
-      data_slice = Slice(str, 0);
-      return;
-    }
-
-    if (str[N - 1] == '\0') {
-      *this = Text(Slice(str, N - 1));
-    } else {
-      *this = Text(Slice(str, N));
-    }
-  }
+  template <size_t N>
+  Text(const char (&str)[N]) : Text(Slice(str, (N > 0 && str[N - 1] == '\0') ? N - 1 : N)) {}
 
   /**
    * @brief Construct a Text from a sequence of bytes. Must be valid UTF-8.

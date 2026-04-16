@@ -1,6 +1,6 @@
 #include <cstdint>
 #include <cstring>
-#include <vendor/doctest.h>
+#include <doctest.h>
 
 #include "util/text/CharIterator.h"
 #include "util/text/InvalidUTF8Error.h"

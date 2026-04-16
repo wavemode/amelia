@@ -14,7 +14,7 @@ add_library(amelia_core
     ${SOURCES_DATA}
     ${SOURCES_EFFECT}
 )
-target_include_directories(amelia_core PUBLIC src)
+target_include_directories(amelia_core PUBLIC src vendor)
 target_compile_features(amelia_core PUBLIC cxx_std_17)
 target_compile_options(amelia_core PUBLIC -Wall -Wextra -Wpedantic)
 

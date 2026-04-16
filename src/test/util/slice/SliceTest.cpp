@@ -1,5 +1,5 @@
 #include <cstring>
-#include <vendor/doctest.h>
+#include <doctest.h>
 
 #include "util/slice/Slice.h"
 #include "util/text/String.h"

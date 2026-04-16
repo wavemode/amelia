@@ -1,4 +1,4 @@
-#include <vendor/utfcpp/utf8.h>
+#include <utfcpp/utf8.h>
 
 #include "CharIterator.h"
 #include "InvalidUTF8Error.h"

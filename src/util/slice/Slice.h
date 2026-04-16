@@ -37,7 +37,7 @@ public:
     bool at_end() const noexcept { return slice.length == 0; }
 
   private:
-    Slice slice;
+    Slice<T> slice;
   };
 
   Slice(T *data_ptr, size_t length) noexcept : data_ptr(data_ptr), length(length) {}
