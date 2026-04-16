@@ -12,9 +12,9 @@ using namespace amelia;
 
 TEST_CASE("can store and retrieve source file") {
   TokenizedFileManager manager;
-  std::vector<Token> tokens = {Token{TokenType::IDENTIFIER, Location{1, 1, 1}, "hello"}};
+  std::vector<Token> tokens = {Token{TokenType::IDENTIFIER, Location{"dummy_file", 1, 1}, "hello"}};
 
-  tokenized_file_id id = manager.store_tokenized_file(tokens);
+  TokenizedFileId id = manager.store_tokenized_file(tokens);
   const std::vector<Token> &retrieved = manager.get_tokenized_file(id);
   CHECK(tokens == retrieved);
 }

@@ -9,8 +9,8 @@ namespace amelia {
 
 class TokenizedFileManager : public ITokenizedFileManager {
 public:
-  tokenized_file_id store_tokenized_file(std::vector<Token>) override;
-  const std::vector<Token> &get_tokenized_file(tokenized_file_id) override;
+  TokenizedFileId store_tokenized_file(std::vector<Token>) override;
+  const std::vector<Token> &get_tokenized_file(TokenizedFileId) override;
 
 private:
   std::vector<std::vector<Token>> source_files;

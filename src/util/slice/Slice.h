@@ -88,6 +88,9 @@ public:
     if (length != other.length) {
       return false;
     }
+    if (data_ptr == other.data_ptr) {
+      return true;
+    }
     for (size_t i = 0; i < length; ++i) {
       if (data_ptr[i] != other.data_ptr[i]) {
         return false;

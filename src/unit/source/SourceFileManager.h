@@ -11,8 +11,8 @@ class String;
 
 class SourceFileManager : public ISourceFileManager {
 public:
-  file_id store_source_file(String) override;
-  const String &get_source_file(file_id) override;
+  FileId store_source_file(String) override;
+  const String &get_source_file(FileId) override;
 
 private:
   std::vector<String> source_files;

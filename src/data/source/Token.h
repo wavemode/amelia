@@ -15,9 +15,7 @@ struct Token {
   Text contents;
 
   bool operator==(const Token &other) const {
-    return type == other.type && location.file_id == other.location.file_id &&
-           location.line == other.location.line && location.column == other.location.column &&
-           contents == other.contents;
+    return type == other.type && location == other.location && contents == other.contents;
   }
 
   bool operator!=(const Token &other) const { return !(*this == other); }

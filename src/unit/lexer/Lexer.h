@@ -8,10 +8,11 @@ namespace amelia {
 
 class Token;
 class Text;
+class LexerContext;
 
 class Lexer : public ILexer {
 public:
-  void tokenize(Text input, std::vector<Token> &output) override;
+  void tokenize(LexerContext ctx, Text input, std::vector<Token> &output) override;
 };
 
 } // namespace amelia

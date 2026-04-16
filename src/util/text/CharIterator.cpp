@@ -67,10 +67,15 @@ void CharIterator::append(uint32_t code_point, std::string &str) {
 }
 
 signed char CharIterator::compare(Slice<const char> a, Slice<const char> b) {
+  if (a.ptr() == b.ptr() && a.size() == b.size()) {
+    return 0;
+  }
+
   auto self_iter = CharIterator(a);
   auto self_end = CharIterator(a + a.size());
   auto other_iter = CharIterator(b);
   auto other_end = CharIterator(b + b.size());
+
   while (self_iter != self_end && other_iter != other_end) {
     uint32_t self_cp = self_iter.next();
     uint32_t other_cp = other_iter.next();
@@ -80,8 +85,10 @@ signed char CharIterator::compare(Slice<const char> a, Slice<const char> b) {
       return 1;
     }
   }
-  if (self_iter == self_end && other_iter == other_end)
+
+  if (self_iter == self_end && other_iter == other_end) {
     return 0;
+  }
   return self_iter == self_end ? -1 : 1;
 }
 

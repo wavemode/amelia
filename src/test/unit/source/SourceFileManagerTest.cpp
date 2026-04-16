@@ -11,7 +11,7 @@ using namespace amelia;
 TEST_CASE("can store and retrieve source file") {
   SourceFileManager manager;
   String source = "// hello";
-  file_id id = manager.store_source_file(source);
+  FileId id = manager.store_source_file(source);
   const String &retrieved = manager.get_source_file(id);
   CHECK(source == retrieved);
 }

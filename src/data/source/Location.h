@@ -2,18 +2,18 @@
 
 #include <cstddef>
 
-#include "data/source/TokenType.h"
 #include "util/slice/Slice.h"
+#include "util/text/Text.h"
 
 namespace amelia {
 
 struct Location {
-  size_t file_id;
+  Text filename;
   size_t line;
   size_t column;
 
   bool operator==(const Location &other) const {
-    return file_id == other.file_id && line == other.line && column == other.column;
+    return filename == other.filename && line == other.line && column == other.column;
   }
 
   bool operator!=(const Location &other) const { return !(*this == other); }
