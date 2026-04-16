@@ -39,7 +39,7 @@ TEST_CASE("can iterate over elements") {
   CHECK(*iter == '\0');
   ++iter;
   CHECK(iter == end);
-  CHECK(iter.at_end());
+  CHECK(iter.size() == 0);
   CHECK_THROWS_AS(*iter, std::out_of_range);
   CHECK_THROWS_AS(++iter, std::out_of_range);
 }

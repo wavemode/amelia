@@ -2,10 +2,14 @@
 
 #include "CharIterator.h"
 #include "InvalidUTF8Error.h"
+#include "Text.h"
 
 namespace amelia {
 
-CharIterator::CharIterator(Slice<const char> str) noexcept : current(str.begin()), end(str.end()) {}
+CharIterator::Position::Position(Slice<const char> p) noexcept : pos(p) {}
+
+CharIterator::CharIterator(Slice<const char> str) noexcept : current(str) {}
+CharIterator::CharIterator(Text text) noexcept : current(text.data()) {}
 
 CharIterator &CharIterator::operator++() {
   next();
@@ -22,7 +26,7 @@ uint32_t CharIterator::operator*() const { return peek(); }
 
 uint32_t CharIterator::peek() const {
   try {
-    return utf8::peek_next(current, end);
+    return utf8::peek_next(current, current.end());
   } catch (...) {
     throw amelia::InvalidUTF8Error();
   }
@@ -30,10 +34,16 @@ uint32_t CharIterator::peek() const {
 
 uint32_t CharIterator::next() {
   try {
-    return utf8::next(current, end);
+    return utf8::next(current, current.end());
   } catch (...) {
     throw amelia::InvalidUTF8Error();
   }
+}
+
+CharIterator::Position CharIterator::position() const noexcept { return Position(current); }
+
+Text CharIterator::slice(Position start, Position end) const {
+  return Text(Slice<const char>(start.pos.ptr(), start.pos.size() - end.pos.size()));
 }
 
 bool CharIterator::operator==(const CharIterator &other) const noexcept {
@@ -44,7 +54,7 @@ bool CharIterator::operator!=(const CharIterator &other) const noexcept {
   return !(*this == other);
 }
 
-bool CharIterator::at_end() const noexcept { return current == end; }
+bool CharIterator::at_end() const noexcept { return current.size() == 0; }
 
 void CharIterator::validate(Slice<const char> str) {
   auto begin = str.begin();

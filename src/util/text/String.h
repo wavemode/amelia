@@ -6,6 +6,7 @@
 
 #include "util/slice/Slice.h"
 #include "util/text/CharIterator.h"
+#include "util/text/Text.h"
 
 namespace amelia {
 
@@ -42,6 +43,11 @@ public:
   explicit String(Slice<const char> str);
 
   /**
+   * @brief Construct a String from a Text object.
+   */
+  explicit String(Text text);
+
+  /**
    * @return A pointer to a null-terminated C-style string. The pointer is valid
    * until the next non-const method call on this String instance.
    */
@@ -68,9 +74,9 @@ public:
 
   /**
    * @brief Appends another String to this String.
-   * @param other The String to append.
+   * @param other The text to append.
    */
-  String &append(const String &other);
+  String &append(Text other);
 
   /**
    * @brief Append a single Unicode code point to this String.

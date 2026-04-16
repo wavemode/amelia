@@ -9,6 +9,7 @@
 namespace amelia {
 
 class Char;
+class Text;
 
 /**
  * @class CharIterator
@@ -16,10 +17,23 @@ class Char;
  */
 class CharIterator {
 public:
+  class Position {
+    Slice<const char> pos;
+
+    Position(Slice<const char> p) noexcept;
+
+    friend class CharIterator;
+  };
+
   /**
    * @brief Constructs an iterator over the UTF-8 code points in the given span.
    */
   explicit CharIterator(Slice<const char> str) noexcept;
+
+  /**
+   * @brief Constructs an iterator over the UTF-8 code points in the given Text object.
+   */
+  explicit CharIterator(Text text) noexcept;
 
   /**
    * @return Advances the iterator.
@@ -45,6 +59,17 @@ public:
    * @throws InvalidUTF8Error if the iterator is not currently pointing to a valid UTF-8 sequence.
    */
   uint32_t next();
+
+  /**
+   * @return A Position object representing the current byte offset of the iterator.
+   */
+  Position position() const noexcept;
+
+  /**
+   * @brief Returns a Text object representing the substring of the underlying UTF-8
+   * string from the start position up until one code point before the end position.
+   */
+  Text slice(Position start, Position end) const;
 
   /**
    * @brief Compares this iterator with another for equality. Two iterators are equal if they point
@@ -83,8 +108,7 @@ public:
   static signed char compare(Slice<const char> a, Slice<const char> b);
 
 private:
-  Slice<const char>::Iterator current;
-  Slice<const char>::Iterator end;
+  Slice<const char> current;
 };
 
 } // namespace amelia

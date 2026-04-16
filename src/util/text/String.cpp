@@ -5,6 +5,7 @@
 
 #include "CharIterator.h"
 #include "String.h"
+#include "Text.h"
 
 namespace amelia {
 
@@ -15,6 +16,8 @@ String::String(Slice<const char> str) {
   if (str.size() > 0)
     data_str.assign(&*str.begin(), str.size());
 }
+
+String::String(Text text) : String(text.data()) {}
 
 const char *String::c_str() const noexcept { return data_str.c_str(); }
 
@@ -29,8 +32,8 @@ String &String::append(Slice<const char> str) {
   return *this;
 }
 
-String &String::append(const String &other) {
-  data_str.append(other.data_str);
+String &String::append(Text other) {
+  data_str.append(other.data().ptr(), other.data().size());
   return *this;
 }
 

@@ -10,45 +10,15 @@ namespace amelia {
  */
 template <typename T> class Slice {
 public:
-  class Iterator {
-  public:
-    Iterator(const Slice<T> &slice) : slice(slice) {}
-
-    T &operator*() const { return slice[0]; }
-
-    Iterator &operator+=(size_t offset) {
-      *this = *this + offset;
-      return *this;
-    }
-
-    Iterator &operator++() {
-      slice += 1;
-      return *this;
-    }
-
-    Iterator operator+(size_t offset) const { return Iterator(slice + offset); }
-
-    bool operator==(const Iterator &other) const noexcept {
-      return slice.data_ptr == other.slice.data_ptr;
-    }
-
-    bool operator!=(const Iterator &other) const noexcept { return !(*this == other); }
-
-    bool at_end() const noexcept { return slice.length == 0; }
-
-  private:
-    Slice<T> slice;
-  };
-
   Slice() noexcept : data_ptr(nullptr), length(0) {}
 
   Slice(T *data_ptr, size_t length) noexcept : data_ptr(data_ptr), length(length) {}
 
   template <size_t N> explicit Slice(T (&array)[N]) noexcept : data_ptr(array), length(N) {}
 
-  Iterator begin() const { return Iterator(*this); }
+  Slice<T> begin() const { return *this; }
 
-  Iterator end() const { return Iterator(Slice(data_ptr + length, 0)); }
+  Slice<T> end() const { return Slice(data_ptr + length, 0); }
 
   T *ptr() const noexcept { return data_ptr; }
 
@@ -59,6 +29,14 @@ public:
       throw std::out_of_range("Slice index out of range");
     }
     return data_ptr[index];
+  }
+
+  T &operator*() const {
+    if (length == 0) {
+      throw std::out_of_range("Dereferencing end of slice");
+    }
+
+    return *data_ptr;
   }
 
   Slice<T> &operator+=(size_t offset) {
