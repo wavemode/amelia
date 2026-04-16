@@ -6,8 +6,10 @@
 
 TEST_SUITE_BEGIN("Slice");
 
+using namespace amelia;
+
 TEST_CASE("can iterate over elements") {
-  amelia::Slice<const char> slice("Hello");
+  Slice<const char> slice("Hello");
 
   // for-each
   size_t count = 0;
@@ -43,26 +45,25 @@ TEST_CASE("can iterate over elements") {
 }
 
 TEST_CASE("can construct from array") {
-  amelia::Slice<const char> slice("Hello, world!");
+  Slice<const char> slice("Hello, world!");
   CHECK(slice.size() == 14); // includes null terminator
-  CHECK(amelia::String(slice) == "Hello, world!\0");
+  CHECK(String(slice) == "Hello, world!\0");
 
-  amelia::Slice<const char> slice2(
-      {'H', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l', 'd', '!'});
+  Slice<const char> slice2({'H', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l', 'd', '!'});
   CHECK(slice2.size() == 13);
-  CHECK(amelia::String(slice2) == "Hello, world!");
+  CHECK(String(slice2) == "Hello, world!");
 }
 
 TEST_CASE("can construct from pointer and length") {
   const char data[] = "Hello, world!";
   REQUIRE(sizeof(data) == 14); // includes null terminator
-  amelia::Slice<const char> slice(data, 13);
+  Slice<const char> slice(data, 13);
   CHECK(slice.size() == 13);
-  CHECK(amelia::String(slice) == "Hello, world!");
+  CHECK(String(slice) == "Hello, world!");
 }
 
 TEST_CASE("can index") {
-  amelia::Slice<const char> slice("Hello");
+  Slice<const char> slice("Hello");
   CHECK(slice[0] == 'H');
   CHECK(slice[1] == 'e');
   CHECK(slice[2] == 'l');
@@ -73,34 +74,34 @@ TEST_CASE("can index") {
 }
 
 TEST_CASE("can increment and add") {
-  amelia::Slice<const char> slice({'H', 'e', 'l', 'l', 'o'});
+  Slice<const char> slice({'H', 'e', 'l', 'l', 'o'});
   slice += 2;
   CHECK(slice.size() == 3);
-  CHECK(amelia::String(slice) == "llo");
+  CHECK(String(slice) == "llo");
 
   auto tmp = ++slice;
   CHECK(slice.size() == 2);
-  CHECK(amelia::String(slice) == "lo");
+  CHECK(String(slice) == "lo");
   CHECK(tmp.size() == 2);
-  CHECK(amelia::String(tmp) == "lo");
+  CHECK(String(tmp) == "lo");
 
   slice = slice + 1;
   CHECK(slice.size() == 1);
-  CHECK(amelia::String(slice) == "o");
+  CHECK(String(slice) == "o");
 
   auto tmp2 = slice++;
   CHECK(slice.size() == 0);
-  CHECK(amelia::String(slice) == "");
+  CHECK(String(slice) == "");
   CHECK(tmp2.size() == 1);
-  CHECK(amelia::String(tmp2) == "o");
+  CHECK(String(tmp2) == "o");
 
   CHECK_THROWS_AS(++slice, std::out_of_range);
 }
 
 TEST_CASE("equality and inequality") {
-  amelia::Slice<const char> slice1("Hello");
-  amelia::Slice<const char> slice2("Hello");
-  amelia::Slice<const char> slice3("World");
+  Slice<const char> slice1("Hello");
+  Slice<const char> slice2("Hello");
+  Slice<const char> slice3("World");
 
   CHECK(slice1 == slice2);
   CHECK(slice1 != slice3);

@@ -8,13 +8,14 @@
 
 TEST_SUITE_BEGIN("TokenizedFileManager");
 
-TEST_CASE("can store and retrieve source file") {
-  amelia::TokenizedFileManager manager;
-  std::vector<amelia::Token> tokens = {
-      amelia::Token{amelia::TokenType::IDENTIFIER, amelia::Location{1, 1, 1}, "hello"}};
+using namespace amelia;
 
-  amelia::tokenized_file_id id = manager.store_tokenized_file(tokens);
-  const std::vector<amelia::Token> &retrieved = manager.get_tokenized_file(id);
+TEST_CASE("can store and retrieve source file") {
+  TokenizedFileManager manager;
+  std::vector<Token> tokens = {Token{TokenType::IDENTIFIER, Location{1, 1, 1}, "hello"}};
+
+  tokenized_file_id id = manager.store_tokenized_file(tokens);
+  const std::vector<Token> &retrieved = manager.get_tokenized_file(id);
   CHECK(tokens == retrieved);
 }
 

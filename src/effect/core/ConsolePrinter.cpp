@@ -8,26 +8,26 @@
 
 #include "util/text/Text.h"
 
-amelia::ConsolePrinter::ConsolePrinter() {
+namespace amelia {
+
+ConsolePrinter::ConsolePrinter() {
 #if defined(_WIN32)
   SetConsoleOutputCP(CP_UTF8);
 #endif
 }
 
-void amelia::ConsolePrinter::print(Text str) {
-  std::cout.write(str.data().ptr(), str.data().size());
-}
+void ConsolePrinter::print(Text str) { std::cout.write(str.data().ptr(), str.data().size()); }
 
-void amelia::ConsolePrinter::println(Text str) {
+void ConsolePrinter::println(Text str) {
   print(str);
   std::cout << std::endl;
 }
 
-void amelia::ConsolePrinter::err_print(Text str) {
-  std::cerr.write(str.data().ptr(), str.data().size());
-}
+void ConsolePrinter::err_print(Text str) { std::cerr.write(str.data().ptr(), str.data().size()); }
 
-void amelia::ConsolePrinter::err_println(Text str) {
+void ConsolePrinter::err_println(Text str) {
   err_print(str);
   std::cerr << std::endl;
 }
+
+} // namespace amelia

@@ -8,8 +8,10 @@
 
 TEST_SUITE_BEGIN("CharIterator");
 
+using namespace amelia;
+
 TEST_CASE("can iterate over a String - ASCII") {
-  amelia::String str("Hello, world!");
+  String str("Hello, world!");
   auto iter = str.begin();
   auto end = str.end();
   CHECK(iter != end);
@@ -56,7 +58,7 @@ TEST_CASE("can iterate over a String - ASCII") {
 }
 
 TEST_CASE("can iterate over a String - Unicode") {
-  amelia::String str("Hello, 🌍!");
+  String str("Hello, 🌍!");
   auto iter = str.begin();
   auto end = str.end();
   CHECK(iter != end);
@@ -90,7 +92,7 @@ TEST_CASE("can iterate over a String - Unicode") {
 }
 
 TEST_CASE("empty String") {
-  amelia::String str;
+  String str;
   size_t count = 0;
   for (auto _ : str) {
     ++count;

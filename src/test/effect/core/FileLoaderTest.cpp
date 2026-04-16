@@ -6,30 +6,32 @@
 
 TEST_SUITE_BEGIN("FileLoader");
 
-TEST_CASE("can read empty file") {
-  amelia::FileLoader loader;
-  amelia::String filename = "src/test/effect/core/empty.txt";
-  amelia::String expected_contents = "";
+using namespace amelia;
 
-  amelia::String result = loader.load_file(amelia::Text(filename));
+TEST_CASE("can read empty file") {
+  FileLoader loader;
+  String filename = "src/test/effect/core/empty.txt";
+  String expected_contents = "";
+
+  String result = loader.load_file(Text(filename));
   CHECK(expected_contents == result);
 }
 
 TEST_CASE("can read ASCII") {
-  amelia::FileLoader loader;
-  amelia::String filename = "src/test/effect/core/hello.txt";
-  amelia::String expected_contents = "Hello, world!\n";
+  FileLoader loader;
+  String filename = "src/test/effect/core/hello.txt";
+  String expected_contents = "Hello, world!\n";
 
-  amelia::String result = loader.load_file(amelia::Text(filename));
+  String result = loader.load_file(Text(filename));
   CHECK(expected_contents == result);
 }
 
 TEST_CASE("can read UTF-8") {
-  amelia::FileLoader loader;
-  amelia::String filename = "src/test/effect/core/emojis.txt";
-  amelia::String expected_contents = "✅⛔\n";
+  FileLoader loader;
+  String filename = "src/test/effect/core/emojis.txt";
+  String expected_contents = "✅⛔\n";
 
-  amelia::String result = loader.load_file(amelia::Text(filename));
+  String result = loader.load_file(Text(filename));
   CHECK(expected_contents == result);
 }
 
