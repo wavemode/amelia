@@ -16,6 +16,11 @@ class String;
 class Text {
 public:
   /**
+   * Construct an empty Text instance.
+   */
+  Text() noexcept;
+
+  /**
    * @brief Construct a Text from a string literal or sequence of bytes. Must be valid UTF-8. Can
    * optionally be null-terminated.
    * @throws InvalidUTF8Error if the input slice is not valid UTF-8 from beginning to end.
@@ -70,25 +75,25 @@ public:
 
   /**
    * @brief Compares this Text with another Text for lexicographical order. The comparison is
-   * based on the sequence of Unicode code points in the Texts.
+   * based on the sequence of Unicode code points.
    */
   bool operator<(const Text &other) const noexcept;
 
   /**
    * @brief Compares this Text with another Text for lexicographical order. The comparison is
-   * based on the sequence of Unicode code points in the Texts.
+   * based on the sequence of Unicode code points.
    */
   bool operator<=(const Text &other) const noexcept;
 
   /**
    * @brief Compares this Text with another Text for lexicographical order. The comparison is
-   * based on the sequence of Unicode code points in the Texts.
+   * based on the sequence of Unicode code points.
    */
   bool operator>(const Text &other) const noexcept;
 
   /**
    * @brief Compares this Text with another Text for lexicographical order. The comparison is
-   * based on the sequence of Unicode code points in the Texts.
+   * based on the sequence of Unicode code points.
    */
   bool operator>=(const Text &other) const noexcept;
 

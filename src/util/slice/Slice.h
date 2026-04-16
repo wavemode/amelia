@@ -40,6 +40,8 @@ public:
     Slice<T> slice;
   };
 
+  Slice() noexcept : data_ptr(nullptr), length(0) {}
+
   Slice(T *data_ptr, size_t length) noexcept : data_ptr(data_ptr), length(length) {}
 
   template <size_t N> explicit Slice(T (&array)[N]) noexcept : data_ptr(array), length(N) {}

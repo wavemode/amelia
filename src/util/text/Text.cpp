@@ -7,6 +7,8 @@
 
 namespace amelia {
 
+Text::Text() noexcept = default;
+
 Text::Text(Slice<const char> str) : data_slice(str) { CharIterator::validate(data_slice); }
 
 Text::Text(const String &str) noexcept : data_slice(str.data()) {}

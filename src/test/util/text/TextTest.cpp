@@ -20,6 +20,11 @@ TEST_CASE("can be constructed from an empty string literal") {
   CHECK(text.data().ptr() != nullptr);
 }
 
+TEST_CASE("default construction") {
+  amelia::Text text;
+  CHECK(text == amelia::Text(""));
+}
+
 TEST_CASE("can be constructed from an array of characters") {
   char arr[] = {'H', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l', 'd', '!'};
   amelia::Text text = arr;
