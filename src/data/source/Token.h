@@ -1,9 +1,8 @@
 #pragma once
 
-#include <cstdint>
-
 #include "data/source/Location.h"
 #include "data/source/TokenType.h"
+#include "interface/text/IString.h"
 #include "util/slice/Slice.h"
 #include "util/text/Text.h"
 
@@ -19,6 +18,17 @@ struct Token {
   }
 
   bool operator!=(const Token &other) const { return !(*this == other); }
+
+  void to_string(IString &out) const {
+    token_type_to_string(type, out);
+    out.append("(\"");
+    out.append(contents);
+    out.append("\", ");
+    out.append(location.line);
+    out.append(":");
+    out.append(location.column);
+    out.append(")");
+  }
 };
 
 } // namespace amelia

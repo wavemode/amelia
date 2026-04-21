@@ -35,7 +35,7 @@ struct LexerState {
 
   void read_file() {
     while (!input.at_end()) {
-      auto slice_start = input.position();
+      auto slice_start = input;
       auto start_location = current_location();
       TokenType token_type;
 
@@ -66,12 +66,14 @@ struct LexerState {
         throw_lexer_error(msg);
       }
 
-      auto slice_end = input.position();
-      emit_token(token_type, start_location, input.slice(slice_start, slice_end));
+      auto slice_end = input;
+      emit_token(token_type, start_location, input.subslice(slice_start, slice_end));
     }
 
-    auto eof_position = input.position();
-    emit_token(TokenType::END_OF_FILE, current_location(), input.slice(eof_position, eof_position));
+    auto eof_position = input;
+    emit_token(
+        TokenType::END_OF_FILE, current_location(), input.subslice(eof_position, eof_position)
+    );
   }
 
   void read_identifier() {

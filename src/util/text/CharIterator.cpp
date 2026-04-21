@@ -6,10 +6,8 @@
 
 namespace amelia {
 
-CharIterator::Position::Position(Slice<const char> p) noexcept : pos(p) {}
-
-CharIterator::CharIterator(Slice<const char> str) noexcept : current(str) {}
-CharIterator::CharIterator(Text text) noexcept : current(text.data()) {}
+CharIterator::CharIterator(Slice<const char> str) noexcept : slice(str) {}
+CharIterator::CharIterator(Text text) noexcept : slice(text.data()) {}
 
 CharIterator &CharIterator::operator++() {
   next();
@@ -22,11 +20,15 @@ CharIterator CharIterator::operator++(int) {
   return temp;
 }
 
+CharIterator CharIterator::begin() const noexcept { return *this; }
+
+CharIterator CharIterator::end() const noexcept { return CharIterator(slice.end()); }
+
 uint32_t CharIterator::operator*() const { return peek(); }
 
 uint32_t CharIterator::peek() const {
   try {
-    return utf8::peek_next(current, current.end());
+    return utf8::peek_next(slice, slice.end());
   } catch (...) {
     throw amelia::InvalidUTF8Error();
   }
@@ -34,27 +36,69 @@ uint32_t CharIterator::peek() const {
 
 uint32_t CharIterator::next() {
   try {
-    return utf8::next(current, current.end());
+    return utf8::next(slice, slice.end());
   } catch (...) {
     throw amelia::InvalidUTF8Error();
   }
 }
 
-CharIterator::Position CharIterator::position() const noexcept { return Position(current); }
+CharIterator CharIterator::find(Text substring) const {
+  CharIterator start_iter = *this;
+  CharIterator current_iter = start_iter;
+  CharIterator start_textiter = CharIterator(substring);
+  CharIterator current_textiter = start_textiter;
+  while (true) {
+    if (current_textiter.at_end()) {
+      return start_iter;
+    }
+    if (current_iter.at_end()) {
+      return CharIterator(slice.end());
+    }
+    if (current_iter.peek() == current_textiter.peek()) {
+      current_textiter.next();
+      current_iter.next();
+    } else {
+      current_textiter = start_textiter;
+      current_iter.next();
+      start_iter = current_iter;
+    }
+  }
+}
 
-Text CharIterator::slice(Position start, Position end) const {
-  return Text(Slice<const char>(start.pos.ptr(), start.pos.size() - end.pos.size()));
+CharIterator CharIterator::find(uint32_t code_point) const {
+  CharIterator current_iter = *this;
+  while (!current_iter.at_end()) {
+    if (current_iter.peek() == code_point) {
+      return current_iter;
+    }
+    current_iter.next();
+  }
+  return end();
+}
+
+Text CharIterator::head(CharIterator end) const noexcept {
+  return Text(Slice(slice.ptr(), end.slice.ptr() - slice.ptr()));
+}
+
+Text CharIterator::tail(CharIterator start) const noexcept {
+  return Text(Slice(start.slice.ptr(), slice.end().ptr() - start.slice.ptr()));
+}
+
+Text CharIterator::subslice(CharIterator start, CharIterator end) const {
+  return Text(Slice(start.slice.ptr(), end.slice.ptr() - start.slice.ptr()));
 }
 
 bool CharIterator::operator==(const CharIterator &other) const noexcept {
-  return current == other.current;
+  return slice == other.slice;
 }
 
 bool CharIterator::operator!=(const CharIterator &other) const noexcept {
   return !(*this == other);
 }
 
-bool CharIterator::at_end() const noexcept { return current.size() == 0; }
+bool CharIterator::at_end() const noexcept { return slice.size() == 0; }
+
+CharIterator::operator bool() const noexcept { return !at_end(); }
 
 void CharIterator::validate(Slice<const char> str) {
   auto begin = str.begin();

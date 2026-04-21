@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "CompilerTestCase.h"
+#include "data/testing/CompilerTestCase.h"
 #include "util/slice/Slice.h"
 #include "util/text/String.h"
 

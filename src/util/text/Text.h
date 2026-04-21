@@ -35,11 +35,6 @@ public:
   explicit Text(Slice<const char> str);
 
   /**
-   * @brief Construct a Text from a String.
-   */
-  Text(const String &str) noexcept;
-
-  /**
    * @return A Slice representing the underlying UTF-8 data of this Text.
    * The slice is valid until the next non-const method call on this Text instance.
    */

@@ -9,8 +9,12 @@ namespace amelia {
 
 class FilesystemWalker {
 public:
-  void walk(const String &root, std::vector<String> &output, bool regular_files_only = true,
-            bool ignore_errors = true);
+  virtual void walk(
+      const String &root,
+      std::vector<String> &output,
+      bool regular_files_only = true,
+      bool ignore_errors = true
+  );
 };
 
 } // namespace amelia

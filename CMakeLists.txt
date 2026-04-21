@@ -16,7 +16,12 @@ add_library(amelia_core
 )
 target_include_directories(amelia_core PUBLIC src vendor)
 target_compile_features(amelia_core PUBLIC cxx_std_17)
-target_compile_options(amelia_core PUBLIC -Wall -Wextra -Wpedantic)
+target_compile_options(
+    amelia_core PUBLIC
+    -Wall -Wextra -Wpedantic -Werror
+    -Wno-error=unused-parameter
+    -Wno-error=unused-variable
+)
 
 add_executable(amelia
     src/main.cpp

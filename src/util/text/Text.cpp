@@ -11,8 +11,6 @@ Text::Text() noexcept = default;
 
 Text::Text(Slice<const char> str) : data_slice(str) { CharIterator::validate(data_slice); }
 
-Text::Text(const String &str) noexcept : data_slice(str.data()) {}
-
 Slice<const char> Text::data() const noexcept { return data_slice; }
 
 size_t Text::size() const noexcept { return data_slice.size(); }

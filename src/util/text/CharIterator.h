@@ -17,14 +17,6 @@ class Text;
  */
 class CharIterator {
 public:
-  class Position {
-    Slice<const char> pos;
-
-    Position(Slice<const char> p) noexcept;
-
-    friend class CharIterator;
-  };
-
   /**
    * @brief Constructs an iterator over the UTF-8 code points in the given span.
    */
@@ -41,6 +33,16 @@ public:
    */
   CharIterator &operator++();
   CharIterator operator++(int);
+
+  /**
+   * @return A copy of the iterator pointing to the current code point.
+   */
+  CharIterator begin() const noexcept;
+
+  /**
+   * @return An iterator pointing one past the end of the string.
+   */
+  CharIterator end() const noexcept;
 
   /**
    * @return The current UTF-8 code point in the string without advancing the iterator.
@@ -61,15 +63,35 @@ public:
   uint32_t next();
 
   /**
-   * @return A Position object representing the current byte offset of the iterator.
+   * @brief Finds the first occurrence of the given substring in the remaining span of the string
+   * and returns a slice of bytes representing the substring if found, or an empty Text if not
+   * found.
    */
-  Position position() const noexcept;
+  CharIterator find(Text substring) const;
+
+  /**
+   * @brief Finds the first occurrence of the given code point in the remaining span of the string
+   * and returns a Position representing the byte offset of the code point.
+   */
+  CharIterator find(uint32_t code_point) const;
+
+  /**
+   * @brief Returns a CharIterator representing the span of the string from the current position
+   * up until one code point before the end position.
+   */
+  Text head(CharIterator end) const noexcept;
+
+  /**
+   * @brief Returns a CharIterator representing the span of the string from the start position up
+   * until the end of the string.
+   */
+  Text tail(CharIterator start) const noexcept;
 
   /**
    * @brief Returns a Text object representing the substring of the underlying UTF-8
    * string from the start position up until one code point before the end position.
    */
-  Text slice(Position start, Position end) const;
+  Text subslice(CharIterator start, CharIterator end) const;
 
   /**
    * @brief Compares this iterator with another for equality. Two iterators are equal if they point
@@ -87,6 +109,11 @@ public:
    * @brief Checks if the iterator has reached the end of the span.
    */
   bool at_end() const noexcept;
+
+  /**
+   * @brief Checks if the iterator has reached the end of the span.
+   */
+  operator bool() const noexcept;
 
   /**
    * @brief Validates that the given span of bytes is valid UTF-8.
@@ -108,7 +135,7 @@ public:
   static signed char compare(Slice<const char> a, Slice<const char> b);
 
 private:
-  Slice<const char> current;
+  Slice<const char> slice;
 };
 
 } // namespace amelia

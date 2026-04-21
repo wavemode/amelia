@@ -5,8 +5,9 @@
 
 namespace amelia {
 
-void FilesystemWalker::walk(const String &root, std::vector<String> &output,
-                            bool regular_files_only, bool ignore_errors) {
+void FilesystemWalker::walk(
+    const String &root, std::vector<String> &output, bool regular_files_only, bool ignore_errors
+) {
   std::error_code ec;
   for (std::filesystem::recursive_directory_iterator it(root.c_str(), ec), end; it != end;
        it.increment(ec)) {
@@ -20,7 +21,7 @@ void FilesystemWalker::walk(const String &root, std::vector<String> &output,
     if (regular_files_only && !it->is_regular_file()) {
       continue;
     }
-    output.push_back(String::from(std::move(it->path().string())));
+    output.push_back(String::from(it->path().string()));
   }
 }
 

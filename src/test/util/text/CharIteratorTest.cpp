@@ -100,4 +100,54 @@ TEST_CASE("empty String") {
   CHECK(count == 0);
 }
 
+TEST_CASE("find substring - ASCII") {
+  String str("Hello, world!");
+  CharIterator iter = str.begin();
+  CharIterator position = iter.find("world");
+  CHECK(iter.tail(position) == "world!");
+}
+
+TEST_CASE("find substring - Unicode") {
+  String str("Hello, 🌍!");
+  CharIterator iter = str.begin();
+  CharIterator result = iter.find("🌍");
+  CHECK(iter.tail(result) == "🌍!");
+}
+
+TEST_CASE("fail to find substring") {
+  String str("Hello, world!");
+  CharIterator iter = str.begin();
+  CharIterator result = iter.find("foo");
+  CHECK(!result);
+}
+
+TEST_CASE("find code point - ASCII") {
+  String str("Hello, world!");
+  CharIterator iter = str.begin();
+  CharIterator result = iter.find('w');
+  CHECK(iter.tail(result) == "world!");
+}
+
+TEST_CASE("find code point - Unicode") {
+  String str("Hello, 🌍!");
+  CharIterator iter = str.begin();
+  CharIterator result = iter.find(U'🌍');
+  CHECK(iter.tail(result) == "🌍!");
+}
+
+TEST_CASE("fail to find code point") {
+  String str("Hello, world!");
+  CharIterator iter = str.begin();
+  CharIterator result = iter.find('x');
+  CHECK(!result);
+}
+
+TEST_CASE("head and tail") {
+  String str("Hello, world!");
+  CharIterator iter = str.begin();
+  CharIterator comma_pos = iter.find(',');
+  CHECK(iter.head(comma_pos) == "Hello");
+  CHECK(iter.tail(comma_pos) == ", world!");
+}
+
 TEST_SUITE_END();
