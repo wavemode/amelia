@@ -1,9 +1,9 @@
 #pragma once
 
-#include <vector>
+#include "data/core/List.h"
 
+#include "data/core/Text.h"
 #include "interface/source/ISourceFileManager.h"
-#include "util/text/Text.h"
 
 namespace amelia {
 

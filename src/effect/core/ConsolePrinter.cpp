@@ -6,7 +6,7 @@
 #include <windows.h>
 #endif
 
-#include "util/text/Text.h"
+#include "data/core/Text.h"
 
 namespace amelia {
 

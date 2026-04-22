@@ -1,8 +1,9 @@
 #pragma once
 
+#include "data/core/List.h"
 #include <cstddef>
-#include <vector>
 
+#include "data/core/List.h"
 #include "interface/source/ISourceFileManager.h"
 
 namespace amelia {
@@ -15,7 +16,7 @@ public:
   const String &get_source_file(FileId) override;
 
 private:
-  std::vector<String> source_files;
+  List<String> source_files;
 };
 
 } // namespace amelia

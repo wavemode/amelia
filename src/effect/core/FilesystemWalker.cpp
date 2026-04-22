@@ -1,12 +1,14 @@
-#include "FilesystemWalker.h"
-
 #include <filesystem>
 #include <iostream>
+
+#include "FilesystemWalker.h"
+#include "data/core/List.h"
+#include "data/core/String.h"
 
 namespace amelia {
 
 void FilesystemWalker::walk(
-    const String &root, std::vector<String> &output, bool regular_files_only, bool ignore_errors
+    const String &root, List<String> &output, bool regular_files_only, bool ignore_errors
 ) {
   std::error_code ec;
   for (std::filesystem::recursive_directory_iterator it(root.c_str(), ec), end; it != end;

@@ -4,10 +4,10 @@
 #include <cstdint>
 #include <string>
 
+#include "data/core/CharIterator.h"
+#include "data/core/Slice.h"
+#include "data/core/Text.h"
 #include "interface/text/IString.h"
-#include "util/slice/Slice.h"
-#include "util/text/CharIterator.h"
-#include "util/text/Text.h"
 
 namespace amelia {
 

@@ -1,8 +1,8 @@
 #include <doctest.h>
 
+#include "data/core/String.h"
+#include "data/core/Text.h"
 #include "unit/source/SourceFileManager.h"
-#include "util/text/String.h"
-#include "util/text/Text.h"
 
 TEST_SUITE_BEGIN("SourceFileManager");
 

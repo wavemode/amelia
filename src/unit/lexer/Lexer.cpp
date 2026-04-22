@@ -2,12 +2,12 @@
 
 #include <cstdint>
 
+#include "data/core/CharIterator.h"
+#include "data/core/Text.h"
 #include "data/lexer/LexerContext.h"
 #include "data/lexer/LexerError.h"
 #include "data/source/Location.h"
 #include "data/source/Token.h"
-#include "util/text/CharIterator.h"
-#include "util/text/Text.h"
 
 namespace amelia {
 
@@ -31,7 +31,7 @@ struct LexerState {
   size_t column;
   size_t position;
   CharIterator input;
-  std::vector<Token> &output;
+  List<Token> &output;
 
   void read_file() {
     while (!input.at_end()) {
@@ -39,10 +39,10 @@ struct LexerState {
       auto start_location = current_location();
       TokenType token_type;
 
-      uint32_t cp = advance();
+      uint32_t cp = read();
       if (cp == '=') {
         if (input.peek() == '=') {
-          advance();
+          read();
           token_type = TokenType::EQUAL;
         } else {
           token_type = TokenType::ASSIGN;
@@ -50,11 +50,11 @@ struct LexerState {
       } else if (is_whitespace(cp)) {
         continue;
       } else if (cp == '/' && input.peek() == '/') {
-        advance();
+        read();
         read_single_line_comment();
         continue;
       } else if (cp == '/' && input.peek() == '*') {
-        advance();
+        read();
         read_multi_line_comment();
         continue;
       } else if (is_ident_start(cp)) {
@@ -67,7 +67,7 @@ struct LexerState {
       }
 
       auto slice_end = input;
-      emit_token(token_type, start_location, input.subslice(slice_start, slice_end));
+      emit_token(token_type, start_location, slice_start.head(slice_end));
     }
 
     auto eof_position = input;
@@ -78,30 +78,27 @@ struct LexerState {
 
   void read_identifier() {
     while (!input.at_end() && is_ident_continue(input.peek())) {
-      advance();
+      read();
     }
   }
 
   void read_single_line_comment() {
-    while (!input.at_end() && advance() != '\n') {
+    while (!input.at_end() && read() != '\n') {
       // skip
     }
   }
 
   void read_multi_line_comment() {
     while (!input.at_end()) {
-      uint32_t cp = advance();
-      if (cp == '/' && input.peek() == '*') {
-        advance();
-        read_multi_line_comment();
-      } else if (cp == '*' && input.peek() == '/') {
-        advance();
+      uint32_t cp = read();
+      if (cp == '*' && input.peek() == '/') {
+        read();
         break;
       }
     }
   }
 
-  uint32_t advance() noexcept {
+  uint32_t read() noexcept {
     uint32_t cp = input.next();
     if (cp == '\n') {
       ++line;
@@ -118,12 +115,12 @@ struct LexerState {
     output.push_back(Token{type, loc, contents});
   }
 
-  void throw_lexer_error(String message) { throw LexerError(current_location(), message); }
+  void throw_lexer_error(String message) { throw LexerError{current_location(), message}; }
 };
 
 } // namespace
 
-void Lexer::tokenize(LexerContext ctx, Text input, std::vector<Token> &output) {
+void Lexer::tokenize(LexerContext ctx, Text input, List<Token> &output) {
   LexerState state{ctx, 1, 1, 0, CharIterator(input), output};
   state.read_file();
 }

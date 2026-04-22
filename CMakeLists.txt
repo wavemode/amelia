@@ -8,6 +8,15 @@ file(GLOB_RECURSE SOURCES_DATA "${CMAKE_CURRENT_SOURCE_DIR}/src/data/*.cpp")
 file(GLOB_RECURSE SOURCES_EFFECT "${CMAKE_CURRENT_SOURCE_DIR}/src/effect/*.cpp")
 file(GLOB_RECURSE SOURCES_TEST "${CMAKE_CURRENT_SOURCE_DIR}/src/test/*.cpp")
 
+add_library(amelia_warnings INTERFACE)
+target_compile_options(
+    amelia_warnings INTERFACE
+    -Wall -Wextra -Wpedantic -Werror
+    -Wno-error=unused-parameter
+    -Wno-error=unused-variable
+    -Wno-error=unused-function
+)
+
 add_library(amelia_core
     ${SOURCES_UNIT}
     ${SOURCES_UTIL}
@@ -15,18 +24,13 @@ add_library(amelia_core
     ${SOURCES_EFFECT}
 )
 target_include_directories(amelia_core PUBLIC src vendor)
-target_compile_features(amelia_core PUBLIC cxx_std_17)
-target_compile_options(
-    amelia_core PUBLIC
-    -Wall -Wextra -Wpedantic -Werror
-    -Wno-error=unused-parameter
-    -Wno-error=unused-variable
-)
+target_compile_features(amelia_core PUBLIC cxx_std_20)
 
 add_executable(amelia
     src/main.cpp
 )
 target_link_libraries(amelia PRIVATE amelia_core)
+target_link_libraries(amelia PRIVATE amelia_warnings)
 
 add_executable(amelia_test
     ${SOURCES_TEST}

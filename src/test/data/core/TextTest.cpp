@@ -1,10 +1,10 @@
 #include <cstring>
 #include <doctest.h>
 
-#include "util/slice/Slice.h"
-#include "util/text/InvalidUTF8Error.h"
-#include "util/text/String.h"
-#include "util/text/Text.h"
+#include "data/core/InvalidUTF8Error.h"
+#include "data/core/Slice.h"
+#include "data/core/String.h"
+#include "data/core/Text.h"
 
 TEST_SUITE_BEGIN("Text");
 

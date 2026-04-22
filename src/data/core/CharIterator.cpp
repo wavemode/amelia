@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include <utfcpp/utf8.h>
 
 #include "CharIterator.h"
@@ -29,17 +30,39 @@ uint32_t CharIterator::operator*() const { return peek(); }
 uint32_t CharIterator::peek() const {
   try {
     return utf8::peek_next(slice, slice.end());
-  } catch (...) {
+  } catch (const utf8::invalid_utf8 &) {
     throw amelia::InvalidUTF8Error();
+  } catch (const utf8::not_enough_room &) {
+    throw std::out_of_range("Attempted to peek past the end of the string");
   }
 }
 
 uint32_t CharIterator::next() {
   try {
     return utf8::next(slice, slice.end());
-  } catch (...) {
+  } catch (const utf8::invalid_utf8 &) {
     throw amelia::InvalidUTF8Error();
+  } catch (const utf8::not_enough_room &) {
+    throw std::out_of_range("Attempted to advance past the end of the string");
   }
+}
+
+CharIterator CharIterator::advanced(size_t n) const {
+  CharIterator iter = *this;
+  for (size_t i = 0; i < n; ++i) {
+    iter.next();
+  }
+  return iter;
+}
+
+size_t CharIterator::count() const {
+  size_t count = 0;
+  CharIterator iter = *this;
+  while (iter) {
+    ++count;
+    ++iter;
+  }
+  return count;
 }
 
 CharIterator CharIterator::find(Text substring) const {
@@ -76,16 +99,18 @@ CharIterator CharIterator::find(uint32_t code_point) const {
   return end();
 }
 
-Text CharIterator::head(CharIterator end) const noexcept {
-  return Text(Slice(slice.ptr(), end.slice.ptr() - slice.ptr()));
-}
+Text CharIterator::head(CharIterator end) const noexcept { return subslice(*this, end); }
 
-Text CharIterator::tail(CharIterator start) const noexcept {
-  return Text(Slice(start.slice.ptr(), slice.end().ptr() - start.slice.ptr()));
-}
+Text CharIterator::tail(CharIterator start) const noexcept { return subslice(start, end()); }
 
 Text CharIterator::subslice(CharIterator start, CharIterator end) const {
-  return Text(Slice(start.slice.ptr(), end.slice.ptr() - start.slice.ptr()));
+  size_t length = end.slice.ptr() - start.slice.ptr();
+
+  if (length > slice.size()) {
+    throw std::out_of_range("Subslice end is out of range");
+  }
+
+  return Text(Slice(start.slice.ptr(), length));
 }
 
 bool CharIterator::operator==(const CharIterator &other) const noexcept {
@@ -106,7 +131,7 @@ void CharIterator::validate(Slice<const char> str) {
   while (begin != end) {
     try {
       utf8::next(begin, end);
-    } catch (...) {
+    } catch (const utf8::invalid_utf8 &) {
       throw amelia::InvalidUTF8Error();
     }
   }
@@ -115,7 +140,7 @@ void CharIterator::validate(Slice<const char> str) {
 void CharIterator::append(uint32_t code_point, std::string &str) {
   try {
     utf8::append(code_point, std::back_inserter(str));
-  } catch (...) {
+  } catch (const utf8::invalid_code_point &) {
     throw amelia::InvalidUTF8Error();
   }
 }

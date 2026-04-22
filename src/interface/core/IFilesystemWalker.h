@@ -1,17 +1,19 @@
 #pragma once
 
-#include "interface/core/IFilesystemWalker.h"
+#include "data/core/List.h"
 
 namespace amelia {
 
-class FilesystemWalker : public IFilesystemWalker {
+class String;
+
+class IFilesystemWalker {
 public:
-  void walk(
+  virtual void walk(
       const String &root,
       List<String> &output,
       bool regular_files_only = true,
       bool ignore_errors = true
-  ) override;
+  ) = 0;
 };
 
 } // namespace amelia

@@ -1,9 +1,9 @@
 #include <cstring>
 #include <doctest.h>
 
-#include "util/slice/Slice.h"
-#include "util/text/InvalidUTF8Error.h"
-#include "util/text/String.h"
+#include "data/core/InvalidUTF8Error.h"
+#include "data/core/Slice.h"
+#include "data/core/String.h"
 
 TEST_SUITE_BEGIN("String");
 

@@ -1,8 +1,8 @@
 #include <cstring>
 #include <doctest.h>
 
-#include "util/slice/Slice.h"
-#include "util/text/String.h"
+#include "data/core/Slice.h"
+#include "data/core/String.h"
 
 TEST_SUITE_BEGIN("Slice");
 

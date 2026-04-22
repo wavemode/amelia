@@ -1,5 +1,5 @@
-#include "util/text/Text.h"
-#include "util/text/CharIterator.h"
+#include "data/core/Text.h"
+#include "data/core/CharIterator.h"
 #include <cstring>
 
 #include "String.h"
@@ -36,5 +36,7 @@ bool Text::operator<=(const Text &other) const noexcept {
 bool Text::operator>(const Text &other) const noexcept { return !(*this <= other); }
 
 bool Text::operator>=(const Text &other) const noexcept { return !(*this < other); }
+
+Text::operator bool() const noexcept { return size() > 0; }
 
 } // namespace amelia

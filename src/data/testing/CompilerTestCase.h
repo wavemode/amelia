@@ -2,8 +2,8 @@
 
 #include <cstddef>
 
-#include "util/slice/Slice.h"
-#include "util/text/Text.h"
+#include "data/core/Slice.h"
+#include "data/core/Text.h"
 
 namespace amelia {
 

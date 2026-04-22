@@ -4,11 +4,9 @@
 
 namespace amelia {
 
-class String;
-
 class FileLoader : public IFileLoader {
 public:
-  String load_file(const String &file_path) override;
+  void load_file(const IString &file_path, IString &output) override;
 };
 
 } // namespace amelia

@@ -1,11 +1,12 @@
 #include <doctest.h>
 
+#include "data/core/List.h"
 #include <algorithm>
-#include <vector>
 
+#include "data/core/List.h"
+#include "data/core/String.h"
 #include "effect/core/ConsolePrinter.h"
 #include "effect/core/FilesystemWalker.h"
-#include "util/text/String.h"
 
 TEST_SUITE_BEGIN("FilesystemWalker");
 
@@ -13,9 +14,13 @@ using namespace amelia;
 
 TEST_CASE("all files") {
   FilesystemWalker fsw;
-  std::vector<String> result;
+  List<String> result;
   fsw.walk("src/test/effect/core/fswalk", result, false);
-  std::sort(result.begin(), result.end());
+  result.sort([](const String &a, const String &b) {
+    if (a == b)
+      return false;
+    return a < b;
+  });
 
   CHECK(result[0] == "src/test/effect/core/fswalk/fswalk2");
   CHECK(result[1] == "src/test/effect/core/fswalk/fswalk2/test2.txt");
@@ -24,9 +29,9 @@ TEST_CASE("all files") {
 
 TEST_CASE("regular files only") {
   FilesystemWalker fsw;
-  std::vector<String> result;
+  List<String> result;
   fsw.walk("src/test/effect/core/fswalk", result);
-  std::sort(result.begin(), result.end());
+  result.sort();
 
   CHECK(result[0] == "src/test/effect/core/fswalk/fswalk2/test2.txt");
   CHECK(result[1] == "src/test/effect/core/fswalk/test.txt");

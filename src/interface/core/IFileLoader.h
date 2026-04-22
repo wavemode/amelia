@@ -2,11 +2,11 @@
 
 namespace amelia {
 
-class String;
+class IString;
 
 class IFileLoader {
 public:
-  virtual String load_file(const String &file_path) = 0;
+  virtual void load_file(const IString &file_path, IString &output) = 0;
 };
 
 } // namespace amelia

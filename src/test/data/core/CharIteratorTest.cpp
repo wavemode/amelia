@@ -1,10 +1,12 @@
-#include <cstdint>
-#include <cstring>
 #include <doctest.h>
 
-#include "util/text/CharIterator.h"
-#include "util/text/InvalidUTF8Error.h"
-#include "util/text/String.h"
+#include <cstdint>
+#include <cstring>
+#include <stdexcept>
+
+#include "data/core/CharIterator.h"
+#include "data/core/InvalidUTF8Error.h"
+#include "data/core/String.h"
 
 TEST_SUITE_BEGIN("CharIterator");
 
@@ -55,6 +57,9 @@ TEST_CASE("can iterate over a String - ASCII") {
   CHECK(*iter == '!');
   ++iter;
   CHECK(iter == end);
+  CHECK(!iter);
+  CHECK_THROWS_AS(*iter, std::out_of_range);
+  CHECK_THROWS_AS(++iter, std::out_of_range);
 }
 
 TEST_CASE("can iterate over a String - Unicode") {
@@ -89,6 +94,9 @@ TEST_CASE("can iterate over a String - Unicode") {
   CHECK(*iter == '!');
   ++iter;
   CHECK(iter == end);
+  CHECK(!iter);
+  CHECK_THROWS_AS(*iter, std::out_of_range);
+  CHECK_THROWS_AS(++iter, std::out_of_range);
 }
 
 TEST_CASE("empty String") {
@@ -148,6 +156,18 @@ TEST_CASE("head and tail") {
   CharIterator comma_pos = iter.find(',');
   CHECK(iter.head(comma_pos) == "Hello");
   CHECK(iter.tail(comma_pos) == ", world!");
+}
+
+TEST_CASE("subslice") {
+  String str("Hello, world!");
+  CharIterator iter = str.begin();
+  CharIterator comma_pos = iter.find(',');
+  CharIterator iter_end = iter.end();
+  CHECK(iter.subslice(iter, comma_pos) == "Hello");
+  CHECK(iter.subslice(comma_pos, iter_end) == ", world!");
+
+  // subslice with end before start will result in a slice length wraparound
+  CHECK_THROWS_AS(iter.subslice(comma_pos, iter), std::out_of_range);
 }
 
 TEST_SUITE_END();

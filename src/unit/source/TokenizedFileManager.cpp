@@ -1,15 +1,16 @@
 #include "TokenizedFileManager.h"
 
+#include "data/core/List.h"
 #include "data/source/Token.h"
 
 namespace amelia {
 
-TokenizedFileId TokenizedFileManager::store_tokenized_file(std::vector<Token> tokens) {
+TokenizedFileId TokenizedFileManager::store_tokenized_file(List<Token> tokens) {
   source_files.emplace_back(std::move(tokens));
   return source_files.size() - 1;
 }
 
-const std::vector<Token> &TokenizedFileManager::get_tokenized_file(TokenizedFileId id) {
+const List<Token> &TokenizedFileManager::get_tokenized_file(TokenizedFileId id) {
   return source_files[id];
 }
 

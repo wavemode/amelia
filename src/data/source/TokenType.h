@@ -2,8 +2,8 @@
 
 #include <stdexcept>
 
+#include "data/core/Slice.h"
 #include "interface/text/IString.h"
-#include "util/slice/Slice.h"
 
 namespace amelia {
 

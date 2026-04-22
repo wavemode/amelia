@@ -1,10 +1,10 @@
 #pragma once
 
+#include "data/core/Slice.h"
+#include "data/core/Text.h"
 #include "data/source/Location.h"
 #include "data/source/TokenType.h"
 #include "interface/text/IString.h"
-#include "util/slice/Slice.h"
-#include "util/text/Text.h"
 
 namespace amelia {
 

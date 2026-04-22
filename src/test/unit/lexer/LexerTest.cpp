@@ -1,10 +1,11 @@
 #include <doctest.h>
 
+#include "data/core/List.h"
+#include "data/core/String.h"
+#include "data/core/Text.h"
 #include "data/lexer/LexerContext.h"
 #include "data/source/Token.h"
 #include "unit/lexer/Lexer.h"
-#include "util/text/String.h"
-#include "util/text/Text.h"
 
 TEST_SUITE_BEGIN("Lexer");
 
@@ -12,10 +13,9 @@ using namespace amelia;
 
 TEST_CASE("basic tokenization test") {
   Lexer lexer;
-  std::vector<Token> tokens;
-  LexerContext ctx{"test_file"};
+  List<Token> tokens;
 
-  lexer.tokenize(ctx, "x = y", tokens);
+  lexer.tokenize({.filename = "test_file"}, "x = y", tokens);
   CHECK(tokens.size() == 4);
   CHECK(tokens[0].type == TokenType::IDENTIFIER);
   CHECK(tokens[0].contents == "x");

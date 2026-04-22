@@ -2,7 +2,7 @@
 
 #include <cstddef>
 
-#include "util/slice/Slice.h"
+#include "data/core/Slice.h"
 
 namespace amelia {
 
@@ -91,6 +91,11 @@ public:
    * based on the sequence of Unicode code points.
    */
   bool operator>=(const Text &other) const noexcept;
+
+  /**
+   * @brief Returns true if this Text is not empty, false if it is empty.
+   */
+  operator bool() const noexcept;
 
 private:
   Slice<const char> data_slice;

@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <string>
 
-#include "util/slice/Slice.h"
+#include "data/core/Slice.h"
 
 namespace amelia {
 
@@ -30,8 +30,15 @@ public:
   /**
    * @return Advances the iterator.
    * @throws InvalidUTF8Error if the iterator is not currently pointing to a valid UTF-8 sequence.
+   * @throws std::out_of_range if the iterator is advanced past the end of the string.
    */
   CharIterator &operator++();
+
+  /**
+   * @return Advances the iterator.
+   * @throws InvalidUTF8Error if the iterator is not currently pointing to a valid UTF-8 sequence.
+   * @throws std::out_of_range if the iterator is advanced past the end of the string.
+   */
   CharIterator operator++(int);
 
   /**
@@ -47,42 +54,63 @@ public:
   /**
    * @return The current UTF-8 code point in the string without advancing the iterator.
    * @throws InvalidUTF8Error if the iterator is not currently pointing to a valid UTF-8 sequence.
+   * @throws std::out_of_range if the iterator is at the end of the string.
    */
   uint32_t operator*() const;
 
   /**
    * @brief Returns the next UTF-8 code point in the string without advancing the iterator.
    * @throws InvalidUTF8Error if the iterator is not currently pointing to a valid UTF-8 sequence.
+   * @throws std::out_of_range if the iterator is at the end of the string.
    */
   uint32_t peek() const;
 
   /**
    * @brief Returns the next UTF-8 code point in the string and advances the iterator.
    * @throws InvalidUTF8Error if the iterator is not currently pointing to a valid UTF-8 sequence.
+   * @throws std::out_of_range if the iterator is advanced past the end of the string.
    */
   uint32_t next();
+
+  /**
+   * @return A new iterator advanced by n code points.
+   * @throws InvalidUTF8Error if the iterator would encounter invalid UTF-8 data before advancing n
+   * code points.
+   * @throws std::out_of_range if the iterator would advance past the end of the string.
+   */
+  CharIterator advanced(size_t n) const;
+
+  /**
+   * @return The number of unicode code points remainin in the iterator. This is an O(n) operation.
+   * @throws InvalidUTF8Error if the sequence contains invalid UTF-8 data.
+   */
+  size_t count() const;
 
   /**
    * @brief Finds the first occurrence of the given substring in the remaining span of the string
    * and returns a slice of bytes representing the substring if found, or an empty Text if not
    * found.
+   * @throws InvalidUTF8Error if finding the substring causes the iterator to encounter invalid
+   * UTF-8 data.
    */
   CharIterator find(Text substring) const;
 
   /**
    * @brief Finds the first occurrence of the given code point in the remaining span of the string
    * and returns a Position representing the byte offset of the code point.
+   * @throws InvalidUTF8Error if finding the code point causes the iterator to encounter invalid
+   * UTF-8 data.
    */
   CharIterator find(uint32_t code_point) const;
 
   /**
-   * @brief Returns a CharIterator representing the span of the string from the current position
+   * @brief Returns a Text representing the span of the string from the current position
    * up until one code point before the end position.
    */
   Text head(CharIterator end) const noexcept;
 
   /**
-   * @brief Returns a CharIterator representing the span of the string from the start position up
+   * @brief Returns a Text representing the span of the string from the start position up
    * until the end of the string.
    */
   Text tail(CharIterator start) const noexcept;
@@ -90,6 +118,7 @@ public:
   /**
    * @brief Returns a Text object representing the substring of the underlying UTF-8
    * string from the start position up until one code point before the end position.
+   * @throws InvalidUTF8Error if the resulting Text would contain invalid UTF-8 data.
    */
   Text subslice(CharIterator start, CharIterator end) const;
 

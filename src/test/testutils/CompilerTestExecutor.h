@@ -1,10 +1,11 @@
 #pragma once
 
-#include <vector>
+#include "data/core/List.h"
 
+#include "data/core/List.h"
+#include "data/core/Slice.h"
+#include "data/core/String.h"
 #include "data/testing/CompilerTestCase.h"
-#include "util/slice/Slice.h"
-#include "util/text/String.h"
 
 namespace amelia {
 
@@ -15,9 +16,9 @@ public:
   void update_test_cases();
 
 private:
-  std::vector<String> paths;
-  std::vector<String> file_contents;
-  std::vector<CompilerTestCase> test_cases;
+  List<String> paths;
+  List<String> file_contents;
+  List<CompilerTestCase> test_cases;
 };
 
 } // namespace amelia
