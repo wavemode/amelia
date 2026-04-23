@@ -36,12 +36,12 @@ CompilerTestCaseExecutor::CompilerTestCaseExecutor(
 
 bool CompilerTestCaseExecutor::execute_test_case(const CompilerTestCase &test_case) {
   String actual_output;
-  test_case_runner->run_test_case(test_case, actual_output);
+  test_case_runner->run_test_case(actual_output, test_case);
   return actual_output.text() != test_case.expected_output;
 }
 bool CompilerTestCaseExecutor::update_expected_output(const CompilerTestCase &test_case) {
   String actual_output;
-  test_case_runner->run_test_case(test_case, actual_output);
+  test_case_runner->run_test_case(actual_output, test_case);
   if (actual_output.text() == test_case.expected_output) {
     return false;
   }

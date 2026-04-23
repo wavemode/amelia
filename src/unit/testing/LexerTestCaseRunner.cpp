@@ -9,7 +9,7 @@
 
 namespace amelia {
 
-void LexerTestCaseRunner::run_test_case(CompilerTestCase input, IString &output) {
+void LexerTestCaseRunner::run_test_case(IString &output, CompilerTestCase input) {
   List<Token> tokens;
   Lexer lexer;
   lexer.tokenize(LexerContext{input.filename}, input.input, tokens);

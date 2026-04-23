@@ -49,7 +49,7 @@ void CompilerTestCaseCollector::collect_test_cases(
     }
 
     String &file_content = output.file_contents.emplace_back();
-    file_loader->load_file(path, file_content);
+    file_loader->load_file(file_content, path);
 
     Text expected_output = find_test_case_expected_output(file_content);
     output.test_cases.push_back(CompilerTestCase{path, file_content, expected_output});
