@@ -13,7 +13,7 @@
 
 namespace amelia {
 
-class SliceUtils;
+class ListUtils;
 
 /**
  * @class List
@@ -93,15 +93,10 @@ public:
   }
   bool operator!=(Slice<T> other) const noexcept { return !(*this == other); }
 
-  void sort() { std::sort(vec.begin(), vec.end()); }
-  template <typename CompareFn> void sort(CompareFn comp) {
-    std::sort(vec.begin(), vec.end(), comp);
-  }
-
   operator Slice<T>() noexcept override { return Slice(vec.data(), vec.size()); }
   operator Slice<const T>() const noexcept override { return Slice(vec.data(), vec.size()); }
 
-  friend class SliceUtils;
+  friend class ListUtils;
 
 private:
   std::vector<T> vec;

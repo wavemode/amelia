@@ -1,9 +1,8 @@
 #include <doctest.h>
 
-#include "data/core/List.h"
 #include <algorithm>
 
-#include "data/core/List.h"
+#include "data/core/ListUtils.h"
 #include "data/core/String.h"
 #include "effect/core/ConsolePrinter.h"
 #include "effect/core/FilesystemWalker.h"
@@ -16,11 +15,7 @@ TEST_CASE("all files") {
   FilesystemWalker fsw;
   List<String> result;
   fsw.walk("src/test/effect/core/fswalk", result, false);
-  result.sort([](const String &a, const String &b) {
-    if (a == b)
-      return false;
-    return a < b;
-  });
+  ListUtils::sort(result);
 
   CHECK(result[0] == "src/test/effect/core/fswalk/fswalk2");
   CHECK(result[1] == "src/test/effect/core/fswalk/fswalk2/test2.txt");
@@ -31,7 +26,7 @@ TEST_CASE("regular files only") {
   FilesystemWalker fsw;
   List<String> result;
   fsw.walk("src/test/effect/core/fswalk", result);
-  result.sort();
+  ListUtils::sort(result);
 
   CHECK(result[0] == "src/test/effect/core/fswalk/fswalk2/test2.txt");
   CHECK(result[1] == "src/test/effect/core/fswalk/test.txt");

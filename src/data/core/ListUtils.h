@@ -8,7 +8,7 @@
 
 namespace amelia {
 
-struct SliceUtils {
+struct ListUtils {
   template <typename T> static void sort(IList<T> &list) { sort(Slice<T>(list)); }
 
   template <typename T> static void sort(Slice<T> list) {
