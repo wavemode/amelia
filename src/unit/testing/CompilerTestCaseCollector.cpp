@@ -5,6 +5,7 @@
 #include "interface/core/IFileLoader.h"
 #include "interface/core/IFilesystemWalker.h"
 
+#include "data/core/ListUtils.h"
 #include "data/core/TextUtils.h"
 #include "data/testing/CompilerTestCase.h"
 #include "data/testing/CompilerTestCaseCollection.h"
@@ -17,16 +18,16 @@ namespace {
 const Text EXPECTED_OUTPUT_HEADER = "/* EXPECTED_OUTPUT:\n";
 
 Text find_test_case_expected_output(const String &file_contents) {
-  auto start = TextUtils::find(file_contents, "/* EXPECTED OUTPUT:");
-  if (start.at_end()) {
+  auto expected_output_section_start = TextUtils::find(file_contents, "/* EXPECTED OUTPUT:");
+  if (expected_output_section_start.at_end()) {
     return Text();
   }
-  auto text_start = start.plus_bytes(EXPECTED_OUTPUT_HEADER.size());
+  auto text_start = expected_output_section_start.plus_bytes(EXPECTED_OUTPUT_HEADER.size());
   auto text_end = TextUtils::find_after(file_contents, "*/", text_start);
   if (text_end.at_end()) {
     return Text();
   }
-  return TextUtils::head(file_contents, text_end);
+  return TextUtils::substr(file_contents, text_start, text_end);
 }
 
 } // namespace
@@ -37,12 +38,15 @@ CompilerTestCaseCollector::CompilerTestCaseCollector(
     : filesystem_walker(filesystem_walker), file_loader(file_loader) {}
 
 void CompilerTestCaseCollector::collect_test_cases(
-    const String &root_directory, CompilerTestCaseCollection &output
+    CompilerTestCaseCollection &output, const String &root_directory
 ) {
   size_t num_files_before = output.paths.size();
   filesystem_walker->walk(root_directory, output.paths);
   for (size_t i = num_files_before; i < output.paths.size(); ++i) {
     const String &path = output.paths[i];
+    if (!TextUtils::ends_with(path, ".am")) {
+      continue;
+    }
 
     String &file_content = output.file_contents.emplace_back();
     file_loader->load_file(path, file_content);
@@ -54,6 +58,9 @@ void CompilerTestCaseCollector::collect_test_cases(
 
     output.test_cases.push_back(CompilerTestCase{Text(path), Text(file_content), expected_output});
   }
+  ListUtils::sort(output.test_cases, [](const CompilerTestCase &a, const CompilerTestCase &b) {
+    return a.filename < b.filename;
+  });
 }
 
 } // namespace amelia
