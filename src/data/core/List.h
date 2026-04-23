@@ -9,45 +9,56 @@
 
 #include "data/core/Slice.h"
 
+#include "interface/core/IList.h"
+
 namespace amelia {
+
+class SliceUtils;
 
 /**
  * @class List
  */
-template <typename T> class List {
+template <typename T> class List : public IList<T> {
 public:
   List() noexcept = default;
 
-  explicit List(Slice<T> slice) noexcept : data(slice.ptr(), slice.end.ptr()) {}
+  explicit List(Slice<T> slice) noexcept : vec(slice.ptr(), slice.end.ptr()) {}
 
   template <size_t N> explicit List(T (&array)[N]) noexcept : List(Slice(array, N)) {}
 
-  List(std::initializer_list<T> init) : data(init) {}
+  List(std::initializer_list<T> init) : vec(init) {}
 
-  Slice<T> begin() noexcept { return Slice(data.data(), data.size()); }
-  Slice<const T> begin() const noexcept { return Slice(data.data(), data.size()); }
+  Slice<T> begin() noexcept { return Slice(vec.data(), vec.size()); }
+  Slice<const T> begin() const noexcept { return Slice(vec.data(), vec.size()); }
 
-  Slice<T> end() noexcept { return Slice(data.data() + data.size(), 0); }
-  Slice<const T> end() const noexcept { return Slice(data.data() + data.size(), 0); }
+  Slice<T> end() noexcept { return Slice(vec.data() + vec.size(), 0); }
+  Slice<const T> end() const noexcept { return Slice(vec.data() + vec.size(), 0); }
 
-  size_t size() const noexcept { return data.size(); }
+  size_t size() const noexcept override { return vec.size(); }
 
-  void push_back(T value) { data.push_back(std::move(value)); }
+  void push_back(T value) override { vec.push_back(std::move(value)); }
 
   template <typename... Args> T &emplace_back(Args &&...args) {
-    return data.emplace_back(std::forward<Args>(args)...);
+    return vec.emplace_back(std::forward<Args>(args)...);
   }
 
-  T &operator[](size_t index) {
+  T &operator[](size_t index) override {
     if (index >= size()) {
       throw std::out_of_range("List index out of range");
     }
-    return data[index];
+    return vec[index];
   }
 
   List<T> &operator+=(Slice<T> slice) {
-    data.insert(data.end(), slice.ptr(), slice.end().ptr());
+    vec.insert(vec.end(), slice.ptr(), slice.end().ptr());
     return *this;
+  }
+
+  void append(Slice<T> slice) override { *this += slice; }
+
+  void assign(Slice<T> slice) override {
+    vec.clear();
+    *this += slice;
   }
 
   List<T> operator+(Slice<T> slice) const {
@@ -61,7 +72,7 @@ public:
       return false;
     }
     for (size_t i = 0; i < size(); ++i) {
-      if (data[i] != other.data[i]) {
+      if (vec[i] != other.vec[i]) {
         return false;
       }
     }
@@ -74,7 +85,7 @@ public:
       return false;
     }
     for (size_t i = 0; i < size(); ++i) {
-      if (data[i] != slice[i]) {
+      if (vec[i] != slice[i]) {
         return false;
       }
     }
@@ -82,16 +93,18 @@ public:
   }
   bool operator!=(Slice<T> other) const noexcept { return !(*this == other); }
 
-  void sort() { std::sort(data.begin(), data.end()); }
+  void sort() { std::sort(vec.begin(), vec.end()); }
   template <typename CompareFn> void sort(CompareFn comp) {
-    std::sort(data.begin(), data.end(), comp);
+    std::sort(vec.begin(), vec.end(), comp);
   }
 
-  operator Slice<T>() noexcept { return Slice(data.data(), data.size()); }
-  operator Slice<const T>() const noexcept { return Slice(data.data(), data.size()); }
+  operator Slice<T>() noexcept override { return Slice(vec.data(), vec.size()); }
+  operator Slice<const T>() const noexcept override { return Slice(vec.data(), vec.size()); }
+
+  friend class SliceUtils;
 
 private:
-  std::vector<T> data;
+  std::vector<T> vec;
 };
 
 } // namespace amelia

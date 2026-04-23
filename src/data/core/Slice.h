@@ -5,6 +5,8 @@
 
 namespace amelia {
 
+class SliceUtils;
+
 /**
  * @class Slice
  */
@@ -78,6 +80,8 @@ public:
   }
 
   bool operator!=(const Slice<T> &other) const noexcept { return !(*this == other); }
+
+  friend class SliceUtils;
 
 private:
   T *data_ptr;
