@@ -9,31 +9,31 @@ using namespace amelia;
 
 TEST_CASE("can read empty file") {
   FileLoader loader;
-  String filename = "src/test/effect/core/empty.txt";
+  String filename = "src/test/effect/core/loader/empty.txt";
   String expected_contents = "";
 
   String result;
-  loader.load_file(filename, result);
+  loader.load_file(result, filename);
   CHECK(expected_contents == result);
 }
 
 TEST_CASE("can read ASCII") {
   FileLoader loader;
-  String filename = "src/test/effect/core/hello.txt";
+  String filename = "src/test/effect/core/loader/hello.txt";
   String expected_contents = "Hello, world!\n";
 
   String result;
-  loader.load_file(filename, result);
+  loader.load_file(result, filename);
   CHECK(expected_contents == result);
 }
 
 TEST_CASE("can read UTF-8") {
   FileLoader loader;
-  String filename = "src/test/effect/core/emojis.txt";
+  String filename = "src/test/effect/core/loader/emojis.txt";
   String expected_contents = "✅⛔\n";
 
   String result;
-  loader.load_file(filename, result);
+  loader.load_file(result, filename);
   CHECK(expected_contents == result);
 }
 
