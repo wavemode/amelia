@@ -4,10 +4,8 @@
 
 #include "interface/core/IFileLoader.h"
 #include "interface/core/IFilesystemWalker.h"
-#include "interface/core/IString.h"
 
-#include "data/core/CharIterator.h"
-#include "data/core/String.h"
+#include "data/core/TextUtils.h"
 #include "data/testing/CompilerTestCase.h"
 #include "data/testing/CompilerTestCaseCollection.h"
 #include "data/testing/CompilerTestCaseError.h"
@@ -19,17 +17,16 @@ namespace {
 const Text EXPECTED_OUTPUT_HEADER = "/* EXPECTED_OUTPUT:\n";
 
 Text find_test_case_expected_output(const String &file_contents) {
-  auto iter = CharIterator(file_contents);
-  auto start = iter.find("/* EXPECTED OUTPUT:");
+  auto start = TextUtils::find(file_contents, "/* EXPECTED OUTPUT:");
   if (start.at_end()) {
     return Text();
   }
-  auto text_start = start.plus(EXPECTED_OUTPUT_HEADER.size());
-  auto text_end = text_start.find("*/");
+  auto text_start = start.plus_bytes(EXPECTED_OUTPUT_HEADER.size());
+  auto text_end = TextUtils::find_after(file_contents, "*/", text_start);
   if (text_end.at_end()) {
     return Text();
   }
-  return text_start.head(text_end);
+  return TextUtils::head(file_contents, text_end);
 }
 
 } // namespace

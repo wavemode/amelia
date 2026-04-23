@@ -2,8 +2,7 @@
 
 #include <cstdint>
 
-#include "data/core/CharIterator.h"
-#include "data/core/Text.h"
+#include "data/core/TextUtils.h"
 #include "data/lexer/LexerContext.h"
 #include "data/lexer/LexerError.h"
 #include "data/source/Location.h"
@@ -30,6 +29,7 @@ struct LexerState {
   size_t line;
   size_t column;
   size_t position;
+  Text file_contents;
   CharIterator input;
   List<Token> &output;
 
@@ -67,12 +67,16 @@ struct LexerState {
       }
 
       auto slice_end = input;
-      emit_token(token_type, start_location, slice_start.head(slice_end));
+      emit_token(
+          token_type, start_location, TextUtils::substr(file_contents, slice_start, slice_end)
+      );
     }
 
     auto eof_position = input;
     emit_token(
-        TokenType::END_OF_FILE, current_location(), input.subslice(eof_position, eof_position)
+        TokenType::END_OF_FILE,
+        current_location(),
+        TextUtils::substr(file_contents, eof_position, eof_position)
     );
   }
 
@@ -121,7 +125,7 @@ struct LexerState {
 } // namespace
 
 void Lexer::tokenize(LexerContext ctx, Text input, List<Token> &output) {
-  LexerState state{ctx, 1, 1, 0, CharIterator(input), output};
+  LexerState state{ctx, 1, 1, 0, input, CharIterator(input), output};
   state.read_file();
 }
 

@@ -96,48 +96,6 @@ public:
   CharIterator plus_bytes(size_t n) const;
 
   /**
-   * @return The number of unicode code points remainin in the iterator. This is an O(n) operation.
-   * @throws InvalidUTF8Error if the sequence contains invalid UTF-8 data.
-   */
-  size_t count() const;
-
-  /**
-   * @brief Finds the first occurrence of the given substring in the remaining span of the string
-   * and returns a slice of bytes representing the substring if found, or an empty Text if not
-   * found.
-   * @throws InvalidUTF8Error if finding the substring causes the iterator to encounter invalid
-   * UTF-8 data.
-   */
-  CharIterator find(Text substring) const;
-
-  /**
-   * @brief Finds the first occurrence of the given code point in the remaining span of the string
-   * and returns a Position representing the byte offset of the code point.
-   * @throws InvalidUTF8Error if finding the code point causes the iterator to encounter invalid
-   * UTF-8 data.
-   */
-  CharIterator find(uint32_t code_point) const;
-
-  /**
-   * @brief Returns a Text representing the span of the string from the current position
-   * up until one code point before the end position.
-   */
-  Text head(CharIterator end) const noexcept;
-
-  /**
-   * @brief Returns a Text representing the span of the string from the start position up
-   * until the end of the string.
-   */
-  Text tail(CharIterator start) const noexcept;
-
-  /**
-   * @brief Returns a Text object representing the substring of the underlying UTF-8
-   * string from the start position up until one code point before the end position.
-   * @throws InvalidUTF8Error if the resulting Text would contain invalid UTF-8 data.
-   */
-  Text subslice(CharIterator start, CharIterator end) const;
-
-  /**
    * @brief Compares this iterator with another for equality. Two iterators are equal if they point
    * to the same position in the same string.
    */

@@ -63,64 +63,6 @@ CharIterator CharIterator::plus_bytes(size_t n) const {
   return iter;
 }
 
-size_t CharIterator::count() const {
-  size_t count = 0;
-  CharIterator iter = *this;
-  while (!iter.at_end()) {
-    ++count;
-    ++iter;
-  }
-  return count;
-}
-
-CharIterator CharIterator::find(Text substring) const {
-  CharIterator start_iter = *this;
-  CharIterator current_iter = start_iter;
-  CharIterator start_textiter = CharIterator(substring);
-  CharIterator current_textiter = start_textiter;
-  while (true) {
-    if (current_textiter.at_end()) {
-      return start_iter;
-    }
-    if (current_iter.at_end()) {
-      return CharIterator(slice.end());
-    }
-    if (current_iter.peek() == current_textiter.peek()) {
-      current_textiter.next();
-      current_iter.next();
-    } else {
-      current_textiter = start_textiter;
-      current_iter.next();
-      start_iter = current_iter;
-    }
-  }
-}
-
-CharIterator CharIterator::find(uint32_t code_point) const {
-  CharIterator current_iter = *this;
-  while (!current_iter.at_end()) {
-    if (current_iter.peek() == code_point) {
-      return current_iter;
-    }
-    current_iter.next();
-  }
-  return end();
-}
-
-Text CharIterator::head(CharIterator end) const noexcept { return subslice(*this, end); }
-
-Text CharIterator::tail(CharIterator start) const noexcept { return subslice(start, end()); }
-
-Text CharIterator::subslice(CharIterator start, CharIterator end) const {
-  size_t length = end.slice.ptr() - start.slice.ptr();
-
-  if (length > slice.size()) {
-    throw std::out_of_range("Subslice end is out of range");
-  }
-
-  return Text(Slice(start.slice.ptr(), length));
-}
-
 bool CharIterator::operator==(const CharIterator &other) const noexcept {
   return slice == other.slice;
 }
