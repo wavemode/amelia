@@ -4,7 +4,7 @@
 #include "data/core/Text.h"
 #include "data/source/Location.h"
 #include "data/source/TokenType.h"
-#include "interface/text/IString.h"
+#include "interface/core/IString.h"
 
 namespace amelia {
 

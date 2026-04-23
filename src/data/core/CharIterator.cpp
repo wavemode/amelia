@@ -47,7 +47,9 @@ uint32_t CharIterator::next() {
   }
 }
 
-CharIterator CharIterator::advanced(size_t n) const {
+Slice<const char> CharIterator::data() const noexcept { return slice; }
+
+CharIterator CharIterator::plus(size_t n) const {
   CharIterator iter = *this;
   for (size_t i = 0; i < n; ++i) {
     iter.next();
@@ -55,10 +57,16 @@ CharIterator CharIterator::advanced(size_t n) const {
   return iter;
 }
 
+CharIterator CharIterator::plus_bytes(size_t n) const {
+  CharIterator iter = *this;
+  iter.slice = iter.slice + n;
+  return iter;
+}
+
 size_t CharIterator::count() const {
   size_t count = 0;
   CharIterator iter = *this;
-  while (iter) {
+  while (!iter.at_end()) {
     ++count;
     ++iter;
   }
@@ -122,8 +130,6 @@ bool CharIterator::operator!=(const CharIterator &other) const noexcept {
 }
 
 bool CharIterator::at_end() const noexcept { return slice.size() == 0; }
-
-CharIterator::operator bool() const noexcept { return !at_end(); }
 
 void CharIterator::validate(Slice<const char> str) {
   auto begin = str.begin();

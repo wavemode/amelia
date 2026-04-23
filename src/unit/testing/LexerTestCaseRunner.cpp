@@ -4,7 +4,7 @@
 #include "data/lexer/LexerContext.h"
 #include "data/source/Token.h"
 #include "data/testing/CompilerTestCase.h"
-#include "interface/text/IString.h"
+#include "interface/core/IString.h"
 #include "unit/lexer/Lexer.h"
 
 namespace amelia {

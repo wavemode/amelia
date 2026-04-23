@@ -7,7 +7,7 @@
 #include "data/core/CharIterator.h"
 #include "data/core/Slice.h"
 #include "data/core/Text.h"
-#include "interface/text/IString.h"
+#include "interface/core/IString.h"
 
 namespace amelia {
 

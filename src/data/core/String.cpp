@@ -38,7 +38,11 @@ void String::append(uint32_t code_point) { CharIterator::append(code_point, data
 
 void String::assign(Text text) { data_str.assign(text.data().ptr(), text.data().size()); }
 
-Text String::text() const noexcept { return Text(Slice(data_str.data(), data_str.size())); }
+Text String::text() const noexcept {
+  Text result;
+  result.data_slice = Slice(data_str.data(), data_str.size());
+  return result;
+}
 
 CharIterator String::begin() const {
   return CharIterator(Slice<const char>(data_str.data(), data_str.size()));

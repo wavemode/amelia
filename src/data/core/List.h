@@ -32,7 +32,7 @@ public:
 
   size_t size() const noexcept { return data.size(); }
 
-  void push_back(const T &value) { data.push_back(value); }
+  void push_back(T value) { data.push_back(std::move(value)); }
 
   template <typename... Args> T &emplace_back(Args &&...args) {
     return data.emplace_back(std::forward<Args>(args)...);

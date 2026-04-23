@@ -2,7 +2,10 @@ build:
 	cmake --build build --target amelia --parallel
 
 configure:
-	cmake -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+	cmake -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug
+
+configure-release:
+	cmake -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Release
 
 build-test:
 	cmake --build build --target amelia_test --parallel

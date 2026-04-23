@@ -37,6 +37,4 @@ bool Text::operator>(const Text &other) const noexcept { return !(*this <= other
 
 bool Text::operator>=(const Text &other) const noexcept { return !(*this < other); }
 
-Text::operator bool() const noexcept { return size() > 0; }
-
 } // namespace amelia

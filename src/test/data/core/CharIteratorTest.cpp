@@ -57,7 +57,7 @@ TEST_CASE("can iterate over a String - ASCII") {
   CHECK(*iter == '!');
   ++iter;
   CHECK(iter == end);
-  CHECK(!iter);
+  CHECK(iter.at_end());
   CHECK_THROWS_AS(*iter, std::out_of_range);
   CHECK_THROWS_AS(++iter, std::out_of_range);
 }
@@ -94,7 +94,7 @@ TEST_CASE("can iterate over a String - Unicode") {
   CHECK(*iter == '!');
   ++iter;
   CHECK(iter == end);
-  CHECK(!iter);
+  CHECK(iter.at_end());
   CHECK_THROWS_AS(*iter, std::out_of_range);
   CHECK_THROWS_AS(++iter, std::out_of_range);
 }
@@ -126,7 +126,7 @@ TEST_CASE("fail to find substring") {
   String str("Hello, world!");
   CharIterator iter = str.begin();
   CharIterator result = iter.find("foo");
-  CHECK(!result);
+  CHECK(result.at_end());
 }
 
 TEST_CASE("find code point - ASCII") {
@@ -147,7 +147,7 @@ TEST_CASE("fail to find code point") {
   String str("Hello, world!");
   CharIterator iter = str.begin();
   CharIterator result = iter.find('x');
-  CHECK(!result);
+  CHECK(result.at_end());
 }
 
 TEST_CASE("head and tail") {

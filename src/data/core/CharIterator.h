@@ -10,6 +10,7 @@ namespace amelia {
 
 class Char;
 class Text;
+class TextUtils;
 
 /**
  * @class CharIterator
@@ -73,12 +74,26 @@ public:
   uint32_t next();
 
   /**
+   * @return The underlying slice of bytes representing the remaining span of the string.
+   */
+  Slice<const char> data() const noexcept;
+
+  /**
    * @return A new iterator advanced by n code points.
    * @throws InvalidUTF8Error if the iterator would encounter invalid UTF-8 data before advancing n
    * code points.
    * @throws std::out_of_range if the iterator would advance past the end of the string.
    */
-  CharIterator advanced(size_t n) const;
+  CharIterator plus(size_t n) const;
+
+  /**
+   * @return A new iterator advanced by at least n bytes. (That is, iterator will be advanced by the
+   * smallest number of code points such that at least n bytes have been advanced.)
+   * @throws InvalidUTF8Error if the iterator would encounter invalid UTF-8 data before advancing n
+   * bytes.
+   * @throws std::out_of_range if the iterator would advance past the end of the string.
+   */
+  CharIterator plus_bytes(size_t n) const;
 
   /**
    * @return The number of unicode code points remainin in the iterator. This is an O(n) operation.
@@ -138,11 +153,6 @@ public:
    * @brief Checks if the iterator has reached the end of the span.
    */
   bool at_end() const noexcept;
-
-  /**
-   * @brief Checks if the iterator has reached the end of the span.
-   */
-  operator bool() const noexcept;
 
   /**
    * @brief Validates that the given span of bytes is valid UTF-8.

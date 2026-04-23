@@ -3,7 +3,7 @@
 #include <stdexcept>
 
 #include "data/core/Slice.h"
-#include "interface/text/IString.h"
+#include "interface/core/IString.h"
 
 namespace amelia {
 

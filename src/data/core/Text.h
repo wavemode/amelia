@@ -8,6 +8,7 @@ namespace amelia {
 
 class CharIterator;
 class String;
+class TextUtils;
 
 /**
  * @class Text
@@ -92,10 +93,8 @@ public:
    */
   bool operator>=(const Text &other) const noexcept;
 
-  /**
-   * @brief Returns true if this Text is not empty, false if it is empty.
-   */
-  operator bool() const noexcept;
+  friend class TextUtils;
+  friend class String;
 
 private:
   Slice<const char> data_slice;
