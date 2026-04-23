@@ -1,5 +1,7 @@
 #include <doctest.h>
 
+#include "effect/core/ConsolePrinter.h"
+#include "effect/core/EnvironmentReader.h"
 #include "effect/core/FileLoader.h"
 #include "effect/core/FileWriter.h"
 #include "effect/core/FilesystemWalker.h"
@@ -16,9 +18,13 @@ using namespace amelia;
 TEST_CASE("execute") {
   FileLoader file_loader;
   FileWriter file_writer;
+  ConsolePrinter console_printer;
   FilesystemWalker filesystem_walker;
   LexerTestCaseRunner lexer_test_case_runner;
-  CompilerTestCaseExecutor executor(&lexer_test_case_runner, &file_writer);
+  EnvironmentReader env_reader;
+  CompilerTestCaseExecutor executor(
+      &lexer_test_case_runner, &file_writer, &console_printer, &env_reader
+  );
 
   String test_case_path = "src/test/unit/testing/execute/example1.am";
   String file_contents = "x = y\n";

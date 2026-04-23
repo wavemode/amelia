@@ -30,9 +30,39 @@ void update_file_expected_output(
 } // namespace
 
 CompilerTestCaseExecutor::CompilerTestCaseExecutor(
-    ITestCaseRunner *test_case_runner, IFileWriter *file_writer
+    ITestCaseRunner *test_case_runner,
+    IFileWriter *file_writer,
+    IPrinter *printer,
+    IEnvironmentReader *env_reader
 )
-    : test_case_runner(test_case_runner), file_writer(file_writer) {}
+    : test_case_runner(test_case_runner), file_writer(file_writer), printer(printer),
+      env_reader(env_reader) {}
+
+size_t CompilerTestCaseExecutor::execute_collection(const CompilerTestCaseCollection &collection) {
+  bool update_test_cases = true;
+  String env_value;
+  env_reader->get_env(env_value, String("AMELIA_UPDATE_TEST_CASES"));
+  if (env_value == "" || env_value == "0") {
+    update_test_cases = false;
+  }
+
+  size_t num_failed = 0;
+  for (const CompilerTestCase &test_case : collection.test_cases) {
+    if (update_test_cases) {
+      if (update_expected_output(test_case)) {
+        printer->print("Updated expected output for: ");
+        printer->println(test_case.filename);
+      }
+    } else {
+      if (execute_test_case(test_case)) {
+        printer->print("Test case failed: ");
+        printer->println(test_case.filename);
+        ++num_failed;
+      }
+    }
+  }
+  return num_failed;
+}
 
 bool CompilerTestCaseExecutor::execute_test_case(const CompilerTestCase &test_case) {
   String actual_output;

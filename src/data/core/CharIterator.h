@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <string>
 
-#include "data/core/Slice.h"
+#include "data/core/SliceIterator.h"
 
 namespace amelia {
 
@@ -21,7 +21,7 @@ public:
   /**
    * @brief Constructs an iterator over the UTF-8 code points in the given span.
    */
-  explicit CharIterator(Slice<const char> str) noexcept;
+  explicit CharIterator(SliceIterator<const char> str) noexcept;
 
   /**
    * @brief Constructs an iterator over the UTF-8 code points in the given Text object.
@@ -132,7 +132,7 @@ public:
   static signed char compare(Slice<const char> a, Slice<const char> b);
 
 private:
-  Slice<const char> slice;
+  SliceIterator<const char> slice;
 };
 
 } // namespace amelia

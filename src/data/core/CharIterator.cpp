@@ -7,7 +7,7 @@
 
 namespace amelia {
 
-CharIterator::CharIterator(Slice<const char> str) noexcept : slice(str) {}
+CharIterator::CharIterator(SliceIterator<const char> str) noexcept : slice(str) {}
 CharIterator::CharIterator(Text text) noexcept : slice(text.data()) {}
 
 CharIterator &CharIterator::operator++() {
@@ -47,7 +47,7 @@ uint32_t CharIterator::next() {
   }
 }
 
-Slice<const char> CharIterator::data() const noexcept { return slice; }
+Slice<const char> CharIterator::data() const noexcept { return Slice(slice); }
 
 CharIterator CharIterator::plus(size_t n) const {
   CharIterator iter = *this;
@@ -99,9 +99,9 @@ signed char CharIterator::compare(Slice<const char> a, Slice<const char> b) {
   }
 
   auto self_iter = CharIterator(a);
-  auto self_end = CharIterator(a + a.size());
+  auto self_end = CharIterator(a.end());
   auto other_iter = CharIterator(b);
-  auto other_end = CharIterator(b + b.size());
+  auto other_end = CharIterator(b.end());
 
   while (self_iter != self_end && other_iter != other_end) {
     uint32_t self_cp = self_iter.next();

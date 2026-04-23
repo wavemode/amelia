@@ -28,11 +28,11 @@ public:
 
   List(std::initializer_list<T> init) : vec(init) {}
 
-  Slice<T> begin() noexcept { return Slice(vec.data(), vec.size()); }
-  Slice<const T> begin() const noexcept { return Slice(vec.data(), vec.size()); }
+  SliceIterator<T> begin() noexcept { return Slice(vec.data(), vec.size()).begin(); }
+  SliceIterator<const T> begin() const noexcept { return Slice(vec.data(), vec.size()).begin(); }
 
-  Slice<T> end() noexcept { return Slice(vec.data() + vec.size(), 0); }
-  Slice<const T> end() const noexcept { return Slice(vec.data() + vec.size(), 0); }
+  SliceIterator<T> end() noexcept { return Slice(vec.data() + vec.size(), 0).end(); }
+  SliceIterator<const T> end() const noexcept { return Slice(vec.data() + vec.size(), 0).end(); }
 
   size_t size() const noexcept override { return vec.size(); }
 

@@ -3,6 +3,8 @@
 #include <cstddef>
 #include <stdexcept>
 
+#include "SliceIterator.h"
+
 namespace amelia {
 
 class ListUtils;
@@ -18,9 +20,11 @@ public:
 
   template <size_t N> explicit Slice(T (&array)[N]) noexcept : data_ptr(array), length(N) {}
 
-  Slice<T> begin() const { return *this; }
+  explicit Slice(SliceIterator<T> iter) noexcept : data_ptr(iter.ptr()), length(iter.size()) {}
 
-  Slice<T> end() const { return Slice(data_ptr + length, 0); }
+  SliceIterator<T> begin() const { return SliceIterator(*this); }
+
+  SliceIterator<T> end() const { return SliceIterator(Slice(data_ptr + length, 0)); }
 
   T *ptr() const noexcept { return data_ptr; }
 
@@ -31,37 +35,6 @@ public:
       throw std::out_of_range("Slice index out of range");
     }
     return data_ptr[index];
-  }
-
-  T &operator*() const {
-    if (length == 0) {
-      throw std::out_of_range("Dereferencing end of slice");
-    }
-
-    return *data_ptr;
-  }
-
-  Slice<T> &operator+=(size_t offset) {
-    *this = *this + offset;
-    return *this;
-  }
-
-  Slice<T> &operator++() {
-    *this += 1;
-    return *this;
-  }
-
-  Slice<T> operator++(int) {
-    Slice<T> temp = *this;
-    ++(*this);
-    return temp;
-  }
-
-  Slice<T> operator+(size_t offset) const {
-    if (offset > length) {
-      throw std::out_of_range("Slice offset out of range");
-    }
-    return Slice(data_ptr + offset, length - offset);
   }
 
   bool operator==(const Slice<T> &other) const noexcept {

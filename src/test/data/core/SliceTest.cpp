@@ -73,31 +73,6 @@ TEST_CASE("can index") {
   CHECK_THROWS_AS(slice[6], std::out_of_range);
 }
 
-TEST_CASE("can increment and add") {
-  Slice<const char> slice({'H', 'e', 'l', 'l', 'o'});
-  slice += 2;
-  CHECK(slice.size() == 3);
-  CHECK(String(slice) == "llo");
-
-  auto tmp = ++slice;
-  CHECK(slice.size() == 2);
-  CHECK(String(slice) == "lo");
-  CHECK(tmp.size() == 2);
-  CHECK(String(tmp) == "lo");
-
-  slice = slice + 1;
-  CHECK(slice.size() == 1);
-  CHECK(String(slice) == "o");
-
-  auto tmp2 = slice++;
-  CHECK(slice.size() == 0);
-  CHECK(String(slice) == "");
-  CHECK(tmp2.size() == 1);
-  CHECK(String(tmp2) == "o");
-
-  CHECK_THROWS_AS(++slice, std::out_of_range);
-}
-
 TEST_CASE("equality and inequality") {
   Slice<const char> slice1("Hello");
   Slice<const char> slice2("Hello");
