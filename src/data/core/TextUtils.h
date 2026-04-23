@@ -100,6 +100,10 @@ struct TextUtils {
   static Text tail(Text input, CharIterator char_start);
   static Text tail_bytes(Text input, size_t index_start);
 
+  static void int_to_string(IString &output, int64_t value);
+  static void int_to_string(IString &output, size_t value);
+  static void double_to_string(IString &output, double value);
+
   static bool is_digit(Text input);
   static bool is_digit(uint32_t ch);
 

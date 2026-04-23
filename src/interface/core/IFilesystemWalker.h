@@ -6,8 +6,7 @@ namespace amelia {
 
 class String;
 
-class IFilesystemWalker {
-public:
+struct IFilesystemWalker {
   virtual void walk(
       const String &root,
       List<String> &output,

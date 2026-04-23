@@ -1,13 +1,13 @@
 #pragma once
 
 #include "data/core/List.h"
+#include "data/testing/CompilerTestCaseCollection.h"
 
 namespace amelia {
 
 class IFilesystemWalker;
 class IFileLoader;
 class CompilerTestCase;
-class CompilerTestCaseCollection;
 class String;
 
 class CompilerTestCaseCollector {

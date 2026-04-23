@@ -72,11 +72,8 @@ struct LexerState {
       );
     }
 
-    auto eof_position = input;
     emit_token(
-        TokenType::END_OF_FILE,
-        current_location(),
-        TextUtils::substr(file_contents, eof_position, eof_position)
+        TokenType::END_OF_FILE, current_location(), TextUtils::substr(file_contents, input, input)
     );
   }
 

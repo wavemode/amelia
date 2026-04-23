@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include <string>
 
 #include "data/core/Slice.h"
 
@@ -34,6 +35,12 @@ public:
    * @throws InvalidUTF8Error if the input slice is not valid UTF-8 from beginning to end.
    */
   explicit Text(Slice<const char> str);
+
+  /**
+   * @brief Construct a Text from a std::string object.
+   * @throws InvalidUTF8Error if the input string is not valid UTF-8 from beginning to end.
+   */
+  explicit Text(const std::string &str);
 
   /**
    * @return A Slice representing the underlying UTF-8 data of this Text.

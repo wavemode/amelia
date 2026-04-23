@@ -1,10 +1,8 @@
 #pragma once
 
-#include "data/core/Slice.h"
-#include "data/core/Text.h"
+#include "data/core/TextUtils.h"
 #include "data/source/Location.h"
 #include "data/source/TokenType.h"
-#include "interface/core/IString.h"
 
 namespace amelia {
 
@@ -23,10 +21,7 @@ struct Token {
     token_type_to_string(type, out);
     out.append("(\"");
     out.append(contents);
-    out.append("\", ");
-    out.append(location.line);
-    out.append(":");
-    out.append(location.column);
+    out.append("\"");
     out.append(")");
   }
 };

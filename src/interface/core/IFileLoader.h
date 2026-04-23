@@ -4,8 +4,7 @@ namespace amelia {
 
 class IString;
 
-class IFileLoader {
-public:
+struct IFileLoader {
   virtual void load_file(const IString &file_path, IString &output) = 0;
 };
 

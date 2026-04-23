@@ -6,8 +6,7 @@ namespace amelia {
 
 template <typename T> class Slice;
 
-template <typename T> class IList {
-public:
+template <typename T> struct IList {
   virtual ~IList() = default;
 
   virtual void append(Slice<T> slice) = 0;

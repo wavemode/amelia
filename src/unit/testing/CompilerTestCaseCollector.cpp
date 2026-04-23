@@ -14,16 +14,16 @@
 namespace amelia {
 
 namespace {
-
-const Text EXPECTED_OUTPUT_HEADER = "/* EXPECTED_OUTPUT:\n";
-
 Text find_test_case_expected_output(const String &file_contents) {
-  auto expected_output_section_start = TextUtils::find(file_contents, "/* EXPECTED OUTPUT:");
+  auto expected_output_section_start =
+      TextUtils::find(file_contents, COMPILER_TEST_CASE_EXPECTED_OUTPUT_HEADER);
   if (expected_output_section_start.at_end()) {
     return Text();
   }
-  auto text_start = expected_output_section_start.plus_bytes(EXPECTED_OUTPUT_HEADER.size());
-  auto text_end = TextUtils::find_after(file_contents, "*/", text_start);
+  auto text_start =
+      expected_output_section_start.plus_bytes(COMPILER_TEST_CASE_EXPECTED_OUTPUT_HEADER.size());
+  auto text_end =
+      TextUtils::find_after(file_contents, COMPILER_TEST_CASE_EXPECTED_OUTPUT_FOOTER, text_start);
   if (text_end.at_end()) {
     return Text();
   }
@@ -52,11 +52,7 @@ void CompilerTestCaseCollector::collect_test_cases(
     file_loader->load_file(path, file_content);
 
     Text expected_output = find_test_case_expected_output(file_content);
-    if (expected_output.size() == 0) {
-      throw CompilerTestCaseError("Malformed test case: missing EXPECTED_OUTPUT comment");
-    }
-
-    output.test_cases.push_back(CompilerTestCase{Text(path), Text(file_content), expected_output});
+    output.test_cases.push_back(CompilerTestCase{path, file_content, expected_output});
   }
   ListUtils::sort(output.test_cases, [](const CompilerTestCase &a, const CompilerTestCase &b) {
     return a.filename < b.filename;

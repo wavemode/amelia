@@ -6,8 +6,7 @@ namespace amelia {
 
 class Text;
 
-class IString {
-public:
+struct IString {
   virtual ~IString() = default;
 
   virtual Text text() const noexcept = 0;

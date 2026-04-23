@@ -1,0 +1,5 @@
+y = 6
+
+/* EXPECTED_OUTPUT:
+testing2
+*/
