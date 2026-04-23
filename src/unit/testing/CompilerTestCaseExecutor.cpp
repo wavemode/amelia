@@ -23,7 +23,11 @@ void update_file_expected_output(
                           ? footer
                           : footer.plus_bytes(COMPILER_TEST_CASE_EXPECTED_OUTPUT_FOOTER.size());
 
-  new_file_contents.append(TextUtils::tail(existing_contents, tail_section));
+  auto tail_text = TextUtils::tail(existing_contents, tail_section);
+  if (tail_text == "") {
+    tail_text = "\n";
+  }
+  new_file_contents.append(tail_text);
 
   file_writer->write_file(String(path), new_file_contents);
 }
