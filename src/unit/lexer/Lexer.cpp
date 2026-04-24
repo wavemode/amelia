@@ -35,71 +35,83 @@ struct LexerState {
 
   void read_file() {
     while (!input.at_end()) {
-      auto slice_start = input;
-      auto start_location = current_location();
-      TokenType token_type;
-
-      uint32_t cp = read();
-      if (cp == '=') {
-        if (input.peek() == '=') {
-          read();
-          token_type = TokenType::EQUAL;
-        } else {
-          token_type = TokenType::ASSIGN;
-        }
-      } else if (is_whitespace(cp)) {
-        continue;
-      } else if (cp == '/' && input.peek() == '/') {
-        read();
-        read_single_line_comment();
-        continue;
-      } else if (cp == '/' && input.peek() == '*') {
-        read();
-        read_multi_line_comment();
-        continue;
-      } else if (is_ident_start(cp)) {
-        read_identifier();
-        token_type = TokenType::IDENTIFIER;
-      } else {
-        String msg("Unexpected character: ");
-        msg.append(cp);
-        throw_lexer_error(msg);
-      }
-
-      auto slice_end = input;
-      emit_token(
-          token_type, start_location, TextUtils::substr(file_contents, slice_start, slice_end)
-      );
+      read_token();
     }
 
-    emit_token(
-        TokenType::END_OF_FILE, current_location(), TextUtils::substr(file_contents, input, input)
-    );
+    emit_token(TokenType::END_OF_FILE, current_location(), input);
   }
 
-  void read_identifier() {
-    while (!input.at_end() && is_ident_continue(input.peek())) {
-      read();
+  void read_token() {
+    uint32_t cp = input.peek();
+    auto start_location = current_location();
+    auto content_start = input;
+    if (is_whitespace(cp)) {
+      advance();
+    } else if (cp == '=') {
+      read_equal(start_location, content_start);
+    } else if (cp == '/') {
+      read_slash(start_location, content_start);
+    } else if (is_ident_start(cp)) {
+      read_identifier(start_location, content_start);
+    } else {
+      String msg = "Unexpected character: '";
+      msg.append(cp);
+      msg.append('\'');
+      throw_lexer_error(std::move(msg));
     }
   }
 
-  void read_single_line_comment() {
-    while (!input.at_end() && read() != '\n') {
+  void read_equal(Location start_location, CharIterator content_start) {
+    advance();
+    if (input.peek() == '=') {
+      advance();
+      emit_token(TokenType::EQUAL, start_location, content_start);
+    } else {
+      emit_token(TokenType::ASSIGN, start_location, content_start);
+    }
+  }
+
+  void read_slash(Location start_location, CharIterator content_start) {
+    advance();
+    if (input.peek() == '/') {
+      advance();
+      skip_single_line_comment();
+    } else if (input.peek() == '*') {
+      advance();
+      skip_multi_line_comment();
+    } else {
+      throw_lexer_error("not implemented");
+    }
+  }
+
+  void skip_single_line_comment() {
+    advance();
+    advance();
+    while (!input.at_end() && advance() != '\n') {
       // skip
     }
   }
 
-  void read_multi_line_comment() {
+  void skip_multi_line_comment() {
+    advance();
+    advance();
     while (!input.at_end()) {
-      uint32_t cp = read();
+      uint32_t cp = advance();
       if (cp == '*' && input.peek() == '/') {
-        read();
+        advance();
         break;
       }
     }
   }
 
-  uint32_t read() noexcept {
+  void read_identifier(Location start_location, CharIterator content_start) {
+    while (!input.at_end() && is_ident_continue(input.peek())) {
+      advance();
+    }
+    emit_token(TokenType::IDENTIFIER, start_location, content_start);
+  }
+
+  uint32_t advance() noexcept {
     uint32_t cp = input.next();
     if (cp == '\n') {
       ++line;
@@ -112,11 +124,19 @@ struct LexerState {
 
   Location current_location() const noexcept { return Location{ctx.filename, line, column}; }
 
-  void emit_token(TokenType type, Location loc, Text contents) {
-    output.push_back(Token{type, loc, contents});
+  void emit_token(TokenType type, Location loc, CharIterator content_start) {
+    emit_token(type, loc, content_start, input);
   }
 
-  void throw_lexer_error(String message) { throw LexerError{current_location(), message}; }
+  void
+  emit_token(TokenType type, Location loc, CharIterator content_start, CharIterator content_end) {
+    output.push_back(Token{type, loc, TextUtils::substr(file_contents, content_start, content_end)}
+    );
+  }
+
+  void throw_lexer_error(String message) {
+    throw LexerError{current_location(), std::move(message)};
+  }
 };
 
 } // namespace
