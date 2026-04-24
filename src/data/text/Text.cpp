@@ -19,9 +19,7 @@ CharIterator Text::begin() const noexcept { return CharIterator(data_slice); }
 
 CharIterator Text::end() const noexcept { return CharIterator(data_slice.end()); }
 
-bool Text::operator==(const Text &other) const noexcept {
-  return CharIterator::compare(data_slice, other.data_slice) == 0;
-}
+bool Text::operator==(const Text &other) const noexcept { return data_slice == other.data_slice; }
 
 bool Text::operator!=(const Text &other) const noexcept { return !(*this == other); }
 

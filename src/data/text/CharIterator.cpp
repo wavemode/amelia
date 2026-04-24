@@ -5,8 +5,8 @@
 
 namespace amelia {
 
-CharIterator::CharIterator(SliceIterator<const char> str) noexcept : slice(str) {}
-CharIterator::CharIterator(Text text) noexcept : slice(text.data()) {}
+CharIterator::CharIterator(SliceIterator<const char> str) noexcept : slice_iter(str) {}
+CharIterator::CharIterator(Text text) noexcept : slice_iter(text.data()) {}
 
 CharIterator &CharIterator::operator++() {
   next();
@@ -21,13 +21,13 @@ CharIterator CharIterator::operator++(int) {
 
 CharIterator CharIterator::begin() const noexcept { return *this; }
 
-CharIterator CharIterator::end() const noexcept { return CharIterator(slice.end()); }
+CharIterator CharIterator::end() const noexcept { return CharIterator(slice_iter.end()); }
 
 uint32_t CharIterator::operator*() const { return peek(); }
 
 uint32_t CharIterator::peek() const {
   try {
-    return utf8::peek_next(slice, slice.end());
+    return utf8::peek_next(slice_iter, slice_iter.end());
   } catch (const utf8::invalid_utf8 &) {
     throw amelia::InvalidUTF8Error();
   } catch (const utf8::not_enough_room &) {
@@ -37,7 +37,7 @@ uint32_t CharIterator::peek() const {
 
 uint32_t CharIterator::next() {
   try {
-    return utf8::next(slice, slice.end());
+    return utf8::next(slice_iter, slice_iter.end());
   } catch (const utf8::invalid_utf8 &) {
     throw amelia::InvalidUTF8Error();
   } catch (const utf8::not_enough_room &) {
@@ -45,7 +45,7 @@ uint32_t CharIterator::next() {
   }
 }
 
-Slice<const char> CharIterator::data() const noexcept { return Slice(slice); }
+Slice<const char> CharIterator::data() const noexcept { return Slice(slice_iter); }
 
 CharIterator CharIterator::plus(size_t n) const {
   CharIterator iter = *this;
@@ -57,19 +57,19 @@ CharIterator CharIterator::plus(size_t n) const {
 
 CharIterator CharIterator::plus_bytes(size_t n) const {
   CharIterator iter = *this;
-  iter.slice = iter.slice + n;
+  iter.slice_iter = iter.slice_iter + n;
   return iter;
 }
 
 bool CharIterator::operator==(const CharIterator &other) const noexcept {
-  return slice == other.slice;
+  return slice_iter == other.slice_iter;
 }
 
 bool CharIterator::operator!=(const CharIterator &other) const noexcept {
   return !(*this == other);
 }
 
-bool CharIterator::at_end() const noexcept { return slice.size() == 0; }
+bool CharIterator::at_end() const noexcept { return slice_iter.size() == 0; }
 
 void CharIterator::validate(Slice<const char> str) {
   auto begin = str.begin();
@@ -97,11 +97,9 @@ signed char CharIterator::compare(Slice<const char> a, Slice<const char> b) {
   }
 
   auto self_iter = CharIterator(a);
-  auto self_end = CharIterator(a.end());
   auto other_iter = CharIterator(b);
-  auto other_end = CharIterator(b.end());
 
-  while (self_iter != self_end && other_iter != other_end) {
+  while (!self_iter.at_end() && !other_iter.at_end()) {
     uint32_t self_cp = self_iter.next();
     uint32_t other_cp = other_iter.next();
     if (self_cp < other_cp) {
@@ -111,10 +109,10 @@ signed char CharIterator::compare(Slice<const char> a, Slice<const char> b) {
     }
   }
 
-  if (self_iter == self_end && other_iter == other_end) {
+  if (self_iter.at_end() && other_iter.at_end()) {
     return 0;
   }
-  return self_iter == self_end ? -1 : 1;
+  return self_iter.at_end() ? -1 : 1;
 }
 
 } // namespace amelia

@@ -8,6 +8,16 @@
 #include "data/text/TextUtils.h"
 
 namespace amelia {
+bool NumberLiteral::operator==(const NumberLiteral &other) const noexcept {
+  return has_decimal_point == other.has_decimal_point && base_prefix == other.base_prefix &&
+         integer_digits == other.integer_digits && fractional_digits == other.fractional_digits &&
+         exponent_prefix == other.exponent_prefix && exponent_sign == other.exponent_sign &&
+         exponent_digits == other.exponent_digits;
+}
+
+bool NumberLiteral::operator!=(const NumberLiteral &other) const noexcept {
+  return !(*this == other);
+}
 
 NumberLiteral NumberLiteral::read(Text text) {
   NumberLiteral result{.has_decimal_point = false};
@@ -36,6 +46,7 @@ NumberLiteral NumberLiteral::read(Text text) {
         it.next();
       } else if (TextUtils::is_digit(ch)) {
         base = 8;
+        assumed_octal = true;
       }
 
       if (base == 10) {

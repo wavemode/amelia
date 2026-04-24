@@ -131,7 +131,7 @@ public:
   static signed char compare(Slice<const char> a, Slice<const char> b);
 
 private:
-  SliceIterator<const char> slice;
+  SliceIterator<const char> slice_iter;
 };
 
 } // namespace amelia

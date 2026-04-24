@@ -13,6 +13,9 @@ struct NumberLiteral {
   Text exponent_sign;
   Text exponent_digits;
 
+  bool operator==(const NumberLiteral &other) const noexcept;
+  bool operator!=(const NumberLiteral &other) const noexcept;
+
   static NumberLiteral read(Text text);
 };
 
