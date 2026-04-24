@@ -47,6 +47,8 @@ uint32_t CharIterator::next() {
 
 Slice<const char> CharIterator::data() const noexcept { return Slice(slice_iter); }
 
+Text CharIterator::text() const noexcept { return Text(data()); }
+
 CharIterator CharIterator::plus(size_t n) const {
   CharIterator iter = *this;
   for (size_t i = 0; i < n; ++i) {

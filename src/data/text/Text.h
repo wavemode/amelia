@@ -65,14 +65,12 @@ public:
   CharIterator end() const noexcept;
 
   /**
-   * @brief Compares this Text with another Text for equality. Two Texts are equal if they
-   * contain the same sequence of Unicode code points.
+   * @brief Compares this Text with another Text for equality.
    */
   bool operator==(const Text &other) const noexcept;
 
   /**
-   * @brief Compares this Text with another Text for inequality. Two Texts are not equal if
-   * they do not contain the same sequence of Unicode code points.
+   * @brief Compares this Text with another Text for inequality.
    */
   bool operator!=(const Text &other) const noexcept;
 

@@ -39,8 +39,8 @@ TEST_CASE("can iterate over elements") {
   ++iter;
   CHECK(iter == end);
   CHECK(iter.size() == 0);
-  CHECK_THROWS_AS(*iter, RuntimeError);
-  CHECK_THROWS_AS(++iter, RuntimeError);
+  CHECK_THROWS_WITH(*iter, "Dereferencing end of slice");
+  CHECK_THROWS_WITH(++iter, "Slice iterator offset out of range");
 }
 
 TEST_CASE("can construct from array") {
@@ -69,7 +69,7 @@ TEST_CASE("can index") {
   CHECK(slice[3] == 'l');
   CHECK(slice[4] == 'o');
   CHECK(slice[5] == '\0');
-  CHECK_THROWS_AS(slice[6], RuntimeError);
+  CHECK_THROWS_WITH(slice[6], "Slice index out of range");
 }
 
 TEST_CASE("equality and inequality") {

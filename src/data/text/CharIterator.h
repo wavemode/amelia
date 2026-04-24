@@ -78,6 +78,11 @@ public:
   Slice<const char> data() const noexcept;
 
   /**
+   * @return A Text object representing the remaining span of the string.
+   */
+  Text text() const noexcept;
+
+  /**
    * @return A new iterator advanced by n code points.
    * @throws InvalidUTF8Error if the iterator would encounter invalid UTF-8 data before advancing n
    * code points.

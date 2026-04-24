@@ -55,8 +55,8 @@ TEST_CASE("can iterate over a String - ASCII") {
   ++iter;
   CHECK(iter == end);
   CHECK(iter.at_end());
-  CHECK_THROWS_AS(*iter, RuntimeError);
-  CHECK_THROWS_AS(++iter, RuntimeError);
+  CHECK_THROWS_WITH(*iter, "Attempted to peek past the end of the string");
+  CHECK_THROWS_WITH(++iter, "Attempted to advance past the end of the string");
 }
 
 TEST_CASE("can iterate over a String - Unicode") {
@@ -92,8 +92,8 @@ TEST_CASE("can iterate over a String - Unicode") {
   ++iter;
   CHECK(iter == end);
   CHECK(iter.at_end());
-  CHECK_THROWS_AS(*iter, RuntimeError);
-  CHECK_THROWS_AS(++iter, RuntimeError);
+  CHECK_THROWS_WITH(*iter, "Attempted to peek past the end of the string");
+  CHECK_THROWS_WITH(++iter, "Attempted to advance past the end of the string");
 }
 
 TEST_CASE("empty String") {
