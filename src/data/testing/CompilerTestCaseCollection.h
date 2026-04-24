@@ -1,10 +1,8 @@
 #pragma once
 
 #include "data/core/List.h"
-
-#include "data/core/List.h"
-#include "data/core/String.h"
 #include "data/testing/CompilerTestCase.h"
+#include "data/text/String.h"
 
 namespace amelia {
 

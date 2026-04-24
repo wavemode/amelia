@@ -1,10 +1,11 @@
 #pragma once
 
-#include "data/core/List.h"
 #include <cstddef>
 
-#include "data/core/List.h"
 #include "interface/source/ISourceFileManager.h"
+
+#include "data/core/List.h"
+#include "data/text/String.h"
 
 namespace amelia {
 

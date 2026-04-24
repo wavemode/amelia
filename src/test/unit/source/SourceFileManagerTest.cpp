@@ -1,7 +1,6 @@
+#include "Prelude.h"
 #include <doctest.h>
 
-#include "data/core/String.h"
-#include "data/core/Text.h"
 #include "unit/source/SourceFileManager.h"
 
 TEST_SUITE_BEGIN("SourceFileManager");

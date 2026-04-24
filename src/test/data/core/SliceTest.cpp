@@ -1,8 +1,7 @@
+#include "Prelude.h"
+
 #include <cstring>
 #include <doctest.h>
-
-#include "data/core/Slice.h"
-#include "data/core/String.h"
 
 TEST_SUITE_BEGIN("Slice");
 
@@ -40,8 +39,8 @@ TEST_CASE("can iterate over elements") {
   ++iter;
   CHECK(iter == end);
   CHECK(iter.size() == 0);
-  CHECK_THROWS_AS(*iter, std::out_of_range);
-  CHECK_THROWS_AS(++iter, std::out_of_range);
+  CHECK_THROWS_AS(*iter, RuntimeError);
+  CHECK_THROWS_AS(++iter, RuntimeError);
 }
 
 TEST_CASE("can construct from array") {
@@ -70,7 +69,7 @@ TEST_CASE("can index") {
   CHECK(slice[3] == 'l');
   CHECK(slice[4] == 'o');
   CHECK(slice[5] == '\0');
-  CHECK_THROWS_AS(slice[6], std::out_of_range);
+  CHECK_THROWS_AS(slice[6], RuntimeError);
 }
 
 TEST_CASE("equality and inequality") {

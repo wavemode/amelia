@@ -1,6 +1,5 @@
 #include "SourceFileManager.h"
-
-#include "data/core/String.h"
+#include "Prelude.h"
 
 namespace amelia {
 

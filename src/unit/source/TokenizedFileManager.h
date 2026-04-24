@@ -3,6 +3,7 @@
 #include <cstddef>
 
 #include "data/core/List.h"
+#include "data/source/Token.h"
 #include "interface/source/ITokenizedFileManager.h"
 
 namespace amelia {

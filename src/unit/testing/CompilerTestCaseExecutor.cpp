@@ -1,7 +1,8 @@
 #include "CompilerTestCaseExecutor.h"
+#include "Prelude.h"
 
-#include "data/core/TextUtils.h"
 #include "data/testing/CompilerTestCase.h"
+#include "data/text/TextUtils.h"
 
 namespace amelia {
 

@@ -1,12 +1,13 @@
 #include "Lexer.h"
+#include "Prelude.h"
 
 #include <cstdint>
 
-#include "data/core/TextUtils.h"
 #include "data/lexer/LexerContext.h"
 #include "data/lexer/LexerError.h"
 #include "data/source/Location.h"
 #include "data/source/Token.h"
+#include "data/text/TextUtils.h"
 
 namespace amelia {
 
@@ -23,6 +24,27 @@ bool is_ident_start(uint32_t cp) noexcept {
 bool is_ident_continue(uint32_t cp) noexcept {
   return is_ident_start(cp) || (cp >= '0' && cp <= '9');
 }
+
+bool is_number_continue(uint32_t cp) noexcept {
+  return (
+      // digit
+      (cp >= '0' && cp <= '9')
+      // decimal separator
+      || cp == '.'
+      // digit separator
+      || cp == '_'
+             // base prefixes
+             | cp == 'x' ||
+      cp == 'X' || cp == 'b' || cp == 'B' || cp == 'o' ||
+      cp == 'O'
+      // hex digits
+      || (cp >= 'a' && cp <= 'f') || (cp >= 'A' && cp <= 'F')
+  );
+}
+
+bool is_exponent_start(uint32_t cp) noexcept { return cp == 'e' || cp == 'E'; }
+
+bool is_sign(uint32_t cp) noexcept { return cp == '+' || cp == '-'; }
 
 struct LexerState {
   LexerContext ctx;
@@ -51,6 +73,8 @@ struct LexerState {
       read_equal(start_location, content_start);
     } else if (cp == '/') {
       read_slash(start_location, content_start);
+    } else if (TextUtils::is_digit(cp)) {
+      read_number(start_location, content_start);
     } else if (is_ident_start(cp)) {
       read_identifier(start_location, content_start);
     } else {
@@ -60,6 +84,8 @@ struct LexerState {
       throw_lexer_error(std::move(msg));
     }
   }
+
+  void read_number(Location start_location, CharIterator content_start) {}
 
   void read_equal(Location start_location, CharIterator content_start) {
     advance();

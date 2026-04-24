@@ -1,11 +1,11 @@
 #pragma once
 
 #include <cstddef>
-#include <stdexcept>
 
 namespace amelia {
 
 template <typename T> class Slice;
+class RuntimeError;
 
 /**
  * @class SliceIterator
@@ -25,7 +25,7 @@ public:
 
   T &operator[](size_t index) const {
     if (index >= length) {
-      throw std::out_of_range("SliceIterator index out of range");
+      throw RuntimeError("SliceIterator index out of range");
     }
     return data_ptr[index];
   }
@@ -38,7 +38,7 @@ public:
 
   T &operator*() const {
     if (length == 0) {
-      throw std::out_of_range("Dereferencing end of slice");
+      throw RuntimeError("Dereferencing end of slice");
     }
 
     return *data_ptr;
@@ -62,7 +62,7 @@ public:
 
   SliceIterator<T> operator+(size_t offset) const {
     if (offset > length) {
-      throw std::out_of_range("Slice iterator offset out of range");
+      throw RuntimeError("Slice iterator offset out of range");
     }
     return Slice(data_ptr + offset, length - offset);
   }

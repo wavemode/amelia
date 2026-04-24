@@ -1,15 +1,15 @@
+#include "Prelude.h"
 #include <doctest.h>
 
-#include "effect/core/FileLoader.h"
-#include "effect/core/FilesystemWalker.h"
-#include "unit/testing/CompilerTestCaseCollector.h"
-
-#include "effect/core/ConsolePrinter.h"
-
-#include "data/core/ListUtils.h"
-#include "data/core/TextUtils.h"
 #include "data/testing/CompilerTestCase.h"
 #include "data/testing/CompilerTestCaseCollection.h"
+#include "effect/fs/FileLoader.h"
+#include "effect/fs/FilesystemWalker.h"
+#include "effect/sys/ConsolePrinter.h"
+#include "unit/testing/CompilerTestCaseCollector.h"
+
+#include "data/core/ListUtils.h"
+#include "data/text/TextUtils.h"
 
 TEST_SUITE_BEGIN("CompilerTestCaseCollector");
 

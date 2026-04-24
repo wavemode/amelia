@@ -1,10 +1,11 @@
+#include "Prelude.h"
 #include <doctest.h>
 
-#include "effect/core/ConsolePrinter.h"
-#include "effect/core/EnvironmentReader.h"
-#include "effect/core/FileLoader.h"
-#include "effect/core/FileWriter.h"
-#include "effect/core/FilesystemWalker.h"
+#include "effect/fs/FileLoader.h"
+#include "effect/fs/FileWriter.h"
+#include "effect/fs/FilesystemWalker.h"
+#include "effect/sys/ConsolePrinter.h"
+#include "effect/sys/EnvironmentReader.h"
 #include "unit/testing/CompilerTestCaseCollector.h"
 #include "unit/testing/CompilerTestCaseExecutor.h"
 #include "unit/testing/LexerTestCaseRunner.h"

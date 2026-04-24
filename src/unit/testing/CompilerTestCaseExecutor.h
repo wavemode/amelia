@@ -4,9 +4,9 @@
 
 #include "data/testing/CompilerTestCaseCollection.h"
 
-#include "interface/core/IEnvironmentReader.h"
-#include "interface/core/IFileWriter.h"
-#include "interface/core/IPrinter.h"
+#include "interface/fs/IFileWriter.h"
+#include "interface/sys/IEnvironmentReader.h"
+#include "interface/sys/IPrinter.h"
 #include "interface/testing/ITestCaseRunner.h"
 
 namespace amelia {

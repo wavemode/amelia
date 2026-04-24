@@ -1,10 +1,10 @@
 #include "LexerTestCaseRunner.h"
-#include "data/core/List.h"
-#include "data/core/Text.h"
+#include "Prelude.h"
+
 #include "data/lexer/LexerContext.h"
 #include "data/source/Token.h"
 #include "data/testing/CompilerTestCase.h"
-#include "interface/core/IString.h"
+
 #include "unit/lexer/Lexer.h"
 
 namespace amelia {

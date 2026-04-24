@@ -1,0 +1,6 @@
+/* EXPECTED_OUTPUT:
+IDENTIFIER("x")
+END_OF_FILE("")
+*/
+
+x

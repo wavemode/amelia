@@ -1,15 +1,16 @@
 #include <cstddef>
 
 #include "CompilerTestCaseCollector.h"
+#include "Prelude.h"
 
-#include "interface/core/IFileLoader.h"
-#include "interface/core/IFilesystemWalker.h"
+#include "interface/fs/IFileLoader.h"
+#include "interface/fs/IFilesystemWalker.h"
 
 #include "data/core/ListUtils.h"
-#include "data/core/TextUtils.h"
 #include "data/testing/CompilerTestCase.h"
 #include "data/testing/CompilerTestCaseCollection.h"
 #include "data/testing/CompilerTestCaseError.h"
+#include "data/text/TextUtils.h"
 
 namespace amelia {
 
@@ -41,7 +42,7 @@ void CompilerTestCaseCollector::collect_test_cases(
     CompilerTestCaseCollection &output, const String &root_directory
 ) {
   size_t num_files_before = output.paths.size();
-  filesystem_walker->walk(root_directory, output.paths);
+  filesystem_walker->walk(output.paths, root_directory);
   for (size_t i = num_files_before; i < output.paths.size(); ++i) {
     const String &path = output.paths[i];
     if (!TextUtils::ends_with(path, ".am")) {

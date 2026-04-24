@@ -1,0 +1,31 @@
+#include <filesystem>
+#include <iostream>
+
+#include "FilesystemWalker.h"
+#include "Prelude.h"
+
+namespace amelia {
+
+void FilesystemWalker::walk(
+    IList<String> &output, const String &root, bool regular_files_only, bool ignore_errors
+) {
+  std::error_code ec;
+  for (std::filesystem::recursive_directory_iterator it(root.c_str(), ec), end; it != end;
+       it.increment(ec)) {
+    if (ec) {
+      if (!ignore_errors) {
+        String err("Error iterating directory: ");
+        err.append(Text::from(ec.message()));
+        throw RuntimeError(std::move(err));
+      }
+      ec.clear();
+      continue;
+    }
+    if (regular_files_only && !it->is_regular_file()) {
+      continue;
+    }
+    output.push_back(String::from(it->path().string()));
+  }
+}
+
+} // namespace amelia

@@ -2,8 +2,7 @@
 
 #include <cstddef>
 
-#include "data/core/Slice.h"
-#include "data/core/Text.h"
+#include "data/text/Text.h"
 
 namespace amelia {
 

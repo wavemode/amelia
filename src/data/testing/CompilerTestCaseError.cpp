@@ -1,11 +1,12 @@
 #include "CompilerTestCaseError.h"
-#include "data/core/String.h"
+#include "Prelude.h"
 
 namespace amelia {
 
 CompilerTestCaseError::CompilerTestCaseError() noexcept {}
 
-CompilerTestCaseError::CompilerTestCaseError(String message) noexcept : message(message) {}
+CompilerTestCaseError::CompilerTestCaseError(String message) noexcept
+    : message(std::move(message)) {}
 
 const char *CompilerTestCaseError::what() const noexcept { return message.c_str(); }
 

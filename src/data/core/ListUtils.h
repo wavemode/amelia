@@ -3,10 +3,10 @@
 #include <algorithm>
 #include <cstddef>
 
-#include "List.h"
-#include "Slice.h"
-
 namespace amelia {
+
+template <typename T> class IList;
+template <typename T> class Slice;
 
 struct ListUtils {
   template <typename T> static void sort(IList<T> &list) { sort(Slice<T>(list)); }

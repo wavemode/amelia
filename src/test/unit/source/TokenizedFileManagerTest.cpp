@@ -1,10 +1,8 @@
+#include "Prelude.h"
 #include <doctest.h>
 
 #include "data/source/Token.h"
 #include "unit/source/TokenizedFileManager.h"
-
-#include "data/core/String.h"
-#include "data/core/Text.h"
 
 TEST_SUITE_BEGIN("TokenizedFileManager");
 

@@ -3,11 +3,10 @@
 #include <cstddef>
 #include <stdexcept>
 
-#include "SliceIterator.h"
-
 namespace amelia {
 
-class ListUtils;
+class RuntimeError;
+template <typename T> class SliceIterator;
 
 /**
  * @class Slice
@@ -32,7 +31,7 @@ public:
 
   T &operator[](size_t index) const {
     if (index >= length) {
-      throw std::out_of_range("Slice index out of range");
+      throw RuntimeError("Slice index out of range");
     }
     return data_ptr[index];
   }
@@ -53,8 +52,6 @@ public:
   }
 
   bool operator!=(const Slice<T> &other) const noexcept { return !(*this == other); }
-
-  friend class ListUtils;
 
 private:
   T *data_ptr;

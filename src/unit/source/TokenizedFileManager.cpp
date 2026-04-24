@@ -1,6 +1,6 @@
 #include "TokenizedFileManager.h"
+#include "Prelude.h"
 
-#include "data/core/List.h"
 #include "data/source/Token.h"
 
 namespace amelia {

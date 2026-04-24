@@ -1,19 +1,16 @@
 #pragma once
 
-#include <algorithm>
 #include <cstddef>
-#include <functional>
 #include <initializer_list>
-#include <stdexcept>
 #include <vector>
-
-#include "data/core/Slice.h"
 
 #include "interface/core/IList.h"
 
 namespace amelia {
 
-class ListUtils;
+class RuntimeError;
+template <typename T> class Slice;
+template <typename T> class SliceIterator;
 
 /**
  * @class List
@@ -22,7 +19,7 @@ template <typename T> class List : public IList<T> {
 public:
   List() noexcept = default;
 
-  explicit List(Slice<T> slice) noexcept : vec(slice.ptr(), slice.end.ptr()) {}
+  explicit List(Slice<T> slice) noexcept : vec(slice.ptr(), slice.end().ptr()) {}
 
   template <size_t N> explicit List(T (&array)[N]) noexcept : List(Slice(array, N)) {}
 
@@ -44,7 +41,7 @@ public:
 
   T &operator[](size_t index) override {
     if (index >= size()) {
-      throw std::out_of_range("List index out of range");
+      RuntimeError("List index out of range");
     }
     return vec[index];
   }
@@ -95,8 +92,6 @@ public:
 
   operator Slice<T>() noexcept override { return Slice(vec.data(), vec.size()); }
   operator Slice<const T>() const noexcept override { return Slice(vec.data(), vec.size()); }
-
-  friend class ListUtils;
 
 private:
   std::vector<T> vec;
