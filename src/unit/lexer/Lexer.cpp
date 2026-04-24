@@ -128,8 +128,9 @@ struct LexerState {
     emit_token(type, loc, content_start, input);
   }
 
-  void
-  emit_token(TokenType type, Location loc, CharIterator content_start, CharIterator content_end) {
+  void emit_token(
+      TokenType type, Location loc, CharIterator content_start, CharIterator content_end
+  ) {
     output.push_back(Token{type, loc, TextUtils::substr(file_contents, content_start, content_end)}
     );
   }

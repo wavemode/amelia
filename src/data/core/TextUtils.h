@@ -65,8 +65,9 @@ struct TextUtils {
   static void find_all_char_bytes(List<int64_t> &output, Text input, uint32_t code_point);
 
   static void replace(IString &text, Text search, Text replacement, int64_t count = 1);
-  static void
-  replace_into(IString &output, Text input, Text search, Text replacement, int64_t count = 1);
+  static void replace_into(
+      IString &output, Text input, Text search, Text replacement, int64_t count = 1
+  );
 
   static void replace_all(IString &text, Text search, Text replacement);
   static void replace_all_into(IString &output, Text input, Text search, Text replacement);
