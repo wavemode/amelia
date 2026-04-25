@@ -549,6 +549,27 @@ TEST_CASE("octal integer") {
         }
     );
   }
+
+  SUBCASE("failure if assumed octal integer ends with underscore") {
+    CHECK_THROWS_WITH(read_text("0755_"), "Underscore must separate successive digits");
+  }
+
+  SUBCASE("failure if octal integer has exponent") {
+    CHECK_THROWS_WITH(read_text("0o755e2"), "Invalid digit 'e' for base 8");
+  }
+
+  SUBCASE("assumed octal integer with exponent will instead be parsed as a decimal float") {
+    CHECK(
+        read_text("0755e2") ==
+        NumberLiteral{
+            .has_decimal_point = false,
+            .base_prefix = "",
+            .integer_digits = "0755",
+            .exponent_prefix = "e",
+            .exponent_digits = "2",
+        }
+    );
+  }
 }
 
 TEST_CASE("decimal floating point") {

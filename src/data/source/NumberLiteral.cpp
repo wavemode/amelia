@@ -77,13 +77,16 @@ NumberLiteral NumberLiteral::read(CharIterator &it) {
     } else if (TextUtils::is_digit(ch)) {
       digit_value = ch - '0';
     } else if (TextUtils::is_alpha(ch)) {
-      if ((ch == 'e' || ch == 'E') && (base == 10 || base == 8)) {
-        break;
-      } else if ((ch == 'p' || ch == 'P') && base == 16) {
+      if ((ch == 'e' || ch == 'E') && (base == 10 || assumed_octal)) {
         break;
       } else if (ch == 'p' || ch == 'P') {
-        throw NumberReadError("Only hexadecimal literals may use 'p' or 'P' as the exponent prefix"
-        );
+        if (base == 16) {
+          break;
+        } else {
+          throw NumberReadError(
+              "Only hexadecimal literals may use 'p' or 'P' as the exponent prefix"
+          );
+        }
       } else if (ch >= 'a' && ch <= 'f') {
         digit_value = 10 + (ch - 'a');
       } else if (ch >= 'A' && ch <= 'F') {
