@@ -2,6 +2,7 @@
 #include "Prelude.h"
 
 #include <cstring>
+#include <string_view>
 
 namespace amelia {
 
@@ -43,3 +44,11 @@ Text Text::from(const std::string &str) { return Text(Slice(str.c_str(), str.siz
 Text Text::from(const char *c_str) { return Text(Slice(c_str, std::strlen(c_str))); }
 
 } // namespace amelia
+
+namespace std {
+
+size_t hash<amelia::Text>::operator()(const amelia::Text &obj) const {
+  return std::hash<std::string_view>{}(std::string_view(obj.data().ptr(), obj.size()));
+}
+
+} // namespace std

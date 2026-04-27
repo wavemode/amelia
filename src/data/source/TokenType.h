@@ -7,6 +7,8 @@ namespace amelia {
 class IString;
 
 enum class TokenType {
+  KEYWORD,
+
   IDENTIFIER,
   NUMBER,
 

@@ -1,4 +1,5 @@
 #include <cstdint>
+#include <unordered_set>
 
 #include "Lexer.h"
 #include "Prelude.h"
@@ -14,6 +15,16 @@
 namespace amelia {
 
 namespace {
+
+const std::unordered_set<Text> keywords = {
+    "fun",    "if",       "else",     "try",    "catch",   "static",    "this",     "module",
+    "void",   "throw",    "import",   "as",     "switch",  "case",      "class",    "union",
+    "record", "type",     "concept",  "bool",   "auto",    "let",       "const",    "impl",
+    "any",    "goto",     "async",    "await",  "true",    "false",     "null",     "default",
+    "open",   "override", "local",    "public", "private", "protected", "enum",     "copy",
+    "move",   "operator", "extern",   "inline", "delete",  "new",       "implicit", "with",
+    "when",   "return",   "continue", "break",  "while",   "for",       "in",
+};
 
 bool is_whitespace(uint32_t cp) noexcept {
   return cp == ' ' || cp == '\t' || cp == '\n' || cp == '\r';
@@ -125,7 +136,12 @@ struct LexerState {
     while (!input.at_end() && is_ident_continue(input.peek())) {
       advance();
     }
-    emit_token(TokenType::IDENTIFIER, start_location);
+    Text ident = TextUtils::substr(file_contents, start_location.position, input);
+    if (keywords.find(ident) == keywords.end()) {
+      emit_token(TokenType::IDENTIFIER, start_location);
+    } else {
+      emit_token(TokenType::KEYWORD, start_location);
+    }
   }
 
   uint32_t advance() noexcept {

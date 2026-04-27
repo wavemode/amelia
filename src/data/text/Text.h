@@ -119,3 +119,9 @@ private:
 };
 
 } // namespace amelia
+
+namespace std {
+template <> struct hash<amelia::Text> {
+  size_t operator()(const amelia::Text &obj) const;
+};
+} // namespace std

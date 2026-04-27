@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <cstring>
 #include <string>
+#include <string_view>
 #include <utility>
 
 namespace amelia {
@@ -127,3 +128,9 @@ String String::from(const std::string &str) {
 }
 
 } // namespace amelia
+
+namespace std {
+size_t hash<amelia::String>::operator()(const amelia::String &obj) const {
+  return std::hash<std::string_view>{}(std::string_view(obj.data().ptr(), obj.size()));
+}
+} // namespace std

@@ -176,3 +176,9 @@ private:
 };
 
 } // namespace amelia
+
+namespace std {
+template <> struct hash<amelia::String> {
+  size_t operator()(const amelia::String &obj) const;
+};
+} // namespace std
