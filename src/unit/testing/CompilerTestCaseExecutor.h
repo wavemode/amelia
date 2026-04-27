@@ -11,6 +11,8 @@
 
 namespace amelia {
 
+struct CompilerTestExecutionOutcome;
+
 class CompilerTestCaseExecutor {
 public:
   CompilerTestCaseExecutor(
@@ -20,7 +22,7 @@ public:
       IEnvironmentReader *env_reader
   );
 
-  size_t execute_collection(const CompilerTestCaseCollection &collection);
+  CompilerTestExecutionOutcome execute_collection(const CompilerTestCaseCollection &collection);
 
   bool execute_test_case(const CompilerTestCase &test_case);
   bool update_expected_output(const CompilerTestCase &test_case);

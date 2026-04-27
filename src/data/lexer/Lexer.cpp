@@ -1,10 +1,12 @@
+#include <cstdint>
+
 #include "Lexer.h"
 #include "Prelude.h"
 
-#include <cstdint>
-
 #include "data/lexer/LexerContext.h"
 #include "data/lexer/LexerError.h"
+#include "data/lexer/NumberLiteral.h"
+#include "data/lexer/NumberReadError.h"
 #include "data/source/Location.h"
 #include "data/source/Token.h"
 #include "data/text/TextUtils.h"
@@ -25,27 +27,6 @@ bool is_ident_continue(uint32_t cp) noexcept {
   return is_ident_start(cp) || (cp >= '0' && cp <= '9');
 }
 
-bool is_number_continue(uint32_t cp) noexcept {
-  return (
-      // digit
-      (cp >= '0' && cp <= '9')
-      // decimal separator
-      || cp == '.'
-      // digit separator
-      || cp == '_'
-             // base prefixes
-             | cp == 'x' ||
-      cp == 'X' || cp == 'b' || cp == 'B' || cp == 'o' ||
-      cp == 'O'
-      // hex digits
-      || (cp >= 'a' && cp <= 'f') || (cp >= 'A' && cp <= 'F')
-  );
-}
-
-bool is_exponent_start(uint32_t cp) noexcept { return cp == 'e' || cp == 'E'; }
-
-bool is_sign(uint32_t cp) noexcept { return cp == '+' || cp == '-'; }
-
 struct LexerState {
   LexerContext ctx;
   size_t line;
@@ -60,23 +41,22 @@ struct LexerState {
       read_token();
     }
 
-    emit_token(TokenType::END_OF_FILE, current_location(), input);
+    emit_token(TokenType::END_OF_FILE, current_location());
   }
 
   void read_token() {
     uint32_t cp = input.peek();
     auto start_location = current_location();
-    auto content_start = input;
     if (is_whitespace(cp)) {
       advance();
     } else if (cp == '=') {
-      read_equal(start_location, content_start);
+      read_equal(start_location);
     } else if (cp == '/') {
-      read_slash(start_location, content_start);
+      read_slash(start_location);
     } else if (TextUtils::is_digit(cp)) {
-      read_number(start_location, content_start);
+      read_number(start_location);
     } else if (is_ident_start(cp)) {
-      read_identifier(start_location, content_start);
+      read_identifier(start_location);
     } else {
       String msg = "Unexpected character: '";
       msg.append(cp);
@@ -85,56 +65,67 @@ struct LexerState {
     }
   }
 
-  void read_number(Location start_location, CharIterator content_start) {}
+  void read_number(Location start_location) {
+    auto it = input;
+    try {
+      NumberLiteral::read(it);
+    } catch (const NumberReadError &e) {
+      throw_lexer_error(String::from(e.what()));
+    }
+    size_t chars_advanced = it.data().ptr() - input.data().ptr();
+    for (size_t i = 0; i < chars_advanced; ++i) {
+      advance();
+    }
+    emit_token(TokenType::INTEGER, start_location);
+  }
 
-  void read_equal(Location start_location, CharIterator content_start) {
+  void read_equal(Location start_location) {
     advance();
     if (input.peek() == '=') {
       advance();
-      emit_token(TokenType::EQUAL, start_location, content_start);
+      emit_token(TokenType::EQUAL, start_location);
     } else {
-      emit_token(TokenType::ASSIGN, start_location, content_start);
+      emit_token(TokenType::ASSIGN, start_location);
     }
   }
 
-  void read_slash(Location start_location, CharIterator content_start) {
+  void read_slash(Location start_location) {
     advance();
-    if (input.peek() == '/') {
+    uint32_t next_cp = input.peek();
+    if (next_cp == '/') {
       advance();
-      skip_single_line_comment();
-    } else if (input.peek() == '*') {
+      skip_until_end_of_single_line_comment();
+    } else if (next_cp == '*') {
       advance();
-      skip_multi_line_comment();
+      skip_until_end_of_multiline_comment();
     } else {
       throw_lexer_error("not implemented");
     }
   }
 
-  void skip_single_line_comment() {
-    advance();
-    advance();
+  void skip_until_end_of_single_line_comment() {
     while (!input.at_end() && advance() != '\n') {
       // skip
     }
   }
 
-  void skip_multi_line_comment() {
-    advance();
-    advance();
+  void skip_until_end_of_multiline_comment() {
+    uint32_t prev = 0;
+    uint32_t cp = 0;
     while (!input.at_end()) {
-      uint32_t cp = advance();
-      if (cp == '*' && input.peek() == '/') {
-        advance();
+      prev = cp;
+      cp = advance();
+      if (prev == '*' && cp == '/') {
         break;
       }
     }
   }
 
-  void read_identifier(Location start_location, CharIterator content_start) {
+  void read_identifier(Location start_location) {
     while (!input.at_end() && is_ident_continue(input.peek())) {
       advance();
     }
-    emit_token(TokenType::IDENTIFIER, start_location, content_start);
+    emit_token(TokenType::IDENTIFIER, start_location);
   }
 
   uint32_t advance() noexcept {
@@ -148,16 +139,13 @@ struct LexerState {
     return cp;
   }
 
-  Location current_location() const noexcept { return Location{ctx.filename, line, column}; }
+  Location current_location() const noexcept { return Location{ctx.filename, input, line, column}; }
 
-  void emit_token(TokenType type, Location loc, CharIterator content_start) {
-    emit_token(type, loc, content_start, input);
-  }
+  void emit_token(TokenType type, Location loc) { emit_token(type, loc, current_location()); }
 
-  void emit_token(
-      TokenType type, Location loc, CharIterator content_start, CharIterator content_end
-  ) {
-    output.push_back(Token{type, loc, TextUtils::substr(file_contents, content_start, content_end)}
+  void emit_token(TokenType type, Location start, Location end) {
+    output.push_back(
+        Token{type, start, TextUtils::substr(file_contents, start.position, end.position)}
     );
   }
 

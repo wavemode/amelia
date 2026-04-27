@@ -11,7 +11,7 @@ build-test:
 	cmake --build build --target amelia_test --parallel
 
 test: build-test
-	./build/amelia_test $(ARGS)
+	./build/amelia_test $$AMELIA_TEST_ARGS
 
 format:
 	find src -path src/vendor -prune -o -iname '*.h' -print0 -o -iname '*.cpp' -print0 | xargs -0 clang-format -i

@@ -19,7 +19,10 @@ CharIterator Text::begin() const noexcept { return CharIterator(data_slice); }
 
 CharIterator Text::end() const noexcept { return CharIterator(data_slice.end()); }
 
-bool Text::operator==(const Text &other) const noexcept { return data_slice == other.data_slice; }
+bool Text::operator==(const Text &other) const noexcept {
+  return data_slice.size() == other.data_slice.size() &&
+         std::memcmp(data_slice.ptr(), other.data_slice.ptr(), data_slice.size()) == 0;
+}
 
 bool Text::operator!=(const Text &other) const noexcept { return !(*this == other); }
 

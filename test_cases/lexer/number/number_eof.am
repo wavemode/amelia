@@ -1,0 +1,6 @@
+/* EXPECTED_OUTPUT:
+INTEGER("5")
+END_OF_FILE("")
+*/
+
+5

@@ -2,6 +2,7 @@
 #include "Prelude.h"
 
 #include "data/testing/CompilerTestCase.h"
+#include "data/testing/CompilerTestExecutionOutcome.h"
 #include "data/text/TextUtils.h"
 
 namespace amelia {
@@ -9,7 +10,7 @@ namespace amelia {
 namespace {
 
 void update_file_expected_output(
-    Text path, Text existing_contents, Text expected_output, IFileWriter *file_writer
+    IFileWriter *file_writer, Text path, Text existing_contents, Text expected_output
 ) {
   String new_file_contents;
   auto header = TextUtils::find(existing_contents, COMPILER_TEST_CASE_EXPECTED_OUTPUT_HEADER);
@@ -33,6 +34,7 @@ void update_file_expected_output(
 
   file_writer->write_file(String(path), new_file_contents);
 }
+
 } // namespace
 
 CompilerTestCaseExecutor::CompilerTestCaseExecutor(
@@ -44,7 +46,9 @@ CompilerTestCaseExecutor::CompilerTestCaseExecutor(
     : test_case_runner(test_case_runner), file_writer(file_writer), printer(printer),
       env_reader(env_reader) {}
 
-size_t CompilerTestCaseExecutor::execute_collection(const CompilerTestCaseCollection &collection) {
+CompilerTestExecutionOutcome CompilerTestCaseExecutor::execute_collection(
+    const CompilerTestCaseCollection &collection
+) {
   bool update_test_cases = true;
   String env_value;
   env_reader->get_env(env_value, String("AMELIA_UPDATE_TEST_CASES"));
@@ -52,8 +56,17 @@ size_t CompilerTestCaseExecutor::execute_collection(const CompilerTestCaseCollec
     update_test_cases = false;
   }
 
+  String test_case_filter;
+  env_reader->get_env(test_case_filter, String("AMELIA_TEST_CASE_FILTER"));
+  bool has_filter = test_case_filter != "";
+
+  size_t num_executed = 0;
   size_t num_failed = 0;
   for (const CompilerTestCase &test_case : collection.test_cases) {
+    if (has_filter && !TextUtils::contains(test_case.filename, test_case_filter)) {
+      continue;
+    }
+    ++num_executed;
     bool should_error = TextUtils::contains(test_case.filename, "error_");
     String actual_output;
     try {
@@ -80,7 +93,7 @@ size_t CompilerTestCaseExecutor::execute_collection(const CompilerTestCaseCollec
     if (actual_output.text() != test_case.expected_output) {
       if (update_test_cases) {
         update_file_expected_output(
-            test_case.filename, test_case.input, actual_output, file_writer
+            file_writer, test_case.filename, test_case.input, actual_output
         );
         printer->print("Updated expected output for: ");
         printer->println(test_case.filename);
@@ -91,7 +104,10 @@ size_t CompilerTestCaseExecutor::execute_collection(const CompilerTestCaseCollec
       }
     }
   }
-  return num_failed;
+  return {
+      .count_executed = num_executed,
+      .count_failed = num_failed,
+  };
 }
 
 bool CompilerTestCaseExecutor::execute_test_case(const CompilerTestCase &test_case) {
@@ -106,8 +122,9 @@ bool CompilerTestCaseExecutor::update_expected_output(const CompilerTestCase &te
     return false;
   }
 
-  update_file_expected_output(test_case.filename, test_case.input, actual_output, file_writer);
+  update_file_expected_output(file_writer, test_case.filename, test_case.input, actual_output);
 
   return true;
 }
+
 } // namespace amelia

@@ -10,7 +10,9 @@ using namespace amelia;
 
 TEST_CASE("can store and retrieve source file") {
   TokenizedFileManager manager;
-  List<Token> tokens = {Token{TokenType::IDENTIFIER, Location{"dummy_file", 1, 1}, "hello"}};
+  List<Token> tokens = {
+      Token{TokenType::IDENTIFIER, Location{"dummy_file", CharIterator(Text()), 1, 1}, "hello"}
+  };
 
   TokenizedFileId id = manager.store_tokenized_file(tokens);
   const List<Token> &retrieved = manager.get_tokenized_file(id);

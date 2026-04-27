@@ -2,7 +2,7 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <string>
+#include <vector>
 
 #include "data/core/SliceIterator.h"
 
@@ -126,7 +126,7 @@ public:
    * @brief Appends a single Unicode code point value to a std::string as UTF-8.
    * @throws InvalidUTF8Error if the value is not a valid Unicode code point.
    */
-  static void append(uint32_t code_point, std::string &str);
+  static void append(uint32_t code_point, std::vector<char> &str);
 
   /**
    * @brief Compares two UTF-8 encoded slices lexicographically by Unicode code points.

@@ -1,6 +1,8 @@
 #include "Prelude.h"
 #include <doctest.h>
 
+#include "data/testing/CompilerTestExecutionOutcome.h"
+#include "data/text/TextUtils.h"
 #include "effect/fs/FileLoader.h"
 #include "effect/fs/FileWriter.h"
 #include "effect/fs/FilesystemWalker.h"
@@ -29,7 +31,18 @@ TEST_CASE("test suite") {
   CompilerTestCaseCollector collector(&filesystem_walker, &file_loader);
   collector.collect_test_cases(collection, "test_cases/lexer");
 
-  CHECK(executor.execute_collection(collection) == 0);
+  auto outcome = executor.execute_collection(collection);
+  console_printer.print("Executed ");
+  String s;
+  TextUtils::to_string(s, outcome.count_executed);
+  console_printer.print(s);
+  console_printer.print(" lexer test cases with ");
+  s.clear();
+  TextUtils::to_string(s, outcome.count_failed);
+  console_printer.print(s);
+  console_printer.println(" failures.");
+
+  CHECK(outcome.count_failed == 0);
 }
 
 TEST_SUITE_END();

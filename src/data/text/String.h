@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <string>
+#include <vector>
 
 #include "interface/text/IString.h"
 
@@ -26,18 +27,7 @@ public:
   /**
    * @brief Construct a String from a string literal or sequence of bytes. Must be valid UTF-8.
    */
-  template <size_t N> String(const char (&str)[N]) {
-    if (N == 0) {
-      data_str = "";
-      return;
-    }
-
-    if (str[N - 1] == '\0') {
-      *this = String(Slice(str, N - 1));
-    } else {
-      *this = String(Slice(str, N));
-    }
-  }
+  template <size_t N> String(const char (&str)[N]) : String(Text(str)) {}
 
   /**
    * @brief Construct a String from a sequence of bytes. Must be valid UTF-8.
@@ -60,6 +50,12 @@ public:
    * The slice is valid until the next non-const method call on this String instance.
    */
   Slice<const char> data() const noexcept;
+
+  /**
+   * @return A Text object representing the contents of this String. The Text object is valid until
+   * the next non-const method call on this String instance.
+   */
+  Text text() const noexcept override;
 
   /**
    * @return The length of the string in bytes, not including the null
@@ -92,9 +88,9 @@ public:
   void assign(Text text) override;
 
   /**
-   * @return A Text object representing the contents of this String.
+   * @brief Clears the contents of this String, making it empty.
    */
-  Text text() const noexcept override;
+  void clear() noexcept;
 
   /**
    * @return An iterator pointing to the first Unicode code point in the string.
@@ -173,10 +169,10 @@ public:
    * @brief Constructs a String from a std::string. The input string must be valid UTF-8.
    * @throws InvalidUTF8Error if the input string is not valid UTF-8.
    */
-  static String from(std::string str);
+  static String from(const std::string &str);
 
 private:
-  std::string data_str;
+  std::vector<char> data_str;
 };
 
 } // namespace amelia
