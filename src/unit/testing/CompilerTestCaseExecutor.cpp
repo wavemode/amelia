@@ -7,6 +7,7 @@
 namespace amelia {
 
 namespace {
+
 void update_file_expected_output(
     Text path, Text existing_contents, Text expected_output, IFileWriter *file_writer
 ) {
@@ -53,13 +54,37 @@ size_t CompilerTestCaseExecutor::execute_collection(const CompilerTestCaseCollec
 
   size_t num_failed = 0;
   for (const CompilerTestCase &test_case : collection.test_cases) {
-    if (update_test_cases) {
-      if (update_expected_output(test_case)) {
+    bool should_error = TextUtils::contains(test_case.filename, "error_");
+    String actual_output;
+    try {
+      test_case_runner->run_test_case(actual_output, test_case);
+      if (should_error) {
+        printer->print("Expected test case to raise an exception but it raised none: ");
+        printer->println(test_case.filename);
+        ++num_failed;
+      }
+    } catch (const std::exception &e) {
+      if (!should_error) {
+        printer->print("Test case threw an unexpected exception: ");
+        printer->print(test_case.filename);
+        printer->print(" (error message: \"");
+        printer->print(Text::from(e.what()));
+        printer->println("\")");
+        ++num_failed;
+      }
+      actual_output.append("ERROR(\"");
+      actual_output.append(Text::from(e.what()));
+      actual_output.append("\")\n");
+    }
+
+    if (actual_output.text() != test_case.expected_output) {
+      if (update_test_cases) {
+        update_file_expected_output(
+            test_case.filename, test_case.input, actual_output, file_writer
+        );
         printer->print("Updated expected output for: ");
         printer->println(test_case.filename);
-      }
-    } else {
-      if (execute_test_case(test_case)) {
+      } else {
         printer->print("Test case failed: ");
         printer->println(test_case.filename);
         ++num_failed;

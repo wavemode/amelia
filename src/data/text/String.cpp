@@ -58,6 +58,22 @@ String String::operator+(const String &other) const {
   return result;
 }
 
+String &String::operator+=(const String &other) {
+  append(other);
+  return *this;
+}
+
+String String::operator+(Text other) const {
+  String result(*this);
+  result.append(other);
+  return result;
+}
+
+String &String::operator+=(Text other) {
+  append(other);
+  return *this;
+}
+
 bool String::operator==(const String &other) const { return data_str == other.data_str; }
 
 bool String::operator!=(const String &other) const { return !(*this == other); }

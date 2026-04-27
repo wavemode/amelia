@@ -12,7 +12,6 @@ namespace amelia {
  * @brief Exception thrown by the lexer when it encounters an error.
  */
 struct LexerError : public std::exception {
-  const Location loc;
   const String message;
 
   LexerError(Location loc, String message) noexcept;

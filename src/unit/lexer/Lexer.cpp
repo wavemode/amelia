@@ -162,7 +162,7 @@ struct LexerState {
   }
 
   void throw_lexer_error(String message) {
-    throw LexerError{current_location(), std::move(message)};
+    throw LexerError(current_location(), std::move(message));
   }
 };
 

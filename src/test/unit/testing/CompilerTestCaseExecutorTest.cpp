@@ -4,8 +4,8 @@
 #include "effect/fs/FileLoader.h"
 #include "effect/fs/FileWriter.h"
 #include "effect/fs/FilesystemWalker.h"
-#include "effect/sys/ConsolePrinter.h"
 #include "effect/sys/EnvironmentReader.h"
+#include "effect/sys/SilentPrinter.h"
 #include "unit/testing/CompilerTestCaseCollector.h"
 #include "unit/testing/CompilerTestCaseExecutor.h"
 #include "unit/testing/LexerTestCaseRunner.h"
@@ -19,7 +19,7 @@ using namespace amelia;
 TEST_CASE("execute") {
   FileLoader file_loader;
   FileWriter file_writer;
-  ConsolePrinter console_printer;
+  SilentPrinter console_printer;
   FilesystemWalker filesystem_walker;
   LexerTestCaseRunner lexer_test_case_runner;
   EnvironmentReader env_reader;

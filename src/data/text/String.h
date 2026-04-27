@@ -112,6 +112,21 @@ public:
   String operator+(const String &other) const;
 
   /**
+   * @brief Concatenates this String with a Text object and returns the result as a new String.
+   */
+  String operator+(Text other) const;
+
+  /**
+   * @brief Appends another String to this String.
+   */
+  String &operator+=(const String &other);
+
+  /**
+   * @brief Appends a Text object to this String.
+   */
+  String &operator+=(Text other);
+
+  /**
    * @brief Compares this String with another String for equality. Two Strings are equal if they
    * contain the same sequence of Unicode code points.
    */

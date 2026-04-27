@@ -104,7 +104,7 @@ NumberLiteral NumberLiteral::read(CharIterator &it) {
         String err("Invalid digit '");
         err.append(ch);
         err.append("' for base ");
-        TextUtils::int_to_string(err, int64_t(base));
+        TextUtils::to_string(err, int64_t(base));
         throw NumberReadError(err);
       }
       previous_char_was_underscore = false;
@@ -177,7 +177,7 @@ NumberLiteral NumberLiteral::read(CharIterator &it) {
           String err("Invalid digit '");
           err.append(ch);
           err.append("' for base ");
-          TextUtils::int_to_string(err, int64_t(base));
+          TextUtils::to_string(err, int64_t(base));
           throw NumberReadError(err);
         }
         previous_char_was_underscore = false;

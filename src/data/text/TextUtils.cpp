@@ -533,17 +533,17 @@ Text TextUtils::tail_bytes(Text input, size_t index_start) {
   return substr_bytes(input, index_start, input.size());
 }
 
-void TextUtils::int_to_string(IString &output, int64_t value) {
+void TextUtils::to_string(IString &output, int64_t value) {
   std::string s1 = std::to_string(value);
   output.append(Text::from(s1));
 }
 
-void TextUtils::int_to_string(IString &output, size_t value) {
+void TextUtils::to_string(IString &output, size_t value) {
   std::string s1 = std::to_string(value);
   output.append(Text::from(s1));
 }
 
-void TextUtils::double_to_string(IString &output, double value) {
+void TextUtils::to_string(IString &output, double value) {
   std::string s1 = std::to_string(value);
   output.append(Text::from(s1));
 }

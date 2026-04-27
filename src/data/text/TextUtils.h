@@ -102,9 +102,9 @@ struct TextUtils {
   static Text tail(Text input, CharIterator char_start);
   static Text tail_bytes(Text input, size_t index_start);
 
-  static void int_to_string(IString &output, int64_t value);
-  static void int_to_string(IString &output, size_t value);
-  static void double_to_string(IString &output, double value);
+  static void to_string(IString &output, int64_t value);
+  static void to_string(IString &output, size_t value);
+  static void to_string(IString &output, double value);
 
   static std::variant<int64_t, double> parse_number(CharIterator it);
 
