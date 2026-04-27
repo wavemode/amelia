@@ -76,7 +76,7 @@ struct LexerState {
     for (size_t i = 0; i < chars_advanced; ++i) {
       advance();
     }
-    emit_token(TokenType::INTEGER, start_location);
+    emit_token(TokenType::NUMBER, start_location);
   }
 
   void read_equal(Location start_location) {

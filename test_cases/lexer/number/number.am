@@ -1,5 +1,5 @@
 5
 /* EXPECTED_OUTPUT:
-INTEGER("5")
+NUMBER("5")
 END_OF_FILE("")
 */

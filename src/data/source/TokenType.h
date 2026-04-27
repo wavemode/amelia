@@ -8,8 +8,7 @@ class IString;
 
 enum class TokenType {
   IDENTIFIER,
-  INTEGER,
-  FLOAT,
+  NUMBER,
 
   ASSIGN,
   EQUAL,

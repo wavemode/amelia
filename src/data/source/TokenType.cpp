@@ -7,11 +7,8 @@ void amelia::token_type_to_string(TokenType type, IString &out) {
   case TokenType::IDENTIFIER:
     out.append("IDENTIFIER");
     break;
-  case TokenType::INTEGER:
-    out.append("INTEGER");
-    break;
-  case TokenType::FLOAT:
-    out.append("FLOAT");
+  case TokenType::NUMBER:
+    out.append("NUMBER");
     break;
   case TokenType::ASSIGN:
     out.append("ASSIGN");
