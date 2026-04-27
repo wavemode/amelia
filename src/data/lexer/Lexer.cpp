@@ -53,7 +53,7 @@ struct LexerState {
   size_t position;
   Text file_contents;
   CharIterator input;
-  List<Token> &output;
+  IList<Token> &output;
 
   void read_file() {
     while (!input.at_end()) {
@@ -168,8 +168,8 @@ struct LexerState {
 
 } // namespace
 
-void Lexer::tokenize(LexerContext ctx, Text input, List<Token> &output) {
-  LexerState state{ctx, 1, 1, 0, input, CharIterator(input), output};
+void Lexer::tokenize(IList<Token> &output, CharIterator &iter, LexerContext ctx) {
+  LexerState state{ctx, 1, 1, 0, iter.text(), iter, output};
   state.read_file();
 }
 

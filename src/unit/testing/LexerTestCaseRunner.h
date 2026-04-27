@@ -6,7 +6,7 @@ namespace amelia {
 
 class LexerTestCaseRunner : public ITestCaseRunner {
 public:
-  virtual void run_test_case(IString &output, CompilerTestCase input) override;
+  virtual void run_test_case(IString &output, CompilerTestCase test_case) override;
 };
 
 } // namespace amelia

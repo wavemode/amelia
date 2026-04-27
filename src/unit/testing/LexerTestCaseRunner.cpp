@@ -5,14 +5,14 @@
 #include "data/source/Token.h"
 #include "data/testing/CompilerTestCase.h"
 
-#include "unit/lexer/Lexer.h"
+#include "data/lexer/Lexer.h"
 
 namespace amelia {
 
-void LexerTestCaseRunner::run_test_case(IString &output, CompilerTestCase input) {
+void LexerTestCaseRunner::run_test_case(IString &output, CompilerTestCase test_case) {
   List<Token> tokens;
-  Lexer lexer;
-  lexer.tokenize(LexerContext{input.filename}, input.input, tokens);
+  CharIterator iter(test_case.input);
+  Lexer::tokenize(tokens, iter, LexerContext{test_case.filename});
   for (const auto &token : tokens) {
     token.to_string(output);
     output.append("\n");
