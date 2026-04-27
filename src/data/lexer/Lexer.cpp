@@ -1,5 +1,5 @@
 #include <cstdint>
-#include <unordered_set>
+#include <unordered_map>
 
 #include "Lexer.h"
 #include "Prelude.h"
@@ -16,26 +16,74 @@ namespace amelia {
 
 namespace {
 
-const std::unordered_set<Text> keywords = {
-    "fun",    "if",       "else",     "try",    "catch",   "static",    "this",     "module",
-    "void",   "throw",    "import",   "as",     "switch",  "case",      "class",    "union",
-    "record", "type",     "concept",  "bool",   "auto",    "let",       "const",    "impl",
-    "any",    "goto",     "async",    "await",  "true",    "false",     "null",     "default",
-    "open",   "override", "local",    "public", "private", "protected", "enum",     "copy",
-    "move",   "operator", "extern",   "inline", "delete",  "new",       "implicit", "with",
-    "when",   "return",   "continue", "break",  "while",   "for",       "in",
+const std::unordered_map<Text, TokenType> keywords = {
+    {"fun", TokenType::KEYWORD_FUN},
+    {"if", TokenType::KEYWORD_IF},
+    {"else", TokenType::KEYWORD_ELSE},
+    {"try", TokenType::KEYWORD_TRY},
+    {"catch", TokenType::KEYWORD_CATCH},
+    {"static", TokenType::KEYWORD_STATIC},
+    {"this", TokenType::KEYWORD_THIS},
+    {"module", TokenType::KEYWORD_MODULE},
+    {"void", TokenType::KEYWORD_VOID},
+    {"throw", TokenType::KEYWORD_THROW},
+    {"import", TokenType::KEYWORD_IMPORT},
+    {"as", TokenType::KEYWORD_AS},
+    {"switch", TokenType::KEYWORD_SWITCH},
+    {"case", TokenType::KEYWORD_CASE},
+    {"class", TokenType::KEYWORD_CLASS},
+    {"union", TokenType::KEYWORD_UNION},
+    {"record", TokenType::KEYWORD_RECORD},
+    {"type", TokenType::KEYWORD_TYPE},
+    {"concept", TokenType::KEYWORD_CONCEPT},
+    {"bool", TokenType::KEYWORD_BOOL},
+    {"auto", TokenType::KEYWORD_AUTO},
+    {"let", TokenType::KEYWORD_LET},
+    {"const", TokenType::KEYWORD_CONST},
+    {"impl", TokenType::KEYWORD_IMPL},
+    {"any", TokenType::KEYWORD_ANY},
+    {"goto", TokenType::KEYWORD_GOTO},
+    {"async", TokenType::KEYWORD_ASYNC},
+    {"await", TokenType::KEYWORD_AWAIT},
+    {"true", TokenType::KEYWORD_TRUE},
+    {"false", TokenType::KEYWORD_FALSE},
+    {"null", TokenType::KEYWORD_NULL},
+    {"default", TokenType::KEYWORD_DEFAULT},
+    {"open", TokenType::KEYWORD_OPEN},
+    {"override", TokenType::KEYWORD_OVERRIDE},
+    {"local", TokenType::KEYWORD_LOCAL},
+    {"public", TokenType::KEYWORD_PUBLIC},
+    {"private", TokenType::KEYWORD_PRIVATE},
+    {"protected", TokenType::KEYWORD_PROTECTED},
+    {"enum", TokenType::KEYWORD_ENUM},
+    {"copy", TokenType::KEYWORD_COPY},
+    {"move", TokenType::KEYWORD_MOVE},
+    {"operator", TokenType::KEYWORD_OPERATOR},
+    {"extern", TokenType::KEYWORD_EXTERN},
+    {"inline", TokenType::KEYWORD_INLINE},
+    {"delete", TokenType::KEYWORD_DELETE},
+    {"new", TokenType::KEYWORD_NEW},
+    {"implicit", TokenType::KEYWORD_IMPLICIT},
+    {"with", TokenType::KEYWORD_WITH},
+    {"when", TokenType::KEYWORD_WHEN},
+    {"return", TokenType::KEYWORD_RETURN},
+    {"continue", TokenType::KEYWORD_CONTINUE},
+    {"break", TokenType::KEYWORD_BREAK},
+    {"while", TokenType::KEYWORD_WHILE},
+    {"for", TokenType::KEYWORD_FOR},
+    {"in", TokenType::KEYWORD_IN},
 };
 
 bool is_whitespace(uint32_t cp) noexcept {
   return cp == ' ' || cp == '\t' || cp == '\n' || cp == '\r';
 }
 
-bool is_ident_start(uint32_t cp) noexcept {
+bool is_word_start(uint32_t cp) noexcept {
   return (cp >= 'a' && cp <= 'z') || (cp >= 'A' && cp <= 'Z') || cp == '_';
 }
 
-bool is_ident_continue(uint32_t cp) noexcept {
-  return is_ident_start(cp) || (cp >= '0' && cp <= '9');
+bool is_word_continue(uint32_t cp) noexcept {
+  return is_word_start(cp) || (cp >= '0' && cp <= '9');
 }
 
 struct LexerState {
@@ -66,8 +114,8 @@ struct LexerState {
       read_slash(start_location);
     } else if (TextUtils::is_digit(cp)) {
       read_number(start_location);
-    } else if (is_ident_start(cp)) {
-      read_identifier(start_location);
+    } else if (is_word_start(cp)) {
+      read_word(start_location);
     } else {
       String msg = "Unexpected character: '";
       msg.append(cp);
@@ -132,16 +180,19 @@ struct LexerState {
     }
   }
 
-  void read_identifier(Location start_location) {
-    while (!input.at_end() && is_ident_continue(input.peek())) {
+  void read_word(Location start_location) {
+    while (!input.at_end() && is_word_continue(input.peek())) {
       advance();
     }
-    Text ident = TextUtils::substr(file_contents, start_location.position, input);
-    if (keywords.find(ident) == keywords.end()) {
-      emit_token(TokenType::IDENTIFIER, start_location);
+    Text word = TextUtils::substr(file_contents, start_location.position, input);
+    auto keyword_it = keywords.find(word);
+    TokenType tt;
+    if (keyword_it != keywords.end()) {
+      tt = keyword_it->second;
     } else {
-      emit_token(TokenType::KEYWORD, start_location);
+      tt = TokenType::IDENTIFIER;
     }
+    output.push_back(Token{tt, start_location, word});
   }
 
   uint32_t advance() noexcept {

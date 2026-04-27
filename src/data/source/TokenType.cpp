@@ -7,8 +7,170 @@ void amelia::token_type_to_string(TokenType type, IString &out) {
   case TokenType::IDENTIFIER:
     out.append("IDENTIFIER");
     break;
-  case TokenType::KEYWORD:
-    out.append("KEYWORD");
+  case TokenType::KEYWORD_FUN:
+    out.append("FUN");
+    break;
+  case TokenType::KEYWORD_IF:
+    out.append("IF");
+    break;
+  case TokenType::KEYWORD_ELSE:
+    out.append("ELSE");
+    break;
+  case TokenType::KEYWORD_TRY:
+    out.append("TRY");
+    break;
+  case TokenType::KEYWORD_CATCH:
+    out.append("CATCH");
+    break;
+  case TokenType::KEYWORD_STATIC:
+    out.append("STATIC");
+    break;
+  case TokenType::KEYWORD_THIS:
+    out.append("THIS");
+    break;
+  case TokenType::KEYWORD_MODULE:
+    out.append("MODULE");
+    break;
+  case TokenType::KEYWORD_VOID:
+    out.append("VOID");
+    break;
+  case TokenType::KEYWORD_THROW:
+    out.append("THROW");
+    break;
+  case TokenType::KEYWORD_IMPORT:
+    out.append("IMPORT");
+    break;
+  case TokenType::KEYWORD_AS:
+    out.append("AS");
+    break;
+  case TokenType::KEYWORD_SWITCH:
+    out.append("SWITCH");
+    break;
+  case TokenType::KEYWORD_CASE:
+    out.append("CASE");
+    break;
+  case TokenType::KEYWORD_CLASS:
+    out.append("CLASS");
+    break;
+  case TokenType::KEYWORD_UNION:
+    out.append("UNION");
+    break;
+  case TokenType::KEYWORD_RECORD:
+    out.append("RECORD");
+    break;
+  case TokenType::KEYWORD_TYPE:
+    out.append("TYPE");
+    break;
+  case TokenType::KEYWORD_CONCEPT:
+    out.append("CONCEPT");
+    break;
+  case TokenType::KEYWORD_BOOL:
+    out.append("BOOL");
+    break;
+  case TokenType::KEYWORD_AUTO:
+    out.append("AUTO");
+    break;
+  case TokenType::KEYWORD_LET:
+    out.append("LET");
+    break;
+  case TokenType::KEYWORD_CONST:
+    out.append("CONST");
+    break;
+  case TokenType::KEYWORD_IMPL:
+    out.append("IMPL");
+    break;
+  case TokenType::KEYWORD_ANY:
+    out.append("ANY");
+    break;
+  case TokenType::KEYWORD_GOTO:
+    out.append("GOTO");
+    break;
+  case TokenType::KEYWORD_ASYNC:
+    out.append("ASYNC");
+    break;
+  case TokenType::KEYWORD_AWAIT:
+    out.append("AWAIT");
+    break;
+  case TokenType::KEYWORD_TRUE:
+    out.append("TRUE");
+    break;
+  case TokenType::KEYWORD_FALSE:
+    out.append("FALSE");
+    break;
+  case TokenType::KEYWORD_NULL:
+    out.append("NULL");
+    break;
+  case TokenType::KEYWORD_DEFAULT:
+    out.append("DEFAULT");
+    break;
+  case TokenType::KEYWORD_OPEN:
+    out.append("OPEN");
+    break;
+  case TokenType::KEYWORD_OVERRIDE:
+    out.append("OVERRIDE");
+    break;
+  case TokenType::KEYWORD_LOCAL:
+    out.append("LOCAL");
+    break;
+  case TokenType::KEYWORD_PUBLIC:
+    out.append("PUBLIC");
+    break;
+  case TokenType::KEYWORD_PRIVATE:
+    out.append("PRIVATE");
+    break;
+  case TokenType::KEYWORD_PROTECTED:
+    out.append("PROTECTED");
+    break;
+  case TokenType::KEYWORD_ENUM:
+    out.append("ENUM");
+    break;
+  case TokenType::KEYWORD_COPY:
+    out.append("COPY");
+    break;
+  case TokenType::KEYWORD_MOVE:
+    out.append("MOVE");
+    break;
+  case TokenType::KEYWORD_OPERATOR:
+    out.append("OPERATOR");
+    break;
+  case TokenType::KEYWORD_EXTERN:
+    out.append("EXTERN");
+    break;
+  case TokenType::KEYWORD_INLINE:
+    out.append("INLINE");
+    break;
+  case TokenType::KEYWORD_DELETE:
+    out.append("DELETE");
+    break;
+  case TokenType::KEYWORD_NEW:
+    out.append("NEW");
+    break;
+  case TokenType::KEYWORD_IMPLICIT:
+    out.append("IMPLICIT");
+    break;
+  case TokenType::KEYWORD_WITH:
+    out.append("WITH");
+    break;
+  case TokenType::KEYWORD_WHEN:
+    out.append("WHEN");
+    break;
+  case TokenType::KEYWORD_RETURN:
+    out.append("RETURN");
+    break;
+  case TokenType::KEYWORD_CONTINUE:
+    out.append("CONTINUE");
+    break;
+  case TokenType::KEYWORD_BREAK:
+    out.append("BREAK");
+    break;
+  case TokenType::KEYWORD_WHILE:
+    out.append("WHILE");
+    break;
+  case TokenType::KEYWORD_FOR:
+    out.append("FOR");
+    break;
+  case TokenType::KEYWORD_IN:
+    out.append("IN");
     break;
   case TokenType::NUMBER:
     out.append("NUMBER");
