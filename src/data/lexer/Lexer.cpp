@@ -6,9 +6,10 @@
 
 #include "data/lexer/LexerContext.h"
 #include "data/lexer/LexerError.h"
+#include "data/lexer/Location.h"
 #include "data/lexer/NumberLiteral.h"
 #include "data/lexer/NumberReadError.h"
-#include "data/lexer/Location.h"
+#include "data/lexer/StringLiteral.h"
 #include "data/lexer/Token.h"
 #include "data/text/TextUtils.h"
 
@@ -87,6 +88,10 @@ bool is_word_continue(uint32_t cp) noexcept {
   return is_word_start(cp) || (cp >= '0' && cp <= '9');
 }
 
+bool is_hex_digit(uint32_t cp) noexcept {
+  return (cp >= '0' && cp <= '9') || (cp >= 'a' && cp <= 'f') || (cp >= 'A' && cp <= 'F');
+}
+
 struct LexerState {
   LexerContext ctx;
   size_t line;
@@ -106,7 +111,7 @@ struct LexerState {
 
   void read_token() {
     uint32_t cp = input.peek();
-    auto start_location = current_location();
+    auto start_location = current_location(); // TODO: don't exclude delimiters
     if (is_whitespace(cp)) {
       read_whitespace();
     } else if (cp == '=') {
@@ -169,7 +174,7 @@ struct LexerState {
       String msg = "Unexpected character: '";
       msg.append(cp);
       msg.append('\'');
-      throw_lexer_error(std::move(msg));
+      throw_lexer_error(start_location, std::move(msg));
     }
   }
 
@@ -183,20 +188,137 @@ struct LexerState {
   }
 
   void read_multiline_string(Location start_location) {
-    throw RuntimeError("not implemented");
+    advance();
+    advance();
+    advance();
+    auto content_start_location = current_location();
+    auto content_end_location = start_location;
+    size_t quotes_in_a_row = 0;
+    while (!input.at_end()) {
+      uint32_t cp = input.peek();
+      if (cp == '"') {
+        quotes_in_a_row++;
+        if (quotes_in_a_row == 1) {
+          content_end_location = current_location();
+        }
+        advance();
+        if (quotes_in_a_row == 3) {
+          Text content = TextUtils::substr(
+              file_contents, content_start_location.position, content_end_location.position
+          );
+          String outcome;
+          CharIterator content_iter = content.begin();
+          try {
+            StringLiteral::read(outcome, content_iter, false);
+          } catch (const std::exception &e) {
+            String msg = "Error in multiline string literal: ";
+            msg.append(Text::from(e.what()));
+            throw_lexer_error(start_location, std::move(msg));
+          }
+          emit_token(TokenType::MULTILINE_STRING_LITERAL, start_location);
+          return;
+        }
+      } else {
+        quotes_in_a_row = 0;
+        if (cp == '\\') {
+          skip_escape_sequence();
+        } else {
+          advance();
+        }
+      }
+    }
+    throw_lexer_error(start_location, "Unterminated multiline string literal");
   }
 
   void read_string(Location start_location) {
-    throw RuntimeError("not implemented");
+    advance();
+    auto content_start_location = current_location(); // TODO: don't exclude delimiters
+    while (!input.at_end()) {
+      uint32_t cp = input.peek();
+      if (cp == '\\') {
+        skip_escape_sequence();
+      } else if (cp == '"') {
+        Text content = TextUtils::substr(file_contents, content_start_location.position, input);
+        String outcome;
+        CharIterator content_iter = content.begin();
+        try {
+          StringLiteral::read(outcome, content_iter, false);
+        } catch (const std::exception &e) {
+          String msg = "Error in string literal: ";
+          msg.append(Text::from(e.what()));
+          throw_lexer_error(start_location, std::move(msg));
+        }
+        advance();
+        emit_token(TokenType::STRING_LITERAL, start_location);
+        return;
+      } else if (cp == '\n') {
+        throw_lexer_error(start_location, "Unterminated string literal");
+      } else {
+        advance();
+      }
+    }
+    throw_lexer_error(start_location, "Unterminated string literal");
   }
 
   void skip_escape_sequence() {
-    throw RuntimeError("not implemented");
+    advance();
+    if (input.at_end()) {
+      throw_lexer_error(current_location(), "Unexpected end of input after backslash in string literal");
+    }
+    uint32_t cp = input.peek();
+    switch (cp) {
+    case 'a':
+    case 'b':
+    case 'f':
+    case 'n':
+    case 'r':
+    case 't':
+    case 'v':
+    case '\\':
+    case '\'':
+    case '"':
+    case '\n':
+      advance();
+      break;
+    case 'x':
+      advance();
+      skip_hex_digits(2);
+      break;
+    case 'u':
+      advance();
+      skip_hex_digits(4);
+      break;
+    case 'U':
+      advance();
+      skip_hex_digits(8);
+      break;
+    default: {
+      String msg = "Invalid escape sequence: '\\";
+      msg.append(cp);
+      msg.append('\'');
+      throw_lexer_error(current_location(), std::move(msg));
+    }
+    }
+  }
+
+  void skip_hex_digits(size_t count) {
+    for (size_t i = 0; i < count; i++) {
+      uint32_t cp = input.peek();
+      if (!is_hex_digit(cp)) {
+        String msg = "Expected ";
+        TextUtils::to_string(msg, count);
+        msg.append(" hex digits in escape sequence, but got '");
+        msg.append(cp);
+        msg.append('\'');
+        throw_lexer_error(current_location(), std::move(msg));
+      }
+      advance();
+    }
   }
 
   void read_at(Location start_location) {
     advance();
-    start_location = current_location();
+    start_location = current_location(); // TODO: don't exclude delimiters
     skip_word_chars();
     emit_token(TokenType::ANNOTATION_NAME, start_location);
   }
@@ -233,7 +355,7 @@ struct LexerState {
     advance();
     if (input.peek() == ':' && !previous_char_was_whitespace) {
       advance();
-      start_location = current_location();
+      start_location = current_location(); // TODO: don't exclude delimiters
       skip_word_chars();
       emit_token(TokenType::NAMESPACE_ACCESS, start_location);
     } else {
@@ -243,7 +365,7 @@ struct LexerState {
 
   void read_dot(Location start_location) {
     advance();
-    start_location = current_location();
+    start_location = current_location(); // TODO: don't exclude delimiters
     skip_word_chars();
     if (previous_char_was_whitespace) {
       emit_token(TokenType::DOTTED_IDENTIFIER, start_location);
@@ -254,7 +376,7 @@ struct LexerState {
 
   void read_question_mark(Location start_location) {
     if (previous_char_was_whitespace) {
-      throw_lexer_error("Unexpected '?' after whitespace");
+      throw_lexer_error(start_location, "Unexpected '?' after whitespace");
     }
     advance();
     emit_token(TokenType::QUESTION, start_location);
@@ -404,7 +526,7 @@ struct LexerState {
     try {
       NumberLiteral::read(it);
     } catch (const NumberReadError &e) {
-      throw_lexer_error(String::from(e.what()));
+      throw_lexer_error(start_location, String::from(e.what()));
     }
     size_t chars_advanced = it.data().ptr() - input.data().ptr();
     for (size_t i = 0; i < chars_advanced; ++i) {
@@ -464,6 +586,8 @@ struct LexerState {
   }
 
   void read_word(Location start_location) {
+    // TODO: check for r followed by quotes (+ add "raw" bool to string reader methods)
+
     skip_word_chars();
 
     Text word = TextUtils::substr(file_contents, start_location.position, input);
@@ -507,8 +631,9 @@ struct LexerState {
     previous_char_was_whitespace = false;
   }
 
-  void throw_lexer_error(String message) {
-    throw LexerError(current_location(), std::move(message));
+  void throw_lexer_error(Location loc, String message) {
+    throw LexerError(loc, std::move(message));
+
   }
 };
 

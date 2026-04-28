@@ -127,6 +127,14 @@ String String::from(const std::string &str) {
   return result;
 }
 
+String String::from(std::vector<char> str) {
+  CharIterator::validate(Slice(static_cast<const char *>(str.data()), str.size()));
+  str.push_back('\0');
+  String result;
+  result.data_str = std::move(str);
+  return result;
+}
+
 } // namespace amelia
 
 namespace std {

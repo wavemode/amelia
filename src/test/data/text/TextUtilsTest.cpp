@@ -1387,7 +1387,7 @@ TEST_CASE("slice") {
   SUBCASE("slice with length greater than remaining") {
     Text input = "hello world";
     CharIterator it = input.begin().plus(6);
-    CHECK_THROWS_AS(TextUtils::slice(input, it, 10), RuntimeError);
+    CHECK(TextUtils::slice(input, it, 10) == "world");
   }
 }
 

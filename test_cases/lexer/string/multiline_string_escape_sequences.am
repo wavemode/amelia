@@ -1,0 +1,8 @@
+"""\a\b\f\n\r\t\v\\\'\"\
+"""
+
+/* EXPECTED_OUTPUT:
+MULTILINE_STRING_LITERAL("""\a\b\f\n\r\t\v\\\'\"\
+""")
+END_OF_FILE()
+*/

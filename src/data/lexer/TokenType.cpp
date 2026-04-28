@@ -316,6 +316,12 @@ void amelia::token_type_to_string(TokenType type, IString &out) {
   case TokenType::ANNOTATION_NAME:
     out.append("ANNOTATION_NAME");
     break;
+  case TokenType::STRING_LITERAL:
+    out.append("STRING_LITERAL");
+    break;
+  case TokenType::MULTILINE_STRING_LITERAL:
+    out.append("MULTILINE_STRING_LITERAL");
+    break;
   case TokenType::END_OF_FILE:
     out.append("END_OF_FILE");
     break;

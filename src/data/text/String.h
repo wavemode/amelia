@@ -171,6 +171,13 @@ public:
    */
   static String from(const std::string &str);
 
+  /**
+   * @brief Constructs a String from a vector of chars. The input vector must contain valid UTF-8
+   * data.
+   * @throws InvalidUTF8Error if the input vector does not contain valid UTF-8 data.
+   */
+  static String from(std::vector<char> str);
+
 private:
   std::vector<char> data_str;
 };

@@ -1,0 +1,5 @@
+/* EXPECTED_OUTPUT:
+ERROR("Unexpected end of input after backslash in string literal (at test_cases/lexer/string/error_end_of_file_after_backslash.am:5:3)")
+*/
+
+"\

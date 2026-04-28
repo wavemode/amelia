@@ -9,6 +9,8 @@ namespace amelia {
  * @brief Exception thrown when a String is constructed or appended with invalid
  * UTF-8 data.
  */
-class InvalidUTF8Error : public std::exception {};
+struct InvalidUTF8Error : public std::exception {
+  const char *what() const noexcept override;
+};
 
 } // namespace amelia

@@ -1,0 +1,6 @@
+/* EXPECTED_OUTPUT:
+STRING_LITERAL("hello, world!")
+END_OF_FILE()
+*/
+
+"hello, world!"

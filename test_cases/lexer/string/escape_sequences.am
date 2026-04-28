@@ -1,0 +1,8 @@
+"\a\b\f\n\r\t\v\\\'\"\
+"
+
+/* EXPECTED_OUTPUT:
+STRING_LITERAL("\a\b\f\n\r\t\v\\\'\"\
+")
+END_OF_FILE()
+*/

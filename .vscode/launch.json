@@ -19,7 +19,7 @@
             "cwd": "${workspaceRoot}",
             "preLaunchTask": "make build-test",
             "env": {
-                "AMELIA_TEST_ARGS": "-ts=FilesystemWalker"
+                "AMELIA_TEST_ARGS": "-ts=StringLiteral"
             }
         }
     ]

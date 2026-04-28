@@ -488,7 +488,12 @@ Text TextUtils::strip_suffix(Text input, Text suffix) {
 }
 
 Text TextUtils::slice(Text input, CharIterator char_start, size_t char_length) {
-  return substr(input, char_start, char_start.plus(char_length));
+  auto char_end = char_start;
+  while (!char_end.at_end() && char_length > 0) {
+    ++char_end;
+    --char_length;
+  }
+  return substr(input, char_start, char_end);
 }
 
 Text TextUtils::slice_bytes(Text input, size_t index_start, size_t byte_length) {

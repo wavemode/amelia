@@ -1,6 +1,6 @@
 /* EXPECTED_OUTPUT:
-IDENTIFIER(x)
+STRING_LITERAL("")
 END_OF_FILE()
 */
 
-x
+""

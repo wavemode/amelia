@@ -1,6 +1,6 @@
 /* EXPECTED_OUTPUT:
-NUMBER("5")
-END_OF_FILE("")
+NUMBER(5)
+END_OF_FILE()
 */
 
 5
