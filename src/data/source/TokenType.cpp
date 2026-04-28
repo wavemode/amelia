@@ -256,6 +256,57 @@ void amelia::token_type_to_string(TokenType type, IString &out) {
   case TokenType::TILDE:
     out.append("TILDE");
     break;
+  case TokenType::LEFT_BRACE:
+    out.append("LEFT_BRACE");
+    break;
+  case TokenType::RIGHT_BRACE:
+    out.append("RIGHT_BRACE");
+    break;
+  case TokenType::ARROW:
+    out.append("ARROW");
+    break;
+  case TokenType::SEMICOLON:
+    out.append("SEMICOLON");
+    break;
+  case TokenType::COMMA:
+    out.append("COMMA");
+    break;
+  case TokenType::QUESTION:
+    out.append("QUESTION");
+    break;
+  case TokenType::EXCLAMATION:
+    out.append("EXCLAMATION");
+    break;
+  case TokenType::FIELD_ACCESS:
+    out.append("FIELD_ACCESS");
+    break;
+  case TokenType::DOTTED_IDENTIFIER:
+    out.append("DOTTED_IDENTIFIER");
+    break;
+  case TokenType::NAMESPACE_ACCESS:
+    out.append("NAMESPACE_ACCESS");
+    break;
+  case TokenType::COLON:
+    out.append("COLON");
+    break;
+  case TokenType::FUNCTION_CALL:
+    out.append("FUNCTION_CALL");
+    break;
+  case TokenType::LEFT_PAREN:
+    out.append("LEFT_PAREN");
+    break;
+  case TokenType::RIGHT_PAREN:
+    out.append("RIGHT_PAREN");
+    break;
+  case TokenType::INDEXING:
+    out.append("INDEXING");
+    break;
+  case TokenType::LEFT_BRACKET:
+    out.append("LEFT_BRACKET");
+    break;
+  case TokenType::RIGHT_BRACKET:
+    out.append("RIGHT_BRACKET");
+    break;
   case TokenType::END_OF_FILE:
     out.append("END_OF_FILE");
     break;

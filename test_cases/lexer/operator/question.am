@@ -1,0 +1,7 @@
+x?
+
+/* EXPECTED_OUTPUT:
+IDENTIFIER("x")
+QUESTION("?")
+END_OF_FILE("")
+*/

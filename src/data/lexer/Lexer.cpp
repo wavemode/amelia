@@ -90,10 +90,10 @@ struct LexerState {
   LexerContext ctx;
   size_t line;
   size_t column;
-  size_t position;
   Text file_contents;
   CharIterator input;
   IList<Token> &output;
+  bool previous_char_was_whitespace;
 
   void read_file() {
     while (!input.at_end()) {
@@ -107,7 +107,7 @@ struct LexerState {
     uint32_t cp = input.peek();
     auto start_location = current_location();
     if (is_whitespace(cp)) {
-      advance();
+      read_whitespace();
     } else if (cp == '=') {
       read_equal(start_location);
     } else if (cp == '/') {
@@ -128,6 +128,34 @@ struct LexerState {
       read_ampersand(start_location);
     } else if (cp == '!') {
       read_exclamation(start_location);
+    } else if (cp == '~') {
+      read_tilde(start_location);
+    } else if (cp == '>') {
+      read_greater(start_location);
+    } else if (cp == '<') {
+      read_less(start_location);
+    } else if (cp == '{') {
+      read_left_brace(start_location);
+    } else if (cp == '}') {
+      read_right_brace(start_location);
+    } else if (cp == ';') {
+      read_semicolon(start_location);
+    } else if (cp == '?') {
+      read_question_mark(start_location);
+    } else if (cp == ',') {
+      read_comma(start_location);
+    } else if (cp == '.') {
+      read_dot(start_location);
+    } else if (cp == ':') {
+      read_colon(start_location);
+    } else if (cp == '(') {
+      read_left_paren(start_location);
+    } else if (cp == ')') {
+      read_right_paren(start_location);
+    } else if (cp == '[') {
+      read_left_bracket(start_location);
+    } else if (cp == ']') {
+      read_right_bracket(start_location);
     } else if (TextUtils::is_digit(cp)) {
       read_number(start_location);
     } else if (is_word_start(cp)) {
@@ -140,11 +168,117 @@ struct LexerState {
     }
   }
 
+  void read_right_bracket(Location start_location) {
+    advance();
+    emit_token(TokenType::RIGHT_BRACKET, start_location);
+  }
+
+  void read_left_bracket(Location start_location) {
+    advance();
+    if (previous_char_was_whitespace) {
+      emit_token(TokenType::LEFT_BRACKET, start_location);
+    } else {
+      emit_token(TokenType::INDEXING, start_location);
+    }
+  }
+
+  void read_right_paren(Location start_location) {
+    advance();
+    emit_token(TokenType::RIGHT_PAREN, start_location);
+  }
+
+  void read_left_paren(Location start_location) {
+    advance();
+    if (previous_char_was_whitespace) {
+      emit_token(TokenType::LEFT_PAREN, start_location);
+    } else {
+      emit_token(TokenType::FUNCTION_CALL, start_location);
+    }
+  }
+
+  void read_colon(Location start_location) {
+    advance();
+    if (input.peek() == ':' && !previous_char_was_whitespace) {
+      advance();
+      start_location = current_location();
+      skip_word_chars();
+      emit_token(TokenType::NAMESPACE_ACCESS, start_location);
+    } else {
+      emit_token(TokenType::COLON, start_location);
+    }
+  }
+
+  void read_dot(Location start_location) {
+    advance();
+    start_location = current_location();
+    skip_word_chars();
+    if (previous_char_was_whitespace) {
+      emit_token(TokenType::DOTTED_IDENTIFIER, start_location);
+    } else {
+      emit_token(TokenType::FIELD_ACCESS, start_location);
+    }
+  }
+
+  void read_question_mark(Location start_location) {
+    if (previous_char_was_whitespace) {
+      throw_lexer_error("Unexpected '?' after whitespace");
+    }
+    advance();
+    emit_token(TokenType::QUESTION, start_location);
+  }
+
+  void read_comma(Location start_location) {
+    advance();
+    emit_token(TokenType::COMMA, start_location);
+  }
+
+  void read_semicolon(Location start_location) {
+    advance();
+    emit_token(TokenType::SEMICOLON, start_location);
+  }
+
+  void read_left_brace(Location start_location) {
+    advance();
+    emit_token(TokenType::LEFT_BRACE, start_location);
+  }
+
+  void read_right_brace(Location start_location) {
+    advance();
+    emit_token(TokenType::RIGHT_BRACE, start_location);
+  }
+
+  void read_less(Location start_location) {
+    advance();
+    if (input.peek() == '=') {
+      advance();
+      emit_token(TokenType::LESS_EQUAL, start_location);
+    } else {
+      emit_token(TokenType::LESS, start_location);
+    }
+  }
+
+  void read_greater(Location start_location) {
+    advance();
+    if (input.peek() == '=') {
+      advance();
+      emit_token(TokenType::GREATER_EQUAL, start_location);
+    } else {
+      emit_token(TokenType::GREATER, start_location);
+    }
+  }
+
+  void read_tilde(Location start_location) {
+    advance();
+    emit_token(TokenType::TILDE, start_location);
+  }
+
   void read_exclamation(Location start_location) {
     advance();
     if (input.peek() == '=') {
       advance();
       emit_token(TokenType::NOT_EQUAL, start_location);
+    } else if (!previous_char_was_whitespace) {
+      emit_token(TokenType::EXCLAMATION, start_location);
     } else {
       emit_token(TokenType::NOT, start_location);
     }
@@ -152,10 +286,11 @@ struct LexerState {
 
   void read_ampersand(Location start_location) {
     advance();
-    if (input.peek() == '&') {
+    uint32_t next_cp = input.peek();
+    if (next_cp == '&') {
       advance();
       emit_token(TokenType::AND, start_location);
-    } else if (input.peek() == '=') {
+    } else if (next_cp == '=') {
       advance();
       emit_token(TokenType::AMPERSAND_EQUAL, start_location);
     } else {
@@ -165,9 +300,13 @@ struct LexerState {
 
   void read_pipe(Location start_location) {
     advance();
-    if (input.peek() == '=') {
+    uint32_t next_cp = input.peek();
+    if (next_cp == '=') {
       advance();
       emit_token(TokenType::PIPE_EQUAL, start_location);
+    } else if (next_cp == '|') {
+      advance();
+      emit_token(TokenType::OR, start_location);
     } else {
       emit_token(TokenType::PIPE, start_location);
     }
@@ -205,9 +344,13 @@ struct LexerState {
 
   void read_minus(Location start_location) {
     advance();
-    if (input.peek() == '=') {
+    uint32_t next_cp = input.peek();
+    if (next_cp == '=') {
       advance();
       emit_token(TokenType::MINUS_EQUAL, start_location);
+    } else if (next_cp == '>') {
+      advance();
+      emit_token(TokenType::ARROW, start_location);
     } else {
       emit_token(TokenType::MINUS, start_location);
     }
@@ -264,6 +407,11 @@ struct LexerState {
     }
   }
 
+  void read_whitespace() {
+    advance();
+    previous_char_was_whitespace = true;
+  }
+
   void skip_until_end_of_single_line_comment() {
     while (!input.at_end() && advance() != '\n') {
       // skip
@@ -294,7 +442,13 @@ struct LexerState {
     } else {
       tt = TokenType::IDENTIFIER;
     }
-    output.push_back(Token{tt, start_location, word});
+    emit_token(tt, start_location);
+  }
+
+  void skip_word_chars() {
+    while (!input.at_end() && is_word_continue(input.peek())) {
+      advance();
+    }
   }
 
   uint32_t advance() noexcept {
@@ -316,6 +470,7 @@ struct LexerState {
     output.push_back(
         Token{type, start, TextUtils::substr(file_contents, start.position, end.position)}
     );
+    previous_char_was_whitespace = false;
   }
 
   void throw_lexer_error(String message) {
@@ -326,7 +481,15 @@ struct LexerState {
 } // namespace
 
 void Lexer::tokenize(IList<Token> &output, CharIterator &iter, LexerContext ctx) {
-  LexerState state{ctx, 1, 1, 0, iter.text(), iter, output};
+  LexerState state{
+      .ctx = ctx,
+      .line = 1,
+      .column = 1,
+      .file_contents = iter.text(),
+      .input = iter,
+      .output = output,
+      .previous_char_was_whitespace = true
+  };
   state.read_file();
 }
 

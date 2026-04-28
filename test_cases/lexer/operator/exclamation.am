@@ -1,0 +1,7 @@
+x!
+
+/* EXPECTED_OUTPUT:
+IDENTIFIER("x")
+EXCLAMATION("!")
+END_OF_FILE("")
+*/

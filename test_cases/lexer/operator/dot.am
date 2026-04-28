@@ -1,0 +1,11 @@
+a.b
+
+a .b
+
+/* EXPECTED_OUTPUT:
+IDENTIFIER("a")
+FIELD_ACCESS("b")
+IDENTIFIER("a")
+DOTTED_IDENTIFIER("b")
+END_OF_FILE("")
+*/

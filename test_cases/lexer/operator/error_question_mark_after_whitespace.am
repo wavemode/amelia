@@ -1,0 +1,5 @@
+x ?
+
+/* EXPECTED_OUTPUT:
+ERROR("Unexpected '?' after whitespace (at test_cases/lexer/operator/error_question_mark_after_whitespace.am:1:3)")
+*/

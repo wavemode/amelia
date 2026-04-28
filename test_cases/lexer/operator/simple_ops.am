@@ -3,6 +3,7 @@
 +=
 -
 -=
+->
 *
 *=
 /
@@ -12,12 +13,22 @@
 ^
 ^=
 |
+||
 |=
 &
 &&
 &=
 !
 !=
+~
+>
+>=
+<
+<=
+{
+}
+;
+,
 
 /* EXPECTED_OUTPUT:
 ASSIGN("=")
@@ -25,6 +36,7 @@ PLUS("+")
 PLUS_EQUAL("+=")
 MINUS("-")
 MINUS_EQUAL("-=")
+ARROW("->")
 STAR("*")
 STAR_EQUAL("*=")
 SLASH("/")
@@ -34,11 +46,21 @@ PERCENT_EQUAL("%=")
 CARET("^")
 CARET_EQUAL("^=")
 PIPE("|")
+OR("||")
 PIPE_EQUAL("|=")
 AMPERSAND("&")
 AND("&&")
 AMPERSAND_EQUAL("&=")
 NOT("!")
 NOT_EQUAL("!=")
+TILDE("~")
+GREATER(">")
+GREATER_EQUAL(">=")
+LESS("<")
+LESS_EQUAL("<=")
+LEFT_BRACE("{")
+RIGHT_BRACE("}")
+SEMICOLON(";")
+COMMA(",")
 END_OF_FILE("")
 */
