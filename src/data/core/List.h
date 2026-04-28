@@ -46,6 +46,13 @@ public:
     return vec[index];
   }
 
+  const T &operator[](size_t index) const {
+    if (index >= size()) {
+      RuntimeError("List index out of range");
+    }
+    return vec[index];
+  }
+
   List<T> &operator+=(Slice<T> slice) {
     vec.insert(vec.end(), slice.ptr(), slice.end().ptr());
     return *this;

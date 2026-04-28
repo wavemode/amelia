@@ -6,11 +6,11 @@
 
 #include "data/lexer/LexerContext.h"
 #include "data/lexer/LexerError.h"
-#include "data/lexer/Location.h"
-#include "data/lexer/NumberLiteral.h"
-#include "data/lexer/NumberReadError.h"
-#include "data/lexer/StringLiteral.h"
 #include "data/lexer/Token.h"
+#include "data/source/Location.h"
+#include "data/source/NumberLiteral.h"
+#include "data/source/NumberReadError.h"
+#include "data/source/StringLiteral.h"
 #include "data/text/TextUtils.h"
 
 namespace amelia {
@@ -110,6 +110,8 @@ struct LexerState {
   }
 
   void read_token() {
+    // TODO: parser should check validity of strings and numbers, not lexer. Since it will have a
+    // way to allocate space for their real contents.
     uint32_t cp = input.peek();
     auto start_location = current_location();
     if (is_whitespace(cp)) {

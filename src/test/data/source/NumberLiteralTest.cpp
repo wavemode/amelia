@@ -1,9 +1,9 @@
 #include <doctest.h>
 
 #include "Prelude.h"
-#include "data/lexer/NumberLiteral.h"
+#include "data/source/NumberLiteral.h"
 
-#include "data/lexer/NumberReadError.h"
+#include "data/source/NumberReadError.h"
 #include "data/text/TextUtils.h"
 
 TEST_SUITE_BEGIN("NumberLiteral");

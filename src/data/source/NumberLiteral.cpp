@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <string>
 
-#include "data/lexer/NumberReadError.h"
+#include "data/source/NumberReadError.h"
 #include "data/text/TextUtils.h"
 
 namespace amelia {

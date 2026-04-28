@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-#include "data/lexer/Location.h"
+#include "data/source/Location.h"
 #include "data/text/String.h"
 
 namespace amelia {

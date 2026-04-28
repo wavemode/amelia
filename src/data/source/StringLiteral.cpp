@@ -3,7 +3,7 @@
 #include "Prelude.h"
 #include "StringLiteral.h"
 
-#include "data/lexer/StringLiteralReadError.h"
+#include "data/source/StringLiteralReadError.h"
 
 namespace amelia {
 

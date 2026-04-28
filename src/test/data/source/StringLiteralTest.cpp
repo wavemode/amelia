@@ -1,7 +1,7 @@
 #include <doctest.h>
 
 #include "Prelude.h"
-#include "data/lexer/StringLiteral.h"
+#include "data/source/StringLiteral.h"
 
 TEST_SUITE_BEGIN("StringLiteral");
 
