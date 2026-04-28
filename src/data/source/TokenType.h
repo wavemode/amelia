@@ -94,9 +94,6 @@ enum class TokenType {
   AND,
   OR,
 
-
-
-
   END_OF_FILE,
 };
 
