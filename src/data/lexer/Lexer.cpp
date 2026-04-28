@@ -111,7 +111,7 @@ struct LexerState {
 
   void read_token() {
     uint32_t cp = input.peek();
-    auto start_location = current_location(); // TODO: don't exclude delimiters
+    auto start_location = current_location();
     if (is_whitespace(cp)) {
       read_whitespace();
     } else if (cp == '=') {
@@ -232,7 +232,7 @@ struct LexerState {
 
   void read_string(Location start_location) {
     advance();
-    auto content_start_location = current_location(); // TODO: don't exclude delimiters
+    auto content_start_location = current_location();
     while (!input.at_end()) {
       uint32_t cp = input.peek();
       if (cp == '\\') {
@@ -263,7 +263,9 @@ struct LexerState {
   void skip_escape_sequence() {
     advance();
     if (input.at_end()) {
-      throw_lexer_error(current_location(), "Unexpected end of input after backslash in string literal");
+      throw_lexer_error(
+          current_location(), "Unexpected end of input after backslash in string literal"
+      );
     }
     uint32_t cp = input.peek();
     switch (cp) {
@@ -318,7 +320,6 @@ struct LexerState {
 
   void read_at(Location start_location) {
     advance();
-    start_location = current_location(); // TODO: don't exclude delimiters
     skip_word_chars();
     emit_token(TokenType::ANNOTATION_NAME, start_location);
   }
@@ -355,7 +356,6 @@ struct LexerState {
     advance();
     if (input.peek() == ':' && !previous_char_was_whitespace) {
       advance();
-      start_location = current_location(); // TODO: don't exclude delimiters
       skip_word_chars();
       emit_token(TokenType::NAMESPACE_ACCESS, start_location);
     } else {
@@ -365,7 +365,6 @@ struct LexerState {
 
   void read_dot(Location start_location) {
     advance();
-    start_location = current_location(); // TODO: don't exclude delimiters
     skip_word_chars();
     if (previous_char_was_whitespace) {
       emit_token(TokenType::DOTTED_IDENTIFIER, start_location);
@@ -633,7 +632,6 @@ struct LexerState {
 
   void throw_lexer_error(Location loc, String message) {
     throw LexerError(loc, std::move(message));
-
   }
 };
 
