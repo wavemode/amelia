@@ -23,6 +23,7 @@ let
 const
 impl
 any
+label
 goto
 async
 await
@@ -80,6 +81,7 @@ LET("let")
 CONST("const")
 IMPL("impl")
 ANY("any")
+LABEL("label")
 GOTO("goto")
 ASYNC("async")
 AWAIT("await")

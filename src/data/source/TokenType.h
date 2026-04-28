@@ -62,6 +62,7 @@ enum class TokenType {
   KEYWORD_WHILE,
   KEYWORD_FOR,
   KEYWORD_IN,
+  KEYWORD_LABEL,
 
   ASSIGN,
   PLUS_EQUAL,

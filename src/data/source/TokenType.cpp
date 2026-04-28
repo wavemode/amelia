@@ -82,6 +82,9 @@ void amelia::token_type_to_string(TokenType type, IString &out) {
   case TokenType::KEYWORD_ANY:
     out.append("ANY");
     break;
+  case TokenType::KEYWORD_LABEL:
+    out.append("LABEL");
+    break;
   case TokenType::KEYWORD_GOTO:
     out.append("GOTO");
     break;

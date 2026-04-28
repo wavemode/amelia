@@ -72,6 +72,7 @@ const std::unordered_map<Text, TokenType> keywords = {
     {"while", TokenType::KEYWORD_WHILE},
     {"for", TokenType::KEYWORD_FOR},
     {"in", TokenType::KEYWORD_IN},
+    {"label", TokenType::KEYWORD_LABEL},
 };
 
 bool is_whitespace(uint32_t cp) noexcept {
