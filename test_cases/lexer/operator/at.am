@@ -1,7 +1,6 @@
-x !
+@a
 
 /* EXPECTED_OUTPUT:
-IDENTIFIER("x")
-NOT("!")
+ANNOTATION_NAME("a")
 END_OF_FILE("")
 */

@@ -156,6 +156,8 @@ struct LexerState {
       read_left_bracket(start_location);
     } else if (cp == ']') {
       read_right_bracket(start_location);
+    } else if (cp == '@') {
+      read_at(start_location);
     } else if (TextUtils::is_digit(cp)) {
       read_number(start_location);
     } else if (is_word_start(cp)) {
@@ -166,6 +168,13 @@ struct LexerState {
       msg.append('\'');
       throw_lexer_error(std::move(msg));
     }
+  }
+
+  void read_at(Location start_location) {
+    advance();
+    start_location = current_location();
+    skip_word_chars();
+    emit_token(TokenType::ANNOTATION_NAME, start_location);
   }
 
   void read_right_bracket(Location start_location) {
@@ -431,18 +440,19 @@ struct LexerState {
   }
 
   void read_word(Location start_location) {
-    while (!input.at_end() && is_word_continue(input.peek())) {
-      advance();
-    }
+    skip_word_chars();
+
     Text word = TextUtils::substr(file_contents, start_location.position, input);
     auto keyword_it = keywords.find(word);
-    TokenType tt;
+
     if (keyword_it != keywords.end()) {
-      tt = keyword_it->second;
+      emit_token(keyword_it->second, start_location);
+    } else if (!input.at_end() && input.peek() == '!') {
+      emit_token(TokenType::MACRO_NAME, start_location);
+      advance();
     } else {
-      tt = TokenType::IDENTIFIER;
+      emit_token(TokenType::IDENTIFIER, start_location);
     }
-    emit_token(tt, start_location);
   }
 
   void skip_word_chars() {
