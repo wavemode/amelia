@@ -9,7 +9,7 @@
 #include "data/lexer/Token.h"
 #include "data/source/Location.h"
 #include "data/source/NumberLiteral.h"
-#include "data/source/NumberReadError.h"
+#include "data/source/NumberLiteralReadError.h"
 #include "data/source/StringLiteral.h"
 #include "data/text/TextUtils.h"
 
@@ -602,7 +602,7 @@ struct LexerState {
     auto it = input;
     try {
       NumberLiteral::read(it);
-    } catch (const NumberReadError &e) {
+    } catch (const NumberLiteralReadError &e) {
       throw_lexer_error(start_location, String::from(e.what()));
     }
     size_t chars_advanced = it.data().ptr() - input.data().ptr();

@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <string>
 
-#include "data/source/NumberReadError.h"
+#include "data/source/NumberLiteralReadError.h"
 #include "data/text/TextUtils.h"
 
 namespace amelia {
@@ -68,7 +68,7 @@ NumberLiteral NumberLiteral::read(CharIterator &iter) {
     signed char digit_value = -1;
     if (ch == '_') {
       if (at_boundary || previous_char_was_underscore) {
-        throw NumberReadError("Underscore must separate successive digits");
+        throw NumberLiteralReadError("Underscore must separate successive digits");
       }
       previous_char_was_underscore = true;
       current_position.next();
@@ -81,7 +81,7 @@ NumberLiteral NumberLiteral::read(CharIterator &iter) {
         if (base == 16) {
           break;
         } else {
-          throw NumberReadError(
+          throw NumberLiteralReadError(
               "Only hexadecimal literals may use 'p' or 'P' as the exponent prefix"
           );
         }
@@ -93,7 +93,7 @@ NumberLiteral NumberLiteral::read(CharIterator &iter) {
         String err("Invalid character '");
         err.append(ch);
         err.append("' in number literal");
-        throw NumberReadError(err);
+        throw NumberLiteralReadError(err);
       }
     }
 
@@ -103,7 +103,7 @@ NumberLiteral NumberLiteral::read(CharIterator &iter) {
         err.append(ch);
         err.append("' for base ");
         TextUtils::to_string(err, int64_t(base));
-        throw NumberReadError(err);
+        throw NumberLiteralReadError(err);
       }
       previous_char_was_underscore = false;
       current_position.next();
@@ -114,7 +114,7 @@ NumberLiteral NumberLiteral::read(CharIterator &iter) {
   }
 
   if (previous_char_was_underscore) {
-    throw NumberReadError("Underscore must separate successive digits");
+    throw NumberLiteralReadError("Underscore must separate successive digits");
   }
   at_boundary = true;
   previous_char_was_underscore = false;
@@ -133,7 +133,7 @@ NumberLiteral NumberLiteral::read(CharIterator &iter) {
     }
 
     if (base != 10 && base != 16) {
-      throw NumberReadError("Floating point literals may only be in base 10 or 16");
+      throw NumberLiteralReadError("Floating point literals may only be in base 10 or 16");
     }
 
     current_position.next();
@@ -143,7 +143,7 @@ NumberLiteral NumberLiteral::read(CharIterator &iter) {
       signed char digit_value = -1;
       if (ch == '_') {
         if (at_boundary || previous_char_was_underscore) {
-          throw NumberReadError("Underscore must separate successive digits");
+          throw NumberLiteralReadError("Underscore must separate successive digits");
         }
         previous_char_was_underscore = true;
         current_position.next();
@@ -155,7 +155,7 @@ NumberLiteral NumberLiteral::read(CharIterator &iter) {
         } else if ((ch == 'p' || ch == 'P') && base == 16) {
           break;
         } else if (ch == 'p' || ch == 'P') {
-          throw NumberReadError(
+          throw NumberLiteralReadError(
               "Only hexadecimal literals may use 'p' or 'P' as the exponent prefix"
           );
         } else if (ch >= 'a' && ch <= 'f') {
@@ -166,7 +166,7 @@ NumberLiteral NumberLiteral::read(CharIterator &iter) {
           String err("Invalid character '");
           err.append(ch);
           err.append("' in number literal");
-          throw NumberReadError(err);
+          throw NumberLiteralReadError(err);
         }
       }
 
@@ -176,7 +176,7 @@ NumberLiteral NumberLiteral::read(CharIterator &iter) {
           err.append(ch);
           err.append("' for base ");
           TextUtils::to_string(err, int64_t(base));
-          throw NumberReadError(err);
+          throw NumberLiteralReadError(err);
         }
         previous_char_was_underscore = false;
         current_position.next();
@@ -190,7 +190,7 @@ NumberLiteral NumberLiteral::read(CharIterator &iter) {
   }
 
   if (previous_char_was_underscore) {
-    throw NumberReadError("Underscore must separate successive digits");
+    throw NumberLiteralReadError("Underscore must separate successive digits");
   }
   at_boundary = true;
   previous_char_was_underscore = false;
@@ -200,12 +200,12 @@ NumberLiteral NumberLiteral::read(CharIterator &iter) {
     auto ch = current_position.peek();
     if (ch == 'e' || ch == 'E') {
       if (base == 16) {
-        throw NumberReadError("Hexadecimal literals must use 'p' or 'P' as the exponent prefix");
+        throw NumberLiteralReadError("Hexadecimal literals must use 'p' or 'P' as the exponent prefix");
       }
       current_position.next();
     } else if (ch == 'p' || ch == 'P') {
       if (base != 16) {
-        throw NumberReadError("Only hexadecimal literals may use 'p' or 'P' as the exponent prefix"
+        throw NumberLiteralReadError("Only hexadecimal literals may use 'p' or 'P' as the exponent prefix"
         );
       }
       current_position.next();
@@ -215,7 +215,7 @@ NumberLiteral NumberLiteral::read(CharIterator &iter) {
 
   if (result.exponent_prefix.size() != 0) {
     if (current_position.at_end()) {
-      throw NumberReadError("Exponent has no digits");
+      throw NumberLiteralReadError("Exponent has no digits");
     }
 
     if (assumed_octal) {
@@ -227,7 +227,7 @@ NumberLiteral NumberLiteral::read(CharIterator &iter) {
     }
 
     if (base != 10 && base != 16) {
-      throw NumberReadError("Only base 10 or 16 literals may have an exponent");
+      throw NumberLiteralReadError("Only base 10 or 16 literals may have an exponent");
     }
 
     auto exponent_sign_start = current_position;
@@ -237,7 +237,7 @@ NumberLiteral NumberLiteral::read(CharIterator &iter) {
     result.exponent_sign = TextUtils::substr(text, exponent_sign_start, current_position);
 
     if (current_position.at_end()) {
-      throw NumberReadError("Exponent has no digits");
+      throw NumberLiteralReadError("Exponent has no digits");
     }
 
     auto exponent_digits_start = current_position;
@@ -245,7 +245,7 @@ NumberLiteral NumberLiteral::read(CharIterator &iter) {
       auto ch = current_position.peek();
       if (ch == '_') {
         if (at_boundary || previous_char_was_underscore) {
-          throw NumberReadError("Underscore must separate successive digits");
+          throw NumberLiteralReadError("Underscore must separate successive digits");
         }
         previous_char_was_underscore = true;
         current_position.next();
@@ -257,7 +257,7 @@ NumberLiteral NumberLiteral::read(CharIterator &iter) {
         String err("Invalid character '");
         err.append(ch);
         err.append("' in exponent");
-        throw NumberReadError(err);
+        throw NumberLiteralReadError(err);
       } else if (ch != '_') {
         break;
       }
@@ -267,11 +267,11 @@ NumberLiteral NumberLiteral::read(CharIterator &iter) {
   }
 
   if (previous_char_was_underscore) {
-    throw NumberReadError("Underscore must separate successive digits");
+    throw NumberLiteralReadError("Underscore must separate successive digits");
   }
 
   if (result.integer_digits.size() == 0 && result.fractional_digits.size() == 0) {
-    throw NumberReadError("Number literal must have at least one digit");
+    throw NumberLiteralReadError("Number literal must have at least one digit");
   }
 
   iter = current_position;

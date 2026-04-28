@@ -7,14 +7,14 @@
 namespace amelia {
 
 /**
- * @class NumberReadError
+ * @class NumberLiteralReadError
  * @brief
  */
-struct NumberReadError : public std::exception {
+struct NumberLiteralReadError : public std::exception {
   const String message;
 
-  NumberReadError() noexcept;
-  NumberReadError(String) noexcept;
+  NumberLiteralReadError() noexcept;
+  NumberLiteralReadError(String) noexcept;
   const char *what() const noexcept override;
 };
 
