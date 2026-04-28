@@ -7,7 +7,7 @@ TEST_SUITE_BEGIN("StringLiteral");
 
 using namespace amelia;
 
-TEST_CASE("escape sequences") {
+TEST_CASE("parsing") {
   struct TestCase {
     Text input;
     Text expected_output;
@@ -28,10 +28,23 @@ TEST_CASE("escape sequences") {
       {"", ""},
   };
 
+  std::vector<TestCase> raw_test_cases = {
+      {R"(Raw string with no escapes: \n\t\\)", R"(Raw string with no escapes: \n\t\\)"},
+      {R"(Raw string with "quotes" and \backslashes\)",
+       R"(Raw string with "quotes" and \backslashes\)"},
+  };
+
   for (const TestCase &test_case : test_cases) {
     CharIterator iter(test_case.input);
     String result;
     StringLiteral::read(result, iter, false);
+    CHECK(result.text() == test_case.expected_output);
+  }
+
+  for (const TestCase &test_case : raw_test_cases) {
+    CharIterator iter(test_case.input);
+    String result;
+    StringLiteral::read(result, iter, true);
     CHECK(result.text() == test_case.expected_output);
   }
 }

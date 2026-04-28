@@ -1,0 +1,5 @@
+/* EXPECTED_OUTPUT:
+ERROR("Unterminated raw multiline string literal (at test_cases/lexer/string/error_unterminated_raw_multiline_string.am:5:1)")
+*/
+
+r"""hello

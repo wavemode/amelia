@@ -187,6 +187,82 @@ struct LexerState {
     }
   }
 
+  void read_raw_quote(Location start_location) {
+    Text first_three_chars = TextUtils::slice(file_contents, input, 3);
+    if (first_three_chars == "\"\"\"") {
+      read_raw_multiline_string(start_location);
+    } else {
+      read_raw_string(start_location);
+    }
+  }
+
+  void read_raw_multiline_string(Location start_location) {
+    advance();
+    advance();
+    advance();
+    auto content_start_location = current_location();
+    auto content_end_location = start_location;
+    size_t quotes_in_a_row = 0;
+    while (!input.at_end()) {
+      uint32_t cp = input.peek();
+      if (cp == '"') {
+        quotes_in_a_row++;
+        if (quotes_in_a_row == 1) {
+          content_end_location = current_location();
+        }
+        advance();
+        if (quotes_in_a_row == 3) {
+          Text content = TextUtils::substr(
+              file_contents, content_start_location.position, content_end_location.position
+          );
+          String outcome;
+          CharIterator content_iter = content.begin();
+          try {
+            StringLiteral::read(outcome, content_iter, true);
+          } catch (const std::exception &e) {
+            String msg = "Error in raw multiline string literal: ";
+            msg.append(Text::from(e.what()));
+            throw_lexer_error(start_location, std::move(msg));
+          }
+          emit_token(TokenType::RAW_MULTILINE_STRING_LITERAL, start_location);
+          return;
+        }
+      } else {
+        quotes_in_a_row = 0;
+        advance();
+      }
+    }
+    throw_lexer_error(start_location, "Unterminated raw multiline string literal");
+  }
+
+  void read_raw_string(Location start_location) {
+    advance();
+    auto content_start_location = current_location();
+    while (!input.at_end()) {
+      uint32_t cp = input.peek();
+      if (cp == '"') {
+        Text content = TextUtils::substr(file_contents, content_start_location.position, input);
+        String outcome;
+        CharIterator content_iter = content.begin();
+        try {
+          StringLiteral::read(outcome, content_iter, true);
+        } catch (const std::exception &e) {
+          String msg = "Error in raw string literal: ";
+          msg.append(Text::from(e.what()));
+          throw_lexer_error(start_location, std::move(msg));
+        }
+        advance();
+        emit_token(TokenType::RAW_STRING_LITERAL, start_location);
+        return;
+      } else if (cp == '\n') {
+        throw_lexer_error(start_location, "Unterminated raw string literal");
+      } else {
+        advance();
+      }
+    }
+    throw_lexer_error(start_location, "Unterminated raw string literal");
+  }
+
   void read_multiline_string(Location start_location) {
     advance();
     advance();
@@ -585,8 +661,13 @@ struct LexerState {
   }
 
   void read_word(Location start_location) {
-    // TODO: check for r followed by quotes (+ add "raw" bool to string reader methods)
-
+    if (input.peek() == 'r') {
+      advance();
+      if (input.peek() == '"') {
+        read_raw_quote(start_location);
+        return;
+      }
+    }
     skip_word_chars();
 
     Text word = TextUtils::substr(file_contents, start_location.position, input);

@@ -1,0 +1,6 @@
+r"hello world\"
+
+/* EXPECTED_OUTPUT:
+RAW_STRING_LITERAL(r"hello world\")
+END_OF_FILE()
+*/
