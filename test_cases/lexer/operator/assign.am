@@ -1,8 +1,0 @@
-x = y
-
-/* EXPECTED_OUTPUT:
-IDENTIFIER("x")
-ASSIGN("=")
-IDENTIFIER("y")
-END_OF_FILE("")
-*/

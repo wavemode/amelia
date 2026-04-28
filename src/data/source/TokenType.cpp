@@ -178,8 +178,83 @@ void amelia::token_type_to_string(TokenType type, IString &out) {
   case TokenType::ASSIGN:
     out.append("ASSIGN");
     break;
+  case TokenType::PLUS_EQUAL:
+    out.append("PLUS_EQUAL");
+    break;
+  case TokenType::MINUS_EQUAL:
+    out.append("MINUS_EQUAL");
+    break;
+  case TokenType::STAR_EQUAL:
+    out.append("STAR_EQUAL");
+    break;
+  case TokenType::SLASH_EQUAL:
+    out.append("SLASH_EQUAL");
+    break;
+  case TokenType::PERCENT_EQUAL:
+    out.append("PERCENT_EQUAL");
+    break;
+  case TokenType::GREATER:
+    out.append("GREATER");
+    break;
+  case TokenType::LESS:
+    out.append("LESS");
+    break;
+  case TokenType::GREATER_EQUAL:
+    out.append("GREATER_EQUAL");
+    break;
+  case TokenType::LESS_EQUAL:
+    out.append("LESS_EQUAL");
+    break;
   case TokenType::EQUAL:
     out.append("EQUAL");
+    break;
+  case TokenType::NOT_EQUAL:
+    out.append("NOT_EQUAL");
+    break;
+  case TokenType::PLUS:
+    out.append("PLUS");
+    break;
+  case TokenType::MINUS:
+    out.append("MINUS");
+    break;
+  case TokenType::STAR:
+    out.append("STAR");
+    break;
+  case TokenType::SLASH:
+    out.append("SLASH");
+    break;
+  case TokenType::AND:
+    out.append("AND");
+    break;
+  case TokenType::OR:
+    out.append("OR");
+    break;
+  case TokenType::NOT:
+    out.append("NOT");
+    break;
+  case TokenType::PERCENT:
+    out.append("PERCENT");
+    break;
+  case TokenType::AMPERSAND:
+    out.append("AMPERSAND");
+    break;
+  case TokenType::PIPE:
+    out.append("PIPE");
+    break;
+  case TokenType::CARET:
+    out.append("CARET");
+    break;
+  case TokenType::PIPE_EQUAL:
+    out.append("PIPE_EQUAL");
+    break;
+  case TokenType::AMPERSAND_EQUAL:
+    out.append("AMPERSAND_EQUAL");
+    break;
+  case TokenType::CARET_EQUAL:
+    out.append("CARET_EQUAL");
+    break;
+  case TokenType::TILDE:
+    out.append("TILDE");
     break;
   case TokenType::END_OF_FILE:
     out.append("END_OF_FILE");

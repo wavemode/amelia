@@ -112,6 +112,22 @@ struct LexerState {
       read_equal(start_location);
     } else if (cp == '/') {
       read_slash(start_location);
+    } else if (cp == '+') {
+      read_plus(start_location);
+    } else if (cp == '-') {
+      read_minus(start_location);
+    } else if (cp == '*') {
+      read_star(start_location);
+    } else if (cp == '%') {
+      read_percent(start_location);
+    } else if (cp == '^') {
+      read_caret(start_location);
+    } else if (cp == '|') {
+      read_pipe(start_location);
+    } else if (cp == '&') {
+      read_ampersand(start_location);
+    } else if (cp == '!') {
+      read_exclamation(start_location);
     } else if (TextUtils::is_digit(cp)) {
       read_number(start_location);
     } else if (is_word_start(cp)) {
@@ -121,6 +137,89 @@ struct LexerState {
       msg.append(cp);
       msg.append('\'');
       throw_lexer_error(std::move(msg));
+    }
+  }
+
+  void read_exclamation(Location start_location) {
+    advance();
+    if (input.peek() == '=') {
+      advance();
+      emit_token(TokenType::NOT_EQUAL, start_location);
+    } else {
+      emit_token(TokenType::NOT, start_location);
+    }
+  }
+
+  void read_ampersand(Location start_location) {
+    advance();
+    if (input.peek() == '&') {
+      advance();
+      emit_token(TokenType::AND, start_location);
+    } else if (input.peek() == '=') {
+      advance();
+      emit_token(TokenType::AMPERSAND_EQUAL, start_location);
+    } else {
+      emit_token(TokenType::AMPERSAND, start_location);
+    }
+  }
+
+  void read_pipe(Location start_location) {
+    advance();
+    if (input.peek() == '=') {
+      advance();
+      emit_token(TokenType::PIPE_EQUAL, start_location);
+    } else {
+      emit_token(TokenType::PIPE, start_location);
+    }
+  }
+
+  void read_caret(Location start_location) {
+    advance();
+    if (input.peek() == '=') {
+      advance();
+      emit_token(TokenType::CARET_EQUAL, start_location);
+    } else {
+      emit_token(TokenType::CARET, start_location);
+    }
+  }
+
+  void read_percent(Location start_location) {
+    advance();
+    if (input.peek() == '=') {
+      advance();
+      emit_token(TokenType::PERCENT_EQUAL, start_location);
+    } else {
+      emit_token(TokenType::PERCENT, start_location);
+    }
+  }
+
+  void read_star(Location start_location) {
+    advance();
+    if (input.peek() == '=') {
+      advance();
+      emit_token(TokenType::STAR_EQUAL, start_location);
+    } else {
+      emit_token(TokenType::STAR, start_location);
+    }
+  }
+
+  void read_minus(Location start_location) {
+    advance();
+    if (input.peek() == '=') {
+      advance();
+      emit_token(TokenType::MINUS_EQUAL, start_location);
+    } else {
+      emit_token(TokenType::MINUS, start_location);
+    }
+  }
+
+  void read_plus(Location start_location) {
+    advance();
+    if (input.peek() == '=') {
+      advance();
+      emit_token(TokenType::PLUS_EQUAL, start_location);
+    } else {
+      emit_token(TokenType::PLUS, start_location);
     }
   }
 
@@ -157,8 +256,11 @@ struct LexerState {
     } else if (next_cp == '*') {
       advance();
       skip_until_end_of_multiline_comment();
+    } else if (next_cp == '=') {
+      advance();
+      emit_token(TokenType::SLASH_EQUAL, start_location);
     } else {
-      throw_lexer_error("not implemented");
+      emit_token(TokenType::SLASH, start_location);
     }
   }
 
