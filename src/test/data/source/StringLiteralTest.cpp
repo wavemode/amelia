@@ -25,6 +25,10 @@ TEST_CASE("parsing") {
       {R"(Unicode\u1234Test)", "UnicodeሴTest"},
       {R"(Multiline\nString\nTest)", "Multiline\nString\nTest"},
       {"\r\n", "\n"},
+      {"\r", ""},
+      {"\\\nhi", "hi"},
+      {"\\\r\nhi", "hi"},
+      {"\\\rhi", "hi"},
       {"", ""},
   };
 

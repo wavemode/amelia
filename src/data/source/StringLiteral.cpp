@@ -70,6 +70,11 @@ void StringLiteral::read(IString &output, CharIterator &iter, bool is_raw) {
       case '"':
         result.push_back(static_cast<char>('\"'));
         break;
+      case '\r':
+        if (!iter.at_end() && iter.peek() == '\n') {
+          iter.next();
+        }
+        break;
       case '\n':
         break;
       case 'x':

@@ -200,12 +200,15 @@ NumberLiteral NumberLiteral::read(CharIterator &iter) {
     auto ch = current_position.peek();
     if (ch == 'e' || ch == 'E') {
       if (base == 16) {
-        throw NumberLiteralReadError("Hexadecimal literals must use 'p' or 'P' as the exponent prefix");
+        throw NumberLiteralReadError(
+            "Hexadecimal literals must use 'p' or 'P' as the exponent prefix"
+        );
       }
       current_position.next();
     } else if (ch == 'p' || ch == 'P') {
       if (base != 16) {
-        throw NumberLiteralReadError("Only hexadecimal literals may use 'p' or 'P' as the exponent prefix"
+        throw NumberLiteralReadError(
+            "Only hexadecimal literals may use 'p' or 'P' as the exponent prefix"
         );
       }
       current_position.next();
