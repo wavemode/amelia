@@ -492,8 +492,11 @@ Text TextUtils::slice(Text input, CharIterator char_start, size_t char_length) {
 }
 
 Text TextUtils::slice_bytes(Text input, size_t index_start, size_t byte_length) {
+  if (index_start >= input.size()) {
+    index_start = input.size() - 1;
+  }
   if (index_start + byte_length > input.size()) {
-    throw RuntimeError("Byte slice is out of range");
+    byte_length = input.size() - index_start;
   }
   return text_from_subslice(Slice(input.data().ptr() + index_start, byte_length));
 }
@@ -504,15 +507,21 @@ Text TextUtils::substr(Text input, CharIterator char_start, CharIterator char_en
   size_t start_offset = start_ptr - input_ptr;
   auto end_ptr = char_end.data().ptr();
   size_t end_offset = end_ptr - input_ptr;
-  if (start_offset > end_offset || end_offset > input.size()) {
-    throw RuntimeError("Character slice is out of range");
+  if (end_offset > input.size()) {
+    end_offset = input.size();
+  }
+  if (start_offset > end_offset) {
+    start_offset = end_offset;
   }
   return text_from_subslice(Slice(start_ptr, end_offset - start_offset));
 }
 
 Text TextUtils::substr_bytes(Text input, size_t index_start, size_t index_end) {
-  if (index_start > index_end || index_end > input.size()) {
-    throw RuntimeError("Byte slice is out of range");
+  if (index_end > input.size()) {
+    index_end = input.size();
+  }
+  if (index_start > index_end) {
+    index_start = index_end;
   }
   return text_from_subslice(Slice(input.data().ptr() + index_start, index_end - index_start));
 }

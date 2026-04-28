@@ -1,7 +1,7 @@
 #pragma once
 
-#include "data/source/Location.h"
-#include "data/source/TokenType.h"
+#include "data/lexer/Location.h"
+#include "data/lexer/TokenType.h"
 #include "data/text/Text.h"
 
 namespace amelia {

@@ -2,7 +2,7 @@
 #include "Prelude.h"
 
 #include "data/lexer/LexerContext.h"
-#include "data/source/Token.h"
+#include "data/lexer/Token.h"
 #include "data/testing/CompilerTestCase.h"
 
 #include "data/lexer/Lexer.h"

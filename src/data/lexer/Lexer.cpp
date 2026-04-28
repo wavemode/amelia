@@ -8,8 +8,8 @@
 #include "data/lexer/LexerError.h"
 #include "data/lexer/NumberLiteral.h"
 #include "data/lexer/NumberReadError.h"
-#include "data/source/Location.h"
-#include "data/source/Token.h"
+#include "data/lexer/Location.h"
+#include "data/lexer/Token.h"
 #include "data/text/TextUtils.h"
 
 namespace amelia {
@@ -159,6 +159,8 @@ struct LexerState {
       read_right_bracket(start_location);
     } else if (cp == '@') {
       read_at(start_location);
+    } else if (cp == '"') {
+      read_quote(start_location);
     } else if (TextUtils::is_digit(cp)) {
       read_number(start_location);
     } else if (is_word_start(cp)) {
@@ -169,6 +171,27 @@ struct LexerState {
       msg.append('\'');
       throw_lexer_error(std::move(msg));
     }
+  }
+
+  void read_quote(Location start_location) {
+    Text first_three_chars = TextUtils::slice(file_contents, input, 3);
+    if (first_three_chars == "\"\"\"") {
+      read_multiline_string(start_location);
+    } else {
+      read_string(start_location);
+    }
+  }
+
+  void read_multiline_string(Location start_location) {
+    throw RuntimeError("not implemented");
+  }
+
+  void read_string(Location start_location) {
+    throw RuntimeError("not implemented");
+  }
+
+  void skip_escape_sequence() {
+    throw RuntimeError("not implemented");
   }
 
   void read_at(Location start_location) {

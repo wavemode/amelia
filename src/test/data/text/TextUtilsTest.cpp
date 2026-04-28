@@ -1409,7 +1409,7 @@ TEST_CASE("slice_bytes") {
   SUBCASE("slice_bytes with length greater than remaining") {
     Text input = "hello world";
     int64_t byte_index = 6;
-    CHECK_THROWS_AS(TextUtils::slice_bytes(input, byte_index, 10), RuntimeError);
+    CHECK(TextUtils::slice_bytes(input, byte_index, 10) == "world");
   }
 }
 
@@ -1432,7 +1432,7 @@ TEST_CASE("substr") {
     Text input = "hello world";
     CharIterator start = input.begin().plus(6);
     CharIterator end = input.begin().plus(5);
-    CHECK_THROWS_AS(TextUtils::substr(input, start, end), RuntimeError);
+    CHECK(TextUtils::substr(input, start, end) == "");
   }
 }
 
@@ -1455,7 +1455,7 @@ TEST_CASE("substr_bytes") {
     Text input = "hello world";
     int64_t start_byte_index = 6;
     int64_t end_byte_index = 5;
-    CHECK_THROWS_AS(TextUtils::substr_bytes(input, start_byte_index, end_byte_index), RuntimeError);
+    CHECK(TextUtils::substr_bytes(input, start_byte_index, end_byte_index) == "");
   }
 }
 
