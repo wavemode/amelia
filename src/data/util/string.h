@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "data/core/abstract_string.h"
+#include "data/util/abstract_string.h"
 
 namespace amelia {
 

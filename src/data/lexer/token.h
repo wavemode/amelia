@@ -1,8 +1,8 @@
 #pragma once
 
-#include "data/core/text.h"
 #include "data/lexer/token_type.h"
 #include "data/source/location.h"
+#include "data/util/text.h"
 
 namespace amelia {
 

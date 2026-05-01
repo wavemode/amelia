@@ -3,8 +3,8 @@
 #include <cstddef>
 #include <vector>
 
-#include "data/core/list.h"
-#include "data/core/map.h"
+#include "data/util/list.h"
+#include "data/util/map.h"
 #include "node_info.h"
 #include "node_type_list.h"
 

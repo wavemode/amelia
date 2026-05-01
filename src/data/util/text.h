@@ -3,7 +3,7 @@
 #include <cstddef>
 #include <string>
 
-#include "data/core/slice.h"
+#include "data/util/slice.h"
 
 namespace amelia {
 

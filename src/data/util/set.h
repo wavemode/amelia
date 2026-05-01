@@ -5,8 +5,8 @@
 #include <unordered_set>
 #include <utility>
 
-#include "data/core/abstract_iterator.h"
-#include "data/core/abstract_set.h"
+#include "data/util/abstract_iterator.h"
+#include "data/util/abstract_set.h"
 
 namespace amelia {
 

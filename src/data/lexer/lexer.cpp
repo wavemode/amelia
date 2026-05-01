@@ -3,7 +3,6 @@
 #include "lexer.h"
 #include "prelude.h"
 
-#include "data/core/text_utils.h"
 #include "data/lexer/lexer_context.h"
 #include "data/lexer/lexer_error.h"
 #include "data/lexer/token.h"
@@ -11,6 +10,7 @@
 #include "data/source/number_literal.h"
 #include "data/source/number_literal_read_error.h"
 #include "data/source/string_literal.h"
+#include "data/util/text_utils.h"
 
 namespace amelia {
 

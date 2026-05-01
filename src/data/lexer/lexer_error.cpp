@@ -1,7 +1,7 @@
 #include "lexer_error.h"
 #include "prelude.h"
 
-#include "data/core/text_utils.h"
+#include "data/util/text_utils.h"
 
 namespace amelia {
 

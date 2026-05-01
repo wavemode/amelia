@@ -1,6 +1,6 @@
 #pragma once
 
-#include "data/core/text.h"
+#include "data/util/text.h"
 
 namespace amelia {
 

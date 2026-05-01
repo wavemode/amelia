@@ -5,8 +5,8 @@
 #include <unordered_map>
 #include <utility>
 
-#include "data/core/abstract_iterator.h"
-#include "data/core/abstract_map.h"
+#include "data/util/abstract_iterator.h"
+#include "data/util/abstract_map.h"
 
 namespace amelia {
 

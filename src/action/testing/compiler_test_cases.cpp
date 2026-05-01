@@ -16,7 +16,7 @@
 #include "data/testing/compiler_test_case_collection.h"
 #include "data/testing/compiler_test_case_outcome.h"
 
-#include "data/core/text_utils.h"
+#include "data/util/text_utils.h"
 
 namespace amelia {
 

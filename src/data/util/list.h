@@ -5,7 +5,7 @@
 #include <initializer_list>
 #include <vector>
 
-#include "data/core/abstract_list.h"
+#include "data/util/abstract_list.h"
 
 namespace amelia {
 

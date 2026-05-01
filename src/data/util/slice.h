@@ -3,7 +3,7 @@
 #include <cstddef>
 #include <stdexcept>
 
-#include "data/core/abstract_iterator.h"
+#include "data/util/abstract_iterator.h"
 
 namespace amelia {
 

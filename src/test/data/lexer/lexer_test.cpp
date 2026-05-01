@@ -3,9 +3,9 @@
 #include "prelude.h"
 
 #include "action/testing/compiler_test_cases.h"
-#include "data/core/text_utils.h"
 #include "data/testing/compiler_test_case_collection.h"
 #include "data/testing/compiler_test_case_outcome.h"
+#include "data/util/text_utils.h"
 #include "effect/fs/file_loader.h"
 #include "effect/fs/file_writer.h"
 #include "effect/fs/filesystem_walker.h"

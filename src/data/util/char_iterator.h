@@ -4,8 +4,8 @@
 #include <cstdint>
 #include <vector>
 
-#include "data/core/abstract_iterator.h"
-#include "data/core/slice.h"
+#include "data/util/abstract_iterator.h"
+#include "data/util/slice.h"
 
 namespace amelia {
 
