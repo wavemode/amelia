@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <vector>
 
+#include "data/core/abstract_iterator.h"
 #include "data/core/slice.h"
 
 namespace amelia {
@@ -15,7 +16,7 @@ class Text;
  * @class CharIterator
  * @brief An iterator over the unicode code points in a UTF-8 string.
  */
-class CharIterator {
+class CharIterator : public AbstractIterator<uint32_t> {
 public:
   /**
    * @brief Constructs an iterator over the UTF-8 code points in the given span.
@@ -63,6 +64,13 @@ public:
    * @throws InvalidUTF8Error if the iterator is not currently pointing to a valid UTF-8 sequence.
    * @throws std::out_of_range if the iterator is at the end of the string.
    */
+  uint32_t peek() override;
+
+  /**
+   * @brief Returns the next UTF-8 code point in the string without advancing the iterator.
+   * @throws InvalidUTF8Error if the iterator is not currently pointing to a valid UTF-8 sequence.
+   * @throws std::out_of_range if the iterator is at the end of the string.
+   */
   uint32_t peek() const;
 
   /**
@@ -70,7 +78,7 @@ public:
    * @throws InvalidUTF8Error if the iterator is not currently pointing to a valid UTF-8 sequence.
    * @throws std::out_of_range if the iterator is advanced past the end of the string.
    */
-  uint32_t next();
+  uint32_t next() override;
 
   /**
    * @return The underlying slice of bytes representing the remaining span of the string.
@@ -114,7 +122,7 @@ public:
   /**
    * @brief Checks if the iterator has reached the end of the span.
    */
-  bool at_end() const noexcept;
+  bool at_end() const noexcept override;
 
   /**
    * @brief Validates that the given span of bytes is valid UTF-8.

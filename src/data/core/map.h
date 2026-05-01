@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <utility>
 
+#include "data/core/abstract_iterator.h"
 #include "data/core/abstract_map.h"
 
 namespace amelia {
@@ -97,14 +98,13 @@ private:
   std::unordered_map<K, V> m_map;
 };
 
-template <typename K, typename V> class MapValueIterator {
+template <typename K, typename V> class MapValueIterator : public AbstractIterator<V &> {
 public:
-  using value_type = std::pair<const K, V>::second_type;
-
   explicit MapValueIterator(MapPairIterator<K, V> it) : m_it(it) {}
 
-  value_type &operator*() { return m_it->second; }
-  value_type *operator->() { return &(m_it->second); }
+  V &operator*() { return m_it->second; }
+  V &peek() override { return **this; }
+  V *operator->() { return &(m_it->second); }
 
   MapValueIterator<K, V> &operator++() {
     ++m_it;
@@ -117,26 +117,32 @@ public:
     return tmp;
   }
 
+  V &next() override {
+    V &value = peek();
+    ++(*this);
+    return value;
+  }
+
   bool operator==(const MapValueIterator &other) const { return m_it == other.m_it; }
   bool operator!=(const MapValueIterator &other) const { return m_it != other.m_it; }
 
   MapValueIterator<K, V> begin() const { return *this; }
   MapValueIterator<K, V> end() const { return MapValueIterator(m_it.end()); }
 
-  bool at_end() const { return m_it.at_end(); }
+  bool at_end() const override { return m_it.at_end(); }
 
 private:
   MapPairIterator<K, V> m_it;
 };
 
-template <typename K, typename V> class MapKeyIterator {
+template <typename K, typename V> class MapKeyIterator : public AbstractIterator<const K &> {
 public:
-  using value_type = std::pair<const K, V>::first_type;
-
   explicit MapKeyIterator(MapPairIterator<K, V> it) : m_it(it) {}
 
-  value_type &operator*() { return m_it->first; }
-  value_type *operator->() { return &(m_it->first); }
+  const K &operator*() { return m_it->first; }
+  const K &peek() override { return **this; }
+
+  const K *operator->() { return &(m_it->first); }
 
   MapKeyIterator<K, V> &operator++() {
     ++m_it;
@@ -149,19 +155,26 @@ public:
     return tmp;
   }
 
+  const K &next() override {
+    const K &key = peek();
+    ++(*this);
+    return key;
+  }
+
   bool operator==(const MapKeyIterator &other) const { return m_it == other.m_it; }
   bool operator!=(const MapKeyIterator &other) const { return m_it != other.m_it; }
 
   MapKeyIterator<K, V> begin() const { return *this; }
   MapKeyIterator<K, V> end() const { return MapKeyIterator(m_it.end()); }
 
-  bool at_end() const { return m_it.at_end(); }
+  bool at_end() const override { return m_it.at_end(); }
 
 private:
   MapPairIterator<K, V> m_it;
 };
 
-template <typename K, typename V> class MapPairIterator {
+template <typename K, typename V>
+class MapPairIterator : public AbstractIterator<std::pair<const K, V> &> {
 public:
   using value_type = std::pair<const K, V>;
 
@@ -173,6 +186,8 @@ public:
     }
     return *m_begin;
   }
+
+  value_type &peek() override { return **this; }
 
   value_type *operator->() {
     if (at_end()) {
@@ -198,13 +213,19 @@ public:
     return tmp;
   }
 
+  value_type &next() override {
+    value_type &pair = peek();
+    ++(*this);
+    return pair;
+  }
+
   bool operator==(const MapPairIterator &other) const { return m_begin == other.m_begin; }
   bool operator!=(const MapPairIterator &other) const { return m_begin != other.m_begin; }
 
   MapPairIterator<K, V> begin() const { return *this; }
   MapPairIterator<K, V> end() const { return MapPairIterator(m_end, m_end); }
 
-  bool at_end() const { return m_begin == m_end; }
+  bool at_end() const override { return m_begin == m_end; }
 
 private:
   MapPairIterator(
@@ -217,14 +238,13 @@ private:
   typename std::unordered_map<K, V>::iterator m_end;
 };
 
-template <typename K, typename V> class ConstMapValueIterator {
+template <typename K, typename V> class ConstMapValueIterator : public AbstractIterator<const V &> {
 public:
-  using value_type = std::pair<const K, V>::second_type;
-
   explicit ConstMapValueIterator(ConstMapPairIterator<K, V> it) : m_it(it) {}
 
-  const value_type &operator*() const { return m_it->second; }
-  const value_type *operator->() const { return &(m_it->second); }
+  const V &operator*() const { return m_it->second; }
+  const V &peek() override { return **this; }
+  const V *operator->() const { return &(m_it->second); }
 
   ConstMapValueIterator<K, V> &operator++() {
     ++m_it;
@@ -237,26 +257,31 @@ public:
     return tmp;
   }
 
+  const V &next() override {
+    const V &value = peek();
+    ++(*this);
+    return value;
+  }
+
   bool operator==(const ConstMapValueIterator &other) const { return m_it == other.m_it; }
   bool operator!=(const ConstMapValueIterator &other) const { return m_it != other.m_it; }
 
   ConstMapValueIterator<K, V> begin() const { return *this; }
   ConstMapValueIterator<K, V> end() const { return ConstMapValueIterator(m_it.end()); }
 
-  bool at_end() const { return m_it.at_end(); }
+  bool at_end() const override { return m_it.at_end(); }
 
 private:
   ConstMapPairIterator<K, V> m_it;
 };
 
-template <typename K, typename V> class ConstMapKeyIterator {
+template <typename K, typename V> class ConstMapKeyIterator : public AbstractIterator<const K &> {
 public:
-  using value_type = std::pair<const K, V>::first_type;
-
   explicit ConstMapKeyIterator(ConstMapPairIterator<K, V> it) : m_it(it) {}
 
-  const value_type &operator*() const { return m_it->first; }
-  const value_type *operator->() const { return &(m_it->first); }
+  const K &operator*() const { return m_it->first; }
+  const K &peek() override { return **this; }
+  const K *operator->() const { return &(m_it->first); }
 
   ConstMapKeyIterator<K, V> &operator++() {
     ++m_it;
@@ -269,19 +294,26 @@ public:
     return tmp;
   }
 
+  const K &next() override {
+    const K &key = peek();
+    ++(*this);
+    return key;
+  }
+
   bool operator==(const ConstMapKeyIterator &other) const { return m_it == other.m_it; }
   bool operator!=(const ConstMapKeyIterator &other) const { return m_it != other.m_it; }
 
   ConstMapKeyIterator<K, V> begin() const { return *this; }
   ConstMapKeyIterator<K, V> end() const { return ConstMapKeyIterator(m_it.end()); }
 
-  bool at_end() const { return m_it.at_end(); }
+  bool at_end() const override { return m_it.at_end(); }
 
 private:
   ConstMapPairIterator<K, V> m_it;
 };
 
-template <typename K, typename V> class ConstMapPairIterator {
+template <typename K, typename V>
+class ConstMapPairIterator : public AbstractIterator<const std::pair<const K, V> &> {
 public:
   using value_type = std::pair<const K, V>;
 
@@ -294,6 +326,8 @@ public:
     }
     return *m_begin;
   }
+
+  const value_type &peek() override { return **this; }
 
   const value_type *operator->() const {
     if (at_end()) {
@@ -319,13 +353,19 @@ public:
     return tmp;
   }
 
+  const value_type &next() override {
+    const value_type &pair = peek();
+    ++(*this);
+    return pair;
+  }
+
   bool operator==(const ConstMapPairIterator &other) const { return m_begin == other.m_begin; }
   bool operator!=(const ConstMapPairIterator &other) const { return m_begin != other.m_begin; }
 
   ConstMapPairIterator<K, V> begin() const { return *this; }
   ConstMapPairIterator<K, V> end() const { return ConstMapPairIterator(m_end, m_end); }
 
-  bool at_end() const { return m_begin == m_end; }
+  bool at_end() const override { return m_begin == m_end; }
 
 private:
   ConstMapPairIterator(

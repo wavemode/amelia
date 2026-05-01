@@ -3,6 +3,8 @@
 #include <cstddef>
 #include <stdexcept>
 
+#include "data/core/abstract_iterator.h"
+
 namespace amelia {
 
 class RuntimeError;
@@ -55,7 +57,7 @@ private:
   size_t m_len;
 };
 
-template <typename T> class SliceIterator {
+template <typename T> class SliceIterator : public AbstractIterator<T &> {
 public:
   SliceIterator() noexcept : m_ptr(nullptr), m_len(0) {}
 
@@ -87,6 +89,8 @@ public:
     return *m_ptr;
   }
 
+  T &peek() override { return **this; }
+
   SliceIterator<T> &operator+=(size_t offset) {
     *this = *this + offset;
     return *this;
@@ -102,6 +106,14 @@ public:
     ++(*this);
     return temp;
   }
+
+  T &next() override {
+    T &value = peek();
+    ++(*this);
+    return value;
+  }
+
+  bool at_end() const override { return m_len == 0; }
 
   SliceIterator<T> operator+(size_t offset) const {
     if (offset > m_len) {

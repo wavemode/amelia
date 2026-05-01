@@ -25,7 +25,7 @@ CharIterator CharIterator::end() const noexcept { return CharIterator(m_slice_it
 
 uint32_t CharIterator::operator*() const { return peek(); }
 
-uint32_t CharIterator::peek() const {
+uint32_t CharIterator::peek() {
   try {
     return utf8::peek_next(m_slice_iter, m_slice_iter.end());
   } catch (const utf8::invalid_utf8 &) {
@@ -34,6 +34,8 @@ uint32_t CharIterator::peek() const {
     throw RuntimeError("Attempted to peek past the end of the string");
   }
 }
+
+uint32_t CharIterator::peek() const { return const_cast<CharIterator *>(this)->peek(); }
 
 uint32_t CharIterator::next() {
   try {

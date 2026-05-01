@@ -1,4 +1,5 @@
 #include "lexer_error.h"
+#include "prelude.h"
 
 #include "data/text/text_utils.h"
 

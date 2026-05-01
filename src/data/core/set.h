@@ -5,6 +5,7 @@
 #include <unordered_set>
 #include <utility>
 
+#include "data/core/abstract_iterator.h"
 #include "data/core/abstract_set.h"
 
 namespace amelia {
@@ -42,7 +43,7 @@ private:
   std::unordered_set<T> m_set;
 };
 
-template <typename T> class SetIterator {
+template <typename T> class SetIterator : public AbstractIterator<const T &> {
 public:
   explicit SetIterator(const Set<T> &set) : m_begin(set.m_set.begin()), m_end(set.m_set.end()) {}
 
@@ -52,6 +53,8 @@ public:
     }
     return *m_begin;
   }
+
+  const T &peek() override { return **this; }
 
   const T *operator->() {
     if (at_end()) {
@@ -77,13 +80,19 @@ public:
     return tmp;
   }
 
+  const T &next() override {
+    const T &value = peek();
+    ++(*this);
+    return value;
+  }
+
   bool operator==(const SetIterator &other) const { return m_begin == other.m_begin; }
   bool operator!=(const SetIterator &other) const { return m_begin != other.m_begin; }
 
   SetIterator<T> begin() const { return *this; }
   SetIterator<T> end() const { return SetIterator(m_end, m_end); }
 
-  bool at_end() const { return m_begin == m_end; }
+  bool at_end() const override { return m_begin == m_end; }
 
 private:
   SetIterator(
