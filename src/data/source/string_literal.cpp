@@ -30,7 +30,7 @@ uint32_t read_hex_chars(size_t num_chars, CharIterator &iter) {
 }
 } // namespace
 
-void StringLiteral::read(IString &output, CharIterator &iter, bool is_raw) {
+void StringLiteral::read(AbstractString &output, CharIterator &iter, bool is_raw) {
   std::vector<char> result;
   while (!iter.at_end()) {
     uint32_t ch = iter.next();

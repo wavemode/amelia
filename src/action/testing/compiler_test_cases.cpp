@@ -178,7 +178,7 @@ bool update_expected_output(
   return true;
 }
 
-void run_lexer_test_case(IString &output, CompilerTestCase test_case) {
+void run_lexer_test_case(AbstractString &output, CompilerTestCase test_case) {
   List<Token> tokens;
   CharIterator iter(test_case.input);
   Lexer::tokenize(tokens, iter, LexerContext{test_case.filename});

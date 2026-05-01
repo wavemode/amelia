@@ -2,7 +2,7 @@
 
 #include "prelude.h"
 
-void amelia::token_type_to_string(TokenType type, IString &out) {
+void amelia::token_type_to_string(TokenType type, AbstractString &out) {
   switch (type) {
   case TokenType::IDENTIFIER:
     out.append("IDENTIFIER");

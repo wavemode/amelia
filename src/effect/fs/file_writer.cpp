@@ -11,7 +11,10 @@ namespace amelia {
 namespace {
 
 void write_to_file(
-    const IString &path, const IString &content, bool overwrite, bool create_directories
+    const AbstractString &path,
+    const AbstractString &content,
+    bool overwrite,
+    bool create_directories
 ) {
   std::filesystem::path p(path.c_str());
 
@@ -34,11 +37,11 @@ void write_to_file(
 
 } // namespace
 
-void FileWriter::write_file(const IString &file_path, const IString &contents) {
+void FileWriter::write_file(const AbstractString &file_path, const AbstractString &contents) {
   write_to_file(file_path, contents, true, true);
 }
 
-void FileWriter::append_file(const IString &file_path, const IString &contents) {
+void FileWriter::append_file(const AbstractString &file_path, const AbstractString &contents) {
   write_to_file(file_path, contents, false, true);
 }
 

@@ -7,7 +7,7 @@
 
 namespace amelia {
 
-void FileLoader::load_file(IString &output, const IString &file_path) {
+void FileLoader::load_file(AbstractString &output, const AbstractString &file_path) {
   std::ifstream file(file_path.c_str());
   if (!file) {
     String err("Failed to open file: ");

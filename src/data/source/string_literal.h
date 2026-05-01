@@ -5,7 +5,7 @@
 namespace amelia {
 
 struct StringLiteral {
-  static void read(IString &output, CharIterator &iter, bool is_raw);
+  static void read(AbstractString &output, CharIterator &iter, bool is_raw);
 };
 
 } // namespace amelia

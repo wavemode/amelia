@@ -6,7 +6,7 @@
 
 namespace amelia {
 
-class IString;
+class AbstractString;
 
 struct Token {
   TokenType type;
@@ -17,7 +17,7 @@ struct Token {
 
   bool operator!=(const Token &other) const;
 
-  void to_string(IString &out) const;
+  void to_string(AbstractString &out) const;
 };
 
 } // namespace amelia

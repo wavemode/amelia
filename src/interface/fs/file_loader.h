@@ -2,10 +2,10 @@
 
 namespace amelia {
 
-class IString;
+class AbstractString;
 
 struct IFileLoader {
-  virtual void load_file(IString &output, const IString &file_path) = 0;
+  virtual void load_file(AbstractString &output, const AbstractString &file_path) = 0;
 };
 
 } // namespace amelia

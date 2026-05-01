@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "interface/text/string.h"
+#include "data/text/abstract_string.h"
 
 namespace amelia {
 
@@ -17,7 +17,7 @@ class CharIterator;
  * @class String
  * @brief A simple string class. Guaranteed to contain valid UTF-8 data.
  */
-class String : public IString {
+class String : public AbstractString {
 public:
   /**
    * @brief Construct an empty String.

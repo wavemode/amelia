@@ -6,10 +6,10 @@ class Text;
 class CharIterator;
 class Token;
 struct LexerContext;
-template <typename T> class IList;
+template <typename T> class AbstractList;
 
 struct Lexer {
-  static void tokenize(IList<Token> &output, CharIterator &iter, LexerContext ctx);
+  static void tokenize(AbstractList<Token> &output, CharIterator &iter, LexerContext ctx);
 };
 
 } // namespace amelia

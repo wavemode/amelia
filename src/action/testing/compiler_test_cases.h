@@ -30,6 +30,6 @@ bool execute_test_case(ITestCaseRunner &, CompilerTestCase test_case);
 
 bool update_expected_output(ITestCaseRunner &, IFileWriter &, CompilerTestCase test_case);
 
-void run_lexer_test_case(IString &output, CompilerTestCase test_case);
+void run_lexer_test_case(AbstractString &output, CompilerTestCase test_case);
 
 } // namespace amelia

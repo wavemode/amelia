@@ -6,7 +6,7 @@ namespace amelia {
 
 Text TextUtils::WHITESPACE_CHARS = " \t\n\r";
 
-void TextUtils::split(IList<Text> &output, Text input, Text delimiter, int64_t max_splits) {
+void TextUtils::split(AbstractList<Text> &output, Text input, Text delimiter, int64_t max_splits) {
   if (delimiter.size() == 0) {
     for (CharIterator it = input.begin(); !it.at_end(); ++it) {
       output.push_back(slice(input, it, 1));
@@ -28,7 +28,9 @@ void TextUtils::split(IList<Text> &output, Text input, Text delimiter, int64_t m
   output.push_back(substr(input, it, input.end()));
 }
 
-void TextUtils::split(IList<String> &output, Text input, Text delimiter, int64_t max_splits) {
+void TextUtils::split(
+    AbstractList<String> &output, Text input, Text delimiter, int64_t max_splits
+) {
   List<Text> temp_output;
   split(temp_output, input, delimiter, max_splits);
   for (const Text &part : temp_output) {
@@ -36,7 +38,7 @@ void TextUtils::split(IList<String> &output, Text input, Text delimiter, int64_t
   }
 }
 
-void TextUtils::join_into(IString &output, Slice<Text> parts, Text delimiter) {
+void TextUtils::join_into(AbstractString &output, Slice<Text> parts, Text delimiter) {
   for (size_t i = 0; i < parts.size(); ++i) {
     output.append(parts[i]);
     if (i < parts.size() - 1) {
@@ -60,7 +62,7 @@ Text TextUtils::trim(Text input, Text chars) {
   }
   return substr(input, start_it, end_it);
 }
-void TextUtils::trim_into(IString &output, Text input, Text chars) {
+void TextUtils::trim_into(AbstractString &output, Text input, Text chars) {
   output.append(trim(input, chars));
 }
 
@@ -71,7 +73,7 @@ Text TextUtils::trim_left(Text input, Text chars) {
   }
   return substr(input, start_it, input.end());
 }
-void TextUtils::trim_left_into(IString &output, Text input, Text chars) {
+void TextUtils::trim_left_into(AbstractString &output, Text input, Text chars) {
   output.append(trim_left(input, chars));
 }
 
@@ -86,11 +88,11 @@ Text TextUtils::trim_right(Text input, Text chars) {
   }
   return substr(input, input.begin(), end_it);
 }
-void TextUtils::trim_right_into(IString &output, Text input, Text chars) {
+void TextUtils::trim_right_into(AbstractString &output, Text input, Text chars) {
   output.append(trim_right(input, chars));
 }
 
-void TextUtils::to_lower(IString &text) {
+void TextUtils::to_lower(AbstractString &text) {
   Text input = text.text();
   String output;
   for (CharIterator it = input.begin(); !it.at_end(); ++it) {
@@ -102,7 +104,7 @@ void TextUtils::to_lower(IString &text) {
   }
   text.assign(output);
 }
-void TextUtils::to_lower_into(IString &output, Text input) {
+void TextUtils::to_lower_into(AbstractString &output, Text input) {
   for (CharIterator it = input.begin(); !it.at_end(); ++it) {
     uint32_t code_point = *it;
     if (code_point >= 'A' && code_point <= 'Z') {
@@ -112,7 +114,7 @@ void TextUtils::to_lower_into(IString &output, Text input) {
   }
 }
 
-void TextUtils::to_upper(IString &text) {
+void TextUtils::to_upper(AbstractString &text) {
   Text input = text.text();
   String output;
   for (CharIterator it = input.begin(); !it.at_end(); ++it) {
@@ -125,7 +127,7 @@ void TextUtils::to_upper(IString &text) {
   text.assign(output);
 }
 
-void TextUtils::to_upper_into(IString &output, Text input) {
+void TextUtils::to_upper_into(AbstractString &output, Text input) {
   for (CharIterator it = input.begin(); !it.at_end(); ++it) {
     uint32_t code_point = *it;
     if (code_point >= 'a' && code_point <= 'z') {
@@ -288,7 +290,7 @@ int64_t TextUtils::find_char_before_byte(Text input, uint32_t code_point, size_t
   return it.data().ptr() - input.data().ptr();
 }
 
-void TextUtils::find_all(IList<CharIterator> &output, Text input, Text substring) {
+void TextUtils::find_all(AbstractList<CharIterator> &output, Text input, Text substring) {
   CharIterator it = input.begin();
   while (!it.at_end()) {
     CharIterator found = find_after(input, substring, it);
@@ -299,7 +301,7 @@ void TextUtils::find_all(IList<CharIterator> &output, Text input, Text substring
     it = substring.size() == 0 ? found.plus(1) : found.plus_bytes(substring.size());
   }
 }
-void TextUtils::find_all_bytes(IList<int64_t> &output, Text input, Text substring) {
+void TextUtils::find_all_bytes(AbstractList<int64_t> &output, Text input, Text substring) {
   CharIterator it = input.begin();
   while (!it.at_end()) {
     CharIterator found = find_after(input, substring, it);
@@ -311,7 +313,9 @@ void TextUtils::find_all_bytes(IList<int64_t> &output, Text input, Text substrin
   }
 }
 
-void TextUtils::find_all_chars(IList<CharIterator> &output, Text input, uint32_t code_point) {
+void TextUtils::find_all_chars(
+    AbstractList<CharIterator> &output, Text input, uint32_t code_point
+) {
   CharIterator it = input.begin();
   while (!it.at_end()) {
     CharIterator found = find_char_after(input, code_point, it);
@@ -323,7 +327,9 @@ void TextUtils::find_all_chars(IList<CharIterator> &output, Text input, uint32_t
   }
 }
 
-void TextUtils::find_all_char_bytes(IList<int64_t> &output, Text input, uint32_t code_point) {
+void TextUtils::find_all_char_bytes(
+    AbstractList<int64_t> &output, Text input, uint32_t code_point
+) {
   CharIterator it = input.begin();
   while (!it.at_end()) {
     CharIterator found = find_char_after(input, code_point, it);
@@ -335,13 +341,13 @@ void TextUtils::find_all_char_bytes(IList<int64_t> &output, Text input, uint32_t
   }
 }
 
-void TextUtils::replace(IString &text, Text search, Text replacement, int64_t count) {
+void TextUtils::replace(AbstractString &text, Text search, Text replacement, int64_t count) {
   String output;
   replace_into(output, text.text(), search, replacement, count);
   text.assign(output);
 }
 void TextUtils::replace_into(
-    IString &output, Text input, Text search, Text replacement, int64_t count
+    AbstractString &output, Text input, Text search, Text replacement, int64_t count
 ) {
   CharIterator it = input.begin();
   int64_t replacements = 0;
@@ -371,21 +377,23 @@ void TextUtils::replace_into(
   output.append(substr(input, it, input.end()));
 }
 
-void TextUtils::replace_all(IString &text, Text search, Text replacement) {
+void TextUtils::replace_all(AbstractString &text, Text search, Text replacement) {
   replace(text, search, replacement, -1);
 }
-void TextUtils::replace_all_into(IString &output, Text input, Text search, Text replacement) {
+void TextUtils::replace_all_into(
+    AbstractString &output, Text input, Text search, Text replacement
+) {
   replace_into(output, input, search, replacement, -1);
 }
 
-void TextUtils::pad_left(IString &text, size_t total_length, Text pad) {
+void TextUtils::pad_left(AbstractString &text, size_t total_length, Text pad) {
   Text input = text.text();
   String output;
   pad_left_into(output, input, total_length, pad);
   text.assign(output);
 }
 
-void TextUtils::pad_left_into(IString &output, Text input, size_t total_length, Text pad) {
+void TextUtils::pad_left_into(AbstractString &output, Text input, size_t total_length, Text pad) {
   size_t input_length = count_chars(input);
   size_t pad_length = count_chars(pad);
   if (input_length < total_length && pad_length > 0) {
@@ -402,12 +410,12 @@ void TextUtils::pad_left_into(IString &output, Text input, size_t total_length, 
   output.append(input);
 }
 
-void TextUtils::pad_right(IString &text, size_t total_length, Text pad) {
+void TextUtils::pad_right(AbstractString &text, size_t total_length, Text pad) {
   String output;
   pad_right_into(output, text.text(), total_length, pad);
   text.assign(output);
 }
-void TextUtils::pad_right_into(IString &output, Text input, size_t total_length, Text pad) {
+void TextUtils::pad_right_into(AbstractString &output, Text input, size_t total_length, Text pad) {
   size_t input_length = count_chars(input);
   size_t pad_length = count_chars(pad);
   output.append(input);
@@ -424,25 +432,25 @@ void TextUtils::pad_right_into(IString &output, Text input, size_t total_length,
   }
 }
 
-void TextUtils::remove(IString &text, Text substring, int64_t count) {
+void TextUtils::remove(AbstractString &text, Text substring, int64_t count) {
   String output;
   remove_into(output, text.text(), substring, count);
   text.assign(output);
 }
-void TextUtils::remove_into(IString &output, Text input, Text substring, int64_t count) {
+void TextUtils::remove_into(AbstractString &output, Text input, Text substring, int64_t count) {
   replace_into(output, input, substring, "", count);
 }
 
-void TextUtils::remove_all(IString &text, Text substring) {
+void TextUtils::remove_all(AbstractString &text, Text substring) {
   String output;
   remove_all_into(output, text.text(), substring);
   text.assign(output);
 }
-void TextUtils::remove_all_into(IString &output, Text input, Text substring) {
+void TextUtils::remove_all_into(AbstractString &output, Text input, Text substring) {
   replace_into(output, input, substring, "", -1);
 }
 
-void TextUtils::repeat(IString &text, size_t count) {
+void TextUtils::repeat(AbstractString &text, size_t count) {
   if (count == 0) {
     text.assign("");
     return;
@@ -451,19 +459,19 @@ void TextUtils::repeat(IString &text, size_t count) {
   repeat_into(output, text.text(), count);
   text.assign(output);
 }
-void TextUtils::repeat_into(IString &output, Text input, size_t count) {
+void TextUtils::repeat_into(AbstractString &output, Text input, size_t count) {
   for (size_t i = 0; i < count; ++i) {
     output.append(input);
   }
 }
 
-void TextUtils::reverse(IString &text) {
+void TextUtils::reverse(AbstractString &text) {
   Text input = text.text();
   String output;
   reverse_into(output, input);
   text.assign(output);
 }
-void TextUtils::reverse_into(IString &output, Text input) {
+void TextUtils::reverse_into(AbstractString &output, Text input) {
   List<uint32_t> code_points;
   for (uint32_t ch : input) {
     code_points.push_back(ch);
@@ -547,17 +555,17 @@ Text TextUtils::tail_bytes(Text input, size_t index_start) {
   return substr_bytes(input, index_start, input.size());
 }
 
-void TextUtils::to_string(IString &output, int64_t value) {
+void TextUtils::to_string(AbstractString &output, int64_t value) {
   std::string s1 = std::to_string(value);
   output.append(Text::from(s1));
 }
 
-void TextUtils::to_string(IString &output, size_t value) {
+void TextUtils::to_string(AbstractString &output, size_t value) {
   std::string s1 = std::to_string(value);
   output.append(Text::from(s1));
 }
 
-void TextUtils::to_string(IString &output, double value) {
+void TextUtils::to_string(AbstractString &output, double value) {
   std::string s1 = std::to_string(value);
   output.append(Text::from(s1));
 }

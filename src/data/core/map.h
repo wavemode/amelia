@@ -5,6 +5,8 @@
 #include <unordered_map>
 #include <utility>
 
+#include "data/core/abstract_map.h"
+
 namespace amelia {
 
 struct RuntimeError;
@@ -15,23 +17,23 @@ template <typename K, typename V> class ConstMapKeyIterator;
 template <typename K, typename V> class MapPairIterator;
 template <typename K, typename V> class ConstMapPairIterator;
 
-template <typename K, typename V> class Map {
+template <typename K, typename V> class Map : public AbstractMap<K, V> {
 public:
   Map() = default;
   Map(std::initializer_list<std::pair<const K, V>> init) : m_map(init) {}
 
-  bool has(const K &key) const { return m_map.find(key) != m_map.end(); }
-  size_t size() const { return m_map.size(); }
+  bool has(const K &key) const override { return m_map.find(key) != m_map.end(); }
+  size_t size() const noexcept override { return m_map.size(); }
 
-  void set(const K &key, V value) { m_map.insert_or_assign(key, std::move(value)); }
+  void set(const K &key, V value) override { m_map.insert_or_assign(key, std::move(value)); }
 
-  V &get(const K &key) {
+  V &get(const K &key) override {
     if (!has(key)) {
       throw RuntimeError("Key not found in map");
     }
     return m_map.at(key);
   }
-  const V &get(const K &key) const {
+  const V &get(const K &key) const override {
     if (!has(key)) {
       throw RuntimeError("Key not found in map");
     }
@@ -53,7 +55,7 @@ public:
     return &(it->second);
   }
 
-  void remove(const K &key) { m_map.erase(key); }
+  void remove(const K &key) override { m_map.erase(key); }
   V remove_and_get(const K &key) {
     auto it = m_map.find(key);
     if (it == m_map.end()) {
@@ -64,7 +66,7 @@ public:
     return value;
   }
 
-  void clear() { m_map.clear(); }
+  void clear() override { m_map.clear(); }
 
   V &operator[](const K &key) { return get(key); }
   const V &operator[](const K &key) const { return get(key); }

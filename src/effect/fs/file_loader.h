@@ -6,7 +6,7 @@ namespace amelia {
 
 class FileLoader : public IFileLoader {
 public:
-  void load_file(IString &output, const IString &file_path) override;
+  void load_file(AbstractString &output, const AbstractString &file_path) override;
 };
 
 } // namespace amelia

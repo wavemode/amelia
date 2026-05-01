@@ -5,7 +5,7 @@
 #include <initializer_list>
 #include <vector>
 
-#include "interface/core/list.h"
+#include "data/core/abstract_list.h"
 
 namespace amelia {
 
@@ -13,7 +13,7 @@ class RuntimeError;
 template <typename T> class Slice;
 template <typename T> class SliceIterator;
 
-template <typename T> class List : public IList<T> {
+template <typename T> class List : public AbstractList<T> {
 public:
   List() noexcept = default;
 

@@ -6,7 +6,7 @@ namespace amelia {
 
 class EnvironmentReader : public IEnvironmentReader {
 public:
-  void get_env(IString &output, const IString &name) override;
+  void get_env(AbstractString &output, const AbstractString &name) override;
 
 private:
 };

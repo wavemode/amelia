@@ -99,7 +99,7 @@ struct LexerState {
   size_t column;
   Text file_contents;
   CharIterator input;
-  IList<Token> &output;
+  AbstractList<Token> &output;
   bool previous_char_was_whitespace;
 
   void read_file() {
@@ -721,7 +721,7 @@ struct LexerState {
 
 } // namespace
 
-void Lexer::tokenize(IList<Token> &output, CharIterator &iter, LexerContext ctx) {
+void Lexer::tokenize(AbstractList<Token> &output, CharIterator &iter, LexerContext ctx) {
   LexerState state{
       .ctx = ctx,
       .line = 1,

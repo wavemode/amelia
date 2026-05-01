@@ -7,34 +7,38 @@
 
 namespace amelia {
 
-template <typename T> class IList;
+template <typename T> class AbstractList;
 template <typename T> class Slice;
 class String;
-class IString;
+class AbstractString;
 class CharIterator;
 
 struct TextUtils {
   static Text WHITESPACE_CHARS;
 
-  static void split(IList<Text> &output, Text input, Text delimiter, int64_t max_splits = -1);
-  static void split(IList<String> &output, Text input, Text delimiter, int64_t max_splits = -1);
+  static void split(
+      AbstractList<Text> &output, Text input, Text delimiter, int64_t max_splits = -1
+  );
+  static void split(
+      AbstractList<String> &output, Text input, Text delimiter, int64_t max_splits = -1
+  );
 
-  static void join_into(IString &output, Slice<Text> parts, Text delimiter);
+  static void join_into(AbstractString &output, Slice<Text> parts, Text delimiter);
 
   static Text trim(Text input, Text chars = WHITESPACE_CHARS);
-  static void trim_into(IString &output, Text input, Text chars = WHITESPACE_CHARS);
+  static void trim_into(AbstractString &output, Text input, Text chars = WHITESPACE_CHARS);
 
   static Text trim_left(Text input, Text chars = WHITESPACE_CHARS);
-  static void trim_left_into(IString &output, Text input, Text chars = WHITESPACE_CHARS);
+  static void trim_left_into(AbstractString &output, Text input, Text chars = WHITESPACE_CHARS);
 
   static Text trim_right(Text input, Text chars = WHITESPACE_CHARS);
-  static void trim_right_into(IString &output, Text input, Text chars = WHITESPACE_CHARS);
+  static void trim_right_into(AbstractString &output, Text input, Text chars = WHITESPACE_CHARS);
 
-  static void to_lower(IString &text);
-  static void to_lower_into(IString &output, Text input);
+  static void to_lower(AbstractString &text);
+  static void to_lower_into(AbstractString &output, Text input);
 
-  static void to_upper(IString &text);
-  static void to_upper_into(IString &output, Text input);
+  static void to_upper(AbstractString &text);
+  static void to_upper_into(AbstractString &output, Text input);
 
   static bool contains(Text input, Text substring);
   static bool starts_with(Text input, Text prefix);
@@ -58,37 +62,41 @@ struct TextUtils {
   static CharIterator find_char_before(Text input, uint32_t code_point, CharIterator end);
   static int64_t find_char_before_byte(Text input, uint32_t code_point, size_t index_end);
 
-  static void find_all(IList<CharIterator> &output, Text input, Text substring);
-  static void find_all_bytes(IList<int64_t> &output, Text input, Text substring);
+  static void find_all(AbstractList<CharIterator> &output, Text input, Text substring);
+  static void find_all_bytes(AbstractList<int64_t> &output, Text input, Text substring);
 
-  static void find_all_chars(IList<CharIterator> &output, Text input, uint32_t code_point);
-  static void find_all_char_bytes(IList<int64_t> &output, Text input, uint32_t code_point);
+  static void find_all_chars(AbstractList<CharIterator> &output, Text input, uint32_t code_point);
+  static void find_all_char_bytes(AbstractList<int64_t> &output, Text input, uint32_t code_point);
 
-  static void replace(IString &text, Text search, Text replacement, int64_t count = 1);
+  static void replace(AbstractString &text, Text search, Text replacement, int64_t count = 1);
   static void replace_into(
-      IString &output, Text input, Text search, Text replacement, int64_t count = 1
+      AbstractString &output, Text input, Text search, Text replacement, int64_t count = 1
   );
 
-  static void replace_all(IString &text, Text search, Text replacement);
-  static void replace_all_into(IString &output, Text input, Text search, Text replacement);
+  static void replace_all(AbstractString &text, Text search, Text replacement);
+  static void replace_all_into(AbstractString &output, Text input, Text search, Text replacement);
 
-  static void pad_left(IString &text, size_t total_length, Text pad = " ");
-  static void pad_left_into(IString &output, Text input, size_t total_length, Text pad = " ");
+  static void pad_left(AbstractString &text, size_t total_length, Text pad = " ");
+  static void pad_left_into(
+      AbstractString &output, Text input, size_t total_length, Text pad = " "
+  );
 
-  static void pad_right(IString &text, size_t total_length, Text pad = " ");
-  static void pad_right_into(IString &output, Text input, size_t total_length, Text pad = " ");
+  static void pad_right(AbstractString &text, size_t total_length, Text pad = " ");
+  static void pad_right_into(
+      AbstractString &output, Text input, size_t total_length, Text pad = " "
+  );
 
-  static void remove(IString &text, Text substring, int64_t count = 1);
-  static void remove_into(IString &output, Text input, Text substring, int64_t count = 1);
+  static void remove(AbstractString &text, Text substring, int64_t count = 1);
+  static void remove_into(AbstractString &output, Text input, Text substring, int64_t count = 1);
 
-  static void remove_all(IString &text, Text substring);
-  static void remove_all_into(IString &output, Text input, Text substring);
+  static void remove_all(AbstractString &text, Text substring);
+  static void remove_all_into(AbstractString &output, Text input, Text substring);
 
-  static void repeat(IString &text, size_t count);
-  static void repeat_into(IString &output, Text input, size_t count);
+  static void repeat(AbstractString &text, size_t count);
+  static void repeat_into(AbstractString &output, Text input, size_t count);
 
-  static void reverse(IString &text);
-  static void reverse_into(IString &output, Text input);
+  static void reverse(AbstractString &text);
+  static void reverse_into(AbstractString &output, Text input);
 
   static Text strip_prefix(Text input, Text prefix);
   static Text strip_suffix(Text input, Text suffix);
@@ -101,9 +109,9 @@ struct TextUtils {
   static Text tail(Text input, CharIterator char_start);
   static Text tail_bytes(Text input, size_t index_start);
 
-  static void to_string(IString &output, int64_t value);
-  static void to_string(IString &output, size_t value);
-  static void to_string(IString &output, double value);
+  static void to_string(AbstractString &output, int64_t value);
+  static void to_string(AbstractString &output, size_t value);
+  static void to_string(AbstractString &output, double value);
 
   static bool is_digit(Text input);
   static bool is_digit(uint32_t ch);

@@ -10,7 +10,7 @@ bool Token::operator==(const Token &other) const {
 
 bool Token::operator!=(const Token &other) const { return !(*this == other); }
 
-void Token::to_string(IString &out) const {
+void Token::to_string(AbstractString &out) const {
   token_type_to_string(type, out);
   out.append("(");
   out.append(contents);

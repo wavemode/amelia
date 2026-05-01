@@ -4,7 +4,7 @@
 
 namespace amelia {
 
-class IString;
+class AbstractString;
 
 enum class TokenType {
   KEYWORD_FUN,
@@ -126,6 +126,6 @@ enum class TokenType {
   END_OF_FILE,
 };
 
-void token_type_to_string(TokenType type, IString &out);
+void token_type_to_string(TokenType type, AbstractString &out);
 
 } // namespace amelia
