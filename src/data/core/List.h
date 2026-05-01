@@ -41,14 +41,14 @@ public:
 
   T &operator[](size_t index) override {
     if (index >= size()) {
-      RuntimeError("List index out of range");
+      throw RuntimeError("List index out of range");
     }
     return vec[index];
   }
 
   const T &operator[](size_t index) const {
     if (index >= size()) {
-      RuntimeError("List index out of range");
+      throw RuntimeError("List index out of range");
     }
     return vec[index];
   }

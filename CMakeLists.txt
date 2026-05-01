@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.23)
 project(amelia)
 
 file(GLOB_RECURSE SOURCES_UNIT "${CMAKE_CURRENT_SOURCE_DIR}/src/unit/*.cpp")
+file(GLOB_RECURSE SOURCES_ACTION "${CMAKE_CURRENT_SOURCE_DIR}/src/action/*.cpp")
 file(GLOB_RECURSE SOURCES_UTIL "${CMAKE_CURRENT_SOURCE_DIR}/src/util/*.cpp")
 file(GLOB_RECURSE SOURCES_DATA "${CMAKE_CURRENT_SOURCE_DIR}/src/data/*.cpp")
 file(GLOB_RECURSE SOURCES_EFFECT "${CMAKE_CURRENT_SOURCE_DIR}/src/effect/*.cpp")
@@ -19,6 +20,7 @@ target_compile_options(
 
 add_library(amelia_core
     ${SOURCES_UNIT}
+    ${SOURCES_ACTION}
     ${SOURCES_UTIL}
     ${SOURCES_DATA}
     ${SOURCES_EFFECT}
