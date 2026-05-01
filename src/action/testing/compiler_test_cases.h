@@ -1,18 +1,18 @@
 #pragma once
 
-#include "Prelude.h"
-
-#include "interface/fs/IFileLoader.h"
-#include "interface/fs/IFileWriter.h"
-#include "interface/fs/IFilesystemWalker.h"
-#include "interface/sys/IEnvironmentReader.h"
-#include "interface/sys/IPrinter.h"
-#include "interface/testing/ITestCaseRunner.h"
-
-#include "data/testing/CompilerTestCaseCollection.h"
-#include "data/testing/CompilerTestExecutionOutcome.h"
+#include "prelude.h"
 
 namespace amelia {
+
+class IFilesystemWalker;
+class IFileLoader;
+class IFileWriter;
+class IPrinter;
+class IEnvironmentReader;
+class ITestCaseRunner;
+class CompilerTestCase;
+class CompilerTestCaseCollection;
+class CompilerTestExecutionOutcome;
 
 void collect_test_cases(
     IFilesystemWalker &, IFileLoader &, CompilerTestCaseCollection &output, Text root_directory

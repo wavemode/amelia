@@ -1,0 +1,23 @@
+#pragma once
+
+#include <cstddef>
+
+#include "data/text/char_iterator.h"
+#include "data/text/text.h"
+
+namespace amelia {
+
+struct Location {
+  Text filename;
+  CharIterator position;
+  size_t line;
+  size_t column;
+
+  bool operator==(const Location &other) const {
+    return filename == other.filename && line == other.line && column == other.column;
+  }
+
+  bool operator!=(const Location &other) const { return !(*this == other); }
+};
+
+} // namespace amelia

@@ -2,13 +2,22 @@
 
 #include "compiler_test_cases.h"
 
-#include "data/lexer/Lexer.h"
-#include "data/lexer/LexerContext.h"
-#include "data/lexer/Token.h"
-#include "data/testing/CompilerTestCase.h"
+#include "interface/fs/file_loader.h"
+#include "interface/fs/file_writer.h"
+#include "interface/fs/filesystem_walker.h"
+#include "interface/sys/environment_reader.h"
+#include "interface/sys/printer.h"
+#include "interface/testing/test_case_runner.h"
 
-#include "data/core/ListUtils.h"
-#include "data/text/TextUtils.h"
+#include "data/lexer/lexer.h"
+#include "data/lexer/lexer_context.h"
+#include "data/lexer/token.h"
+#include "data/testing/compiler_test_case.h"
+#include "data/testing/compiler_test_case_collection.h"
+#include "data/testing/compiler_test_case_outcome.h"
+
+#include "data/core/list_utils.h"
+#include "data/text/text_utils.h"
 
 namespace amelia {
 

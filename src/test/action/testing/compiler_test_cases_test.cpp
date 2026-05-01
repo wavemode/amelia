@@ -1,15 +1,15 @@
-#include "Prelude.h"
+#include "prelude.h"
 #include <doctest.h>
 
 #include "action/testing/compiler_test_cases.h"
-#include "data/testing/CompilerTestCase.h"
-#include "data/testing/CompilerTestCaseCollection.h"
-#include "effect/fs/FileLoader.h"
-#include "effect/fs/FileWriter.h"
-#include "effect/fs/FilesystemWalker.h"
-#include "effect/sys/EnvironmentReader.h"
-#include "effect/sys/SilentPrinter.h"
-#include "unit/testing/LexerTestCaseRunner.h"
+#include "data/testing/compiler_test_case.h"
+#include "data/testing/compiler_test_case_collection.h"
+#include "effect/fs/file_loader.h"
+#include "effect/fs/file_writer.h"
+#include "effect/fs/filesystem_walker.h"
+#include "effect/sys/environment_reader.h"
+#include "effect/sys/silent_printer.h"
+#include "unit/testing/lexer_test_case_runner.h"
 
 TEST_SUITE_BEGIN("compiler_test_cases");
 
