@@ -25,7 +25,7 @@ TEST_CASE("test suite") {
   EnvironmentReader env_reader;
 
   CompilerTestCaseCollection collection;
-  collect_test_cases(filesystem_walker, file_loader, collection, "src/test/data/lexer");
+  collect_test_cases(filesystem_walker, file_loader, collection, "test_cases/lexer");
   auto outcome = execute_collection(
       lexer_test_case_runner, file_writer, console_printer, env_reader, collection
   );

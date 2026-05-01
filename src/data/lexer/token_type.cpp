@@ -175,6 +175,12 @@ void amelia::token_type_to_string(TokenType type, IString &out) {
   case TokenType::KEYWORD_IN:
     out.append("IN");
     break;
+  case TokenType::KEYWORD_ABSTRACT:
+    out.append("ABSTRACT");
+    break;
+  case TokenType::KEYWORD_SUPER:
+    out.append("SUPER");
+    break;
   case TokenType::NUMBER:
     out.append("NUMBER");
     break;

@@ -54,6 +54,8 @@ break
 while
 for
 in
+abstract
+super
 
 /* EXPECTED_OUTPUT:
 FUN(fun)
@@ -112,5 +114,7 @@ BREAK(break)
 WHILE(while)
 FOR(for)
 IN(in)
+ABSTRACT(abstract)
+SUPER(super)
 END_OF_FILE()
 */
