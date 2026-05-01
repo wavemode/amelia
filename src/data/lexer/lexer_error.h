@@ -2,8 +2,8 @@
 
 #include <stdexcept>
 
+#include "data/core/string.h"
 #include "data/source/location.h"
-#include "data/text/string.h"
 
 namespace amelia {
 

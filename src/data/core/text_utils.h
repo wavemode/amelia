@@ -3,7 +3,7 @@
 #include <cstddef>
 #include <cstdint>
 
-#include "data/text/text.h"
+#include "data/core/text.h"
 
 namespace amelia {
 

@@ -1,8 +1,8 @@
 #pragma once
 
 #include "data/core/list.h"
+#include "data/core/string.h"
 #include "data/testing/compiler_test_case.h"
-#include "data/text/string.h"
 
 namespace amelia {
 

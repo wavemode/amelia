@@ -2,8 +2,8 @@
 
 #include <cstddef>
 
-#include "data/text/char_iterator.h"
-#include "data/text/text.h"
+#include "data/core/char_iterator.h"
+#include "data/core/text.h"
 
 namespace amelia {
 

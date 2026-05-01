@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-#include "data/text/string.h"
+#include "data/core/string.h"
 
 namespace amelia {
 

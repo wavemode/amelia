@@ -2,7 +2,7 @@
 
 #include "prelude.h"
 
-#include "data/text/text_utils.h"
+#include "data/core/text_utils.h"
 
 TEST_SUITE_BEGIN("TextUtils");
 
