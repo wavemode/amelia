@@ -412,7 +412,7 @@ struct LexerState {
     if (previous_char_was_whitespace) {
       emit_token(TokenType::LEFT_BRACKET, start_location);
     } else {
-      emit_token(TokenType::INDEXING, start_location);
+      emit_token(TokenType::IX_START, start_location);
     }
   }
 
@@ -426,7 +426,7 @@ struct LexerState {
     if (previous_char_was_whitespace) {
       emit_token(TokenType::LEFT_PAREN, start_location);
     } else {
-      emit_token(TokenType::FUNCTION_CALL, start_location);
+      emit_token(TokenType::FUNCALL_START, start_location);
     }
   }
 

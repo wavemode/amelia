@@ -41,34 +41,34 @@ void StringLiteral::read(IString &output, CharIterator &iter, bool is_raw) {
       ch = iter.next();
       switch (ch) {
       case 'a':
-        result.push_back(static_cast<char>('\a'));
+        result.push_back('\a');
         break;
       case 'b':
-        result.push_back(static_cast<char>('\b'));
+        result.push_back('\b');
         break;
       case 'f':
-        result.push_back(static_cast<char>('\f'));
+        result.push_back('\f');
         break;
       case 'n':
-        result.push_back(static_cast<char>('\n'));
+        result.push_back('\n');
         break;
       case 'r':
-        result.push_back(static_cast<char>('\r'));
+        result.push_back('\r');
         break;
       case 't':
-        result.push_back(static_cast<char>('\t'));
+        result.push_back('\t');
         break;
       case 'v':
-        result.push_back(static_cast<char>('\v'));
+        result.push_back('\v');
         break;
       case '\\':
-        result.push_back(static_cast<char>('\\'));
+        result.push_back('\\');
         break;
       case '\'':
-        result.push_back(static_cast<char>('\''));
+        result.push_back('\'');
         break;
       case '"':
-        result.push_back(static_cast<char>('\"'));
+        result.push_back('\"');
         break;
       case '\r':
         if (!iter.at_end() && iter.peek() == '\n') {
@@ -78,7 +78,7 @@ void StringLiteral::read(IString &output, CharIterator &iter, bool is_raw) {
       case '\n':
         break;
       case 'x':
-        CharIterator::append(read_hex_chars(2, iter), result);
+        result.push_back(static_cast<char>(read_hex_chars(2, iter)));
         break;
       case 'u':
         CharIterator::append(read_hex_chars(4, iter), result);

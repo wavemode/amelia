@@ -292,8 +292,8 @@ void amelia::token_type_to_string(TokenType type, IString &out) {
   case TokenType::COLON:
     out.append("COLON");
     break;
-  case TokenType::FUNCTION_CALL:
-    out.append("FUNCTION_CALL");
+  case TokenType::FUNCALL_START:
+    out.append("FUNCALL_START");
     break;
   case TokenType::LEFT_PAREN:
     out.append("LEFT_PAREN");
@@ -301,8 +301,8 @@ void amelia::token_type_to_string(TokenType type, IString &out) {
   case TokenType::RIGHT_PAREN:
     out.append("RIGHT_PAREN");
     break;
-  case TokenType::INDEXING:
-    out.append("INDEXING");
+  case TokenType::IX_START:
+    out.append("IX_START");
     break;
   case TokenType::LEFT_BRACKET:
     out.append("LEFT_BRACKET");
