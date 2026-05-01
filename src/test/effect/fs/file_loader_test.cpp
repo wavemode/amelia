@@ -1,5 +1,6 @@
-#include "prelude.h"
 #include <doctest.h>
+
+#include "prelude.h"
 
 #include "effect/fs/file_loader.h"
 

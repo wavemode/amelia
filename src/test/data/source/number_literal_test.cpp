@@ -1,8 +1,8 @@
 #include <doctest.h>
 
-#include "data/source/number_literal.h"
 #include "prelude.h"
 
+#include "data/source/number_literal.h"
 #include "data/source/number_literal_read_error.h"
 #include "data/text/text_utils.h"
 

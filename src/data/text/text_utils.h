@@ -2,7 +2,6 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <variant>
 
 #include "data/text/text.h"
 
@@ -105,8 +104,6 @@ struct TextUtils {
   static void to_string(IString &output, int64_t value);
   static void to_string(IString &output, size_t value);
   static void to_string(IString &output, double value);
-
-  static std::variant<int64_t, double> parse_number(CharIterator it);
 
   static bool is_digit(Text input);
   static bool is_digit(uint32_t ch);

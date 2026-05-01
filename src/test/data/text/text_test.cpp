@@ -1,7 +1,8 @@
-#include "prelude.h"
-
 #include <cstring>
+
 #include <doctest.h>
+
+#include "prelude.h"
 
 TEST_SUITE_BEGIN("Text");
 

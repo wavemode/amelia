@@ -6,7 +6,6 @@
 
 #include "data/core/list.h"
 #include "node_info.h"
-
 #include "node_type_list.h"
 
 namespace amelia {

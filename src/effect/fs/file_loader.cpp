@@ -1,9 +1,9 @@
-#include "file_loader.h"
-#include "prelude.h"
-
 #include <fstream>
 #include <sstream>
 #include <string>
+
+#include "file_loader.h"
+#include "prelude.h"
 
 namespace amelia {
 

@@ -1,7 +1,8 @@
 #include <doctest.h>
 
-#include "data/source/string_literal.h"
 #include "prelude.h"
+
+#include "data/source/string_literal.h"
 
 TEST_SUITE_BEGIN("StringLiteral");
 

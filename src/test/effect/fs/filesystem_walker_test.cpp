@@ -1,10 +1,8 @@
 #include <doctest.h>
 
-#include <algorithm>
-
-#include "data/core/list_utils.h"
 #include "prelude.h"
 
+#include "data/core/list_utils.h"
 #include "effect/fs/filesystem_walker.h"
 #include "effect/sys/console_printer.h"
 

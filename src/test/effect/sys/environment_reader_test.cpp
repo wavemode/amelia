@@ -1,9 +1,10 @@
-#include "prelude.h"
+#include <cstdlib>
+
 #include <doctest.h>
 
-#include "effect/sys/environment_reader.h"
+#include "prelude.h"
 
-#include <cstdlib>
+#include "effect/sys/environment_reader.h"
 
 TEST_SUITE_BEGIN("EnvironmentReader");
 

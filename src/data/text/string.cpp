@@ -1,11 +1,11 @@
-#include "string.h"
-#include "prelude.h"
-
 #include <cstdint>
 #include <cstring>
 #include <string>
 #include <string_view>
 #include <utility>
+
+#include "prelude.h"
+#include "string.h"
 
 namespace amelia {
 

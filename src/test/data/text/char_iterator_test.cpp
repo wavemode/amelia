@@ -1,9 +1,10 @@
-#include "prelude.h"
-#include <doctest.h>
-
 #include <cstdint>
 #include <cstring>
 #include <stdexcept>
+
+#include <doctest.h>
+
+#include "prelude.h"
 
 TEST_SUITE_BEGIN("CharIterator");
 

@@ -1,5 +1,6 @@
-#include "prelude.h"
 #include <doctest.h>
+
+#include "prelude.h"
 
 #include "action/testing/compiler_test_cases.h"
 #include "data/testing/compiler_test_case.h"

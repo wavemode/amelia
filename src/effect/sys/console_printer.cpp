@@ -1,11 +1,11 @@
-#include "console_printer.h"
-#include "prelude.h"
-
 #include <iostream>
 
 #if defined(_WIN32)
 #include <windows.h>
 #endif
+
+#include "console_printer.h"
+#include "prelude.h"
 
 namespace amelia {
 

@@ -1,6 +1,7 @@
+#include <doctest.h>
+
 #include "data/core/list_utils.h"
 #include "prelude.h"
-#include <doctest.h>
 
 TEST_SUITE_BEGIN("ListUtils");
 

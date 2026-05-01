@@ -1,8 +1,8 @@
-#include "number_literal.h"
-#include "prelude.h"
-
 #include <cstdint>
 #include <string>
+
+#include "number_literal.h"
+#include "prelude.h"
 
 #include "data/source/number_literal_read_error.h"
 #include "data/text/text_utils.h"
