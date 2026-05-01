@@ -179,7 +179,7 @@ public:
   static String from(std::vector<char> str);
 
 private:
-  std::vector<char> data_str;
+  std::vector<char> m_str;
 };
 
 } // namespace amelia

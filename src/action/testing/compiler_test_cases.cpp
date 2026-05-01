@@ -16,7 +16,6 @@
 #include "data/testing/compiler_test_case_collection.h"
 #include "data/testing/compiler_test_case_outcome.h"
 
-#include "data/core/list_utils.h"
 #include "data/text/text_utils.h"
 
 namespace amelia {
@@ -86,7 +85,7 @@ void collect_test_cases(
     Text expected_output = find_test_case_expected_output(file_content);
     output.test_cases.push_back(CompilerTestCase{path, file_content, expected_output});
   }
-  ListUtils::sort(output.test_cases, [](const CompilerTestCase &a, const CompilerTestCase &b) {
+  output.test_cases.sort([](const CompilerTestCase &a, const CompilerTestCase &b) {
     return a.filename < b.filename;
   });
 }

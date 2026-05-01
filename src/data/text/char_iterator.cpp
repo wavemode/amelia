@@ -5,8 +5,8 @@
 
 namespace amelia {
 
-CharIterator::CharIterator(SliceIterator<const char> str) noexcept : slice_iter(str) {}
-CharIterator::CharIterator(Text text) noexcept : slice_iter(text.data()) {}
+CharIterator::CharIterator(SliceIterator<const char> str) noexcept : m_slice_iter(str) {}
+CharIterator::CharIterator(Text text) noexcept : m_slice_iter(text.data()) {}
 
 CharIterator &CharIterator::operator++() {
   next();
@@ -21,13 +21,13 @@ CharIterator CharIterator::operator++(int) {
 
 CharIterator CharIterator::begin() const noexcept { return *this; }
 
-CharIterator CharIterator::end() const noexcept { return CharIterator(slice_iter.end()); }
+CharIterator CharIterator::end() const noexcept { return CharIterator(m_slice_iter.end()); }
 
 uint32_t CharIterator::operator*() const { return peek(); }
 
 uint32_t CharIterator::peek() const {
   try {
-    return utf8::peek_next(slice_iter, slice_iter.end());
+    return utf8::peek_next(m_slice_iter, m_slice_iter.end());
   } catch (const utf8::invalid_utf8 &) {
     throw amelia::InvalidUTF8Error();
   } catch (const utf8::not_enough_room &) {
@@ -37,7 +37,7 @@ uint32_t CharIterator::peek() const {
 
 uint32_t CharIterator::next() {
   try {
-    return utf8::next(slice_iter, slice_iter.end());
+    return utf8::next(m_slice_iter, m_slice_iter.end());
   } catch (const utf8::invalid_utf8 &) {
     throw amelia::InvalidUTF8Error();
   } catch (const utf8::not_enough_room &) {
@@ -45,7 +45,7 @@ uint32_t CharIterator::next() {
   }
 }
 
-Slice<const char> CharIterator::data() const noexcept { return Slice(slice_iter); }
+Slice<const char> CharIterator::data() const noexcept { return Slice(m_slice_iter); }
 
 Text CharIterator::text() const noexcept { return Text(data()); }
 
@@ -59,19 +59,19 @@ CharIterator CharIterator::plus(size_t n) const {
 
 CharIterator CharIterator::plus_bytes(size_t n) const {
   CharIterator iter = *this;
-  iter.slice_iter = iter.slice_iter + n;
+  iter.m_slice_iter = iter.m_slice_iter + n;
   return iter;
 }
 
 bool CharIterator::operator==(const CharIterator &other) const noexcept {
-  return slice_iter == other.slice_iter;
+  return m_slice_iter == other.m_slice_iter;
 }
 
 bool CharIterator::operator!=(const CharIterator &other) const noexcept {
   return !(*this == other);
 }
 
-bool CharIterator::at_end() const noexcept { return slice_iter.size() == 0; }
+bool CharIterator::at_end() const noexcept { return m_slice_iter.size() == 0; }
 
 void CharIterator::validate(Slice<const char> str) {
   auto begin = str.begin();

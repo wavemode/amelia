@@ -1,5 +1,4 @@
 #include <cstdint>
-#include <unordered_map>
 
 #include "lexer.h"
 #include "prelude.h"
@@ -17,7 +16,7 @@ namespace amelia {
 
 namespace {
 
-const std::unordered_map<Text, TokenType> keywords = {
+const Map<Text, TokenType> keywords = {
     {"fun", TokenType::KEYWORD_FUN},
     {"if", TokenType::KEYWORD_IF},
     {"else", TokenType::KEYWORD_ELSE},
@@ -675,10 +674,10 @@ struct LexerState {
     skip_word_chars();
 
     Text word = TextUtils::substr(file_contents, start_location.position, input);
-    auto keyword_it = keywords.find(word);
+    const TokenType *keyword_tt = keywords.find(word);
 
-    if (keyword_it != keywords.end()) {
-      emit_token(keyword_it->second, start_location);
+    if (keyword_tt) {
+      emit_token(*keyword_tt, start_location);
     } else if (!input.at_end() && input.peek() == '!') {
       emit_token(TokenType::MACRO_NAME, start_location);
       advance();

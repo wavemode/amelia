@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <vector>
 
-#include "data/core/slice_iterator.h"
+#include "data/core/slice.h"
 
 namespace amelia {
 
@@ -136,7 +136,7 @@ public:
   static signed char compare(Slice<const char> a, Slice<const char> b);
 
 private:
-  SliceIterator<const char> slice_iter;
+  SliceIterator<const char> m_slice_iter;
 };
 
 } // namespace amelia

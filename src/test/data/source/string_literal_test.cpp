@@ -14,7 +14,7 @@ TEST_CASE("parsing") {
     Text expected_output;
   };
 
-  std::vector<TestCase> test_cases = {
+  List<TestCase> test_cases = {
       {R"(Hello, world!)", "Hello, world!"},
       {R"(Line 1\nLine 2)", "Line 1\nLine 2"},
       {R"(Tab\tSeparated)", "Tab\tSeparated"},
@@ -33,7 +33,7 @@ TEST_CASE("parsing") {
       {"", ""},
   };
 
-  std::vector<TestCase> raw_test_cases = {
+  List<TestCase> raw_test_cases = {
       {R"(Raw string with no escapes: \n\t\\)", R"(Raw string with no escapes: \n\t\\)"},
       {R"(Raw string with "quotes" and \backslashes\)",
        R"(Raw string with "quotes" and \backslashes\)"},

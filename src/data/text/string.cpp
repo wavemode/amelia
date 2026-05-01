@@ -9,72 +9,70 @@
 
 namespace amelia {
 
-String::String() noexcept { data_str.push_back('\0'); };
+String::String() noexcept { m_str.push_back('\0'); };
 
 String::String(Slice<const char> str) {
   if (str.size() > 0) {
     CharIterator::validate(str);
-    data_str.assign(str.ptr(), str.ptr() + str.size());
+    m_str.assign(str.ptr(), str.ptr() + str.size());
   }
-  data_str.push_back('\0');
+  m_str.push_back('\0');
 }
 
 String::String(Text text) {
-  data_str.assign(text.data().ptr(), text.data().ptr() + text.data().size());
-  data_str.push_back('\0');
+  m_str.assign(text.data().ptr(), text.data().ptr() + text.data().size());
+  m_str.push_back('\0');
 }
 
-const char *String::c_str() const noexcept { return data_str.data(); }
+const char *String::c_str() const noexcept { return m_str.data(); }
 
-Slice<const char> String::data() const noexcept {
-  return Slice(data_str.data(), data_str.size() - 1);
-}
+Slice<const char> String::data() const noexcept { return Slice(m_str.data(), m_str.size() - 1); }
 
-size_t String::size() const noexcept { return data_str.size() - 1; }
+size_t String::size() const noexcept { return m_str.size() - 1; }
 
 void String::append(Slice<const char> str) {
   if (str.size() > 0) {
     CharIterator::validate(str);
-    data_str.pop_back();
-    data_str.insert(data_str.end(), str.ptr(), str.ptr() + str.size());
-    data_str.push_back('\0');
+    m_str.pop_back();
+    m_str.insert(m_str.end(), str.ptr(), str.ptr() + str.size());
+    m_str.push_back('\0');
   }
 }
 
 void String::append(Text other) {
   if (other.size() > 0) {
-    data_str.pop_back();
-    data_str.insert(data_str.end(), other.data().ptr(), other.data().ptr() + other.data().size());
-    data_str.push_back('\0');
+    m_str.pop_back();
+    m_str.insert(m_str.end(), other.data().ptr(), other.data().ptr() + other.data().size());
+    m_str.push_back('\0');
   }
 }
 
 void String::append(uint32_t code_point) {
-  data_str.pop_back();
-  CharIterator::append(code_point, data_str);
-  data_str.push_back('\0');
+  m_str.pop_back();
+  CharIterator::append(code_point, m_str);
+  m_str.push_back('\0');
 }
 
 void String::assign(Text text) {
-  data_str.assign(text.data().ptr(), text.data().ptr() + text.data().size());
-  data_str.push_back('\0');
+  m_str.assign(text.data().ptr(), text.data().ptr() + text.data().size());
+  m_str.push_back('\0');
 }
 
 void String::clear() noexcept {
-  data_str.clear();
-  data_str.push_back('\0');
+  m_str.clear();
+  m_str.push_back('\0');
 }
 
 Text String::text() const noexcept {
   Text result;
-  result.data_slice = Slice(data_str.data(), data_str.size() - 1);
+  result.m_slice = Slice(m_str.data(), m_str.size() - 1);
   return result;
 }
 
 CharIterator String::begin() const { return CharIterator(data()); }
 
 CharIterator String::end() const {
-  return CharIterator(Slice<const char>(data_str.data() + data_str.size() - 1, 0));
+  return CharIterator(Slice<const char>(m_str.data() + m_str.size() - 1, 0));
 }
 
 String String::operator+(const String &other) const {
@@ -122,8 +120,8 @@ String::operator Text() const noexcept { return text(); }
 String String::from(const std::string &str) {
   CharIterator::validate(Slice(str.c_str(), str.size()));
   String result;
-  result.data_str.assign(str.c_str(), str.c_str() + str.size());
-  result.data_str.push_back('\0');
+  result.m_str.assign(str.c_str(), str.c_str() + str.size());
+  result.m_str.push_back('\0');
   return result;
 }
 
@@ -131,7 +129,7 @@ String String::from(std::vector<char> str) {
   CharIterator::validate(Slice(static_cast<const char *>(str.data()), str.size()));
   str.push_back('\0');
   String result;
-  result.data_str = std::move(str);
+  result.m_str = std::move(str);
   return result;
 }
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <cstddef>
 #include <initializer_list>
 #include <vector>
@@ -12,56 +13,57 @@ class RuntimeError;
 template <typename T> class Slice;
 template <typename T> class SliceIterator;
 
-/**
- * @class List
- */
 template <typename T> class List : public IList<T> {
 public:
   List() noexcept = default;
 
-  explicit List(Slice<T> slice) noexcept : vec(slice.ptr(), slice.end().ptr()) {}
+  explicit List(Slice<T> slice) noexcept : m_vec(slice.ptr(), slice.end().ptr()) {}
 
   template <size_t N> explicit List(T (&array)[N]) noexcept : List(Slice(array, N)) {}
 
-  List(std::initializer_list<T> init) : vec(init) {}
+  List(std::initializer_list<T> init) : m_vec(init) {}
 
-  SliceIterator<T> begin() noexcept { return Slice(vec.data(), vec.size()).begin(); }
-  SliceIterator<const T> begin() const noexcept { return Slice(vec.data(), vec.size()).begin(); }
+  SliceIterator<T> begin() noexcept { return Slice(m_vec.data(), m_vec.size()).begin(); }
+  SliceIterator<const T> begin() const noexcept {
+    return Slice(m_vec.data(), m_vec.size()).begin();
+  }
 
-  SliceIterator<T> end() noexcept { return Slice(vec.data() + vec.size(), 0).end(); }
-  SliceIterator<const T> end() const noexcept { return Slice(vec.data() + vec.size(), 0).end(); }
+  SliceIterator<T> end() noexcept { return Slice(m_vec.data() + m_vec.size(), 0).end(); }
+  SliceIterator<const T> end() const noexcept {
+    return Slice(m_vec.data() + m_vec.size(), 0).end();
+  }
 
-  size_t size() const noexcept override { return vec.size(); }
+  size_t size() const noexcept override { return m_vec.size(); }
 
-  void push_back(T value) override { vec.push_back(std::move(value)); }
+  void push_back(T value) override { m_vec.push_back(std::move(value)); }
 
   template <typename... Args> T &emplace_back(Args &&...args) {
-    return vec.emplace_back(std::forward<Args>(args)...);
+    return m_vec.emplace_back(std::forward<Args>(args)...);
   }
 
   T &operator[](size_t index) override {
     if (index >= size()) {
       throw RuntimeError("List index out of range");
     }
-    return vec[index];
+    return m_vec[index];
   }
 
   const T &operator[](size_t index) const {
     if (index >= size()) {
       throw RuntimeError("List index out of range");
     }
-    return vec[index];
+    return m_vec[index];
   }
 
   List<T> &operator+=(Slice<T> slice) {
-    vec.insert(vec.end(), slice.ptr(), slice.end().ptr());
+    m_vec.insert(m_vec.end(), slice.ptr(), slice.end().ptr());
     return *this;
   }
 
   void append(Slice<T> slice) override { *this += slice; }
 
   void assign(Slice<T> slice) override {
-    vec.clear();
+    m_vec.clear();
     *this += slice;
   }
 
@@ -76,7 +78,7 @@ public:
       return false;
     }
     for (size_t i = 0; i < size(); ++i) {
-      if (vec[i] != other.vec[i]) {
+      if (m_vec[i] != other.m_vec[i]) {
         return false;
       }
     }
@@ -89,7 +91,7 @@ public:
       return false;
     }
     for (size_t i = 0; i < size(); ++i) {
-      if (vec[i] != slice[i]) {
+      if (m_vec[i] != slice[i]) {
         return false;
       }
     }
@@ -97,11 +99,27 @@ public:
   }
   bool operator!=(Slice<T> other) const noexcept { return !(*this == other); }
 
-  operator Slice<T>() noexcept override { return Slice(vec.data(), vec.size()); }
-  operator Slice<const T>() const noexcept override { return Slice(vec.data(), vec.size()); }
+  bool contains(const T &value) const noexcept {
+    for (const T &item : m_vec) {
+      if (item == value) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  void reverse() noexcept { std::reverse(m_vec.begin(), m_vec.end()); }
+
+  void sort() { std::sort(m_vec.begin(), m_vec.end()); }
+  template <typename Compare> void sort(Compare comp) {
+    std::sort(m_vec.begin(), m_vec.end(), comp);
+  }
+
+  operator Slice<T>() noexcept override { return Slice(m_vec.data(), m_vec.size()); }
+  operator Slice<const T>() const noexcept override { return Slice(m_vec.data(), m_vec.size()); }
 
 private:
-  std::vector<T> vec;
+  std::vector<T> m_vec;
 };
 
 } // namespace amelia

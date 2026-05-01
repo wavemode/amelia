@@ -115,7 +115,7 @@ public:
   friend class String;
 
 private:
-  Slice<const char> data_slice;
+  Slice<const char> m_slice;
 };
 
 } // namespace amelia

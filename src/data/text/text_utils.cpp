@@ -619,7 +619,7 @@ Text TextUtils::text_from_subslice(Slice<const char> slice) {
     CharIterator(slice).peek();
   }
   Text result;
-  result.data_slice = slice;
+  result.m_slice = slice;
   return result;
 }
 
