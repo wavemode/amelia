@@ -1,5 +1,35 @@
-5
+42
+4_2
+0600
+0_600
+0o600
+0O600
+0xBadFace
+0xBad_Face
+0x_67_7a_2f_cc_40_c6
+170141183460469231731687303715884105727
+170_141183_460469_231731_687303_715884_105727
+0.
+72.40
+072.40       
+2.71828
+
+
 /* EXPECTED_OUTPUT:
-NUMBER(5)
+NUMBER(base_prefix="", integer_digits="42", has_decimal_point=false, fractional_digits="", exponent_prefix="", exponent_sign="", exponent_digits="")
+NUMBER(base_prefix="", integer_digits="4_2", has_decimal_point=false, fractional_digits="", exponent_prefix="", exponent_sign="", exponent_digits="")
+NUMBER(base_prefix="0", integer_digits="600", has_decimal_point=false, fractional_digits="", exponent_prefix="", exponent_sign="", exponent_digits="")
+NUMBER(base_prefix="0", integer_digits="_600", has_decimal_point=false, fractional_digits="", exponent_prefix="", exponent_sign="", exponent_digits="")
+NUMBER(base_prefix="0o", integer_digits="600", has_decimal_point=false, fractional_digits="", exponent_prefix="", exponent_sign="", exponent_digits="")
+NUMBER(base_prefix="0O", integer_digits="600", has_decimal_point=false, fractional_digits="", exponent_prefix="", exponent_sign="", exponent_digits="")
+NUMBER(base_prefix="0x", integer_digits="BadFace", has_decimal_point=false, fractional_digits="", exponent_prefix="", exponent_sign="", exponent_digits="")
+NUMBER(base_prefix="0x", integer_digits="Bad_Face", has_decimal_point=false, fractional_digits="", exponent_prefix="", exponent_sign="", exponent_digits="")
+NUMBER(base_prefix="0x", integer_digits="_67_7a_2f_cc_40_c6", has_decimal_point=false, fractional_digits="", exponent_prefix="", exponent_sign="", exponent_digits="")
+NUMBER(base_prefix="", integer_digits="170141183460469231731687303715884105727", has_decimal_point=false, fractional_digits="", exponent_prefix="", exponent_sign="", exponent_digits="")
+NUMBER(base_prefix="", integer_digits="170_141183_460469_231731_687303_715884_105727", has_decimal_point=false, fractional_digits="", exponent_prefix="", exponent_sign="", exponent_digits="")
+NUMBER(base_prefix="", integer_digits="0", has_decimal_point=true, fractional_digits="", exponent_prefix="", exponent_sign="", exponent_digits="")
+NUMBER(base_prefix="", integer_digits="72", has_decimal_point=true, fractional_digits="40", exponent_prefix="", exponent_sign="", exponent_digits="")
+NUMBER(base_prefix="", integer_digits="072", has_decimal_point=true, fractional_digits="40", exponent_prefix="", exponent_sign="", exponent_digits="")
+NUMBER(base_prefix="", integer_digits="2", has_decimal_point=true, fractional_digits="71828", exponent_prefix="", exponent_sign="", exponent_digits="")
 END_OF_FILE()
 */

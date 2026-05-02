@@ -7,6 +7,7 @@
 namespace amelia {
 
 class AbstractString;
+class LexerResult;
 
 struct Token {
   TokenType type;
@@ -17,7 +18,7 @@ struct Token {
 
   bool operator!=(const Token &other) const;
 
-  void to_string(AbstractString &out) const;
+  static void to_string(AbstractString &out, size_t token_id, const LexerResult &lr);
 };
 
 } // namespace amelia

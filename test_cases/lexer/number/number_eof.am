@@ -1,5 +1,5 @@
 /* EXPECTED_OUTPUT:
-NUMBER(5)
+NUMBER(base_prefix="", integer_digits="5", has_decimal_point=false, fractional_digits="", exponent_prefix="", exponent_sign="", exponent_digits="")
 END_OF_FILE()
 */
 

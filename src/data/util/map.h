@@ -17,6 +17,11 @@ template <typename K, typename V> class MapKeyIterator;
 template <typename K, typename V> class ConstMapKeyIterator;
 template <typename K, typename V> class MapPairIterator;
 template <typename K, typename V> class ConstMapPairIterator;
+template <typename T> class Option;
+struct None;
+template <typename T> struct Some;
+template <typename T> struct Ref;
+template <typename T> struct ConstRef;
 
 template <typename K, typename V> class Map : public AbstractMap<K, V> {
 public:
@@ -41,19 +46,20 @@ public:
     return m_map.at(key);
   }
 
-  const V *find(const K &key) const {
+  Option<Ref<V>> find(const K &key) {
     auto it = m_map.find(key);
     if (it == m_map.end()) {
-      return nullptr;
+      return None();
     }
-    return &(it->second);
+    return Some(Ref(it->second));
   }
-  V *find(const K &key) {
+
+  Option<ConstRef<V>> find(const K &key) const {
     auto it = m_map.find(key);
     if (it == m_map.end()) {
-      return nullptr;
+      return None();
     }
-    return &(it->second);
+    return Some(ConstRef(it->second));
   }
 
   void remove(const K &key) override { m_map.erase(key); }

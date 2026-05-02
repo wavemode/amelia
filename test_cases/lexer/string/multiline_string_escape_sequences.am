@@ -2,7 +2,7 @@
 """
 
 /* EXPECTED_OUTPUT:
-MULTILINE_STRING_LITERAL("""\a\b\f\n\r\t\v\\\'\"\
-""")
+STRING_LITERAL("
+	\'"")
 END_OF_FILE()
 */

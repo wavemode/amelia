@@ -2,7 +2,7 @@ r"""hello
     world\\\"""
 
 /* EXPECTED_OUTPUT:
-RAW_MULTILINE_STRING_LITERAL(r"""hello
-    world\\\""")
+STRING_LITERAL("hello
+    world\\\")
 END_OF_FILE()
 */

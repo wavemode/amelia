@@ -6,6 +6,8 @@
 #include "data/util/invalid_utf8_error.h"
 #include "data/util/list.h"
 #include "data/util/map.h"
+#include "data/util/option.h"
+#include "data/util/ref.h"
 #include "data/util/runtime_error.h"
 #include "data/util/set.h"
 #include "data/util/slice.h"

@@ -15,8 +15,6 @@ struct NumberLiteral {
 
   bool operator==(const NumberLiteral &other) const noexcept;
   bool operator!=(const NumberLiteral &other) const noexcept;
-
-  static NumberLiteral read(CharIterator &iter);
 };
 
 } // namespace amelia

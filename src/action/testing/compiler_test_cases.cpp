@@ -11,6 +11,7 @@
 
 #include "data/lexer/lexer.h"
 #include "data/lexer/lexer_context.h"
+#include "data/lexer/lexer_result.h"
 #include "data/lexer/token.h"
 #include "data/testing/compiler_test_case.h"
 #include "data/testing/compiler_test_case_collection.h"
@@ -179,11 +180,12 @@ bool update_expected_output(
 }
 
 void run_lexer_test_case(AbstractString &output, CompilerTestCase test_case) {
-  List<Token> tokens;
+  LexerResult result;
   CharIterator iter(test_case.input);
-  Lexer::tokenize(tokens, iter, LexerContext{test_case.filename});
-  for (const auto &token : tokens) {
-    token.to_string(output);
+  Lexer::tokenize(result, iter, LexerContext{test_case.filename});
+  auto tokens = result.tokens();
+  for (size_t token_id = 0; token_id < tokens.size(); ++token_id) {
+    Token::to_string(output, token_id, result);
     output.append("\n");
   }
 }

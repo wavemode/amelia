@@ -49,7 +49,7 @@ void String::append(Text other) {
 
 void String::append(uint32_t code_point) {
   m_str.pop_back();
-  CharIterator::append(code_point, m_str);
+  CharIterator::append(m_str, code_point);
   m_str.push_back('\0');
 }
 

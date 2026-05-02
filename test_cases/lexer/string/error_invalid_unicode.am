@@ -1,5 +1,5 @@
 "\uD800"
 
 /* EXPECTED_OUTPUT:
-ERROR("Error in string literal: Invalid UTF-8 data (at test_cases/lexer/string/error_invalid_unicode.am:1:1)")
+ERROR("Invalid string literal: Invalid UTF-8 data (at test_cases/lexer/string/error_invalid_unicode.am:1:1)")
 */

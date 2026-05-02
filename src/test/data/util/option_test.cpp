@@ -41,5 +41,9 @@ TEST_CASE("general usage") {
   CHECK(opt2.value() == 20);
   opt2 = Some(30);
   CHECK(*opt2 == 30);
+
+  Option<int *> opt3 = &*opt2;
+  **opt3 = 40;
+  CHECK(opt2.value() == 40);
 }
 TEST_SUITE_END();

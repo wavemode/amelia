@@ -26,6 +26,7 @@ TEST_CASE("has and clear") {
   CHECK(map.has("a"));
   CHECK(map.has("b"));
   CHECK(map.has("c"));
+
   map.clear();
   CHECK(!map.has("a"));
   CHECK(!map.has("b"));
@@ -50,18 +51,18 @@ TEST_CASE("indexing operator") {
 TEST_CASE("find") {
   Map<String, int> map;
   map.set("a", 1);
-  int *a_value = map.find("a");
-  CHECK(a_value != nullptr);
-  CHECK(*a_value == 1);
-  *a_value = 10;
+  auto a_value = map.find("a");
+  CHECK(a_value.has_value());
+  CHECK(**a_value == 1);
+  **a_value = 10;
   CHECK(map.get("a") == 10);
-  CHECK(map.find("b") == nullptr);
+  CHECK(map.find("b") == None());
 
   const Map<String, int> &const_map = map;
-  const int *const_a_value = const_map.find("a");
-  CHECK(const_a_value != nullptr);
-  CHECK(*const_a_value == 10);
-  CHECK(const_map.find("b") == nullptr);
+  auto const_a_value = const_map.find("a");
+  CHECK(const_a_value.has_value());
+  CHECK(**const_a_value == 10);
+  CHECK(const_map.find("b") == None());
 }
 
 TEST_CASE("remove and remove_and_get") {

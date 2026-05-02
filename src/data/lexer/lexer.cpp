@@ -5,11 +5,9 @@
 
 #include "data/lexer/lexer_context.h"
 #include "data/lexer/lexer_error.h"
+#include "data/lexer/lexer_result.h"
 #include "data/lexer/token.h"
 #include "data/source/location.h"
-#include "data/source/number_literal.h"
-#include "data/source/number_literal_read_error.h"
-#include "data/source/string_literal.h"
 #include "data/util/text_utils.h"
 
 namespace amelia {
@@ -99,11 +97,15 @@ struct LexerState {
   size_t column;
   Text file_contents;
   CharIterator input;
-  AbstractList<Token> &output;
+  List<Token> &token_output;
+  String &string_literal_buffer;
+  Map<size_t, Text> &string_literal_output;
+  Map<size_t, NumberLiteral> &number_literal_output;
   bool previous_char_was_whitespace;
+  std::vector<char> scratch_buffer;
 
   void read_file() {
-    while (!input.at_end()) {
+    while (!at_end()) {
       read_token();
     }
 
@@ -111,9 +113,7 @@ struct LexerState {
   }
 
   void read_token() {
-    // TODO: parser should check validity of strings and numbers, not lexer. Since it will have a
-    // way to allocate space for their real contents.
-    uint32_t cp = input.peek();
+    uint32_t cp = peek();
     auto start_location = current_location();
     if (is_whitespace(cp)) {
       read_whitespace();
@@ -184,232 +184,192 @@ struct LexerState {
   void read_quote(Location start_location) {
     Text first_three_chars = TextUtils::slice(file_contents, input, 3);
     if (first_three_chars == "\"\"\"") {
-      read_multiline_string(start_location);
+      read_string(start_location, true, false);
     } else {
-      read_string(start_location);
+      read_string(start_location, false, false);
     }
   }
 
   void read_raw_quote(Location start_location) {
     Text first_three_chars = TextUtils::slice(file_contents, input, 3);
     if (first_three_chars == "\"\"\"") {
-      read_raw_multiline_string(start_location);
+      read_string(start_location, true, true);
     } else {
-      read_raw_string(start_location);
+      read_string(start_location, false, true);
     }
   }
 
-  void read_raw_multiline_string(Location start_location) {
-    advance();
-    advance();
-    advance();
-    auto content_start_location = current_location();
-    auto content_end_location = start_location;
+  void read_string(Location start_location, bool multiline, bool is_raw) {
+    try {
+      read_string_literal(start_location, multiline, is_raw);
+    } catch (InvalidUTF8Error &e) {
+      String err;
+      err.append("Invalid string literal: ");
+      err.append(Text::from(e.what()));
+      throw_lexer_error(start_location, std::move(err));
+    }
+  }
+
+  void read_string_literal(Location start_location, bool multiline, bool is_raw) {
+    scratch_buffer.clear();
+    size_t quote_count = multiline ? 3 : 1;
+    for (size_t i = 0; i < quote_count; ++i) {
+      if (at_end() || next() != '"') {
+        throw RuntimeError("String literal does not start with expected quote characters");
+      }
+    }
+
     size_t quotes_in_a_row = 0;
-    while (!input.at_end()) {
-      uint32_t cp = input.peek();
-      if (cp == '"') {
-        quotes_in_a_row++;
-        if (quotes_in_a_row == 1) {
-          content_end_location = current_location();
-        }
-        advance();
-        if (quotes_in_a_row == 3) {
-          Text content = TextUtils::substr(
-              file_contents, content_start_location.position, content_end_location.position
+    while (true) {
+      if (at_end()) {
+        throw_lexer_error(
+            current_location(), "Unterminated string literal - unexpected end of input"
+        );
+      }
+      uint32_t ch = peek();
+      if (ch == '\\' && !is_raw) {
+        next();
+        if (at_end()) {
+          throw_lexer_error(
+              current_location(), "Unexpected end of input after backslash in string literal"
           );
-          String outcome;
-          CharIterator content_iter = content.begin();
-          try {
-            StringLiteral::read(outcome, content_iter, true);
-          } catch (const std::exception &e) {
-            String msg = "Error in raw multiline string literal: ";
-            msg.append(Text::from(e.what()));
-            throw_lexer_error(start_location, std::move(msg));
+        }
+        ch = peek();
+        switch (ch) {
+        case 'a':
+          next();
+          scratch_buffer.push_back('\a');
+          break;
+        case 'b':
+          next();
+          scratch_buffer.push_back('\b');
+          break;
+        case 'f':
+          next();
+          scratch_buffer.push_back('\f');
+          break;
+        case 'n':
+          next();
+          scratch_buffer.push_back('\n');
+          break;
+        case 'r':
+          next();
+          scratch_buffer.push_back('\r');
+          break;
+        case 't':
+          next();
+          scratch_buffer.push_back('\t');
+          break;
+        case 'v':
+          next();
+          scratch_buffer.push_back('\v');
+          break;
+        case '\\':
+          next();
+          scratch_buffer.push_back('\\');
+          break;
+        case '\'':
+          next();
+          scratch_buffer.push_back('\'');
+          break;
+        case '"':
+          next();
+          scratch_buffer.push_back('\"');
+          break;
+        case '\r':
+          next();
+          if (!at_end() && peek() == '\n') {
+            next();
           }
-          emit_token(TokenType::RAW_MULTILINE_STRING_LITERAL, start_location);
-          return;
+          break;
+        case '\n':
+          next();
+          break;
+        case 'x':
+          next();
+          scratch_buffer.push_back(static_cast<char>(read_hex_chars(2)));
+          break;
+        case 'u':
+          next();
+          CharIterator::append(scratch_buffer, read_hex_chars(4));
+          break;
+        case 'U':
+          next();
+          CharIterator::append(scratch_buffer, read_hex_chars(8));
+          break;
+        default:
+          String msg = "Invalid escape sequence: '\\";
+          msg.append(ch);
+          msg.append('\'');
+          throw_lexer_error(current_location(), std::move(msg));
+        }
+      } else if (ch == '\r') {
+        // skip
+        next();
+      } else if (ch == '"') {
+        next();
+        ++quotes_in_a_row;
+        if (quotes_in_a_row == quote_count) {
+          break;
         }
       } else {
-        quotes_in_a_row = 0;
-        advance();
+        if (ch == '\n' && !multiline) {
+          throw_lexer_error(current_location(), "Unterminated string literal - unexpected newline");
+        }
+        while (quotes_in_a_row > 0) {
+          scratch_buffer.push_back('"');
+          --quotes_in_a_row;
+        }
+        CharIterator::append(scratch_buffer, ch);
+        next();
       }
     }
-    throw_lexer_error(start_location, "Unterminated raw multiline string literal");
+    size_t literal_start_offset = string_literal_buffer.size();
+    string_literal_buffer.append(
+        Text(Slice(static_cast<const char *>(scratch_buffer.data()), scratch_buffer.size()))
+    );
+    Text literal_text = TextUtils::tail_bytes(string_literal_buffer, literal_start_offset);
+    size_t token_id = token_output.size();
+    string_literal_output.set(token_id, literal_text);
+    emit_token(TokenType::STRING_LITERAL, start_location);
   }
 
-  void read_raw_string(Location start_location) {
-    advance();
-    auto content_start_location = current_location();
-    while (!input.at_end()) {
-      uint32_t cp = input.peek();
-      if (cp == '"') {
-        Text content = TextUtils::substr(file_contents, content_start_location.position, input);
-        String outcome;
-        CharIterator content_iter = content.begin();
-        try {
-          StringLiteral::read(outcome, content_iter, true);
-        } catch (const std::exception &e) {
-          String msg = "Error in raw string literal: ";
-          msg.append(Text::from(e.what()));
-          throw_lexer_error(start_location, std::move(msg));
-        }
-        advance();
-        emit_token(TokenType::RAW_STRING_LITERAL, start_location);
-        return;
-      } else if (cp == '\n') {
-        throw_lexer_error(start_location, "Unterminated raw string literal");
+  uint32_t read_hex_chars(size_t num_chars) {
+    uint32_t result = 0;
+    for (size_t i = 0; i < num_chars; ++i) {
+      if (at_end()) {
+        throw_lexer_error(
+            current_location(), "Unexpected end of input in hexadecimal escape sequence"
+        );
+      }
+      uint32_t ch = next();
+      result <<= 4;
+      if (ch >= '0' && ch <= '9') {
+        result |= (ch - '0');
+      } else if (ch >= 'a' && ch <= 'f') {
+        result |= (ch - 'a' + 10);
+      } else if (ch >= 'A' && ch <= 'F') {
+        result |= (ch - 'A' + 10);
       } else {
-        advance();
+        throw_lexer_error(current_location(), "Invalid character in hexadecimal escape sequence");
       }
     }
-    throw_lexer_error(start_location, "Unterminated raw string literal");
-  }
-
-  void read_multiline_string(Location start_location) {
-    advance();
-    advance();
-    advance();
-    auto content_start_location = current_location();
-    auto content_end_location = start_location;
-    size_t quotes_in_a_row = 0;
-    while (!input.at_end()) {
-      uint32_t cp = input.peek();
-      if (cp == '"') {
-        quotes_in_a_row++;
-        if (quotes_in_a_row == 1) {
-          content_end_location = current_location();
-        }
-        advance();
-        if (quotes_in_a_row == 3) {
-          Text content = TextUtils::substr(
-              file_contents, content_start_location.position, content_end_location.position
-          );
-          String outcome;
-          CharIterator content_iter = content.begin();
-          try {
-            StringLiteral::read(outcome, content_iter, false);
-          } catch (const std::exception &e) {
-            String msg = "Error in multiline string literal: ";
-            msg.append(Text::from(e.what()));
-            throw_lexer_error(start_location, std::move(msg));
-          }
-          emit_token(TokenType::MULTILINE_STRING_LITERAL, start_location);
-          return;
-        }
-      } else {
-        quotes_in_a_row = 0;
-        if (cp == '\\') {
-          skip_escape_sequence();
-        } else {
-          advance();
-        }
-      }
-    }
-    throw_lexer_error(start_location, "Unterminated multiline string literal");
-  }
-
-  void read_string(Location start_location) {
-    advance();
-    auto content_start_location = current_location();
-    while (!input.at_end()) {
-      uint32_t cp = input.peek();
-      if (cp == '\\') {
-        skip_escape_sequence();
-      } else if (cp == '"') {
-        Text content = TextUtils::substr(file_contents, content_start_location.position, input);
-        String outcome;
-        CharIterator content_iter = content.begin();
-        try {
-          StringLiteral::read(outcome, content_iter, false);
-        } catch (const std::exception &e) {
-          String msg = "Error in string literal: ";
-          msg.append(Text::from(e.what()));
-          throw_lexer_error(start_location, std::move(msg));
-        }
-        advance();
-        emit_token(TokenType::STRING_LITERAL, start_location);
-        return;
-      } else if (cp == '\n') {
-        throw_lexer_error(start_location, "Unterminated string literal");
-      } else {
-        advance();
-      }
-    }
-    throw_lexer_error(start_location, "Unterminated string literal");
-  }
-
-  void skip_escape_sequence() {
-    advance();
-    if (input.at_end()) {
-      throw_lexer_error(
-          current_location(), "Unexpected end of input after backslash in string literal"
-      );
-    }
-    uint32_t cp = input.peek();
-    switch (cp) {
-    case 'a':
-    case 'b':
-    case 'f':
-    case 'n':
-    case 'r':
-    case 't':
-    case 'v':
-    case '\\':
-    case '\'':
-    case '"':
-    case '\n':
-      advance();
-      break;
-    case 'x':
-      advance();
-      skip_hex_digits(2);
-      break;
-    case 'u':
-      advance();
-      skip_hex_digits(4);
-      break;
-    case 'U':
-      advance();
-      skip_hex_digits(8);
-      break;
-    default: {
-      String msg = "Invalid escape sequence: '\\";
-      msg.append(cp);
-      msg.append('\'');
-      throw_lexer_error(current_location(), std::move(msg));
-    }
-    }
-  }
-
-  void skip_hex_digits(size_t count) {
-    for (size_t i = 0; i < count; i++) {
-      uint32_t cp = input.peek();
-      if (!is_hex_digit(cp)) {
-        String msg = "Expected ";
-        TextUtils::to_string(msg, count);
-        msg.append(" hex digits in escape sequence, but got '");
-        msg.append(cp);
-        msg.append('\'');
-        throw_lexer_error(current_location(), std::move(msg));
-      }
-      advance();
-    }
+    return result;
   }
 
   void read_at(Location start_location) {
-    advance();
+    next();
     skip_word_chars();
     emit_token(TokenType::ANNOTATION_NAME, start_location);
   }
 
   void read_right_bracket(Location start_location) {
-    advance();
+    next();
     emit_token(TokenType::RIGHT_BRACKET, start_location);
   }
 
   void read_left_bracket(Location start_location) {
-    advance();
+    next();
     if (previous_char_was_whitespace) {
       emit_token(TokenType::LEFT_BRACKET, start_location);
     } else {
@@ -418,12 +378,12 @@ struct LexerState {
   }
 
   void read_right_paren(Location start_location) {
-    advance();
+    next();
     emit_token(TokenType::RIGHT_PAREN, start_location);
   }
 
   void read_left_paren(Location start_location) {
-    advance();
+    next();
     if (previous_char_was_whitespace) {
       emit_token(TokenType::LEFT_PAREN, start_location);
     } else {
@@ -432,9 +392,9 @@ struct LexerState {
   }
 
   void read_colon(Location start_location) {
-    advance();
-    if (input.peek() == ':' && !previous_char_was_whitespace) {
-      advance();
+    next();
+    if (peek() == ':' && !previous_char_was_whitespace) {
+      next();
       skip_word_chars();
       emit_token(TokenType::NAMESPACE_ACCESS, start_location);
     } else {
@@ -443,7 +403,12 @@ struct LexerState {
   }
 
   void read_dot(Location start_location) {
-    advance();
+    next();
+    if (TextUtils::is_digit(peek())) {
+      set_location(start_location);
+      read_number(start_location);
+      return;
+    }
     skip_word_chars();
     if (previous_char_was_whitespace) {
       emit_token(TokenType::DOTTED_IDENTIFIER, start_location);
@@ -456,34 +421,34 @@ struct LexerState {
     if (previous_char_was_whitespace) {
       throw_lexer_error(start_location, "Unexpected '?' after whitespace");
     }
-    advance();
+    next();
     emit_token(TokenType::QUESTION, start_location);
   }
 
   void read_comma(Location start_location) {
-    advance();
+    next();
     emit_token(TokenType::COMMA, start_location);
   }
 
   void read_semicolon(Location start_location) {
-    advance();
+    next();
     emit_token(TokenType::SEMICOLON, start_location);
   }
 
   void read_left_brace(Location start_location) {
-    advance();
+    next();
     emit_token(TokenType::LEFT_BRACE, start_location);
   }
 
   void read_right_brace(Location start_location) {
-    advance();
+    next();
     emit_token(TokenType::RIGHT_BRACE, start_location);
   }
 
   void read_less(Location start_location) {
-    advance();
-    if (input.peek() == '=') {
-      advance();
+    next();
+    if (peek() == '=') {
+      next();
       emit_token(TokenType::LESS_EQUAL, start_location);
     } else {
       emit_token(TokenType::LESS, start_location);
@@ -491,9 +456,9 @@ struct LexerState {
   }
 
   void read_greater(Location start_location) {
-    advance();
-    if (input.peek() == '=') {
-      advance();
+    next();
+    if (peek() == '=') {
+      next();
       emit_token(TokenType::GREATER_EQUAL, start_location);
     } else {
       emit_token(TokenType::GREATER, start_location);
@@ -501,14 +466,14 @@ struct LexerState {
   }
 
   void read_tilde(Location start_location) {
-    advance();
+    next();
     emit_token(TokenType::TILDE, start_location);
   }
 
   void read_exclamation(Location start_location) {
-    advance();
-    if (input.peek() == '=') {
-      advance();
+    next();
+    if (peek() == '=') {
+      next();
       emit_token(TokenType::NOT_EQUAL, start_location);
     } else if (!previous_char_was_whitespace) {
       emit_token(TokenType::EXCLAMATION, start_location);
@@ -518,13 +483,13 @@ struct LexerState {
   }
 
   void read_ampersand(Location start_location) {
-    advance();
-    uint32_t next_cp = input.peek();
+    next();
+    uint32_t next_cp = peek();
     if (next_cp == '&') {
-      advance();
+      next();
       emit_token(TokenType::AND, start_location);
     } else if (next_cp == '=') {
-      advance();
+      next();
       emit_token(TokenType::AMPERSAND_EQUAL, start_location);
     } else {
       emit_token(TokenType::AMPERSAND, start_location);
@@ -532,13 +497,13 @@ struct LexerState {
   }
 
   void read_pipe(Location start_location) {
-    advance();
-    uint32_t next_cp = input.peek();
+    next();
+    uint32_t next_cp = peek();
     if (next_cp == '=') {
-      advance();
+      next();
       emit_token(TokenType::PIPE_EQUAL, start_location);
     } else if (next_cp == '|') {
-      advance();
+      next();
       emit_token(TokenType::OR, start_location);
     } else {
       emit_token(TokenType::PIPE, start_location);
@@ -546,9 +511,9 @@ struct LexerState {
   }
 
   void read_caret(Location start_location) {
-    advance();
-    if (input.peek() == '=') {
-      advance();
+    next();
+    if (peek() == '=') {
+      next();
       emit_token(TokenType::CARET_EQUAL, start_location);
     } else {
       emit_token(TokenType::CARET, start_location);
@@ -556,9 +521,9 @@ struct LexerState {
   }
 
   void read_percent(Location start_location) {
-    advance();
-    if (input.peek() == '=') {
-      advance();
+    next();
+    if (peek() == '=') {
+      next();
       emit_token(TokenType::PERCENT_EQUAL, start_location);
     } else {
       emit_token(TokenType::PERCENT, start_location);
@@ -566,9 +531,9 @@ struct LexerState {
   }
 
   void read_star(Location start_location) {
-    advance();
-    if (input.peek() == '=') {
-      advance();
+    next();
+    if (peek() == '=') {
+      next();
       emit_token(TokenType::STAR_EQUAL, start_location);
     } else {
       emit_token(TokenType::STAR, start_location);
@@ -576,13 +541,13 @@ struct LexerState {
   }
 
   void read_minus(Location start_location) {
-    advance();
-    uint32_t next_cp = input.peek();
+    next();
+    uint32_t next_cp = peek();
     if (next_cp == '=') {
-      advance();
+      next();
       emit_token(TokenType::MINUS_EQUAL, start_location);
     } else if (next_cp == '>') {
-      advance();
+      next();
       emit_token(TokenType::ARROW, start_location);
     } else {
       emit_token(TokenType::MINUS, start_location);
@@ -590,9 +555,9 @@ struct LexerState {
   }
 
   void read_plus(Location start_location) {
-    advance();
-    if (input.peek() == '=') {
-      advance();
+    next();
+    if (peek() == '=') {
+      next();
       emit_token(TokenType::PLUS_EQUAL, start_location);
     } else {
       emit_token(TokenType::PLUS, start_location);
@@ -600,23 +565,280 @@ struct LexerState {
   }
 
   void read_number(Location start_location) {
-    auto it = input;
-    try {
-      NumberLiteral::read(it);
-    } catch (const NumberLiteralReadError &e) {
-      throw_lexer_error(start_location, String::from(e.what()));
+    NumberLiteral result{.has_decimal_point = false};
+    unsigned char base = 10;
+    bool at_boundary = true;
+    bool assumed_octal = false;
+    bool previous_char_was_underscore = false;
+
+    auto base_prefix_start = current_location();
+
+    if (at_end()) {
+      throw RuntimeError("Expected number literal, but got empty input");
     }
-    size_t chars_advanced = it.data().ptr() - input.data().ptr();
-    for (size_t i = 0; i < chars_advanced; ++i) {
-      advance();
+
+    if (peek() == '0') {
+      next();
+      if (!at_end()) {
+        auto ch = peek();
+        if (ch == 'x' || ch == 'X') {
+          base = 16;
+          next();
+        } else if (ch == 'b' || ch == 'B') {
+          base = 2;
+          next();
+        } else if (ch == 'o' || ch == 'O') {
+          base = 8;
+          next();
+        } else if (ch == '_' || TextUtils::is_digit(ch)) {
+          base = 8;
+          assumed_octal = true;
+        }
+      }
+
+      if (base == 10) {
+        // this zero was not the beginning of a base prefix. go back to parsing the number normally.
+        set_location(base_prefix_start);
+      } else {
+        result.base_prefix = TextUtils::substr(file_contents, base_prefix_start.position, input);
+        at_boundary = false;
+      }
     }
+
+    auto integer_digits_start = current_location();
+    while (!at_end()) {
+      auto ch = peek();
+      signed char digit_value = -1;
+      if (ch == '_') {
+        if (at_boundary || previous_char_was_underscore) {
+          throw_lexer_error(current_location(), "Underscore must separate successive digits");
+        }
+        previous_char_was_underscore = true;
+        next();
+      } else if (TextUtils::is_digit(ch)) {
+        digit_value = ch - '0';
+      } else if (TextUtils::is_alpha(ch)) {
+        if ((ch == 'e' || ch == 'E') && (base == 10 || assumed_octal)) {
+          break;
+        } else if (ch == 'p' || ch == 'P') {
+          if (base == 16) {
+            break;
+          } else {
+            throw_lexer_error(
+                current_location(),
+                "Only hexadecimal literals may use 'p' or 'P' as the exponent prefix"
+            );
+          }
+        } else if (ch >= 'a' && ch <= 'f') {
+          digit_value = 10 + (ch - 'a');
+        } else if (ch >= 'A' && ch <= 'F') {
+          digit_value = 10 + (ch - 'A');
+        } else {
+          String err("Invalid character '");
+          err.append(ch);
+          err.append("' in number literal");
+          throw_lexer_error(current_location(), err);
+        }
+      }
+
+      if (digit_value != -1) {
+        if (digit_value >= base) {
+          String err("Invalid digit '");
+          err.append(ch);
+          err.append("' for base ");
+          TextUtils::to_string(err, int64_t(base));
+          throw_lexer_error(current_location(), err);
+        }
+        previous_char_was_underscore = false;
+        next();
+        at_boundary = false;
+      } else if (ch != '_') {
+        break;
+      }
+    }
+
+    if (previous_char_was_underscore) {
+      throw_lexer_error(current_location(), "Underscore must separate successive digits");
+    }
+    at_boundary = true;
+    previous_char_was_underscore = false;
+    result.integer_digits = TextUtils::substr(file_contents, integer_digits_start.position, input);
+
+    if (!at_end() && peek() == '.') {
+
+      result.has_decimal_point = true;
+
+      if (assumed_octal) {
+        // a number with a leading zero is only assumed octal if it has no decimal point or exponent
+        result.base_prefix = Text();
+        result.integer_digits = TextUtils::substr(file_contents, base_prefix_start.position, input);
+        assumed_octal = false;
+        base = 10;
+      }
+
+      if (base != 10 && base != 16) {
+        throw_lexer_error(
+            current_location(), "Floating point literals may only be in base 10 or 16"
+        );
+      }
+
+      input.next();
+      auto fractional_digits_start = current_location();
+      while (!at_end()) {
+        auto ch = peek();
+        signed char digit_value = -1;
+        if (ch == '_') {
+          if (at_boundary || previous_char_was_underscore) {
+            throw_lexer_error(current_location(), "Underscore must separate successive digits");
+          }
+          previous_char_was_underscore = true;
+          next();
+        } else if (TextUtils::is_digit(ch)) {
+          digit_value = ch - '0';
+        } else if (TextUtils::is_alpha(ch)) {
+          if ((ch == 'e' || ch == 'E') && base == 10) {
+            break;
+          } else if ((ch == 'p' || ch == 'P') && base == 16) {
+            break;
+          } else if (ch == 'p' || ch == 'P') {
+            throw_lexer_error(
+                current_location(),
+                "Only hexadecimal literals may use 'p' or 'P' as the exponent prefix"
+            );
+          } else if (ch >= 'a' && ch <= 'f') {
+            digit_value = 10 + (ch - 'a');
+          } else if (ch >= 'A' && ch <= 'F') {
+            digit_value = 10 + (ch - 'A');
+          } else {
+            String err("Invalid character '");
+            err.append(ch);
+            err.append("' in number literal");
+            throw_lexer_error(current_location(), err);
+          }
+        }
+
+        if (digit_value != -1) {
+          if (digit_value >= base) {
+            String err("Invalid digit '");
+            err.append(ch);
+            err.append("' for base ");
+            TextUtils::to_string(err, int64_t(base));
+            throw_lexer_error(current_location(), err);
+          }
+          previous_char_was_underscore = false;
+          next();
+          at_boundary = false;
+        } else if (ch != '_') {
+          break;
+        }
+      }
+
+      result.fractional_digits =
+          TextUtils::substr(file_contents, fractional_digits_start.position, input);
+    }
+
+    if (previous_char_was_underscore) {
+      throw_lexer_error(current_location(), "Underscore must separate successive digits");
+    }
+    at_boundary = true;
+    previous_char_was_underscore = false;
+
+    auto exponent_prefix_start = current_location();
+    if (!at_end()) {
+      auto ch = peek();
+      if (ch == 'e' || ch == 'E') {
+        if (base == 16) {
+          throw_lexer_error(
+              current_location(), "Hexadecimal literals must use 'p' or 'P' as the exponent prefix"
+          );
+        }
+        next();
+      } else if (ch == 'p' || ch == 'P') {
+        if (base != 16) {
+          throw_lexer_error(
+              current_location(),
+              "Only hexadecimal literals may use 'p' or 'P' as the exponent prefix"
+          );
+        }
+        next();
+      }
+    }
+    result.exponent_prefix =
+        TextUtils::substr(file_contents, exponent_prefix_start.position, input);
+
+    if (result.exponent_prefix.size() != 0) {
+      if (at_end()) {
+        throw_lexer_error(current_location(), "Exponent has no digits");
+      }
+
+      if (assumed_octal) {
+        // a number with a leading zero is only assumed octal if it has no decimal point or exponent
+        result.base_prefix = Text();
+        result.integer_digits = TextUtils::substr(
+            file_contents, base_prefix_start.position, exponent_prefix_start.position
+        );
+        assumed_octal = false;
+        base = 10;
+      }
+
+      if (base != 10 && base != 16) {
+        throw_lexer_error(current_location(), "Only base 10 or 16 literals may have an exponent");
+      }
+
+      auto exponent_sign_start = current_location();
+      if (peek() == '+' || peek() == '-') {
+        next();
+      }
+      result.exponent_sign = TextUtils::substr(file_contents, exponent_sign_start.position, input);
+
+      if (at_end()) {
+        throw_lexer_error(current_location(), "Exponent has no digits");
+      }
+
+      auto exponent_digits_start = current_location();
+      while (!at_end()) {
+        auto ch = peek();
+        if (ch == '_') {
+          if (at_boundary || previous_char_was_underscore) {
+            throw_lexer_error(current_location(), "Underscore must separate successive digits");
+          }
+          previous_char_was_underscore = true;
+          next();
+        } else if (TextUtils::is_digit(ch)) {
+          previous_char_was_underscore = false;
+          next();
+          at_boundary = false;
+        } else if (ch == '.' || TextUtils::is_alpha(ch)) {
+          String err("Invalid character '");
+          err.append(ch);
+          err.append("' in exponent");
+          throw_lexer_error(current_location(), err);
+        } else if (ch != '_') {
+          break;
+        }
+      }
+
+      result.exponent_digits =
+          TextUtils::substr(file_contents, exponent_digits_start.position, input);
+    }
+
+    if (previous_char_was_underscore) {
+      throw_lexer_error(current_location(), "Underscore must separate successive digits");
+    }
+
+    if (result.integer_digits.size() == 0 && result.fractional_digits.size() == 0) {
+      throw_lexer_error(current_location(), "Number literal must have at least one digit");
+    }
+
+    size_t token_id = token_output.size();
+    number_literal_output.set(token_id, std::move(result));
     emit_token(TokenType::NUMBER, start_location);
   }
 
   void read_equal(Location start_location) {
-    advance();
-    if (input.peek() == '=') {
-      advance();
+    next();
+    if (peek() == '=') {
+      next();
       emit_token(TokenType::EQUAL, start_location);
     } else {
       emit_token(TokenType::ASSIGN, start_location);
@@ -624,16 +846,16 @@ struct LexerState {
   }
 
   void read_slash(Location start_location) {
-    advance();
-    uint32_t next_cp = input.peek();
+    next();
+    uint32_t next_cp = peek();
     if (next_cp == '/') {
-      advance();
+      next();
       skip_until_end_of_single_line_comment();
     } else if (next_cp == '*') {
-      advance();
+      next();
       skip_until_end_of_multiline_comment();
     } else if (next_cp == '=') {
-      advance();
+      next();
       emit_token(TokenType::SLASH_EQUAL, start_location);
     } else {
       emit_token(TokenType::SLASH, start_location);
@@ -641,12 +863,12 @@ struct LexerState {
   }
 
   void read_whitespace() {
-    advance();
+    next();
     previous_char_was_whitespace = true;
   }
 
   void skip_until_end_of_single_line_comment() {
-    while (!input.at_end() && advance() != '\n') {
+    while (!at_end() && next() != '\n') {
       // skip
     }
   }
@@ -654,9 +876,9 @@ struct LexerState {
   void skip_until_end_of_multiline_comment() {
     uint32_t prev = 0;
     uint32_t cp = 0;
-    while (!input.at_end()) {
+    while (!at_end()) {
       prev = cp;
-      cp = advance();
+      cp = next();
       if (prev == '*' && cp == '/') {
         break;
       }
@@ -664,9 +886,9 @@ struct LexerState {
   }
 
   void read_word(Location start_location) {
-    if (input.peek() == 'r') {
-      advance();
-      if (input.peek() == '"') {
+    if (peek() == 'r') {
+      next();
+      if (peek() == '"') {
         read_raw_quote(start_location);
         return;
       }
@@ -674,25 +896,25 @@ struct LexerState {
     skip_word_chars();
 
     Text word = TextUtils::substr(file_contents, start_location.position, input);
-    const TokenType *keyword_tt = keywords.find(word);
+    auto keyword_tt = keywords.find(word);
 
-    if (keyword_tt) {
+    if (keyword_tt.has_value()) {
       emit_token(*keyword_tt, start_location);
-    } else if (!input.at_end() && input.peek() == '!') {
+    } else if (!at_end() && peek() == '!') {
       emit_token(TokenType::MACRO_NAME, start_location);
-      advance();
+      next();
     } else {
       emit_token(TokenType::IDENTIFIER, start_location);
     }
   }
 
   void skip_word_chars() {
-    while (!input.at_end() && is_word_continue(input.peek())) {
-      advance();
+    while (!at_end() && is_word_continue(peek())) {
+      next();
     }
   }
 
-  uint32_t advance() noexcept {
+  uint32_t next() {
     uint32_t cp = input.next();
     if (cp == '\n') {
       ++line;
@@ -703,12 +925,22 @@ struct LexerState {
     return cp;
   }
 
+  uint32_t peek() { return input.peek(); }
+
+  bool at_end() const { return input.at_end(); }
+
   Location current_location() const noexcept { return Location{ctx.filename, input, line, column}; }
+
+  void set_location(Location loc) {
+    input = loc.position;
+    line = loc.line;
+    column = loc.column;
+  }
 
   void emit_token(TokenType type, Location loc) { emit_token(type, loc, current_location()); }
 
   void emit_token(TokenType type, Location start, Location end) {
-    output.push_back(
+    token_output.push_back(
         Token{type, start, TextUtils::substr(file_contents, start.position, end.position)}
     );
     previous_char_was_whitespace = false;
@@ -721,14 +953,17 @@ struct LexerState {
 
 } // namespace
 
-void Lexer::tokenize(AbstractList<Token> &output, CharIterator &iter, LexerContext ctx) {
+void Lexer::tokenize(LexerResult &output, CharIterator &iter, LexerContext ctx) {
   LexerState state{
       .ctx = ctx,
       .line = 1,
       .column = 1,
       .file_contents = iter.text(),
       .input = iter,
-      .output = output,
+      .token_output = output.m_tokens,
+      .string_literal_buffer = output.m_string_literal_buffer,
+      .string_literal_output = output.m_string_literals,
+      .number_literal_output = output.m_number_literals,
       .previous_char_was_whitespace = true
   };
   state.read_file();

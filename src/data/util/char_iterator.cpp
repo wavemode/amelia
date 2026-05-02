@@ -87,7 +87,7 @@ void CharIterator::validate(Slice<const char> str) {
   }
 }
 
-void CharIterator::append(uint32_t code_point, std::vector<char> &str) {
+void CharIterator::append(std::vector<char> &str, uint32_t code_point) {
   try {
     utf8::append(code_point, std::back_inserter(str));
   } catch (const utf8::invalid_code_point &) {

@@ -2,8 +2,8 @@
 there"""xy
 
 /* EXPECTED_OUTPUT:
-MULTILINE_STRING_LITERAL("""hi
-there""")
+STRING_LITERAL("hi
+there")
 IDENTIFIER(xy)
 END_OF_FILE()
 */

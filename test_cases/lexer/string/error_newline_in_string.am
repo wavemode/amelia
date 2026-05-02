@@ -1,5 +1,5 @@
 /* EXPECTED_OUTPUT:
-ERROR("Unterminated string literal (at test_cases/lexer/string/error_newline_in_string.am:5:1)")
+ERROR("Unterminated string literal - unexpected newline (at test_cases/lexer/string/error_newline_in_string.am:5:14)")
 */
 
 "hello, world

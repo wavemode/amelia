@@ -101,7 +101,16 @@ public:
 
   T &operator*() { return value(); }
 
+  const T &operator*() const { return value(); }
+
   T *operator->() {
+    if (!m_has_value) {
+      throw RuntimeError("Attempted to access value of an empty Option");
+    }
+    return get();
+  }
+
+  const T *operator->() const {
     if (!m_has_value) {
       throw RuntimeError("Attempted to access value of an empty Option");
     }
@@ -110,17 +119,22 @@ public:
 
   void clear() { destroy(); }
 
-  static Option<T> some(T value) { return Option(std::move(value)); }
-  static Option<T> none() { return Option(); }
+  template <typename U, typename = std::enable_if_t<std::is_convertible_v<T, U>>>
+  operator Option<U>() const {
+    if (m_has_value) {
+      return Some(static_cast<U>(value()));
+    }
+    return None();
+  }
 
   bool operator==(const Option<T> &other) const {
     if (m_has_value != other.m_has_value) {
       return false;
     }
     if (m_has_value) {
-      return *get() == *other.get();
+      return value() == other.value();
     }
-    return false;
+    return true;
   }
 
   bool operator!=(const Option<T> &other) const { return !(*this == other); }

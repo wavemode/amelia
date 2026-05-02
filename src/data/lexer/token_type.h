@@ -126,6 +126,6 @@ enum class TokenType {
   END_OF_FILE,
 };
 
-void token_type_to_string(TokenType type, AbstractString &out);
+void token_type_to_string(AbstractString &out, TokenType type);
 
 } // namespace amelia
