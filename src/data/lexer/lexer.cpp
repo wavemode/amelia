@@ -98,11 +98,9 @@ struct LexerState {
   Text file_contents;
   CharIterator input;
   List<Token> &token_output;
-  String &string_literal_buffer;
-  Map<size_t, Text> &string_literal_output;
+  Map<size_t, String> &string_literal_output;
   Map<size_t, NumberLiteral> &number_literal_output;
   bool previous_char_was_whitespace;
-  std::vector<char> scratch_buffer;
 
   void read_file() {
     while (!at_end()) {
@@ -211,7 +209,7 @@ struct LexerState {
   }
 
   void read_string_literal(Location start_location, bool multiline, bool is_raw) {
-    scratch_buffer.clear();
+    std::vector<char> scratch_buffer;
     size_t quote_count = multiline ? 3 : 1;
     for (size_t i = 0; i < quote_count; ++i) {
       if (at_end() || next() != '"') {
@@ -324,13 +322,8 @@ struct LexerState {
         next();
       }
     }
-    size_t literal_start_offset = string_literal_buffer.size();
-    string_literal_buffer.append(
-        Text(Slice(static_cast<const char *>(scratch_buffer.data()), scratch_buffer.size()))
-    );
-    Text literal_text = TextUtils::tail_bytes(string_literal_buffer, literal_start_offset);
     size_t token_id = token_output.size();
-    string_literal_output.set(token_id, literal_text);
+    string_literal_output.set(token_id, String::from(std::move(scratch_buffer)));
     emit_token(TokenType::STRING_LITERAL, start_location);
   }
 
@@ -961,7 +954,6 @@ void Lexer::tokenize(LexerResult &output, CharIterator &iter, LexerContext ctx) 
       .file_contents = iter.text(),
       .input = iter,
       .token_output = output.m_tokens,
-      .string_literal_buffer = output.m_string_literal_buffer,
       .string_literal_output = output.m_string_literals,
       .number_literal_output = output.m_number_literals,
       .previous_char_was_whitespace = true

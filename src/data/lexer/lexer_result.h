@@ -20,7 +20,7 @@ class LexerResult {
 public:
   Slice<const Token> tokens() const noexcept { return m_tokens; }
 
-  Option<Text> string_literal(size_t token_id) const noexcept {
+  Option<String> string_literal(size_t token_id) const noexcept {
     return m_string_literals.find(token_id);
   }
 
@@ -32,8 +32,7 @@ public:
 
 private:
   List<Token> m_tokens;
-  String m_string_literal_buffer;
-  Map<size_t, Text> m_string_literals;
+  Map<size_t, String> m_string_literals;
   Map<size_t, NumberLiteral> m_number_literals;
 };
 

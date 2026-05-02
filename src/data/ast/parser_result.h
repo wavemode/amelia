@@ -10,19 +10,21 @@
 
 namespace amelia {
 
-class NodeManager {
+class ParserResult {
 public:
   NodeInfo get_node_info(size_t id) const { return m_nodes[id]; }
 
-#define X(name)                                                                                    \
+#define X(NODE_TYPE)                                                                               \
 private:                                                                                           \
-  Map<size_t, name> m_##name##_nodes;                                                              \
+  Map<size_t, NODE_TYPE> m_##NODE_TYPE##_nodes;                                                    \
                                                                                                    \
 public:                                                                                            \
-  const name &get_##name(size_t id) const { return m_##name##_nodes.get(id); }                     \
-  size_t add_##name(Location loc, name node) {                                                     \
-    size_t id = add_node_info({loc, NodeType::name});                                              \
-    m_##name##_nodes.set(id, std::move(node));                                                     \
+  const NODE_TYPE &get_##NODE_TYPE(size_t id) const { return m_##NODE_TYPE##_nodes.get(id); }      \
+                                                                                                   \
+private:                                                                                           \
+  size_t add_##NODE_TYPE(Location loc, NODE_TYPE node) {                                           \
+    size_t id = add_node_info({loc, NodeType::NODE_TYPE});                                         \
+    m_##NODE_TYPE##_nodes.set(id, std::move(node));                                                \
     return id;                                                                                     \
   }
   NODE_TYPE_LIST

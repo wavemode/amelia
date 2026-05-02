@@ -1,9 +1,8 @@
 #pragma once
 
-#include <stdexcept>
-
 #include "data/source/location.h"
 #include "data/util/string.h"
+#include "source_location_error.h"
 
 namespace amelia {
 
@@ -11,11 +10,8 @@ namespace amelia {
  * @class LexerError
  * @brief Exception thrown by the lexer when it encounters an error.
  */
-struct LexerError : public std::exception {
-  const String message;
-
+struct LexerError : public SourceLocationError {
   LexerError(Location loc, String message) noexcept;
-  const char *what() const noexcept override;
 };
 
 } // namespace amelia
