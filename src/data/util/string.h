@@ -1,11 +1,9 @@
 #pragma once
 
 #include <cstddef>
-#include <cstdint>
-#include <string>
-#include <vector>
 
 #include "data/util/abstract_string.h"
+#include "data/util/list.h"
 
 namespace amelia {
 
@@ -176,10 +174,10 @@ public:
    * data.
    * @throws InvalidUTF8Error if the input vector does not contain valid UTF-8 data.
    */
-  static String from(std::vector<char> str);
+  static String from(List<char> str);
 
 private:
-  std::vector<char> m_str;
+  List<char> m_str;
 };
 
 } // namespace amelia

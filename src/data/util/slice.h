@@ -52,6 +52,13 @@ public:
 
   bool operator!=(const Slice<T> &other) const noexcept { return !(*this == other); }
 
+  Slice<T> operator+(size_t offset) const {
+    if (offset > m_len) {
+      throw RuntimeError("Slice offset out of range");
+    }
+    return Slice(m_ptr + offset, m_len - offset);
+  }
+
 private:
   T *m_ptr;
   size_t m_len;

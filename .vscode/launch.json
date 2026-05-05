@@ -19,7 +19,7 @@
             "cwd": "${workspaceRoot}",
             "preLaunchTask": "make build-test",
             "env": {
-                "AMELIA_TEST_ARGS": "-ts=Map"
+                "AMELIA_TEST_ARGS": "-ts=TextUtils -tc=remove"
             }
         }
     ]

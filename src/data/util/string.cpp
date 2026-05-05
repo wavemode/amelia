@@ -14,19 +14,21 @@ String::String() noexcept { m_str.push_back('\0'); };
 String::String(Slice<const char> str) {
   if (str.size() > 0) {
     CharIterator::validate(str);
-    m_str.assign(str.ptr(), str.ptr() + str.size());
+    m_str.assign(str);
   }
   m_str.push_back('\0');
 }
 
 String::String(Text text) {
-  m_str.assign(text.data().ptr(), text.data().ptr() + text.data().size());
+  m_str.assign(text.data());
   m_str.push_back('\0');
 }
 
-const char *String::c_str() const noexcept { return m_str.data(); }
+const char *String::c_str() const noexcept { return m_str.data().ptr(); }
 
-Slice<const char> String::data() const noexcept { return Slice(m_str.data(), m_str.size() - 1); }
+Slice<const char> String::data() const noexcept {
+  return Slice(m_str.data().ptr(), m_str.size() - 1);
+}
 
 size_t String::size() const noexcept { return m_str.size() - 1; }
 
@@ -34,7 +36,7 @@ void String::append(Slice<const char> str) {
   if (str.size() > 0) {
     CharIterator::validate(str);
     m_str.pop_back();
-    m_str.insert(m_str.end(), str.ptr(), str.ptr() + str.size());
+    m_str.append(str);
     m_str.push_back('\0');
   }
 }
@@ -42,7 +44,7 @@ void String::append(Slice<const char> str) {
 void String::append(Text other) {
   if (other.size() > 0) {
     m_str.pop_back();
-    m_str.insert(m_str.end(), other.data().ptr(), other.data().ptr() + other.data().size());
+    m_str.append(other.data());
     m_str.push_back('\0');
   }
 }
@@ -54,7 +56,7 @@ void String::append(uint32_t code_point) {
 }
 
 void String::assign(Text text) {
-  m_str.assign(text.data().ptr(), text.data().ptr() + text.data().size());
+  m_str.assign(text.data());
   m_str.push_back('\0');
 }
 
@@ -65,15 +67,13 @@ void String::clear() noexcept {
 
 Text String::text() const noexcept {
   Text result;
-  result.m_slice = Slice(m_str.data(), m_str.size() - 1);
+  result.m_slice = Slice(m_str.data().ptr(), m_str.size() - 1);
   return result;
 }
 
 CharIterator String::begin() const { return CharIterator(data()); }
 
-CharIterator String::end() const {
-  return CharIterator(Slice<const char>(m_str.data() + m_str.size() - 1, 0));
-}
+CharIterator String::end() const { return CharIterator(data().end()); }
 
 String String::operator+(const String &other) const {
   String result(*this);
@@ -120,13 +120,13 @@ String::operator Text() const noexcept { return text(); }
 String String::from(const std::string &str) {
   CharIterator::validate(Slice(str.c_str(), str.size()));
   String result;
-  result.m_str.assign(str.c_str(), str.c_str() + str.size());
+  result.m_str.assign(Slice(str.c_str(), str.size()));
   result.m_str.push_back('\0');
   return result;
 }
 
-String String::from(std::vector<char> str) {
-  CharIterator::validate(Slice(static_cast<const char *>(str.data()), str.size()));
+String String::from(List<char> str) {
+  CharIterator::validate(str.data());
   str.push_back('\0');
   String result;
   result.m_str = std::move(str);

@@ -10,6 +10,7 @@
 namespace amelia {
 
 template <typename T> class Slice;
+template <typename T> class List;
 class Text;
 
 /**
@@ -134,7 +135,7 @@ public:
    * @brief Appends a single Unicode code point value to a std::string as UTF-8.
    * @throws InvalidUTF8Error if the value is not a valid Unicode code point.
    */
-  static void append(std::vector<char> &str, uint32_t code_point);
+  static void append(List<char> &str, uint32_t code_point);
 
   /**
    * @brief Compares two UTF-8 encoded slices lexicographically by Unicode code points.

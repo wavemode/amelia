@@ -1,4 +1,5 @@
 #include "runtime_error.h"
+#include "prelude.h"
 
 namespace amelia {
 

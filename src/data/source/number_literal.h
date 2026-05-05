@@ -12,9 +12,6 @@ struct NumberLiteral {
   Text exponent_prefix;
   Text exponent_sign;
   Text exponent_digits;
-
-  bool operator==(const NumberLiteral &other) const noexcept;
-  bool operator!=(const NumberLiteral &other) const noexcept;
 };
 
 } // namespace amelia

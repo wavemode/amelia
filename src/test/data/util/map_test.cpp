@@ -155,18 +155,18 @@ TEST_CASE("key iterator") {
   for (const auto &key : map.keys()) {
     seen.push_back(key);
   }
-  CHECK(seen.contains("a"));
-  CHECK(seen.contains("b"));
-  CHECK(seen.contains("c"));
+  CHECK(seen.has("a"));
+  CHECK(seen.has("b"));
+  CHECK(seen.has("c"));
 
   const Map<String, int> &const_map = map;
   List<String> const_seen;
   for (const auto &key : const_map.keys()) {
     const_seen.push_back(key);
   }
-  CHECK(const_seen.contains("a"));
-  CHECK(const_seen.contains("b"));
-  CHECK(const_seen.contains("c"));
+  CHECK(const_seen.has("a"));
+  CHECK(const_seen.has("b"));
+  CHECK(const_seen.has("c"));
 }
 
 TEST_CASE("key iterator - manual") {
@@ -178,9 +178,9 @@ TEST_CASE("key iterator - manual") {
     const auto &key = *it;
     seen.push_back(key);
   }
-  CHECK(seen.contains("a"));
-  CHECK(seen.contains("b"));
-  CHECK(seen.contains("c"));
+  CHECK(seen.has("a"));
+  CHECK(seen.has("b"));
+  CHECK(seen.has("c"));
 
   CHECK_THROWS_AS(*it, RuntimeError);
   CHECK_THROWS_AS(*end, RuntimeError);
@@ -192,18 +192,18 @@ TEST_CASE("value iterator") {
   for (const auto &value : map.values()) {
     seen.push_back(value);
   }
-  CHECK(seen.contains(1));
-  CHECK(seen.contains(2));
-  CHECK(seen.contains(3));
+  CHECK(seen.has(1));
+  CHECK(seen.has(2));
+  CHECK(seen.has(3));
 
   const Map<String, int> &const_map = map;
   List<int> const_seen;
   for (const auto &value : const_map.values()) {
     const_seen.push_back(value);
   }
-  CHECK(const_seen.contains(1));
-  CHECK(const_seen.contains(2));
-  CHECK(const_seen.contains(3));
+  CHECK(const_seen.has(1));
+  CHECK(const_seen.has(2));
+  CHECK(const_seen.has(3));
 }
 
 TEST_CASE("value iterator - manual") {
@@ -215,9 +215,9 @@ TEST_CASE("value iterator - manual") {
     const auto &value = *it;
     seen.push_back(value);
   }
-  CHECK(seen.contains(1));
-  CHECK(seen.contains(2));
-  CHECK(seen.contains(3));
+  CHECK(seen.has(1));
+  CHECK(seen.has(2));
+  CHECK(seen.has(3));
 
   CHECK_THROWS_AS(*it, RuntimeError);
   CHECK_THROWS_AS(*end, RuntimeError);

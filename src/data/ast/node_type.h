@@ -1,5 +1,6 @@
 #pragma once
 
+#include "data/util/abstract_string.h"
 #include "node_type_list.h"
 
 namespace amelia {
