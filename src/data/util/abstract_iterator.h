@@ -11,7 +11,7 @@ template <typename T> struct AbstractIterator {
 
   virtual T peek() = 0;
   virtual T next() = 0;
-  virtual bool at_end() const = 0;
+  virtual bool at_end() const noexcept = 0;
 };
 
 } // namespace amelia

@@ -216,16 +216,16 @@ public:
     size_t quotes_in_a_row = 0;
     while (true) {
       if (at_end()) {
-        throw_lexer_error(
-            current_location(), "Unterminated string literal - unexpected end of input"
+        throw_lexer_error_at_current_location(
+            "Unterminated string literal - unexpected end of input"
         );
       }
       uint32_t ch = peek();
       if (ch == '\\' && !is_raw) {
         next();
         if (at_end()) {
-          throw_lexer_error(
-              current_location(), "Unexpected end of input after backslash in string literal"
+          throw_lexer_error_at_current_location(
+              "Unexpected end of input after backslash in string literal"
           );
         }
         ch = peek();
@@ -326,8 +326,8 @@ public:
     uint32_t result = 0;
     for (size_t i = 0; i < num_chars; ++i) {
       if (at_end()) {
-        throw_lexer_error(
-            current_location(), "Unexpected end of input in hexadecimal escape sequence"
+        throw_lexer_error_at_current_location(
+            "Unexpected end of input in hexadecimal escape sequence"
         );
       }
       uint32_t ch = next();
@@ -625,7 +625,7 @@ public:
           String err("Invalid character '");
           err.append(ch);
           err.append("' in number literal");
-          throw_lexer_error_at_current_location(err);
+          throw_lexer_error_at_current_location(std::move(err));
         }
       }
 
@@ -635,7 +635,7 @@ public:
           err.append(ch);
           err.append("' for base ");
           TextUtils::to_string(err, int64_t(base));
-          throw_lexer_error_at_current_location(err);
+          throw_lexer_error_at_current_location(std::move(err));
         }
         previous_char_was_underscore = false;
         next();
@@ -665,8 +665,7 @@ public:
       }
 
       if (base != 10 && base != 16) {
-        throw_lexer_error(
-            current_location(), "Floating point literals may only be in base 10 or 16"
+        throw_lexer_error_at_current_location("Floating point literals may only be in base 10 or 16"
         );
       }
 
@@ -701,7 +700,7 @@ public:
             String err("Invalid character '");
             err.append(ch);
             err.append("' in number literal");
-            throw_lexer_error_at_current_location(err);
+            throw_lexer_error_at_current_location(std::move(err));
           }
         }
 
@@ -711,7 +710,7 @@ public:
             err.append(ch);
             err.append("' for base ");
             TextUtils::to_string(err, int64_t(base));
-            throw_lexer_error_at_current_location(err);
+            throw_lexer_error_at_current_location(std::move(err));
           }
           previous_char_was_underscore = false;
           next();
@@ -735,15 +734,14 @@ public:
       auto ch = peek();
       if (ch == 'e' || ch == 'E') {
         if (base == 16) {
-          throw_lexer_error(
-              current_location(), "Hexadecimal literals must use 'p' or 'P' as the exponent prefix"
+          throw_lexer_error_at_current_location(
+              "Hexadecimal literals must use 'p' or 'P' as the exponent prefix"
           );
         }
         next();
       } else if (ch == 'p' || ch == 'P') {
         if (base != 16) {
-          throw_lexer_error(
-              current_location(),
+          throw_lexer_error_at_current_location(
               "Only hexadecimal literals may use 'p' or 'P' as the exponent prefix"
           );
         }
@@ -796,7 +794,7 @@ public:
           String err("Invalid character '");
           err.append(ch);
           err.append("' in exponent");
-          throw_lexer_error_at_current_location(err);
+          throw_lexer_error_at_current_location(std::move(err));
         } else if (ch != '_') {
           break;
         }

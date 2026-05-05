@@ -7,7 +7,9 @@
 namespace amelia {
 void EnvironmentReader::get_env(AbstractString &output, const AbstractString &name) {
   const char *env_value = std::getenv(name.c_str());
-  output.append(Text(Slice(env_value, env_value ? std::strlen(env_value) : 0)));
+  if (env_value) {
+    output.append(Text::from(env_value));
+  }
 }
 
 } // namespace amelia

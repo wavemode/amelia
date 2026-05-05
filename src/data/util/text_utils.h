@@ -129,7 +129,7 @@ struct TextUtils {
   static size_t count_chars(Text input);
 
 private:
-  static Text text_from_subslice(Slice<const char> slice);
+  static Text text_from_subslice(ConstSlice<char> slice);
 };
 
 } // namespace amelia

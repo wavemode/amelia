@@ -11,7 +11,7 @@ namespace amelia {
 
 String::String() noexcept { m_str.push_back('\0'); };
 
-String::String(Slice<const char> str) {
+String::String(ConstSlice<char> str) {
   if (str.size() > 0) {
     CharIterator::validate(str);
     m_str.assign(str);
@@ -26,13 +26,13 @@ String::String(Text text) {
 
 const char *String::c_str() const noexcept { return m_str.data().ptr(); }
 
-Slice<const char> String::data() const noexcept {
-  return Slice(m_str.data().ptr(), m_str.size() - 1);
+ConstSlice<char> String::data() const noexcept {
+  return ConstSlice(m_str.data().ptr(), m_str.size() - 1);
 }
 
 size_t String::size() const noexcept { return m_str.size() - 1; }
 
-void String::append(Slice<const char> str) {
+void String::append(ConstSlice<char> str) {
   if (str.size() > 0) {
     CharIterator::validate(str);
     m_str.pop_back();
@@ -67,7 +67,7 @@ void String::clear() noexcept {
 
 Text String::text() const noexcept {
   Text result;
-  result.m_slice = Slice(m_str.data().ptr(), m_str.size() - 1);
+  result.m_slice = ConstSlice(m_str.data().ptr(), m_str.size() - 1);
   return result;
 }
 
@@ -117,13 +117,7 @@ bool String::operator>=(const String &other) const { return !(*this < other); }
 
 String::operator Text() const noexcept { return text(); }
 
-String String::from(const std::string &str) {
-  CharIterator::validate(Slice(str.c_str(), str.size()));
-  String result;
-  result.m_str.assign(Slice(str.c_str(), str.size()));
-  result.m_str.push_back('\0');
-  return result;
-}
+String String::from(const char *c_str) { return String(Text::from(c_str)); }
 
 String String::from(List<char> str) {
   CharIterator::validate(str.data());

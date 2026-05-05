@@ -511,7 +511,7 @@ Text TextUtils::slice_bytes(Text input, size_t index_start, size_t byte_length) 
   if (index_start + byte_length > input.size()) {
     byte_length = input.size() - index_start;
   }
-  return text_from_subslice(Slice(input.data().ptr() + index_start, byte_length));
+  return text_from_subslice(ConstSlice(input.data().ptr() + index_start, byte_length));
 }
 
 Text TextUtils::substr(Text input, CharIterator char_start, CharIterator char_end) {
@@ -526,7 +526,7 @@ Text TextUtils::substr(Text input, CharIterator char_start, CharIterator char_en
   if (start_offset > end_offset) {
     start_offset = end_offset;
   }
-  return text_from_subslice(Slice(start_ptr, end_offset - start_offset));
+  return text_from_subslice(ConstSlice(start_ptr, end_offset - start_offset));
 }
 
 Text TextUtils::substr_bytes(Text input, size_t index_start, size_t index_end) {
@@ -536,7 +536,7 @@ Text TextUtils::substr_bytes(Text input, size_t index_start, size_t index_end) {
   if (index_start > index_end) {
     index_start = index_end;
   }
-  return text_from_subslice(Slice(input.data().ptr() + index_start, index_end - index_start));
+  return text_from_subslice(ConstSlice(input.data().ptr() + index_start, index_end - index_start));
 }
 
 Text TextUtils::head(Text input, CharIterator char_end) {
@@ -621,7 +621,7 @@ bool TextUtils::is_ascii(Text input) {
   return true;
 }
 
-Text TextUtils::text_from_subslice(Slice<const char> slice) {
+Text TextUtils::text_from_subslice(ConstSlice<char> slice) {
   if (slice.size() > 0) {
     // raise an exception if this slice is not at a valid code point boundary
     CharIterator(slice).peek();

@@ -31,11 +31,11 @@ public:
 
   void clear() override { m_set.clear(); }
 
-  bool operator==(const Set<T> &other) const { return m_set == other.m_set; }
-  bool operator!=(const Set<T> &other) const { return m_set != other.m_set; }
-
   SetIterator<T> begin() const { return SetIterator(*this); }
   SetIterator<T> end() const { return SetIterator(*this).end(); }
+
+  bool operator==(const Set<T> &other) const { return m_set == other.m_set; }
+  bool operator!=(const Set<T> &other) const { return m_set != other.m_set; }
 
   friend class SetIterator<T>;
 
@@ -47,14 +47,25 @@ template <typename T> class SetIterator : public AbstractIterator<const T &> {
 public:
   explicit SetIterator(const Set<T> &set) : m_begin(set.m_set.begin()), m_end(set.m_set.end()) {}
 
+  const T &peek() override { return **this; }
+
+  const T &next() override {
+    const T &value = peek();
+    ++(*this);
+    return value;
+  }
+
+  bool at_end() const noexcept override { return m_begin == m_end; }
+
+  SetIterator<T> begin() const { return *this; }
+  SetIterator<T> end() const { return SetIterator(m_end, m_end); }
+
   const T &operator*() {
     if (at_end()) {
       throw RuntimeError("Attempted to dereference end iterator");
     }
     return *m_begin;
   }
-
-  const T &peek() override { return **this; }
 
   const T *operator->() {
     if (at_end()) {
@@ -80,19 +91,8 @@ public:
     return tmp;
   }
 
-  const T &next() override {
-    const T &value = peek();
-    ++(*this);
-    return value;
-  }
-
   bool operator==(const SetIterator &other) const { return m_begin == other.m_begin; }
   bool operator!=(const SetIterator &other) const { return m_begin != other.m_begin; }
-
-  SetIterator<T> begin() const { return *this; }
-  SetIterator<T> end() const { return SetIterator(m_end, m_end); }
-
-  bool at_end() const override { return m_begin == m_end; }
 
 private:
   SetIterator(

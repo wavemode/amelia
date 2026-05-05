@@ -5,7 +5,7 @@
 
 namespace amelia {
 
-CharIterator::CharIterator(SliceIterator<const char> str) noexcept : m_slice_iter(str) {}
+CharIterator::CharIterator(ConstSliceIterator<char> str) noexcept : m_slice_iter(str) {}
 CharIterator::CharIterator(Text text) noexcept : m_slice_iter(text.data()) {}
 
 CharIterator &CharIterator::operator++() {
@@ -47,7 +47,7 @@ uint32_t CharIterator::next() {
   }
 }
 
-Slice<const char> CharIterator::data() const noexcept { return Slice(m_slice_iter); }
+ConstSlice<char> CharIterator::data() const noexcept { return ConstSlice(m_slice_iter); }
 
 Text CharIterator::text() const noexcept { return Text(data()); }
 
@@ -75,7 +75,7 @@ bool CharIterator::operator!=(const CharIterator &other) const noexcept {
 
 bool CharIterator::at_end() const noexcept { return m_slice_iter.size() == 0; }
 
-void CharIterator::validate(Slice<const char> str) {
+void CharIterator::validate(ConstSlice<char> str) {
   auto begin = str.begin();
   auto end = str.end();
   while (begin != end) {
@@ -95,7 +95,7 @@ void CharIterator::append(List<char> &str, uint32_t code_point) {
   }
 }
 
-signed char CharIterator::compare(Slice<const char> a, Slice<const char> b) {
+signed char CharIterator::compare(ConstSlice<char> a, ConstSlice<char> b) {
   if (a.ptr() == b.ptr() && a.size() == b.size()) {
     return 0;
   }

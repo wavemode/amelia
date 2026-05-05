@@ -52,13 +52,13 @@ TEST_CASE("can be constructed from a Slice of bytes") {
   const char data[] = {'H', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l', 'd', '!'};
   REQUIRE(sizeof(data) == 13);
 
-  String str = String(Slice(data));
+  String str = String(ConstSlice(data));
   CHECK(str.size() == 13);
   CHECK(std::strcmp(str.c_str(), "Hello, world!") == 0);
 
   const char data2[] = "Hello, world!";
   REQUIRE(sizeof(data2) == 14);
-  String str2 = String(Slice(data2));
+  String str2 = String(ConstSlice(data2));
 
   // String will actually have a NULL character at the end, since the Slice does.
   CHECK(str2.size() == 14);

@@ -152,7 +152,7 @@ TEST_CASE("pair iterator - manual") {
 TEST_CASE("key iterator") {
   Map<String, int> map = {{"a", 1}, {"b", 2}, {"c", 3}};
   List<String> seen;
-  for (const auto &key : map.keys()) {
+  for (const String &key : map.keys()) {
     seen.push_back(key);
   }
   CHECK(seen.has("a"));
@@ -175,7 +175,7 @@ TEST_CASE("key iterator - manual") {
   auto end = map.keys().end();
   List<String> seen;
   for (; it != end; ++it) {
-    const auto &key = *it;
+    const String &key = *it;
     seen.push_back(key);
   }
   CHECK(seen.has("a"));
@@ -189,7 +189,7 @@ TEST_CASE("key iterator - manual") {
 TEST_CASE("value iterator") {
   Map<String, int> map = {{"a", 1}, {"b", 2}, {"c", 3}};
   List<int> seen;
-  for (const auto &value : map.values()) {
+  for (int &value : map.values()) {
     seen.push_back(value);
   }
   CHECK(seen.has(1));
@@ -198,7 +198,7 @@ TEST_CASE("value iterator") {
 
   const Map<String, int> &const_map = map;
   List<int> const_seen;
-  for (const auto &value : const_map.values()) {
+  for (const int &value : const_map.values()) {
     const_seen.push_back(value);
   }
   CHECK(const_seen.has(1));

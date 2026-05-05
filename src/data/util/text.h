@@ -13,7 +13,7 @@ class TextUtils;
 
 /**
  * @class Text
- * @brief A reference to a sequence of UTF-8 data. Basically, a rich wrapper over Slice<const char>.
+ * @brief A reference to a sequence of UTF-8 data. Basically, a rich wrapper over ConstSlice<char>.
  */
 class Text {
 public:
@@ -28,13 +28,13 @@ public:
    * @throws InvalidUTF8Error if the input slice is not valid UTF-8 from beginning to end.
    */
   template <size_t N>
-  Text(const char (&str)[N]) : Text(Slice(str, (N > 0 && str[N - 1] == '\0') ? N - 1 : N)) {}
+  Text(const char (&str)[N]) : Text(ConstSlice(str, (N > 0 && str[N - 1] == '\0') ? N - 1 : N)) {}
 
   /**
    * @brief Construct a Text from a sequence of bytes. Must be valid UTF-8.
    * @throws InvalidUTF8Error if the input slice is not valid UTF-8 from beginning to end.
    */
-  explicit Text(Slice<const char> str);
+  explicit Text(ConstSlice<char> str);
 
   /**
    * @brief Construct a Text from a std::string object.
@@ -46,7 +46,7 @@ public:
    * @return A Slice representing the underlying UTF-8 data of this Text.
    * The slice is valid until the next non-const method call on this Text instance.
    */
-  Slice<const char> data() const noexcept;
+  ConstSlice<char> data() const noexcept;
 
   /**
    * @return The size of the Text in bytes, not including the null
@@ -115,7 +115,7 @@ public:
   friend class String;
 
 private:
-  Slice<const char> m_slice;
+  ConstSlice<char> m_slice;
 };
 
 } // namespace amelia

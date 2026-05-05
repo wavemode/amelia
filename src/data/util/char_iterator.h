@@ -22,7 +22,7 @@ public:
   /**
    * @brief Constructs an iterator over the UTF-8 code points in the given span.
    */
-  explicit CharIterator(SliceIterator<const char> str) noexcept;
+  explicit CharIterator(ConstSliceIterator<char> str) noexcept;
 
   /**
    * @brief Constructs an iterator over the UTF-8 code points in the given Text object.
@@ -84,7 +84,7 @@ public:
   /**
    * @return The underlying slice of bytes representing the remaining span of the string.
    */
-  Slice<const char> data() const noexcept;
+  ConstSlice<char> data() const noexcept;
 
   /**
    * @return A Text object representing the remaining span of the string.
@@ -129,7 +129,7 @@ public:
    * @brief Validates that the given span of bytes is valid UTF-8.
    * @throws InvalidUTF8Error if the input span is not valid UTF-8 from beginning to end.
    */
-  static void validate(Slice<const char> str);
+  static void validate(ConstSlice<char> str);
 
   /**
    * @brief Appends a single Unicode code point value to a std::string as UTF-8.
@@ -142,10 +142,10 @@ public:
    * @return A signed char indicating the result of the comparison: negative if a < b, zero if a ==
    * b, positive if a > b.
    */
-  static signed char compare(Slice<const char> a, Slice<const char> b);
+  static signed char compare(ConstSlice<char> a, ConstSlice<char> b);
 
 private:
-  SliceIterator<const char> m_slice_iter;
+  ConstSliceIterator<char> m_slice_iter;
 };
 
 } // namespace amelia

@@ -107,25 +107,25 @@ TEST_CASE("join_into") {
 
   SUBCASE("basic join") {
     List<Text> parts = {"a", "b", "c"};
-    TextUtils::join_into(output, parts, ",");
+    TextUtils::join_into(output, parts.data(), ",");
     CHECK(output == "a,b,c");
   }
 
   SUBCASE("single part") {
     List<Text> parts = {"abc"};
-    TextUtils::join_into(output, parts, ",");
+    TextUtils::join_into(output, parts.data(), ",");
     CHECK(output == "abc");
   }
 
   SUBCASE("empty parts") {
     List<Text> parts;
-    TextUtils::join_into(output, parts, ",");
+    TextUtils::join_into(output, parts.data(), ",");
     CHECK(output == "");
   }
 
   SUBCASE("empty delimiter") {
     List<Text> parts = {"a", "b", "c"};
-    TextUtils::join_into(output, parts, "");
+    TextUtils::join_into(output, parts.data(), "");
     CHECK(output == "abc");
   }
 }

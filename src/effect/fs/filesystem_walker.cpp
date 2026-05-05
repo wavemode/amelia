@@ -24,7 +24,7 @@ void FilesystemWalker::walk(
     if (regular_files_only && !it->is_regular_file()) {
       continue;
     }
-    output.push_back(String::from(it->path().string()));
+    output.push_back(String::from(it->path().string().c_str()));
   }
 }
 

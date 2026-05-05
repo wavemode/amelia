@@ -46,9 +46,9 @@ TEST_CASE("can be constructed from a String") {
   CHECK(std::memcmp(text.data().ptr(), "Hello, world!", 13) == 0);
 }
 
-TEST_CASE("can be constructed from a Slice<const char>") {
+TEST_CASE("can be constructed from a ConstSlice<char>") {
   const char arr[] = "Hello, world!";
-  Text text(Slice(arr, 13));
+  Text text(ConstSlice(arr, 13));
   CHECK(text.size() == 13);
   CHECK(std::memcmp(text.data().ptr(), arr, 13) == 0);
 }

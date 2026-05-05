@@ -8,7 +8,7 @@
 namespace amelia {
 
 class Text;
-template <typename T> class Slice;
+template <typename T> class ConstSlice;
 class CharIterator;
 
 /**
@@ -30,7 +30,7 @@ public:
   /**
    * @brief Construct a String from a sequence of bytes. Must be valid UTF-8.
    */
-  explicit String(Slice<const char> str);
+  explicit String(ConstSlice<char> str);
 
   /**
    * @brief Construct a String from a Text object.
@@ -47,7 +47,7 @@ public:
    * @return A Slice representing the underlying UTF-8 data of this String.
    * The slice is valid until the next non-const method call on this String instance.
    */
-  Slice<const char> data() const noexcept;
+  ConstSlice<char> data() const noexcept;
 
   /**
    * @return A Text object representing the contents of this String. The Text object is valid until
@@ -66,7 +66,7 @@ public:
    * @param str A null-terminated C-style string to append.
    * @throws InvalidUTF8Error if the input string is not valid UTF-8.
    */
-  void append(Slice<const char> str);
+  void append(ConstSlice<char> str);
 
   /**
    * @brief Appends another String to this String.
@@ -164,10 +164,11 @@ public:
   operator Text() const noexcept;
 
   /**
-   * @brief Constructs a String from a std::string. The input string must be valid UTF-8.
+   * @brief Constructs a String from a null-terminated C-style string. The input string must be
+   * valid UTF-8.
    * @throws InvalidUTF8Error if the input string is not valid UTF-8.
    */
-  static String from(const std::string &str);
+  static String from(const char *c_str);
 
   /**
    * @brief Constructs a String from a vector of chars. The input vector must contain valid UTF-8
