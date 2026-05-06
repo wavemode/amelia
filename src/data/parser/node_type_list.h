@@ -27,10 +27,20 @@ struct ConstStatementNode {
   NodeId expression;
 };
 
+struct StringLiteralNode {
+  TokenId value;
+};
+
+struct NumberLiteralNode {
+  TokenId value;
+};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
   X(LetStatementNode)                                                                              \
-  X(ConstStatementNode)
+  X(ConstStatementNode)                                                                            \
+  X(StringLiteralNode)                                                                             \
+  X(NumberLiteralNode)
 
 } // namespace amelia

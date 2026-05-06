@@ -39,6 +39,12 @@ private:
       const auto &node = m_ConstStatementNode_nodes.get(node_id);
       print_node_field_with_comma(out, lr, "target", node.target, indent + 2);
       print_node_field(out, lr, "expression", node.expression, indent + 2);
+    } else if (info.type == NodeType::StringLiteralNode) {
+      const auto &node = m_StringLiteralNode_nodes.get(node_id);
+      print_token_field(out, lr, "value", node.value, indent + 2);
+    } else if (info.type == NodeType::NumberLiteralNode) {
+      const auto &node = m_NumberLiteralNode_nodes.get(node_id);
+      print_token_field(out, lr, "value", node.value, indent + 2);
     } else if (info.type == NodeType::ModuleNode) {
       const auto &node = m_ModuleNode_nodes.get(node_id);
       print_node_list_field(out, lr, "decls", node.decls.data(), indent + 2);

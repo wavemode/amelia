@@ -23,21 +23,25 @@ public:
   NodeId parse_module() {
     List<NodeId> top_level_statements;
     auto start_token = peek();
-    auto current_token = start_token;
     while (peek().type != TokenType::END_OF_FILE) {
-      auto next_token = peek();
-      if (next_token.type == TokenType::SEMICOLON) {
+      if (peek().type == TokenType::SEMICOLON) {
         ++m_token_index;
-        current_token = next_token;
         continue;
       }
       top_level_statements.push_back(parse_top_level_statement());
-      next_token = peek();
-      if (next_token.type != TokenType::END_OF_FILE && next_token.type != TokenType::SEMICOLON &&
-          next_token.loc.line == current_token.loc.line) {
-        throw_parser_error_at_current_location("Expected end of line after statement");
+      if (top_level_statements.size() > 1) {
+        auto prev_stmt_info = m_output.get_node_info(
+            top_level_statements[top_level_statements.size() - 2]
+        );
+        auto curr_stmt_info = m_output.get_node_info(
+            top_level_statements[top_level_statements.size() - 1]
+        );
+        if (prev_stmt_info.location.line == curr_stmt_info.location.line) {
+          throw_parser_error_at_current_location(
+              "Multiple statements on the same line are not allowed"
+          );
+        }
       }
-      current_token = next_token;
     }
     return m_output.add_ModuleNode(start_token.loc, ModuleNode{std::move(top_level_statements)});
   }
@@ -76,9 +80,17 @@ public:
   }
 
   NodeId parse_expression() {
+    return parse_atom();
+  }
+
+  NodeId parse_atom() {
     auto token = peek();
     if (token.type == TokenType::IDENTIFIER) {
       return parse_identifier();
+    } else if (token.type == TokenType::STRING_LITERAL) {
+      return parse_string_literal();
+    } else if (token.type == TokenType::NUMBER) {
+      return parse_number_literal();
     } else {
       String err("Expected expression, got token ");
       m_input.format_token(err, m_token_index);
@@ -86,8 +98,18 @@ public:
     }
   }
 
+  NodeId parse_string_literal() {
+    auto token = next();
+    return m_output.add_StringLiteralNode(token.loc, StringLiteralNode{token.id});
+  }
+
+  NodeId parse_number_literal() {
+    auto token = next();
+    return m_output.add_NumberLiteralNode(token.loc, NumberLiteralNode{token.id});
+  }
+
   NodeId parse_identifier() {
-    auto ident = read_token_type(TokenType::IDENTIFIER, "Expected identifier");
+    auto ident = next();
     return m_output.add_IdentifierNode(ident.loc, IdentifierNode{ident.id});
   }
 
