@@ -3,6 +3,7 @@
 #include <cstddef>
 
 #include "data/util/list.h"
+#include "data/util/option.h"
 
 namespace amelia {
 
@@ -48,7 +49,7 @@ struct BlockExpressionNode {
 };
 
 struct KeyValueEntryNode {
-  TokenId field;
+  TokenId key;
   NodeId value;
 };
 
@@ -57,13 +58,24 @@ struct ExpressionStatementNode {
 };
 
 struct ObjectLiteralNode {
-  List<KeyValueEntryNode> entries;
+  List<NodeId> entries;
 };
 
 struct IfExpressionNode {
   NodeId condition;
   NodeId then_branch;
   Option<NodeId> else_branch;
+};
+
+struct CatchClauseNode {
+  Option<TokenId> var;
+  NodeId exc_type;
+  NodeId body;
+};
+
+struct TryCatchExpressionNode {
+  NodeId try_block;
+  List<NodeId> catch_clauses;
 };
 
 #define NODE_TYPE_LIST                                                                             \
@@ -76,8 +88,11 @@ struct IfExpressionNode {
   X(ParenthesizedExpressionNode)                                                                   \
   X(ArrayLiteralNode)                                                                              \
   X(BlockExpressionNode)                                                                           \
+  X(KeyValueEntryNode)                                                                             \
   X(ObjectLiteralNode)                                                                             \
   X(ExpressionStatementNode)                                                                       \
-  X(IfExpressionNode)
+  X(IfExpressionNode)                                                                              \
+  X(CatchClauseNode)                                                                               \
+  X(TryCatchExpressionNode)
 
 } // namespace amelia

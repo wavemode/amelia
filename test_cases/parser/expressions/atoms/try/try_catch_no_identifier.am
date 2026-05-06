@@ -1,0 +1,28 @@
+let w = try x catch (z) t
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetStatementNode(
+      target=IdentifierNode(
+        name=IDENTIFIER(w)
+      ),
+      expression=TryCatchExpressionNode(
+        try_block=IdentifierNode(
+          name=IDENTIFIER(x)
+        ),
+        catch_clauses=[
+          CatchClauseNode(
+            exc_type=IdentifierNode(
+              name=IDENTIFIER(z)
+            ),
+            body=IdentifierNode(
+              name=IDENTIFIER(t)
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

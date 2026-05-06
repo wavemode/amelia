@@ -103,11 +103,39 @@ public:
       return parse_brace_expression();
     } else if (token.type == TokenType::KEYWORD_IF) {
       return parse_if_expression();
+    } else if (token.type == TokenType::KEYWORD_TRY) {
+      return parse_try_catch_expression();
     } else {
       String err("Expected expression, got token ");
       m_input.format_token(err, m_token_index);
       throw_parser_error_at_current_location(std::move(err));
     }
+  }
+
+  NodeId parse_try_catch_expression() {
+    auto try_token = next(); // consume the 'try' keyword
+    NodeId try_block = parse_atom();
+    List<NodeId> catch_clauses;
+    while (peek().type == TokenType::KEYWORD_CATCH) {
+      catch_clauses.push_back(parse_catch_clause());
+    }
+    return m_output.add_TryCatchExpressionNode(
+        try_token.loc, TryCatchExpressionNode{try_block, std::move(catch_clauses)}
+    );
+  }
+
+  NodeId parse_catch_clause() {
+    auto catch_token = next(); // consume the 'catch' keyword
+    read_left_paren("Expected '(' after 'catch'");
+    Option<TokenId> var;
+    if (peek().type == TokenType::IDENTIFIER && peek(1).type == TokenType::COLON) {
+      var = peek().id;
+      m_token_index += 2; // consume the identifier and the colon
+    }
+    NodeId exc_type = parse_atom();
+    read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after catch clause condition");
+    NodeId body = parse_atom();
+    return m_output.add_CatchClauseNode(catch_token.loc, CatchClauseNode{var, exc_type, body});
   }
 
   NodeId parse_if_expression() {
@@ -163,14 +191,16 @@ public:
 
   NodeId parse_object_literal() {
     auto open_brace = next(); // consume the left brace
-    List<KeyValueEntryNode> entries;
+    List<NodeId> entries;
     while (peek().type != TokenType::RIGHT_BRACE) {
       auto field_token = read_token_type(
           TokenType::DOTTED_IDENTIFIER, "Expected field name in object literal"
       );
       read_token_type(TokenType::ASSIGN, "Expected '=' after field name in object literal");
       NodeId value = parse_expression();
-      entries.push_back(KeyValueEntryNode{field_token.id, value});
+      entries.push_back(
+          m_output.add_KeyValueEntryNode(field_token.loc, KeyValueEntryNode{field_token.id, value})
+      );
       if (peek().type == TokenType::COMMA) {
         ++m_token_index; // consume the comma and continue parsing entries
       }

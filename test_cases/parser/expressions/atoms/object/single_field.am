@@ -9,8 +9,11 @@ ModuleNode(
       ),
       expression=ObjectLiteralNode(
         entries=[
-          DOTTED_IDENTIFIER(.y) = IdentifierNode(
-            name=IDENTIFIER(z)
+          KeyValueEntryNode(
+            key=DOTTED_IDENTIFIER(.y),
+            value=IdentifierNode(
+              name=IDENTIFIER(z)
+            )
           )
         ]
       )

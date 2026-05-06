@@ -59,7 +59,11 @@ private:
       print_node_list_field(out, lr, "stmts", node.stmts.data(), indent + 2);
     } else if (info.type == NodeType::ObjectLiteralNode) {
       const auto &node = m_ObjectLiteralNode_nodes.get(node_id);
-      print_entry_list_field(out, lr, "entries", node.entries.data(), indent + 2);
+      print_node_list_field(out, lr, "entries", node.entries.data(), indent + 2);
+    } else if (info.type == NodeType::KeyValueEntryNode) {
+      const auto &node = m_KeyValueEntryNode_nodes.get(node_id);
+      print_token_field_with_comma(out, lr, "key", node.key, indent + 2);
+      print_node_field(out, lr, "value", node.value, indent + 2);
     } else if (info.type == NodeType::ExpressionStatementNode) {
       const auto &node = m_ExpressionStatementNode_nodes.get(node_id);
       print_node_field(out, lr, "expr", node.expr, indent + 2);
@@ -70,37 +74,22 @@ private:
       if (node.else_branch.has_value()) {
         print_node_field(out, lr, "else_branch", node.else_branch.value(), indent + 2);
       }
+    } else if (info.type == NodeType::CatchClauseNode) {
+      const auto &node = m_CatchClauseNode_nodes.get(node_id);
+      if (node.var.has_value()) {
+        print_token_field_with_comma(out, lr, "var", node.var.value(), indent + 2);
+      }
+      print_node_field_with_comma(out, lr, "exc_type", node.exc_type, indent + 2);
+      print_node_field(out, lr, "body", node.body, indent + 2);
+    } else if (info.type == NodeType::TryCatchExpressionNode) {
+      const auto &node = m_TryCatchExpressionNode_nodes.get(node_id);
+      print_node_field_with_comma(out, lr, "try_block", node.try_block, indent + 2);
+      print_node_list_field(out, lr, "catch_clauses", node.catch_clauses.data(), indent + 2);
     } else {
       throw RuntimeError("Unknown node type");
     }
     open_line(out, indent);
     out.append(')');
-  }
-
-  void print_entry_list_field(
-      AbstractString &out,
-      const LexerResult &lr,
-      Text name,
-      ConstSlice<KeyValueEntryNode> entries,
-      int indent
-  ) const {
-    open_line(out, indent);
-    out.append(name);
-    out.append("=[");
-    if (entries.size() > 0) {
-      for (size_t i = 0; i < entries.size(); ++i) {
-        const auto &entry = entries[i];
-        open_line(out, indent + 2);
-        lr.format_token(out, entry.field);
-        out.append(" = ");
-        format_node_with_indent(out, lr, entry.value, indent + 2);
-        if (i < entries.size() - 1) {
-          out.append(',');
-        }
-      }
-      open_line(out, indent);
-    }
-    out.append(']');
   }
 
   void print_node_list_field(
