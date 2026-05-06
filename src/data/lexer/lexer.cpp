@@ -891,7 +891,9 @@ public:
   }
 
 private:
-  bool previous_char_was_whitespace() const { return m_previous_char_was_whitespace; }
+  bool previous_char_was_whitespace() const {
+    return m_previous_char_was_whitespace;
+  }
 
   Text substr_after(Location start) const {
     return TextUtils::substr(m_file_contents, start.position, m_input_iter);
@@ -901,7 +903,9 @@ private:
     return TextUtils::substr(m_file_contents, start.position, end.position);
   }
 
-  Text peek_n(size_t n) const { return TextUtils::slice(m_file_contents, m_input_iter, n); }
+  Text peek_n(size_t n) const {
+    return TextUtils::slice(m_file_contents, m_input_iter, n);
+  }
 
   uint32_t next() {
     uint32_t cp = m_input_iter.next();
@@ -917,9 +921,13 @@ private:
     return cp;
   }
 
-  uint32_t peek() { return m_input_iter.peek(); }
+  uint32_t peek() {
+    return m_input_iter.peek();
+  }
 
-  bool at_end() const { return m_input_iter.at_end(); }
+  bool at_end() const {
+    return m_input_iter.at_end();
+  }
 
   Location current_location() const noexcept {
     return Location{m_ctx.filename, m_input_iter, m_line, m_column};
@@ -943,11 +951,11 @@ private:
     return token_id;
   }
 
-  void throw_lexer_error_at_current_location(String message) {
+  [[noreturn]] void throw_lexer_error_at_current_location(String message) {
     throw_lexer_error(current_location(), std::move(message));
   }
 
-  void throw_lexer_error(Location loc, String message) {
+  [[noreturn]] void throw_lexer_error(Location loc, String message) {
     throw LexerError(loc, std::move(message));
   }
 

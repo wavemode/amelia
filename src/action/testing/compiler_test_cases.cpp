@@ -13,6 +13,9 @@
 #include "data/lexer/lexer_context.h"
 #include "data/lexer/lexer_result.h"
 #include "data/lexer/token.h"
+#include "data/parser/parser.h"
+#include "data/parser/parser_result.h"
+#include "data/source/source_location_error.h"
 #include "data/testing/compiler_test_case.h"
 #include "data/testing/compiler_test_case_collection.h"
 #include "data/testing/compiler_test_case_outcome.h"
@@ -23,15 +26,18 @@ namespace amelia {
 
 namespace {
 Text find_test_case_expected_output(const String &file_contents) {
-  auto expected_output_section_start =
-      TextUtils::find(file_contents, COMPILER_TEST_CASE_EXPECTED_OUTPUT_HEADER);
+  auto expected_output_section_start = TextUtils::find(
+      file_contents, COMPILER_TEST_CASE_EXPECTED_OUTPUT_HEADER
+  );
   if (expected_output_section_start.at_end()) {
     return Text();
   }
-  auto text_start =
-      expected_output_section_start.plus_bytes(COMPILER_TEST_CASE_EXPECTED_OUTPUT_HEADER.size());
-  auto text_end =
-      TextUtils::find_after(file_contents, COMPILER_TEST_CASE_EXPECTED_OUTPUT_FOOTER, text_start);
+  auto text_start = expected_output_section_start.plus_bytes(
+      COMPILER_TEST_CASE_EXPECTED_OUTPUT_HEADER.size()
+  );
+  auto text_end = TextUtils::find_after(
+      file_contents, COMPILER_TEST_CASE_EXPECTED_OUTPUT_FOOTER, text_start
+  );
   if (text_end.at_end()) {
     return Text();
   }
@@ -49,8 +55,9 @@ void update_file_expected_output(
   new_file_contents.append(expected_output);
   new_file_contents.append(COMPILER_TEST_CASE_EXPECTED_OUTPUT_FOOTER);
 
-  auto footer =
-      TextUtils::find_after(existing_contents, COMPILER_TEST_CASE_EXPECTED_OUTPUT_FOOTER, header);
+  auto footer = TextUtils::find_after(
+      existing_contents, COMPILER_TEST_CASE_EXPECTED_OUTPUT_FOOTER, header
+  );
   auto tail_section = footer.at_end()
                           ? footer
                           : footer.plus_bytes(COMPILER_TEST_CASE_EXPECTED_OUTPUT_FOOTER.size());
@@ -125,10 +132,9 @@ CompilerTestExecutionOutcome execute_collection(
         printer.println(test_case.filename);
         ++num_failed;
       }
-    } catch (const std::exception &e) {
+    } catch (const SourceLocationError &e) {
       if (!should_error) {
         printer.print("Test case threw an unexpected exception: ");
-        printer.print(test_case.filename);
         printer.print(" (error message: \"");
         printer.print(Text::from(e.what()));
         printer.println("\")");
@@ -189,6 +195,13 @@ void run_lexer_test_case(AbstractString &output, CompilerTestCase test_case) {
   }
 }
 
-void run_parser_test_case(AbstractString &output, CompilerTestCase test_case) {}
+void run_parser_test_case(AbstractString &output, CompilerTestCase test_case) {
+  LexerResult lexer_result;
+  Lexer::tokenize(lexer_result, LexerContext{test_case.filename}, test_case.input);
+  ParserResult parser_result;
+  NodeId root_node_id = Parser::parse_module(parser_result, lexer_result);
+  parser_result.format_node(output, lexer_result, root_node_id);
+  output.append("\n");
+}
 
 } // namespace amelia

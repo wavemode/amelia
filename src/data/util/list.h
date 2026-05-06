@@ -27,22 +27,34 @@ public:
 
   List(std::initializer_list<T> init) : m_vec(init) {}
 
-  SliceIterator<T> begin() noexcept { return SliceIterator(m_vec.data(), m_vec.size()); }
+  SliceIterator<T> begin() noexcept {
+    return SliceIterator(m_vec.data(), m_vec.size());
+  }
   ConstSliceIterator<T> begin() const noexcept {
     return ConstSliceIterator(m_vec.data(), m_vec.size());
   }
 
-  SliceIterator<T> end() noexcept { return SliceIterator(m_vec.data() + m_vec.size(), 0); }
+  SliceIterator<T> end() noexcept {
+    return SliceIterator(m_vec.data() + m_vec.size(), 0);
+  }
   ConstSliceIterator<T> end() const noexcept {
     return ConstSliceIterator(m_vec.data() + m_vec.size(), 0);
   }
 
-  Slice<T> data() noexcept { return Slice(m_vec.data(), m_vec.size()); }
-  ConstSlice<T> data() const noexcept { return ConstSlice(m_vec.data(), m_vec.size()); }
+  Slice<T> data() noexcept {
+    return Slice(m_vec.data(), m_vec.size());
+  }
+  ConstSlice<T> data() const noexcept {
+    return ConstSlice(m_vec.data(), m_vec.size());
+  }
 
-  size_t size() const noexcept override { return m_vec.size(); }
+  size_t size() const noexcept override {
+    return m_vec.size();
+  }
 
-  void push_back(T value) override { m_vec.push_back(std::move(value)); }
+  void push_back(T value) override {
+    m_vec.push_back(std::move(value));
+  }
 
   void pop_back() {
     if (m_vec.empty()) {
@@ -51,13 +63,17 @@ public:
     m_vec.pop_back();
   }
 
-  void clear() noexcept { m_vec.clear(); }
+  void clear() noexcept {
+    m_vec.clear();
+  }
 
   template <typename... Args> T &emplace_back(Args &&...args) {
     return m_vec.emplace_back(std::forward<Args>(args)...);
   }
 
-  void append(ConstSlice<T> slice) override { *this += slice; }
+  void append(ConstSlice<T> slice) override {
+    *this += slice;
+  }
 
   void assign(ConstSlice<T> slice) override {
     m_vec.clear();
@@ -73,9 +89,13 @@ public:
     return false;
   }
 
-  void reverse() noexcept { std::reverse(m_vec.begin(), m_vec.end()); }
+  void reverse() noexcept {
+    std::reverse(m_vec.begin(), m_vec.end());
+  }
 
-  void sort() { std::sort(m_vec.begin(), m_vec.end()); }
+  void sort() {
+    std::sort(m_vec.begin(), m_vec.end());
+  }
   template <typename Compare> void sort(Compare comp) {
     std::sort(m_vec.begin(), m_vec.end(), comp);
   }
@@ -140,8 +160,12 @@ public:
     return true;
   }
 
-  bool operator!=(const List<T> &other) const { return !(*this == other); }
-  bool operator!=(ConstSlice<T> other) const { return !(*this == other); }
+  bool operator!=(const List<T> &other) const {
+    return !(*this == other);
+  }
+  bool operator!=(ConstSlice<T> other) const {
+    return !(*this == other);
+  }
 
 private:
   std::vector<T> m_vec;

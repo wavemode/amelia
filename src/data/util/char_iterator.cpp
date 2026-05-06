@@ -19,11 +19,17 @@ CharIterator CharIterator::operator++(int) {
   return temp;
 }
 
-CharIterator CharIterator::begin() const noexcept { return *this; }
+CharIterator CharIterator::begin() const noexcept {
+  return *this;
+}
 
-CharIterator CharIterator::end() const noexcept { return CharIterator(m_slice_iter.end()); }
+CharIterator CharIterator::end() const noexcept {
+  return CharIterator(m_slice_iter.end());
+}
 
-uint32_t CharIterator::operator*() { return peek(); }
+uint32_t CharIterator::operator*() {
+  return peek();
+}
 
 uint32_t CharIterator::peek() {
   try {
@@ -45,9 +51,13 @@ uint32_t CharIterator::next() {
   }
 }
 
-ConstSlice<char> CharIterator::data() const noexcept { return ConstSlice(m_slice_iter); }
+ConstSlice<char> CharIterator::data() const noexcept {
+  return ConstSlice(m_slice_iter);
+}
 
-Text CharIterator::text() const noexcept { return Text(data()); }
+Text CharIterator::text() const noexcept {
+  return Text(data());
+}
 
 CharIterator CharIterator::plus(size_t n) const {
   CharIterator iter = *this;
@@ -71,7 +81,9 @@ bool CharIterator::operator!=(const CharIterator &other) const noexcept {
   return !(*this == other);
 }
 
-bool CharIterator::at_end() const noexcept { return m_slice_iter.size() == 0; }
+bool CharIterator::at_end() const noexcept {
+  return m_slice_iter.size() == 0;
+}
 
 void CharIterator::validate(ConstSlice<char> str) {
   auto begin = str.begin();

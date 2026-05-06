@@ -10,7 +10,7 @@
 #include "effect/fs/filesystem_walker.h"
 #include "effect/sys/environment_reader.h"
 #include "effect/sys/silent_printer.h"
-#include "unit/testing/lexer_test_case_runner.h"
+#include "system/testing/lexer_test_case_runner.h"
 
 TEST_SUITE_BEGIN("compiler_test_cases");
 

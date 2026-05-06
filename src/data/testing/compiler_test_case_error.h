@@ -15,7 +15,9 @@ struct CompilerTestCaseError : public std::exception {
 
   CompilerTestCaseError() noexcept = default;
   CompilerTestCaseError(String message) noexcept : message(std::move(message)) {}
-  const char *what() const noexcept override { return message.c_str(); }
+  const char *what() const noexcept override {
+    return message.c_str();
+  }
 };
 
 } // namespace amelia

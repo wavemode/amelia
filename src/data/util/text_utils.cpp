@@ -570,7 +570,9 @@ void TextUtils::to_string(AbstractString &output, double value) {
   output.append(Text::from(s1));
 }
 
-bool TextUtils::is_digit(uint32_t ch) { return ch >= '0' && ch <= '9'; }
+bool TextUtils::is_digit(uint32_t ch) {
+  return ch >= '0' && ch <= '9';
+}
 bool TextUtils::is_digit(Text input) {
   if (input.size() == 0) {
     return false;
@@ -598,7 +600,9 @@ bool TextUtils::is_alpha(Text input) {
   return true;
 }
 
-bool TextUtils::is_alnum(uint32_t ch) { return is_alpha(ch) || is_digit(ch); }
+bool TextUtils::is_alnum(uint32_t ch) {
+  return is_alpha(ch) || is_digit(ch);
+}
 bool TextUtils::is_alnum(Text input) {
   if (input.size() == 0) {
     return false;
@@ -611,7 +615,9 @@ bool TextUtils::is_alnum(Text input) {
   return true;
 }
 
-bool TextUtils::is_ascii(uint32_t ch) { return ch <= 127; }
+bool TextUtils::is_ascii(uint32_t ch) {
+  return ch <= 127;
+}
 bool TextUtils::is_ascii(Text input) {
   for (auto ch : input) {
     if (!is_ascii(ch)) {

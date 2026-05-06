@@ -131,17 +131,29 @@ TEST_CASE("join_into") {
 }
 
 TEST_CASE("trim") {
-  SUBCASE("basic trim") { CHECK(TextUtils::trim("  abc  \n\r\t") == "abc"); }
+  SUBCASE("basic trim") {
+    CHECK(TextUtils::trim("  abc  \n\r\t") == "abc");
+  }
 
-  SUBCASE("trim with custom chars") { CHECK(TextUtils::trim("--abc--", "-") == "abc"); }
+  SUBCASE("trim with custom chars") {
+    CHECK(TextUtils::trim("--abc--", "-") == "abc");
+  }
 
-  SUBCASE("no chars to trim") { CHECK(TextUtils::trim("abc") == "abc"); }
+  SUBCASE("no chars to trim") {
+    CHECK(TextUtils::trim("abc") == "abc");
+  }
 
-  SUBCASE("all chars trimmed") { CHECK(TextUtils::trim("   ", " ") == ""); }
+  SUBCASE("all chars trimmed") {
+    CHECK(TextUtils::trim("   ", " ") == "");
+  }
 
-  SUBCASE("empty input") { CHECK(TextUtils::trim("", " ") == ""); }
+  SUBCASE("empty input") {
+    CHECK(TextUtils::trim("", " ") == "");
+  }
 
-  SUBCASE("empty chars") { CHECK(TextUtils::trim("abc", "") == "abc"); }
+  SUBCASE("empty chars") {
+    CHECK(TextUtils::trim("abc", "") == "abc");
+  }
 }
 
 TEST_CASE("trim_into") {
@@ -179,17 +191,29 @@ TEST_CASE("trim_into") {
 }
 
 TEST_CASE("trim_left") {
-  SUBCASE("basic trim_left") { CHECK(TextUtils::trim_left("  abc  \n\r\t") == "abc  \n\r\t"); }
+  SUBCASE("basic trim_left") {
+    CHECK(TextUtils::trim_left("  abc  \n\r\t") == "abc  \n\r\t");
+  }
 
-  SUBCASE("trim_left with custom chars") { CHECK(TextUtils::trim_left("--abc--", "-") == "abc--"); }
+  SUBCASE("trim_left with custom chars") {
+    CHECK(TextUtils::trim_left("--abc--", "-") == "abc--");
+  }
 
-  SUBCASE("no chars to trim") { CHECK(TextUtils::trim_left("abc") == "abc"); }
+  SUBCASE("no chars to trim") {
+    CHECK(TextUtils::trim_left("abc") == "abc");
+  }
 
-  SUBCASE("all chars trimmed") { CHECK(TextUtils::trim_left("   ", " ") == ""); }
+  SUBCASE("all chars trimmed") {
+    CHECK(TextUtils::trim_left("   ", " ") == "");
+  }
 
-  SUBCASE("empty input") { CHECK(TextUtils::trim_left("", " ") == ""); }
+  SUBCASE("empty input") {
+    CHECK(TextUtils::trim_left("", " ") == "");
+  }
 
-  SUBCASE("empty chars") { CHECK(TextUtils::trim_left("abc", "") == "abc"); }
+  SUBCASE("empty chars") {
+    CHECK(TextUtils::trim_left("abc", "") == "abc");
+  }
 }
 
 TEST_CASE("trim_left_into") {
@@ -227,19 +251,29 @@ TEST_CASE("trim_left_into") {
 }
 
 TEST_CASE("trim_right") {
-  SUBCASE("basic trim_right") { CHECK(TextUtils::trim_right("  abc  \n\r\t") == "  abc"); }
+  SUBCASE("basic trim_right") {
+    CHECK(TextUtils::trim_right("  abc  \n\r\t") == "  abc");
+  }
 
   SUBCASE("trim_right with custom chars") {
     CHECK(TextUtils::trim_right("--abc--", "-") == "--abc");
   }
 
-  SUBCASE("no chars to trim") { CHECK(TextUtils::trim_right("abc") == "abc"); }
+  SUBCASE("no chars to trim") {
+    CHECK(TextUtils::trim_right("abc") == "abc");
+  }
 
-  SUBCASE("all chars trimmed") { CHECK(TextUtils::trim_right("   ", " ") == ""); }
+  SUBCASE("all chars trimmed") {
+    CHECK(TextUtils::trim_right("   ", " ") == "");
+  }
 
-  SUBCASE("empty input") { CHECK(TextUtils::trim_right("", " ") == ""); }
+  SUBCASE("empty input") {
+    CHECK(TextUtils::trim_right("", " ") == "");
+  }
 
-  SUBCASE("empty chars") { CHECK(TextUtils::trim_right("abc", "") == "abc"); }
+  SUBCASE("empty chars") {
+    CHECK(TextUtils::trim_right("abc", "") == "abc");
+  }
 }
 
 TEST_CASE("trim_right_into") {
@@ -377,33 +411,57 @@ TEST_CASE("to_upper_into") {
 }
 
 TEST_CASE("contains") {
-  SUBCASE("substring present") { CHECK(TextUtils::contains("hello world", "world")); }
+  SUBCASE("substring present") {
+    CHECK(TextUtils::contains("hello world", "world"));
+  }
 
-  SUBCASE("substring not present") { CHECK(!TextUtils::contains("hello world", "abc")); }
+  SUBCASE("substring not present") {
+    CHECK(!TextUtils::contains("hello world", "abc"));
+  }
 
-  SUBCASE("empty substring") { CHECK(TextUtils::contains("hello world", "")); }
+  SUBCASE("empty substring") {
+    CHECK(TextUtils::contains("hello world", ""));
+  }
 
-  SUBCASE("empty input") { CHECK(!TextUtils::contains("", "abc")); }
+  SUBCASE("empty input") {
+    CHECK(!TextUtils::contains("", "abc"));
+  }
 }
 
 TEST_CASE("starts_with") {
-  SUBCASE("prefix present") { CHECK(TextUtils::starts_with("hello world", "hello")); }
+  SUBCASE("prefix present") {
+    CHECK(TextUtils::starts_with("hello world", "hello"));
+  }
 
-  SUBCASE("prefix not present") { CHECK(!TextUtils::starts_with("hello world", "world")); }
+  SUBCASE("prefix not present") {
+    CHECK(!TextUtils::starts_with("hello world", "world"));
+  }
 
-  SUBCASE("empty prefix") { CHECK(TextUtils::starts_with("hello world", "")); }
+  SUBCASE("empty prefix") {
+    CHECK(TextUtils::starts_with("hello world", ""));
+  }
 
-  SUBCASE("empty input") { CHECK(!TextUtils::starts_with("", "abc")); }
+  SUBCASE("empty input") {
+    CHECK(!TextUtils::starts_with("", "abc"));
+  }
 }
 
 TEST_CASE("ends_with") {
-  SUBCASE("suffix present") { CHECK(TextUtils::ends_with("hello world", "world")); }
+  SUBCASE("suffix present") {
+    CHECK(TextUtils::ends_with("hello world", "world"));
+  }
 
-  SUBCASE("suffix not present") { CHECK(!TextUtils::ends_with("hello world", "hello")); }
+  SUBCASE("suffix not present") {
+    CHECK(!TextUtils::ends_with("hello world", "hello"));
+  }
 
-  SUBCASE("empty suffix") { CHECK(TextUtils::ends_with("hello world", "")); }
+  SUBCASE("empty suffix") {
+    CHECK(TextUtils::ends_with("hello world", ""));
+  }
 
-  SUBCASE("empty input") { CHECK(!TextUtils::ends_with("", "abc")); }
+  SUBCASE("empty input") {
+    CHECK(!TextUtils::ends_with("", "abc"));
+  }
 }
 
 TEST_CASE("find") {
@@ -1568,7 +1626,9 @@ TEST_CASE("is_digit - code point") {
 }
 
 TEST_CASE("is_digit - Text") {
-  SUBCASE("basic is_digit") { CHECK(TextUtils::is_digit("12345")); }
+  SUBCASE("basic is_digit") {
+    CHECK(TextUtils::is_digit("12345"));
+  }
 
   SUBCASE("is_digit with non-digit characters") {
     CHECK(!TextUtils::is_digit("123a5"));
@@ -1576,7 +1636,9 @@ TEST_CASE("is_digit - Text") {
     CHECK(!TextUtils::is_digit("-123"));
   }
 
-  SUBCASE("is_digit with empty string") { CHECK(!TextUtils::is_digit("")); }
+  SUBCASE("is_digit with empty string") {
+    CHECK(!TextUtils::is_digit(""));
+  }
 }
 
 TEST_CASE("is_alpha - code point") {
@@ -1606,7 +1668,9 @@ TEST_CASE("is_alpha - Text") {
     CHECK(!TextUtils::is_alpha("-Test"));
   }
 
-  SUBCASE("is_alpha with empty string") { CHECK(!TextUtils::is_alpha("")); }
+  SUBCASE("is_alpha with empty string") {
+    CHECK(!TextUtils::is_alpha(""));
+  }
 }
 
 TEST_CASE("is_alnum - code point") {
@@ -1636,7 +1700,9 @@ TEST_CASE("is_alnum - Text") {
     CHECK(!TextUtils::is_alnum("@World"));
   }
 
-  SUBCASE("is_alnum with empty string") { CHECK(!TextUtils::is_alnum("")); }
+  SUBCASE("is_alnum with empty string") {
+    CHECK(!TextUtils::is_alnum(""));
+  }
 }
 
 TEST_CASE("is_ascii - code point") {
@@ -1666,7 +1732,9 @@ TEST_CASE("is_ascii - Text") {
     CHECK(!TextUtils::is_ascii("测试"));
   }
 
-  SUBCASE("is_ascii with empty string") { CHECK(TextUtils::is_ascii("")); }
+  SUBCASE("is_ascii with empty string") {
+    CHECK(TextUtils::is_ascii(""));
+  }
 }
 
 TEST_CASE("count_chars") {

@@ -18,24 +18,42 @@ public:
   Set() = default;
   Set(std::initializer_list<T> init) : m_set(init) {}
 
-  bool has(const T &key) const override { return m_set.find(key) != m_set.end(); }
-  size_t size() const noexcept override { return m_set.size(); }
+  bool has(const T &key) const override {
+    return m_set.find(key) != m_set.end();
+  }
+  size_t size() const noexcept override {
+    return m_set.size();
+  }
 
-  void add(T value) override { m_set.insert(std::move(value)); }
+  void add(T value) override {
+    m_set.insert(std::move(value));
+  }
 
   template <typename... Args> void emplace(Args &&...args) {
     m_set.emplace(std::forward<Args>(args)...);
   }
 
-  void remove(const T &key) override { m_set.erase(key); }
+  void remove(const T &key) override {
+    m_set.erase(key);
+  }
 
-  void clear() override { m_set.clear(); }
+  void clear() override {
+    m_set.clear();
+  }
 
-  SetIterator<T> begin() const { return SetIterator(*this); }
-  SetIterator<T> end() const { return SetIterator(*this).end(); }
+  SetIterator<T> begin() const {
+    return SetIterator(*this);
+  }
+  SetIterator<T> end() const {
+    return SetIterator(*this).end();
+  }
 
-  bool operator==(const Set<T> &other) const { return m_set == other.m_set; }
-  bool operator!=(const Set<T> &other) const { return m_set != other.m_set; }
+  bool operator==(const Set<T> &other) const {
+    return m_set == other.m_set;
+  }
+  bool operator!=(const Set<T> &other) const {
+    return m_set != other.m_set;
+  }
 
   friend class SetIterator<T>;
 
@@ -47,7 +65,9 @@ template <typename T> class SetIterator : public AbstractIterator<const T &> {
 public:
   explicit SetIterator(const Set<T> &set) : m_begin(set.m_set.begin()), m_end(set.m_set.end()) {}
 
-  const T &peek() override { return **this; }
+  const T &peek() override {
+    return **this;
+  }
 
   const T &next() override {
     const T &value = peek();
@@ -55,10 +75,16 @@ public:
     return value;
   }
 
-  bool at_end() const noexcept override { return m_begin == m_end; }
+  bool at_end() const noexcept override {
+    return m_begin == m_end;
+  }
 
-  SetIterator<T> begin() const { return *this; }
-  SetIterator<T> end() const { return SetIterator(m_end, m_end); }
+  SetIterator<T> begin() const {
+    return *this;
+  }
+  SetIterator<T> end() const {
+    return SetIterator(m_end, m_end);
+  }
 
   const T &operator*() {
     if (at_end()) {
@@ -91,8 +117,12 @@ public:
     return tmp;
   }
 
-  bool operator==(const SetIterator &other) const { return m_begin == other.m_begin; }
-  bool operator!=(const SetIterator &other) const { return m_begin != other.m_begin; }
+  bool operator==(const SetIterator &other) const {
+    return m_begin == other.m_begin;
+  }
+  bool operator!=(const SetIterator &other) const {
+    return m_begin != other.m_begin;
+  }
 
 private:
   SetIterator(

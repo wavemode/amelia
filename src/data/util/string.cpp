@@ -9,7 +9,9 @@
 
 namespace amelia {
 
-String::String() noexcept { m_str.push_back('\0'); };
+String::String() noexcept {
+  m_str.push_back('\0');
+};
 
 String::String(ConstSlice<char> str) {
   if (str.size() > 0) {
@@ -24,13 +26,17 @@ String::String(Text text) {
   m_str.push_back('\0');
 }
 
-const char *String::c_str() const noexcept { return m_str.data().ptr(); }
+const char *String::c_str() const noexcept {
+  return m_str.data().ptr();
+}
 
 ConstSlice<char> String::data() const noexcept {
   return ConstSlice(m_str.data().ptr(), m_str.size() - 1);
 }
 
-size_t String::size() const noexcept { return m_str.size() - 1; }
+size_t String::size() const noexcept {
+  return m_str.size() - 1;
+}
 
 void String::append(ConstSlice<char> str) {
   if (str.size() > 0) {
@@ -71,9 +77,13 @@ Text String::text() const noexcept {
   return result;
 }
 
-CharIterator String::begin() const { return CharIterator(data()); }
+CharIterator String::begin() const {
+  return CharIterator(data());
+}
 
-CharIterator String::end() const { return CharIterator(data().end()); }
+CharIterator String::end() const {
+  return CharIterator(data().end());
+}
 
 String String::operator+(const String &other) const {
   String result(*this);
@@ -101,7 +111,9 @@ bool String::operator==(const String &other) const {
   return size() == other.size() && std::memcmp(c_str(), other.c_str(), size()) == 0;
 }
 
-bool String::operator!=(const String &other) const { return !(*this == other); }
+bool String::operator!=(const String &other) const {
+  return !(*this == other);
+}
 
 bool String::operator<(const String &other) const {
   return CharIterator::compare(data(), other.data()) < 0;
@@ -111,13 +123,21 @@ bool String::operator<=(const String &other) const {
   return CharIterator::compare(data(), other.data()) <= 0;
 }
 
-bool String::operator>(const String &other) const { return !(*this <= other); }
+bool String::operator>(const String &other) const {
+  return !(*this <= other);
+}
 
-bool String::operator>=(const String &other) const { return !(*this < other); }
+bool String::operator>=(const String &other) const {
+  return !(*this < other);
+}
 
-String::operator Text() const noexcept { return text(); }
+String::operator Text() const noexcept {
+  return text();
+}
 
-String String::from(const char *c_str) { return String(Text::from(c_str)); }
+String String::from(const char *c_str) {
+  return String(Text::from(c_str));
+}
 
 String String::from(List<char> str) {
   CharIterator::validate(str.data());

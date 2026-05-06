@@ -21,6 +21,8 @@ String make_message(Location loc, String message) {
 SourceLocationError::SourceLocationError(Location loc, String message)
     : message(make_message(loc, std::move(message))) {}
 
-const char *SourceLocationError::what() const noexcept { return message.c_str(); }
+const char *SourceLocationError::what() const noexcept {
+  return message.c_str();
+}
 
 } // namespace amelia

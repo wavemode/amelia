@@ -13,7 +13,9 @@ namespace amelia {
 
 class ParserResult {
 public:
-  NodeInfo get_node_info(size_t id) const { return m_nodes[id]; }
+  NodeInfo get_node_info(size_t id) const {
+    return m_nodes[id];
+  }
 
   void format_node(AbstractString &out, const LexerResult &lr, size_t node_id) const {
     format_node_with_indent(out, lr, node_id, 0);
@@ -31,7 +33,7 @@ private:
       open_line(out, indent + 2);
       out.append("name=");
       lr.format_token(out, node.name);
-      out.append('\n');
+      open_line(out, indent);
     } else if (info.type == NodeType::LetStatementNode) {
       const auto &node = m_LetStatementNode_nodes.get(node_id);
       open_line(out, indent + 2);
@@ -40,7 +42,23 @@ private:
       open_line_comma(out, indent + 2);
       out.append("expression=");
       format_node_with_indent(out, lr, node.expression, indent + 2);
-      out.append('\n');
+      open_line(out, indent);
+    } else if (info.type == NodeType::ModuleNode) {
+      const auto &node = m_ModuleNode_nodes.get(node_id);
+      open_line(out, indent + 2);
+      out.append("decls=[");
+      if (node.decls.size() > 0) {
+        for (size_t i = 0; i < node.decls.size(); ++i) {
+          open_line(out, indent + 4);
+          format_node_with_indent(out, lr, node.decls[i], indent + 4);
+          if (i < node.decls.size() - 1) {
+            out.append(',');
+          }
+        }
+        open_line(out, indent + 2);
+      }
+      out.append(']');
+      open_line(out, indent);
     }
     out.append(')');
   }
@@ -66,9 +84,10 @@ private:                                                                        
   Map<size_t, NODE_TYPE> m_##NODE_TYPE##_nodes;                                                    \
                                                                                                    \
 public:                                                                                            \
-  const NODE_TYPE &get_##NODE_TYPE(size_t id) const { return m_##NODE_TYPE##_nodes.get(id); }      \
+  const NODE_TYPE &get_##NODE_TYPE(size_t id) const {                                              \
+    return m_##NODE_TYPE##_nodes.get(id);                                                          \
+  }                                                                                                \
                                                                                                    \
-private:                                                                                           \
   size_t add_##NODE_TYPE(Location loc, NODE_TYPE node) {                                           \
     size_t id = add_node_info({loc, NodeType::NODE_TYPE});                                         \
     m_##NODE_TYPE##_nodes.set(id, std::move(node));                                                \

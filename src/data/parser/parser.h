@@ -1,13 +1,15 @@
 #pragma once
 
+#include <cstddef>
+
 namespace amelia {
 
-class ParserContext;
 class ParserResult;
 class LexerResult;
+using NodeId = size_t;
 
 struct Parser {
-  static void parse(ParserResult &output, ParserContext ctx, const LexerResult &input);
+  static NodeId parse_module(ParserResult &output, const LexerResult &input);
 };
 
 } // namespace amelia

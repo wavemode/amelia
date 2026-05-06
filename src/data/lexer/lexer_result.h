@@ -10,7 +10,9 @@
 namespace amelia {
 
 struct LexerResult {
-  ConstSlice<Token> tokens() const { return m_tokens.data(); }
+  ConstSlice<Token> tokens() const {
+    return m_tokens.data();
+  }
 
   StringLiteral get_string_literal(size_t token_id) const {
     auto result = m_string_literals.find(token_id);
@@ -129,9 +131,13 @@ struct LexerResult {
     m_number_literals.set(token_id, lit);
   }
 
-  size_t string_literal_buffer_size() const { return m_string_literal_buffer.size(); }
+  size_t string_literal_buffer_size() const {
+    return m_string_literal_buffer.size();
+  }
 
-  void append_byte_to_string_literal_buffer(char byte) { m_string_literal_buffer.push_back(byte); }
+  void append_byte_to_string_literal_buffer(char byte) {
+    m_string_literal_buffer.push_back(byte);
+  }
 
   void append_code_point_to_string_literal_buffer(uint32_t code_point) {
     CharIterator::append(m_string_literal_buffer, code_point);
