@@ -44,14 +44,59 @@ struct LexerResult {
     return m_tokens[token_id];
   }
 
-  void format_token(AbstractString &out, size_t token_id) {
+  void format_token(AbstractString &out, size_t token_id) const {
     auto token = get_token(token_id);
     token_type_to_string(out, token.type);
     out.append("(");
     if (token.type == TokenType::STRING_LITERAL) {
       auto lit = get_string_literal(token_id);
       out.append('\"');
-      out.append(string_literal_contents(lit));
+      for (uint32_t cp : string_literal_contents(lit)) {
+        switch (cp) {
+        case '\\':
+          out.append('\\');
+          out.append('\\');
+          break;
+        case '\a':
+          out.append('\\');
+          out.append('a');
+          break;
+        case '\b':
+          out.append('\\');
+          out.append('b');
+          break;
+        case '\f':
+          out.append('\\');
+          out.append('f');
+          break;
+        case '\n':
+          out.append('\\');
+          out.append('n');
+          break;
+        case '\r':
+          out.append('\\');
+          out.append('r');
+          break;
+        case '\t':
+          out.append('\\');
+          out.append('t');
+          break;
+        case '\v':
+          out.append('\\');
+          out.append('v');
+          break;
+        case '\'':
+          out.append('\\');
+          out.append('\'');
+          break;
+        case '"':
+          out.append('\\');
+          out.append('\"');
+          break;
+        default:
+          out.append(cp);
+        }
+      }
       out.append('\"');
     } else if (token.type == TokenType::NUMBER) {
       auto lit = get_number_literal(token_id);

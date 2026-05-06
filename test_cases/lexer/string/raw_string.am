@@ -1,6 +1,6 @@
 r"hello world\"
 
 /* EXPECTED_OUTPUT:
-STRING_LITERAL("hello world\")
+STRING_LITERAL("hello world\\")
 END_OF_FILE()
 */
