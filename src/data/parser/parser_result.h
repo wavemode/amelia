@@ -60,6 +60,18 @@ private:
     } else if (info.type == NodeType::ObjectLiteralNode) {
       const auto &node = m_ObjectLiteralNode_nodes.get(node_id);
       print_entry_list_field(out, lr, "entries", node.entries.data(), indent + 2);
+    } else if (info.type == NodeType::ExpressionStatementNode) {
+      const auto &node = m_ExpressionStatementNode_nodes.get(node_id);
+      print_node_field(out, lr, "expr", node.expr, indent + 2);
+    } else if (info.type == NodeType::IfExpressionNode) {
+      const auto &node = m_IfExpressionNode_nodes.get(node_id);
+      print_node_field_with_comma(out, lr, "condition", node.condition, indent + 2);
+      print_node_field_with_comma(out, lr, "then_branch", node.then_branch, indent + 2);
+      if (node.else_branch.has_value()) {
+        print_node_field(out, lr, "else_branch", node.else_branch.value(), indent + 2);
+      }
+    } else {
+      throw RuntimeError("Unknown node type");
     }
     open_line(out, indent);
     out.append(')');

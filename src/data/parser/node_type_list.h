@@ -52,8 +52,18 @@ struct KeyValueEntryNode {
   NodeId value;
 };
 
+struct ExpressionStatementNode {
+  NodeId expr;
+};
+
 struct ObjectLiteralNode {
   List<KeyValueEntryNode> entries;
+};
+
+struct IfExpressionNode {
+  NodeId condition;
+  NodeId then_branch;
+  Option<NodeId> else_branch;
 };
 
 #define NODE_TYPE_LIST                                                                             \
@@ -66,6 +76,8 @@ struct ObjectLiteralNode {
   X(ParenthesizedExpressionNode)                                                                   \
   X(ArrayLiteralNode)                                                                              \
   X(BlockExpressionNode)                                                                           \
-  X(ObjectLiteralNode)
+  X(ObjectLiteralNode)                                                                             \
+  X(ExpressionStatementNode)                                                                       \
+  X(IfExpressionNode)
 
 } // namespace amelia

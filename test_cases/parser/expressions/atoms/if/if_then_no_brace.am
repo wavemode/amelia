@@ -1,0 +1,21 @@
+let w = if(x)y
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetStatementNode(
+      target=IdentifierNode(
+        name=IDENTIFIER(w)
+      ),
+      expression=IfExpressionNode(
+        condition=IdentifierNode(
+          name=IDENTIFIER(x)
+        ),
+        then_branch=IdentifierNode(
+          name=IDENTIFIER(y)
+        ),
+      )
+    )
+  ]
+)
+*/

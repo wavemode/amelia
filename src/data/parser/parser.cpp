@@ -53,9 +53,7 @@ public:
     } else if (token.type == TokenType::KEYWORD_CONST) {
       return parse_const_statement();
     } else {
-      String err("Expected statement, got token ");
-      m_input.format_token(err, m_token_index);
-      throw_parser_error_at_current_location(std::move(err));
+      return parse_expression_statement();
     }
   }
 
@@ -79,6 +77,12 @@ public:
     return m_output.add_LetStatementNode(let_token.loc, LetStatementNode{target, expression});
   }
 
+  NodeId parse_expression_statement() {
+    auto expr_token = peek();
+    NodeId expr = parse_expression();
+    return m_output.add_ExpressionStatementNode(expr_token.loc, ExpressionStatementNode{expr});
+  }
+
   NodeId parse_expression() {
     return parse_atom();
   }
@@ -97,11 +101,29 @@ public:
       return parse_array_literal();
     } else if (token.type == TokenType::LEFT_BRACE) {
       return parse_brace_expression();
+    } else if (token.type == TokenType::KEYWORD_IF) {
+      return parse_if_expression();
     } else {
       String err("Expected expression, got token ");
       m_input.format_token(err, m_token_index);
       throw_parser_error_at_current_location(std::move(err));
     }
+  }
+
+  NodeId parse_if_expression() {
+    auto if_token = next(); // consume the 'if' keyword
+    read_left_paren("Expected '(' after 'if'");
+    NodeId condition = parse_expression();
+    read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after condition in 'if' expression");
+    NodeId then_branch = parse_atom();
+    Option<NodeId> else_branch;
+    if (peek().type == TokenType::KEYWORD_ELSE) {
+      ++m_token_index;
+      else_branch = parse_atom();
+    }
+    return m_output.add_IfExpressionNode(
+        if_token.loc, IfExpressionNode{condition, then_branch, else_branch}
+    );
   }
 
   NodeId parse_array_literal() {
@@ -182,6 +204,15 @@ public:
   }
 
 private:
+  TokenWithId read_left_paren(String error_message) {
+    auto token = peek();
+    if (token.type != TokenType::LEFT_PAREN && token.type != TokenType::FUNCALL_START) {
+      throw_parser_error(token.id, std::move(error_message));
+    }
+    ++m_token_index;
+    return token;
+  }
+
   TokenWithId read_token_type(TokenType expected, String error_message) {
     auto token = peek();
     if (token.type != expected) {

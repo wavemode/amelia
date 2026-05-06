@@ -1,0 +1,37 @@
+if (x) {
+  y
+} else {
+  z
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ExpressionStatementNode(
+      expr=IfExpressionNode(
+        condition=IdentifierNode(
+          name=IDENTIFIER(x)
+        ),
+        then_branch=BlockExpressionNode(
+          stmts=[
+            ExpressionStatementNode(
+              expr=IdentifierNode(
+                name=IDENTIFIER(y)
+              )
+            )
+          ]
+        ),
+        else_branch=BlockExpressionNode(
+          stmts=[
+            ExpressionStatementNode(
+              expr=IdentifierNode(
+                name=IDENTIFIER(z)
+              )
+            )
+          ]
+        )
+      )
+    )
+  ]
+)
+*/

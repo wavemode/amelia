@@ -1,0 +1,42 @@
+let x = {
+  let y = 1
+  let a = 2
+  a
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetStatementNode(
+      target=IdentifierNode(
+        name=IDENTIFIER(x)
+      ),
+      expression=BlockExpressionNode(
+        stmts=[
+          LetStatementNode(
+            target=IdentifierNode(
+              name=IDENTIFIER(y)
+            ),
+            expression=NumberLiteralNode(
+              value=NUMBER(1)
+            )
+          ),
+          LetStatementNode(
+            target=IdentifierNode(
+              name=IDENTIFIER(a)
+            ),
+            expression=NumberLiteralNode(
+              value=NUMBER(2)
+            )
+          ),
+          ExpressionStatementNode(
+            expr=IdentifierNode(
+              name=IDENTIFIER(a)
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/
