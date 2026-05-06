@@ -1,0 +1,20 @@
+let x = (5)
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetStatementNode(
+      target=IdentifierNode(
+        name=IDENTIFIER(x)
+      ),
+      expression=ParenthesizedExpressionNode(
+        exprs=[
+          NumberLiteralNode(
+            value=NUMBER(5)
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

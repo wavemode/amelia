@@ -45,6 +45,9 @@ private:
     } else if (info.type == NodeType::NumberLiteralNode) {
       const auto &node = m_NumberLiteralNode_nodes.get(node_id);
       print_token_field(out, lr, "value", node.value, indent + 2);
+    } else if (info.type == NodeType::ParenthesizedExpressionNode) {
+      const auto &node = m_ParenthesizedExpressionNode_nodes.get(node_id);
+      print_node_list_field(out, lr, "exprs", node.exprs.data(), indent + 2);
     } else if (info.type == NodeType::ModuleNode) {
       const auto &node = m_ModuleNode_nodes.get(node_id);
       print_node_list_field(out, lr, "decls", node.decls.data(), indent + 2);

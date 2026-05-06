@@ -1,0 +1,30 @@
+let x = (
+  5,
+  "hello",
+  6.7,
+)
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetStatementNode(
+      target=IdentifierNode(
+        name=IDENTIFIER(x)
+      ),
+      expression=ParenthesizedExpressionNode(
+        exprs=[
+          NumberLiteralNode(
+            value=NUMBER(5)
+          ),
+          StringLiteralNode(
+            value=STRING_LITERAL("hello")
+          ),
+          NumberLiteralNode(
+            value=NUMBER(6.7)
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

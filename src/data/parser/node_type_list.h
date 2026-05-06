@@ -35,12 +35,17 @@ struct NumberLiteralNode {
   TokenId value;
 };
 
+struct ParenthesizedExpressionNode {
+  List<NodeId> exprs;
+};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
   X(LetStatementNode)                                                                              \
   X(ConstStatementNode)                                                                            \
   X(StringLiteralNode)                                                                             \
-  X(NumberLiteralNode)
+  X(NumberLiteralNode)                                                                             \
+  X(ParenthesizedExpressionNode)
 
 } // namespace amelia

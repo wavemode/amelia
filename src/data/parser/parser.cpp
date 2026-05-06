@@ -28,7 +28,7 @@ public:
         ++m_token_index;
         continue;
       }
-      top_level_statements.push_back(parse_top_level_statement());
+      top_level_statements.push_back(parse_statement());
       if (top_level_statements.size() > 1) {
         auto prev_stmt_info = m_output.get_node_info(
             top_level_statements[top_level_statements.size() - 2]
@@ -46,7 +46,7 @@ public:
     return m_output.add_ModuleNode(start_token.loc, ModuleNode{std::move(top_level_statements)});
   }
 
-  NodeId parse_top_level_statement() {
+  NodeId parse_statement() {
     auto token = peek();
     if (token.type == TokenType::KEYWORD_LET) {
       return parse_let_statement();
@@ -60,7 +60,7 @@ public:
   }
 
   NodeId parse_const_statement() {
-    auto const_token = next();
+    auto const_token = next(); // consume the 'const' keyword
     NodeId target = parse_expression();
     auto assign_token = read_token_type(
         TokenType::ASSIGN, "Expected '=' after identifier in const statement"
@@ -70,7 +70,7 @@ public:
   }
 
   NodeId parse_let_statement() {
-    auto let_token = next();
+    auto let_token = next(); // consume the 'let' keyword
     NodeId target = parse_expression();
     auto assign_token = read_token_type(
         TokenType::ASSIGN, "Expected '=' after identifier in let statement"
@@ -91,10 +91,31 @@ public:
       return parse_string_literal();
     } else if (token.type == TokenType::NUMBER) {
       return parse_number_literal();
+    } else if (token.type == TokenType::LEFT_PAREN || token.type == TokenType::FUNCALL_START) {
+      return parse_parenthesized_expression();
     } else {
       String err("Expected expression, got token ");
       m_input.format_token(err, m_token_index);
       throw_parser_error_at_current_location(std::move(err));
+    }
+  }
+
+  NodeId parse_parenthesized_expression() {
+    auto open_paren = next(); // consume the left paren
+    List<NodeId> exprs;
+    parse_comma_separated_expression_list(exprs, TokenType::RIGHT_PAREN);
+    ++m_token_index; // consume the right paren
+    return m_output.add_ParenthesizedExpressionNode(
+        open_paren.loc, ParenthesizedExpressionNode{std::move(exprs)}
+    );
+  }
+
+  void parse_comma_separated_expression_list(List<NodeId> &exprs, TokenType terminator) {
+    while (peek().type != terminator) {
+      exprs.push_back(parse_expression());
+      if (peek().type == TokenType::COMMA) {
+        ++m_token_index;
+      }
     }
   }
 
