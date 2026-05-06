@@ -182,8 +182,9 @@ bool update_expected_output(
 void run_lexer_test_case(AbstractString &output, CompilerTestCase test_case) {
   LexerResult result;
   Lexer::tokenize(result, LexerContext{test_case.filename}, test_case.input);
-  for (size_t token_id = 0; token_id < result.tokens.size(); ++token_id) {
-    result.token_to_string(output, token_id);
+  auto tokens = result.tokens();
+  for (size_t token_id = 0; token_id < tokens.size(); ++token_id) {
+    result.format_token(output, token_id);
     output.append("\n");
   }
 }

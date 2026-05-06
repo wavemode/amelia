@@ -2,44 +2,59 @@
 
 #include <cstddef>
 
+#include "data/lexer/token.h"
 #include "data/source/number_literal.h"
 #include "data/source/string_literal.h"
-#include "data/util/list.h"
-#include "data/util/map.h"
-#include "data/util/option.h"
-#include "data/util/ref.h"
-#include "data/util/slice.h"
-#include "data/util/string.h"
-#include "data/util/text.h"
-#include "token.h"
+#include "prelude.h"
 
 namespace amelia {
 
 struct LexerResult {
-  List<Token> tokens;
-  List<char> string_literal_buffer;
-  Map<size_t, StringLiteral> string_literals;
-  Map<size_t, NumberLiteral> number_literals;
+  ConstSlice<Token> tokens() const { return m_tokens.data(); }
 
-  Option<StringLiteral> string_literal(size_t token_id) const noexcept {
-    return string_literals.find(token_id);
+  StringLiteral get_string_literal(size_t token_id) const {
+    auto result = m_string_literals.find(token_id);
+    if (!result.has_value()) {
+      throw RuntimeError("Token does not have a string literal");
+    }
+    return result.value();
   }
 
-  Option<NumberLiteral> number_literal(size_t token_id) const noexcept {
-    return number_literals.find(token_id);
+  Text string_literal_contents(StringLiteral lit) const {
+    if (lit.buffer_end > m_string_literal_buffer.size() || lit.buffer_start > lit.buffer_end) {
+      throw RuntimeError("Invalid string literal buffer start and end");
+    }
+    return Text(ConstSlice(
+        m_string_literal_buffer.data().ptr() + lit.buffer_start, lit.buffer_end - lit.buffer_start
+    ));
   }
 
-  void token_to_string(AbstractString &out, size_t token_id) {
-    auto token = tokens[token_id];
+  NumberLiteral get_number_literal(size_t token_id) const {
+    auto result = m_number_literals.find(token_id);
+    if (!result.has_value()) {
+      throw RuntimeError("Token does not have a number literal");
+    }
+    return result.value();
+  }
+
+  Token get_token(size_t token_id) const {
+    if (token_id >= m_tokens.size()) {
+      throw RuntimeError("Invalid token ID");
+    }
+    return m_tokens[token_id];
+  }
+
+  void format_token(AbstractString &out, size_t token_id) {
+    auto token = get_token(token_id);
     token_type_to_string(out, token.type);
     out.append("(");
     if (token.type == TokenType::STRING_LITERAL) {
-      auto lit = string_literal(token_id).value();
+      auto lit = get_string_literal(token_id);
       out.append('\"');
-      out.append(Text(Slice(string_literal_buffer.data().ptr() + lit.buffer_offset, lit.length)));
+      out.append(string_literal_contents(lit));
       out.append('\"');
     } else if (token.type == TokenType::NUMBER) {
-      auto lit = number_literal(token_id).value();
+      auto lit = get_number_literal(token_id);
       out.append(lit.base_prefix);
       out.append(lit.integer_digits);
       if (lit.has_decimal_point) {
@@ -54,6 +69,34 @@ struct LexerResult {
     }
     out.append(")");
   }
+
+  size_t add_token(Token token) {
+    size_t token_id = m_tokens.size();
+    m_tokens.push_back(token);
+    return token_id;
+  }
+
+  void add_string_literal(size_t token_id, StringLiteral lit) {
+    m_string_literals.set(token_id, lit);
+  }
+
+  void add_number_literal(size_t token_id, NumberLiteral lit) {
+    m_number_literals.set(token_id, lit);
+  }
+
+  size_t string_literal_buffer_size() const { return m_string_literal_buffer.size(); }
+
+  void append_byte_to_string_literal_buffer(char byte) { m_string_literal_buffer.push_back(byte); }
+
+  void append_code_point_to_string_literal_buffer(uint32_t code_point) {
+    CharIterator::append(m_string_literal_buffer, code_point);
+  }
+
+private:
+  List<Token> m_tokens;
+  List<char> m_string_literal_buffer;
+  Map<size_t, StringLiteral> m_string_literals;
+  Map<size_t, NumberLiteral> m_number_literals;
 };
 
 } // namespace amelia

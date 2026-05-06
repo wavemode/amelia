@@ -212,7 +212,7 @@ public:
         throw RuntimeError("String literal does not start with expected quote characters");
       }
     }
-    size_t literal_buffer_start_size = m_result.string_literal_buffer.size();
+    size_t literal_buffer_start_size = m_result.string_literal_buffer_size();
     size_t quotes_in_a_row = 0;
     while (true) {
       if (at_end()) {
@@ -232,43 +232,43 @@ public:
         switch (ch) {
         case 'a':
           next();
-          append_byte_to_string_literal_buffer('\a');
+          m_result.append_byte_to_string_literal_buffer('\a');
           break;
         case 'b':
           next();
-          append_byte_to_string_literal_buffer('\b');
+          m_result.append_byte_to_string_literal_buffer('\b');
           break;
         case 'f':
           next();
-          append_byte_to_string_literal_buffer('\f');
+          m_result.append_byte_to_string_literal_buffer('\f');
           break;
         case 'n':
           next();
-          append_byte_to_string_literal_buffer('\n');
+          m_result.append_byte_to_string_literal_buffer('\n');
           break;
         case 'r':
           next();
-          append_byte_to_string_literal_buffer('\r');
+          m_result.append_byte_to_string_literal_buffer('\r');
           break;
         case 't':
           next();
-          append_byte_to_string_literal_buffer('\t');
+          m_result.append_byte_to_string_literal_buffer('\t');
           break;
         case 'v':
           next();
-          append_byte_to_string_literal_buffer('\v');
+          m_result.append_byte_to_string_literal_buffer('\v');
           break;
         case '\\':
           next();
-          append_byte_to_string_literal_buffer('\\');
+          m_result.append_byte_to_string_literal_buffer('\\');
           break;
         case '\'':
           next();
-          append_byte_to_string_literal_buffer('\'');
+          m_result.append_byte_to_string_literal_buffer('\'');
           break;
         case '"':
           next();
-          append_byte_to_string_literal_buffer('\"');
+          m_result.append_byte_to_string_literal_buffer('\"');
           break;
         case '\r':
           next();
@@ -281,15 +281,15 @@ public:
           break;
         case 'x':
           next();
-          append_byte_to_string_literal_buffer(static_cast<char>(read_hex_chars(2)));
+          m_result.append_byte_to_string_literal_buffer(static_cast<char>(read_hex_chars(2)));
           break;
         case 'u':
           next();
-          append_code_point_to_string_literal_buffer(read_hex_chars(4));
+          m_result.append_code_point_to_string_literal_buffer(read_hex_chars(4));
           break;
         case 'U':
           next();
-          append_code_point_to_string_literal_buffer(read_hex_chars(8));
+          m_result.append_code_point_to_string_literal_buffer(read_hex_chars(8));
           break;
         default:
           String msg = "Invalid escape sequence: '\\";
@@ -311,15 +311,16 @@ public:
           throw_lexer_error_at_current_location("Unterminated string literal - unexpected newline");
         }
         while (quotes_in_a_row > 0) {
-          append_byte_to_string_literal_buffer('"');
+          m_result.append_byte_to_string_literal_buffer('"');
           --quotes_in_a_row;
         }
-        append_code_point_to_string_literal_buffer(ch);
+        m_result.append_code_point_to_string_literal_buffer(ch);
         next();
       }
     }
     size_t token_id = emit_token(TokenType::STRING_LITERAL, start_location);
-    emit_string_literal(token_id, literal_buffer_start_size);
+    auto result = StringLiteral{literal_buffer_start_size, m_result.string_literal_buffer_size()};
+    m_result.add_string_literal(token_id, result);
   }
 
   uint32_t read_hex_chars(size_t num_chars) {
@@ -812,7 +813,7 @@ public:
     }
 
     size_t token_id = emit_token(TokenType::NUMBER, start_location);
-    emit_number_literal(token_id, result);
+    m_result.add_number_literal(token_id, result);
   }
 
   void read_equal(Location start_location) {
@@ -935,36 +936,11 @@ private:
   }
 
   size_t emit_token(TokenType type, Location start, Location end) {
-    size_t token_id = m_result.tokens.size();
-    m_result.tokens.push_back(
+    size_t token_id = m_result.add_token(
         Token{type, start, TextUtils::substr(m_file_contents, start.position, end.position)}
     );
     m_previous_char_was_whitespace = false;
     return token_id;
-  }
-
-  size_t string_literal_buffer_size() const { return m_result.string_literal_buffer.size(); }
-
-  void append_code_point_to_string_literal_buffer(uint32_t cp) {
-    CharIterator::append(m_result.string_literal_buffer, cp);
-  }
-
-  void append_byte_to_string_literal_buffer(char byte) {
-    m_result.string_literal_buffer.push_back(byte);
-  }
-
-  void emit_string_literal(size_t token_id, size_t buffer_offset) {
-    m_result.string_literals.set(
-        token_id,
-        StringLiteral{
-            .buffer_offset = buffer_offset,
-            .length = m_result.string_literal_buffer.size() - buffer_offset,
-        }
-    );
-  }
-
-  void emit_number_literal(size_t token_id, NumberLiteral value) {
-    m_result.number_literals.set(token_id, value);
   }
 
   void throw_lexer_error_at_current_location(String message) {

@@ -21,6 +21,7 @@ class CharIterator : public AbstractIterator<uint32_t> {
 public:
   /**
    * @brief Constructs an iterator over the UTF-8 code points in the given span.
+   * @throws InvalidUTF8Error if the input span is not valid UTF-8 from beginning to end.
    */
   explicit CharIterator(ConstSliceIterator<char> str) noexcept;
 
@@ -28,20 +29,6 @@ public:
    * @brief Constructs an iterator over the UTF-8 code points in the given Text object.
    */
   explicit CharIterator(Text text) noexcept;
-
-  /**
-   * @return Advances the iterator.
-   * @throws InvalidUTF8Error if the iterator is not currently pointing to a valid UTF-8 sequence.
-   * @throws std::out_of_range if the iterator is advanced past the end of the string.
-   */
-  CharIterator &operator++();
-
-  /**
-   * @return Advances the iterator.
-   * @throws InvalidUTF8Error if the iterator is not currently pointing to a valid UTF-8 sequence.
-   * @throws std::out_of_range if the iterator is advanced past the end of the string.
-   */
-  CharIterator operator++(int);
 
   /**
    * @return A copy of the iterator pointing to the current code point.
@@ -58,7 +45,7 @@ public:
    * @throws InvalidUTF8Error if the iterator is not currently pointing to a valid UTF-8 sequence.
    * @throws std::out_of_range if the iterator is at the end of the string.
    */
-  uint32_t operator*() const;
+  uint32_t operator*();
 
   /**
    * @brief Returns the next UTF-8 code point in the string without advancing the iterator.
@@ -66,13 +53,6 @@ public:
    * @throws std::out_of_range if the iterator is at the end of the string.
    */
   uint32_t peek() override;
-
-  /**
-   * @brief Returns the next UTF-8 code point in the string without advancing the iterator.
-   * @throws InvalidUTF8Error if the iterator is not currently pointing to a valid UTF-8 sequence.
-   * @throws std::out_of_range if the iterator is at the end of the string.
-   */
-  uint32_t peek() const;
 
   /**
    * @brief Returns the next UTF-8 code point in the string and advances the iterator.
@@ -107,6 +87,20 @@ public:
    * @throws std::out_of_range if the iterator would advance past the end of the string.
    */
   CharIterator plus_bytes(size_t n) const;
+
+  /**
+   * @return Advances the iterator.
+   * @throws InvalidUTF8Error if the iterator is not currently pointing to a valid UTF-8 sequence.
+   * @throws std::out_of_range if the iterator is advanced past the end of the string.
+   */
+  CharIterator &operator++();
+
+  /**
+   * @return Advances the iterator.
+   * @throws InvalidUTF8Error if the iterator is not currently pointing to a valid UTF-8 sequence.
+   * @throws std::out_of_range if the iterator is advanced past the end of the string.
+   */
+  CharIterator operator++(int);
 
   /**
    * @brief Compares this iterator with another for equality. Two iterators are equal if they point
