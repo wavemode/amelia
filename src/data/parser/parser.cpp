@@ -105,6 +105,8 @@ public:
       return parse_if_expression();
     } else if (token.type == TokenType::KEYWORD_TRY) {
       return parse_try_catch_expression();
+    } else if (token.type == TokenType::KEYWORD_SWITCH) {
+      return parse_switch_expression();
     } else {
       String err("Expected expression, got token ");
       m_input.format_token(err, m_token_index);
@@ -112,15 +114,40 @@ public:
     }
   }
 
+  NodeId parse_switch_expression() {
+    auto switch_token = next(); // consume the 'switch' keyword
+    read_left_paren("Expected '(' after 'switch'");
+    NodeId expr = parse_expression();
+    read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after switch expression");
+    read_token_type(TokenType::LEFT_BRACE, "Expected '{' to start switch expression body");
+    List<NodeId> clauses;
+    while (peek().type == TokenType::KEYWORD_CASE) {
+      clauses.push_back(parse_case_clause());
+    }
+    read_token_type(TokenType::RIGHT_BRACE, "Expected '}' to end switch expression body");
+    return m_output.add_SwitchExpressionNode(
+        switch_token.loc, SwitchExpressionNode{expr, std::move(clauses)}
+    );
+  }
+
+  NodeId parse_case_clause() {
+    auto case_token = next(); // consume the 'case' keyword
+    read_left_paren("Expected '(' after 'case'");
+    NodeId expr = parse_expression();
+    read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after case clause condition");
+    NodeId body = parse_expression();
+    return m_output.add_CaseClauseNode(case_token.loc, CaseClauseNode{expr, body});
+  }
+
   NodeId parse_try_catch_expression() {
     auto try_token = next(); // consume the 'try' keyword
-    NodeId try_block = parse_atom();
-    List<NodeId> catch_clauses;
+    NodeId try_block = parse_expression();
+    List<NodeId> clauses;
     while (peek().type == TokenType::KEYWORD_CATCH) {
-      catch_clauses.push_back(parse_catch_clause());
+      clauses.push_back(parse_catch_clause());
     }
     return m_output.add_TryCatchExpressionNode(
-        try_token.loc, TryCatchExpressionNode{try_block, std::move(catch_clauses)}
+        try_token.loc, TryCatchExpressionNode{try_block, std::move(clauses)}
     );
   }
 
@@ -132,9 +159,9 @@ public:
       var = peek().id;
       m_token_index += 2; // consume the identifier and the colon
     }
-    NodeId exc_type = parse_atom();
+    NodeId exc_type = parse_expression();
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after catch clause condition");
-    NodeId body = parse_atom();
+    NodeId body = parse_expression();
     return m_output.add_CatchClauseNode(catch_token.loc, CatchClauseNode{var, exc_type, body});
   }
 
@@ -143,11 +170,11 @@ public:
     read_left_paren("Expected '(' after 'if'");
     NodeId condition = parse_expression();
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after condition in 'if' expression");
-    NodeId then_branch = parse_atom();
+    NodeId then_branch = parse_expression();
     Option<NodeId> else_branch;
     if (peek().type == TokenType::KEYWORD_ELSE) {
       ++m_token_index;
-      else_branch = parse_atom();
+      else_branch = parse_expression();
     }
     return m_output.add_IfExpressionNode(
         if_token.loc, IfExpressionNode{condition, then_branch, else_branch}

@@ -1,0 +1,39 @@
+let x = switch(y) {
+  case (1) 2
+  case (3) 4
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetStatementNode(
+      target=IdentifierNode(
+        name=IDENTIFIER(x)
+      ),
+      expression=SwitchExpressionNode(
+        expr=IdentifierNode(
+          name=IDENTIFIER(y)
+        ),
+        clauses=[
+          CaseClauseNode(
+            expr=NumberLiteralNode(
+              value=NUMBER(1)
+            ),
+            body=NumberLiteralNode(
+              value=NUMBER(2)
+            )
+          ),
+          CaseClauseNode(
+            expr=NumberLiteralNode(
+              value=NUMBER(3)
+            ),
+            body=NumberLiteralNode(
+              value=NUMBER(4)
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

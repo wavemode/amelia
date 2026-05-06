@@ -84,7 +84,15 @@ private:
     } else if (info.type == NodeType::TryCatchExpressionNode) {
       const auto &node = m_TryCatchExpressionNode_nodes.get(node_id);
       print_node_field_with_comma(out, lr, "try_block", node.try_block, indent + 2);
-      print_node_list_field(out, lr, "catch_clauses", node.catch_clauses.data(), indent + 2);
+      print_node_list_field(out, lr, "clauses", node.clauses.data(), indent + 2);
+    } else if (info.type == NodeType::CaseClauseNode) {
+      const auto &node = m_CaseClauseNode_nodes.get(node_id);
+      print_node_field_with_comma(out, lr, "expr", node.expr, indent + 2);
+      print_node_field(out, lr, "body", node.body, indent + 2);
+    } else if (info.type == NodeType::SwitchExpressionNode) {
+      const auto &node = m_SwitchExpressionNode_nodes.get(node_id);
+      print_node_field_with_comma(out, lr, "expr", node.expr, indent + 2);
+      print_node_list_field(out, lr, "clauses", node.clauses.data(), indent + 2);
     } else {
       throw RuntimeError("Unknown node type");
     }

@@ -75,7 +75,17 @@ struct CatchClauseNode {
 
 struct TryCatchExpressionNode {
   NodeId try_block;
-  List<NodeId> catch_clauses;
+  List<NodeId> clauses;
+};
+
+struct CaseClauseNode {
+  NodeId expr;
+  NodeId body;
+};
+
+struct SwitchExpressionNode {
+  NodeId expr;
+  List<NodeId> clauses;
 };
 
 #define NODE_TYPE_LIST                                                                             \
@@ -93,6 +103,8 @@ struct TryCatchExpressionNode {
   X(ExpressionStatementNode)                                                                       \
   X(IfExpressionNode)                                                                              \
   X(CatchClauseNode)                                                                               \
-  X(TryCatchExpressionNode)
+  X(TryCatchExpressionNode)                                                                        \
+  X(CaseClauseNode)                                                                                \
+  X(SwitchExpressionNode)
 
 } // namespace amelia
