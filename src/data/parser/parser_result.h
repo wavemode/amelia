@@ -51,6 +51,9 @@ private:
     } else if (info.type == NodeType::ModuleNode) {
       const auto &node = m_ModuleNode_nodes.get(node_id);
       print_node_list_field(out, lr, "decls", node.decls.data(), indent + 2);
+    } else if (info.type == NodeType::ArrayLiteralNode) {
+      const auto &node = m_ArrayLiteralNode_nodes.get(node_id);
+      print_node_list_field(out, lr, "exprs", node.exprs.data(), indent + 2);
     }
     open_line(out, indent);
     out.append(')');

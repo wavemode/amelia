@@ -1,0 +1,6 @@
+let x =[,5,
+]
+
+/* EXPECTED_OUTPUT:
+ERROR("Expected expression, got token COMMA(,) (at test_cases/parser/expressions/atoms/array/error_leading_comma.am:1:9)")
+*/

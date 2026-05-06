@@ -39,6 +39,10 @@ struct ParenthesizedExpressionNode {
   List<NodeId> exprs;
 };
 
+struct ArrayLiteralNode {
+  List<NodeId> exprs;
+};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
@@ -46,6 +50,7 @@ struct ParenthesizedExpressionNode {
   X(ConstStatementNode)                                                                            \
   X(StringLiteralNode)                                                                             \
   X(NumberLiteralNode)                                                                             \
-  X(ParenthesizedExpressionNode)
+  X(ParenthesizedExpressionNode)                                                                   \
+  X(ArrayLiteralNode)
 
 } // namespace amelia

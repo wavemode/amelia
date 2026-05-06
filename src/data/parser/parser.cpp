@@ -93,11 +93,21 @@ public:
       return parse_number_literal();
     } else if (token.type == TokenType::LEFT_PAREN || token.type == TokenType::FUNCALL_START) {
       return parse_parenthesized_expression();
+    } else if (token.type == TokenType::LEFT_BRACKET || token.type == TokenType::IX_START) {
+      return parse_array_literal();
     } else {
       String err("Expected expression, got token ");
       m_input.format_token(err, m_token_index);
       throw_parser_error_at_current_location(std::move(err));
     }
+  }
+
+  NodeId parse_array_literal() {
+    auto open_bracket = next(); // consume the left bracket
+    List<NodeId> exprs;
+    parse_comma_separated_expression_list(exprs, TokenType::RIGHT_BRACKET);
+    ++m_token_index; // consume the right bracket
+    return m_output.add_ArrayLiteralNode(open_bracket.loc, ArrayLiteralNode{std::move(exprs)});
   }
 
   NodeId parse_parenthesized_expression() {
