@@ -23,19 +23,20 @@ public:
   NodeId parse_module() {
     List<NodeId> top_level_statements;
     auto start_token = peek();
-    while (peek().type != TokenType::END_OF_FILE) {
+    parse_statements(top_level_statements, TokenType::END_OF_FILE);
+    return m_output.add_ModuleNode(start_token.loc, ModuleNode{std::move(top_level_statements)});
+  }
+
+  void parse_statements(List<NodeId> &stmts, TokenType terminator) {
+    while (peek().type != terminator) {
       if (peek().type == TokenType::SEMICOLON) {
         ++m_token_index;
         continue;
       }
-      top_level_statements.push_back(parse_statement());
-      if (top_level_statements.size() > 1) {
-        auto prev_stmt_info = m_output.get_node_info(
-            top_level_statements[top_level_statements.size() - 2]
-        );
-        auto curr_stmt_info = m_output.get_node_info(
-            top_level_statements[top_level_statements.size() - 1]
-        );
+      stmts.push_back(parse_statement());
+      if (stmts.size() > 1) {
+        auto prev_stmt_info = m_output.get_node_info(stmts[stmts.size() - 2]);
+        auto curr_stmt_info = m_output.get_node_info(stmts[stmts.size() - 1]);
         if (prev_stmt_info.location.line == curr_stmt_info.location.line) {
           throw_parser_error_at_current_location(
               "Multiple statements on the same line are not allowed"
@@ -43,7 +44,6 @@ public:
         }
       }
     }
-    return m_output.add_ModuleNode(start_token.loc, ModuleNode{std::move(top_level_statements)});
   }
 
   NodeId parse_statement() {
@@ -95,6 +95,8 @@ public:
       return parse_parenthesized_expression();
     } else if (token.type == TokenType::LEFT_BRACKET || token.type == TokenType::IX_START) {
       return parse_array_literal();
+    } else if (token.type == TokenType::LEFT_BRACE) {
+      return parse_brace_expression();
     } else {
       String err("Expected expression, got token ");
       m_input.format_token(err, m_token_index);
@@ -118,6 +120,41 @@ public:
     return m_output.add_ParenthesizedExpressionNode(
         open_paren.loc, ParenthesizedExpressionNode{std::move(exprs)}
     );
+  }
+
+  NodeId parse_brace_expression() {
+    auto next_token = peek(1);
+    if (next_token.type == TokenType::RIGHT_BRACE ||
+        next_token.type == TokenType::DOTTED_IDENTIFIER) {
+      return parse_object_literal();
+    }
+    return parse_block_expression();
+  }
+
+  NodeId parse_block_expression() {
+    auto open_brace = next(); // consume the left brace
+    List<NodeId> stmts;
+    parse_statements(stmts, TokenType::RIGHT_BRACE);
+    ++m_token_index; // consume the right brace
+    return m_output.add_BlockExpressionNode(open_brace.loc, BlockExpressionNode{std::move(stmts)});
+  }
+
+  NodeId parse_object_literal() {
+    auto open_brace = next(); // consume the left brace
+    List<KeyValueEntryNode> entries;
+    while (peek().type != TokenType::RIGHT_BRACE) {
+      auto field_token = read_token_type(
+          TokenType::DOTTED_IDENTIFIER, "Expected field name in object literal"
+      );
+      read_token_type(TokenType::ASSIGN, "Expected '=' after field name in object literal");
+      NodeId value = parse_expression();
+      entries.push_back(KeyValueEntryNode{field_token.id, value});
+      if (peek().type == TokenType::COMMA) {
+        ++m_token_index; // consume the comma and continue parsing entries
+      }
+    }
+    ++m_token_index; // consume the right brace
+    return m_output.add_ObjectLiteralNode(open_brace.loc, ObjectLiteralNode{std::move(entries)});
   }
 
   void parse_comma_separated_expression_list(List<NodeId> &exprs, TokenType terminator) {

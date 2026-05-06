@@ -43,6 +43,19 @@ struct ArrayLiteralNode {
   List<NodeId> exprs;
 };
 
+struct BlockExpressionNode {
+  List<NodeId> stmts;
+};
+
+struct KeyValueEntryNode {
+  TokenId field;
+  NodeId value;
+};
+
+struct ObjectLiteralNode {
+  List<KeyValueEntryNode> entries;
+};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
@@ -51,6 +64,8 @@ struct ArrayLiteralNode {
   X(StringLiteralNode)                                                                             \
   X(NumberLiteralNode)                                                                             \
   X(ParenthesizedExpressionNode)                                                                   \
-  X(ArrayLiteralNode)
+  X(ArrayLiteralNode)                                                                              \
+  X(BlockExpressionNode)                                                                           \
+  X(ObjectLiteralNode)
 
 } // namespace amelia

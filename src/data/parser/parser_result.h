@@ -54,9 +54,41 @@ private:
     } else if (info.type == NodeType::ArrayLiteralNode) {
       const auto &node = m_ArrayLiteralNode_nodes.get(node_id);
       print_node_list_field(out, lr, "exprs", node.exprs.data(), indent + 2);
+    } else if (info.type == NodeType::BlockExpressionNode) {
+      const auto &node = m_BlockExpressionNode_nodes.get(node_id);
+      print_node_list_field(out, lr, "stmts", node.stmts.data(), indent + 2);
+    } else if (info.type == NodeType::ObjectLiteralNode) {
+      const auto &node = m_ObjectLiteralNode_nodes.get(node_id);
+      print_entry_list_field(out, lr, "entries", node.entries.data(), indent + 2);
     }
     open_line(out, indent);
     out.append(')');
+  }
+
+  void print_entry_list_field(
+      AbstractString &out,
+      const LexerResult &lr,
+      Text name,
+      ConstSlice<KeyValueEntryNode> entries,
+      int indent
+  ) const {
+    open_line(out, indent);
+    out.append(name);
+    out.append("=[");
+    if (entries.size() > 0) {
+      for (size_t i = 0; i < entries.size(); ++i) {
+        const auto &entry = entries[i];
+        open_line(out, indent + 2);
+        lr.format_token(out, entry.field);
+        out.append(" = ");
+        format_node_with_indent(out, lr, entry.value, indent + 2);
+        if (i < entries.size() - 1) {
+          out.append(',');
+        }
+      }
+      open_line(out, indent);
+    }
+    out.append(']');
   }
 
   void print_node_list_field(

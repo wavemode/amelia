@@ -1,0 +1,16 @@
+let x = {}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetStatementNode(
+      target=IdentifierNode(
+        name=IDENTIFIER(x)
+      ),
+      expression=ObjectLiteralNode(
+        entries=[]
+      )
+    )
+  ]
+)
+*/
