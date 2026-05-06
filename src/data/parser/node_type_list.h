@@ -22,9 +22,15 @@ struct LetStatementNode {
   NodeId expression;
 };
 
+struct ConstStatementNode {
+  NodeId target;
+  NodeId expression;
+};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
-  X(LetStatementNode)
+  X(LetStatementNode)                                                                              \
+  X(ConstStatementNode)
 
 } // namespace amelia

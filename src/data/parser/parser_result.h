@@ -30,37 +30,72 @@ private:
     out.append('(');
     if (info.type == NodeType::IdentifierNode) {
       const auto &node = m_IdentifierNode_nodes.get(node_id);
-      open_line(out, indent + 2);
-      out.append("name=");
-      lr.format_token(out, node.name);
-      open_line(out, indent);
+      print_token_field(out, lr, "name", node.name, indent + 2);
     } else if (info.type == NodeType::LetStatementNode) {
       const auto &node = m_LetStatementNode_nodes.get(node_id);
-      open_line(out, indent + 2);
-      out.append("target=");
-      format_node_with_indent(out, lr, node.target, indent + 2);
-      open_line_comma(out, indent + 2);
-      out.append("expression=");
-      format_node_with_indent(out, lr, node.expression, indent + 2);
-      open_line(out, indent);
+      print_node_field_with_comma(out, lr, "target", node.target, indent + 2);
+      print_node_field(out, lr, "expression", node.expression, indent + 2);
+    } else if (info.type == NodeType::ConstStatementNode) {
+      const auto &node = m_ConstStatementNode_nodes.get(node_id);
+      print_node_field_with_comma(out, lr, "target", node.target, indent + 2);
+      print_node_field(out, lr, "expression", node.expression, indent + 2);
     } else if (info.type == NodeType::ModuleNode) {
       const auto &node = m_ModuleNode_nodes.get(node_id);
-      open_line(out, indent + 2);
-      out.append("decls=[");
-      if (node.decls.size() > 0) {
-        for (size_t i = 0; i < node.decls.size(); ++i) {
-          open_line(out, indent + 4);
-          format_node_with_indent(out, lr, node.decls[i], indent + 4);
-          if (i < node.decls.size() - 1) {
-            out.append(',');
-          }
-        }
+      print_node_list_field(out, lr, "decls", node.decls.data(), indent + 2);
+    }
+    open_line(out, indent);
+    out.append(')');
+  }
+
+  void print_node_list_field(
+      AbstractString &out, const LexerResult &lr, Text name, ConstSlice<NodeId> nodes, int indent
+  ) const {
+    open_line(out, indent);
+    out.append(name);
+    out.append("=[");
+    if (nodes.size() > 0) {
+      for (size_t i = 0; i < nodes.size(); ++i) {
         open_line(out, indent + 2);
+        format_node_with_indent(out, lr, nodes[i], indent + 2);
+        if (i < nodes.size() - 1) {
+          out.append(',');
+        }
       }
-      out.append(']');
       open_line(out, indent);
     }
-    out.append(')');
+    out.append(']');
+  }
+
+  void print_node_field(
+      AbstractString &out, const LexerResult &lr, Text name, NodeId node_id, int indent
+  ) const {
+    open_line(out, indent);
+    out.append(name);
+    out.append('=');
+    format_node_with_indent(out, lr, node_id, indent);
+  }
+
+  void print_node_field_with_comma(
+      AbstractString &out, const LexerResult &lr, Text name, NodeId node_id, int indent
+  ) const {
+    print_node_field(out, lr, name, node_id, indent);
+    out.append(',');
+  }
+
+  void print_token_field(
+      AbstractString &out, const LexerResult &lr, Text name, NodeId token_id, int indent
+  ) const {
+    open_line(out, indent);
+    out.append(name);
+    out.append('=');
+    lr.format_token(out, token_id);
+  }
+
+  void print_token_field_with_comma(
+      AbstractString &out, const LexerResult &lr, Text name, NodeId token_id, int indent
+  ) const {
+    print_token_field(out, lr, name, token_id, indent);
+    out.append(',');
   }
 
   static void open_line(AbstractString &out, int indent) {

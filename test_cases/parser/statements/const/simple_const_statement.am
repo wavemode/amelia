@@ -1,0 +1,16 @@
+const x = y
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ConstStatementNode(
+      target=IdentifierNode(
+        name=IDENTIFIER(x)
+      ),
+      expression=IdentifierNode(
+        name=IDENTIFIER(y)
+      )
+    )
+  ]
+)
+*/

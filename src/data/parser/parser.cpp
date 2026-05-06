@@ -23,10 +23,21 @@ public:
   NodeId parse_module() {
     List<NodeId> top_level_statements;
     auto start_token = peek();
-    auto next_token = start_token;
-    while (next_token.type != TokenType::END_OF_FILE) {
+    auto current_token = start_token;
+    while (peek().type != TokenType::END_OF_FILE) {
+      auto next_token = peek();
+      if (next_token.type == TokenType::SEMICOLON) {
+        ++m_token_index;
+        current_token = next_token;
+        continue;
+      }
       top_level_statements.push_back(parse_top_level_statement());
       next_token = peek();
+      if (next_token.type != TokenType::END_OF_FILE && next_token.type != TokenType::SEMICOLON &&
+          next_token.loc.line == current_token.loc.line) {
+        throw_parser_error_at_current_location("Expected end of line after statement");
+      }
+      current_token = next_token;
     }
     return m_output.add_ModuleNode(start_token.loc, ModuleNode{std::move(top_level_statements)});
   }
@@ -35,6 +46,8 @@ public:
     auto token = peek();
     if (token.type == TokenType::KEYWORD_LET) {
       return parse_let_statement();
+    } else if (token.type == TokenType::KEYWORD_CONST) {
+      return parse_const_statement();
     } else {
       String err("Expected statement, got token ");
       m_input.format_token(err, m_token_index);
@@ -42,10 +55,18 @@ public:
     }
   }
 
-  NodeId parse_let_statement() {
-    auto let_token = read_token_type(
-        TokenType::KEYWORD_LET, "Expected 'let' at start of let statement"
+  NodeId parse_const_statement() {
+    auto const_token = next();
+    NodeId target = parse_expression();
+    auto assign_token = read_token_type(
+        TokenType::ASSIGN, "Expected '=' after identifier in const statement"
     );
+    NodeId expression = parse_expression();
+    return m_output.add_ConstStatementNode(const_token.loc, ConstStatementNode{target, expression});
+  }
+
+  NodeId parse_let_statement() {
+    auto let_token = next();
     NodeId target = parse_expression();
     auto assign_token = read_token_type(
         TokenType::ASSIGN, "Expected '=' after identifier in let statement"

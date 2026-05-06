@@ -1,0 +1,25 @@
+;;;let x = y;;
+const a = b;;;
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetStatementNode(
+      target=IdentifierNode(
+        name=IDENTIFIER(x)
+      ),
+      expression=IdentifierNode(
+        name=IDENTIFIER(y)
+      )
+    ),
+    ConstStatementNode(
+      target=IdentifierNode(
+        name=IDENTIFIER(a)
+      ),
+      expression=IdentifierNode(
+        name=IDENTIFIER(b)
+      )
+    )
+  ]
+)
+*/
