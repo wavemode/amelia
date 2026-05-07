@@ -84,7 +84,29 @@ public:
   }
 
   NodeId parse_expression() {
-    return parse_atom();
+    return parse_descend_expr_or();
+  }
+
+  NodeId parse_descend_expr_or() {
+    auto start_location = peek().loc;
+    NodeId left = parse_descend_expr_and();
+    while (peek().type == TokenType::OR) {
+      auto or_token = next(); // consume the '||' operator
+      NodeId right = parse_descend_expr_and();
+      left = m_output.add_OrExpressionNode(start_location, OrExpressionNode{left, right});
+    }
+    return left;
+  }
+
+  NodeId parse_descend_expr_and() {
+    auto start_location = peek().loc;
+    NodeId left = parse_atom();
+    while (peek().type == TokenType::AND) {
+      auto and_token = next(); // consume the '&&' operator
+      NodeId right = parse_atom();
+      left = m_output.add_AndExpressionNode(start_location, AndExpressionNode{left, right});
+    }
+    return left;
   }
 
   NodeId parse_atom() {

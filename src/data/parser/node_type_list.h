@@ -88,6 +88,16 @@ struct SwitchExpressionNode {
   List<NodeId> clauses;
 };
 
+struct OrExpressionNode {
+  NodeId left;
+  NodeId right;
+};
+
+struct AndExpressionNode {
+  NodeId left;
+  NodeId right;
+};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
@@ -105,6 +115,8 @@ struct SwitchExpressionNode {
   X(CatchClauseNode)                                                                               \
   X(TryCatchExpressionNode)                                                                        \
   X(CaseClauseNode)                                                                                \
-  X(SwitchExpressionNode)
+  X(SwitchExpressionNode)                                                                          \
+  X(OrExpressionNode)                                                                              \
+  X(AndExpressionNode)
 
 } // namespace amelia

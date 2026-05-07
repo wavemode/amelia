@@ -93,6 +93,14 @@ private:
       const auto &node = m_SwitchExpressionNode_nodes.get(node_id);
       print_node_field_with_comma(out, lr, "expr", node.expr, indent + 2);
       print_node_list_field(out, lr, "clauses", node.clauses.data(), indent + 2);
+    } else if (info.type == NodeType::OrExpressionNode) {
+      const auto &node = m_OrExpressionNode_nodes.get(node_id);
+      print_node_field_with_comma(out, lr, "left", node.left, indent + 2);
+      print_node_field(out, lr, "right", node.right, indent + 2);
+    } else if (info.type == NodeType::AndExpressionNode) {
+      const auto &node = m_AndExpressionNode_nodes.get(node_id);
+      print_node_field_with_comma(out, lr, "left", node.left, indent + 2);
+      print_node_field(out, lr, "right", node.right, indent + 2);
     } else {
       throw RuntimeError("Unknown node type");
     }
