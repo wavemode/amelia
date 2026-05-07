@@ -98,6 +98,21 @@ struct AndExpressionNode {
   NodeId right;
 };
 
+struct BitwiseOrExpressionNode {
+  NodeId left;
+  NodeId right;
+};
+
+struct BitwiseAndExpressionNode {
+  NodeId left;
+  NodeId right;
+};
+
+struct BitwiseXorExpressionNode {
+  NodeId left;
+  NodeId right;
+};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
@@ -117,6 +132,9 @@ struct AndExpressionNode {
   X(CaseClauseNode)                                                                                \
   X(SwitchExpressionNode)                                                                          \
   X(OrExpressionNode)                                                                              \
-  X(AndExpressionNode)
+  X(AndExpressionNode)                                                                             \
+  X(BitwiseOrExpressionNode)                                                                       \
+  X(BitwiseAndExpressionNode)                                                                      \
+  X(BitwiseXorExpressionNode)
 
 } // namespace amelia

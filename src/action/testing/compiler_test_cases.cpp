@@ -118,6 +118,7 @@ CompilerTestExecutionOutcome execute_collection(
 
   size_t num_executed = 0;
   size_t num_failed = 0;
+  size_t num_updated = 0;
   for (const CompilerTestCase &test_case : collection.test_cases) {
     if (has_filter && !TextUtils::contains(test_case.filename, test_case_filter)) {
       continue;
@@ -152,6 +153,7 @@ CompilerTestExecutionOutcome execute_collection(
         );
         printer.print("Updated expected output for: ");
         printer.println(test_case.filename);
+        ++num_updated;
       } else {
         printer.print("Test case failed: ");
         printer.println(test_case.filename);
@@ -162,6 +164,7 @@ CompilerTestExecutionOutcome execute_collection(
   return {
       .count_executed = num_executed,
       .count_failed = num_failed,
+      .count_updated = num_updated,
   };
 }
 

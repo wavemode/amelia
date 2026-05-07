@@ -91,7 +91,7 @@ public:
     auto start_location = peek().loc;
     NodeId left = parse_descend_expr_and();
     while (peek().type == TokenType::OR) {
-      auto or_token = next(); // consume the '||' operator
+      ++m_token_index; // consume the '||' operator
       NodeId right = parse_descend_expr_and();
       left = m_output.add_OrExpressionNode(start_location, OrExpressionNode{left, right});
     }
@@ -100,11 +100,50 @@ public:
 
   NodeId parse_descend_expr_and() {
     auto start_location = peek().loc;
-    NodeId left = parse_atom();
+    NodeId left = parse_descend_expr_bitwise_or();
     while (peek().type == TokenType::AND) {
-      auto and_token = next(); // consume the '&&' operator
-      NodeId right = parse_atom();
+      ++m_token_index; // consume the '&&' operator
+      NodeId right = parse_descend_expr_bitwise_or();
       left = m_output.add_AndExpressionNode(start_location, AndExpressionNode{left, right});
+    }
+    return left;
+  }
+
+  NodeId parse_descend_expr_bitwise_or() {
+    auto start_location = peek().loc;
+    NodeId left = parse_descend_expr_bitwise_xor();
+    while (peek().type == TokenType::PIPE) {
+      ++m_token_index; // consume the '|' operator
+      NodeId right = parse_descend_expr_bitwise_xor();
+      left = m_output.add_BitwiseOrExpressionNode(
+          start_location, BitwiseOrExpressionNode{left, right}
+      );
+    }
+    return left;
+  }
+
+  NodeId parse_descend_expr_bitwise_xor() {
+    auto start_location = peek().loc;
+    NodeId left = parse_descend_expr_bitwise_and();
+    while (peek().type == TokenType::CARET) {
+      ++m_token_index; // consume the '^' operator
+      NodeId right = parse_descend_expr_bitwise_and();
+      left = m_output.add_BitwiseXorExpressionNode(
+          start_location, BitwiseXorExpressionNode{left, right}
+      );
+    }
+    return left;
+  }
+
+  NodeId parse_descend_expr_bitwise_and() {
+    auto start_location = peek().loc;
+    NodeId left = parse_atom();
+    while (peek().type == TokenType::AMPERSAND) {
+      ++m_token_index; // consume the '&' operator
+      NodeId right = parse_atom();
+      left = m_output.add_BitwiseAndExpressionNode(
+          start_location, BitwiseAndExpressionNode{left, right}
+      );
     }
     return left;
   }

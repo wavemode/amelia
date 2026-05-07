@@ -38,7 +38,11 @@ TEST_CASE("test suite") {
   s.clear();
   TextUtils::to_string(s, outcome.count_failed);
   console_printer.print(s);
-  console_printer.println(" failures.");
+  console_printer.print(" failures and ");
+  s.clear();
+  TextUtils::to_string(s, outcome.count_updated);
+  console_printer.print(s);
+  console_printer.println(" updated.");
 
   CHECK(outcome.count_failed == 0);
 }
