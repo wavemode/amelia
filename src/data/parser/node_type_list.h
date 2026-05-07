@@ -143,6 +143,16 @@ struct LessExpressionNode {
   NodeId right;
 };
 
+struct LeftShiftExpressionNode {
+  NodeId left;
+  NodeId right;
+};
+
+struct RightShiftExpressionNode {
+  NodeId left;
+  NodeId right;
+};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
@@ -171,6 +181,8 @@ struct LessExpressionNode {
   X(GreaterEqualsExpressionNode)                                                                   \
   X(LessEqualsExpressionNode)                                                                      \
   X(GreaterExpressionNode)                                                                         \
-  X(LessExpressionNode)
+  X(LessExpressionNode)                                                                            \
+  X(LeftShiftExpressionNode)                                                                       \
+  X(RightShiftExpressionNode)
 
 } // namespace amelia

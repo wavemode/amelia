@@ -72,6 +72,10 @@
   X(AMPERSAND_EQUAL)                                                                               \
   X(CARET)                                                                                         \
   X(CARET_EQUAL)                                                                                   \
+  X(LSHIFT)                                                                                        \
+  X(LSHIFT_EQUAL)                                                                                  \
+  X(RSHIFT)                                                                                        \
+  X(RSHIFT_EQUAL)                                                                                  \
   X(TILDE)                                                                                         \
   X(GREATER)                                                                                       \
   X(LESS)                                                                                          \
@@ -85,7 +89,9 @@
   X(STAR)                                                                                          \
   X(SLASH)                                                                                         \
   X(AND)                                                                                           \
+  X(AND_EQUAL)                                                                                     \
   X(OR)                                                                                            \
+  X(OR_EQUAL)                                                                                      \
   X(QUESTION_NO_W)                                                                                 \
   X(EXCLAM_NO_W)                                                                                   \
   X(COLON)                                                                                         \

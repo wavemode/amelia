@@ -169,13 +169,13 @@ public:
 
   NodeId parse_descend_expr_gt_lt() {
     auto start_location = peek().loc;
-    NodeId left = parse_atom();
+    NodeId left = parse_descend_lshift_rshift();
     auto next_token = peek();
     while (next_token.type == TokenType::GREATER || next_token.type == TokenType::LESS ||
            next_token.type == TokenType::GREATER_EQUAL ||
            next_token.type == TokenType::LESS_EQUAL) {
       ++m_token_index; // consume the operator
-      NodeId right = parse_atom();
+      NodeId right = parse_descend_lshift_rshift();
       if (next_token.type == TokenType::GREATER) {
         left = m_output.add_GreaterExpressionNode(
             start_location, GreaterExpressionNode{left, right}
@@ -189,6 +189,27 @@ public:
       } else {
         left = m_output.add_LessEqualsExpressionNode(
             start_location, LessEqualsExpressionNode{left, right}
+        );
+      }
+      next_token = peek();
+    }
+    return left;
+  }
+
+  NodeId parse_descend_lshift_rshift() {
+    auto start_location = peek().loc;
+    NodeId left = parse_atom();
+    auto next_token = peek();
+    while (next_token.type == TokenType::LSHIFT || next_token.type == TokenType::RSHIFT) {
+      ++m_token_index; // consume the operator
+      NodeId right = parse_atom();
+      if (next_token.type == TokenType::LSHIFT) {
+        left = m_output.add_LeftShiftExpressionNode(
+            start_location, LeftShiftExpressionNode{left, right}
+        );
+      } else {
+        left = m_output.add_RightShiftExpressionNode(
+            start_location, RightShiftExpressionNode{left, right}
         );
       }
       next_token = peek();

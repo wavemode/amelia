@@ -436,6 +436,14 @@ public:
     if (peek() == '=') {
       next();
       emit_token(TokenType::LESS_EQUAL, start_location);
+    } else if (peek() == '<') {
+      next();
+      if (peek() == '=') {
+        next();
+        emit_token(TokenType::LSHIFT_EQUAL, start_location);
+      } else {
+        emit_token(TokenType::LSHIFT, start_location);
+      }
     } else {
       emit_token(TokenType::LESS, start_location);
     }
@@ -446,6 +454,14 @@ public:
     if (peek() == '=') {
       next();
       emit_token(TokenType::GREATER_EQUAL, start_location);
+    } else if (peek() == '>') {
+      next();
+      if (peek() == '=') {
+        next();
+        emit_token(TokenType::RSHIFT_EQUAL, start_location);
+      } else {
+        emit_token(TokenType::RSHIFT, start_location);
+      }
     } else {
       emit_token(TokenType::GREATER, start_location);
     }
@@ -473,7 +489,12 @@ public:
     uint32_t next_cp = peek();
     if (next_cp == '&') {
       next();
-      emit_token(TokenType::AND, start_location);
+      if (peek() == '=') {
+        next();
+        emit_token(TokenType::AND_EQUAL, start_location);
+      } else {
+        emit_token(TokenType::AND, start_location);
+      }
     } else if (next_cp == '=') {
       next();
       emit_token(TokenType::AMPERSAND_EQUAL, start_location);
@@ -490,7 +511,12 @@ public:
       emit_token(TokenType::PIPE_EQUAL, start_location);
     } else if (next_cp == '|') {
       next();
-      emit_token(TokenType::OR, start_location);
+      if (peek() == '=') {
+        next();
+        emit_token(TokenType::OR_EQUAL, start_location);
+      } else {
+        emit_token(TokenType::OR, start_location);
+      }
     } else {
       emit_token(TokenType::PIPE, start_location);
     }

@@ -13,11 +13,13 @@
 ^
 ^=
 |
-||
 |=
+||
+||=
 &
-&&
 &=
+&&
+&&=
 !
 !=
 ~
@@ -29,6 +31,10 @@
 }
 ;
 ,
+<<
+<<=
+>>
+>>=
 
 /* EXPECTED_OUTPUT:
 ASSIGN(=)
@@ -46,11 +52,13 @@ PERCENT_EQUAL(%=)
 CARET(^)
 CARET_EQUAL(^=)
 PIPE(|)
-OR(||)
 PIPE_EQUAL(|=)
+OR(||)
+OR_EQUAL(||=)
 AMPERSAND(&)
-AND(&&)
 AMPERSAND_EQUAL(&=)
+AND(&&)
+AND_EQUAL(&&=)
 EXCLAM(!)
 NOT_EQUAL(!=)
 TILDE(~)
@@ -62,5 +70,9 @@ LEFT_BRACE({)
 RIGHT_BRACE(})
 SEMICOLON(;)
 COMMA(,)
+LSHIFT(<<)
+LSHIFT_EQUAL(<<=)
+RSHIFT(>>)
+RSHIFT_EQUAL(>>=)
 END_OF_FILE()
 */

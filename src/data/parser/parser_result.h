@@ -137,6 +137,14 @@ private:
       const auto &node = m_LessExpressionNode_nodes.get(node_id);
       print_node_field_with_comma(out, lr, "left", node.left, indent + 2);
       print_node_field(out, lr, "right", node.right, indent + 2);
+    } else if (info.type == NodeType::LeftShiftExpressionNode) {
+      const auto &node = m_LeftShiftExpressionNode_nodes.get(node_id);
+      print_node_field_with_comma(out, lr, "left", node.left, indent + 2);
+      print_node_field(out, lr, "right", node.right, indent + 2);
+    } else if (info.type == NodeType::RightShiftExpressionNode) {
+      const auto &node = m_RightShiftExpressionNode_nodes.get(node_id);
+      print_node_field_with_comma(out, lr, "left", node.left, indent + 2);
+      print_node_field(out, lr, "right", node.right, indent + 2);
     } else {
       throw RuntimeError("Unknown node type");
     }
