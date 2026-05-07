@@ -1,0 +1,5 @@
+let x = { .x = 5, y = 6 }
+
+/* EXPECTED_OUTPUT:
+ERROR("Expected dot before field name in object literal (at test_cases/parser/expressions/atoms/object/error_no_dot.am:1:19)")
+*/

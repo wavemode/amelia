@@ -178,6 +178,14 @@ struct ModuloExpressionNode {
   NodeId right;
 };
 
+struct RefExpressionNode {
+  NodeId expr;
+};
+
+struct AwaitExpressionNode {
+  NodeId expr;
+};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
@@ -213,6 +221,8 @@ struct ModuloExpressionNode {
   X(SubtractExpressionNode)                                                                        \
   X(MultiplyExpressionNode)                                                                        \
   X(DivideExpressionNode)                                                                          \
-  X(ModuloExpressionNode)
+  X(ModuloExpressionNode)                                                                          \
+  X(RefExpressionNode)                                                                             \
+  X(AwaitExpressionNode)
 
 } // namespace amelia

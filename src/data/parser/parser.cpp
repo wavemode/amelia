@@ -238,12 +238,12 @@ public:
 
   NodeId parse_descend_expr_mul_div_mod() {
     auto start_location = peek().loc;
-    NodeId left = parse_atom();
+    NodeId left = parse_descend_expr_await_ref();
     auto next_token = peek();
     while (next_token.type == TokenType::STAR || next_token.type == TokenType::SLASH ||
            next_token.type == TokenType::PERCENT) {
       ++m_token_index; // consume the operator
-      NodeId right = parse_atom();
+      NodeId right = parse_descend_expr_await_ref();
       if (next_token.type == TokenType::STAR) {
         left = m_output.add_MultiplyExpressionNode(
             start_location, MultiplyExpressionNode{left, right}
@@ -256,6 +256,20 @@ public:
       next_token = peek();
     }
     return left;
+  }
+
+  NodeId parse_descend_expr_await_ref() {
+    auto start_location = peek().loc;
+    if (peek().type == TokenType::KEYWORD_AWAIT) {
+      ++m_token_index; // consume the 'await' keyword
+      NodeId expr = parse_descend_expr_await_ref();
+      return m_output.add_AwaitExpressionNode(start_location, AwaitExpressionNode{expr});
+    } else if (peek().type == TokenType::AMPERSAND) {
+      ++m_token_index; // consume the '&' operator
+      NodeId expr = parse_descend_expr_await_ref();
+      return m_output.add_RefExpressionNode(start_location, RefExpressionNode{expr});
+    }
+    return parse_atom();
   }
 
   NodeId parse_atom() {
@@ -396,7 +410,7 @@ public:
     auto open_brace = next(); // consume the left brace
     List<NodeId> entries;
     while (peek().type != TokenType::RIGHT_BRACE) {
-      read_token_type(TokenType::DOT, "Expected dot before field name in object literal");
+      read_dot("Expected dot before field name in object literal");
       auto field_token = read_token_type(
           TokenType::IDENTIFIER_NO_W, "Expected field name immediately after dot in object literal"
       );
@@ -438,19 +452,28 @@ public:
   }
 
 private:
-  TokenWithId read_left_paren(String error_message) {
+  TokenWithId read_dot(Text error_message) {
     auto token = peek();
-    if (token.type != TokenType::LEFT_PAREN && token.type != TokenType::LEFT_PAREN_NO_W) {
-      throw_parser_error(token.id, std::move(error_message));
+    if (token.type != TokenType::DOT && token.type != TokenType::DOT_NO_W) {
+      throw_parser_error(token.id, String(error_message));
     }
     ++m_token_index;
     return token;
   }
 
-  TokenWithId read_token_type(TokenType expected, String error_message) {
+  TokenWithId read_left_paren(Text error_message) {
+    auto token = peek();
+    if (token.type != TokenType::LEFT_PAREN && token.type != TokenType::LEFT_PAREN_NO_W) {
+      throw_parser_error(token.id, String(error_message));
+    }
+    ++m_token_index;
+    return token;
+  }
+
+  TokenWithId read_token_type(TokenType expected, Text error_message) {
     auto token = peek();
     if (token.type != expected) {
-      throw_parser_error(token.id, std::move(error_message));
+      throw_parser_error(token.id, String(error_message));
     }
     ++m_token_index;
     return token;
