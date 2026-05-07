@@ -186,6 +186,9 @@ private:
     } else if (info.type == NodeType::NegativeExpressionNode) {
       const auto &node = m_NegativeExpressionNode_nodes.get(node_id);
       print_node_field(out, lr, "expr", node.expr, indent + 2);
+    } else if (info.type == NodeType::EllipsisExpressionNode) {
+      const auto &node = m_EllipsisExpressionNode_nodes.get(node_id);
+      print_node_field(out, lr, "expr", node.expr, indent + 2);
     } else if (info.type == NodeType::FieldAccessExpressionNode) {
       const auto &node = m_FieldAccessExpressionNode_nodes.get(node_id);
       print_node_field_with_comma(out, lr, "object", node.object, indent + 2);

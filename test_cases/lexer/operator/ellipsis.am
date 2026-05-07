@@ -1,0 +1,6 @@
+...
+
+/* EXPECTED_OUTPUT:
+ELLIPSIS(...)
+END_OF_FILE()
+*/

@@ -394,9 +394,15 @@ public:
     if (TextUtils::is_digit(peek())) {
       set_location(start_location);
       read_number(start_location);
-      return;
-    }
-    if (previous_char_was_whitespace()) {
+    } else if (peek() == '.') {
+      next();
+      if (peek() == '.') {
+        next();
+        emit_token(TokenType::ELLIPSIS, start_location);
+      } else {
+        throw_lexer_error(start_location, "Unexpected token '..' - did you mean '...'?");
+      }
+    } else if (previous_char_was_whitespace()) {
       emit_token(TokenType::DOT, start_location);
     } else {
       emit_token(TokenType::DOT_NO_W, start_location);

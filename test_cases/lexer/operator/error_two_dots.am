@@ -1,0 +1,5 @@
+..
+
+/* EXPECTED_OUTPUT:
+ERROR("Unexpected token '..' - did you mean '...'? (at test_cases/lexer/operator/error_two_dots.am:1:1)")
+*/

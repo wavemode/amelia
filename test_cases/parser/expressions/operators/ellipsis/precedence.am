@@ -1,0 +1,23 @@
+let x = ... y*z
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetStatementNode(
+      target=IdentifierNode(
+        name=IDENTIFIER(x)
+      ),
+      expression=MultiplyExpressionNode(
+        left=EllipsisExpressionNode(
+          expr=IdentifierNode(
+            name=IDENTIFIER(y)
+          )
+        ),
+        right=IdentifierNode(
+          name=IDENTIFIER_NO_W(z)
+        )
+      )
+    )
+  ]
+)
+*/

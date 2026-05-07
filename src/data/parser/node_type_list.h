@@ -211,6 +211,10 @@ struct NegativeExpressionNode {
   NodeId expr;
 };
 
+struct EllipsisExpressionNode {
+  NodeId expr;
+};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
@@ -254,6 +258,7 @@ struct NegativeExpressionNode {
   X(DerefExpressionNode)                                                                           \
   X(PositiveExpressionNode)                                                                        \
   X(NegativeExpressionNode)                                                                        \
-  X(FieldAccessExpressionNode)
+  X(FieldAccessExpressionNode)                                                                     \
+  X(EllipsisExpressionNode)
 
 } // namespace amelia

@@ -59,6 +59,7 @@
   X(KEYWORD_LABEL)                                                                                 \
   X(KEYWORD_ABSTRACT)                                                                              \
   X(KEYWORD_SUPER)                                                                                 \
+  X(ELLIPSIS)                                                                                      \
   X(ASSIGN)                                                                                        \
   X(PLUS_EQUAL)                                                                                    \
   X(MINUS_EQUAL)                                                                                   \
