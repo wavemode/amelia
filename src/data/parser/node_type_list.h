@@ -153,6 +153,31 @@ struct RightShiftExpressionNode {
   NodeId right;
 };
 
+struct AddExpressionNode {
+  NodeId left;
+  NodeId right;
+};
+
+struct SubtractExpressionNode {
+  NodeId left;
+  NodeId right;
+};
+
+struct MultiplyExpressionNode {
+  NodeId left;
+  NodeId right;
+};
+
+struct DivideExpressionNode {
+  NodeId left;
+  NodeId right;
+};
+
+struct ModuloExpressionNode {
+  NodeId left;
+  NodeId right;
+};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
@@ -183,6 +208,11 @@ struct RightShiftExpressionNode {
   X(GreaterExpressionNode)                                                                         \
   X(LessExpressionNode)                                                                            \
   X(LeftShiftExpressionNode)                                                                       \
-  X(RightShiftExpressionNode)
+  X(RightShiftExpressionNode)                                                                      \
+  X(AddExpressionNode)                                                                             \
+  X(SubtractExpressionNode)                                                                        \
+  X(MultiplyExpressionNode)                                                                        \
+  X(DivideExpressionNode)                                                                          \
+  X(ModuloExpressionNode)
 
 } // namespace amelia

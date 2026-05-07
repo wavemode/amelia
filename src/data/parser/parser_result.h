@@ -145,6 +145,26 @@ private:
       const auto &node = m_RightShiftExpressionNode_nodes.get(node_id);
       print_node_field_with_comma(out, lr, "left", node.left, indent + 2);
       print_node_field(out, lr, "right", node.right, indent + 2);
+    } else if (info.type == NodeType::AddExpressionNode) {
+      const auto &node = m_AddExpressionNode_nodes.get(node_id);
+      print_node_field_with_comma(out, lr, "left", node.left, indent + 2);
+      print_node_field(out, lr, "right", node.right, indent + 2);
+    } else if (info.type == NodeType::SubtractExpressionNode) {
+      const auto &node = m_SubtractExpressionNode_nodes.get(node_id);
+      print_node_field_with_comma(out, lr, "left", node.left, indent + 2);
+      print_node_field(out, lr, "right", node.right, indent + 2);
+    } else if (info.type == NodeType::MultiplyExpressionNode) {
+      const auto &node = m_MultiplyExpressionNode_nodes.get(node_id);
+      print_node_field_with_comma(out, lr, "left", node.left, indent + 2);
+      print_node_field(out, lr, "right", node.right, indent + 2);
+    } else if (info.type == NodeType::DivideExpressionNode) {
+      const auto &node = m_DivideExpressionNode_nodes.get(node_id);
+      print_node_field_with_comma(out, lr, "left", node.left, indent + 2);
+      print_node_field(out, lr, "right", node.right, indent + 2);
+    } else if (info.type == NodeType::ModuloExpressionNode) {
+      const auto &node = m_ModuloExpressionNode_nodes.get(node_id);
+      print_node_field_with_comma(out, lr, "left", node.left, indent + 2);
+      print_node_field(out, lr, "right", node.right, indent + 2);
     } else {
       throw RuntimeError("Unknown node type");
     }

@@ -169,13 +169,13 @@ public:
 
   NodeId parse_descend_expr_gt_lt() {
     auto start_location = peek().loc;
-    NodeId left = parse_descend_lshift_rshift();
+    NodeId left = parse_descend_expr_lshift_rshift();
     auto next_token = peek();
     while (next_token.type == TokenType::GREATER || next_token.type == TokenType::LESS ||
            next_token.type == TokenType::GREATER_EQUAL ||
            next_token.type == TokenType::LESS_EQUAL) {
       ++m_token_index; // consume the operator
-      NodeId right = parse_descend_lshift_rshift();
+      NodeId right = parse_descend_expr_lshift_rshift();
       if (next_token.type == TokenType::GREATER) {
         left = m_output.add_GreaterExpressionNode(
             start_location, GreaterExpressionNode{left, right}
@@ -196,13 +196,13 @@ public:
     return left;
   }
 
-  NodeId parse_descend_lshift_rshift() {
+  NodeId parse_descend_expr_lshift_rshift() {
     auto start_location = peek().loc;
-    NodeId left = parse_atom();
+    NodeId left = parse_descend_expr_add_sub();
     auto next_token = peek();
     while (next_token.type == TokenType::LSHIFT || next_token.type == TokenType::RSHIFT) {
       ++m_token_index; // consume the operator
-      NodeId right = parse_atom();
+      NodeId right = parse_descend_expr_add_sub();
       if (next_token.type == TokenType::LSHIFT) {
         left = m_output.add_LeftShiftExpressionNode(
             start_location, LeftShiftExpressionNode{left, right}
@@ -211,6 +211,47 @@ public:
         left = m_output.add_RightShiftExpressionNode(
             start_location, RightShiftExpressionNode{left, right}
         );
+      }
+      next_token = peek();
+    }
+    return left;
+  }
+
+  NodeId parse_descend_expr_add_sub() {
+    auto start_location = peek().loc;
+    NodeId left = parse_descend_expr_mul_div_mod();
+    auto next_token = peek();
+    while (next_token.type == TokenType::PLUS || next_token.type == TokenType::MINUS) {
+      ++m_token_index; // consume the operator
+      NodeId right = parse_descend_expr_mul_div_mod();
+      if (next_token.type == TokenType::PLUS) {
+        left = m_output.add_AddExpressionNode(start_location, AddExpressionNode{left, right});
+      } else {
+        left = m_output.add_SubtractExpressionNode(
+            start_location, SubtractExpressionNode{left, right}
+        );
+      }
+      next_token = peek();
+    }
+    return left;
+  }
+
+  NodeId parse_descend_expr_mul_div_mod() {
+    auto start_location = peek().loc;
+    NodeId left = parse_atom();
+    auto next_token = peek();
+    while (next_token.type == TokenType::STAR || next_token.type == TokenType::SLASH ||
+           next_token.type == TokenType::PERCENT) {
+      ++m_token_index; // consume the operator
+      NodeId right = parse_atom();
+      if (next_token.type == TokenType::STAR) {
+        left = m_output.add_MultiplyExpressionNode(
+            start_location, MultiplyExpressionNode{left, right}
+        );
+      } else if (next_token.type == TokenType::SLASH) {
+        left = m_output.add_DivideExpressionNode(start_location, DivideExpressionNode{left, right});
+      } else {
+        left = m_output.add_ModuloExpressionNode(start_location, ModuloExpressionNode{left, right});
       }
       next_token = peek();
     }
