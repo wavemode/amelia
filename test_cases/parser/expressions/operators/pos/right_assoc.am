@@ -1,4 +1,4 @@
-let x = !y.z
+let x = ++y
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
@@ -7,13 +7,10 @@ ModuleNode(
       target=IdentifierNode(
         name=IDENTIFIER(x)
       ),
-      expression=NotExpressionNode(
-        expr=FieldAccessExpressionNode(
-          object=IdentifierNode(
+      expression=PositiveExpressionNode(
+        expr=PositiveExpressionNode(
+          expr=IdentifierNode(
             name=IDENTIFIER_NO_W(y)
-          ),
-          field=IdentifierNode(
-            name=IDENTIFIER_NO_W(z)
           )
         )
       )

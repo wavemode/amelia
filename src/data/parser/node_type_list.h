@@ -191,6 +191,26 @@ struct FieldAccessExpressionNode {
   NodeId field;
 };
 
+struct NotExpressionNode {
+  NodeId expr;
+};
+
+struct BitwiseNotExpressionNode {
+  NodeId expr;
+};
+
+struct DerefExpressionNode {
+  NodeId expr;
+};
+
+struct PositiveExpressionNode {
+  NodeId expr;
+};
+
+struct NegativeExpressionNode {
+  NodeId expr;
+};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
@@ -229,6 +249,11 @@ struct FieldAccessExpressionNode {
   X(ModuloExpressionNode)                                                                          \
   X(RefExpressionNode)                                                                             \
   X(AwaitExpressionNode)                                                                           \
+  X(NotExpressionNode)                                                                             \
+  X(BitwiseNotExpressionNode)                                                                      \
+  X(DerefExpressionNode)                                                                           \
+  X(PositiveExpressionNode)                                                                        \
+  X(NegativeExpressionNode)                                                                        \
   X(FieldAccessExpressionNode)
 
 } // namespace amelia

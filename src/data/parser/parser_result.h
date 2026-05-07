@@ -171,6 +171,21 @@ private:
     } else if (info.type == NodeType::AwaitExpressionNode) {
       const auto &node = m_AwaitExpressionNode_nodes.get(node_id);
       print_node_field(out, lr, "expr", node.expr, indent + 2);
+    } else if (info.type == NodeType::NotExpressionNode) {
+      const auto &node = m_NotExpressionNode_nodes.get(node_id);
+      print_node_field(out, lr, "expr", node.expr, indent + 2);
+    } else if (info.type == NodeType::BitwiseNotExpressionNode) {
+      const auto &node = m_BitwiseNotExpressionNode_nodes.get(node_id);
+      print_node_field(out, lr, "expr", node.expr, indent + 2);
+    } else if (info.type == NodeType::DerefExpressionNode) {
+      const auto &node = m_DerefExpressionNode_nodes.get(node_id);
+      print_node_field(out, lr, "expr", node.expr, indent + 2);
+    } else if (info.type == NodeType::PositiveExpressionNode) {
+      const auto &node = m_PositiveExpressionNode_nodes.get(node_id);
+      print_node_field(out, lr, "expr", node.expr, indent + 2);
+    } else if (info.type == NodeType::NegativeExpressionNode) {
+      const auto &node = m_NegativeExpressionNode_nodes.get(node_id);
+      print_node_field(out, lr, "expr", node.expr, indent + 2);
     } else if (info.type == NodeType::FieldAccessExpressionNode) {
       const auto &node = m_FieldAccessExpressionNode_nodes.get(node_id);
       print_node_field_with_comma(out, lr, "object", node.object, indent + 2);

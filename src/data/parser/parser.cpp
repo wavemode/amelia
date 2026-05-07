@@ -270,6 +270,33 @@ public:
       NodeId expr = parse_descend_expr_await_ref();
       return m_output.add_RefExpressionNode(start_location, RefExpressionNode{expr});
     }
+    return parse_descend_pos_neg_deref_not_bitnot();
+  }
+
+  NodeId parse_descend_pos_neg_deref_not_bitnot() {
+    auto next_token = peek();
+    auto start_location = next_token.loc;
+    if (next_token.type == TokenType::PLUS) {
+      ++m_token_index; // consume the '+' operator
+      NodeId expr = parse_descend_pos_neg_deref_not_bitnot();
+      return m_output.add_PositiveExpressionNode(start_location, PositiveExpressionNode{expr});
+    } else if (next_token.type == TokenType::MINUS) {
+      ++m_token_index; // consume the '-' operator
+      NodeId expr = parse_descend_pos_neg_deref_not_bitnot();
+      return m_output.add_NegativeExpressionNode(start_location, NegativeExpressionNode{expr});
+    } else if (next_token.type == TokenType::TILDE) {
+      ++m_token_index; // consume the '~' operator
+      NodeId expr = parse_descend_pos_neg_deref_not_bitnot();
+      return m_output.add_BitwiseNotExpressionNode(start_location, BitwiseNotExpressionNode{expr});
+    } else if (next_token.type == TokenType::STAR) {
+      ++m_token_index; // consume the '*' operator
+      NodeId expr = parse_descend_pos_neg_deref_not_bitnot();
+      return m_output.add_DerefExpressionNode(start_location, DerefExpressionNode{expr});
+    } else if (next_token.type == TokenType::EXCLAM || next_token.type == TokenType::EXCLAM_NO_W) {
+      ++m_token_index; // consume the '!' operator
+      NodeId expr = parse_descend_pos_neg_deref_not_bitnot();
+      return m_output.add_NotExpressionNode(start_location, NotExpressionNode{expr});
+    }
     return parse_descend_expr_field_access();
   }
 
