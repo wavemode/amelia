@@ -171,6 +171,10 @@ private:
     } else if (info.type == NodeType::AwaitExpressionNode) {
       const auto &node = m_AwaitExpressionNode_nodes.get(node_id);
       print_node_field(out, lr, "expr", node.expr, indent + 2);
+    } else if (info.type == NodeType::FieldAccessExpressionNode) {
+      const auto &node = m_FieldAccessExpressionNode_nodes.get(node_id);
+      print_node_field_with_comma(out, lr, "object", node.object, indent + 2);
+      print_node_field(out, lr, "field", node.field, indent + 2);
     } else {
       throw RuntimeError("Unknown node type");
     }

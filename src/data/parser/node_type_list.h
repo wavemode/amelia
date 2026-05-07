@@ -186,6 +186,11 @@ struct AwaitExpressionNode {
   NodeId expr;
 };
 
+struct FieldAccessExpressionNode {
+  NodeId object;
+  NodeId field;
+};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
@@ -223,6 +228,7 @@ struct AwaitExpressionNode {
   X(DivideExpressionNode)                                                                          \
   X(ModuloExpressionNode)                                                                          \
   X(RefExpressionNode)                                                                             \
-  X(AwaitExpressionNode)
+  X(AwaitExpressionNode)                                                                           \
+  X(FieldAccessExpressionNode)
 
 } // namespace amelia

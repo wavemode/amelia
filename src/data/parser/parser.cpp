@@ -259,17 +259,35 @@ public:
   }
 
   NodeId parse_descend_expr_await_ref() {
-    auto start_location = peek().loc;
-    if (peek().type == TokenType::KEYWORD_AWAIT) {
+    auto next_token = peek();
+    auto start_location = next_token.loc;
+    if (next_token.type == TokenType::KEYWORD_AWAIT) {
       ++m_token_index; // consume the 'await' keyword
       NodeId expr = parse_descend_expr_await_ref();
       return m_output.add_AwaitExpressionNode(start_location, AwaitExpressionNode{expr});
-    } else if (peek().type == TokenType::AMPERSAND) {
+    } else if (next_token.type == TokenType::AMPERSAND) {
       ++m_token_index; // consume the '&' operator
       NodeId expr = parse_descend_expr_await_ref();
       return m_output.add_RefExpressionNode(start_location, RefExpressionNode{expr});
     }
-    return parse_atom();
+    return parse_descend_expr_field_access();
+  }
+
+  NodeId parse_descend_expr_field_access() {
+    auto start_location = peek().loc;
+    auto left = parse_atom();
+    while (peek().type == TokenType::DOT_NO_W) {
+      ++m_token_index; // consume the '.' operator
+      if (peek().type != TokenType::IDENTIFIER_NO_W) {
+        throw_parser_error_at_current_location(
+            "Expected identifier immediately after '.' in field access expression"
+        );
+      }
+      left = m_output.add_FieldAccessExpressionNode(
+          start_location, FieldAccessExpressionNode{left, parse_identifier()}
+      );
+    }
+    return left;
   }
 
   NodeId parse_atom() {
