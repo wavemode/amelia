@@ -15,12 +15,14 @@
             "type": "lldb",
             "request": "launch",
             "program": "${workspaceRoot}/build/amelia_test",
-            "args": [],
+            "args": [
+                // "-ts=Parser"
+            ],
             "cwd": "${workspaceRoot}",
             "preLaunchTask": "make build-test",
             "env": {
-                "AMELIA_TEST_ARGS": "-ts=Lexer",
-                "AMELIA_TEST_CASE_FILTER": "test_cases/parser/expressions/operators/equals/single.am"
+                // "AMELIA_UPDATE_TEST_CASES": "1",
+                // "AMELIA_TEST_CASE_FILTER": "test_cases/parser/expressions/operators/numeric_field_access/single.am"
             }
         }
     ]

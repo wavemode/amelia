@@ -186,11 +186,6 @@ struct AwaitExpressionNode {
   NodeId expr;
 };
 
-struct FieldAccessExpressionNode {
-  NodeId object;
-  NodeId field;
-};
-
 struct NotExpressionNode {
   NodeId expr;
 };
@@ -213,6 +208,16 @@ struct NegativeExpressionNode {
 
 struct EllipsisExpressionNode {
   NodeId expr;
+};
+
+struct FieldAccessExpressionNode {
+  NodeId object;
+  NodeId field;
+};
+
+struct NumericFieldAccessExpressionNode {
+  NodeId object;
+  TokenId field;
 };
 
 #define NODE_TYPE_LIST                                                                             \
@@ -258,7 +263,8 @@ struct EllipsisExpressionNode {
   X(DerefExpressionNode)                                                                           \
   X(PositiveExpressionNode)                                                                        \
   X(NegativeExpressionNode)                                                                        \
+  X(EllipsisExpressionNode)                                                                        \
   X(FieldAccessExpressionNode)                                                                     \
-  X(EllipsisExpressionNode)
+  X(NumericFieldAccessExpressionNode)
 
 } // namespace amelia

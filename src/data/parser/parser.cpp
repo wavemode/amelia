@@ -33,14 +33,13 @@ public:
         ++m_token_index;
         continue;
       }
+      auto next_token = peek();
       stmts.push_back(parse_statement());
       if (stmts.size() > 1) {
         auto prev_stmt_info = m_output.get_node_info(stmts[stmts.size() - 2]);
-        auto curr_stmt_info = m_output.get_node_info(stmts[stmts.size() - 1]);
-        if (prev_stmt_info.location.line == curr_stmt_info.location.line) {
-          throw_parser_error_at_current_location(
-              "Multiple statements on the same line are not allowed"
-          );
+        auto next_stmt_info = m_output.get_node_info(stmts[stmts.size() - 1]);
+        if (prev_stmt_info.location.line == next_stmt_info.location.line) {
+          throw_parser_error(next_token.id, "Multiple statements on the same line are not allowed");
         }
       }
     }
@@ -307,16 +306,25 @@ public:
   NodeId parse_descend_expr_field_access() {
     auto start_location = peek().loc;
     auto left = parse_atom();
-    while (peek().type == TokenType::DOT_NO_W) {
-      ++m_token_index; // consume the '.' operator
-      if (peek().type != TokenType::IDENTIFIER_NO_W) {
-        throw_parser_error_at_current_location(
-            "Expected identifier immediately after '.' in field access expression"
+    auto next_token = peek();
+    while (next_token.type == TokenType::DOT_NO_W || token_is_number_field(next_token)) {
+      if (next_token.type == TokenType::DOT_NO_W) {
+        ++m_token_index; // consume the '.' operator
+        if (peek().type != TokenType::IDENTIFIER_NO_W) {
+          throw_parser_error_at_current_location(
+              "Expected identifier immediately after '.' in field access expression"
+          );
+        }
+        left = m_output.add_FieldAccessExpressionNode(
+            start_location, FieldAccessExpressionNode{left, parse_identifier()}
+        );
+      } else {
+        m_token_index++; // consume the numeric field token
+        left = m_output.add_NumericFieldAccessExpressionNode(
+            start_location, NumericFieldAccessExpressionNode{left, next_token.id}
         );
       }
-      left = m_output.add_FieldAccessExpressionNode(
-          start_location, FieldAccessExpressionNode{left, parse_identifier()}
-      );
+      next_token = peek();
     }
     return left;
   }
@@ -501,6 +509,21 @@ public:
   }
 
 private:
+  bool token_is_number_field(TokenWithId token) {
+    // number must have no whitespace before it in the source
+    if (token.type != TokenType::NUMBER_NO_W) {
+      return false;
+    }
+
+    auto lit = m_input.get_number_literal(token.id);
+    return (
+        // number must have the form `.1` (only a decimal point and some digits after)
+        lit.base_prefix.size() == 0 && lit.exponent_digits.size() == 0 &&
+        lit.exponent_sign.size() == 0 && lit.exponent_prefix.size() == 0 &&
+        lit.integer_digits.size() == 0 && lit.has_decimal_point && lit.fractional_digits.size() > 0
+    );
+  }
+
   TokenWithId read_dot(Text error_message) {
     auto token = peek();
     if (token.type != TokenType::DOT && token.type != TokenType::DOT_NO_W) {

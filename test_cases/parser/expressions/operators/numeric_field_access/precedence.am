@@ -1,0 +1,21 @@
+let x = !y.0
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetStatementNode(
+      target=IdentifierNode(
+        name=IDENTIFIER(x)
+      ),
+      expression=NotExpressionNode(
+        expr=NumericFieldAccessExpressionNode(
+          object=IdentifierNode(
+            name=IDENTIFIER_NO_W(y)
+          ),
+          field=NUMBER_NO_W(.0)
+        )
+      )
+    )
+  ]
+)
+*/
