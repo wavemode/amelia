@@ -13,7 +13,7 @@ ModuleNode(
         ),
         clauses=[
           CatchClauseNode(
-            var=IDENTIFIER(y),
+            var=IDENTIFIER_NO_W(y),
             exc_type=IdentifierNode(
               name=IDENTIFIER(z)
             ),

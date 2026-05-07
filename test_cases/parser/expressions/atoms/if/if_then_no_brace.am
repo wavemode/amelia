@@ -9,10 +9,10 @@ ModuleNode(
       ),
       expression=IfExpressionNode(
         condition=IdentifierNode(
-          name=IDENTIFIER(x)
+          name=IDENTIFIER_NO_W(x)
         ),
         then_branch=IdentifierNode(
-          name=IDENTIFIER(y)
+          name=IDENTIFIER_NO_W(y)
         ),
       )
     )

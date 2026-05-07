@@ -5,6 +5,7 @@
 #include "data/lexer/token.h"
 #include "data/source/number_literal.h"
 #include "data/source/string_literal.h"
+#include "data/util/text_utils.h"
 #include "prelude.h"
 
 namespace amelia {
@@ -100,7 +101,7 @@ struct LexerResult {
         }
       }
       out.append('\"');
-    } else if (token.type == TokenType::NUMBER) {
+    } else if (token.type == TokenType::NUMBER || token.type == TokenType::NUMBER_NO_W) {
       auto lit = get_number_literal(token_id);
       out.append(lit.base_prefix);
       out.append(lit.integer_digits);

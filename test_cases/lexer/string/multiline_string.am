@@ -3,6 +3,6 @@ there"""xy
 
 /* EXPECTED_OUTPUT:
 STRING_LITERAL("hi\nthere")
-IDENTIFIER(xy)
+IDENTIFIER_NO_W(xy)
 END_OF_FILE()
 */

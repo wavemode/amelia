@@ -13,6 +13,7 @@
 72.40
 072.40       
 2.71828
+x.0 // tuple field access
 
 
 /* EXPECTED_OUTPUT:
@@ -31,5 +32,7 @@ NUMBER(0.)
 NUMBER(72.40)
 NUMBER(072.40)
 NUMBER(2.71828)
+IDENTIFIER(x)
+NUMBER_NO_W(.0)
 END_OF_FILE()
 */

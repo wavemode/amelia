@@ -1,7 +1,7 @@
-@a
+!x
 
 /* EXPECTED_OUTPUT:
-AT(@)
-IDENTIFIER_NO_W(a)
+EXCLAM(!)
+IDENTIFIER_NO_W(x)
 END_OF_FILE()
 */

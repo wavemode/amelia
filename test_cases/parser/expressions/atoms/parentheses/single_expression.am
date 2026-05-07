@@ -10,7 +10,7 @@ ModuleNode(
       expression=ParenthesizedExpressionNode(
         exprs=[
           NumberLiteralNode(
-            value=NUMBER(5)
+            value=NUMBER_NO_W(5)
           )
         ]
       )

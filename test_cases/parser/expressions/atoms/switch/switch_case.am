@@ -12,12 +12,12 @@ ModuleNode(
       ),
       expression=SwitchExpressionNode(
         expr=IdentifierNode(
-          name=IDENTIFIER(y)
+          name=IDENTIFIER_NO_W(y)
         ),
         clauses=[
           CaseClauseNode(
             expr=NumberLiteralNode(
-              value=NUMBER(1)
+              value=NUMBER_NO_W(1)
             ),
             body=NumberLiteralNode(
               value=NUMBER(2)
@@ -25,7 +25,7 @@ ModuleNode(
           ),
           CaseClauseNode(
             expr=NumberLiteralNode(
-              value=NUMBER(3)
+              value=NUMBER_NO_W(3)
             ),
             body=NumberLiteralNode(
               value=NUMBER(4)

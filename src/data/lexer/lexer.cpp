@@ -348,8 +348,7 @@ public:
 
   void read_at(Location start_location) {
     next();
-    skip_word_chars();
-    emit_token(TokenType::ANNOTATION_NAME, start_location);
+    emit_token(TokenType::AT, start_location);
   }
 
   void read_right_bracket(Location start_location) {
@@ -362,7 +361,7 @@ public:
     if (previous_char_was_whitespace()) {
       emit_token(TokenType::LEFT_BRACKET, start_location);
     } else {
-      emit_token(TokenType::IX_START, start_location);
+      emit_token(TokenType::LEFT_BRACKET_NO_W, start_location);
     }
   }
 
@@ -376,7 +375,7 @@ public:
     if (previous_char_was_whitespace()) {
       emit_token(TokenType::LEFT_PAREN, start_location);
     } else {
-      emit_token(TokenType::FUNCALL_START, start_location);
+      emit_token(TokenType::LEFT_PAREN_NO_W, start_location);
     }
   }
 
@@ -384,8 +383,7 @@ public:
     next();
     if (peek() == ':' && !previous_char_was_whitespace()) {
       next();
-      skip_word_chars();
-      emit_token(TokenType::NAMESPACE_ACCESS, start_location);
+      emit_token(TokenType::DOUBLE_COLON_NO_W, start_location);
     } else {
       emit_token(TokenType::COLON, start_location);
     }
@@ -398,11 +396,10 @@ public:
       read_number(start_location);
       return;
     }
-    skip_word_chars();
     if (previous_char_was_whitespace()) {
-      emit_token(TokenType::DOTTED_IDENTIFIER, start_location);
+      emit_token(TokenType::DOT, start_location);
     } else {
-      emit_token(TokenType::FIELD_ACCESS, start_location);
+      emit_token(TokenType::DOT_NO_W, start_location);
     }
   }
 
@@ -465,9 +462,9 @@ public:
       next();
       emit_token(TokenType::NOT_EQUAL, start_location);
     } else if (!previous_char_was_whitespace()) {
-      emit_token(TokenType::EXCLAMATION, start_location);
+      emit_token(TokenType::EXCLAM_NO_W, start_location);
     } else {
-      emit_token(TokenType::NOT, start_location);
+      emit_token(TokenType::EXCLAM, start_location);
     }
   }
 
@@ -812,7 +809,12 @@ public:
       throw_lexer_error_at_current_location("Number literal must have at least one digit");
     }
 
-    size_t token_id = emit_token(TokenType::NUMBER, start_location);
+    size_t token_id;
+    if (previous_char_was_whitespace()) {
+      token_id = emit_token(TokenType::NUMBER, start_location);
+    } else {
+      token_id = emit_token(TokenType::NUMBER_NO_W, start_location);
+    }
     m_result.add_number_literal(token_id, result);
   }
 
@@ -876,11 +878,10 @@ public:
 
     if (keyword_tt.has_value()) {
       emit_token(*keyword_tt, start_location);
-    } else if (!at_end() && peek() == '!') {
-      emit_token(TokenType::MACRO_NAME, start_location);
-      next();
-    } else {
+    } else if (previous_char_was_whitespace()) {
       emit_token(TokenType::IDENTIFIER, start_location);
+    } else {
+      emit_token(TokenType::IDENTIFIER_NO_W, start_location);
     }
   }
 

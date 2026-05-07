@@ -78,7 +78,7 @@
   X(GREATER_EQUAL)                                                                                 \
   X(LESS_EQUAL)                                                                                    \
   X(EQUAL)                                                                                         \
-  X(NOT)                                                                                           \
+  X(EXCLAM)                                                                                        \
   X(NOT_EQUAL)                                                                                     \
   X(PLUS)                                                                                          \
   X(MINUS)                                                                                         \
@@ -87,12 +87,14 @@
   X(AND)                                                                                           \
   X(OR)                                                                                            \
   X(QUESTION)                                                                                      \
-  X(EXCLAMATION)                                                                                   \
+  X(EXCLAM_NO_W)                                                                                   \
   X(COLON)                                                                                         \
-  X(FUNCALL_START)                                                                                 \
+  X(LEFT_PAREN_NO_W)                                                                               \
   X(LEFT_PAREN)                                                                                    \
   X(RIGHT_PAREN)                                                                                   \
-  X(IX_START)                                                                                      \
+  X(LEFT_BRACKET_NO_W)                                                                             \
+  X(DOT)                                                                                           \
+  X(DOT_NO_W)                                                                                      \
   X(LEFT_BRACKET)                                                                                  \
   X(RIGHT_BRACKET)                                                                                 \
   X(ARROW)                                                                                         \
@@ -101,12 +103,11 @@
   X(SEMICOLON)                                                                                     \
   X(COMMA)                                                                                         \
   X(NUMBER)                                                                                        \
+  X(NUMBER_NO_W)                                                                                   \
   X(IDENTIFIER)                                                                                    \
-  X(DOTTED_IDENTIFIER)                                                                             \
-  X(FIELD_ACCESS)                                                                                  \
-  X(NAMESPACE_ACCESS)                                                                              \
-  X(MACRO_NAME)                                                                                    \
-  X(ANNOTATION_NAME)                                                                               \
+  X(IDENTIFIER_NO_W)                                                                               \
+  X(DOUBLE_COLON_NO_W)                                                                             \
+  X(AT)                                                                                            \
   X(STRING_LITERAL)                                                                                \
   X(MULTILINE_STRING_LITERAL)                                                                      \
   X(RAW_STRING_LITERAL)                                                                            \

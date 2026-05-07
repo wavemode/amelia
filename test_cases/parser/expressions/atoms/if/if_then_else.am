@@ -10,7 +10,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=IfExpressionNode(
         condition=IdentifierNode(
-          name=IDENTIFIER(x)
+          name=IDENTIFIER_NO_W(x)
         ),
         then_branch=BlockExpressionNode(
           stmts=[

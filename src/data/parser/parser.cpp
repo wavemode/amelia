@@ -169,17 +169,17 @@ public:
 
   NodeId parse_atom() {
     auto next_token = peek();
-    if (next_token.type == TokenType::IDENTIFIER) {
+    if (next_token.type == TokenType::IDENTIFIER || next_token.type == TokenType::IDENTIFIER_NO_W) {
       return parse_identifier();
     } else if (next_token.type == TokenType::STRING_LITERAL) {
       return parse_string_literal();
-    } else if (next_token.type == TokenType::NUMBER) {
+    } else if (next_token.type == TokenType::NUMBER || next_token.type == TokenType::NUMBER_NO_W) {
       return parse_number_literal();
     } else if (next_token.type == TokenType::LEFT_PAREN ||
-               next_token.type == TokenType::FUNCALL_START) {
+               next_token.type == TokenType::LEFT_PAREN_NO_W) {
       return parse_parenthesized_expression();
     } else if (next_token.type == TokenType::LEFT_BRACKET ||
-               next_token.type == TokenType::IX_START) {
+               next_token.type == TokenType::LEFT_BRACKET_NO_W) {
       return parse_array_literal();
     } else if (next_token.type == TokenType::LEFT_BRACE) {
       return parse_brace_expression();
@@ -237,12 +237,16 @@ public:
     auto catch_token = next(); // consume the 'catch' keyword
     read_left_paren("Expected '(' after 'catch'");
     Option<TokenId> var;
-    if (peek().type == TokenType::IDENTIFIER && peek(1).type == TokenType::COLON) {
-      var = peek().id;
+    auto next_token = peek();
+    auto following_token = peek(1);
+    if ((next_token.type == TokenType::IDENTIFIER || next_token.type == TokenType::IDENTIFIER_NO_W
+        ) &&
+        following_token.type == TokenType::COLON) {
+      var = next_token.id;
       m_token_index += 2; // consume the identifier and the colon
     }
     NodeId exc_type = parse_expression();
-    read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after catch clause condition");
+    read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after catch clause exception type");
     NodeId body = parse_expression();
     return m_output.add_CatchClauseNode(catch_token.loc, CatchClauseNode{var, exc_type, body});
   }
@@ -283,8 +287,7 @@ public:
 
   NodeId parse_brace_expression() {
     auto next_token = peek(1);
-    if (next_token.type == TokenType::RIGHT_BRACE ||
-        next_token.type == TokenType::DOTTED_IDENTIFIER) {
+    if (next_token.type == TokenType::RIGHT_BRACE || next_token.type == TokenType::DOT) {
       return parse_object_literal();
     }
     return parse_block_expression();
@@ -302,8 +305,9 @@ public:
     auto open_brace = next(); // consume the left brace
     List<NodeId> entries;
     while (peek().type != TokenType::RIGHT_BRACE) {
+      read_token_type(TokenType::DOT, "Expected dot before field name in object literal");
       auto field_token = read_token_type(
-          TokenType::DOTTED_IDENTIFIER, "Expected field name in object literal"
+          TokenType::IDENTIFIER_NO_W, "Expected field name immediately after dot in object literal"
       );
       read_token_type(TokenType::ASSIGN, "Expected '=' after field name in object literal");
       NodeId value = parse_expression();
@@ -345,7 +349,7 @@ public:
 private:
   TokenWithId read_left_paren(String error_message) {
     auto token = peek();
-    if (token.type != TokenType::LEFT_PAREN && token.type != TokenType::FUNCALL_START) {
+    if (token.type != TokenType::LEFT_PAREN && token.type != TokenType::LEFT_PAREN_NO_W) {
       throw_parser_error(token.id, std::move(error_message));
     }
     ++m_token_index;

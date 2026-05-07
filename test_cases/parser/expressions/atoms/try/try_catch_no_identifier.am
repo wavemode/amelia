@@ -14,7 +14,7 @@ ModuleNode(
         clauses=[
           CatchClauseNode(
             exc_type=IdentifierNode(
-              name=IDENTIFIER(z)
+              name=IDENTIFIER_NO_W(z)
             ),
             body=IdentifierNode(
               name=IDENTIFIER(t)
