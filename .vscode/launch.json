@@ -19,7 +19,8 @@
             "cwd": "${workspaceRoot}",
             "preLaunchTask": "make build-test",
             "env": {
-                "AMELIA_TEST_ARGS": "-ts=TextUtils -tc=remove"
+                "AMELIA_TEST_ARGS": "-ts=Lexer",
+                "AMELIA_TEST_CASE_FILTER": "test_cases/parser/expressions/operators/equals/single.am"
             }
         }
     ]

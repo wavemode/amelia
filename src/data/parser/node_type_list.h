@@ -113,6 +113,16 @@ struct BitwiseXorExpressionNode {
   NodeId right;
 };
 
+struct EqualsExpressionNode {
+  NodeId left;
+  NodeId right;
+};
+
+struct NotEqualsExpressionNode {
+  NodeId left;
+  NodeId right;
+};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
@@ -135,6 +145,8 @@ struct BitwiseXorExpressionNode {
   X(AndExpressionNode)                                                                             \
   X(BitwiseOrExpressionNode)                                                                       \
   X(BitwiseAndExpressionNode)                                                                      \
-  X(BitwiseXorExpressionNode)
+  X(BitwiseXorExpressionNode)                                                                      \
+  X(EqualsExpressionNode)                                                                          \
+  X(NotEqualsExpressionNode)
 
 } // namespace amelia

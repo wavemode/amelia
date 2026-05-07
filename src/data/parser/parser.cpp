@@ -137,10 +137,10 @@ public:
 
   NodeId parse_descend_expr_bitwise_and() {
     auto start_location = peek().loc;
-    NodeId left = parse_atom();
+    NodeId left = parse_descend_expr_eq_ne();
     while (peek().type == TokenType::AMPERSAND) {
       ++m_token_index; // consume the '&' operator
-      NodeId right = parse_atom();
+      NodeId right = parse_descend_expr_eq_ne();
       left = m_output.add_BitwiseAndExpressionNode(
           start_location, BitwiseAndExpressionNode{left, right}
       );
@@ -148,25 +148,46 @@ public:
     return left;
   }
 
+  NodeId parse_descend_expr_eq_ne() {
+    auto start_location = peek().loc;
+    NodeId left = parse_atom();
+    auto next_token = peek();
+    while (next_token.type == TokenType::EQUAL || next_token.type == TokenType::NOT_EQUAL) {
+      ++m_token_index; // consume the operator
+      NodeId right = parse_atom();
+      if (next_token.type == TokenType::EQUAL) {
+        left = m_output.add_EqualsExpressionNode(start_location, EqualsExpressionNode{left, right});
+      } else {
+        left = m_output.add_NotEqualsExpressionNode(
+            start_location, NotEqualsExpressionNode{left, right}
+        );
+      }
+      next_token = peek();
+    }
+    return left;
+  }
+
   NodeId parse_atom() {
-    auto token = peek();
-    if (token.type == TokenType::IDENTIFIER) {
+    auto next_token = peek();
+    if (next_token.type == TokenType::IDENTIFIER) {
       return parse_identifier();
-    } else if (token.type == TokenType::STRING_LITERAL) {
+    } else if (next_token.type == TokenType::STRING_LITERAL) {
       return parse_string_literal();
-    } else if (token.type == TokenType::NUMBER) {
+    } else if (next_token.type == TokenType::NUMBER) {
       return parse_number_literal();
-    } else if (token.type == TokenType::LEFT_PAREN || token.type == TokenType::FUNCALL_START) {
+    } else if (next_token.type == TokenType::LEFT_PAREN ||
+               next_token.type == TokenType::FUNCALL_START) {
       return parse_parenthesized_expression();
-    } else if (token.type == TokenType::LEFT_BRACKET || token.type == TokenType::IX_START) {
+    } else if (next_token.type == TokenType::LEFT_BRACKET ||
+               next_token.type == TokenType::IX_START) {
       return parse_array_literal();
-    } else if (token.type == TokenType::LEFT_BRACE) {
+    } else if (next_token.type == TokenType::LEFT_BRACE) {
       return parse_brace_expression();
-    } else if (token.type == TokenType::KEYWORD_IF) {
+    } else if (next_token.type == TokenType::KEYWORD_IF) {
       return parse_if_expression();
-    } else if (token.type == TokenType::KEYWORD_TRY) {
+    } else if (next_token.type == TokenType::KEYWORD_TRY) {
       return parse_try_catch_expression();
-    } else if (token.type == TokenType::KEYWORD_SWITCH) {
+    } else if (next_token.type == TokenType::KEYWORD_SWITCH) {
       return parse_switch_expression();
     } else {
       String err("Expected expression, got token ");

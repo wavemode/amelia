@@ -113,6 +113,14 @@ private:
       const auto &node = m_BitwiseAndExpressionNode_nodes.get(node_id);
       print_node_field_with_comma(out, lr, "left", node.left, indent + 2);
       print_node_field(out, lr, "right", node.right, indent + 2);
+    } else if (info.type == NodeType::EqualsExpressionNode) {
+      const auto &node = m_EqualsExpressionNode_nodes.get(node_id);
+      print_node_field_with_comma(out, lr, "left", node.left, indent + 2);
+      print_node_field(out, lr, "right", node.right, indent + 2);
+    } else if (info.type == NodeType::NotEqualsExpressionNode) {
+      const auto &node = m_NotEqualsExpressionNode_nodes.get(node_id);
+      print_node_field_with_comma(out, lr, "left", node.left, indent + 2);
+      print_node_field(out, lr, "right", node.right, indent + 2);
     } else {
       throw RuntimeError("Unknown node type");
     }
