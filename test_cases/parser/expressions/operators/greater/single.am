@@ -1,0 +1,21 @@
+let x = y > z
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetStatementNode(
+      target=IdentifierNode(
+        name=IDENTIFIER(x)
+      ),
+      expression=GreaterExpressionNode(
+        left=IdentifierNode(
+          name=IDENTIFIER(y)
+        ),
+        right=IdentifierNode(
+          name=IDENTIFIER(z)
+        )
+      )
+    )
+  ]
+)
+*/

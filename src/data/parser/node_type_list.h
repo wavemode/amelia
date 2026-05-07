@@ -123,6 +123,26 @@ struct NotEqualsExpressionNode {
   NodeId right;
 };
 
+struct GreaterEqualsExpressionNode {
+  NodeId left;
+  NodeId right;
+};
+
+struct LessEqualsExpressionNode {
+  NodeId left;
+  NodeId right;
+};
+
+struct GreaterExpressionNode {
+  NodeId left;
+  NodeId right;
+};
+
+struct LessExpressionNode {
+  NodeId left;
+  NodeId right;
+};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
@@ -147,6 +167,10 @@ struct NotEqualsExpressionNode {
   X(BitwiseAndExpressionNode)                                                                      \
   X(BitwiseXorExpressionNode)                                                                      \
   X(EqualsExpressionNode)                                                                          \
-  X(NotEqualsExpressionNode)
+  X(NotEqualsExpressionNode)                                                                       \
+  X(GreaterEqualsExpressionNode)                                                                   \
+  X(LessEqualsExpressionNode)                                                                      \
+  X(GreaterExpressionNode)                                                                         \
+  X(LessExpressionNode)
 
 } // namespace amelia

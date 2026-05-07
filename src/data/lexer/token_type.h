@@ -86,7 +86,7 @@
   X(SLASH)                                                                                         \
   X(AND)                                                                                           \
   X(OR)                                                                                            \
-  X(QUESTION)                                                                                      \
+  X(QUESTION_NO_W)                                                                                 \
   X(EXCLAM_NO_W)                                                                                   \
   X(COLON)                                                                                         \
   X(LEFT_PAREN_NO_W)                                                                               \

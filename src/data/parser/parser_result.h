@@ -121,6 +121,22 @@ private:
       const auto &node = m_NotEqualsExpressionNode_nodes.get(node_id);
       print_node_field_with_comma(out, lr, "left", node.left, indent + 2);
       print_node_field(out, lr, "right", node.right, indent + 2);
+    } else if (info.type == NodeType::GreaterEqualsExpressionNode) {
+      const auto &node = m_GreaterEqualsExpressionNode_nodes.get(node_id);
+      print_node_field_with_comma(out, lr, "left", node.left, indent + 2);
+      print_node_field(out, lr, "right", node.right, indent + 2);
+    } else if (info.type == NodeType::LessEqualsExpressionNode) {
+      const auto &node = m_LessEqualsExpressionNode_nodes.get(node_id);
+      print_node_field_with_comma(out, lr, "left", node.left, indent + 2);
+      print_node_field(out, lr, "right", node.right, indent + 2);
+    } else if (info.type == NodeType::GreaterExpressionNode) {
+      const auto &node = m_GreaterExpressionNode_nodes.get(node_id);
+      print_node_field_with_comma(out, lr, "left", node.left, indent + 2);
+      print_node_field(out, lr, "right", node.right, indent + 2);
+    } else if (info.type == NodeType::LessExpressionNode) {
+      const auto &node = m_LessExpressionNode_nodes.get(node_id);
+      print_node_field_with_comma(out, lr, "left", node.left, indent + 2);
+      print_node_field(out, lr, "right", node.right, indent + 2);
     } else {
       throw RuntimeError("Unknown node type");
     }

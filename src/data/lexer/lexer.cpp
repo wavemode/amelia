@@ -408,7 +408,7 @@ public:
       throw_lexer_error(start_location, "Unexpected '?' after whitespace");
     }
     next();
-    emit_token(TokenType::QUESTION, start_location);
+    emit_token(TokenType::QUESTION_NO_W, start_location);
   }
 
   void read_comma(Location start_location) {
