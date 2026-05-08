@@ -87,8 +87,10 @@
   X(NOT_EQUAL)                                                                                     \
   X(PLUS)                                                                                          \
   X(DOUBLE_PLUS)                                                                                   \
+  X(DOUBLE_PLUS_NO_W)                                                                              \
   X(MINUS)                                                                                         \
   X(DOUBLE_MINUS)                                                                                  \
+  X(DOUBLE_MINUS_NO_W)                                                                             \
   X(STAR)                                                                                          \
   X(SLASH)                                                                                         \
   X(AND)                                                                                           \

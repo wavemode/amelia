@@ -566,7 +566,11 @@ public:
       emit_token(TokenType::MINUS_EQUAL, start_location);
     } else if (next_cp == '-') {
       next();
-      emit_token(TokenType::DOUBLE_MINUS, start_location);
+      if (previous_char_was_whitespace()) {
+        emit_token(TokenType::DOUBLE_MINUS, start_location);
+      } else {
+        emit_token(TokenType::DOUBLE_MINUS_NO_W, start_location);
+      }
     } else if (next_cp == '>') {
       next();
       emit_token(TokenType::ARROW, start_location);
@@ -583,7 +587,11 @@ public:
       emit_token(TokenType::PLUS_EQUAL, start_location);
     } else if (next_cp == '+') {
       next();
-      emit_token(TokenType::DOUBLE_PLUS, start_location);
+      if (previous_char_was_whitespace()) {
+        emit_token(TokenType::DOUBLE_PLUS, start_location);
+      } else {
+        emit_token(TokenType::DOUBLE_PLUS_NO_W, start_location);
+      }
     } else {
       emit_token(TokenType::PLUS, start_location);
     }

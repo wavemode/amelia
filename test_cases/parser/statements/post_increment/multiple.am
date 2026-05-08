@@ -1,0 +1,23 @@
+x++
+y++
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    PostIncrementStatementNode(
+      target=ExpressionStatementNode(
+        expr=IdentifierNode(
+          name=IDENTIFIER(x)
+        )
+      )
+    ),
+    PostIncrementStatementNode(
+      target=ExpressionStatementNode(
+        expr=IdentifierNode(
+          name=IDENTIFIER(y)
+        )
+      )
+    )
+  ]
+)
+*/

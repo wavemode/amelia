@@ -53,17 +53,28 @@ public:
 
   NodeId parse_statement() {
     auto token = peek();
+    NodeId result;
     if (token.type == TokenType::KEYWORD_LET) {
-      return parse_let_statement();
+      result = parse_let_statement();
     } else if (token.type == TokenType::KEYWORD_CONST) {
-      return parse_const_statement();
-    } else if (token.type == TokenType::DOUBLE_PLUS) {
-      return parse_pre_increment_statement();
-    } else if (token.type == TokenType::DOUBLE_MINUS) {
-      return parse_pre_decrement_statement();
+      result = parse_const_statement();
+    } else if (token.type == TokenType::DOUBLE_PLUS || token.type == TokenType::DOUBLE_PLUS_NO_W) {
+      result = parse_pre_increment_statement();
+    } else if (token.type == TokenType::DOUBLE_MINUS ||
+               token.type == TokenType::DOUBLE_MINUS_NO_W) {
+      result = parse_pre_decrement_statement();
     } else {
-      return parse_expression_statement();
+      result = parse_expression_statement();
     }
+    auto next_token = peek();
+    if (next_token.type == TokenType::DOUBLE_PLUS_NO_W) {
+      ++m_token_index; // consume the '++' operator
+      result = m_output.add_node(token.loc, PostIncrementStatementNode{result});
+    } else if (next_token.type == TokenType::DOUBLE_MINUS_NO_W) {
+      ++m_token_index; // consume the '--' operator
+      result = m_output.add_node(token.loc, PostDecrementStatementNode{result});
+    }
+    return result;
   }
 
   NodeId parse_pre_increment_statement() {
