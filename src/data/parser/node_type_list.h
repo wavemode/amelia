@@ -235,13 +235,18 @@ struct IndexingExpressionNode {
   NodeId index;
 };
 
-struct PositionFunctionArgumentNode {
+struct PositionalFunctionArgumentNode {
   NodeId expr;
 };
 
 struct NamedFunctionArgumentNode {
   NodeId name;
   NodeId expr;
+};
+
+struct FunctionCallExpressionNode {
+  NodeId callee;
+  List<NodeId> args;
 };
 
 #define NODE_TYPE_LIST                                                                             \
@@ -292,6 +297,9 @@ struct NamedFunctionArgumentNode {
   X(EllipsisExpressionNode)                                                                        \
   X(FieldAccessExpressionNode)                                                                     \
   X(NumericFieldAccessExpressionNode)                                                              \
-  X(IndexingExpressionNode)
+  X(IndexingExpressionNode)                                                                        \
+  X(PositionalFunctionArgumentNode)                                                                \
+  X(NamedFunctionArgumentNode)                                                                     \
+  X(FunctionCallExpressionNode)
 
 } // namespace amelia

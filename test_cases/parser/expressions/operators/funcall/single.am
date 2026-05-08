@@ -1,0 +1,25 @@
+let x = y(z)
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetStatementNode(
+      target=IdentifierNode(
+        name=IDENTIFIER(x)
+      ),
+      expression=FunctionCallExpressionNode(
+        callee=IdentifierNode(
+          name=IDENTIFIER(y)
+        ),
+        args=[
+          PositionalFunctionArgumentNode(
+            expr=IdentifierNode(
+              name=IDENTIFIER_NO_W(z)
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

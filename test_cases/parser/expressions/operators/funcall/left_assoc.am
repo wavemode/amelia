@@ -1,0 +1,37 @@
+let w = x(y=5)(z)
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetStatementNode(
+      target=IdentifierNode(
+        name=IDENTIFIER(w)
+      ),
+      expression=FunctionCallExpressionNode(
+        callee=FunctionCallExpressionNode(
+          callee=IdentifierNode(
+            name=IDENTIFIER(x)
+          ),
+          args=[
+            NamedFunctionArgumentNode(
+              name=IdentifierNode(
+                name=IDENTIFIER_NO_W(y)
+              ),
+              expr=NumberLiteralNode(
+                value=NUMBER(5)
+              )
+            )
+          ]
+        ),
+        args=[
+          PositionalFunctionArgumentNode(
+            expr=IdentifierNode(
+              name=IDENTIFIER_NO_W(z)
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

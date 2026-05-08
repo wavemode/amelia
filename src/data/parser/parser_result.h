@@ -205,6 +205,17 @@ private:
       const auto &node = m_IndexingExpressionNode_nodes.get(node_id);
       print_node_field_with_comma(out, lr, "object", node.object, indent + 2);
       print_node_field(out, lr, "index", node.index, indent + 2);
+    } else if (info.type == NodeType::PositionalFunctionArgumentNode) {
+      const auto &node = m_PositionalFunctionArgumentNode_nodes.get(node_id);
+      print_node_field(out, lr, "expr", node.expr, indent + 2);
+    } else if (info.type == NodeType::NamedFunctionArgumentNode) {
+      const auto &node = m_NamedFunctionArgumentNode_nodes.get(node_id);
+      print_node_field_with_comma(out, lr, "name", node.name, indent + 2);
+      print_node_field(out, lr, "expr", node.expr, indent + 2);
+    } else if (info.type == NodeType::FunctionCallExpressionNode) {
+      const auto &node = m_FunctionCallExpressionNode_nodes.get(node_id);
+      print_node_field_with_comma(out, lr, "callee", node.callee, indent + 2);
+      print_node_list_field(out, lr, "args", node.args.data(), indent + 2);
     } else {
       throw RuntimeError("Unknown node type");
     }

@@ -300,15 +300,16 @@ public:
       NodeId expr = parse_descend_pos_neg_deref_not_bitnot_ell();
       return m_output.add_EllipsisExpressionNode(start_location, EllipsisExpressionNode{expr});
     }
-    return parse_descend_expr_field_ix();
+    return parse_descend_expr_field_ix_funcall();
   }
 
-  NodeId parse_descend_expr_field_ix() {
+  NodeId parse_descend_expr_field_ix_funcall() {
     auto start_location = peek().loc;
     auto left = parse_atom();
     auto next_token = peek();
     while (next_token.type == TokenType::DOT_NO_W || next_token.type == TokenType::NUMBER_FIELD ||
-           next_token.type == TokenType::LEFT_BRACKET_NO_W) {
+           next_token.type == TokenType::LEFT_BRACKET_NO_W ||
+           next_token.type == TokenType::LEFT_PAREN_NO_W) {
       if (next_token.type == TokenType::DOT_NO_W) {
         ++m_token_index; // consume the '.' operator
         if (peek().type != TokenType::IDENTIFIER_NO_W) {
@@ -332,6 +333,19 @@ public:
         );
         left = m_output.add_IndexingExpressionNode(
             start_location, IndexingExpressionNode{left, index_expr}
+        );
+      } else if (next_token.type == TokenType::LEFT_PAREN_NO_W) {
+        ++m_token_index; // consume the '(' operator
+        List<NodeId> args;
+        while (peek().type != TokenType::RIGHT_PAREN) {
+          args.push_back(parse_function_call_argument());
+          if (peek().type == TokenType::COMMA) {
+            ++m_token_index; // consume the comma
+          }
+        }
+        ++m_token_index; // consume the ')' operator
+        left = m_output.add_FunctionCallExpressionNode(
+            start_location, FunctionCallExpressionNode{left, std::move(args)}
         );
       } else {
         throw RuntimeError("unreachable");
@@ -368,6 +382,26 @@ public:
       m_input.format_token(err, m_token_index);
       throw_parser_error_at_current_location(std::move(err));
     }
+  }
+
+  NodeId parse_function_call_argument() {
+    Option<NodeId> name;
+    auto next_token = peek();
+    if ((next_token.type == TokenType::IDENTIFIER || next_token.type == TokenType::IDENTIFIER_NO_W
+        ) &&
+        peek(1).type == TokenType::ASSIGN) {
+      name = parse_identifier();
+      ++m_token_index; // consume the '=' token
+    }
+    NodeId expr = parse_expression();
+    if (name.has_value()) {
+      return m_output.add_NamedFunctionArgumentNode(
+          next_token.loc, NamedFunctionArgumentNode{name.value(), expr}
+      );
+    }
+    return m_output.add_PositionalFunctionArgumentNode(
+        next_token.loc, PositionalFunctionArgumentNode{expr}
+    );
   }
 
   NodeId parse_switch_expression() {
