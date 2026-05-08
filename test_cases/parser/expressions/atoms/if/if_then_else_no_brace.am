@@ -7,7 +7,7 @@ ModuleNode(
       target=IdentifierNode(
         name=IDENTIFIER(w)
       ),
-      expression=IfExpressionNode(
+      expression=IfThenElseExpressionNode(
         condition=IdentifierNode(
           name=IDENTIFIER_NO_W(x)
         ),

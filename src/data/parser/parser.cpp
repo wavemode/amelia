@@ -422,7 +422,13 @@ public:
     NodeId exc_type = parse_expression();
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after catch clause exception type");
     NodeId body = parse_expression();
-    return m_output.add_CatchClauseNode(catch_token.loc, CatchClauseNode{var, exc_type, body});
+    if (var.has_value()) {
+      return m_output.add_CatchClauseBindingNode(
+          catch_token.loc, CatchClauseBindingNode{var.value(), exc_type, body}
+      );
+    } else {
+      return m_output.add_CatchClauseNode(catch_token.loc, CatchClauseNode{exc_type, body});
+    }
   }
 
   NodeId parse_if_expression() {
@@ -436,9 +442,15 @@ public:
       ++m_token_index;
       else_branch = parse_expression();
     }
-    return m_output.add_IfExpressionNode(
-        if_token.loc, IfExpressionNode{condition, then_branch, else_branch}
-    );
+    if (else_branch.has_value()) {
+      return m_output.add_IfThenElseExpressionNode(
+          if_token.loc, IfThenElseExpressionNode{condition, then_branch, else_branch.value()}
+      );
+    } else {
+      return m_output.add_IfThenExpressionNode(
+          if_token.loc, IfThenExpressionNode{condition, then_branch}
+      );
+    }
   }
 
   NodeId parse_array_literal() {

@@ -7,13 +7,13 @@ ModuleNode(
       target=IdentifierNode(
         name=IDENTIFIER(w)
       ),
-      expression=IfExpressionNode(
+      expression=IfThenExpressionNode(
         condition=IdentifierNode(
           name=IDENTIFIER_NO_W(x)
         ),
         then_branch=IdentifierNode(
           name=IDENTIFIER_NO_W(y)
-        ),
+        )
       )
     )
   ]

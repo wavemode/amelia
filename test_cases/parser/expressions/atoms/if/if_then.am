@@ -6,7 +6,7 @@ if (x) {
 ModuleNode(
   decls=[
     ExpressionStatementNode(
-      expr=IfExpressionNode(
+      expr=IfThenExpressionNode(
         condition=IdentifierNode(
           name=IDENTIFIER_NO_W(x)
         ),
@@ -18,7 +18,7 @@ ModuleNode(
               )
             )
           ]
-        ),
+        )
       )
     )
   ]

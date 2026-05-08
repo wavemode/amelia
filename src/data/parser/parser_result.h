@@ -67,18 +67,22 @@ private:
     } else if (info.type == NodeType::ExpressionStatementNode) {
       const auto &node = m_ExpressionStatementNode_nodes.get(node_id);
       print_node_field(out, lr, "expr", node.expr, indent + 2);
-    } else if (info.type == NodeType::IfExpressionNode) {
-      const auto &node = m_IfExpressionNode_nodes.get(node_id);
+    } else if (info.type == NodeType::IfThenExpressionNode) {
+      const auto &node = m_IfThenExpressionNode_nodes.get(node_id);
+      print_node_field_with_comma(out, lr, "condition", node.condition, indent + 2);
+      print_node_field(out, lr, "then_branch", node.then_branch, indent + 2);
+    } else if (info.type == NodeType::IfThenElseExpressionNode) {
+      const auto &node = m_IfThenElseExpressionNode_nodes.get(node_id);
       print_node_field_with_comma(out, lr, "condition", node.condition, indent + 2);
       print_node_field_with_comma(out, lr, "then_branch", node.then_branch, indent + 2);
-      if (node.else_branch.has_value()) {
-        print_node_field(out, lr, "else_branch", node.else_branch.value(), indent + 2);
-      }
+      print_node_field(out, lr, "else_branch", node.else_branch, indent + 2);
     } else if (info.type == NodeType::CatchClauseNode) {
       const auto &node = m_CatchClauseNode_nodes.get(node_id);
-      if (node.var.has_value()) {
-        print_token_field_with_comma(out, lr, "var", node.var.value(), indent + 2);
-      }
+      print_node_field_with_comma(out, lr, "exc_type", node.exc_type, indent + 2);
+      print_node_field(out, lr, "body", node.body, indent + 2);
+    } else if (info.type == NodeType::CatchClauseBindingNode) {
+      const auto &node = m_CatchClauseBindingNode_nodes.get(node_id);
+      print_token_field_with_comma(out, lr, "var", node.var, indent + 2);
       print_node_field_with_comma(out, lr, "exc_type", node.exc_type, indent + 2);
       print_node_field(out, lr, "body", node.body, indent + 2);
     } else if (info.type == NodeType::TryCatchExpressionNode) {

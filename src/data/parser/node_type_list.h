@@ -61,14 +61,24 @@ struct ObjectLiteralNode {
   List<NodeId> entries;
 };
 
-struct IfExpressionNode {
+struct IfThenExpressionNode {
   NodeId condition;
   NodeId then_branch;
-  Option<NodeId> else_branch;
+};
+
+struct IfThenElseExpressionNode {
+  NodeId condition;
+  NodeId then_branch;
+  NodeId else_branch;
 };
 
 struct CatchClauseNode {
-  Option<TokenId> var;
+  NodeId exc_type;
+  NodeId body;
+};
+
+struct CatchClauseBindingNode {
+  NodeId var;
   NodeId exc_type;
   NodeId body;
 };
@@ -238,8 +248,10 @@ struct IndexingExpressionNode {
   X(KeyValueEntryNode)                                                                             \
   X(ObjectLiteralNode)                                                                             \
   X(ExpressionStatementNode)                                                                       \
-  X(IfExpressionNode)                                                                              \
+  X(IfThenExpressionNode)                                                                          \
+  X(IfThenElseExpressionNode)                                                                      \
   X(CatchClauseNode)                                                                               \
+  X(CatchClauseBindingNode)                                                                        \
   X(TryCatchExpressionNode)                                                                        \
   X(CaseClauseNode)                                                                                \
   X(SwitchExpressionNode)                                                                          \
