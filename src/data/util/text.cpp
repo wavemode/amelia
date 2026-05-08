@@ -31,8 +31,20 @@ CharIterator Text::end() const noexcept {
 }
 
 bool Text::operator==(const Text &other) const noexcept {
-  return m_slice.size() == other.m_slice.size() &&
-         std::memcmp(m_slice.ptr(), other.m_slice.ptr(), m_slice.size()) == 0;
+  if (m_slice.size() != other.m_slice.size()) {
+    return false;
+  }
+
+  if (m_slice.ptr() == other.m_slice.ptr()) {
+    return true;
+  }
+
+  if (m_slice.ptr() == nullptr || other.m_slice.ptr() == nullptr) {
+    // we already checked that both have the same size, so if one is null then both must be size 0
+    return true;
+  }
+
+  return std::memcmp(m_slice.ptr(), other.m_slice.ptr(), m_slice.size()) == 0;
 }
 
 bool Text::operator!=(const Text &other) const noexcept {

@@ -77,9 +77,15 @@ struct ObjectLiteralNode {
   List<NodeId> entries;
 };
 
-struct IfThenExpressionNode {
+struct IfThenStatementNode {
   NodeId condition;
   NodeId then_branch;
+};
+
+struct IfThenElseStatementNode {
+  NodeId condition;
+  NodeId then_branch;
+  NodeId else_branch;
 };
 
 struct IfThenElseExpressionNode {
@@ -270,6 +276,10 @@ struct ScopeResolutionExpressionNode {
   NodeId name;
 };
 
+struct BlockStatementNode {
+  List<NodeId> stmts;
+};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
@@ -283,7 +293,8 @@ struct ScopeResolutionExpressionNode {
   X(KeyValueEntryNode)                                                                             \
   X(ObjectLiteralNode)                                                                             \
   X(ExpressionStatementNode)                                                                       \
-  X(IfThenExpressionNode)                                                                          \
+  X(IfThenStatementNode)                                                                           \
+  X(IfThenElseStatementNode)                                                                       \
   X(IfThenElseExpressionNode)                                                                      \
   X(CatchClauseNode)                                                                               \
   X(CatchClauseBindingNode)                                                                        \
@@ -326,6 +337,7 @@ struct ScopeResolutionExpressionNode {
   X(PreIncrementStatementNode)                                                                     \
   X(PostIncrementStatementNode)                                                                    \
   X(PreDecrementStatementNode)                                                                     \
-  X(PostDecrementStatementNode)
+  X(PostDecrementStatementNode)                                                                    \
+  X(BlockStatementNode)
 
 } // namespace amelia

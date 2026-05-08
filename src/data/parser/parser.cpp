@@ -63,18 +63,49 @@ public:
     } else if (token.type == TokenType::DOUBLE_MINUS ||
                token.type == TokenType::DOUBLE_MINUS_NO_W) {
       result = parse_pre_decrement_statement();
+    } else if (token.type == TokenType::LEFT_BRACE) {
+      return parse_block_statement();
+    } else if (token.type == TokenType::KEYWORD_IF) {
+      result = parse_if_statement();
     } else {
       result = parse_expression_statement();
-    }
-    auto next_token = peek();
-    if (next_token.type == TokenType::DOUBLE_PLUS_NO_W) {
-      ++m_token_index; // consume the '++' operator
-      result = m_output.add_node(token.loc, PostIncrementStatementNode{result});
-    } else if (next_token.type == TokenType::DOUBLE_MINUS_NO_W) {
-      ++m_token_index; // consume the '--' operator
-      result = m_output.add_node(token.loc, PostDecrementStatementNode{result});
+      auto next_token = peek();
+      if (next_token.type == TokenType::DOUBLE_PLUS_NO_W) {
+        ++m_token_index; // consume the '++' operator
+        result = m_output.add_node(token.loc, PostIncrementStatementNode{result});
+      } else if (next_token.type == TokenType::DOUBLE_MINUS_NO_W) {
+        ++m_token_index; // consume the '--' operator
+        result = m_output.add_node(token.loc, PostDecrementStatementNode{result});
+      }
     }
     return result;
+  }
+
+  NodeId parse_if_statement() {
+    auto if_token = next(); // consume the 'if' keyword
+    read_left_paren("Expected '(' after 'if' keyword in if statement");
+    NodeId condition = parse_expression();
+    read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after condition in if statement");
+    NodeId then_branch = parse_statement();
+    if (peek().type == TokenType::KEYWORD_ELSE) {
+      ++m_token_index; // consume the 'else' keyword
+      NodeId else_branch = parse_statement();
+      return m_output.add_node(
+          if_token.loc, IfThenElseStatementNode{condition, then_branch, else_branch}
+      );
+    } else {
+      return m_output.add_node(if_token.loc, IfThenStatementNode{condition, then_branch});
+    }
+  }
+
+  NodeId parse_block_statement() {
+    auto left_brace_token = read_token_type(
+        TokenType::LEFT_BRACE, "Expected '{' at the beginning of block statement"
+    );
+    List<NodeId> stmts;
+    parse_statements(stmts, TokenType::RIGHT_BRACE);
+    read_token_type(TokenType::RIGHT_BRACE, "Expected '}' at the end of block statement");
+    return m_output.add_node(left_brace_token.loc, BlockStatementNode{std::move(stmts)});
   }
 
   NodeId parse_pre_increment_statement() {
@@ -382,7 +413,7 @@ public:
     } else if (next_token.type == TokenType::LEFT_BRACE) {
       return parse_brace_expression();
     } else if (next_token.type == TokenType::KEYWORD_IF) {
-      return parse_if_expression();
+      return parse_if_then_else_expression();
     } else if (next_token.type == TokenType::KEYWORD_TRY) {
       return parse_try_catch_expression();
     } else if (next_token.type == TokenType::KEYWORD_SWITCH) {
@@ -467,24 +498,19 @@ public:
     }
   }
 
-  NodeId parse_if_expression() {
+  NodeId parse_if_then_else_expression() {
     auto if_token = next(); // consume the 'if' keyword
     read_left_paren("Expected '(' after 'if'");
     NodeId condition = parse_expression();
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after condition in 'if' expression");
     NodeId then_branch = parse_expression();
-    Option<NodeId> else_branch;
-    if (peek().type == TokenType::KEYWORD_ELSE) {
-      ++m_token_index;
-      else_branch = parse_expression();
-    }
-    if (else_branch.has_value()) {
-      return m_output.add_node(
-          if_token.loc, IfThenElseExpressionNode{condition, then_branch, else_branch.value()}
-      );
-    } else {
-      return m_output.add_node(if_token.loc, IfThenExpressionNode{condition, then_branch});
-    }
+    read_token_type(
+        TokenType::KEYWORD_ELSE, "Expected 'else' after then-branch of 'if' expression"
+    );
+    NodeId else_branch = parse_expression();
+    return m_output.add_node(
+        if_token.loc, IfThenElseExpressionNode{condition, then_branch, else_branch}
+    );
   }
 
   NodeId parse_array_literal() {

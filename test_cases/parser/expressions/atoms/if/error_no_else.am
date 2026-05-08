@@ -1,0 +1,5 @@
+let w = if(x)y
+
+/* EXPECTED_OUTPUT:
+ERROR("Expected 'else' after then-branch of 'if' expression (at test_cases/parser/expressions/atoms/if/error_no_else.am:6:1)")
+*/

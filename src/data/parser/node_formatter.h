@@ -63,10 +63,15 @@ private:
     } else if (generic_node.type() == NodeType::ExpressionStatementNode) {
       const auto &node = generic_node.as_ExpressionStatementNode();
       print_node_field(out, "expr", node.expr, indent + 2);
-    } else if (generic_node.type() == NodeType::IfThenExpressionNode) {
-      const auto &node = generic_node.as_IfThenExpressionNode();
+    } else if (generic_node.type() == NodeType::IfThenStatementNode) {
+      const auto &node = generic_node.as_IfThenStatementNode();
       print_node_field_with_comma(out, "condition", node.condition, indent + 2);
       print_node_field(out, "then_branch", node.then_branch, indent + 2);
+    } else if (generic_node.type() == NodeType::IfThenElseStatementNode) {
+      const auto &node = generic_node.as_IfThenElseStatementNode();
+      print_node_field_with_comma(out, "condition", node.condition, indent + 2);
+      print_node_field_with_comma(out, "then_branch", node.then_branch, indent + 2);
+      print_node_field(out, "else_branch", node.else_branch, indent + 2);
     } else if (generic_node.type() == NodeType::IfThenElseExpressionNode) {
       const auto &node = generic_node.as_IfThenElseExpressionNode();
       print_node_field_with_comma(out, "condition", node.condition, indent + 2);
@@ -228,6 +233,9 @@ private:
     } else if (generic_node.type() == NodeType::PostDecrementStatementNode) {
       const auto &node = generic_node.as_PostDecrementStatementNode();
       print_node_field(out, "target", node.target, indent + 2);
+    } else if (generic_node.type() == NodeType::BlockStatementNode) {
+      const auto &node = generic_node.as_BlockStatementNode();
+      print_node_list_field(out, "stmts", node.stmts.data(), indent + 2);
     } else {
       throw RuntimeError("Unknown node type");
     }

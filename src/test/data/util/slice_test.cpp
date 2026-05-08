@@ -49,7 +49,8 @@ TEST_CASE("can construct from array") {
   CHECK(slice.size() == 14); // includes null terminator
   CHECK(String(slice) == "Hello, world!\0");
 
-  ConstSlice<char> slice2({'H', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l', 'd', '!'});
+  char data[] = {'H', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l', 'd', '!'};
+  ConstSlice<char> slice2(data);
   CHECK(slice2.size() == 13);
   CHECK(String(slice2) == "Hello, world!");
 }

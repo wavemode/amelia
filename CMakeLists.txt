@@ -18,6 +18,12 @@ target_compile_options(
     -Wno-error=unused-function
 )
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    message(STATUS "Enabling Sanitizers: Address and Undefined Behavior")
+    add_compile_options("-fsanitize=address,undefined" "-fno-omit-frame-pointer")
+    add_link_options("-fsanitize=address,undefined")
+endif()
+
 add_library(amelia_core
     ${SOURCES_SYSTEM}
     ${SOURCES_ACTION}

@@ -1,0 +1,19 @@
+if (x) y
+
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    IfThenStatementNode(
+      condition=IdentifierNode(
+        name=IDENTIFIER_NO_W(x)
+      ),
+      then_branch=ExpressionStatementNode(
+        expr=IdentifierNode(
+          name=IDENTIFIER(y)
+        )
+      )
+    )
+  ]
+)
+*/

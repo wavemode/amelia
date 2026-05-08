@@ -1,0 +1,22 @@
+{
+  f()
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    BlockStatementNode(
+      stmts=[
+        ExpressionStatementNode(
+          expr=FunctionCallExpressionNode(
+            callee=IdentifierNode(
+              name=IDENTIFIER(f)
+            ),
+            args=[]
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

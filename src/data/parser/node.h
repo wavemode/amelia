@@ -30,7 +30,7 @@ public:
 #undef X
 
   ~Node() {
-    destroy();
+    m_data.destroy(m_type);
   }
 
   Node(const Node &other)
@@ -54,7 +54,7 @@ public:
       if (m_type == other.m_type) {
         m_data.assign(m_type, other.m_data);
       } else {
-        destroy();
+        m_data.destroy(m_type);
         m_type = other.m_type;
         new (&m_data) NodeData(m_type, other.m_data);
       }
@@ -68,7 +68,7 @@ public:
       if (m_type == other.m_type) {
         m_data.assign(m_type, std::move(other.m_data));
       } else {
-        destroy();
+        m_data.destroy(m_type);
         m_type = other.m_type;
         new (&m_data) NodeData(m_type, std::move(other.m_data));
       }
@@ -129,23 +129,23 @@ private:
       }
     }
 
+    void destroy(NodeType type) noexcept {
+      switch (type) {
+#define X(NODE_TYPE)                                                                               \
+  case NodeType::NODE_TYPE:                                                                        \
+    data_##NODE_TYPE.~NODE_TYPE();                                                                 \
+    break;
+        NODE_TYPE_LIST
+#undef X
+      }
+    }
+
     ~NodeData() {}
   };
 
   Location m_loc;
   NodeType m_type;
   NodeData m_data;
-
-  void destroy() noexcept {
-    switch (m_type) {
-#define X(NODE_TYPE)                                                                               \
-  case NodeType::NODE_TYPE:                                                                        \
-    m_data.data_##NODE_TYPE.~NODE_TYPE();                                                          \
-    break;
-      NODE_TYPE_LIST
-#undef X
-    }
-  }
 };
 
 } // namespace amelia
