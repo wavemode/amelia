@@ -67,6 +67,8 @@ public:
       return parse_block_statement();
     } else if (token.type == TokenType::KEYWORD_IF) {
       result = parse_if_statement();
+    } else if (token.type == TokenType::KEYWORD_THROW) {
+      result = parse_throw_statement();
     } else {
       result = parse_expression_statement();
       auto next_token = peek();
@@ -79,6 +81,12 @@ public:
       }
     }
     return result;
+  }
+
+  NodeId parse_throw_statement() {
+    auto throw_token = next(); // consume the 'throw' keyword
+    NodeId expression = parse_expression();
+    return m_output.add_node(throw_token.loc, ThrowStatementNode{expression});
   }
 
   NodeId parse_if_statement() {

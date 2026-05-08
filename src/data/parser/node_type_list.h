@@ -280,6 +280,10 @@ struct BlockStatementNode {
   List<NodeId> stmts;
 };
 
+struct ThrowStatementNode {
+  NodeId expr;
+};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
@@ -338,6 +342,7 @@ struct BlockStatementNode {
   X(PostIncrementStatementNode)                                                                    \
   X(PreDecrementStatementNode)                                                                     \
   X(PostDecrementStatementNode)                                                                    \
-  X(BlockStatementNode)
+  X(BlockStatementNode)                                                                            \
+  X(ThrowStatementNode)
 
 } // namespace amelia

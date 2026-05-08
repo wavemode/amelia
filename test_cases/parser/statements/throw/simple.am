@@ -1,0 +1,13 @@
+throw x
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ThrowStatementNode(
+      expr=IdentifierNode(
+        name=IDENTIFIER(x)
+      )
+    )
+  ]
+)
+*/

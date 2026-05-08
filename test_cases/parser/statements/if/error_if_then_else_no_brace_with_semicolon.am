@@ -1,0 +1,9 @@
+if (x)
+  y();
+else
+  z();
+
+
+/* EXPECTED_OUTPUT:
+ERROR("Expected expression, got token KEYWORD_ELSE(else) (at test_cases/parser/statements/if/error_if_then_else_no_brace_with_semicolon.am:3:1)")
+*/

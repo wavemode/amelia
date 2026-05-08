@@ -236,6 +236,9 @@ private:
     } else if (generic_node.type() == NodeType::BlockStatementNode) {
       const auto &node = generic_node.as_BlockStatementNode();
       print_node_list_field(out, "stmts", node.stmts.data(), indent + 2);
+    } else if (generic_node.type() == NodeType::ThrowStatementNode) {
+      const auto &node = generic_node.as_ThrowStatementNode();
+      print_node_field(out, "expr", node.expr, indent + 2);
     } else {
       throw RuntimeError("Unknown node type");
     }
