@@ -13,6 +13,8 @@
 #include "data/lexer/lexer_context.h"
 #include "data/lexer/lexer_result.h"
 #include "data/lexer/token.h"
+#include "data/lexer/token_formatter.h"
+#include "data/parser/node_formatter.h"
 #include "data/parser/parser.h"
 #include "data/parser/parser_result.h"
 #include "data/source/source_location_error.h"
@@ -191,9 +193,10 @@ bool update_expected_output(
 void run_lexer_test_case(AbstractString &output, CompilerTestCase test_case) {
   LexerResult result;
   Lexer::tokenize(result, LexerContext{test_case.filename}, test_case.input);
+  TokenFormatter formatter(result);
   auto tokens = result.tokens();
   for (size_t token_id = 0; token_id < tokens.size(); ++token_id) {
-    result.format_token(output, token_id);
+    formatter.format_token(output, token_id);
     output.append("\n");
   }
 }
@@ -203,7 +206,8 @@ void run_parser_test_case(AbstractString &output, CompilerTestCase test_case) {
   Lexer::tokenize(lexer_result, LexerContext{test_case.filename}, test_case.input);
   ParserResult parser_result;
   NodeId root_node_id = Parser::parse_module(parser_result, lexer_result);
-  parser_result.format_node(output, lexer_result, root_node_id);
+  NodeFormatter node_formatter(parser_result, lexer_result);
+  node_formatter.format_node(output, root_node_id);
   output.append("\n");
 }
 

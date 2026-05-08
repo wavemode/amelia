@@ -2,6 +2,7 @@
 #include "prelude.h"
 
 #include "data/lexer/lexer_result.h"
+#include "data/lexer/token_formatter.h"
 #include "data/parser/parser_error.h"
 #include "data/parser/parser_result.h"
 
@@ -18,13 +19,13 @@ struct TokenWithId {
 class ParserState {
 public:
   ParserState(ParserResult &output, const LexerResult &input)
-      : m_output(output), m_input(input), m_token_index(0) {}
+      : m_output(output), m_input(input), m_token_index(0), m_token_formatter(input) {}
 
   NodeId parse_module() {
     List<NodeId> top_level_statements;
     auto start_token = peek();
     parse_statements(top_level_statements, TokenType::END_OF_FILE);
-    return m_output.add_ModuleNode(start_token.loc, ModuleNode{std::move(top_level_statements)});
+    return m_output.add_node(start_token.loc, ModuleNode{std::move(top_level_statements)});
   }
 
   void parse_statements(List<NodeId> &stmts, TokenType terminator) {
@@ -36,9 +37,9 @@ public:
       auto next_token = peek();
       stmts.push_back(parse_statement());
       if (stmts.size() > 1) {
-        auto prev_stmt_info = m_output.get_node_info(stmts[stmts.size() - 2]);
-        auto next_stmt_info = m_output.get_node_info(stmts[stmts.size() - 1]);
-        if (prev_stmt_info.location.line == next_stmt_info.location.line) {
+        auto prev_stmt = m_output.get_node(stmts[stmts.size() - 2]);
+        auto next_stmt = m_output.get_node(stmts[stmts.size() - 1]);
+        if (prev_stmt.location().line == next_stmt.location().line) {
           throw_parser_error(next_token.id, "Multiple statements on the same line are not allowed");
         }
       }
@@ -63,7 +64,7 @@ public:
         TokenType::ASSIGN, "Expected '=' after identifier in const statement"
     );
     NodeId expression = parse_expression();
-    return m_output.add_ConstStatementNode(const_token.loc, ConstStatementNode{target, expression});
+    return m_output.add_node(const_token.loc, ConstStatementNode{target, expression});
   }
 
   NodeId parse_let_statement() {
@@ -73,13 +74,13 @@ public:
         TokenType::ASSIGN, "Expected '=' after identifier in let statement"
     );
     NodeId expression = parse_expression();
-    return m_output.add_LetStatementNode(let_token.loc, LetStatementNode{target, expression});
+    return m_output.add_node(let_token.loc, LetStatementNode{target, expression});
   }
 
   NodeId parse_expression_statement() {
     auto expr_token = peek();
     NodeId expr = parse_expression();
-    return m_output.add_ExpressionStatementNode(expr_token.loc, ExpressionStatementNode{expr});
+    return m_output.add_node(expr_token.loc, ExpressionStatementNode{expr});
   }
 
   NodeId parse_expression() {
@@ -92,7 +93,7 @@ public:
     while (peek().type == TokenType::OR) {
       ++m_token_index; // consume the '||' operator
       NodeId right = parse_descend_expr_and();
-      left = m_output.add_OrExpressionNode(start_location, OrExpressionNode{left, right});
+      left = m_output.add_node(start_location, OrExpressionNode{left, right});
     }
     return left;
   }
@@ -103,7 +104,7 @@ public:
     while (peek().type == TokenType::AND) {
       ++m_token_index; // consume the '&&' operator
       NodeId right = parse_descend_expr_bitwise_or();
-      left = m_output.add_AndExpressionNode(start_location, AndExpressionNode{left, right});
+      left = m_output.add_node(start_location, AndExpressionNode{left, right});
     }
     return left;
   }
@@ -114,9 +115,7 @@ public:
     while (peek().type == TokenType::PIPE) {
       ++m_token_index; // consume the '|' operator
       NodeId right = parse_descend_expr_bitwise_xor();
-      left = m_output.add_BitwiseOrExpressionNode(
-          start_location, BitwiseOrExpressionNode{left, right}
-      );
+      left = m_output.add_node(start_location, BitwiseOrExpressionNode{left, right});
     }
     return left;
   }
@@ -127,9 +126,7 @@ public:
     while (peek().type == TokenType::CARET) {
       ++m_token_index; // consume the '^' operator
       NodeId right = parse_descend_expr_bitwise_and();
-      left = m_output.add_BitwiseXorExpressionNode(
-          start_location, BitwiseXorExpressionNode{left, right}
-      );
+      left = m_output.add_node(start_location, BitwiseXorExpressionNode{left, right});
     }
     return left;
   }
@@ -140,9 +137,7 @@ public:
     while (peek().type == TokenType::AMPERSAND) {
       ++m_token_index; // consume the '&' operator
       NodeId right = parse_descend_expr_eq_ne();
-      left = m_output.add_BitwiseAndExpressionNode(
-          start_location, BitwiseAndExpressionNode{left, right}
-      );
+      left = m_output.add_node(start_location, BitwiseAndExpressionNode{left, right});
     }
     return left;
   }
@@ -155,11 +150,9 @@ public:
       ++m_token_index; // consume the operator
       NodeId right = parse_descend_expr_gt_lt();
       if (next_token.type == TokenType::EQUAL) {
-        left = m_output.add_EqualsExpressionNode(start_location, EqualsExpressionNode{left, right});
+        left = m_output.add_node(start_location, EqualsExpressionNode{left, right});
       } else {
-        left = m_output.add_NotEqualsExpressionNode(
-            start_location, NotEqualsExpressionNode{left, right}
-        );
+        left = m_output.add_node(start_location, NotEqualsExpressionNode{left, right});
       }
       next_token = peek();
     }
@@ -176,19 +169,13 @@ public:
       ++m_token_index; // consume the operator
       NodeId right = parse_descend_expr_lshift_rshift();
       if (next_token.type == TokenType::GREATER) {
-        left = m_output.add_GreaterExpressionNode(
-            start_location, GreaterExpressionNode{left, right}
-        );
+        left = m_output.add_node(start_location, GreaterExpressionNode{left, right});
       } else if (next_token.type == TokenType::LESS) {
-        left = m_output.add_LessExpressionNode(start_location, LessExpressionNode{left, right});
+        left = m_output.add_node(start_location, LessExpressionNode{left, right});
       } else if (next_token.type == TokenType::GREATER_EQUAL) {
-        left = m_output.add_GreaterEqualsExpressionNode(
-            start_location, GreaterEqualsExpressionNode{left, right}
-        );
+        left = m_output.add_node(start_location, GreaterEqualsExpressionNode{left, right});
       } else {
-        left = m_output.add_LessEqualsExpressionNode(
-            start_location, LessEqualsExpressionNode{left, right}
-        );
+        left = m_output.add_node(start_location, LessEqualsExpressionNode{left, right});
       }
       next_token = peek();
     }
@@ -197,26 +184,22 @@ public:
 
   NodeId parse_descend_expr_lshift_rshift() {
     auto start_location = peek().loc;
-    NodeId left = parse_descend_expr_add_sub();
+    NodeId left = parse_descend_expr_add_node();
     auto next_token = peek();
     while (next_token.type == TokenType::LSHIFT || next_token.type == TokenType::RSHIFT) {
       ++m_token_index; // consume the operator
-      NodeId right = parse_descend_expr_add_sub();
+      NodeId right = parse_descend_expr_add_node();
       if (next_token.type == TokenType::LSHIFT) {
-        left = m_output.add_LeftShiftExpressionNode(
-            start_location, LeftShiftExpressionNode{left, right}
-        );
+        left = m_output.add_node(start_location, LeftShiftExpressionNode{left, right});
       } else {
-        left = m_output.add_RightShiftExpressionNode(
-            start_location, RightShiftExpressionNode{left, right}
-        );
+        left = m_output.add_node(start_location, RightShiftExpressionNode{left, right});
       }
       next_token = peek();
     }
     return left;
   }
 
-  NodeId parse_descend_expr_add_sub() {
+  NodeId parse_descend_expr_add_node() {
     auto start_location = peek().loc;
     NodeId left = parse_descend_expr_mul_div_mod();
     auto next_token = peek();
@@ -224,11 +207,9 @@ public:
       ++m_token_index; // consume the operator
       NodeId right = parse_descend_expr_mul_div_mod();
       if (next_token.type == TokenType::PLUS) {
-        left = m_output.add_AddExpressionNode(start_location, AddExpressionNode{left, right});
+        left = m_output.add_node(start_location, AddExpressionNode{left, right});
       } else {
-        left = m_output.add_SubtractExpressionNode(
-            start_location, SubtractExpressionNode{left, right}
-        );
+        left = m_output.add_node(start_location, SubtractExpressionNode{left, right});
       }
       next_token = peek();
     }
@@ -244,13 +225,11 @@ public:
       ++m_token_index; // consume the operator
       NodeId right = parse_descend_expr_await_ref();
       if (next_token.type == TokenType::STAR) {
-        left = m_output.add_MultiplyExpressionNode(
-            start_location, MultiplyExpressionNode{left, right}
-        );
+        left = m_output.add_node(start_location, MultiplyExpressionNode{left, right});
       } else if (next_token.type == TokenType::SLASH) {
-        left = m_output.add_DivideExpressionNode(start_location, DivideExpressionNode{left, right});
+        left = m_output.add_node(start_location, DivideExpressionNode{left, right});
       } else {
-        left = m_output.add_ModuloExpressionNode(start_location, ModuloExpressionNode{left, right});
+        left = m_output.add_node(start_location, ModuloExpressionNode{left, right});
       }
       next_token = peek();
     }
@@ -263,11 +242,11 @@ public:
     if (next_token.type == TokenType::KEYWORD_AWAIT) {
       ++m_token_index; // consume the 'await' keyword
       NodeId expr = parse_descend_expr_await_ref();
-      return m_output.add_AwaitExpressionNode(start_location, AwaitExpressionNode{expr});
+      return m_output.add_node(start_location, AwaitExpressionNode{expr});
     } else if (next_token.type == TokenType::AMPERSAND) {
       ++m_token_index; // consume the '&' operator
       NodeId expr = parse_descend_expr_await_ref();
-      return m_output.add_RefExpressionNode(start_location, RefExpressionNode{expr});
+      return m_output.add_node(start_location, RefExpressionNode{expr});
     }
     return parse_descend_pos_neg_deref_not_bitnot_ell();
   }
@@ -278,27 +257,27 @@ public:
     if (next_token.type == TokenType::PLUS) {
       ++m_token_index; // consume the '+' operator
       NodeId expr = parse_descend_pos_neg_deref_not_bitnot_ell();
-      return m_output.add_PositiveExpressionNode(start_location, PositiveExpressionNode{expr});
+      return m_output.add_node(start_location, PositiveExpressionNode{expr});
     } else if (next_token.type == TokenType::MINUS) {
       ++m_token_index; // consume the '-' operator
       NodeId expr = parse_descend_pos_neg_deref_not_bitnot_ell();
-      return m_output.add_NegativeExpressionNode(start_location, NegativeExpressionNode{expr});
+      return m_output.add_node(start_location, NegativeExpressionNode{expr});
     } else if (next_token.type == TokenType::TILDE) {
       ++m_token_index; // consume the '~' operator
       NodeId expr = parse_descend_pos_neg_deref_not_bitnot_ell();
-      return m_output.add_BitwiseNotExpressionNode(start_location, BitwiseNotExpressionNode{expr});
+      return m_output.add_node(start_location, BitwiseNotExpressionNode{expr});
     } else if (next_token.type == TokenType::STAR) {
       ++m_token_index; // consume the '*' operator
       NodeId expr = parse_descend_pos_neg_deref_not_bitnot_ell();
-      return m_output.add_DerefExpressionNode(start_location, DerefExpressionNode{expr});
+      return m_output.add_node(start_location, DerefExpressionNode{expr});
     } else if (next_token.type == TokenType::EXCLAM || next_token.type == TokenType::EXCLAM_NO_W) {
       ++m_token_index; // consume the '!' operator
       NodeId expr = parse_descend_pos_neg_deref_not_bitnot_ell();
-      return m_output.add_NotExpressionNode(start_location, NotExpressionNode{expr});
+      return m_output.add_node(start_location, NotExpressionNode{expr});
     } else if (next_token.type == TokenType::ELLIPSIS) {
       ++m_token_index; // consume the '...' operator
       NodeId expr = parse_descend_pos_neg_deref_not_bitnot_ell();
-      return m_output.add_EllipsisExpressionNode(start_location, EllipsisExpressionNode{expr});
+      return m_output.add_node(start_location, EllipsisExpressionNode{expr});
     }
     return parse_descend_expr_field_ix_funcall();
   }
@@ -317,12 +296,12 @@ public:
               "Expected identifier immediately after '.' in field access expression"
           );
         }
-        left = m_output.add_FieldAccessExpressionNode(
+        left = m_output.add_node(
             start_location, FieldAccessExpressionNode{left, parse_identifier()}
         );
       } else if (next_token.type == TokenType::NUMBER_FIELD) {
         m_token_index++; // consume the numeric field token
-        left = m_output.add_NumericFieldAccessExpressionNode(
+        left = m_output.add_node(
             start_location, NumericFieldAccessExpressionNode{left, next_token.id}
         );
       } else if (next_token.type == TokenType::LEFT_BRACKET_NO_W) {
@@ -331,9 +310,7 @@ public:
         read_token_type(
             TokenType::RIGHT_BRACKET, "Expected ']' after index expression in index access"
         );
-        left = m_output.add_IndexingExpressionNode(
-            start_location, IndexingExpressionNode{left, index_expr}
-        );
+        left = m_output.add_node(start_location, IndexingExpressionNode{left, index_expr});
       } else if (next_token.type == TokenType::LEFT_PAREN_NO_W) {
         ++m_token_index; // consume the '(' operator
         List<NodeId> args;
@@ -344,9 +321,7 @@ public:
           }
         }
         ++m_token_index; // consume the ')' operator
-        left = m_output.add_FunctionCallExpressionNode(
-            start_location, FunctionCallExpressionNode{left, std::move(args)}
-        );
+        left = m_output.add_node(start_location, FunctionCallExpressionNode{left, std::move(args)});
       } else {
         throw RuntimeError("unreachable");
       }
@@ -379,7 +354,7 @@ public:
       return parse_switch_expression();
     } else {
       String err("Expected expression, got token ");
-      m_input.format_token(err, m_token_index);
+      m_token_formatter.format_token(err, m_token_index);
       throw_parser_error_at_current_location(std::move(err));
     }
   }
@@ -395,13 +370,9 @@ public:
     }
     NodeId expr = parse_expression();
     if (name.has_value()) {
-      return m_output.add_NamedFunctionArgumentNode(
-          next_token.loc, NamedFunctionArgumentNode{name.value(), expr}
-      );
+      return m_output.add_node(next_token.loc, NamedFunctionArgumentNode{name.value(), expr});
     }
-    return m_output.add_PositionalFunctionArgumentNode(
-        next_token.loc, PositionalFunctionArgumentNode{expr}
-    );
+    return m_output.add_node(next_token.loc, PositionalFunctionArgumentNode{expr});
   }
 
   NodeId parse_switch_expression() {
@@ -415,9 +386,7 @@ public:
       clauses.push_back(parse_case_clause());
     }
     read_token_type(TokenType::RIGHT_BRACE, "Expected '}' to end switch expression body");
-    return m_output.add_SwitchExpressionNode(
-        switch_token.loc, SwitchExpressionNode{expr, std::move(clauses)}
-    );
+    return m_output.add_node(switch_token.loc, SwitchExpressionNode{expr, std::move(clauses)});
   }
 
   NodeId parse_case_clause() {
@@ -426,7 +395,7 @@ public:
     NodeId expr = parse_expression();
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after case clause condition");
     NodeId body = parse_expression();
-    return m_output.add_CaseClauseNode(case_token.loc, CaseClauseNode{expr, body});
+    return m_output.add_node(case_token.loc, CaseClauseNode{expr, body});
   }
 
   NodeId parse_try_catch_expression() {
@@ -436,9 +405,7 @@ public:
     while (peek().type == TokenType::KEYWORD_CATCH) {
       clauses.push_back(parse_catch_clause());
     }
-    return m_output.add_TryCatchExpressionNode(
-        try_token.loc, TryCatchExpressionNode{try_block, std::move(clauses)}
-    );
+    return m_output.add_node(try_token.loc, TryCatchExpressionNode{try_block, std::move(clauses)});
   }
 
   NodeId parse_catch_clause() {
@@ -457,11 +424,11 @@ public:
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after catch clause exception type");
     NodeId body = parse_expression();
     if (var.has_value()) {
-      return m_output.add_CatchClauseBindingNode(
+      return m_output.add_node(
           catch_token.loc, CatchClauseBindingNode{var.value(), exc_type, body}
       );
     } else {
-      return m_output.add_CatchClauseNode(catch_token.loc, CatchClauseNode{exc_type, body});
+      return m_output.add_node(catch_token.loc, CatchClauseNode{exc_type, body});
     }
   }
 
@@ -477,13 +444,11 @@ public:
       else_branch = parse_expression();
     }
     if (else_branch.has_value()) {
-      return m_output.add_IfThenElseExpressionNode(
+      return m_output.add_node(
           if_token.loc, IfThenElseExpressionNode{condition, then_branch, else_branch.value()}
       );
     } else {
-      return m_output.add_IfThenExpressionNode(
-          if_token.loc, IfThenExpressionNode{condition, then_branch}
-      );
+      return m_output.add_node(if_token.loc, IfThenExpressionNode{condition, then_branch});
     }
   }
 
@@ -492,7 +457,7 @@ public:
     List<NodeId> exprs;
     parse_comma_separated_expression_list(exprs, TokenType::RIGHT_BRACKET);
     ++m_token_index; // consume the right bracket
-    return m_output.add_ArrayLiteralNode(open_bracket.loc, ArrayLiteralNode{std::move(exprs)});
+    return m_output.add_node(open_bracket.loc, ArrayLiteralNode{std::move(exprs)});
   }
 
   NodeId parse_parenthesized_expression() {
@@ -500,9 +465,7 @@ public:
     List<NodeId> exprs;
     parse_comma_separated_expression_list(exprs, TokenType::RIGHT_PAREN);
     ++m_token_index; // consume the right paren
-    return m_output.add_ParenthesizedExpressionNode(
-        open_paren.loc, ParenthesizedExpressionNode{std::move(exprs)}
-    );
+    return m_output.add_node(open_paren.loc, ParenthesizedExpressionNode{std::move(exprs)});
   }
 
   NodeId parse_brace_expression() {
@@ -518,7 +481,7 @@ public:
     List<NodeId> stmts;
     parse_statements(stmts, TokenType::RIGHT_BRACE);
     ++m_token_index; // consume the right brace
-    return m_output.add_BlockExpressionNode(open_brace.loc, BlockExpressionNode{std::move(stmts)});
+    return m_output.add_node(open_brace.loc, BlockExpressionNode{std::move(stmts)});
   }
 
   NodeId parse_object_literal() {
@@ -530,15 +493,13 @@ public:
       auto field = expect_identifier("Expected field name immediately after dot in object literal");
       read_token_type(TokenType::ASSIGN, "Expected '=' after field name in object literal");
       NodeId value = parse_expression();
-      entries.push_back(
-          m_output.add_KeyValueEntryNode(field_token.loc, KeyValueEntryNode{field, value})
-      );
+      entries.push_back(m_output.add_node(field_token.loc, KeyValueEntryNode{field, value}));
       if (peek().type == TokenType::COMMA) {
         ++m_token_index; // consume the comma
       }
     }
     ++m_token_index; // consume the right brace
-    return m_output.add_ObjectLiteralNode(open_brace.loc, ObjectLiteralNode{std::move(entries)});
+    return m_output.add_node(open_brace.loc, ObjectLiteralNode{std::move(entries)});
   }
 
   void parse_comma_separated_expression_list(List<NodeId> &exprs, TokenType terminator) {
@@ -552,12 +513,12 @@ public:
 
   NodeId parse_string_literal() {
     auto token = next();
-    return m_output.add_StringLiteralNode(token.loc, StringLiteralNode{token.id});
+    return m_output.add_node(token.loc, StringLiteralNode{token.id});
   }
 
   NodeId parse_number_literal() {
     auto token = next();
-    return m_output.add_NumberLiteralNode(token.loc, NumberLiteralNode{token.id});
+    return m_output.add_node(token.loc, NumberLiteralNode{token.id});
   }
 
   NodeId expect_identifier(Text error_message) {
@@ -570,7 +531,7 @@ public:
 
   NodeId parse_identifier() {
     auto ident = next();
-    return m_output.add_IdentifierNode(ident.loc, IdentifierNode{ident.id});
+    return m_output.add_node(ident.loc, IdentifierNode{ident.id});
   }
 
 private:
@@ -631,6 +592,7 @@ private:
   ParserResult &m_output;
   const LexerResult &m_input;
   size_t m_token_index;
+  TokenFormatter m_token_formatter;
 };
 } // namespace
 
