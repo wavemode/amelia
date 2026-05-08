@@ -10,7 +10,9 @@ ModuleNode(
       expression=ObjectLiteralNode(
         entries=[
           KeyValueEntryNode(
-            key=IDENTIFIER_NO_W(y),
+            key=IdentifierNode(
+              name=IDENTIFIER_NO_W(y)
+            ),
             value=IdentifierNode(
               name=IDENTIFIER(z)
             )

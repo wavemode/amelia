@@ -49,7 +49,7 @@ struct BlockExpressionNode {
 };
 
 struct KeyValueEntryNode {
-  TokenId key;
+  NodeId key;
   NodeId value;
 };
 
@@ -233,6 +233,15 @@ struct NumericFieldAccessExpressionNode {
 struct IndexingExpressionNode {
   NodeId object;
   NodeId index;
+};
+
+struct PositionFunctionArgumentNode {
+  NodeId expr;
+};
+
+struct NamedFunctionArgumentNode {
+  NodeId name;
+  NodeId expr;
 };
 
 #define NODE_TYPE_LIST                                                                             \

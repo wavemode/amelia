@@ -62,7 +62,7 @@ private:
       print_node_list_field(out, lr, "entries", node.entries.data(), indent + 2);
     } else if (info.type == NodeType::KeyValueEntryNode) {
       const auto &node = m_KeyValueEntryNode_nodes.get(node_id);
-      print_token_field_with_comma(out, lr, "key", node.key, indent + 2);
+      print_node_field_with_comma(out, lr, "key", node.key, indent + 2);
       print_node_field(out, lr, "value", node.value, indent + 2);
     } else if (info.type == NodeType::ExpressionStatementNode) {
       const auto &node = m_ExpressionStatementNode_nodes.get(node_id);

@@ -492,13 +492,12 @@ public:
     List<NodeId> entries;
     while (peek().type != TokenType::RIGHT_BRACE) {
       read_dot("Expected dot before field name in object literal");
-      auto field_token = read_token_type(
-          TokenType::IDENTIFIER_NO_W, "Expected field name immediately after dot in object literal"
-      );
+      auto field_token = peek();
+      auto field = expect_identifier("Expected field name immediately after dot in object literal");
       read_token_type(TokenType::ASSIGN, "Expected '=' after field name in object literal");
       NodeId value = parse_expression();
       entries.push_back(
-          m_output.add_KeyValueEntryNode(field_token.loc, KeyValueEntryNode{field_token.id, value})
+          m_output.add_KeyValueEntryNode(field_token.loc, KeyValueEntryNode{field, value})
       );
       if (peek().type == TokenType::COMMA) {
         ++m_token_index; // consume the comma
@@ -525,6 +524,14 @@ public:
   NodeId parse_number_literal() {
     auto token = next();
     return m_output.add_NumberLiteralNode(token.loc, NumberLiteralNode{token.id});
+  }
+
+  NodeId expect_identifier(Text error_message) {
+    auto token = peek();
+    if (token.type != TokenType::IDENTIFIER && token.type != TokenType::IDENTIFIER_NO_W) {
+      throw_parser_error(token.id, String(error_message));
+    }
+    return parse_identifier();
   }
 
   NodeId parse_identifier() {
