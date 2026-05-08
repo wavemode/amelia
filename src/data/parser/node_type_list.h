@@ -249,6 +249,11 @@ struct FunctionCallExpressionNode {
   List<NodeId> args;
 };
 
+struct ScopeResolutionExpressionNode {
+  NodeId scope;
+  NodeId name;
+};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
@@ -300,6 +305,7 @@ struct FunctionCallExpressionNode {
   X(IndexingExpressionNode)                                                                        \
   X(PositionalFunctionArgumentNode)                                                                \
   X(NamedFunctionArgumentNode)                                                                     \
-  X(FunctionCallExpressionNode)
+  X(FunctionCallExpressionNode)                                                                    \
+  X(ScopeResolutionExpressionNode)
 
 } // namespace amelia

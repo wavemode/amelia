@@ -212,6 +212,10 @@ private:
       const auto &node = generic_node.as_FunctionCallExpressionNode();
       print_node_field_with_comma(out, "callee", node.callee, indent + 2);
       print_node_list_field(out, "args", node.args.data(), indent + 2);
+    } else if (generic_node.type() == NodeType::ScopeResolutionExpressionNode) {
+      const auto &node = generic_node.as_ScopeResolutionExpressionNode();
+      print_node_field_with_comma(out, "scope", node.scope, indent + 2);
+      print_node_field(out, "name", node.name, indent + 2);
     } else {
       throw RuntimeError("Unknown node type");
     }

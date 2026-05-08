@@ -333,6 +333,9 @@ public:
   NodeId parse_atom() {
     auto next_token = peek();
     if (next_token.type == TokenType::IDENTIFIER || next_token.type == TokenType::IDENTIFIER_NO_W) {
+      if (peek(1).type == TokenType::DOUBLE_COLON_NO_W) {
+        return parse_scope_resolution();
+      }
       return parse_identifier();
     } else if (next_token.type == TokenType::STRING_LITERAL) {
       return parse_string_literal();
@@ -359,20 +362,20 @@ public:
     }
   }
 
-  NodeId parse_function_call_argument() {
-    Option<NodeId> name;
-    auto next_token = peek();
-    if ((next_token.type == TokenType::IDENTIFIER || next_token.type == TokenType::IDENTIFIER_NO_W
-        ) &&
-        peek(1).type == TokenType::ASSIGN) {
-      name = parse_identifier();
-      ++m_token_index; // consume the '=' token
+  NodeId parse_scope_resolution() {
+    auto start_location = peek().loc;
+    auto left = parse_identifier();
+    while (peek().type == TokenType::DOUBLE_COLON_NO_W) {
+      m_token_index++; // consume the '::' operator
+      if (peek().type != TokenType::IDENTIFIER_NO_W) {
+        throw_parser_error_at_current_location(
+            "Expected identifier immediately after '::' in scope resolution expression"
+        );
+      }
+      auto name = parse_identifier();
+      left = m_output.add_node(start_location, ScopeResolutionExpressionNode{left, name});
     }
-    NodeId expr = parse_expression();
-    if (name.has_value()) {
-      return m_output.add_node(next_token.loc, NamedFunctionArgumentNode{name.value(), expr});
-    }
-    return m_output.add_node(next_token.loc, PositionalFunctionArgumentNode{expr});
+    return left;
   }
 
   NodeId parse_switch_expression() {
@@ -532,6 +535,22 @@ public:
   NodeId parse_identifier() {
     auto ident = next();
     return m_output.add_node(ident.loc, IdentifierNode{ident.id});
+  }
+
+  NodeId parse_function_call_argument() {
+    Option<NodeId> name;
+    auto next_token = peek();
+    if ((next_token.type == TokenType::IDENTIFIER || next_token.type == TokenType::IDENTIFIER_NO_W
+        ) &&
+        peek(1).type == TokenType::ASSIGN) {
+      name = parse_identifier();
+      ++m_token_index; // consume the '=' token
+    }
+    NodeId expr = parse_expression();
+    if (name.has_value()) {
+      return m_output.add_node(next_token.loc, NamedFunctionArgumentNode{name.value(), expr});
+    }
+    return m_output.add_node(next_token.loc, PositionalFunctionArgumentNode{expr});
   }
 
 private:
