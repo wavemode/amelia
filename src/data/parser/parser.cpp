@@ -300,14 +300,14 @@ public:
       NodeId expr = parse_descend_pos_neg_deref_not_bitnot_ell();
       return m_output.add_EllipsisExpressionNode(start_location, EllipsisExpressionNode{expr});
     }
-    return parse_descend_expr_field_access();
+    return parse_descend_expr_field_ix();
   }
 
-  NodeId parse_descend_expr_field_access() {
+  NodeId parse_descend_expr_field_ix() {
     auto start_location = peek().loc;
     auto left = parse_atom();
     auto next_token = peek();
-    while (next_token.type == TokenType::DOT_NO_W || token_is_number_field(next_token)) {
+    while (next_token.type == TokenType::DOT_NO_W || next_token.type == TokenType::NUMBER_FIELD) {
       if (next_token.type == TokenType::DOT_NO_W) {
         ++m_token_index; // consume the '.' operator
         if (peek().type != TokenType::IDENTIFIER_NO_W) {
@@ -335,7 +335,7 @@ public:
       return parse_identifier();
     } else if (next_token.type == TokenType::STRING_LITERAL) {
       return parse_string_literal();
-    } else if (next_token.type == TokenType::NUMBER || next_token.type == TokenType::NUMBER_NO_W) {
+    } else if (next_token.type == TokenType::NUMBER || next_token.type == TokenType::NUMBER_FIELD) {
       return parse_number_literal();
     } else if (next_token.type == TokenType::LEFT_PAREN ||
                next_token.type == TokenType::LEFT_PAREN_NO_W) {
@@ -477,7 +477,7 @@ public:
           m_output.add_KeyValueEntryNode(field_token.loc, KeyValueEntryNode{field_token.id, value})
       );
       if (peek().type == TokenType::COMMA) {
-        ++m_token_index; // consume the comma and continue parsing entries
+        ++m_token_index; // consume the comma
       }
     }
     ++m_token_index; // consume the right brace
@@ -509,21 +509,6 @@ public:
   }
 
 private:
-  bool token_is_number_field(TokenWithId token) {
-    // number must have no whitespace before it in the source
-    if (token.type != TokenType::NUMBER_NO_W) {
-      return false;
-    }
-
-    auto lit = m_input.get_number_literal(token.id);
-    return (
-        // number must have the form `.1` (only a decimal point and some digits after)
-        lit.base_prefix.size() == 0 && lit.exponent_digits.size() == 0 &&
-        lit.exponent_sign.size() == 0 && lit.exponent_prefix.size() == 0 &&
-        lit.integer_digits.size() == 0 && lit.has_decimal_point && lit.fractional_digits.size() > 0
-    );
-  }
-
   TokenWithId read_dot(Text error_message) {
     auto token = peek();
     if (token.type != TokenType::DOT && token.type != TokenType::DOT_NO_W) {

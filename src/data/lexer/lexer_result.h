@@ -101,7 +101,7 @@ struct LexerResult {
         }
       }
       out.append('\"');
-    } else if (token.type == TokenType::NUMBER || token.type == TokenType::NUMBER_NO_W) {
+    } else if (token.type == TokenType::NUMBER || token.type == TokenType::NUMBER_FIELD) {
       auto lit = get_number_literal(token_id);
       out.append(lit.base_prefix);
       out.append(lit.integer_digits);

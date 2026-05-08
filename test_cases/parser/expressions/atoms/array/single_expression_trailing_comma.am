@@ -11,7 +11,7 @@ ModuleNode(
       expression=ArrayLiteralNode(
         exprs=[
           NumberLiteralNode(
-            value=NUMBER_NO_W(5)
+            value=NUMBER(5)
           )
         ]
       )

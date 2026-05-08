@@ -110,7 +110,7 @@
   X(SEMICOLON)                                                                                     \
   X(COMMA)                                                                                         \
   X(NUMBER)                                                                                        \
-  X(NUMBER_NO_W)                                                                                   \
+  X(NUMBER_FIELD)                                                                                  \
   X(IDENTIFIER)                                                                                    \
   X(IDENTIFIER_NO_W)                                                                               \
   X(DOUBLE_COLON_NO_W)                                                                             \

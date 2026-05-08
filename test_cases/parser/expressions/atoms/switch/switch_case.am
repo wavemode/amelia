@@ -17,7 +17,7 @@ ModuleNode(
         clauses=[
           CaseClauseNode(
             expr=NumberLiteralNode(
-              value=NUMBER_NO_W(1)
+              value=NUMBER(1)
             ),
             body=NumberLiteralNode(
               value=NUMBER(2)
@@ -25,7 +25,7 @@ ModuleNode(
           ),
           CaseClauseNode(
             expr=NumberLiteralNode(
-              value=NUMBER_NO_W(3)
+              value=NUMBER(3)
             ),
             body=NumberLiteralNode(
               value=NUMBER(4)

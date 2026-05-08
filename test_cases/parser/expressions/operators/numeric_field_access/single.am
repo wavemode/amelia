@@ -11,7 +11,7 @@ ModuleNode(
         object=IdentifierNode(
           name=IDENTIFIER(y)
         ),
-        field=NUMBER_NO_W(.0)
+        field=NUMBER_FIELD(.0)
       )
     )
   ]

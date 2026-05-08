@@ -12,9 +12,9 @@ ModuleNode(
           object=IdentifierNode(
             name=IDENTIFIER(x)
           ),
-          field=NUMBER_NO_W(.0)
+          field=NUMBER_FIELD(.0)
         ),
-        field=NUMBER_NO_W(.1)
+        field=NUMBER_FIELD(.1)
       )
     )
   ]

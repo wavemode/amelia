@@ -842,10 +842,13 @@ public:
     }
 
     size_t token_id;
-    if (previous_char_was_whitespace()) {
-      token_id = emit_token(TokenType::NUMBER, start_location);
+    if (!previous_char_was_whitespace() && result.base_prefix.size() == 0 &&
+        result.exponent_digits.size() == 0 && result.exponent_sign.size() == 0 &&
+        result.exponent_prefix.size() == 0 && result.integer_digits.size() == 0 &&
+        result.has_decimal_point && result.fractional_digits.size() > 0) {
+      token_id = emit_token(TokenType::NUMBER_FIELD, start_location);
     } else {
-      token_id = emit_token(TokenType::NUMBER_NO_W, start_location);
+      token_id = emit_token(TokenType::NUMBER, start_location);
     }
     m_result.add_number_literal(token_id, result);
   }
