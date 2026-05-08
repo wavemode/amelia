@@ -307,7 +307,8 @@ public:
     auto start_location = peek().loc;
     auto left = parse_atom();
     auto next_token = peek();
-    while (next_token.type == TokenType::DOT_NO_W || next_token.type == TokenType::NUMBER_FIELD) {
+    while (next_token.type == TokenType::DOT_NO_W || next_token.type == TokenType::NUMBER_FIELD ||
+           next_token.type == TokenType::LEFT_BRACKET_NO_W) {
       if (next_token.type == TokenType::DOT_NO_W) {
         ++m_token_index; // consume the '.' operator
         if (peek().type != TokenType::IDENTIFIER_NO_W) {
@@ -318,11 +319,22 @@ public:
         left = m_output.add_FieldAccessExpressionNode(
             start_location, FieldAccessExpressionNode{left, parse_identifier()}
         );
-      } else {
+      } else if (next_token.type == TokenType::NUMBER_FIELD) {
         m_token_index++; // consume the numeric field token
         left = m_output.add_NumericFieldAccessExpressionNode(
             start_location, NumericFieldAccessExpressionNode{left, next_token.id}
         );
+      } else if (next_token.type == TokenType::LEFT_BRACKET_NO_W) {
+        ++m_token_index; // consume the '[' operator
+        NodeId index_expr = parse_expression();
+        read_token_type(
+            TokenType::RIGHT_BRACKET, "Expected ']' after index expression in index access"
+        );
+        left = m_output.add_IndexingExpressionNode(
+            start_location, IndexingExpressionNode{left, index_expr}
+        );
+      } else {
+        throw RuntimeError("unreachable");
       }
       next_token = peek();
     }

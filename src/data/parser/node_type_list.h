@@ -220,6 +220,11 @@ struct NumericFieldAccessExpressionNode {
   TokenId field;
 };
 
+struct IndexingExpressionNode {
+  NodeId object;
+  NodeId index;
+};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
@@ -265,6 +270,7 @@ struct NumericFieldAccessExpressionNode {
   X(NegativeExpressionNode)                                                                        \
   X(EllipsisExpressionNode)                                                                        \
   X(FieldAccessExpressionNode)                                                                     \
-  X(NumericFieldAccessExpressionNode)
+  X(NumericFieldAccessExpressionNode)                                                              \
+  X(IndexingExpressionNode)
 
 } // namespace amelia

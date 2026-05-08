@@ -1,0 +1,21 @@
+let x = y[z]
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetStatementNode(
+      target=IdentifierNode(
+        name=IDENTIFIER(x)
+      ),
+      expression=IndexingExpressionNode(
+        object=IdentifierNode(
+          name=IDENTIFIER(y)
+        ),
+        index=IdentifierNode(
+          name=IDENTIFIER_NO_W(z)
+        )
+      )
+    )
+  ]
+)
+*/

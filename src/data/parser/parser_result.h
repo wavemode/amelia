@@ -197,6 +197,10 @@ private:
       const auto &node = m_NumericFieldAccessExpressionNode_nodes.get(node_id);
       print_node_field_with_comma(out, lr, "object", node.object, indent + 2);
       print_token_field(out, lr, "field", node.field, indent + 2);
+    } else if (info.type == NodeType::IndexingExpressionNode) {
+      const auto &node = m_IndexingExpressionNode_nodes.get(node_id);
+      print_node_field_with_comma(out, lr, "object", node.object, indent + 2);
+      print_node_field(out, lr, "index", node.index, indent + 2);
     } else {
       throw RuntimeError("Unknown node type");
     }

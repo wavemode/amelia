@@ -1,0 +1,26 @@
+let w = x[y][z]
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetStatementNode(
+      target=IdentifierNode(
+        name=IDENTIFIER(w)
+      ),
+      expression=IndexingExpressionNode(
+        object=IndexingExpressionNode(
+          object=IdentifierNode(
+            name=IDENTIFIER(x)
+          ),
+          index=IdentifierNode(
+            name=IDENTIFIER_NO_W(y)
+          )
+        ),
+        index=IdentifierNode(
+          name=IDENTIFIER_NO_W(z)
+        )
+      )
+    )
+  ]
+)
+*/
