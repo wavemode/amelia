@@ -216,6 +216,18 @@ private:
       const auto &node = generic_node.as_ScopeResolutionExpressionNode();
       print_node_field_with_comma(out, "scope", node.scope, indent + 2);
       print_node_field(out, "name", node.name, indent + 2);
+    } else if (generic_node.type() == NodeType::PreIncrementStatementNode) {
+      const auto &node = generic_node.as_PreIncrementStatementNode();
+      print_node_field(out, "target", node.target, indent + 2);
+    } else if (generic_node.type() == NodeType::PostIncrementStatementNode) {
+      const auto &node = generic_node.as_PostIncrementStatementNode();
+      print_node_field(out, "target", node.target, indent + 2);
+    } else if (generic_node.type() == NodeType::PreDecrementStatementNode) {
+      const auto &node = generic_node.as_PreDecrementStatementNode();
+      print_node_field(out, "target", node.target, indent + 2);
+    } else if (generic_node.type() == NodeType::PostDecrementStatementNode) {
+      const auto &node = generic_node.as_PostDecrementStatementNode();
+      print_node_field(out, "target", node.target, indent + 2);
     } else {
       throw RuntimeError("Unknown node type");
     }

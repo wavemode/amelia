@@ -564,6 +564,9 @@ public:
     if (next_cp == '=') {
       next();
       emit_token(TokenType::MINUS_EQUAL, start_location);
+    } else if (next_cp == '-') {
+      next();
+      emit_token(TokenType::DOUBLE_MINUS, start_location);
     } else if (next_cp == '>') {
       next();
       emit_token(TokenType::ARROW, start_location);
@@ -574,9 +577,13 @@ public:
 
   void read_plus(Location start_location) {
     next();
-    if (peek() == '=') {
+    auto next_cp = peek();
+    if (next_cp == '=') {
       next();
       emit_token(TokenType::PLUS_EQUAL, start_location);
+    } else if (next_cp == '+') {
+      next();
+      emit_token(TokenType::DOUBLE_PLUS, start_location);
     } else {
       emit_token(TokenType::PLUS, start_location);
     }

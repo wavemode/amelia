@@ -1,7 +1,9 @@
 =
 +
+++
 +=
 -
+--
 -=
 ->
 *
@@ -39,8 +41,10 @@
 /* EXPECTED_OUTPUT:
 ASSIGN(=)
 PLUS(+)
+DOUBLE_PLUS(++)
 PLUS_EQUAL(+=)
 MINUS(-)
+DOUBLE_MINUS(--)
 MINUS_EQUAL(-=)
 ARROW(->)
 STAR(*)

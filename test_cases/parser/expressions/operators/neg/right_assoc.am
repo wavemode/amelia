@@ -1,4 +1,4 @@
-let x = --y
+let x = - -y
 
 /* EXPECTED_OUTPUT:
 ModuleNode(

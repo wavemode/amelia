@@ -29,20 +29,25 @@ public:
   }
 
   void parse_statements(List<NodeId> &stmts, TokenType terminator) {
+    bool saw_semicolon = false;
     while (peek().type != terminator) {
       if (peek().type == TokenType::SEMICOLON) {
         ++m_token_index;
+        saw_semicolon = true;
         continue;
       }
       auto next_token = peek();
       stmts.push_back(parse_statement());
-      if (stmts.size() > 1) {
+      if (!saw_semicolon && stmts.size() > 1) {
         auto prev_stmt = m_output.get_node(stmts[stmts.size() - 2]);
         auto next_stmt = m_output.get_node(stmts[stmts.size() - 1]);
         if (prev_stmt.location().line == next_stmt.location().line) {
-          throw_parser_error(next_token.id, "Multiple statements on the same line are not allowed");
+          throw_parser_error(
+              next_token.id, "Multiple statements on the same line must be separated by a semicolon"
+          );
         }
       }
+      saw_semicolon = false;
     }
   }
 
@@ -52,9 +57,25 @@ public:
       return parse_let_statement();
     } else if (token.type == TokenType::KEYWORD_CONST) {
       return parse_const_statement();
+    } else if (token.type == TokenType::DOUBLE_PLUS) {
+      return parse_pre_increment_statement();
+    } else if (token.type == TokenType::DOUBLE_MINUS) {
+      return parse_pre_decrement_statement();
     } else {
       return parse_expression_statement();
     }
+  }
+
+  NodeId parse_pre_increment_statement() {
+    auto token = next(); // consume the '++' operator
+    NodeId operand = parse_expression();
+    return m_output.add_node(token.loc, PreIncrementStatementNode{operand});
+  }
+
+  NodeId parse_pre_decrement_statement() {
+    auto token = next(); // consume the '--' operator
+    NodeId operand = parse_expression();
+    return m_output.add_node(token.loc, PreDecrementStatementNode{operand});
   }
 
   NodeId parse_const_statement() {

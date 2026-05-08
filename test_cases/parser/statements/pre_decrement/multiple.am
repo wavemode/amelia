@@ -1,0 +1,19 @@
+--x
+--y
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    PreDecrementStatementNode(
+      target=IdentifierNode(
+        name=IDENTIFIER_NO_W(x)
+      )
+    ),
+    PreDecrementStatementNode(
+      target=IdentifierNode(
+        name=IDENTIFIER_NO_W(y)
+      )
+    )
+  ]
+)
+*/

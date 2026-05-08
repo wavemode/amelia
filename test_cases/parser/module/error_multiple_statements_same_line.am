@@ -1,5 +1,5 @@
 let x = y const a = b
 
 /* EXPECTED_OUTPUT:
-ERROR("Multiple statements on the same line are not allowed (at test_cases/parser/module/error_multiple_statements_same_line.am:1:11)")
+ERROR("Multiple statements on the same line must be separated by a semicolon (at test_cases/parser/module/error_multiple_statements_same_line.am:1:11)")
 */

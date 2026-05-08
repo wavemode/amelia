@@ -1,5 +1,4 @@
-;;;let x = y;;
-const a = b;;;
+;;;let x = y; const a = b;;;
 
 /* EXPECTED_OUTPUT:
 ModuleNode(

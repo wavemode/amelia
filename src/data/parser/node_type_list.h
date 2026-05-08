@@ -28,6 +28,22 @@ struct ConstStatementNode {
   NodeId expression;
 };
 
+struct PreIncrementStatementNode {
+  NodeId target;
+};
+
+struct PostIncrementStatementNode {
+  NodeId target;
+};
+
+struct PreDecrementStatementNode {
+  NodeId target;
+};
+
+struct PostDecrementStatementNode {
+  NodeId target;
+};
+
 struct StringLiteralNode {
   TokenId value;
 };
@@ -306,6 +322,10 @@ struct ScopeResolutionExpressionNode {
   X(PositionalFunctionArgumentNode)                                                                \
   X(NamedFunctionArgumentNode)                                                                     \
   X(FunctionCallExpressionNode)                                                                    \
-  X(ScopeResolutionExpressionNode)
+  X(ScopeResolutionExpressionNode)                                                                 \
+  X(PreIncrementStatementNode)                                                                     \
+  X(PostIncrementStatementNode)                                                                    \
+  X(PreDecrementStatementNode)                                                                     \
+  X(PostDecrementStatementNode)
 
 } // namespace amelia

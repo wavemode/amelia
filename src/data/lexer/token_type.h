@@ -86,7 +86,9 @@
   X(EXCLAM)                                                                                        \
   X(NOT_EQUAL)                                                                                     \
   X(PLUS)                                                                                          \
+  X(DOUBLE_PLUS)                                                                                   \
   X(MINUS)                                                                                         \
+  X(DOUBLE_MINUS)                                                                                  \
   X(STAR)                                                                                          \
   X(SLASH)                                                                                         \
   X(AND)                                                                                           \
