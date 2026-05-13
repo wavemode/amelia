@@ -284,6 +284,84 @@ struct ThrowStatementNode {
   NodeId expr;
 };
 
+struct OperatorIdentAddNode {};
+
+struct OperatorIdentSubNode {};
+
+struct OperatorIdentStarNode {};
+
+struct OperatorIdentDivNode {};
+
+struct OperatorIdentModNode {};
+
+struct OperatorIdentIncNode {};
+
+struct OperatorIdentDecNode {};
+
+struct OperatorIdentEqNode {};
+
+struct OperatorIdentNeqNode {};
+
+struct OperatorIdentGtNode {};
+
+struct OperatorIdentLtNode {};
+
+struct OperatorIdentGteNode {};
+
+struct OperatorIdentLteNode {};
+
+struct OperatorIdentNotNode {};
+
+struct OperatorIdentAndNode {};
+
+struct OperatorIdentOrNode {};
+
+struct OperatorIdentBitwiseNotNode {};
+
+struct OperatorIdentBitwiseAndNode {};
+
+struct OperatorIdentBitwiseOrNode {};
+
+struct OperatorIdentBitwiseXorNode {};
+
+struct OperatorIdentLShiftNode {};
+
+struct OperatorIdentRShiftNode {};
+
+struct OperatorIdentAssignNode {};
+
+struct OperatorIdentAddAssignNode {};
+
+struct OperatorIdentSubAssignNode {};
+
+struct OperatorIdentMulAssignNode {};
+
+struct OperatorIdentDivAssignNode {};
+
+struct OperatorIdentModAssignNode {};
+
+struct OperatorIdentBitwiseAndAssignNode {};
+
+struct OperatorIdentBitwiseOrAssignNode {};
+
+struct OperatorIdentBitwiseXorAssignNode {};
+
+struct OperatorIdentLShiftAssignNode {};
+
+struct OperatorIdentRShiftAssignNode {};
+
+struct OperatorIdentIxNode {};
+
+struct OperatorIdentFuncallNode {};
+
+struct OperatorIdentAsNode {
+  NodeId type;
+};
+
+struct OperatorIdentifierNode {
+  NodeId operator_node;
+};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
@@ -343,6 +421,43 @@ struct ThrowStatementNode {
   X(PreDecrementStatementNode)                                                                     \
   X(PostDecrementStatementNode)                                                                    \
   X(BlockStatementNode)                                                                            \
-  X(ThrowStatementNode)
+  X(ThrowStatementNode)                                                                            \
+  X(OperatorIdentAddNode)                                                                          \
+  X(OperatorIdentSubNode)                                                                          \
+  X(OperatorIdentStarNode)                                                                         \
+  X(OperatorIdentDivNode)                                                                          \
+  X(OperatorIdentModNode)                                                                          \
+  X(OperatorIdentIncNode)                                                                          \
+  X(OperatorIdentDecNode)                                                                          \
+  X(OperatorIdentEqNode)                                                                           \
+  X(OperatorIdentNeqNode)                                                                          \
+  X(OperatorIdentGtNode)                                                                           \
+  X(OperatorIdentLtNode)                                                                           \
+  X(OperatorIdentGteNode)                                                                          \
+  X(OperatorIdentLteNode)                                                                          \
+  X(OperatorIdentNotNode)                                                                          \
+  X(OperatorIdentAndNode)                                                                          \
+  X(OperatorIdentOrNode)                                                                           \
+  X(OperatorIdentBitwiseNotNode)                                                                   \
+  X(OperatorIdentBitwiseAndNode)                                                                   \
+  X(OperatorIdentBitwiseOrNode)                                                                    \
+  X(OperatorIdentBitwiseXorNode)                                                                   \
+  X(OperatorIdentLShiftNode)                                                                       \
+  X(OperatorIdentRShiftNode)                                                                       \
+  X(OperatorIdentAssignNode)                                                                       \
+  X(OperatorIdentAddAssignNode)                                                                    \
+  X(OperatorIdentSubAssignNode)                                                                    \
+  X(OperatorIdentMulAssignNode)                                                                    \
+  X(OperatorIdentDivAssignNode)                                                                    \
+  X(OperatorIdentModAssignNode)                                                                    \
+  X(OperatorIdentBitwiseAndAssignNode)                                                             \
+  X(OperatorIdentBitwiseOrAssignNode)                                                              \
+  X(OperatorIdentBitwiseXorAssignNode)                                                             \
+  X(OperatorIdentLShiftAssignNode)                                                                 \
+  X(OperatorIdentRShiftAssignNode)                                                                 \
+  X(OperatorIdentIxNode)                                                                           \
+  X(OperatorIdentFuncallNode)                                                                      \
+  X(OperatorIdentAsNode)                                                                           \
+  X(OperatorIdentifierNode)
 
 } // namespace amelia

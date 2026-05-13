@@ -1,0 +1,13 @@
+a
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ExpressionStatementNode(
+      expr=IdentifierNode(
+        name=IDENTIFIER(a)
+      )
+    )
+  ]
+)
+*/

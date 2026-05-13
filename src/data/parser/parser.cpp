@@ -362,7 +362,8 @@ public:
            next_token.type == TokenType::LEFT_PAREN_NO_W) {
       if (next_token.type == TokenType::DOT_NO_W) {
         ++m_token_index; // consume the '.' operator
-        if (peek().type != TokenType::IDENTIFIER_NO_W) {
+        auto next_type = peek().type;
+        if (next_type != TokenType::IDENTIFIER_NO_W && next_type != TokenType::KEYWORD_OPERATOR) {
           throw_parser_error_at_current_location(
               "Expected identifier immediately after '.' in field access expression"
           );
@@ -404,9 +405,6 @@ public:
   NodeId parse_atom() {
     auto next_token = peek();
     if (next_token.type == TokenType::IDENTIFIER || next_token.type == TokenType::IDENTIFIER_NO_W) {
-      if (peek(1).type == TokenType::DOUBLE_COLON_NO_W) {
-        return parse_scope_resolution();
-      }
       return parse_identifier();
     } else if (next_token.type == TokenType::STRING_LITERAL) {
       return parse_string_literal();
@@ -433,9 +431,140 @@ public:
     }
   }
 
+  NodeId parse_operator_ident() {
+    auto start_location = next().loc; // consume the 'operator' token
+    NodeId operator_node;
+    switch (next().type) {
+    case TokenType::PLUS:
+      operator_node = m_output.add_node(start_location, OperatorIdentAddNode{});
+      break;
+    case TokenType::MINUS:
+      operator_node = m_output.add_node(start_location, OperatorIdentSubNode{});
+      break;
+    case TokenType::STAR:
+      operator_node = m_output.add_node(start_location, OperatorIdentStarNode{});
+      break;
+    case TokenType::SLASH:
+      operator_node = m_output.add_node(start_location, OperatorIdentDivNode{});
+      break;
+    case TokenType::PERCENT:
+      operator_node = m_output.add_node(start_location, OperatorIdentModNode{});
+      break;
+    case TokenType::DOUBLE_PLUS:
+    case TokenType::DOUBLE_PLUS_NO_W:
+      operator_node = m_output.add_node(start_location, OperatorIdentIncNode{});
+      break;
+    case TokenType::DOUBLE_MINUS:
+    case TokenType::DOUBLE_MINUS_NO_W:
+      operator_node = m_output.add_node(start_location, OperatorIdentDecNode{});
+      break;
+    case TokenType::EQUAL:
+      operator_node = m_output.add_node(start_location, OperatorIdentEqNode{});
+      break;
+    case TokenType::NOT_EQUAL:
+      operator_node = m_output.add_node(start_location, OperatorIdentNeqNode{});
+      break;
+    case TokenType::GREATER:
+      operator_node = m_output.add_node(start_location, OperatorIdentGtNode{});
+      break;
+    case TokenType::LESS:
+      operator_node = m_output.add_node(start_location, OperatorIdentLtNode{});
+      break;
+    case TokenType::GREATER_EQUAL:
+      operator_node = m_output.add_node(start_location, OperatorIdentGteNode{});
+      break;
+    case TokenType::LESS_EQUAL:
+      operator_node = m_output.add_node(start_location, OperatorIdentLteNode{});
+      break;
+    case TokenType::EXCLAM:
+    case TokenType::EXCLAM_NO_W:
+      operator_node = m_output.add_node(start_location, OperatorIdentNotNode{});
+      break;
+    case TokenType::AND:
+      operator_node = m_output.add_node(start_location, OperatorIdentAndNode{});
+      break;
+    case TokenType::OR:
+      operator_node = m_output.add_node(start_location, OperatorIdentOrNode{});
+      break;
+    case TokenType::TILDE:
+      operator_node = m_output.add_node(start_location, OperatorIdentBitwiseNotNode{});
+      break;
+    case TokenType::AMPERSAND:
+      operator_node = m_output.add_node(start_location, OperatorIdentBitwiseAndNode{});
+      break;
+    case TokenType::PIPE:
+      operator_node = m_output.add_node(start_location, OperatorIdentBitwiseOrNode{});
+      break;
+    case TokenType::CARET:
+      operator_node = m_output.add_node(start_location, OperatorIdentBitwiseXorNode{});
+      break;
+    case TokenType::LSHIFT:
+      operator_node = m_output.add_node(start_location, OperatorIdentLShiftNode{});
+      break;
+    case TokenType::RSHIFT:
+      operator_node = m_output.add_node(start_location, OperatorIdentRShiftNode{});
+      break;
+    case TokenType::ASSIGN:
+      operator_node = m_output.add_node(start_location, OperatorIdentAssignNode{});
+      break;
+    case TokenType::PLUS_EQUAL:
+      operator_node = m_output.add_node(start_location, OperatorIdentAddAssignNode{});
+      break;
+    case TokenType::MINUS_EQUAL:
+      operator_node = m_output.add_node(start_location, OperatorIdentSubAssignNode{});
+      break;
+    case TokenType::STAR_EQUAL:
+      operator_node = m_output.add_node(start_location, OperatorIdentMulAssignNode{});
+      break;
+    case TokenType::SLASH_EQUAL:
+      operator_node = m_output.add_node(start_location, OperatorIdentDivAssignNode{});
+      break;
+    case TokenType::PERCENT_EQUAL:
+      operator_node = m_output.add_node(start_location, OperatorIdentModAssignNode{});
+      break;
+    case TokenType::AMPERSAND_EQUAL:
+      operator_node = m_output.add_node(start_location, OperatorIdentBitwiseAndAssignNode{});
+      break;
+    case TokenType::PIPE_EQUAL:
+      operator_node = m_output.add_node(start_location, OperatorIdentBitwiseOrAssignNode{});
+      break;
+    case TokenType::CARET_EQUAL:
+      operator_node = m_output.add_node(start_location, OperatorIdentBitwiseXorAssignNode{});
+      break;
+    case TokenType::LSHIFT_EQUAL:
+      operator_node = m_output.add_node(start_location, OperatorIdentLShiftAssignNode{});
+      break;
+    case TokenType::RSHIFT_EQUAL:
+      operator_node = m_output.add_node(start_location, OperatorIdentRShiftAssignNode{});
+      break;
+    case TokenType::LEFT_BRACKET:
+    case TokenType::LEFT_BRACKET_NO_W:
+      read_token_type(TokenType::RIGHT_BRACKET, "Expected ']' following 'operator['");
+      operator_node = m_output.add_node(start_location, OperatorIdentIxNode{});
+      break;
+    case TokenType::LEFT_PAREN:
+    case TokenType::LEFT_PAREN_NO_W:
+      read_token_type(TokenType::RIGHT_PAREN, "Expected ')' following 'operator('");
+      operator_node = m_output.add_node(start_location, OperatorIdentFuncallNode{});
+      break;
+    case TokenType::KEYWORD_AS: {
+      read_left_bracket("Expected '[' after 'operator as'");
+      auto type = parse_expression();
+      read_token_type(
+          TokenType::RIGHT_BRACKET, "Expected ']' after type in 'operator as' identifier"
+      );
+      operator_node = m_output.add_node(start_location, OperatorIdentAsNode{type});
+      break;
+    }
+    default:
+      throw_parser_error_at_current_location("Expected operator after 'operator' keyword");
+    }
+    return m_output.add_node(start_location, OperatorIdentifierNode{operator_node});
+  }
+
   NodeId parse_scope_resolution() {
     auto start_location = peek().loc;
-    auto left = parse_identifier();
+    auto left = parse_single_identifier();
     while (peek().type == TokenType::DOUBLE_COLON_NO_W) {
       m_token_index++; // consume the '::' operator
       if (peek().type != TokenType::IDENTIFIER_NO_W) {
@@ -443,7 +572,7 @@ public:
             "Expected identifier immediately after '::' in scope resolution expression"
         );
       }
-      auto name = parse_identifier();
+      auto name = parse_single_identifier();
       left = m_output.add_node(start_location, ScopeResolutionExpressionNode{left, name});
     }
     return left;
@@ -599,6 +728,19 @@ public:
   }
 
   NodeId parse_identifier() {
+    if (peek(1).type == TokenType::DOUBLE_COLON_NO_W) {
+      return parse_scope_resolution();
+    }
+    if (peek().type == TokenType::KEYWORD_OPERATOR) {
+      return parse_operator_ident();
+    }
+    if (peek().type == TokenType::IDENTIFIER || peek().type == TokenType::IDENTIFIER_NO_W) {
+      return parse_single_identifier();
+    }
+    throw_parser_error_at_current_location("Expected identifier");
+  }
+
+  NodeId parse_single_identifier() {
     auto ident = next();
     return m_output.add_node(ident.loc, IdentifierNode{ident.id});
   }
@@ -632,6 +774,15 @@ private:
   TokenWithId read_left_paren(Text error_message) {
     auto token = peek();
     if (token.type != TokenType::LEFT_PAREN && token.type != TokenType::LEFT_PAREN_NO_W) {
+      throw_parser_error(token.id, String(error_message));
+    }
+    ++m_token_index;
+    return token;
+  }
+
+  TokenWithId read_left_bracket(Text error_message) {
+    auto token = peek();
+    if (token.type != TokenType::LEFT_BRACKET && token.type != TokenType::LEFT_BRACKET_NO_W) {
       throw_parser_error(token.id, String(error_message));
     }
     ++m_token_index;
