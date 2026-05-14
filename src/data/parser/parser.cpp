@@ -76,6 +76,12 @@ public:
       result = parse_label_statement();
     } else if (token.type == TokenType::KEYWORD_GOTO) {
       result = parse_goto_statement();
+    } else if (token.type == TokenType::KEYWORD_CONTINUE) {
+      result = parse_continue_statement();
+    } else if (token.type == TokenType::KEYWORD_RETURN) {
+      result = parse_return_statement();
+    } else if (token.type == TokenType::KEYWORD_FUN && peek(1).type == TokenType::IDENTIFIER) {
+      result = parse_function_declaration();
     } else if (token.type == TokenType::SEMICOLON) {
       result = parse_empty_statement();
       is_empty = true;
@@ -86,6 +92,27 @@ public:
       ++m_token_index; // consume one trailing ';' token
     }
     return result;
+  }
+
+  NodeId parse_continue_statement() {
+    auto continue_token = next();
+    return m_output.add_node(continue_token.loc, ContinueStatementNode{});
+  }
+
+  NodeId parse_return_statement() {
+    auto return_token = next();
+    NodeId expr = -1;
+    if (peek().loc.line == return_token.loc.line) {
+      expr = try_parse_expression();
+    }
+    if (expr == -1) {
+      return m_output.add_node(return_token.loc, ReturnStatementNode{});
+    }
+    return m_output.add_node(return_token.loc, ReturnValueStatementNode{expr});
+  }
+
+  NodeId parse_function_declaration() {
+    return 0;
   }
 
   NodeId parse_label_statement() {
@@ -109,7 +136,7 @@ public:
   NodeId parse_while_statement() {
     auto while_token = next(); // consume the 'while' keyword
     read_left_paren("Expected '(' after 'while' keyword in while statement");
-    NodeId condition = parse_expression();
+    NodeId condition = require_expression();
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after condition in while statement");
     NodeId body = parse_statement();
     return m_output.add_node(while_token.loc, WhileStatementNode{condition, body});
@@ -118,9 +145,9 @@ public:
   NodeId parse_for_in_statement() {
     auto for_token = next(); // consume the 'for' keyword
     read_left_paren("Expected '(' after 'for' keyword in for-in statement");
-    NodeId var = parse_expression();
+    NodeId var = require_expression();
     read_token_type(TokenType::KEYWORD_IN, "Expected 'in' keyword in for-in statement");
-    NodeId iterable = parse_expression();
+    NodeId iterable = require_expression();
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after iterable in for-in statement");
     NodeId body = parse_statement();
     return m_output.add_node(for_token.loc, ForInStatementNode{var, iterable, body});
@@ -128,14 +155,14 @@ public:
 
   NodeId parse_throw_statement() {
     auto throw_token = next(); // consume the 'throw' keyword
-    NodeId expression = parse_expression();
+    NodeId expression = require_expression();
     return m_output.add_node(throw_token.loc, ThrowStatementNode{expression});
   }
 
   NodeId parse_if_statement() {
     auto if_token = next(); // consume the 'if' keyword
     read_left_paren("Expected '(' after 'if' keyword in if statement");
-    NodeId condition = parse_expression();
+    NodeId condition = require_expression();
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after condition in if statement");
     NodeId then_branch = parse_statement();
     if (peek().type == TokenType::KEYWORD_ELSE) {
@@ -161,28 +188,28 @@ public:
 
   NodeId parse_pre_increment_statement() {
     auto token = next(); // consume the '++' operator
-    NodeId operand = parse_expression();
+    NodeId operand = require_expression();
     return m_output.add_node(token.loc, PreIncrementStatementNode{operand});
   }
 
   NodeId parse_pre_decrement_statement() {
     auto token = next(); // consume the '--' operator
-    NodeId operand = parse_expression();
+    NodeId operand = require_expression();
     return m_output.add_node(token.loc, PreDecrementStatementNode{operand});
   }
 
   NodeId parse_const_statement() {
     auto const_token = next(); // consume the 'const' keyword
-    NodeId target = parse_expression();
+    NodeId target = require_expression();
     Option<NodeId> type_annotation;
     Option<NodeId> expression;
     if (peek().type == TokenType::COLON) {
       ++m_token_index; // consume the ':' token
-      type_annotation = parse_expression();
+      type_annotation = require_expression();
     }
     if (peek().type == TokenType::ASSIGN) {
       ++m_token_index; // consume the '=' token
-      expression = parse_expression();
+      expression = require_expression();
     }
     if (type_annotation.has_value()) {
       if (expression.has_value()) {
@@ -206,16 +233,16 @@ public:
 
   NodeId parse_let_statement() {
     auto let_token = next(); // consume the 'let' keyword
-    NodeId target = parse_expression();
+    NodeId target = require_expression();
     Option<NodeId> type_annotation;
     Option<NodeId> expression;
     if (peek().type == TokenType::COLON) {
       ++m_token_index; // consume the ':' token
-      type_annotation = parse_expression();
+      type_annotation = require_expression();
     }
     if (peek().type == TokenType::ASSIGN) {
       ++m_token_index; // consume the '=' token
-      expression = parse_expression();
+      expression = require_expression();
     }
     if (type_annotation.has_value()) {
       if (expression.has_value()) {
@@ -237,7 +264,7 @@ public:
 
   NodeId parse_expression_statement() {
     auto expr_token = peek();
-    NodeId expr = parse_expression();
+    NodeId expr = require_expression();
     auto next_token = peek();
     if (next_token.type == TokenType::DOUBLE_PLUS_NO_W) {
       ++m_token_index; // consume the '++' operator
@@ -247,53 +274,63 @@ public:
       return m_output.add_node(expr_token.loc, PostDecrementStatementNode{expr});
     } else if (next_token.type == TokenType::ASSIGN) {
       ++m_token_index; // consume the '=' operator
-      NodeId value = parse_expression();
+      NodeId value = require_expression();
       return m_output.add_node(expr_token.loc, AssignmentStatementNode{expr, value});
     } else if (next_token.type == TokenType::PLUS_EQUAL) {
       ++m_token_index; // consume the '+=' operator
-      NodeId value = parse_expression();
+      NodeId value = require_expression();
       return m_output.add_node(expr_token.loc, AddAssignStatementNode{expr, value});
     } else if (next_token.type == TokenType::MINUS_EQUAL) {
       ++m_token_index; // consume the '-=' operator
-      NodeId value = parse_expression();
+      NodeId value = require_expression();
       return m_output.add_node(expr_token.loc, SubAssignStatementNode{expr, value});
     } else if (next_token.type == TokenType::STAR_EQUAL) {
       ++m_token_index; // consume the '*=' operator
-      NodeId value = parse_expression();
+      NodeId value = require_expression();
       return m_output.add_node(expr_token.loc, MulAssignStatementNode{expr, value});
     } else if (next_token.type == TokenType::SLASH_EQUAL) {
       ++m_token_index; // consume the '/=' operator
-      NodeId value = parse_expression();
+      NodeId value = require_expression();
       return m_output.add_node(expr_token.loc, DivAssignStatementNode{expr, value});
     } else if (next_token.type == TokenType::PERCENT_EQUAL) {
       ++m_token_index; // consume the '%=' operator
-      NodeId value = parse_expression();
+      NodeId value = require_expression();
       return m_output.add_node(expr_token.loc, ModAssignStatementNode{expr, value});
     } else if (next_token.type == TokenType::LSHIFT_EQUAL) {
       ++m_token_index; // consume the '<<=' operator
-      NodeId value = parse_expression();
+      NodeId value = require_expression();
       return m_output.add_node(expr_token.loc, LeftShiftAssignStatementNode{expr, value});
     } else if (next_token.type == TokenType::RSHIFT_EQUAL) {
       ++m_token_index; // consume the '>>=' operator
-      NodeId value = parse_expression();
+      NodeId value = require_expression();
       return m_output.add_node(expr_token.loc, RightShiftAssignStatementNode{expr, value});
     } else if (next_token.type == TokenType::AMPERSAND_EQUAL) {
       ++m_token_index; // consume the '&=' operator
-      NodeId value = parse_expression();
+      NodeId value = require_expression();
       return m_output.add_node(expr_token.loc, BitwiseAndAssignStatementNode{expr, value});
     } else if (next_token.type == TokenType::PIPE_EQUAL) {
       ++m_token_index; // consume the '|=' operator
-      NodeId value = parse_expression();
+      NodeId value = require_expression();
       return m_output.add_node(expr_token.loc, BitwiseOrAssignStatementNode{expr, value});
     } else if (next_token.type == TokenType::CARET_EQUAL) {
       ++m_token_index; // consume the '^=' operator
-      NodeId value = parse_expression();
+      NodeId value = require_expression();
       return m_output.add_node(expr_token.loc, BitwiseXorAssignStatementNode{expr, value});
     }
     return m_output.add_node(expr_token.loc, ExpressionStatementNode{expr});
   }
 
-  NodeId parse_expression() {
+  NodeId require_expression() {
+    NodeId result = parse_descend_expr_or();
+    if (result == -1) {
+      String err("Expected expression, got token ");
+      m_token_formatter.format_token(err, m_token_index);
+      throw_parser_error_at_current_location(std::move(err));
+    }
+    return result;
+  }
+
+  NodeId try_parse_expression() {
     return parse_descend_expr_or();
   }
 
@@ -517,7 +554,7 @@ public:
         );
       } else if (next_token.type == TokenType::LEFT_BRACKET_NO_W) {
         ++m_token_index; // consume the '[' operator
-        NodeId index_expr = parse_expression();
+        NodeId index_expr = require_expression();
         read_token_type(
             TokenType::RIGHT_BRACKET, "Expected ']' after index expression in index access"
         );
@@ -561,7 +598,8 @@ public:
 
   NodeId parse_atom() {
     auto next_token = peek();
-    if (next_token.type == TokenType::IDENTIFIER || next_token.type == TokenType::IDENTIFIER_NO_W) {
+    if (next_token.type == TokenType::IDENTIFIER || next_token.type == TokenType::IDENTIFIER_NO_W ||
+        next_token.type == TokenType::KEYWORD_OPERATOR) {
       return parse_identifier();
     } else if (next_token.type == TokenType::STRING_LITERAL) {
       return parse_string_literal();
@@ -582,9 +620,7 @@ public:
     } else if (next_token.type == TokenType::KEYWORD_SWITCH) {
       return parse_switch_expression();
     } else {
-      String err("Expected expression, got token ");
-      m_token_formatter.format_token(err, m_token_index);
-      throw_parser_error_at_current_location(std::move(err));
+      return -1;
     }
   }
 
@@ -706,7 +742,7 @@ public:
       break;
     case TokenType::KEYWORD_AS: {
       read_left_bracket("Expected '[' after 'operator as'");
-      auto type = parse_expression();
+      auto type = require_expression();
       read_token_type(
           TokenType::RIGHT_BRACKET, "Expected ']' after type in 'operator as' identifier"
       );
@@ -738,7 +774,7 @@ public:
   NodeId parse_switch_expression() {
     auto switch_token = next(); // consume the 'switch' keyword
     read_left_paren("Expected '(' after 'switch'");
-    NodeId expr = parse_expression();
+    NodeId expr = require_expression();
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after switch expression");
     read_token_type(TokenType::LEFT_BRACE, "Expected '{' to start switch expression body");
     List<NodeId> clauses;
@@ -752,15 +788,15 @@ public:
   NodeId parse_case_clause() {
     auto case_token = next(); // consume the 'case' keyword
     read_left_paren("Expected '(' after 'case'");
-    NodeId expr = parse_expression();
+    NodeId expr = require_expression();
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after case clause condition");
-    NodeId body = parse_expression();
+    NodeId body = require_expression();
     return m_output.add_node(case_token.loc, CaseClauseNode{expr, body});
   }
 
   NodeId parse_try_catch_expression() {
     auto try_token = next(); // consume the 'try' keyword
-    NodeId try_block = parse_expression();
+    NodeId try_block = require_expression();
     List<NodeId> clauses;
     while (peek().type == TokenType::KEYWORD_CATCH) {
       clauses.push_back(parse_catch_clause());
@@ -780,9 +816,9 @@ public:
       var = next_token.id;
       m_token_index += 2; // consume the identifier and the colon
     }
-    NodeId exc_type = parse_expression();
+    NodeId exc_type = require_expression();
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after catch clause exception type");
-    NodeId body = parse_expression();
+    NodeId body = require_expression();
     if (var.has_value()) {
       return m_output.add_node(
           catch_token.loc, CatchClauseBindingNode{var.value(), exc_type, body}
@@ -795,13 +831,13 @@ public:
   NodeId parse_if_then_else_expression() {
     auto if_token = next(); // consume the 'if' keyword
     read_left_paren("Expected '(' after 'if'");
-    NodeId condition = parse_expression();
+    NodeId condition = require_expression();
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after condition in 'if' expression");
-    NodeId then_branch = parse_expression();
+    NodeId then_branch = require_expression();
     read_token_type(
         TokenType::KEYWORD_ELSE, "Expected 'else' after then-branch of 'if' expression"
     );
-    NodeId else_branch = parse_expression();
+    NodeId else_branch = require_expression();
     return m_output.add_node(
         if_token.loc, IfThenElseExpressionNode{condition, then_branch, else_branch}
     );
@@ -847,7 +883,7 @@ public:
       auto field_token = peek();
       auto field = expect_identifier("Expected field name immediately after dot in object literal");
       read_token_type(TokenType::ASSIGN, "Expected '=' after field name in object literal");
-      NodeId value = parse_expression();
+      NodeId value = require_expression();
       entries.push_back(m_output.add_node(field_token.loc, KeyValueEntryNode{field, value}));
       if (peek().type == TokenType::COMMA) {
         ++m_token_index; // consume the comma
@@ -859,7 +895,7 @@ public:
 
   void parse_comma_separated_expression_list(List<NodeId> &exprs, TokenType terminator) {
     while (peek().type != terminator) {
-      exprs.push_back(parse_expression());
+      exprs.push_back(require_expression());
       if (peek().type == TokenType::COMMA) {
         ++m_token_index;
       }
@@ -909,7 +945,7 @@ public:
       name = parse_identifier();
       ++m_token_index; // consume the '=' token
     }
-    NodeId expr = parse_expression();
+    NodeId expr = require_expression();
     if (name.has_value()) {
       return m_output.add_node(next_token.loc, NamedFunctionArgumentNode{name.value(), expr});
     }

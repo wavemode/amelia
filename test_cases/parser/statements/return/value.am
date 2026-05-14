@@ -1,0 +1,16 @@
+return x()
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ReturnValueStatementNode(
+      expr=FunctionCallExpressionNode(
+        callee=IdentifierNode(
+          name=IDENTIFIER(x)
+        ),
+        args=[]
+      )
+    )
+  ]
+)
+*/

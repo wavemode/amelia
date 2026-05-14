@@ -1,0 +1,9 @@
+continue
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ContinueStatementNode()
+  ]
+)
+*/

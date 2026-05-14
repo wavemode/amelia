@@ -1,0 +1,18 @@
+let x = { return }
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetAssignmentStatementNode(
+      target=IdentifierNode(
+        name=IDENTIFIER(x)
+      ),
+      expression=BlockExpressionNode(
+        stmts=[
+          ReturnStatementNode()
+        ]
+      )
+    )
+  ]
+)
+*/

@@ -382,12 +382,29 @@ struct WhileStatementNode {
   NodeId body;
 };
 
+struct ContinueStatementNode {};
+
 struct LabelStatementNode {
   NodeId label;
 };
 
 struct GotoStatementNode {
   NodeId label;
+};
+
+struct ReturnStatementNode {};
+
+struct ReturnValueStatementNode {
+  NodeId expr;
+};
+
+struct FunctionParameterNode {
+  NodeId name;
+};
+
+struct TypedFunctionParameterNode {
+  NodeId name;
+  NodeId type;
 };
 
 struct OperatorIdentAddNode {};
@@ -586,6 +603,11 @@ struct OperatorIdentifierNode {
   X(ForInStatementNode)                                                                            \
   X(WhileStatementNode)                                                                            \
   X(LabelStatementNode)                                                                            \
-  X(GotoStatementNode)
+  X(GotoStatementNode)                                                                             \
+  X(ContinueStatementNode)                                                                         \
+  X(ReturnValueStatementNode)                                                                      \
+  X(ReturnStatementNode)                                                                           \
+  X(FunctionParameterNode)                                                                         \
+  X(TypedFunctionParameterNode)
 
 } // namespace amelia

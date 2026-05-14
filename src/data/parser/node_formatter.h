@@ -602,6 +602,28 @@ private:
       print_node_field(out, "label", n.label, indent + 2);
       break;
     }
+    case NodeType::ContinueStatementNode: {
+      break;
+    }
+    case NodeType::ReturnStatementNode: {
+      break;
+    }
+    case NodeType::ReturnValueStatementNode: {
+      const auto &n = node.as_ReturnValueStatementNode();
+      print_node_field(out, "expr", n.expr, indent + 2);
+      break;
+    }
+    case NodeType::FunctionParameterNode: {
+      const auto &n = node.as_FunctionParameterNode();
+      print_node_field(out, "name", n.name, indent + 2);
+      break;
+    }
+    case NodeType::TypedFunctionParameterNode: {
+      const auto &n = node.as_TypedFunctionParameterNode();
+      print_node_field_with_comma(out, "name", n.name, indent + 2);
+      print_node_field(out, "type", n.type, indent + 2);
+      break;
+    }
     default:
       throw RuntimeError("Unknown node type");
     }

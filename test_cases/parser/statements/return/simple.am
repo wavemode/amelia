@@ -1,0 +1,9 @@
+return
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ReturnStatementNode()
+  ]
+)
+*/
