@@ -1,14 +1,14 @@
 #pragma once
 
-#include <cstddef>
+#include <cstdint>
 
+#include "data/lexer/token_type.h"
 #include "data/util/list.h"
 #include "data/util/option.h"
 
 namespace amelia {
 
-using TokenId = size_t;
-using NodeId = size_t;
+using NodeId = int32_t;
 
 struct ModuleNode {
   List<NodeId> decls;
@@ -17,6 +17,8 @@ struct ModuleNode {
 struct IdentifierNode {
   TokenId name;
 };
+
+struct EmptyStatementNode {};
 
 struct LetStatementNode {
   NodeId target;
@@ -339,6 +341,12 @@ struct ThrowStatementNode {
   NodeId expr;
 };
 
+struct ForInStatementNode {
+  NodeId var;
+  NodeId iterable;
+  NodeId body;
+};
+
 struct OperatorIdentAddNode {};
 
 struct OperatorIdentSubNode {};
@@ -420,6 +428,7 @@ struct OperatorIdentifierNode {
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
+  X(EmptyStatementNode)                                                                            \
   X(LetStatementNode)                                                                              \
   X(ConstStatementNode)                                                                            \
   X(StringLiteralNode)                                                                             \
@@ -524,6 +533,7 @@ struct OperatorIdentifierNode {
   X(RightShiftAssignStatementNode)                                                                 \
   X(BitwiseAndAssignStatementNode)                                                                 \
   X(BitwiseOrAssignStatementNode)                                                                  \
-  X(BitwiseXorAssignStatementNode)
+  X(BitwiseXorAssignStatementNode)                                                                 \
+  X(ForInStatementNode)
 
 } // namespace amelia

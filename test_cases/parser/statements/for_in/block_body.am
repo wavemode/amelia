@@ -1,0 +1,39 @@
+for (x in y) {
+  z()
+  t()
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ForInStatementNode(
+      var=IdentifierNode(
+        name=IDENTIFIER_NO_W(x)
+      ),
+      iterable=IdentifierNode(
+        name=IDENTIFIER(y)
+      ),
+      body=BlockStatementNode(
+        stmts=[
+          ExpressionStatementNode(
+            expr=FunctionCallExpressionNode(
+              callee=IdentifierNode(
+                name=IDENTIFIER(z)
+              ),
+              args=[]
+            )
+          ),
+          ExpressionStatementNode(
+            expr=FunctionCallExpressionNode(
+              callee=IdentifierNode(
+                name=IDENTIFIER(t)
+              ),
+              args=[]
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

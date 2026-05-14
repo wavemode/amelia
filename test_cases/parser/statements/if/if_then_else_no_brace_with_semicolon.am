@@ -1,0 +1,33 @@
+if (x)
+  y();
+else
+  z();
+
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    IfThenElseStatementNode(
+      condition=IdentifierNode(
+        name=IDENTIFIER_NO_W(x)
+      ),
+      then_branch=ExpressionStatementNode(
+        expr=FunctionCallExpressionNode(
+          callee=IdentifierNode(
+            name=IDENTIFIER(y)
+          ),
+          args=[]
+        )
+      ),
+      else_branch=ExpressionStatementNode(
+        expr=FunctionCallExpressionNode(
+          callee=IdentifierNode(
+            name=IDENTIFIER(z)
+          ),
+          args=[]
+        )
+      )
+    )
+  ]
+)
+*/

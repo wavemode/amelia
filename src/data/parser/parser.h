@@ -1,12 +1,11 @@
 #pragma once
 
-#include <cstddef>
+#include "data/parser/node_type_list.h"
 
 namespace amelia {
 
 class ParserResult;
 class LexerResult;
-using NodeId = size_t;
 
 struct Parser {
   static NodeId parse_module(ParserResult &output, const LexerResult &input);

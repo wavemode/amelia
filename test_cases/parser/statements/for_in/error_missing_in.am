@@ -1,0 +1,5 @@
+for (x) z
+
+/* EXPECTED_OUTPUT:
+ERROR("Expected 'in' keyword in for-in statement (at test_cases/parser/statements/for_in/error_missing_in.am:1:7)")
+*/

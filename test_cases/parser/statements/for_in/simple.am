@@ -1,0 +1,21 @@
+for (x in y) z
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ForInStatementNode(
+      var=IdentifierNode(
+        name=IDENTIFIER_NO_W(x)
+      ),
+      iterable=IdentifierNode(
+        name=IDENTIFIER(y)
+      ),
+      body=ExpressionStatementNode(
+        expr=IdentifierNode(
+          name=IDENTIFIER(z)
+        )
+      )
+    )
+  ]
+)
+*/

@@ -8,7 +8,9 @@ ModuleNode(
         name=IDENTIFIER(x)
       ),
       expression=BlockExpressionNode(
-        stmts=[]
+        stmts=[
+          EmptyStatementNode()
+        ]
       )
     )
   ]

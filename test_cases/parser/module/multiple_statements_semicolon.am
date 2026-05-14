@@ -3,6 +3,9 @@
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
+    EmptyStatementNode(),
+    EmptyStatementNode(),
+    EmptyStatementNode(),
     LetStatementNode(
       target=IdentifierNode(
         name=IDENTIFIER(x)
@@ -18,7 +21,9 @@ ModuleNode(
       expression=IdentifierNode(
         name=IDENTIFIER(b)
       )
-    )
+    ),
+    EmptyStatementNode(),
+    EmptyStatementNode()
   ]
 )
 */

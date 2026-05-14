@@ -15,7 +15,7 @@ struct LexerResult : public AbstractTokenRepository {
     return m_tokens.data();
   }
 
-  Text string_literal_contents(size_t token_id) const override {
+  Text string_literal_contents(TokenId token_id) const override {
     auto lit = get_string_literal(token_id);
     if (lit.buffer_end > m_string_literal_buffer.size() || lit.buffer_start > lit.buffer_end) {
       throw RuntimeError("Invalid string literal buffer start and end");
@@ -25,7 +25,7 @@ struct LexerResult : public AbstractTokenRepository {
     ));
   }
 
-  NumberLiteral get_number_literal(size_t token_id) const override {
+  NumberLiteral get_number_literal(TokenId token_id) const override {
     auto result = m_number_literals.find(token_id);
     if (!result.has_value()) {
       throw RuntimeError("Token does not have a number literal");
@@ -33,24 +33,24 @@ struct LexerResult : public AbstractTokenRepository {
     return result.value();
   }
 
-  Token get_token(size_t token_id) const override {
+  Token get_token(TokenId token_id) const override {
     if (token_id >= m_tokens.size()) {
       throw RuntimeError("Invalid token ID");
     }
     return m_tokens[token_id];
   }
 
-  size_t add_token(Token token) {
-    size_t token_id = m_tokens.size();
+  TokenId add_token(Token token) {
+    TokenId token_id = m_tokens.size();
     m_tokens.push_back(token);
     return token_id;
   }
 
-  void add_string_literal(size_t token_id, StringLiteral lit) {
+  void add_string_literal(TokenId token_id, StringLiteral lit) {
     m_string_literals.set(token_id, lit);
   }
 
-  void add_number_literal(size_t token_id, NumberLiteral lit) {
+  void add_number_literal(TokenId token_id, NumberLiteral lit) {
     m_number_literals.set(token_id, lit);
   }
 
@@ -67,7 +67,7 @@ struct LexerResult : public AbstractTokenRepository {
   }
 
 private:
-  StringLiteral get_string_literal(size_t token_id) const {
+  StringLiteral get_string_literal(TokenId token_id) const {
     auto result = m_string_literals.find(token_id);
     if (!result.has_value()) {
       throw RuntimeError("Token does not have a string literal");
@@ -77,8 +77,8 @@ private:
 
   List<Token> m_tokens;
   List<char> m_string_literal_buffer;
-  Map<size_t, StringLiteral> m_string_literals;
-  Map<size_t, NumberLiteral> m_number_literals;
+  Map<TokenId, StringLiteral> m_string_literals;
+  Map<TokenId, NumberLiteral> m_number_literals;
 };
 
 } // namespace amelia

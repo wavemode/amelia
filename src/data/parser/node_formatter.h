@@ -31,6 +31,9 @@ private:
       print_token_field(out, "name", n.name, indent + 2);
       break;
     }
+    case NodeType::EmptyStatementNode: {
+      break;
+    }
     case NodeType::LetStatementNode: {
       const auto &n = node.as_LetStatementNode();
       print_node_field_with_comma(out, "target", n.target, indent + 2);
@@ -538,6 +541,13 @@ private:
       const auto &n = node.as_BitwiseXorAssignStatementNode();
       print_node_field_with_comma(out, "target", n.target, indent + 2);
       print_node_field(out, "expression", n.expression, indent + 2);
+      break;
+    }
+    case NodeType::ForInStatementNode: {
+      const auto &n = node.as_ForInStatementNode();
+      print_node_field_with_comma(out, "var", n.var, indent + 2);
+      print_node_field_with_comma(out, "iterable", n.iterable, indent + 2);
+      print_node_field(out, "body", n.body, indent + 2);
       break;
     }
     default:

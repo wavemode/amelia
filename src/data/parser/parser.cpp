@@ -29,31 +29,30 @@ public:
   }
 
   void parse_statements(List<NodeId> &stmts, TokenType terminator) {
-    bool saw_semicolon = false;
+    bool previous_statement_ended_with_semicolon = false;
     while (peek().type != terminator) {
-      if (peek().type == TokenType::SEMICOLON) {
-        ++m_token_index;
-        saw_semicolon = true;
-        continue;
-      }
-      auto next_token = peek();
+      auto stmt_token = peek();
       stmts.push_back(parse_statement());
-      if (!saw_semicolon && stmts.size() > 1) {
+
+      if (!previous_statement_ended_with_semicolon && stmts.size() > 1) {
+        const Node &stmt = m_output.get_node(stmts[stmts.size() - 1]);
         const Node &prev_stmt = m_output.get_node(stmts[stmts.size() - 2]);
-        const Node &next_stmt = m_output.get_node(stmts[stmts.size() - 1]);
-        if (prev_stmt.location().line == next_stmt.location().line) {
+        if (prev_stmt.type() != NodeType::EmptyStatementNode &&
+            prev_stmt.location().line == stmt.location().line) {
           throw_parser_error(
-              next_token.id, "Multiple statements on the same line must be separated by a semicolon"
+              stmt_token.id, "Multiple statements on the same line must be separated by a semicolon"
           );
         }
       }
-      saw_semicolon = false;
+
+      previous_statement_ended_with_semicolon = peek(-1).type == TokenType::SEMICOLON;
     }
   }
 
   NodeId parse_statement() {
     auto token = peek();
     NodeId result;
+    bool is_empty = false;
     if (token.type == TokenType::KEYWORD_LET) {
       result = parse_let_statement();
     } else if (token.type == TokenType::KEYWORD_CONST) {
@@ -69,10 +68,34 @@ public:
       result = parse_if_statement();
     } else if (token.type == TokenType::KEYWORD_THROW) {
       result = parse_throw_statement();
+    } else if (token.type == TokenType::KEYWORD_FOR) {
+      result = parse_for_in_statement();
+    } else if (token.type == TokenType::SEMICOLON) {
+      result = parse_empty_statement();
+      is_empty = true;
     } else {
       result = parse_expression_statement();
     }
+    if (!is_empty && peek().type == TokenType::SEMICOLON) {
+      ++m_token_index; // consume one trailing ';' token
+    }
     return result;
+  }
+
+  NodeId parse_empty_statement() {
+    auto semicolon_token = next(); // consume the ';' token
+    return m_output.add_node(semicolon_token.loc, EmptyStatementNode{});
+  }
+
+  NodeId parse_for_in_statement() {
+    auto for_token = next(); // consume the 'for' keyword
+    read_left_paren("Expected '(' after 'for' keyword in for-in statement");
+    NodeId var = parse_expression();
+    read_token_type(TokenType::KEYWORD_IN, "Expected 'in' keyword in for-in statement");
+    NodeId iterable = parse_expression();
+    read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after iterable in for-in statement");
+    NodeId body = parse_statement();
+    return m_output.add_node(for_token.loc, ForInStatementNode{var, iterable, body});
   }
 
   NodeId parse_throw_statement() {
@@ -867,7 +890,7 @@ private:
     return result;
   }
 
-  TokenWithId peek(size_t n = 0) const {
+  TokenWithId peek(TokenId n = 0) const {
     if (m_token_index + n >= m_input.tokens().size()) {
       throw RuntimeError("Attempting to peek past end of token stream");
     }
@@ -886,7 +909,7 @@ private:
 
   ParserResult &m_output;
   const LexerResult &m_input;
-  size_t m_token_index;
+  TokenId m_token_index;
   TokenFormatter m_token_formatter;
 };
 } // namespace

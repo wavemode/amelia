@@ -1,5 +1,9 @@
 #pragma once
 
+#include <cstdint>
+
+namespace amelia {
+
 #define TOKEN_TYPE_LIST                                                                            \
   X(KEYWORD_FUN)                                                                                   \
   X(KEYWORD_IF)                                                                                    \
@@ -125,9 +129,8 @@
   X(RAW_MULTILINE_STRING_LITERAL)                                                                  \
   X(END_OF_FILE)
 
-namespace amelia {
-
 class AbstractString;
+using TokenId = int32_t;
 
 enum class TokenType {
 #define X(name) name,
