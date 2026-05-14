@@ -5,17 +5,13 @@ y--
 ModuleNode(
   decls=[
     PostDecrementStatementNode(
-      target=ExpressionStatementNode(
-        expr=IdentifierNode(
-          name=IDENTIFIER(x)
-        )
+      target=IdentifierNode(
+        name=IDENTIFIER(x)
       )
     ),
     PostDecrementStatementNode(
-      target=ExpressionStatementNode(
-        expr=IdentifierNode(
-          name=IDENTIFIER(y)
-        )
+      target=IdentifierNode(
+        name=IDENTIFIER(y)
       )
     )
   ]

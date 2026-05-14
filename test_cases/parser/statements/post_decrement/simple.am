@@ -4,10 +4,8 @@ x--
 ModuleNode(
   decls=[
     PostDecrementStatementNode(
-      target=ExpressionStatementNode(
-        expr=IdentifierNode(
-          name=IDENTIFIER(x)
-        )
+      target=IdentifierNode(
+        name=IDENTIFIER(x)
       )
     )
   ]

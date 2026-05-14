@@ -4,10 +4,8 @@ x++
 ModuleNode(
   decls=[
     PostIncrementStatementNode(
-      target=ExpressionStatementNode(
-        expr=IdentifierNode(
-          name=IDENTIFIER(x)
-        )
+      target=IdentifierNode(
+        name=IDENTIFIER(x)
       )
     )
   ]

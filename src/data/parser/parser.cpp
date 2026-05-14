@@ -39,8 +39,8 @@ public:
       auto next_token = peek();
       stmts.push_back(parse_statement());
       if (!saw_semicolon && stmts.size() > 1) {
-        auto prev_stmt = m_output.get_node(stmts[stmts.size() - 2]);
-        auto next_stmt = m_output.get_node(stmts[stmts.size() - 1]);
+        const Node &prev_stmt = m_output.get_node(stmts[stmts.size() - 2]);
+        const Node &next_stmt = m_output.get_node(stmts[stmts.size() - 1]);
         if (prev_stmt.location().line == next_stmt.location().line) {
           throw_parser_error(
               next_token.id, "Multiple statements on the same line must be separated by a semicolon"
@@ -71,14 +71,6 @@ public:
       result = parse_throw_statement();
     } else {
       result = parse_expression_statement();
-      auto next_token = peek();
-      if (next_token.type == TokenType::DOUBLE_PLUS_NO_W) {
-        ++m_token_index; // consume the '++' operator
-        result = m_output.add_node(token.loc, PostIncrementStatementNode{result});
-      } else if (next_token.type == TokenType::DOUBLE_MINUS_NO_W) {
-        ++m_token_index; // consume the '--' operator
-        result = m_output.add_node(token.loc, PostDecrementStatementNode{result});
-      }
     }
     return result;
   }
@@ -151,6 +143,14 @@ public:
   NodeId parse_expression_statement() {
     auto expr_token = peek();
     NodeId expr = parse_expression();
+    auto next_token = peek();
+    if (next_token.type == TokenType::DOUBLE_PLUS_NO_W) {
+      ++m_token_index; // consume the '++' operator
+      return m_output.add_node(expr_token.loc, PostIncrementStatementNode{expr});
+    } else if (next_token.type == TokenType::DOUBLE_MINUS_NO_W) {
+      ++m_token_index; // consume the '--' operator
+      return m_output.add_node(expr_token.loc, PostDecrementStatementNode{expr});
+    }
     return m_output.add_node(expr_token.loc, ExpressionStatementNode{expr});
   }
 
