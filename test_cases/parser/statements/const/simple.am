@@ -1,14 +1,11 @@
-let x = []
+const x
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetAssignmentStatementNode(
+    ConstStatementNode(
       target=IdentifierNode(
         name=IDENTIFIER(x)
-      ),
-      expression=ArrayLiteralNode(
-        exprs=[]
       )
     )
   ]

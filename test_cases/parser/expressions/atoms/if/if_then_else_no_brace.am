@@ -3,7 +3,7 @@ let w = if(x)y else z
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetStatementNode(
+    LetAssignmentStatementNode(
       target=IdentifierNode(
         name=IDENTIFIER(w)
       ),

@@ -3,7 +3,7 @@ const x = y
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ConstStatementNode(
+    ConstAssignmentStatementNode(
       target=IdentifierNode(
         name=IDENTIFIER(x)
       ),

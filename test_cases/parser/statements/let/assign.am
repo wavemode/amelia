@@ -1,4 +1,4 @@
-let x = -y
+let x = y
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
@@ -7,10 +7,8 @@ ModuleNode(
       target=IdentifierNode(
         name=IDENTIFIER(x)
       ),
-      expression=NegativeExpressionNode(
-        expr=IdentifierNode(
-          name=IDENTIFIER_NO_W(y)
-        )
+      expression=IdentifierNode(
+        name=IDENTIFIER(y)
       )
     )
   ]

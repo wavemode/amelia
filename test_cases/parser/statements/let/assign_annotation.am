@@ -1,0 +1,19 @@
+let x : int = 5
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetAssignAnnotationNode(
+      target=IdentifierNode(
+        name=IDENTIFIER(x)
+      ),
+      type=IdentifierNode(
+        name=IDENTIFIER(int)
+      ),
+      expression=NumberLiteralNode(
+        value=NUMBER(5)
+      )
+    )
+  ]
+)
+*/

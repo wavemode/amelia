@@ -157,21 +157,65 @@ public:
   NodeId parse_const_statement() {
     auto const_token = next(); // consume the 'const' keyword
     NodeId target = parse_expression();
-    auto assign_token = read_token_type(
-        TokenType::ASSIGN, "Expected '=' after identifier in const statement"
-    );
-    NodeId expression = parse_expression();
-    return m_output.add_node(const_token.loc, ConstStatementNode{target, expression});
+    Option<NodeId> type_annotation;
+    Option<NodeId> expression;
+    if (peek().type == TokenType::COLON) {
+      ++m_token_index; // consume the ':' token
+      type_annotation = parse_expression();
+    }
+    if (peek().type == TokenType::ASSIGN) {
+      ++m_token_index; // consume the '=' token
+      expression = parse_expression();
+    }
+    if (type_annotation.has_value()) {
+      if (expression.has_value()) {
+        return m_output.add_node(
+            const_token.loc,
+            ConstAssignAnnotationNode{target, type_annotation.value(), expression.value()}
+        );
+      } else {
+        return m_output.add_node(
+            const_token.loc, ConstAnnotationNode{target, type_annotation.value()}
+        );
+      }
+    } else if (expression.has_value()) {
+      return m_output.add_node(
+          const_token.loc, ConstAssignmentStatementNode{target, expression.value()}
+      );
+    } else {
+      return m_output.add_node(const_token.loc, ConstStatementNode{target});
+    }
   }
 
   NodeId parse_let_statement() {
     auto let_token = next(); // consume the 'let' keyword
     NodeId target = parse_expression();
-    auto assign_token = read_token_type(
-        TokenType::ASSIGN, "Expected '=' after identifier in let statement"
-    );
-    NodeId expression = parse_expression();
-    return m_output.add_node(let_token.loc, LetStatementNode{target, expression});
+    Option<NodeId> type_annotation;
+    Option<NodeId> expression;
+    if (peek().type == TokenType::COLON) {
+      ++m_token_index; // consume the ':' token
+      type_annotation = parse_expression();
+    }
+    if (peek().type == TokenType::ASSIGN) {
+      ++m_token_index; // consume the '=' token
+      expression = parse_expression();
+    }
+    if (type_annotation.has_value()) {
+      if (expression.has_value()) {
+        return m_output.add_node(
+            let_token.loc,
+            LetAssignAnnotationNode{target, type_annotation.value(), expression.value()}
+        );
+      } else {
+        return m_output.add_node(let_token.loc, LetAnnotationNode{target, type_annotation.value()});
+      }
+    } else if (expression.has_value()) {
+      return m_output.add_node(
+          let_token.loc, LetAssignmentStatementNode{target, expression.value()}
+      );
+    } else {
+      return m_output.add_node(let_token.loc, LetStatementNode{target});
+    }
   }
 
   NodeId parse_expression_statement() {

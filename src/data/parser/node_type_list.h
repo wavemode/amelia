@@ -22,12 +22,42 @@ struct EmptyStatementNode {};
 
 struct LetStatementNode {
   NodeId target;
+};
+
+struct LetAssignmentStatementNode {
+  NodeId target;
   NodeId expression;
+};
+
+struct LetAssignAnnotationNode {
+  NodeId target;
+  NodeId type;
+  NodeId expression;
+};
+
+struct LetAnnotationNode {
+  NodeId target;
+  NodeId type;
 };
 
 struct ConstStatementNode {
   NodeId target;
+};
+
+struct ConstAssignmentStatementNode {
+  NodeId target;
   NodeId expression;
+};
+
+struct ConstAssignAnnotationNode {
+  NodeId target;
+  NodeId type;
+  NodeId expression;
+};
+
+struct ConstAnnotationNode {
+  NodeId target;
+  NodeId type;
 };
 
 struct PreIncrementStatementNode {
@@ -435,7 +465,13 @@ struct OperatorIdentifierNode {
   X(IdentifierNode)                                                                                \
   X(EmptyStatementNode)                                                                            \
   X(LetStatementNode)                                                                              \
+  X(LetAssignmentStatementNode)                                                                    \
+  X(LetAssignAnnotationNode)                                                                       \
+  X(LetAnnotationNode)                                                                             \
   X(ConstStatementNode)                                                                            \
+  X(ConstAssignmentStatementNode)                                                                  \
+  X(ConstAssignAnnotationNode)                                                                     \
+  X(ConstAnnotationNode)                                                                           \
   X(StringLiteralNode)                                                                             \
   X(NumberLiteralNode)                                                                             \
   X(ParenthesizedExpressionNode)                                                                   \

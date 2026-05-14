@@ -3,7 +3,7 @@ let x = r"\hello, world!"
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetStatementNode(
+    LetAssignmentStatementNode(
       target=IdentifierNode(
         name=IDENTIFIER(x)
       ),

@@ -7,13 +7,13 @@ let x = {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetStatementNode(
+    LetAssignmentStatementNode(
       target=IdentifierNode(
         name=IDENTIFIER(x)
       ),
       expression=BlockExpressionNode(
         stmts=[
-          LetStatementNode(
+          LetAssignmentStatementNode(
             target=IdentifierNode(
               name=IDENTIFIER(y)
             ),
@@ -21,7 +21,7 @@ ModuleNode(
               value=NUMBER(1)
             )
           ),
-          LetStatementNode(
+          LetAssignmentStatementNode(
             target=IdentifierNode(
               name=IDENTIFIER(a)
             ),

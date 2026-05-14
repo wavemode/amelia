@@ -6,7 +6,7 @@ ModuleNode(
     EmptyStatementNode(),
     EmptyStatementNode(),
     EmptyStatementNode(),
-    LetStatementNode(
+    LetAssignmentStatementNode(
       target=IdentifierNode(
         name=IDENTIFIER(x)
       ),
@@ -14,7 +14,7 @@ ModuleNode(
         name=IDENTIFIER(y)
       )
     ),
-    ConstStatementNode(
+    ConstAssignmentStatementNode(
       target=IdentifierNode(
         name=IDENTIFIER(a)
       ),
