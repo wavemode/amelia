@@ -1,0 +1,16 @@
+x -= 5
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    SubAssignStatementNode(
+      target=IdentifierNode(
+        name=IDENTIFIER(x)
+      ),
+      expression=NumberLiteralNode(
+        value=NUMBER(5)
+      )
+    )
+  ]
+)
+*/

@@ -41,9 +41,9 @@ x.operator &
 x.operator |
 // OperatorIdentBitwiseXorNode
 x.operator ^
-// OperatorIdentLShiftNode
+// OperatorIdentLeftShiftNode
 x.operator <<
-// OperatorIdentRShiftNode
+// OperatorIdentRightShiftNode
 x.operator >>
 // OperatorIdentAssignNode
 x.operator =
@@ -63,9 +63,9 @@ x.operator &=
 x.operator |=
 // OperatorIdentBitwiseXorAssignNode
 x.operator ^=
-// OperatorIdentLShiftAssignNode
+// OperatorIdentLeftShiftAssignNode
 x.operator <<=
-// OperatorIdentRShiftAssignNode
+// OperatorIdentRightShiftAssignNode
 x.operator >>=
 // OperatorIdentIxNode
 x.operator [ ]
@@ -313,7 +313,7 @@ ModuleNode(
           name=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentLShiftNode()
+          operator_node=OperatorIdentLeftShiftNode()
         )
       )
     ),
@@ -323,7 +323,7 @@ ModuleNode(
           name=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentRShiftNode()
+          operator_node=OperatorIdentRightShiftNode()
         )
       )
     ),
@@ -423,7 +423,7 @@ ModuleNode(
           name=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentLShiftAssignNode()
+          operator_node=OperatorIdentLeftShiftAssignNode()
         )
       )
     ),
@@ -433,7 +433,7 @@ ModuleNode(
           name=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentRShiftAssignNode()
+          operator_node=OperatorIdentRightShiftAssignNode()
         )
       )
     ),

@@ -1,0 +1,25 @@
+x /= 5
+y /= 6
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    DivAssignStatementNode(
+      target=IdentifierNode(
+        name=IDENTIFIER(x)
+      ),
+      expression=NumberLiteralNode(
+        value=NUMBER(5)
+      )
+    ),
+    DivAssignStatementNode(
+      target=IdentifierNode(
+        name=IDENTIFIER(y)
+      ),
+      expression=NumberLiteralNode(
+        value=NUMBER(6)
+      )
+    )
+  ]
+)
+*/

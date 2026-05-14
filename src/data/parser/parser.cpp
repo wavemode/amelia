@@ -150,6 +150,50 @@ public:
     } else if (next_token.type == TokenType::DOUBLE_MINUS_NO_W) {
       ++m_token_index; // consume the '--' operator
       return m_output.add_node(expr_token.loc, PostDecrementStatementNode{expr});
+    } else if (next_token.type == TokenType::ASSIGN) {
+      ++m_token_index; // consume the '=' operator
+      NodeId value = parse_expression();
+      return m_output.add_node(expr_token.loc, AssignmentStatementNode{expr, value});
+    } else if (next_token.type == TokenType::PLUS_EQUAL) {
+      ++m_token_index; // consume the '+=' operator
+      NodeId value = parse_expression();
+      return m_output.add_node(expr_token.loc, AddAssignStatementNode{expr, value});
+    } else if (next_token.type == TokenType::MINUS_EQUAL) {
+      ++m_token_index; // consume the '-=' operator
+      NodeId value = parse_expression();
+      return m_output.add_node(expr_token.loc, SubAssignStatementNode{expr, value});
+    } else if (next_token.type == TokenType::STAR_EQUAL) {
+      ++m_token_index; // consume the '*=' operator
+      NodeId value = parse_expression();
+      return m_output.add_node(expr_token.loc, MulAssignStatementNode{expr, value});
+    } else if (next_token.type == TokenType::SLASH_EQUAL) {
+      ++m_token_index; // consume the '/=' operator
+      NodeId value = parse_expression();
+      return m_output.add_node(expr_token.loc, DivAssignStatementNode{expr, value});
+    } else if (next_token.type == TokenType::PERCENT_EQUAL) {
+      ++m_token_index; // consume the '%=' operator
+      NodeId value = parse_expression();
+      return m_output.add_node(expr_token.loc, ModAssignStatementNode{expr, value});
+    } else if (next_token.type == TokenType::LSHIFT_EQUAL) {
+      ++m_token_index; // consume the '<<=' operator
+      NodeId value = parse_expression();
+      return m_output.add_node(expr_token.loc, LeftShiftAssignStatementNode{expr, value});
+    } else if (next_token.type == TokenType::RSHIFT_EQUAL) {
+      ++m_token_index; // consume the '>>=' operator
+      NodeId value = parse_expression();
+      return m_output.add_node(expr_token.loc, RightShiftAssignStatementNode{expr, value});
+    } else if (next_token.type == TokenType::AMPERSAND_EQUAL) {
+      ++m_token_index; // consume the '&=' operator
+      NodeId value = parse_expression();
+      return m_output.add_node(expr_token.loc, BitwiseAndAssignStatementNode{expr, value});
+    } else if (next_token.type == TokenType::PIPE_EQUAL) {
+      ++m_token_index; // consume the '|=' operator
+      NodeId value = parse_expression();
+      return m_output.add_node(expr_token.loc, BitwiseOrAssignStatementNode{expr, value});
+    } else if (next_token.type == TokenType::CARET_EQUAL) {
+      ++m_token_index; // consume the '^=' operator
+      NodeId value = parse_expression();
+      return m_output.add_node(expr_token.loc, BitwiseXorAssignStatementNode{expr, value});
     }
     return m_output.add_node(expr_token.loc, ExpressionStatementNode{expr});
   }
@@ -355,7 +399,7 @@ public:
 
   NodeId parse_descend_expr_field_ix_funcall() {
     auto start_location = peek().loc;
-    auto left = parse_atom();
+    auto left = parse_descend_expr_scope_resolution();
     auto next_token = peek();
     while (next_token.type == TokenType::DOT_NO_W || next_token.type == TokenType::NUMBER_FIELD ||
            next_token.type == TokenType::LEFT_BRACKET_NO_W ||
@@ -398,6 +442,24 @@ public:
         throw RuntimeError("unreachable");
       }
       next_token = peek();
+    }
+    return left;
+  }
+
+  NodeId parse_descend_expr_scope_resolution() {
+    auto start_location = peek().loc;
+    NodeId left = parse_atom();
+    while (peek().type == TokenType::DOUBLE_COLON_NO_W) {
+      ++m_token_index; // consume the '::' operator
+      auto next_type = peek().type;
+      if (next_type != TokenType::IDENTIFIER_NO_W && next_type != TokenType::KEYWORD_OPERATOR) {
+        throw_parser_error_at_current_location(
+            "Expected identifier immediately after '::' in scope resolution expression"
+        );
+      }
+      left = m_output.add_node(
+          start_location, ScopeResolutionExpressionNode{left, parse_identifier()}
+      );
     }
     return left;
   }
@@ -499,10 +561,10 @@ public:
       operator_node = m_output.add_node(start_location, OperatorIdentBitwiseXorNode{});
       break;
     case TokenType::LSHIFT:
-      operator_node = m_output.add_node(start_location, OperatorIdentLShiftNode{});
+      operator_node = m_output.add_node(start_location, OperatorIdentLeftShiftNode{});
       break;
     case TokenType::RSHIFT:
-      operator_node = m_output.add_node(start_location, OperatorIdentRShiftNode{});
+      operator_node = m_output.add_node(start_location, OperatorIdentRightShiftNode{});
       break;
     case TokenType::ASSIGN:
       operator_node = m_output.add_node(start_location, OperatorIdentAssignNode{});
@@ -532,10 +594,10 @@ public:
       operator_node = m_output.add_node(start_location, OperatorIdentBitwiseXorAssignNode{});
       break;
     case TokenType::LSHIFT_EQUAL:
-      operator_node = m_output.add_node(start_location, OperatorIdentLShiftAssignNode{});
+      operator_node = m_output.add_node(start_location, OperatorIdentLeftShiftAssignNode{});
       break;
     case TokenType::RSHIFT_EQUAL:
-      operator_node = m_output.add_node(start_location, OperatorIdentRShiftAssignNode{});
+      operator_node = m_output.add_node(start_location, OperatorIdentRightShiftAssignNode{});
       break;
     case TokenType::LEFT_BRACKET:
     case TokenType::LEFT_BRACKET_NO_W:
@@ -728,9 +790,6 @@ public:
   }
 
   NodeId parse_identifier() {
-    if (peek(1).type == TokenType::DOUBLE_COLON_NO_W) {
-      return parse_scope_resolution();
-    }
     if (peek().type == TokenType::KEYWORD_OPERATOR) {
       return parse_operator_ident();
     }

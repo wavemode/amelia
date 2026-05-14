@@ -419,10 +419,10 @@ private:
     case NodeType::OperatorIdentBitwiseXorNode: {
       break;
     }
-    case NodeType::OperatorIdentLShiftNode: {
+    case NodeType::OperatorIdentLeftShiftNode: {
       break;
     }
-    case NodeType::OperatorIdentRShiftNode: {
+    case NodeType::OperatorIdentRightShiftNode: {
       break;
     }
     case NodeType::OperatorIdentAssignNode: {
@@ -452,10 +452,10 @@ private:
     case NodeType::OperatorIdentBitwiseXorAssignNode: {
       break;
     }
-    case NodeType::OperatorIdentLShiftAssignNode: {
+    case NodeType::OperatorIdentLeftShiftAssignNode: {
       break;
     }
-    case NodeType::OperatorIdentRShiftAssignNode: {
+    case NodeType::OperatorIdentRightShiftAssignNode: {
       break;
     }
     case NodeType::OperatorIdentIxNode: {
@@ -472,6 +472,72 @@ private:
     case NodeType::OperatorIdentifierNode: {
       const auto &n = node.as_OperatorIdentifierNode();
       print_node_field(out, "operator_node", n.operator_node, indent + 2);
+      break;
+    }
+    case NodeType::AssignmentStatementNode: {
+      const auto &n = node.as_AssignmentStatementNode();
+      print_node_field_with_comma(out, "target", n.target, indent + 2);
+      print_node_field(out, "expression", n.expression, indent + 2);
+      break;
+    }
+    case NodeType::AddAssignStatementNode: {
+      const auto &n = node.as_AddAssignStatementNode();
+      print_node_field_with_comma(out, "target", n.target, indent + 2);
+      print_node_field(out, "expression", n.expression, indent + 2);
+      break;
+    }
+    case NodeType::SubAssignStatementNode: {
+      const auto &n = node.as_SubAssignStatementNode();
+      print_node_field_with_comma(out, "target", n.target, indent + 2);
+      print_node_field(out, "expression", n.expression, indent + 2);
+      break;
+    }
+    case NodeType::MulAssignStatementNode: {
+      const auto &n = node.as_MulAssignStatementNode();
+      print_node_field_with_comma(out, "target", n.target, indent + 2);
+      print_node_field(out, "expression", n.expression, indent + 2);
+      break;
+    }
+    case NodeType::DivAssignStatementNode: {
+      const auto &n = node.as_DivAssignStatementNode();
+      print_node_field_with_comma(out, "target", n.target, indent + 2);
+      print_node_field(out, "expression", n.expression, indent + 2);
+      break;
+    }
+    case NodeType::ModAssignStatementNode: {
+      const auto &n = node.as_ModAssignStatementNode();
+      print_node_field_with_comma(out, "target", n.target, indent + 2);
+      print_node_field(out, "expression", n.expression, indent + 2);
+      break;
+    }
+    case NodeType::LeftShiftAssignStatementNode: {
+      const auto &n = node.as_LeftShiftAssignStatementNode();
+      print_node_field_with_comma(out, "target", n.target, indent + 2);
+      print_node_field(out, "expression", n.expression, indent + 2);
+      break;
+    }
+    case NodeType::RightShiftAssignStatementNode: {
+      const auto &n = node.as_RightShiftAssignStatementNode();
+      print_node_field_with_comma(out, "target", n.target, indent + 2);
+      print_node_field(out, "expression", n.expression, indent + 2);
+      break;
+    }
+    case NodeType::BitwiseAndAssignStatementNode: {
+      const auto &n = node.as_BitwiseAndAssignStatementNode();
+      print_node_field_with_comma(out, "target", n.target, indent + 2);
+      print_node_field(out, "expression", n.expression, indent + 2);
+      break;
+    }
+    case NodeType::BitwiseOrAssignStatementNode: {
+      const auto &n = node.as_BitwiseOrAssignStatementNode();
+      print_node_field_with_comma(out, "target", n.target, indent + 2);
+      print_node_field(out, "expression", n.expression, indent + 2);
+      break;
+    }
+    case NodeType::BitwiseXorAssignStatementNode: {
+      const auto &n = node.as_BitwiseXorAssignStatementNode();
+      print_node_field_with_comma(out, "target", n.target, indent + 2);
+      print_node_field(out, "expression", n.expression, indent + 2);
       break;
     }
     default:

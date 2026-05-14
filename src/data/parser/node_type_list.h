@@ -73,6 +73,61 @@ struct ExpressionStatementNode {
   NodeId expr;
 };
 
+struct AssignmentStatementNode {
+  NodeId target;
+  NodeId expression;
+};
+
+struct AddAssignStatementNode {
+  NodeId target;
+  NodeId expression;
+};
+
+struct SubAssignStatementNode {
+  NodeId target;
+  NodeId expression;
+};
+
+struct MulAssignStatementNode {
+  NodeId target;
+  NodeId expression;
+};
+
+struct DivAssignStatementNode {
+  NodeId target;
+  NodeId expression;
+};
+
+struct ModAssignStatementNode {
+  NodeId target;
+  NodeId expression;
+};
+
+struct LeftShiftAssignStatementNode {
+  NodeId target;
+  NodeId expression;
+};
+
+struct RightShiftAssignStatementNode {
+  NodeId target;
+  NodeId expression;
+};
+
+struct BitwiseAndAssignStatementNode {
+  NodeId target;
+  NodeId expression;
+};
+
+struct BitwiseOrAssignStatementNode {
+  NodeId target;
+  NodeId expression;
+};
+
+struct BitwiseXorAssignStatementNode {
+  NodeId target;
+  NodeId expression;
+};
+
 struct ObjectLiteralNode {
   List<NodeId> entries;
 };
@@ -324,9 +379,9 @@ struct OperatorIdentBitwiseOrNode {};
 
 struct OperatorIdentBitwiseXorNode {};
 
-struct OperatorIdentLShiftNode {};
+struct OperatorIdentLeftShiftNode {};
 
-struct OperatorIdentRShiftNode {};
+struct OperatorIdentRightShiftNode {};
 
 struct OperatorIdentAssignNode {};
 
@@ -346,9 +401,9 @@ struct OperatorIdentBitwiseOrAssignNode {};
 
 struct OperatorIdentBitwiseXorAssignNode {};
 
-struct OperatorIdentLShiftAssignNode {};
+struct OperatorIdentLeftShiftAssignNode {};
 
-struct OperatorIdentRShiftAssignNode {};
+struct OperatorIdentRightShiftAssignNode {};
 
 struct OperatorIdentIxNode {};
 
@@ -442,8 +497,8 @@ struct OperatorIdentifierNode {
   X(OperatorIdentBitwiseAndNode)                                                                   \
   X(OperatorIdentBitwiseOrNode)                                                                    \
   X(OperatorIdentBitwiseXorNode)                                                                   \
-  X(OperatorIdentLShiftNode)                                                                       \
-  X(OperatorIdentRShiftNode)                                                                       \
+  X(OperatorIdentLeftShiftNode)                                                                    \
+  X(OperatorIdentRightShiftNode)                                                                   \
   X(OperatorIdentAssignNode)                                                                       \
   X(OperatorIdentAddAssignNode)                                                                    \
   X(OperatorIdentSubAssignNode)                                                                    \
@@ -453,11 +508,22 @@ struct OperatorIdentifierNode {
   X(OperatorIdentBitwiseAndAssignNode)                                                             \
   X(OperatorIdentBitwiseOrAssignNode)                                                              \
   X(OperatorIdentBitwiseXorAssignNode)                                                             \
-  X(OperatorIdentLShiftAssignNode)                                                                 \
-  X(OperatorIdentRShiftAssignNode)                                                                 \
+  X(OperatorIdentLeftShiftAssignNode)                                                              \
+  X(OperatorIdentRightShiftAssignNode)                                                             \
   X(OperatorIdentIxNode)                                                                           \
   X(OperatorIdentFuncallNode)                                                                      \
   X(OperatorIdentAsNode)                                                                           \
-  X(OperatorIdentifierNode)
+  X(OperatorIdentifierNode)                                                                        \
+  X(AssignmentStatementNode)                                                                       \
+  X(AddAssignStatementNode)                                                                        \
+  X(SubAssignStatementNode)                                                                        \
+  X(MulAssignStatementNode)                                                                        \
+  X(DivAssignStatementNode)                                                                        \
+  X(ModAssignStatementNode)                                                                        \
+  X(LeftShiftAssignStatementNode)                                                                  \
+  X(RightShiftAssignStatementNode)                                                                 \
+  X(BitwiseAndAssignStatementNode)                                                                 \
+  X(BitwiseOrAssignStatementNode)                                                                  \
+  X(BitwiseXorAssignStatementNode)
 
 } // namespace amelia
