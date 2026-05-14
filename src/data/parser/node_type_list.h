@@ -382,6 +382,14 @@ struct WhileStatementNode {
   NodeId body;
 };
 
+struct LabelStatementNode {
+  NodeId label;
+};
+
+struct GotoStatementNode {
+  NodeId label;
+};
+
 struct OperatorIdentAddNode {};
 
 struct OperatorIdentSubNode {};
@@ -576,6 +584,8 @@ struct OperatorIdentifierNode {
   X(BitwiseOrAssignStatementNode)                                                                  \
   X(BitwiseXorAssignStatementNode)                                                                 \
   X(ForInStatementNode)                                                                            \
-  X(WhileStatementNode)
+  X(WhileStatementNode)                                                                            \
+  X(LabelStatementNode)                                                                            \
+  X(GotoStatementNode)
 
 } // namespace amelia

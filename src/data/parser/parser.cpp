@@ -72,6 +72,10 @@ public:
       result = parse_for_in_statement();
     } else if (token.type == TokenType::KEYWORD_WHILE) {
       result = parse_while_statement();
+    } else if (token.type == TokenType::KEYWORD_LABEL) {
+      result = parse_label_statement();
+    } else if (token.type == TokenType::KEYWORD_GOTO) {
+      result = parse_goto_statement();
     } else if (token.type == TokenType::SEMICOLON) {
       result = parse_empty_statement();
       is_empty = true;
@@ -82,6 +86,19 @@ public:
       ++m_token_index; // consume one trailing ';' token
     }
     return result;
+  }
+
+  NodeId parse_label_statement() {
+    auto label_token = next(); // consume the 'label' keyword
+    NodeId label = expect_identifier("Expected identifier after 'label' keyword in label statement"
+    );
+    return m_output.add_node(label_token.loc, LabelStatementNode{label});
+  }
+
+  NodeId parse_goto_statement() {
+    auto goto_token = next(); // consume the 'goto' keyword
+    NodeId label = expect_identifier("Expected identifier after 'goto' keyword in goto statement");
+    return m_output.add_node(goto_token.loc, GotoStatementNode{label});
   }
 
   NodeId parse_empty_statement() {
@@ -861,7 +878,8 @@ public:
 
   NodeId expect_identifier(Text error_message) {
     auto token = peek();
-    if (token.type != TokenType::IDENTIFIER && token.type != TokenType::IDENTIFIER_NO_W) {
+    if (token.type != TokenType::IDENTIFIER && token.type != TokenType::IDENTIFIER_NO_W &&
+        token.type != TokenType::KEYWORD_OPERATOR) {
       throw_parser_error(token.id, String(error_message));
     }
     return parse_identifier();

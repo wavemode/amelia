@@ -592,6 +592,16 @@ private:
       print_node_field(out, "body", n.body, indent + 2);
       break;
     }
+    case NodeType::LabelStatementNode: {
+      const auto &n = node.as_LabelStatementNode();
+      print_node_field(out, "label", n.label, indent + 2);
+      break;
+    }
+    case NodeType::GotoStatementNode: {
+      const auto &n = node.as_GotoStatementNode();
+      print_node_field(out, "label", n.label, indent + 2);
+      break;
+    }
     default:
       throw RuntimeError("Unknown node type");
     }

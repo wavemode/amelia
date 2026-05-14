@@ -1,0 +1,13 @@
+label x
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LabelStatementNode(
+      label=IdentifierNode(
+        name=IDENTIFIER(x)
+      )
+    )
+  ]
+)
+*/

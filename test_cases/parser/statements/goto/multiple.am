@@ -1,0 +1,19 @@
+goto x
+goto y
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    GotoStatementNode(
+      label=IdentifierNode(
+        name=IDENTIFIER(x)
+      )
+    ),
+    GotoStatementNode(
+      label=IdentifierNode(
+        name=IDENTIFIER(y)
+      )
+    )
+  ]
+)
+*/
