@@ -1,0 +1,14 @@
+while (x);
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    WhileStatementNode(
+      condition=IdentifierNode(
+        name=IDENTIFIER_NO_W(x)
+      ),
+      body=EmptyStatementNode()
+    )
+  ]
+)
+*/

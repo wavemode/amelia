@@ -70,6 +70,8 @@ public:
       result = parse_throw_statement();
     } else if (token.type == TokenType::KEYWORD_FOR) {
       result = parse_for_in_statement();
+    } else if (token.type == TokenType::KEYWORD_WHILE) {
+      result = parse_while_statement();
     } else if (token.type == TokenType::SEMICOLON) {
       result = parse_empty_statement();
       is_empty = true;
@@ -85,6 +87,15 @@ public:
   NodeId parse_empty_statement() {
     auto semicolon_token = next(); // consume the ';' token
     return m_output.add_node(semicolon_token.loc, EmptyStatementNode{});
+  }
+
+  NodeId parse_while_statement() {
+    auto while_token = next(); // consume the 'while' keyword
+    read_left_paren("Expected '(' after 'while' keyword in while statement");
+    NodeId condition = parse_expression();
+    read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after condition in while statement");
+    NodeId body = parse_statement();
+    return m_output.add_node(while_token.loc, WhileStatementNode{condition, body});
   }
 
   NodeId parse_for_in_statement() {

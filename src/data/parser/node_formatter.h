@@ -550,6 +550,12 @@ private:
       print_node_field(out, "body", n.body, indent + 2);
       break;
     }
+    case NodeType::WhileStatementNode: {
+      const auto &n = node.as_WhileStatementNode();
+      print_node_field_with_comma(out, "condition", n.condition, indent + 2);
+      print_node_field(out, "body", n.body, indent + 2);
+      break;
+    }
     default:
       throw RuntimeError("Unknown node type");
     }

@@ -347,6 +347,11 @@ struct ForInStatementNode {
   NodeId body;
 };
 
+struct WhileStatementNode {
+  NodeId condition;
+  NodeId body;
+};
+
 struct OperatorIdentAddNode {};
 
 struct OperatorIdentSubNode {};
@@ -534,6 +539,7 @@ struct OperatorIdentifierNode {
   X(BitwiseAndAssignStatementNode)                                                                 \
   X(BitwiseOrAssignStatementNode)                                                                  \
   X(BitwiseXorAssignStatementNode)                                                                 \
-  X(ForInStatementNode)
+  X(ForInStatementNode)                                                                            \
+  X(WhileStatementNode)
 
 } // namespace amelia
