@@ -112,7 +112,92 @@ public:
   }
 
   NodeId parse_function_declaration() {
-    return 0;
+    auto fun_token = next(); // consume the 'fun' keyword
+    auto name = expect_identifier("Expected function name after 'fun' keyword");
+    NodeId signature = parse_function_signature();
+    Option<NodeId> body;
+    if (peek().type == TokenType::LEFT_BRACE) {
+      body = parse_function_body();
+    }
+    return m_output.add_node(
+        fun_token.loc, FunctionDeclarationStatementNode{name, signature, body}
+    );
+  }
+
+  NodeId parse_function_body() {
+    auto left_brace_token = read_token_type(
+        TokenType::LEFT_BRACE, "Expected '{' at the beginning of function body"
+    );
+    List<NodeId> stmts;
+    parse_statements(stmts, TokenType::RIGHT_BRACE);
+    ++m_token_index; // consume the '}' token
+    return m_output.add_node(left_brace_token.loc, FunctionBodyNode{std::move(stmts)});
+  }
+
+  NodeId parse_function_signature() {
+    auto start_position = read_left_paren("Expected '(' at the beginning of function signature")
+                              .loc;
+    List<NodeId> parameters;
+    while (peek().type != TokenType::RIGHT_PAREN) {
+      parameters.push_back(parse_function_parameter());
+      if (peek().type == TokenType::COMMA) {
+        ++m_token_index; // consume the ',' token
+      }
+    }
+    ++m_token_index; // consume the ')' token
+    Option<NodeId> implicit_parameter_list;
+    auto next_token = peek();
+    if (next_token.type == TokenType::KEYWORD_WITH) {
+      ++m_token_index; // consume the 'with' keyword
+      read_left_paren("Expected '(' after 'with' keyword in function signature");
+      List<NodeId> implicit_parameters;
+      while (peek().type != TokenType::RIGHT_PAREN) {
+        implicit_parameters.push_back(parse_function_parameter());
+        if (peek().type == TokenType::COMMA) {
+          ++m_token_index; // consume the ',' token
+        }
+      }
+      ++m_token_index; // consume the ')' token
+      implicit_parameter_list = m_output.add_node(
+          next_token.loc, FunctionImplicitParameterListNode{std::move(implicit_parameters)}
+      );
+    }
+
+    Option<NodeId> return_type;
+    if (peek().type == TokenType::ARROW) {
+      ++m_token_index; // consume the '->' token
+      return_type = require_expression();
+    }
+
+    return m_output.add_node(
+        start_position,
+        FunctionSignatureNode{std::move(parameters), implicit_parameter_list, return_type}
+    );
+  }
+
+  NodeId parse_function_parameter() {
+    auto start_position = peek().loc;
+    bool variadic = false;
+    if (peek().type == TokenType::ELLIPSIS) {
+      variadic = true;
+      ++m_token_index; // consume the '...' token
+    }
+    auto name = expect_identifier("Expected parameter name in function signature");
+    Option<NodeId> type;
+    if (peek().type == TokenType::COLON) {
+      ++m_token_index; // consume the ':' token
+      type = require_expression();
+    }
+
+    Option<NodeId> default_value;
+    if (peek().type == TokenType::ASSIGN) {
+      ++m_token_index; // consume the '=' token
+      default_value = require_expression();
+    }
+
+    return m_output.add_node(
+        start_position, FunctionParameterNode{variadic, name, type, default_value}
+    );
   }
 
   NodeId parse_label_statement() {
@@ -807,14 +892,14 @@ public:
   NodeId parse_catch_clause() {
     auto catch_token = next(); // consume the 'catch' keyword
     read_left_paren("Expected '(' after 'catch'");
-    Option<TokenId> var;
+    Option<NodeId> var;
     auto next_token = peek();
     auto following_token = peek(1);
     if ((next_token.type == TokenType::IDENTIFIER || next_token.type == TokenType::IDENTIFIER_NO_W
         ) &&
         following_token.type == TokenType::COLON) {
-      var = next_token.id;
-      m_token_index += 2; // consume the identifier and the colon
+      var = parse_identifier();
+      ++m_token_index; // consume the ':' token
     }
     NodeId exc_type = require_expression();
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after catch clause exception type");

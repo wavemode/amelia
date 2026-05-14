@@ -10,7 +10,7 @@ ModuleNode(
         ExpressionStatementNode(
           expr=FunctionCallExpressionNode(
             callee=IdentifierNode(
-              name=IDENTIFIER(f)
+              token=IDENTIFIER(f)
             ),
             args=[]
           )

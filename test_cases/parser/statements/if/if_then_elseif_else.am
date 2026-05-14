@@ -11,26 +11,26 @@ ModuleNode(
   decls=[
     IfThenElseStatementNode(
       condition=IdentifierNode(
-        name=IDENTIFIER_NO_W(x)
+        token=IDENTIFIER_NO_W(x)
       ),
       then_branch=BlockStatementNode(
         stmts=[
           ExpressionStatementNode(
             expr=IdentifierNode(
-              name=IDENTIFIER(y)
+              token=IDENTIFIER(y)
             )
           )
         ]
       ),
       else_branch=IfThenElseStatementNode(
         condition=IdentifierNode(
-          name=IDENTIFIER_NO_W(z)
+          token=IDENTIFIER_NO_W(z)
         ),
         then_branch=BlockStatementNode(
           stmts=[
             ExpressionStatementNode(
               expr=IdentifierNode(
-                name=IDENTIFIER(t)
+                token=IDENTIFIER(t)
               )
             )
           ]
@@ -39,7 +39,7 @@ ModuleNode(
           stmts=[
             ExpressionStatementNode(
               expr=IdentifierNode(
-                name=IDENTIFIER(u)
+                token=IDENTIFIER(u)
               )
             )
           ]

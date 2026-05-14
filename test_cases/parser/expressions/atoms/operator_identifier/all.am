@@ -80,7 +80,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentAddNode()
@@ -90,7 +90,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentSubNode()
@@ -100,7 +100,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentStarNode()
@@ -110,7 +110,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentDivNode()
@@ -120,7 +120,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentModNode()
@@ -130,7 +130,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentIncNode()
@@ -140,7 +140,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentIncNode()
@@ -150,7 +150,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentDecNode()
@@ -160,7 +160,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentDecNode()
@@ -170,7 +170,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentEqNode()
@@ -180,7 +180,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentNeqNode()
@@ -190,7 +190,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentGtNode()
@@ -200,7 +200,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentLtNode()
@@ -210,7 +210,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentGteNode()
@@ -220,7 +220,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentLteNode()
@@ -230,7 +230,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentNotNode()
@@ -240,7 +240,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentNotNode()
@@ -250,7 +250,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentAndNode()
@@ -260,7 +260,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentOrNode()
@@ -270,7 +270,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentBitwiseNotNode()
@@ -280,7 +280,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentBitwiseAndNode()
@@ -290,7 +290,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentBitwiseOrNode()
@@ -300,7 +300,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentBitwiseXorNode()
@@ -310,7 +310,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentLeftShiftNode()
@@ -320,7 +320,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentRightShiftNode()
@@ -330,7 +330,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentAssignNode()
@@ -340,7 +340,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentAddAssignNode()
@@ -350,7 +350,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentSubAssignNode()
@@ -360,7 +360,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentMulAssignNode()
@@ -370,7 +370,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentDivAssignNode()
@@ -380,7 +380,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentModAssignNode()
@@ -390,7 +390,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentBitwiseAndAssignNode()
@@ -400,7 +400,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentBitwiseOrAssignNode()
@@ -410,7 +410,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentBitwiseXorAssignNode()
@@ -420,7 +420,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentLeftShiftAssignNode()
@@ -430,7 +430,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentRightShiftAssignNode()
@@ -440,7 +440,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentIxNode()
@@ -450,7 +450,7 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentFuncallNode()
@@ -460,12 +460,12 @@ ModuleNode(
     ExpressionStatementNode(
       expr=FieldAccessExpressionNode(
         object=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
           operator_node=OperatorIdentAsNode(
             type=IdentifierNode(
-              name=IDENTIFIER_NO_W(int)
+              token=IDENTIFIER_NO_W(int)
             )
           )
         )

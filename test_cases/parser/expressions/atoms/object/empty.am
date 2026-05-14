@@ -5,7 +5,7 @@ ModuleNode(
   decls=[
     LetAssignmentStatementNode(
       target=IdentifierNode(
-        name=IDENTIFIER(x)
+        token=IDENTIFIER(x)
       ),
       expression=ObjectLiteralNode(
         entries=[]

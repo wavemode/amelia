@@ -5,10 +5,10 @@ ModuleNode(
   decls=[
     ConstAssignmentStatementNode(
       target=IdentifierNode(
-        name=IDENTIFIER(x)
+        token=IDENTIFIER(x)
       ),
       expression=IdentifierNode(
-        name=IDENTIFIER(y)
+        token=IDENTIFIER(y)
       )
     )
   ]

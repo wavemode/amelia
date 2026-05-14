@@ -15,7 +15,7 @@ struct ModuleNode {
 };
 
 struct IdentifierNode {
-  TokenId name;
+  TokenId token;
 };
 
 struct EmptyStatementNode {};
@@ -77,11 +77,11 @@ struct PostDecrementStatementNode {
 };
 
 struct StringLiteralNode {
-  TokenId value;
+  TokenId lit;
 };
 
 struct NumberLiteralNode {
-  TokenId value;
+  TokenId lit;
 };
 
 struct ParenthesizedExpressionNode {
@@ -336,7 +336,7 @@ struct FieldAccessExpressionNode {
 
 struct NumericFieldAccessExpressionNode {
   NodeId object;
-  TokenId field;
+  TokenId lit;
 };
 
 struct IndexingExpressionNode {
@@ -399,12 +399,30 @@ struct ReturnValueStatementNode {
 };
 
 struct FunctionParameterNode {
+  bool variadic;
   NodeId name;
+  Option<NodeId> type;
+  Option<NodeId> default_value;
 };
 
-struct TypedFunctionParameterNode {
+struct FunctionImplicitParameterListNode {
+  List<NodeId> parameters;
+};
+
+struct FunctionSignatureNode {
+  List<NodeId> parameters;
+  Option<NodeId> implicit_parameter_list;
+  Option<NodeId> return_type;
+};
+
+struct FunctionBodyNode {
+  List<NodeId> stmts;
+};
+
+struct FunctionDeclarationStatementNode {
   NodeId name;
-  NodeId type;
+  NodeId signature;
+  Option<NodeId> body;
 };
 
 struct OperatorIdentAddNode {};
@@ -608,6 +626,9 @@ struct OperatorIdentifierNode {
   X(ReturnValueStatementNode)                                                                      \
   X(ReturnStatementNode)                                                                           \
   X(FunctionParameterNode)                                                                         \
-  X(TypedFunctionParameterNode)
+  X(FunctionImplicitParameterListNode)                                                             \
+  X(FunctionSignatureNode)                                                                         \
+  X(FunctionBodyNode)                                                                              \
+  X(FunctionDeclarationStatementNode)
 
 } // namespace amelia

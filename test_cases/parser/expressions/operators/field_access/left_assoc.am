@@ -5,19 +5,19 @@ ModuleNode(
   decls=[
     LetAssignmentStatementNode(
       target=IdentifierNode(
-        name=IDENTIFIER(w)
+        token=IDENTIFIER(w)
       ),
       expression=FieldAccessExpressionNode(
         object=FieldAccessExpressionNode(
           object=IdentifierNode(
-            name=IDENTIFIER(x)
+            token=IDENTIFIER(x)
           ),
           field=IdentifierNode(
-            name=IDENTIFIER_NO_W(y)
+            token=IDENTIFIER_NO_W(y)
           )
         ),
         field=IdentifierNode(
-          name=IDENTIFIER_NO_W(z)
+          token=IDENTIFIER_NO_W(z)
         )
       )
     )

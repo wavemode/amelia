@@ -5,7 +5,7 @@ ModuleNode(
   decls=[
     WhileStatementNode(
       condition=IdentifierNode(
-        name=IDENTIFIER_NO_W(x)
+        token=IDENTIFIER_NO_W(x)
       ),
       body=EmptyStatementNode()
     )

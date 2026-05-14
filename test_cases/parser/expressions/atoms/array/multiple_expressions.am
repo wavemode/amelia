@@ -9,18 +9,18 @@ ModuleNode(
   decls=[
     LetAssignmentStatementNode(
       target=IdentifierNode(
-        name=IDENTIFIER(x)
+        token=IDENTIFIER(x)
       ),
       expression=ArrayLiteralNode(
         exprs=[
           NumberLiteralNode(
-            value=NUMBER(5)
+            lit=NUMBER(5)
           ),
           StringLiteralNode(
-            value=STRING_LITERAL("hello")
+            lit=STRING_LITERAL("hello")
           ),
           NumberLiteralNode(
-            value=NUMBER(6.7)
+            lit=NUMBER(6.7)
           )
         ]
       )

@@ -5,10 +5,10 @@ ModuleNode(
   decls=[
     LetAssignmentStatementNode(
       target=IdentifierNode(
-        name=IDENTIFIER(x)
+        token=IDENTIFIER(x)
       ),
       expression=StringLiteralNode(
-        value=STRING_LITERAL("\\hello, world!")
+        lit=STRING_LITERAL("\\hello, world!")
       )
     )
   ]

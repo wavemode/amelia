@@ -6,12 +6,12 @@ ModuleNode(
   decls=[
     PostIncrementStatementNode(
       target=IdentifierNode(
-        name=IDENTIFIER(x)
+        token=IDENTIFIER(x)
       )
     ),
     PostIncrementStatementNode(
       target=IdentifierNode(
-        name=IDENTIFIER(y)
+        token=IDENTIFIER(y)
       )
     )
   ]

@@ -6,12 +6,12 @@ ModuleNode(
   decls=[
     GotoStatementNode(
       label=IdentifierNode(
-        name=IDENTIFIER(x)
+        token=IDENTIFIER(x)
       )
     ),
     GotoStatementNode(
       label=IdentifierNode(
-        name=IDENTIFIER(y)
+        token=IDENTIFIER(y)
       )
     )
   ]

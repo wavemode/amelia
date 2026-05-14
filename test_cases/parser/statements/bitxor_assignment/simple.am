@@ -5,10 +5,10 @@ ModuleNode(
   decls=[
     BitwiseXorAssignStatementNode(
       target=IdentifierNode(
-        name=IDENTIFIER(x)
+        token=IDENTIFIER(x)
       ),
       expression=NumberLiteralNode(
-        value=NUMBER(5)
+        lit=NUMBER(5)
       )
     )
   ]

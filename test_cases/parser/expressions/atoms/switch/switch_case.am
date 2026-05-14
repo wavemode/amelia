@@ -8,27 +8,27 @@ ModuleNode(
   decls=[
     LetAssignmentStatementNode(
       target=IdentifierNode(
-        name=IDENTIFIER(x)
+        token=IDENTIFIER(x)
       ),
       expression=SwitchExpressionNode(
         expr=IdentifierNode(
-          name=IDENTIFIER_NO_W(y)
+          token=IDENTIFIER_NO_W(y)
         ),
         clauses=[
           CaseClauseNode(
             expr=NumberLiteralNode(
-              value=NUMBER(1)
+              lit=NUMBER(1)
             ),
             body=NumberLiteralNode(
-              value=NUMBER(2)
+              lit=NUMBER(2)
             )
           ),
           CaseClauseNode(
             expr=NumberLiteralNode(
-              value=NUMBER(3)
+              lit=NUMBER(3)
             ),
             body=NumberLiteralNode(
-              value=NUMBER(4)
+              lit=NUMBER(4)
             )
           )
         ]

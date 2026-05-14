@@ -5,10 +5,10 @@ ModuleNode(
   decls=[
     LetAnnotationNode(
       target=IdentifierNode(
-        name=IDENTIFIER(x)
+        token=IDENTIFIER(x)
       ),
       type=IdentifierNode(
-        name=IDENTIFIER(int)
+        token=IDENTIFIER(int)
       )
     )
   ]

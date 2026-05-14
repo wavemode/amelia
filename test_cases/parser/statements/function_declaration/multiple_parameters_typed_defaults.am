@@ -1,0 +1,44 @@
+fun f(x : int = 4, y : float = 10.0) {}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    FunctionDeclarationStatementNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(f)
+      ),
+      signature=FunctionSignatureNode(
+        parameters=[
+          FunctionParameterNode(
+            variadic=false,
+            name=IdentifierNode(
+              token=IDENTIFIER_NO_W(x)
+            ),
+            type=IdentifierNode(
+              token=IDENTIFIER(int)
+            ),
+            default_value=NumberLiteralNode(
+              lit=NUMBER(4)
+            )
+          ),
+          FunctionParameterNode(
+            variadic=false,
+            name=IdentifierNode(
+              token=IDENTIFIER(y)
+            ),
+            type=IdentifierNode(
+              token=IDENTIFIER(float)
+            ),
+            default_value=NumberLiteralNode(
+              lit=NUMBER(10.0)
+            )
+          )
+        ]
+      ),
+      body=FunctionBodyNode(
+        stmts=[]
+      )
+    )
+  ]
+)
+*/

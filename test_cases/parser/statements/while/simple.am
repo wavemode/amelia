@@ -5,11 +5,11 @@ ModuleNode(
   decls=[
     WhileStatementNode(
       condition=IdentifierNode(
-        name=IDENTIFIER_NO_W(x)
+        token=IDENTIFIER_NO_W(x)
       ),
       body=ExpressionStatementNode(
         expr=IdentifierNode(
-          name=IDENTIFIER(z)
+          token=IDENTIFIER(z)
         )
       )
     )

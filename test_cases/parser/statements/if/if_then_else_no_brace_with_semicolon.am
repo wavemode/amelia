@@ -9,12 +9,12 @@ ModuleNode(
   decls=[
     IfThenElseStatementNode(
       condition=IdentifierNode(
-        name=IDENTIFIER_NO_W(x)
+        token=IDENTIFIER_NO_W(x)
       ),
       then_branch=ExpressionStatementNode(
         expr=FunctionCallExpressionNode(
           callee=IdentifierNode(
-            name=IDENTIFIER(y)
+            token=IDENTIFIER(y)
           ),
           args=[]
         )
@@ -22,7 +22,7 @@ ModuleNode(
       else_branch=ExpressionStatementNode(
         expr=FunctionCallExpressionNode(
           callee=IdentifierNode(
-            name=IDENTIFIER(z)
+            token=IDENTIFIER(z)
           ),
           args=[]
         )

@@ -5,16 +5,16 @@ ModuleNode(
   decls=[
     LetAssignmentStatementNode(
       target=IdentifierNode(
-        name=IDENTIFIER(x)
+        token=IDENTIFIER(x)
       ),
       expression=FunctionCallExpressionNode(
         callee=IdentifierNode(
-          name=IDENTIFIER(y)
+          token=IDENTIFIER(y)
         ),
         args=[
           PositionalFunctionArgumentNode(
             expr=IdentifierNode(
-              name=IDENTIFIER_NO_W(z)
+              token=IDENTIFIER_NO_W(z)
             )
           )
         ]

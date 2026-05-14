@@ -5,14 +5,14 @@ ModuleNode(
   decls=[
     ForInStatementNode(
       var=IdentifierNode(
-        name=IDENTIFIER_NO_W(x)
+        token=IDENTIFIER_NO_W(x)
       ),
       iterable=IdentifierNode(
-        name=IDENTIFIER(y)
+        token=IDENTIFIER(y)
       ),
       body=ExpressionStatementNode(
         expr=IdentifierNode(
-          name=IDENTIFIER(z)
+          token=IDENTIFIER(z)
         )
       )
     )

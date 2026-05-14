@@ -5,11 +5,11 @@ ModuleNode(
   decls=[
     LetAssignmentStatementNode(
       target=IdentifierNode(
-        name=IDENTIFIER(x)
+        token=IDENTIFIER(x)
       ),
       expression=NegativeExpressionNode(
         expr=IdentifierNode(
-          name=IDENTIFIER_NO_W(y)
+          token=IDENTIFIER_NO_W(y)
         )
       )
     )

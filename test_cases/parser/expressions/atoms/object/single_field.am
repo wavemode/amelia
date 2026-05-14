@@ -5,16 +5,16 @@ ModuleNode(
   decls=[
     LetAssignmentStatementNode(
       target=IdentifierNode(
-        name=IDENTIFIER(x)
+        token=IDENTIFIER(x)
       ),
       expression=ObjectLiteralNode(
         entries=[
           KeyValueEntryNode(
             key=IdentifierNode(
-              name=IDENTIFIER_NO_W(y)
+              token=IDENTIFIER_NO_W(y)
             ),
             value=IdentifierNode(
-              name=IDENTIFIER(z)
+              token=IDENTIFIER(z)
             )
           )
         ]

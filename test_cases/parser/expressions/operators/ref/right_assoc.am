@@ -5,12 +5,12 @@ ModuleNode(
   decls=[
     LetAssignmentStatementNode(
       target=IdentifierNode(
-        name=IDENTIFIER(w)
+        token=IDENTIFIER(w)
       ),
       expression=RefExpressionNode(
         expr=RefExpressionNode(
           expr=IdentifierNode(
-            name=IDENTIFIER(x)
+            token=IDENTIFIER(x)
           )
         )
       )

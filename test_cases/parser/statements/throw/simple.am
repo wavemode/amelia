@@ -5,7 +5,7 @@ ModuleNode(
   decls=[
     ThrowStatementNode(
       expr=IdentifierNode(
-        name=IDENTIFIER(x)
+        token=IDENTIFIER(x)
       )
     )
   ]

@@ -5,7 +5,7 @@ ModuleNode(
   decls=[
     ExpressionStatementNode(
       expr=IdentifierNode(
-        name=IDENTIFIER(a)
+        token=IDENTIFIER(a)
       )
     )
   ]

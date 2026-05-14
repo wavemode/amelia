@@ -5,18 +5,18 @@ ModuleNode(
   decls=[
     LetAssignmentStatementNode(
       target=IdentifierNode(
-        name=IDENTIFIER(w)
+        token=IDENTIFIER(w)
       ),
       expression=GreaterExpressionNode(
         left=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         right=RightShiftExpressionNode(
           left=IdentifierNode(
-            name=IDENTIFIER(y)
+            token=IDENTIFIER(y)
           ),
           right=IdentifierNode(
-            name=IDENTIFIER(z)
+            token=IDENTIFIER(z)
           )
         )
       )

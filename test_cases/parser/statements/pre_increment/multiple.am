@@ -6,12 +6,12 @@ ModuleNode(
   decls=[
     PreIncrementStatementNode(
       target=IdentifierNode(
-        name=IDENTIFIER_NO_W(x)
+        token=IDENTIFIER_NO_W(x)
       )
     ),
     PreIncrementStatementNode(
       target=IdentifierNode(
-        name=IDENTIFIER_NO_W(y)
+        token=IDENTIFIER_NO_W(y)
       )
     )
   ]

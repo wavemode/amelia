@@ -5,19 +5,19 @@ ModuleNode(
   decls=[
     LetAssignmentStatementNode(
       target=IdentifierNode(
-        name=IDENTIFIER(w)
+        token=IDENTIFIER(w)
       ),
       expression=TryCatchExpressionNode(
         try_block=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         clauses=[
           CatchClauseNode(
             exc_type=IdentifierNode(
-              name=IDENTIFIER_NO_W(z)
+              token=IDENTIFIER_NO_W(z)
             ),
             body=IdentifierNode(
-              name=IDENTIFIER(t)
+              token=IDENTIFIER(t)
             )
           )
         ]

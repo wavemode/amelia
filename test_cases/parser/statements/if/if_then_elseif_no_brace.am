@@ -9,20 +9,20 @@ ModuleNode(
   decls=[
     IfThenElseStatementNode(
       condition=IdentifierNode(
-        name=IDENTIFIER_NO_W(x)
+        token=IDENTIFIER_NO_W(x)
       ),
       then_branch=ExpressionStatementNode(
         expr=IdentifierNode(
-          name=IDENTIFIER(y)
+          token=IDENTIFIER(y)
         )
       ),
       else_branch=IfThenStatementNode(
         condition=IdentifierNode(
-          name=IDENTIFIER_NO_W(z)
+          token=IDENTIFIER_NO_W(z)
         ),
         then_branch=ExpressionStatementNode(
           expr=IdentifierNode(
-            name=IDENTIFIER(t)
+            token=IDENTIFIER(t)
           )
         )
       )

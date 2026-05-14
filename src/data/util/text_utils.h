@@ -112,6 +112,7 @@ struct TextUtils {
   static void to_string(AbstractString &output, int64_t value);
   static void to_string(AbstractString &output, size_t value);
   static void to_string(AbstractString &output, double value);
+  static void to_string(AbstractString &output, bool value);
 
   static bool is_digit(Text input);
   static bool is_digit(uint32_t ch);

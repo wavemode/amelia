@@ -5,19 +5,19 @@ ModuleNode(
   decls=[
     LetAssignmentStatementNode(
       target=IdentifierNode(
-        name=IDENTIFIER(w)
+        token=IDENTIFIER(w)
       ),
       expression=ScopeResolutionExpressionNode(
         scope=ScopeResolutionExpressionNode(
           scope=IdentifierNode(
-            name=IDENTIFIER(x)
+            token=IDENTIFIER(x)
           ),
           name=IdentifierNode(
-            name=IDENTIFIER_NO_W(y)
+            token=IDENTIFIER_NO_W(y)
           )
         ),
         name=IdentifierNode(
-          name=IDENTIFIER_NO_W(z)
+          token=IDENTIFIER_NO_W(z)
         )
       )
     )

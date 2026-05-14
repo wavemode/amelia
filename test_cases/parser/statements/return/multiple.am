@@ -8,7 +8,7 @@ ModuleNode(
     ReturnValueStatementNode(
       expr=FunctionCallExpressionNode(
         callee=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         args=[]
       )

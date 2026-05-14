@@ -5,7 +5,7 @@ ModuleNode(
   decls=[
     LetStatementNode(
       target=IdentifierNode(
-        name=IDENTIFIER(x)
+        token=IDENTIFIER(x)
       )
     )
   ]

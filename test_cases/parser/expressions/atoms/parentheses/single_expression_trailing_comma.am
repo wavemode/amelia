@@ -6,12 +6,12 @@ ModuleNode(
   decls=[
     LetAssignmentStatementNode(
       target=IdentifierNode(
-        name=IDENTIFIER(x)
+        token=IDENTIFIER(x)
       ),
       expression=ParenthesizedExpressionNode(
         exprs=[
           NumberLiteralNode(
-            value=NUMBER(5)
+            lit=NUMBER(5)
           )
         ]
       )

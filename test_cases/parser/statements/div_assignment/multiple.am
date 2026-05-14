@@ -6,18 +6,18 @@ ModuleNode(
   decls=[
     DivAssignStatementNode(
       target=IdentifierNode(
-        name=IDENTIFIER(x)
+        token=IDENTIFIER(x)
       ),
       expression=NumberLiteralNode(
-        value=NUMBER(5)
+        lit=NUMBER(5)
       )
     ),
     DivAssignStatementNode(
       target=IdentifierNode(
-        name=IDENTIFIER(y)
+        token=IDENTIFIER(y)
       ),
       expression=NumberLiteralNode(
-        value=NUMBER(6)
+        lit=NUMBER(6)
       )
     )
   ]

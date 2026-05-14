@@ -570,6 +570,14 @@ void TextUtils::to_string(AbstractString &output, double value) {
   output.append(Text::from(s1));
 }
 
+void TextUtils::to_string(AbstractString &output, bool value) {
+  if (value) {
+    output.append("true");
+  } else {
+    output.append("false");
+  }
+}
+
 bool TextUtils::is_digit(uint32_t ch) {
   return ch >= '0' && ch <= '9';
 }

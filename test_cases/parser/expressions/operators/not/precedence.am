@@ -5,16 +5,16 @@ ModuleNode(
   decls=[
     LetAssignmentStatementNode(
       target=IdentifierNode(
-        name=IDENTIFIER(x)
+        token=IDENTIFIER(x)
       ),
       expression=MultiplyExpressionNode(
         left=NotExpressionNode(
           expr=IdentifierNode(
-            name=IDENTIFIER_NO_W(y)
+            token=IDENTIFIER_NO_W(y)
           )
         ),
         right=IdentifierNode(
-          name=IDENTIFIER_NO_W(z)
+          token=IDENTIFIER_NO_W(z)
         )
       )
     )

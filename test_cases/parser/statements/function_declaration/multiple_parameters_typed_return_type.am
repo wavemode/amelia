@@ -1,0 +1,41 @@
+fun f(x : int, y : float) -> double {}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    FunctionDeclarationStatementNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(f)
+      ),
+      signature=FunctionSignatureNode(
+        parameters=[
+          FunctionParameterNode(
+            variadic=false,
+            name=IdentifierNode(
+              token=IDENTIFIER_NO_W(x)
+            ),
+            type=IdentifierNode(
+              token=IDENTIFIER(int)
+            )
+          ),
+          FunctionParameterNode(
+            variadic=false,
+            name=IdentifierNode(
+              token=IDENTIFIER(y)
+            ),
+            type=IdentifierNode(
+              token=IDENTIFIER(float)
+            )
+          )
+        ],
+        return_type=IdentifierNode(
+          token=IDENTIFIER(double)
+        )
+      ),
+      body=FunctionBodyNode(
+        stmts=[]
+      )
+    )
+  ]
+)
+*/

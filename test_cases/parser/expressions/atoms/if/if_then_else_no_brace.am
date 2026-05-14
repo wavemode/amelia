@@ -5,17 +5,17 @@ ModuleNode(
   decls=[
     LetAssignmentStatementNode(
       target=IdentifierNode(
-        name=IDENTIFIER(w)
+        token=IDENTIFIER(w)
       ),
       expression=IfThenElseExpressionNode(
         condition=IdentifierNode(
-          name=IDENTIFIER_NO_W(x)
+          token=IDENTIFIER_NO_W(x)
         ),
         then_branch=IdentifierNode(
-          name=IDENTIFIER_NO_W(y)
+          token=IDENTIFIER_NO_W(y)
         ),
         else_branch=IdentifierNode(
-          name=IDENTIFIER(z)
+          token=IDENTIFIER(z)
         )
       )
     )

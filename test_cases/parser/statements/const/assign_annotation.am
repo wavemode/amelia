@@ -5,13 +5,13 @@ ModuleNode(
   decls=[
     ConstAssignAnnotationNode(
       target=IdentifierNode(
-        name=IDENTIFIER(x)
+        token=IDENTIFIER(x)
       ),
       type=IdentifierNode(
-        name=IDENTIFIER(int)
+        token=IDENTIFIER(int)
       ),
       expression=NumberLiteralNode(
-        value=NUMBER(5)
+        lit=NUMBER(5)
       )
     )
   ]

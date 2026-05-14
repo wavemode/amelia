@@ -5,14 +5,14 @@ ModuleNode(
   decls=[
     LetAssignmentStatementNode(
       target=IdentifierNode(
-        name=IDENTIFIER(x)
+        token=IDENTIFIER(x)
       ),
       expression=NotExpressionNode(
         expr=NumericFieldAccessExpressionNode(
           object=IdentifierNode(
-            name=IDENTIFIER_NO_W(y)
+            token=IDENTIFIER_NO_W(y)
           ),
-          field=NUMBER_FIELD(.0)
+          lit=NUMBER_FIELD(.0)
         )
       )
     )

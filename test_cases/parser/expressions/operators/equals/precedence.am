@@ -5,18 +5,18 @@ ModuleNode(
   decls=[
     LetAssignmentStatementNode(
       target=IdentifierNode(
-        name=IDENTIFIER(w)
+        token=IDENTIFIER(w)
       ),
       expression=BitwiseAndExpressionNode(
         left=IdentifierNode(
-          name=IDENTIFIER(x)
+          token=IDENTIFIER(x)
         ),
         right=EqualsExpressionNode(
           left=IdentifierNode(
-            name=IDENTIFIER(y)
+            token=IDENTIFIER(y)
           ),
           right=IdentifierNode(
-            name=IDENTIFIER(z)
+            token=IDENTIFIER(z)
           )
         )
       )

@@ -8,14 +8,14 @@ ModuleNode(
   decls=[
     WhileStatementNode(
       condition=IdentifierNode(
-        name=IDENTIFIER_NO_W(x)
+        token=IDENTIFIER_NO_W(x)
       ),
       body=BlockStatementNode(
         stmts=[
           ExpressionStatementNode(
             expr=FunctionCallExpressionNode(
               callee=IdentifierNode(
-                name=IDENTIFIER(z)
+                token=IDENTIFIER(z)
               ),
               args=[]
             )
@@ -23,7 +23,7 @@ ModuleNode(
           ExpressionStatementNode(
             expr=FunctionCallExpressionNode(
               callee=IdentifierNode(
-                name=IDENTIFIER(t)
+                token=IDENTIFIER(t)
               ),
               args=[]
             )

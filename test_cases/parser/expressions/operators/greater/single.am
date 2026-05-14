@@ -5,14 +5,14 @@ ModuleNode(
   decls=[
     LetAssignmentStatementNode(
       target=IdentifierNode(
-        name=IDENTIFIER(x)
+        token=IDENTIFIER(x)
       ),
       expression=GreaterExpressionNode(
         left=IdentifierNode(
-          name=IDENTIFIER(y)
+          token=IDENTIFIER(y)
         ),
         right=IdentifierNode(
-          name=IDENTIFIER(z)
+          token=IDENTIFIER(z)
         )
       )
     )

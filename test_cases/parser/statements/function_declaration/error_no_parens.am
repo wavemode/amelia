@@ -1,0 +1,5 @@
+fun f {}
+
+/* EXPECTED_OUTPUT:
+ERROR("Expected '(' at the beginning of function signature (at test_cases/parser/statements/function_declaration/error_no_parens.am:1:7)")
+*/
