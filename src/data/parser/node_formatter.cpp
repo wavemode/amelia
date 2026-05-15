@@ -614,6 +614,7 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
     print_node_field_with_comma(
         out, "implicit_parameter_list", n.implicit_parameter_list, indent + 2
     );
+    print_node_field_with_comma(out, "capture_list", n.capture_list, indent + 2);
     print_node_field_with_comma(out, "return_type", n.return_type, indent + 2);
     break;
   }
@@ -625,6 +626,27 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
   case NodeType::FunctionImplicitParameterListNode: {
     const auto &n = node.as_FunctionImplicitParameterListNode();
     print_node_list_field(out, "parameters", n.parameters.data(), indent + 2);
+    break;
+  }
+  case NodeType::FunctionSignatureCaptureAnnotationListNode: {
+    const auto &n = node.as_FunctionSignatureCaptureAnnotationListNode();
+    print_node_list_field(out, "captures", n.captures.data(), indent + 2);
+    break;
+  }
+  case NodeType::FunctionSignatureCaptureAnnotationNode: {
+    const auto &n = node.as_FunctionSignatureCaptureAnnotationNode();
+    Text kind;
+    if (n.kind == FunctionCaptureKind::Copy) {
+      kind = "copy";
+    } else if (n.kind == FunctionCaptureKind::Move) {
+      kind = "move";
+    } else if (n.kind == FunctionCaptureKind::Ref) {
+      kind = "ref";
+    } else {
+      throw RuntimeError("unreachable");
+    }
+    print_field(out, "kind", kind, indent + 2);
+    print_node_field_with_comma(out, "var", n.var, indent + 2);
     break;
   }
   case NodeType::FunctionDeclarationStatementNode: {
@@ -695,6 +717,19 @@ void NodeFormatter::print_token_field_with_comma(
 ) const {
   out.append(',');
   print_token_field(out, name, token_id, indent);
+}
+
+void NodeFormatter::print_field(AbstractString &out, Text name, Text value, int indent) const {
+  open_line(out, indent);
+  out.append(name);
+  out.append('=');
+  out.append(value);
+}
+
+void NodeFormatter::print_field_with_comma(AbstractString &out, Text name, Text value, int indent)
+    const {
+  out.append(',');
+  print_field(out, name, value, indent);
 }
 
 void NodeFormatter::open_line(AbstractString &out, int indent) {

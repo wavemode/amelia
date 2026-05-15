@@ -409,9 +409,25 @@ struct FunctionImplicitParameterListNode {
   List<NodeId> parameters;
 };
 
+enum class FunctionCaptureKind {
+  Move,
+  Copy,
+  Ref,
+};
+
+struct FunctionSignatureCaptureAnnotationNode {
+  FunctionCaptureKind kind;
+  NodeId var;
+};
+
+struct FunctionSignatureCaptureAnnotationListNode {
+  List<NodeId> captures;
+};
+
 struct FunctionSignatureNode {
   List<NodeId> parameters;
   Option<NodeId> implicit_parameter_list;
+  Option<NodeId> capture_list;
   Option<NodeId> return_type;
 };
 
@@ -627,6 +643,8 @@ struct OperatorIdentifierNode {
   X(ReturnStatementNode)                                                                           \
   X(FunctionParameterNode)                                                                         \
   X(FunctionImplicitParameterListNode)                                                             \
+  X(FunctionSignatureCaptureAnnotationNode)                                                        \
+  X(FunctionSignatureCaptureAnnotationListNode)                                                    \
   X(FunctionSignatureNode)                                                                         \
   X(FunctionBodyNode)                                                                              \
   X(FunctionDeclarationStatementNode)

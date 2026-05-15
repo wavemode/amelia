@@ -135,8 +135,23 @@ public:
   }
 
   NodeId parse_function_signature() {
-    auto start_position = read_left_paren("Expected '(' at the beginning of function signature")
-                              .loc;
+    auto start_position = peek().loc;
+
+    List<NodeId> parameters = parse_function_parameter_list();
+    Option<NodeId> implicit_parameter_list = try_parse_implicit_parameter_list();
+    Option<NodeId> capture_list = try_parse_function_signature_capture_annotation_list();
+    Option<NodeId> return_type = try_parse_function_return_type();
+
+    return m_output.add_node(
+        start_position,
+        FunctionSignatureNode{
+            std::move(parameters), implicit_parameter_list, capture_list, return_type
+        }
+    );
+  }
+
+  List<NodeId> parse_function_parameter_list() {
+    read_left_paren("Expected '(' at the beginning of function parameter list");
     List<NodeId> parameters;
     while (peek().type != TokenType::RIGHT_PAREN) {
       parameters.push_back(parse_function_parameter());
@@ -145,34 +160,7 @@ public:
       }
     }
     ++m_token_index; // consume the ')' token
-    Option<NodeId> implicit_parameter_list;
-    auto next_token = peek();
-    if (next_token.type == TokenType::KEYWORD_WITH) {
-      ++m_token_index; // consume the 'with' keyword
-      read_left_paren("Expected '(' after 'with' keyword in function signature");
-      List<NodeId> implicit_parameters;
-      while (peek().type != TokenType::RIGHT_PAREN) {
-        implicit_parameters.push_back(parse_function_parameter());
-        if (peek().type == TokenType::COMMA) {
-          ++m_token_index; // consume the ',' token
-        }
-      }
-      ++m_token_index; // consume the ')' token
-      implicit_parameter_list = m_output.add_node(
-          next_token.loc, FunctionImplicitParameterListNode{std::move(implicit_parameters)}
-      );
-    }
-
-    Option<NodeId> return_type;
-    if (peek().type == TokenType::ARROW) {
-      ++m_token_index; // consume the '->' token
-      return_type = require_expression();
-    }
-
-    return m_output.add_node(
-        start_position,
-        FunctionSignatureNode{std::move(parameters), implicit_parameter_list, return_type}
-    );
+    return std::move(parameters);
   }
 
   NodeId parse_function_parameter() {
@@ -198,6 +186,74 @@ public:
     return m_output.add_node(
         start_position, FunctionParameterNode{variadic, name, type, default_value}
     );
+  }
+
+  Option<NodeId> try_parse_implicit_parameter_list() {
+    auto next_token = peek();
+    if (next_token.type == TokenType::KEYWORD_WITH) {
+      ++m_token_index; // consume the 'with' keyword
+      read_left_paren("Expected '(' after 'with' keyword in function signature");
+      List<NodeId> implicit_parameters;
+      while (peek().type != TokenType::RIGHT_PAREN) {
+        implicit_parameters.push_back(parse_function_parameter());
+        if (peek().type == TokenType::COMMA) {
+          ++m_token_index; // consume the ',' token
+        }
+      }
+      ++m_token_index; // consume the ')' token
+      return Some(m_output.add_node(
+          next_token.loc, FunctionImplicitParameterListNode{std::move(implicit_parameters)}
+      ));
+    }
+    return None();
+  }
+
+  Option<NodeId> try_parse_function_signature_capture_annotation_list() {
+    auto next_token = peek();
+    if (next_token.type == TokenType::LEFT_BRACKET ||
+        next_token.type == TokenType::LEFT_BRACKET_NO_W) {
+      ++m_token_index; // consume the '[' token
+      List<NodeId> capture_annotations;
+      while (peek().type != TokenType::RIGHT_BRACKET) {
+        capture_annotations.push_back(parse_function_signature_capture_annotation());
+        if (peek().type == TokenType::COMMA) {
+          ++m_token_index; // consume the ',' token
+        }
+      }
+      ++m_token_index; // consume the ']' token
+      return Some(m_output.add_node(
+          next_token.loc, FunctionSignatureCaptureAnnotationListNode{std::move(capture_annotations)}
+      ));
+    }
+    return None();
+  }
+
+  NodeId parse_function_signature_capture_annotation() {
+    auto start_position = peek().loc;
+    FunctionCaptureKind kind;
+    auto token = next();
+    if (token.type == TokenType::AMPERSAND) {
+      kind = FunctionCaptureKind::Ref;
+    } else if (token.type == TokenType::KEYWORD_MOVE) {
+      kind = FunctionCaptureKind::Move;
+    } else if (token.type == TokenType::KEYWORD_COPY) {
+      kind = FunctionCaptureKind::Copy;
+    } else {
+      throw_parser_error(
+          token.id, "Expected capture annotation to start with '&', 'move', or 'copy'"
+      );
+    }
+    NodeId var = expect_identifier("Expected variable name in function capture annotation");
+    return m_output.add_node(start_position, FunctionSignatureCaptureAnnotationNode{kind, var});
+  }
+
+  Option<NodeId> try_parse_function_return_type() {
+    auto next_token = peek();
+    if (next_token.type == TokenType::ARROW) {
+      ++m_token_index; // consume the '->' token
+      return require_expression();
+    }
+    return None();
   }
 
   NodeId parse_label_statement() {
