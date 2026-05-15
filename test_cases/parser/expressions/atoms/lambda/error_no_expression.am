@@ -1,0 +1,5 @@
+let x = () -> ;
+
+/* EXPECTED_OUTPUT:
+ERROR("Expected expression, got token SEMICOLON(;) (at test_cases/parser/expressions/atoms/lambda/error_no_expression.am:1:15)")
+*/

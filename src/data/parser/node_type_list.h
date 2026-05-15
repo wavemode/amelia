@@ -446,6 +446,11 @@ struct FunctionExpressionNode {
   NodeId body;
 };
 
+struct LambdaExpressionNode {
+  List<NodeId> parameters;
+  NodeId body;
+};
+
 struct OperatorIdentAddNode {};
 
 struct OperatorIdentSubNode {};
@@ -653,6 +658,7 @@ struct OperatorIdentifierNode {
   X(FunctionSignatureNode)                                                                         \
   X(FunctionBodyNode)                                                                              \
   X(FunctionDeclarationStatementNode)                                                              \
-  X(FunctionExpressionNode)
+  X(FunctionExpressionNode)                                                                        \
+  X(LambdaExpressionNode)
 
 } // namespace amelia

@@ -1,0 +1,5 @@
+let x = (...ys) -> ys
+
+/* EXPECTED_OUTPUT:
+ERROR("Expected expression, got token ARROW(->) (at test_cases/parser/expressions/atoms/lambda/error_variadic.am:1:17)")
+*/

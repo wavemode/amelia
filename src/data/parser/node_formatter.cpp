@@ -662,6 +662,12 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
     print_node_field_with_comma(out, "body", n.body, indent + 2);
     break;
   }
+  case NodeType::LambdaExpressionNode: {
+    const auto &n = node.as_LambdaExpressionNode();
+    print_node_list_field(out, "parameters", n.parameters.data(), indent + 2);
+    print_node_field_with_comma(out, "body", n.body, indent + 2);
+    break;
+  }
   default:
     throw RuntimeError("Unknown node type");
   }

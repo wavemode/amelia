@@ -1,0 +1,49 @@
+[1, 2, 3].map(x -> x + 1)
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ExpressionStatementNode(
+      expr=FunctionCallExpressionNode(
+        callee=FieldAccessExpressionNode(
+          object=ArrayLiteralNode(
+            exprs=[
+              NumberLiteralNode(
+                lit=NUMBER(1)
+              ),
+              NumberLiteralNode(
+                lit=NUMBER(2)
+              ),
+              NumberLiteralNode(
+                lit=NUMBER(3)
+              )
+            ]
+          ),
+          field=IdentifierNode(
+            token=IDENTIFIER_NO_W(map)
+          )
+        ),
+        args=[
+          PositionalFunctionArgumentNode(
+            expr=LambdaExpressionNode(
+              parameters=[
+                IdentifierNode(
+                  token=IDENTIFIER_NO_W(x)
+                )
+              ],
+              body=AddExpressionNode(
+                left=IdentifierNode(
+                  token=IDENTIFIER(x)
+                ),
+                right=NumberLiteralNode(
+                  lit=NUMBER(1)
+                )
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

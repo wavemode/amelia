@@ -1,0 +1,5 @@
+let x = (y = 10) -> y
+
+/* EXPECTED_OUTPUT:
+ERROR("Expected expression, got token ASSIGN(=) (at test_cases/parser/expressions/atoms/lambda/error_default.am:1:12)")
+*/

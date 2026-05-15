@@ -1,0 +1,5 @@
+x, y -> x + y
+
+/* EXPECTED_OUTPUT:
+ERROR("Expected expression, got token COMMA(,) (at test_cases/parser/expressions/atoms/lambda/error_comma_with_no_parens.am:1:2)")
+*/

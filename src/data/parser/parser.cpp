@@ -746,6 +746,9 @@ public:
     auto next_token = peek();
     if (next_token.type == TokenType::IDENTIFIER || next_token.type == TokenType::IDENTIFIER_NO_W ||
         next_token.type == TokenType::KEYWORD_OPERATOR) {
+      if (is_start_of_lambda_expression()) {
+        return parse_lambda_expression();
+      }
       return parse_identifier();
     } else if (next_token.type == TokenType::STRING_LITERAL) {
       return parse_string_literal();
@@ -753,6 +756,9 @@ public:
       return parse_number_literal();
     } else if (next_token.type == TokenType::LEFT_PAREN ||
                next_token.type == TokenType::LEFT_PAREN_NO_W) {
+      if (is_start_of_lambda_expression()) {
+        return parse_lambda_expression();
+      }
       return parse_parenthesized_expression();
     } else if (next_token.type == TokenType::LEFT_BRACKET ||
                next_token.type == TokenType::LEFT_BRACKET_NO_W) {
@@ -1080,10 +1086,61 @@ public:
     if (peek().type == TokenType::KEYWORD_OPERATOR) {
       return parse_operator_ident();
     }
-    if (peek().type == TokenType::IDENTIFIER || peek().type == TokenType::IDENTIFIER_NO_W) {
-      return parse_single_identifier();
+    return parse_single_identifier();
+  }
+
+  bool is_start_of_lambda_expression() {
+    auto next_token = peek();
+    if (next_token.type == TokenType::IDENTIFIER || next_token.type == TokenType::IDENTIFIER_NO_W) {
+      return peek(1).type == TokenType::ARROW;
+    } else if (next_token.type == TokenType::LEFT_PAREN ||
+               next_token.type == TokenType::LEFT_PAREN_NO_W) {
+      int lookahead = 1;
+      next_token = peek(lookahead);
+      while (next_token.type != TokenType::RIGHT_PAREN) {
+        if (next_token.type == TokenType::END_OF_FILE) {
+          return false;
+        }
+
+        /*
+          In a nutshell - in a parenthesized lambda parameter list, we should only see identifiers
+          and commas. The only exception is the colon character, which can appear immediately after
+          an identifier. If we see anything else, this isn't a lambda parameter list.
+        */
+
+        if (next_token.type == TokenType::IDENTIFIER ||
+            next_token.type == TokenType::IDENTIFIER_NO_W) {
+          if (peek(lookahead + 1).type == TokenType::COLON) {
+            return true;
+          }
+        } else if (next_token.type != TokenType::COMMA) {
+          return false;
+        }
+
+        ++lookahead;
+        next_token = peek(lookahead);
+      }
+      return peek(lookahead + 1).type == TokenType::ARROW;
     }
-    throw_parser_error_at_current_location("Expected identifier");
+    return false;
+  }
+
+  NodeId parse_lambda_expression() {
+    auto start_token = peek();
+    if (start_token.type == TokenType::LEFT_PAREN ||
+        start_token.type == TokenType::LEFT_PAREN_NO_W) {
+      List<NodeId> params = parse_function_parameter_list();
+      read_token_type(TokenType::ARROW, "Expected '->' after lambda parameter");
+      NodeId body = require_expression();
+      return m_output.add_node(start_token.loc, LambdaExpressionNode{std::move(params), body});
+    }
+
+    auto single_param = expect_identifier(
+        "Expected identifier or '(' to start lambda parameter list"
+    );
+    read_token_type(TokenType::ARROW, "Expected '->' after lambda parameter");
+    NodeId body = require_expression();
+    return m_output.add_node(start_token.loc, LambdaExpressionNode{{single_param}, body});
   }
 
   NodeId parse_single_identifier() {
