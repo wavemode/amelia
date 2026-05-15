@@ -1,0 +1,43 @@
+let f = fun(x : int, y : float) -> double {}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetAssignmentStatementNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(f)
+      ),
+      expression=FunctionExpressionNode(
+        signature=FunctionSignatureNode(
+          parameters=[
+            FunctionParameterNode(
+              variadic=false,
+              name=IdentifierNode(
+                token=IDENTIFIER_NO_W(x)
+              ),
+              type=IdentifierNode(
+                token=IDENTIFIER(int)
+              )
+            ),
+            FunctionParameterNode(
+              variadic=false,
+              name=IdentifierNode(
+                token=IDENTIFIER(y)
+              ),
+              type=IdentifierNode(
+                token=IDENTIFIER(float)
+              )
+            )
+          ],
+          return_type=IdentifierNode(
+            token=IDENTIFIER(double)
+          )
+        ),
+        body=FunctionBodyNode(
+          stmts=[]
+        )
+      )
+    )
+  ]
+)
+*/

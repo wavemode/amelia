@@ -765,9 +765,18 @@ public:
       return parse_try_catch_expression();
     } else if (next_token.type == TokenType::KEYWORD_SWITCH) {
       return parse_switch_expression();
+    } else if (next_token.type == TokenType::KEYWORD_FUN) {
+      return parse_function_expression();
     } else {
       return -1;
     }
+  }
+
+  NodeId parse_function_expression() {
+    auto fun_token = next(); // consume the 'fun' keyword
+    NodeId signature = parse_function_signature();
+    NodeId body = parse_function_body();
+    return m_output.add_node(fun_token.loc, FunctionExpressionNode{signature, body});
   }
 
   NodeId parse_operator_ident() {

@@ -1,0 +1,21 @@
+let f = fun() {}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetAssignmentStatementNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(f)
+      ),
+      expression=FunctionExpressionNode(
+        signature=FunctionSignatureNode(
+          parameters=[]
+        ),
+        body=FunctionBodyNode(
+          stmts=[]
+        )
+      )
+    )
+  ]
+)
+*/

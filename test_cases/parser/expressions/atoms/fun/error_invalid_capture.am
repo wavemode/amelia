@@ -1,0 +1,13 @@
+let f = fun (
+  x : int,
+  y : float,
+) with (
+  a : long,
+  b : short,
+) [z] -> int {
+
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("Expected capture annotation to start with '&', 'move', or 'copy' (at test_cases/parser/expressions/atoms/fun/error_invalid_capture.am:7:4)")
+*/

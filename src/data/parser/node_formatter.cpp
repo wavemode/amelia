@@ -656,6 +656,12 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
     print_node_field_with_comma(out, "body", n.body, indent + 2);
     break;
   }
+  case NodeType::FunctionExpressionNode: {
+    const auto &n = node.as_FunctionExpressionNode();
+    print_node_field(out, "signature", n.signature, indent + 2);
+    print_node_field_with_comma(out, "body", n.body, indent + 2);
+    break;
+  }
   default:
     throw RuntimeError("Unknown node type");
   }
