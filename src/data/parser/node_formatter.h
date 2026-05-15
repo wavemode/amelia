@@ -40,6 +40,8 @@ private:
 
   void print_field(AbstractString &out, Text name, Text value, int indent) const;
 
+  void print_field(AbstractString &out, Text name, bool value, int indent) const;
+
   void print_field_with_comma(AbstractString &out, Text name, Text value, int indent) const;
 
   static void open_line(AbstractString &out, int indent);

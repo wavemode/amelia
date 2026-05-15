@@ -638,8 +638,13 @@ public:
       return m_output.add_node(start_location, AwaitExpressionNode{expr});
     } else if (next_token.type == TokenType::AMPERSAND) {
       ++m_token_index; // consume the '&' operator
+      bool is_const = false;
+      if (peek().type == TokenType::KEYWORD_CONST) {
+        is_const = true;
+        ++m_token_index; // consume the 'const' keyword
+      }
       NodeId expr = parse_descend_expr_await_ref();
-      return m_output.add_node(start_location, RefExpressionNode{expr});
+      return m_output.add_node(start_location, RefExpressionNode{is_const, expr});
     }
     return parse_descend_pos_neg_deref_not_bitnot_ell();
   }
@@ -661,8 +666,13 @@ public:
       return m_output.add_node(start_location, BitwiseNotExpressionNode{expr});
     } else if (next_token.type == TokenType::STAR) {
       ++m_token_index; // consume the '*' operator
+      bool is_const = false;
+      if (peek().type == TokenType::KEYWORD_CONST) {
+        is_const = true;
+        ++m_token_index; // consume the 'const' keyword
+      }
       NodeId expr = parse_descend_pos_neg_deref_not_bitnot_ell();
-      return m_output.add_node(start_location, DerefExpressionNode{expr});
+      return m_output.add_node(start_location, DerefExpressionNode{is_const, expr});
     } else if (next_token.type == TokenType::EXCLAM || next_token.type == TokenType::EXCLAM_NO_W) {
       ++m_token_index; // consume the '!' operator
       NodeId expr = parse_descend_pos_neg_deref_not_bitnot_ell();
@@ -762,7 +772,7 @@ public:
       return parse_parenthesized_expression();
     } else if (next_token.type == TokenType::LEFT_BRACKET ||
                next_token.type == TokenType::LEFT_BRACKET_NO_W) {
-      return parse_array_literal();
+      return parse_bracket_expression();
     } else if (next_token.type == TokenType::LEFT_BRACE) {
       return parse_brace_expression();
     } else if (next_token.type == TokenType::KEYWORD_IF) {
@@ -1004,12 +1014,37 @@ public:
     );
   }
 
-  NodeId parse_array_literal() {
+  NodeId parse_bracket_expression() {
     auto open_bracket = next(); // consume the left bracket
-    List<NodeId> exprs;
-    parse_comma_separated_expression_list(exprs, TokenType::RIGHT_BRACKET);
-    ++m_token_index; // consume the right bracket
-    return m_output.add_node(open_bracket.loc, ArrayLiteralNode{std::move(exprs)});
+    auto next_token = peek();
+    if (next_token.type == TokenType::RIGHT_BRACKET) {
+      ++m_token_index; // consume the right bracket
+      bool is_const = false;
+      if (peek().type == TokenType::KEYWORD_CONST) {
+        is_const = true;
+        ++m_token_index; // consume the 'const' keyword
+      }
+      auto type = require_expression();
+      return m_output.add_node(open_bracket.loc, SliceExpressionNode{is_const, type});
+    }
+
+    NodeId size = require_expression();
+    read_token_type(TokenType::RIGHT_BRACKET, "Expected ']' after array size in array expression");
+
+    auto type = require_expression();
+
+    Option<List<NodeId>> elements;
+    if (peek().type == TokenType::LEFT_BRACE) {
+      ++m_token_index; // consume the '{' token
+      List<NodeId> elems;
+      parse_comma_separated_expression_list(elems, TokenType::RIGHT_BRACE);
+      ++m_token_index; // consume the '}' token
+      elements = std::move(elems);
+    }
+
+    return m_output.add_node(
+        open_bracket.loc, ArrayExpressionNode{type, size, std::move(elements)}
+    );
   }
 
   NodeId parse_parenthesized_expression() {

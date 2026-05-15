@@ -9,6 +9,7 @@ ModuleNode(
       ),
       expression=MultiplyExpressionNode(
         left=RefExpressionNode(
+          is_const=false,
           expr=IdentifierNode(
             token=IDENTIFIER(y)
           )

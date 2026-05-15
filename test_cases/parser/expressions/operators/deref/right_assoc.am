@@ -8,7 +8,9 @@ ModuleNode(
         token=IDENTIFIER(x)
       ),
       expression=DerefExpressionNode(
+        is_const=false,
         expr=DerefExpressionNode(
+          is_const=false,
           expr=IdentifierNode(
             token=IDENTIFIER_NO_W(y)
           )

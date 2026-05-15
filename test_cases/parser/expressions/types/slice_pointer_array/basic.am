@@ -1,0 +1,143 @@
+let x : *T
+let x : *const T
+let x : &T
+let x : &const T
+let x : []T
+let x : []const T
+let x = [_]T {a, b, c}
+let x : [N]T
+let x = [3]T {a, b, c}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetAnnotationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x)
+      ),
+      type=DerefExpressionNode(
+        is_const=false,
+        expr=IdentifierNode(
+          token=IDENTIFIER_NO_W(T)
+        )
+      )
+    ),
+    LetAnnotationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x)
+      ),
+      type=DerefExpressionNode(
+        is_const=true,
+        expr=IdentifierNode(
+          token=IDENTIFIER(T)
+        )
+      )
+    ),
+    LetAnnotationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x)
+      ),
+      type=RefExpressionNode(
+        is_const=false,
+        expr=IdentifierNode(
+          token=IDENTIFIER_NO_W(T)
+        )
+      )
+    ),
+    LetAnnotationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x)
+      ),
+      type=RefExpressionNode(
+        is_const=true,
+        expr=IdentifierNode(
+          token=IDENTIFIER(T)
+        )
+      )
+    ),
+    LetAnnotationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x)
+      ),
+      type=SliceExpressionNode(
+        is_const=false,
+        type=IdentifierNode(
+          token=IDENTIFIER_NO_W(T)
+        )
+      )
+    ),
+    LetAnnotationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x)
+      ),
+      type=SliceExpressionNode(
+        is_const=true,
+        type=IdentifierNode(
+          token=IDENTIFIER(T)
+        )
+      )
+    ),
+    LetAssignmentStatementNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x)
+      ),
+      expression=ArrayExpressionNode(
+        type=IdentifierNode(
+          token=IDENTIFIER_NO_W(T)
+        ),
+        size=IdentifierNode(
+          token=IDENTIFIER_NO_W(_)
+        ),
+        elements=[
+          IdentifierNode(
+            token=IDENTIFIER_NO_W(a)
+          ),
+          IdentifierNode(
+            token=IDENTIFIER(b)
+          ),
+          IdentifierNode(
+            token=IDENTIFIER(c)
+          )
+        ]
+      )
+    ),
+    LetAnnotationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x)
+      ),
+      type=ArrayExpressionNode(
+        type=IdentifierNode(
+          token=IDENTIFIER_NO_W(T)
+        ),
+        size=IdentifierNode(
+          token=IDENTIFIER_NO_W(N)
+        )
+      )
+    ),
+    LetAssignmentStatementNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x)
+      ),
+      expression=ArrayExpressionNode(
+        type=IdentifierNode(
+          token=IDENTIFIER_NO_W(T)
+        ),
+        size=NumberLiteralNode(
+          lit=NUMBER(3)
+        ),
+        elements=[
+          IdentifierNode(
+            token=IDENTIFIER_NO_W(a)
+          ),
+          IdentifierNode(
+            token=IDENTIFIER(b)
+          ),
+          IdentifierNode(
+            token=IDENTIFIER(c)
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

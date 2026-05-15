@@ -274,7 +274,8 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
   }
   case NodeType::RefExpressionNode: {
     const auto &n = node.as_RefExpressionNode();
-    print_node_field(out, "expr", n.expr, indent + 2);
+    print_field(out, "is_const", n.is_const, indent + 2);
+    print_node_field_with_comma(out, "expr", n.expr, indent + 2);
     break;
   }
   case NodeType::AwaitExpressionNode: {
@@ -294,7 +295,8 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
   }
   case NodeType::DerefExpressionNode: {
     const auto &n = node.as_DerefExpressionNode();
-    print_node_field(out, "expr", n.expr, indent + 2);
+    print_field(out, "is_const", n.is_const, indent + 2);
+    print_node_field_with_comma(out, "expr", n.expr, indent + 2);
     break;
   }
   case NodeType::PositiveExpressionNode: {
@@ -600,9 +602,7 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
   }
   case NodeType::FunctionParameterNode: {
     const auto &n = node.as_FunctionParameterNode();
-    open_line(out, indent + 2);
-    out.append("variadic=");
-    TextUtils::to_string(out, n.variadic);
+    print_field(out, "variadic", n.variadic, indent + 2);
     print_node_field_with_comma(out, "name", n.name, indent + 2);
     print_node_field_with_comma(out, "type", n.type, indent + 2);
     print_node_field_with_comma(out, "default_value", n.default_value, indent + 2);
@@ -666,6 +666,21 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
     const auto &n = node.as_LambdaExpressionNode();
     print_node_list_field(out, "parameters", n.parameters.data(), indent + 2);
     print_node_field_with_comma(out, "body", n.body, indent + 2);
+    break;
+  }
+  case NodeType::SliceExpressionNode: {
+    const auto &n = node.as_SliceExpressionNode();
+    print_field(out, "is_const", n.is_const, indent + 2);
+    print_node_field_with_comma(out, "type", n.type, indent + 2);
+    break;
+  }
+  case NodeType::ArrayExpressionNode: {
+    const auto &n = node.as_ArrayExpressionNode();
+    print_node_field(out, "type", n.type, indent + 2);
+    print_node_field_with_comma(out, "size", n.size, indent + 2);
+    if (n.elements.has_value()) {
+      print_node_list_field_with_comma(out, "elements", n.elements.value().data(), indent + 2);
+    }
     break;
   }
   default:
@@ -736,6 +751,13 @@ void NodeFormatter::print_field(AbstractString &out, Text name, Text value, int 
   out.append(name);
   out.append('=');
   out.append(value);
+}
+
+void NodeFormatter::print_field(AbstractString &out, Text name, bool value, int indent) const {
+  open_line(out, indent);
+  out.append(name);
+  out.append('=');
+  TextUtils::to_string(out, value);
 }
 
 void NodeFormatter::print_field_with_comma(AbstractString &out, Text name, Text value, int indent)

@@ -298,7 +298,19 @@ struct ModuloExpressionNode {
 };
 
 struct RefExpressionNode {
+  bool is_const;
   NodeId expr;
+};
+
+struct SliceExpressionNode {
+  bool is_const;
+  NodeId type;
+};
+
+struct ArrayExpressionNode {
+  NodeId type;
+  NodeId size;
+  Option<List<NodeId>> elements;
 };
 
 struct AwaitExpressionNode {
@@ -314,6 +326,7 @@ struct BitwiseNotExpressionNode {
 };
 
 struct DerefExpressionNode {
+  bool is_const;
   NodeId expr;
 };
 
@@ -659,6 +672,18 @@ struct OperatorIdentifierNode {
   X(FunctionBodyNode)                                                                              \
   X(FunctionDeclarationStatementNode)                                                              \
   X(FunctionExpressionNode)                                                                        \
-  X(LambdaExpressionNode)
+  X(LambdaExpressionNode)                                                                          \
+  X(SliceExpressionNode)                                                                           \
+  X(ArrayExpressionNode)
 
 } // namespace amelia
+
+// *T
+// *const T
+// &T
+// &const T
+// []T
+// []const T
+// [N]T
+// [_]T {a, b, c}
+// [N]T {a, b, c}

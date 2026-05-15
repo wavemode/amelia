@@ -8,7 +8,9 @@ ModuleNode(
         token=IDENTIFIER(w)
       ),
       expression=RefExpressionNode(
+        is_const=false,
         expr=RefExpressionNode(
+          is_const=false,
           expr=IdentifierNode(
             token=IDENTIFIER(x)
           )
