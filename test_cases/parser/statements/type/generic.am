@@ -1,0 +1,21 @@
+type A[B] = C
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    TypeDeclarationNode(
+      name=IndexingExpressionNode(
+        object=IdentifierNode(
+          token=IDENTIFIER(A)
+        ),
+        index=IdentifierNode(
+          token=IDENTIFIER_NO_W(B)
+        )
+      ),
+      type_expr=IdentifierNode(
+        token=IDENTIFIER(C)
+      )
+    )
+  ]
+)
+*/

@@ -542,6 +542,11 @@ struct OperatorIdentifierNode {
   NodeId operator_node;
 };
 
+struct TypeDeclarationNode {
+  NodeId name;
+  NodeId type_expr;
+};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
@@ -674,7 +679,8 @@ struct OperatorIdentifierNode {
   X(FunctionExpressionNode)                                                                        \
   X(LambdaExpressionNode)                                                                          \
   X(SliceExpressionNode)                                                                           \
-  X(ArrayExpressionNode)
+  X(ArrayExpressionNode)                                                                           \
+  X(TypeDeclarationNode)
 
 } // namespace amelia
 

@@ -1,0 +1,16 @@
+type A = int
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    TypeDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      type_expr=IdentifierNode(
+        token=IDENTIFIER(int)
+      )
+    )
+  ]
+)
+*/

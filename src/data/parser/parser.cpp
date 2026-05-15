@@ -82,6 +82,8 @@ public:
       result = parse_return_statement();
     } else if (token.type == TokenType::KEYWORD_FUN && peek(1).type == TokenType::IDENTIFIER) {
       result = parse_function_declaration();
+    } else if (token.type == TokenType::KEYWORD_TYPE) {
+      result = parse_type_declaration();
     } else if (token.type == TokenType::SEMICOLON) {
       result = parse_empty_statement();
       is_empty = true;
@@ -92,6 +94,14 @@ public:
       ++m_token_index; // consume one trailing ';' token
     }
     return result;
+  }
+
+  NodeId parse_type_declaration() {
+    auto type_token = next(); // consume the 'type' keyword
+    auto name = require_expression();
+    read_token_type(TokenType::ASSIGN, "Expected '=' after type name in type declaration");
+    NodeId type_expr = require_expression();
+    return m_output.add_node(type_token.loc, TypeDeclarationNode{name, type_expr});
   }
 
   NodeId parse_continue_statement() {
@@ -924,22 +934,6 @@ public:
       throw_parser_error_at_current_location("Expected operator after 'operator' keyword");
     }
     return m_output.add_node(start_location, OperatorIdentifierNode{operator_node});
-  }
-
-  NodeId parse_scope_resolution() {
-    auto start_location = peek().loc;
-    auto left = parse_single_identifier();
-    while (peek().type == TokenType::DOUBLE_COLON_NO_W) {
-      m_token_index++; // consume the '::' operator
-      if (peek().type != TokenType::IDENTIFIER_NO_W) {
-        throw_parser_error_at_current_location(
-            "Expected identifier immediately after '::' in scope resolution expression"
-        );
-      }
-      auto name = parse_single_identifier();
-      left = m_output.add_node(start_location, ScopeResolutionExpressionNode{left, name});
-    }
-    return left;
   }
 
   NodeId parse_switch_expression() {

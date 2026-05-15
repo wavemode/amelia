@@ -683,6 +683,12 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
     }
     break;
   }
+  case NodeType::TypeDeclarationNode: {
+    const auto &n = node.as_TypeDeclarationNode();
+    print_node_field(out, "name", n.name, indent + 2);
+    print_node_field_with_comma(out, "type_expr", n.type_expr, indent + 2);
+    break;
+  }
   default:
     throw RuntimeError("Unknown node type");
   }
