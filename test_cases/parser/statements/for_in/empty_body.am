@@ -4,9 +4,11 @@ for (x in y);
 ModuleNode(
   decls=[
     ForInStatementNode(
-      var=IdentifierNode(
-        token=IDENTIFIER_NO_W(x)
-      ),
+      vars=[
+        IdentifierNode(
+          token=IDENTIFIER_NO_W(x)
+        )
+      ],
       iterable=IdentifierNode(
         token=IDENTIFIER(y)
       ),

@@ -1,0 +1,58 @@
+fun f(x : int, y : float) -> double {
+  print("hello, world!")
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    FunctionDeclarationStatementNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(f)
+      ),
+      signature=FunctionSignatureNode(
+        parameters=[
+          FunctionParameterNode(
+            variadic=false,
+            name=IdentifierNode(
+              token=IDENTIFIER_NO_W(x)
+            ),
+            type=IdentifierNode(
+              token=IDENTIFIER(int)
+            )
+          ),
+          FunctionParameterNode(
+            variadic=false,
+            name=IdentifierNode(
+              token=IDENTIFIER(y)
+            ),
+            type=IdentifierNode(
+              token=IDENTIFIER(float)
+            )
+          )
+        ],
+        return_type=IdentifierNode(
+          token=IDENTIFIER(double)
+        )
+      ),
+      body=FunctionBodyNode(
+        stmts=[
+          ExpressionStatementNode(
+            expr=FunctionCallExpressionNode(
+              callee=IdentifierNode(
+                token=IDENTIFIER(print)
+              ),
+              args=[
+                PositionalFunctionArgumentNode(
+                  expr=StringLiteralNode(
+                    lit=STRING_LITERAL("hello, world!")
+                  )
+                )
+              ]
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

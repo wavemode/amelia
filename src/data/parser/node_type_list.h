@@ -372,7 +372,7 @@ struct ThrowStatementNode {
 };
 
 struct ForInStatementNode {
-  NodeId var;
+  List<NodeId> vars;
   NodeId iterable;
   NodeId body;
 };

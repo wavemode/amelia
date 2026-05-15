@@ -1,4 +1,4 @@
-for (x in y) z
+for (x, y in z) w();
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
@@ -7,14 +7,20 @@ ModuleNode(
       vars=[
         IdentifierNode(
           token=IDENTIFIER_NO_W(x)
+        ),
+        IdentifierNode(
+          token=IDENTIFIER(y)
         )
       ],
       iterable=IdentifierNode(
-        token=IDENTIFIER(y)
+        token=IDENTIFIER(z)
       ),
       body=ExpressionStatementNode(
-        expr=IdentifierNode(
-          token=IDENTIFIER(z)
+        expr=FunctionCallExpressionNode(
+          callee=IdentifierNode(
+            token=IDENTIFIER(w)
+          ),
+          args=[]
         )
       )
     )

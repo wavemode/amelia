@@ -230,12 +230,17 @@ public:
   NodeId parse_for_in_statement() {
     auto for_token = next(); // consume the 'for' keyword
     read_left_paren("Expected '(' after 'for' keyword in for-in statement");
-    NodeId var = require_expression();
+    List<NodeId> vars;
+    vars.push_back(require_expression());
+    while (peek().type == TokenType::COMMA) {
+      ++m_token_index; // consume the ',' token
+      vars.push_back(require_expression());
+    }
     read_token_type(TokenType::KEYWORD_IN, "Expected 'in' keyword in for-in statement");
     NodeId iterable = require_expression();
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after iterable in for-in statement");
     NodeId body = parse_statement();
-    return m_output.add_node(for_token.loc, ForInStatementNode{var, iterable, body});
+    return m_output.add_node(for_token.loc, ForInStatementNode{std::move(vars), iterable, body});
   }
 
   NodeId parse_throw_statement() {

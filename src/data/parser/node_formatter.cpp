@@ -566,7 +566,7 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
   }
   case NodeType::ForInStatementNode: {
     const auto &n = node.as_ForInStatementNode();
-    print_node_field(out, "var", n.var, indent + 2);
+    print_node_list_field(out, "vars", n.vars.data(), indent + 2);
     print_node_field_with_comma(out, "iterable", n.iterable, indent + 2);
     print_node_field_with_comma(out, "body", n.body, indent + 2);
     break;
