@@ -97,7 +97,7 @@ public:
   }
 
   NodeId parse_type_declaration() {
-    auto type_token = next(); // consume the 'type' keyword
+    auto type_token = next();
     auto name = require_expression();
     read_token_type(TokenType::ASSIGN, "Expected '=' after type name in type declaration");
     NodeId type_expr = require_expression();
@@ -122,7 +122,7 @@ public:
   }
 
   NodeId parse_function_declaration() {
-    auto fun_token = next(); // consume the 'fun' keyword
+    auto fun_token = next();
     auto name = expect_identifier("Expected function name after 'fun' keyword");
     NodeId signature = parse_function_signature();
     Option<NodeId> body;
@@ -267,25 +267,25 @@ public:
   }
 
   NodeId parse_label_statement() {
-    auto label_token = next(); // consume the 'label' keyword
+    auto label_token = next();
     NodeId label = expect_identifier("Expected identifier after 'label' keyword in label statement"
     );
     return m_output.add_node(label_token.loc, LabelStatementNode{label});
   }
 
   NodeId parse_goto_statement() {
-    auto goto_token = next(); // consume the 'goto' keyword
+    auto goto_token = next();
     NodeId label = expect_identifier("Expected identifier after 'goto' keyword in goto statement");
     return m_output.add_node(goto_token.loc, GotoStatementNode{label});
   }
 
   NodeId parse_empty_statement() {
-    auto semicolon_token = next(); // consume the ';' token
+    auto semicolon_token = next();
     return m_output.add_node(semicolon_token.loc, EmptyStatementNode{});
   }
 
   NodeId parse_while_statement() {
-    auto while_token = next(); // consume the 'while' keyword
+    auto while_token = next();
     read_left_paren("Expected '(' after 'while' keyword in while statement");
     NodeId condition = require_expression();
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after condition in while statement");
@@ -294,7 +294,7 @@ public:
   }
 
   NodeId parse_for_in_statement() {
-    auto for_token = next(); // consume the 'for' keyword
+    auto for_token = next();
     read_left_paren("Expected '(' after 'for' keyword in for-in statement");
     List<NodeId> vars;
     vars.push_back(require_expression());
@@ -310,13 +310,13 @@ public:
   }
 
   NodeId parse_throw_statement() {
-    auto throw_token = next(); // consume the 'throw' keyword
+    auto throw_token = next();
     NodeId expression = require_expression();
     return m_output.add_node(throw_token.loc, ThrowStatementNode{expression});
   }
 
   NodeId parse_if_statement() {
-    auto if_token = next(); // consume the 'if' keyword
+    auto if_token = next();
     read_left_paren("Expected '(' after 'if' keyword in if statement");
     NodeId condition = require_expression();
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after condition in if statement");
@@ -343,19 +343,19 @@ public:
   }
 
   NodeId parse_pre_increment_statement() {
-    auto token = next(); // consume the '++' operator
+    auto token = next();
     NodeId operand = require_expression();
     return m_output.add_node(token.loc, PreIncrementStatementNode{operand});
   }
 
   NodeId parse_pre_decrement_statement() {
-    auto token = next(); // consume the '--' operator
+    auto token = next();
     NodeId operand = require_expression();
     return m_output.add_node(token.loc, PreDecrementStatementNode{operand});
   }
 
   NodeId parse_const_statement() {
-    auto const_token = next(); // consume the 'const' keyword
+    auto const_token = next();
     NodeId target = require_expression();
     Option<NodeId> type_annotation;
     Option<NodeId> expression;
@@ -388,7 +388,7 @@ public:
   }
 
   NodeId parse_let_statement() {
-    auto let_token = next(); // consume the 'let' keyword
+    auto let_token = next();
     NodeId target = require_expression();
     Option<NodeId> type_annotation;
     Option<NodeId> expression;
@@ -799,7 +799,7 @@ public:
   }
 
   NodeId parse_function_expression() {
-    auto fun_token = next(); // consume the 'fun' keyword
+    auto fun_token = next();
     NodeId signature = parse_function_signature();
     NodeId body = parse_function_body();
     return m_output.add_node(fun_token.loc, FunctionExpressionNode{signature, body});
@@ -864,7 +864,7 @@ public:
       operator_node = m_output.add_node(start_location, OperatorIdentBitwiseNotNode{});
       break;
     case TokenType::AMPERSAND:
-      operator_node = m_output.add_node(start_location, OperatorIdentBitwiseAndNode{});
+      operator_node = m_output.add_node(start_location, OperatorIdentAmpersandNode{});
       break;
     case TokenType::PIPE:
       operator_node = m_output.add_node(start_location, OperatorIdentBitwiseOrNode{});
@@ -937,7 +937,7 @@ public:
   }
 
   NodeId parse_switch_expression() {
-    auto switch_token = next(); // consume the 'switch' keyword
+    auto switch_token = next();
     read_left_paren("Expected '(' after 'switch'");
     NodeId expr = require_expression();
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after switch expression");
@@ -951,7 +951,7 @@ public:
   }
 
   NodeId parse_case_clause() {
-    auto case_token = next(); // consume the 'case' keyword
+    auto case_token = next();
     read_left_paren("Expected '(' after 'case'");
     NodeId expr = require_expression();
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after case clause condition");
@@ -960,7 +960,7 @@ public:
   }
 
   NodeId parse_try_catch_expression() {
-    auto try_token = next(); // consume the 'try' keyword
+    auto try_token = next();
     NodeId try_block = require_expression();
     List<NodeId> clauses;
     while (peek().type == TokenType::KEYWORD_CATCH) {
@@ -970,7 +970,7 @@ public:
   }
 
   NodeId parse_catch_clause() {
-    auto catch_token = next(); // consume the 'catch' keyword
+    auto catch_token = next();
     read_left_paren("Expected '(' after 'catch'");
     Option<NodeId> var;
     auto next_token = peek();
@@ -994,7 +994,7 @@ public:
   }
 
   NodeId parse_if_then_else_expression() {
-    auto if_token = next(); // consume the 'if' keyword
+    auto if_token = next();
     read_left_paren("Expected '(' after 'if'");
     NodeId condition = require_expression();
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after condition in 'if' expression");
@@ -1009,40 +1009,15 @@ public:
   }
 
   NodeId parse_bracket_expression() {
-    auto open_bracket = next(); // consume the left bracket
-    auto next_token = peek();
-    if (next_token.type == TokenType::RIGHT_BRACKET) {
-      ++m_token_index; // consume the right bracket
-      bool is_const = false;
-      if (peek().type == TokenType::KEYWORD_CONST) {
-        is_const = true;
-        ++m_token_index; // consume the 'const' keyword
-      }
-      auto type = require_expression();
-      return m_output.add_node(open_bracket.loc, SliceExpressionNode{is_const, type});
-    }
-
-    NodeId size = require_expression();
-    read_token_type(TokenType::RIGHT_BRACKET, "Expected ']' after array size in array expression");
-
-    auto type = require_expression();
-
-    Option<List<NodeId>> elements;
-    if (peek().type == TokenType::LEFT_BRACE) {
-      ++m_token_index; // consume the '{' token
-      List<NodeId> elems;
-      parse_comma_separated_expression_list(elems, TokenType::RIGHT_BRACE);
-      ++m_token_index; // consume the '}' token
-      elements = std::move(elems);
-    }
-
-    return m_output.add_node(
-        open_bracket.loc, ArrayExpressionNode{type, size, std::move(elements)}
-    );
+    auto open_bracket = next();
+    List<NodeId> exprs;
+    parse_comma_separated_expression_list(exprs, TokenType::RIGHT_BRACKET);
+    ++m_token_index; // consume the right bracket
+    return m_output.add_node(open_bracket.loc, BracketExpressionNode{std::move(exprs)});
   }
 
   NodeId parse_parenthesized_expression() {
-    auto open_paren = next(); // consume the left paren
+    auto open_paren = next();
     List<NodeId> exprs;
     parse_comma_separated_expression_list(exprs, TokenType::RIGHT_PAREN);
     ++m_token_index; // consume the right paren
@@ -1058,7 +1033,7 @@ public:
   }
 
   NodeId parse_block_expression() {
-    auto open_brace = next(); // consume the left brace
+    auto open_brace = next();
     List<NodeId> stmts;
     parse_statements(stmts, TokenType::RIGHT_BRACE);
     ++m_token_index; // consume the right brace
@@ -1066,7 +1041,7 @@ public:
   }
 
   NodeId parse_object_literal() {
-    auto open_brace = next(); // consume the left brace
+    auto open_brace = next();
     List<NodeId> entries;
     while (peek().type != TokenType::RIGHT_BRACE) {
       read_dot("Expected dot before field name in object literal");

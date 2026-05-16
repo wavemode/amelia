@@ -35,7 +35,7 @@ x.operator &&
 x.operator ||
 // OperatorIdentBitwiseNotNode
 x.operator ~
-// OperatorIdentBitwiseAndNode
+// OperatorIdentAmpersandNode
 x.operator &
 // OperatorIdentBitwiseOrNode
 x.operator |
@@ -283,7 +283,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentBitwiseAndNode()
+          operator_node=OperatorIdentAmpersandNode()
         )
       )
     ),

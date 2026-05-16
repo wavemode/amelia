@@ -1,0 +1,26 @@
+let x = [1, 2, 3]
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetAssignmentStatementNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x)
+      ),
+      expression=BracketExpressionNode(
+        exprs=[
+          NumberLiteralNode(
+            lit=NUMBER(1)
+          ),
+          NumberLiteralNode(
+            lit=NUMBER(2)
+          ),
+          NumberLiteralNode(
+            lit=NUMBER(3)
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

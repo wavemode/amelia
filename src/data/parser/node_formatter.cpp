@@ -87,8 +87,8 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
     print_node_list_field(out, "decls", n.decls.data(), indent + 2);
     break;
   }
-  case NodeType::ArrayLiteralNode: {
-    const auto &n = node.as_ArrayLiteralNode();
+  case NodeType::BracketExpressionNode: {
+    const auto &n = node.as_BracketExpressionNode();
     print_node_list_field(out, "exprs", n.exprs.data(), indent + 2);
     break;
   }
@@ -436,7 +436,7 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
   case NodeType::OperatorIdentBitwiseNotNode: {
     break;
   }
-  case NodeType::OperatorIdentBitwiseAndNode: {
+  case NodeType::OperatorIdentAmpersandNode: {
     break;
   }
   case NodeType::OperatorIdentBitwiseOrNode: {
@@ -666,21 +666,6 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
     const auto &n = node.as_LambdaExpressionNode();
     print_node_list_field(out, "parameters", n.parameters.data(), indent + 2);
     print_node_field_with_comma(out, "body", n.body, indent + 2);
-    break;
-  }
-  case NodeType::SliceExpressionNode: {
-    const auto &n = node.as_SliceExpressionNode();
-    print_field(out, "is_const", n.is_const, indent + 2);
-    print_node_field_with_comma(out, "type", n.type, indent + 2);
-    break;
-  }
-  case NodeType::ArrayExpressionNode: {
-    const auto &n = node.as_ArrayExpressionNode();
-    print_node_field(out, "type", n.type, indent + 2);
-    print_node_field_with_comma(out, "size", n.size, indent + 2);
-    if (n.elements.has_value()) {
-      print_node_list_field_with_comma(out, "elements", n.elements.value().data(), indent + 2);
-    }
     break;
   }
   case NodeType::TypeDeclarationNode: {

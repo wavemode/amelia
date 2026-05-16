@@ -1,0 +1,23 @@
+let x : [int, 4]
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetAnnotationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x)
+      ),
+      type=BracketExpressionNode(
+        exprs=[
+          IdentifierNode(
+            token=IDENTIFIER_NO_W(int)
+          ),
+          NumberLiteralNode(
+            lit=NUMBER(4)
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

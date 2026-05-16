@@ -1,0 +1,19 @@
+let x : *T
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetAnnotationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x)
+      ),
+      type=DerefExpressionNode(
+        is_const=false,
+        expr=IdentifierNode(
+          token=IDENTIFIER_NO_W(T)
+        )
+      )
+    )
+  ]
+)
+*/

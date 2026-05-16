@@ -1,0 +1,23 @@
+let x : &const [T]
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetAnnotationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x)
+      ),
+      type=RefExpressionNode(
+        is_const=true,
+        expr=BracketExpressionNode(
+          exprs=[
+            IdentifierNode(
+              token=IDENTIFIER_NO_W(T)
+            )
+          ]
+        )
+      )
+    )
+  ]
+)
+*/

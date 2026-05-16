@@ -1,0 +1,19 @@
+let x : *const T
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetAnnotationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x)
+      ),
+      type=DerefExpressionNode(
+        is_const=true,
+        expr=IdentifierNode(
+          token=IDENTIFIER(T)
+        )
+      )
+    )
+  ]
+)
+*/

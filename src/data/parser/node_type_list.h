@@ -88,7 +88,7 @@ struct ParenthesizedExpressionNode {
   List<NodeId> exprs;
 };
 
-struct ArrayLiteralNode {
+struct BracketExpressionNode {
   List<NodeId> exprs;
 };
 
@@ -302,17 +302,6 @@ struct RefExpressionNode {
   NodeId expr;
 };
 
-struct SliceExpressionNode {
-  bool is_const;
-  NodeId type;
-};
-
-struct ArrayExpressionNode {
-  NodeId type;
-  NodeId size;
-  Option<List<NodeId>> elements;
-};
-
 struct AwaitExpressionNode {
   NodeId expr;
 };
@@ -498,7 +487,7 @@ struct OperatorIdentOrNode {};
 
 struct OperatorIdentBitwiseNotNode {};
 
-struct OperatorIdentBitwiseAndNode {};
+struct OperatorIdentAmpersandNode {};
 
 struct OperatorIdentBitwiseOrNode {};
 
@@ -562,7 +551,7 @@ struct TypeDeclarationNode {
   X(StringLiteralNode)                                                                             \
   X(NumberLiteralNode)                                                                             \
   X(ParenthesizedExpressionNode)                                                                   \
-  X(ArrayLiteralNode)                                                                              \
+  X(BracketExpressionNode)                                                                         \
   X(BlockExpressionNode)                                                                           \
   X(KeyValueEntryNode)                                                                             \
   X(ObjectLiteralNode)                                                                             \
@@ -631,7 +620,7 @@ struct TypeDeclarationNode {
   X(OperatorIdentAndNode)                                                                          \
   X(OperatorIdentOrNode)                                                                           \
   X(OperatorIdentBitwiseNotNode)                                                                   \
-  X(OperatorIdentBitwiseAndNode)                                                                   \
+  X(OperatorIdentAmpersandNode)                                                                    \
   X(OperatorIdentBitwiseOrNode)                                                                    \
   X(OperatorIdentBitwiseXorNode)                                                                   \
   X(OperatorIdentLeftShiftNode)                                                                    \
@@ -678,18 +667,6 @@ struct TypeDeclarationNode {
   X(FunctionDeclarationStatementNode)                                                              \
   X(FunctionExpressionNode)                                                                        \
   X(LambdaExpressionNode)                                                                          \
-  X(SliceExpressionNode)                                                                           \
-  X(ArrayExpressionNode)                                                                           \
   X(TypeDeclarationNode)
 
 } // namespace amelia
-
-// *T
-// *const T
-// &T
-// &const T
-// []T
-// []const T
-// [N]T
-// [_]T {a, b, c}
-// [N]T {a, b, c}
