@@ -433,8 +433,13 @@ public:
 
   NodeId parse_throw_statement() {
     auto throw_token = next();
-    NodeId expression = parse_expression();
-    return m_output.add_node(throw_token.loc, ThrowStatementNode{expression});
+    Option<NodeId> expr;
+    auto next_token = peek();
+    if (next_token.loc.line == throw_token.loc.line && next_token.type != TokenType::SEMICOLON &&
+        next_token.type != TokenType::END_OF_FILE && next_token.type != TokenType::RIGHT_BRACE) {
+      expr = parse_expression();
+    }
+    return m_output.add_node(throw_token.loc, ThrowStatementNode{expr});
   }
 
   NodeId parse_if_statement() {

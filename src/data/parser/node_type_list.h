@@ -460,7 +460,7 @@ struct BlockStatementNode {
 };
 
 struct ThrowStatementNode {
-  NodeId expr;
+  Option<NodeId> expr;
 };
 
 struct ForInStatementNode {

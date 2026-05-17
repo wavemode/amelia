@@ -1,0 +1,13 @@
+{ throw }
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    BlockStatementNode(
+      stmts=[
+        ThrowStatementNode()
+      ]
+    )
+  ]
+)
+*/
