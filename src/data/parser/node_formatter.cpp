@@ -632,7 +632,11 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
   }
   case NodeType::FunctionBodyNode: {
     const auto &n = node.as_FunctionBodyNode();
-    print_node_list_field(out, "stmts", n.stmts.data(), indent + 2);
+    if (n.expression.has_value()) {
+      print_node_field(out, "expression", n.expression.value(), indent + 2);
+    } else {
+      print_node_list_field(out, "stmts", n.stmts.value().data(), indent + 2);
+    }
     break;
   }
   case NodeType::FunctionImplicitParameterListNode: {

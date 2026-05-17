@@ -1,0 +1,21 @@
+fun f() = 10
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    FunctionDeclarationStatementNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(f)
+      ),
+      signature=FunctionSignatureNode(
+        parameters=[]
+      ),
+      body=FunctionBodyNode(
+        expression=NumberLiteralNode(
+          lit=NUMBER(10)
+        )
+      )
+    )
+  ]
+)
+*/

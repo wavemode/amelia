@@ -524,7 +524,8 @@ struct FunctionSignatureNode {
 };
 
 struct FunctionBodyNode {
-  List<NodeId> stmts;
+  Option<NodeId> expression;
+  Option<List<NodeId>> stmts;
 };
 
 struct FunctionDeclarationStatementNode {

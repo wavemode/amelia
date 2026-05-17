@@ -240,7 +240,8 @@ public:
     auto name = expect_identifier("Expected function name after 'fun' keyword");
     NodeId signature = parse_function_signature();
     Option<NodeId> body;
-    if (peek().type == TokenType::LEFT_BRACE) {
+    auto next_token = peek();
+    if (next_token.type == TokenType::LEFT_BRACE || next_token.type == TokenType::ASSIGN) {
       body = parse_function_body();
     }
     return m_output.add_node(
@@ -249,13 +250,20 @@ public:
   }
 
   NodeId parse_function_body() {
-    auto left_brace_token = read_token_type(
-        TokenType::LEFT_BRACE, "Expected '{' at the beginning of function body"
-    );
-    List<NodeId> stmts;
-    parse_statements(stmts, TokenType::RIGHT_BRACE);
-    ++m_token_index; // consume the '}' token
-    return m_output.add_node(left_brace_token.loc, FunctionBodyNode{std::move(stmts)});
+    auto start_token = next();
+
+    Option<NodeId> expression;
+    Option<List<NodeId>> stmts;
+
+    if (start_token.type == TokenType::ASSIGN) {
+      expression = parse_expression();
+    } else {
+      stmts = List<NodeId>();
+      parse_statements(stmts.value(), TokenType::RIGHT_BRACE);
+      ++m_token_index; // consume the '}' token
+    }
+
+    return m_output.add_node(start_token.loc, FunctionBodyNode{expression, std::move(stmts)});
   }
 
   NodeId parse_function_signature() {
@@ -921,6 +929,11 @@ public:
   NodeId parse_function_expression() {
     auto fun_token = next();
     NodeId signature = parse_function_signature();
+    if (peek().type != TokenType::LEFT_BRACE) {
+      throw_parser_error_at_current_location(
+          "Expected '{' to begin function body in function expression"
+      );
+    }
     NodeId body = parse_function_body();
     return m_output.add_node(fun_token.loc, FunctionExpressionNode{signature, body});
   }
