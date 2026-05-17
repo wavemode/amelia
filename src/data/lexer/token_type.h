@@ -129,7 +129,7 @@ namespace amelia {
   X(RAW_MULTILINE_STRING_LITERAL)                                                                  \
   X(END_OF_FILE)
 
-class AbstractString;
+struct AbstractString;
 using TokenId = int32_t;
 
 enum class TokenType {

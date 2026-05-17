@@ -44,8 +44,8 @@ TEST_CASE("indexing operator") {
   CHECK(const_map["a"] == 1);
   CHECK(const_map["b"] == 2);
 
-  CHECK_THROWS_AS(map["c"], RuntimeError);
-  CHECK_THROWS_AS(const_map["c"], RuntimeError);
+  CHECK_THROWS_AS(map["c"], std::runtime_error);
+  CHECK_THROWS_AS(const_map["c"], std::runtime_error);
 }
 
 TEST_CASE("find") {
@@ -83,7 +83,7 @@ TEST_CASE("remove and remove_and_get") {
   CHECK(b_value == 2);
   CHECK(!map.has("b"));
 
-  CHECK_THROWS_AS(map.remove_and_get("c"), RuntimeError);
+  CHECK_THROWS_AS(map.remove_and_get("c"), std::runtime_error);
 }
 
 TEST_CASE("equals") {
@@ -145,8 +145,8 @@ TEST_CASE("pair iterator - manual") {
   CHECK(seen.get("b") == 2);
   CHECK(seen.get("c") == 3);
 
-  CHECK_THROWS_AS(*it, RuntimeError);
-  CHECK_THROWS_AS(*end, RuntimeError);
+  CHECK_THROWS_AS(*it, std::runtime_error);
+  CHECK_THROWS_AS(*end, std::runtime_error);
 }
 
 TEST_CASE("key iterator") {
@@ -182,8 +182,8 @@ TEST_CASE("key iterator - manual") {
   CHECK(seen.has("b"));
   CHECK(seen.has("c"));
 
-  CHECK_THROWS_AS(*it, RuntimeError);
-  CHECK_THROWS_AS(*end, RuntimeError);
+  CHECK_THROWS_AS(*it, std::runtime_error);
+  CHECK_THROWS_AS(*end, std::runtime_error);
 }
 
 TEST_CASE("value iterator") {
@@ -219,8 +219,8 @@ TEST_CASE("value iterator - manual") {
   CHECK(seen.has(2));
   CHECK(seen.has(3));
 
-  CHECK_THROWS_AS(*it, RuntimeError);
-  CHECK_THROWS_AS(*end, RuntimeError);
+  CHECK_THROWS_AS(*it, std::runtime_error);
+  CHECK_THROWS_AS(*end, std::runtime_error);
 }
 
 TEST_SUITE_END();

@@ -2,6 +2,12 @@ cmake_minimum_required(VERSION 3.23)
 
 project(amelia)
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    message(STATUS "Enabling Sanitizers: Address and Undefined Behavior")
+    add_compile_options("-fsanitize=address,undefined" "-fno-omit-frame-pointer" "-g1")
+    add_link_options("-fsanitize=address,undefined")
+endif()
+
 file(GLOB_RECURSE SOURCES_SYSTEM "${CMAKE_CURRENT_SOURCE_DIR}/src/system/*.cpp")
 file(GLOB_RECURSE SOURCES_ACTION "${CMAKE_CURRENT_SOURCE_DIR}/src/action/*.cpp")
 file(GLOB_RECURSE SOURCES_UTIL "${CMAKE_CURRENT_SOURCE_DIR}/src/util/*.cpp")
@@ -18,12 +24,6 @@ target_compile_options(
     -Wno-error=unused-function
 )
 
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    message(STATUS "Enabling Sanitizers: Address and Undefined Behavior")
-    add_compile_options("-fsanitize=address,undefined" "-fno-omit-frame-pointer")
-    add_link_options("-fsanitize=address,undefined")
-endif()
-
 add_library(amelia_core
     ${SOURCES_SYSTEM}
     ${SOURCES_ACTION}
@@ -33,6 +33,7 @@ add_library(amelia_core
 )
 target_include_directories(amelia_core PUBLIC src vendor)
 target_compile_features(amelia_core PUBLIC cxx_std_20)
+target_link_libraries(amelia_core PRIVATE amelia_warnings)
 
 add_executable(amelia
     src/main.cpp

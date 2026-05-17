@@ -11,7 +11,7 @@ void token_type_to_string(AbstractString &out, TokenType type) {
     TOKEN_TYPE_LIST
 #undef X
   default:
-    throw RuntimeError("Invalid TokenType");
+    throw std::runtime_error("Invalid TokenType");
   }
 }
 

@@ -4,7 +4,7 @@ namespace amelia {
 
 class String;
 class Text;
-template <typename T> class AbstractList;
+template <typename T> struct AbstractList;
 
 struct IFilesystemWalker {
   virtual void walk(

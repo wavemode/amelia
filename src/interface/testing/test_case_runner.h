@@ -2,11 +2,10 @@
 
 namespace amelia {
 
-class AbstractString;
-class CompilerTestCase;
+struct AbstractString;
+struct CompilerTestCase;
 
-class ITestCaseRunner {
-public:
+struct ITestCaseRunner {
   virtual void run_test_case(AbstractString &output, CompilerTestCase input) = 0;
 };
 

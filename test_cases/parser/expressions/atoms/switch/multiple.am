@@ -1,0 +1,55 @@
+let x = switch(y) {
+  case (1) 2
+  case (3, 4) 5
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetAssignmentStatementNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x)
+      ),
+      expression=SwitchExpressionNode(
+        introductory_bindings=IntroductoryBindingsNode(
+          bindings=[]
+        ),
+        expr=IdentifierNode(
+          token=IDENTIFIER_NO_W(y)
+        ),
+        clauses=[
+          CaseClauseNode(
+            introductory_bindings=IntroductoryBindingsNode(
+              bindings=[]
+            ),
+            exprs=[
+              NumberLiteralNode(
+                lit=NUMBER(1)
+              )
+            ],
+            body=NumberLiteralNode(
+              lit=NUMBER(2)
+            )
+          ),
+          CaseClauseNode(
+            introductory_bindings=IntroductoryBindingsNode(
+              bindings=[]
+            ),
+            exprs=[
+              NumberLiteralNode(
+                lit=NUMBER(3)
+              ),
+              NumberLiteralNode(
+                lit=NUMBER(4)
+              )
+            ],
+            body=NumberLiteralNode(
+              lit=NUMBER(5)
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

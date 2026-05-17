@@ -67,7 +67,7 @@ ModuleNode(
                 ]
               )
             ),
-            ReturnValueStatementNode(
+            ReturnStatementNode(
               expr=NumberLiteralNode(
                 lit=NUMBER(10.0)
               )

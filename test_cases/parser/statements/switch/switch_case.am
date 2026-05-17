@@ -1,0 +1,51 @@
+switch(y) {
+  case (1) ++x
+  case (3) ++y
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    SwitchStatementNode(
+      introductory_bindings=IntroductoryBindingsNode(
+        bindings=[]
+      ),
+      expr=IdentifierNode(
+        token=IDENTIFIER_NO_W(y)
+      ),
+      clauses=[
+        CaseClauseNode(
+          introductory_bindings=IntroductoryBindingsNode(
+            bindings=[]
+          ),
+          exprs=[
+            NumberLiteralNode(
+              lit=NUMBER(1)
+            )
+          ],
+          body=PreIncrementStatementNode(
+            target=IdentifierNode(
+              token=IDENTIFIER_NO_W(x)
+            )
+          )
+        ),
+        CaseClauseNode(
+          introductory_bindings=IntroductoryBindingsNode(
+            bindings=[]
+          ),
+          exprs=[
+            NumberLiteralNode(
+              lit=NUMBER(3)
+            )
+          ],
+          body=PreIncrementStatementNode(
+            target=IdentifierNode(
+              token=IDENTIFIER_NO_W(y)
+            )
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

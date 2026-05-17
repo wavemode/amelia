@@ -37,7 +37,7 @@ uint32_t CharIterator::peek() {
   } catch (const utf8::invalid_utf8 &) {
     throw amelia::InvalidUTF8Error();
   } catch (const utf8::not_enough_room &) {
-    throw RuntimeError("Attempted to peek past the end of the string");
+    throw std::runtime_error("Attempted to peek past the end of the string");
   }
 }
 
@@ -47,7 +47,7 @@ uint32_t CharIterator::next() {
   } catch (const utf8::invalid_utf8 &) {
     throw amelia::InvalidUTF8Error();
   } catch (const utf8::not_enough_room &) {
-    throw RuntimeError("Attempted to advance past the end of the string");
+    throw std::runtime_error("Attempted to advance past the end of the string");
   }
 }
 

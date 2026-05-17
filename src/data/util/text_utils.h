@@ -7,10 +7,10 @@
 
 namespace amelia {
 
-template <typename T> class AbstractList;
+template <typename T> struct AbstractList;
 template <typename T> class Slice;
 class String;
-class AbstractString;
+struct AbstractString;
 class CharIterator;
 
 struct TextUtils {

@@ -4,15 +4,15 @@
 
 namespace amelia {
 
-class IFilesystemWalker;
-class IFileLoader;
-class IFileWriter;
-class IPrinter;
-class IEnvironmentReader;
-class ITestCaseRunner;
-class CompilerTestCase;
-class CompilerTestCaseCollection;
-class CompilerTestExecutionOutcome;
+struct IFilesystemWalker;
+struct IFileLoader;
+struct IFileWriter;
+struct IPrinter;
+struct IEnvironmentReader;
+struct ITestCaseRunner;
+struct CompilerTestCase;
+struct CompilerTestCaseCollection;
+struct CompilerTestExecutionOutcome;
 
 void collect_test_cases(
     IFilesystemWalker &, IFileLoader &, CompilerTestCaseCollection &output, Text root_directory

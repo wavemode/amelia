@@ -9,7 +9,7 @@ namespace amelia {
 
 class CharIterator;
 class String;
-class TextUtils;
+struct TextUtils;
 
 /**
  * @class Text
@@ -111,7 +111,7 @@ public:
    */
   static Text from(const char *c_str);
 
-  friend class TextUtils;
+  friend struct TextUtils;
   friend class String;
 
 private:

@@ -1,0 +1,69 @@
+if (
+  let w = 10
+  const x = w + 5
+  x > 10
+) {
+  ++y
+} else {
+  ++z
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    IfStatementNode(
+      introductory_bindings=IntroductoryBindingsNode(
+        bindings=[
+          LetAssignmentStatementNode(
+            target=IdentifierNode(
+              token=IDENTIFIER(w)
+            ),
+            expression=NumberLiteralNode(
+              lit=NUMBER(10)
+            )
+          ),
+          ConstAssignmentStatementNode(
+            target=IdentifierNode(
+              token=IDENTIFIER(x)
+            ),
+            expression=AddExpressionNode(
+              left=IdentifierNode(
+                token=IDENTIFIER(w)
+              ),
+              right=NumberLiteralNode(
+                lit=NUMBER(5)
+              )
+            )
+          )
+        ]
+      ),
+      condition=GreaterExpressionNode(
+        left=IdentifierNode(
+          token=IDENTIFIER(x)
+        ),
+        right=NumberLiteralNode(
+          lit=NUMBER(10)
+        )
+      ),
+      then_branch=BlockStatementNode(
+        stmts=[
+          PreIncrementStatementNode(
+            target=IdentifierNode(
+              token=IDENTIFIER_NO_W(y)
+            )
+          )
+        ]
+      ),
+      else_branch=BlockStatementNode(
+        stmts=[
+          PreIncrementStatementNode(
+            target=IdentifierNode(
+              token=IDENTIFIER_NO_W(z)
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

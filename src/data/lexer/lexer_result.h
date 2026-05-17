@@ -18,7 +18,7 @@ struct LexerResult : public AbstractTokenRepository {
   Text string_literal_contents(TokenId token_id) const override {
     auto lit = get_string_literal(token_id);
     if (lit.buffer_end > m_string_literal_buffer.size() || lit.buffer_start > lit.buffer_end) {
-      throw RuntimeError("Invalid string literal buffer start and end");
+      throw std::runtime_error("Invalid string literal buffer start and end");
     }
     return Text(ConstSlice(
         m_string_literal_buffer.data().ptr() + lit.buffer_start, lit.buffer_end - lit.buffer_start
@@ -28,14 +28,14 @@ struct LexerResult : public AbstractTokenRepository {
   NumberLiteral get_number_literal(TokenId token_id) const override {
     auto result = m_number_literals.find(token_id);
     if (!result.has_value()) {
-      throw RuntimeError("Token does not have a number literal");
+      throw std::runtime_error("Token does not have a number literal");
     }
     return result.value();
   }
 
   Token get_token(TokenId token_id) const override {
-    if (token_id >= m_tokens.size()) {
-      throw RuntimeError("Invalid token ID");
+    if (token_id >= static_cast<TokenId>(m_tokens.size())) {
+      throw std::runtime_error("Invalid token ID");
     }
     return m_tokens[token_id];
   }
@@ -70,7 +70,7 @@ private:
   StringLiteral get_string_literal(TokenId token_id) const {
     auto result = m_string_literals.find(token_id);
     if (!result.has_value()) {
-      throw RuntimeError("Token does not have a string literal");
+      throw std::runtime_error("Token does not have a string literal");
     }
     return result.value();
   }

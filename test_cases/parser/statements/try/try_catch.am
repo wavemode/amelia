@@ -1,0 +1,30 @@
+try ++x catch (y : z) ++t
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    TryStatementNode(
+      try_block=PreIncrementStatementNode(
+        target=IdentifierNode(
+          token=IDENTIFIER_NO_W(x)
+        )
+      ),
+      clauses=[
+        CatchClauseBindingNode(
+          var=IdentifierNode(
+            token=IDENTIFIER_NO_W(y)
+          ),
+          exc_type=IdentifierNode(
+            token=IDENTIFIER(z)
+          ),
+          body=PreIncrementStatementNode(
+            target=IdentifierNode(
+              token=IDENTIFIER_NO_W(t)
+            )
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

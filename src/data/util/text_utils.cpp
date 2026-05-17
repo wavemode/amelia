@@ -154,7 +154,7 @@ bool TextUtils::ends_with(Text input, Text suffix) {
     return suffix.size() == 0;
   size_t expected_position = input.size() - suffix.size();
   int64_t position = find_after_byte(input, suffix, expected_position);
-  return position != -1 && position == expected_position;
+  return position != -1 && position == static_cast<int64_t>(expected_position);
 }
 
 CharIterator TextUtils::find(Text input, Text substring) {
@@ -168,6 +168,7 @@ int64_t TextUtils::find_byte(Text input, Text substring) {
 }
 
 CharIterator TextUtils::find_after(Text input, Text substring, CharIterator start) {
+  head(input, start); // error if the start iterator is out of bounds
   CharIterator start_iter = start;
   CharIterator current_iter = start_iter;
   CharIterator start_textiter = CharIterator(substring);
@@ -254,6 +255,7 @@ int64_t TextUtils::find_char_byte(Text input, uint32_t code_point) {
 }
 
 CharIterator TextUtils::find_char_after(Text input, uint32_t code_point, CharIterator start) {
+  head(input, start); // error if the start iterator is out of bounds
   CharIterator it = start;
   while (!it.at_end()) {
     if (*it == code_point) {

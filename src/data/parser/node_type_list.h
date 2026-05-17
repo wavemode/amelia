@@ -18,6 +18,84 @@ struct IdentifierNode {
   TokenId token;
 };
 
+struct OperatorIdentAddNode {};
+
+struct OperatorIdentSubNode {};
+
+struct OperatorIdentStarNode {};
+
+struct OperatorIdentDivNode {};
+
+struct OperatorIdentModNode {};
+
+struct OperatorIdentIncNode {};
+
+struct OperatorIdentDecNode {};
+
+struct OperatorIdentEqNode {};
+
+struct OperatorIdentNeqNode {};
+
+struct OperatorIdentGtNode {};
+
+struct OperatorIdentLtNode {};
+
+struct OperatorIdentGteNode {};
+
+struct OperatorIdentLteNode {};
+
+struct OperatorIdentNotNode {};
+
+struct OperatorIdentAndNode {};
+
+struct OperatorIdentOrNode {};
+
+struct OperatorIdentBitwiseNotNode {};
+
+struct OperatorIdentAmpersandNode {};
+
+struct OperatorIdentBitwiseOrNode {};
+
+struct OperatorIdentBitwiseXorNode {};
+
+struct OperatorIdentLeftShiftNode {};
+
+struct OperatorIdentRightShiftNode {};
+
+struct OperatorIdentAssignNode {};
+
+struct OperatorIdentAddAssignNode {};
+
+struct OperatorIdentSubAssignNode {};
+
+struct OperatorIdentMulAssignNode {};
+
+struct OperatorIdentDivAssignNode {};
+
+struct OperatorIdentModAssignNode {};
+
+struct OperatorIdentBitwiseAndAssignNode {};
+
+struct OperatorIdentBitwiseOrAssignNode {};
+
+struct OperatorIdentBitwiseXorAssignNode {};
+
+struct OperatorIdentLeftShiftAssignNode {};
+
+struct OperatorIdentRightShiftAssignNode {};
+
+struct OperatorIdentIxNode {};
+
+struct OperatorIdentFuncallNode {};
+
+struct OperatorIdentAsNode {
+  NodeId type;
+};
+
+struct OperatorIdentifierNode {
+  NodeId operator_node;
+};
+
 struct EmptyStatementNode {};
 
 struct LetStatementNode {
@@ -164,18 +242,15 @@ struct ObjectLiteralNode {
   List<NodeId> entries;
 };
 
-struct IfThenStatementNode {
+struct IfStatementNode {
+  NodeId introductory_bindings;
   NodeId condition;
   NodeId then_branch;
+  Option<NodeId> else_branch;
 };
 
-struct IfThenElseStatementNode {
-  NodeId condition;
-  NodeId then_branch;
-  NodeId else_branch;
-};
-
-struct IfThenElseExpressionNode {
+struct IfExpressionNode {
+  NodeId introductory_bindings;
   NodeId condition;
   NodeId then_branch;
   NodeId else_branch;
@@ -192,19 +267,34 @@ struct CatchClauseBindingNode {
   NodeId body;
 };
 
-struct TryCatchExpressionNode {
+struct TryExpressionNode {
+  NodeId try_block;
+  List<NodeId> clauses;
+};
+
+struct TryStatementNode {
   NodeId try_block;
   List<NodeId> clauses;
 };
 
 struct CaseClauseNode {
-  NodeId expr;
+  NodeId introductory_bindings;
+  List<NodeId> exprs;
   NodeId body;
 };
 
 struct SwitchExpressionNode {
+  NodeId introductory_bindings;
   NodeId expr;
   List<NodeId> clauses;
+  Option<NodeId> default_body;
+};
+
+struct SwitchStatementNode {
+  NodeId introductory_bindings;
+  NodeId expr;
+  List<NodeId> clauses;
+  Option<NodeId> default_body;
 };
 
 struct OrExpressionNode {
@@ -374,12 +464,14 @@ struct ThrowStatementNode {
 };
 
 struct ForInStatementNode {
+  NodeId introductory_bindings;
   List<NodeId> vars;
   NodeId iterable;
   NodeId body;
 };
 
 struct WhileStatementNode {
+  NodeId introductory_bindings;
   NodeId condition;
   NodeId body;
 };
@@ -394,10 +486,8 @@ struct GotoStatementNode {
   NodeId label;
 };
 
-struct ReturnStatementNode {};
-
-struct ReturnValueStatementNode {
-  NodeId expr;
+struct ReturnStatementNode {
+  Option<NodeId> expr;
 };
 
 struct FunctionParameterNode {
@@ -453,87 +543,13 @@ struct LambdaExpressionNode {
   NodeId body;
 };
 
-struct OperatorIdentAddNode {};
-
-struct OperatorIdentSubNode {};
-
-struct OperatorIdentStarNode {};
-
-struct OperatorIdentDivNode {};
-
-struct OperatorIdentModNode {};
-
-struct OperatorIdentIncNode {};
-
-struct OperatorIdentDecNode {};
-
-struct OperatorIdentEqNode {};
-
-struct OperatorIdentNeqNode {};
-
-struct OperatorIdentGtNode {};
-
-struct OperatorIdentLtNode {};
-
-struct OperatorIdentGteNode {};
-
-struct OperatorIdentLteNode {};
-
-struct OperatorIdentNotNode {};
-
-struct OperatorIdentAndNode {};
-
-struct OperatorIdentOrNode {};
-
-struct OperatorIdentBitwiseNotNode {};
-
-struct OperatorIdentAmpersandNode {};
-
-struct OperatorIdentBitwiseOrNode {};
-
-struct OperatorIdentBitwiseXorNode {};
-
-struct OperatorIdentLeftShiftNode {};
-
-struct OperatorIdentRightShiftNode {};
-
-struct OperatorIdentAssignNode {};
-
-struct OperatorIdentAddAssignNode {};
-
-struct OperatorIdentSubAssignNode {};
-
-struct OperatorIdentMulAssignNode {};
-
-struct OperatorIdentDivAssignNode {};
-
-struct OperatorIdentModAssignNode {};
-
-struct OperatorIdentBitwiseAndAssignNode {};
-
-struct OperatorIdentBitwiseOrAssignNode {};
-
-struct OperatorIdentBitwiseXorAssignNode {};
-
-struct OperatorIdentLeftShiftAssignNode {};
-
-struct OperatorIdentRightShiftAssignNode {};
-
-struct OperatorIdentIxNode {};
-
-struct OperatorIdentFuncallNode {};
-
-struct OperatorIdentAsNode {
-  NodeId type;
-};
-
-struct OperatorIdentifierNode {
-  NodeId operator_node;
-};
-
 struct TypeDeclarationNode {
   NodeId name;
   NodeId type_expr;
+};
+
+struct IntroductoryBindingsNode {
+  List<NodeId> bindings;
 };
 
 #define NODE_TYPE_LIST                                                                             \
@@ -556,14 +572,15 @@ struct TypeDeclarationNode {
   X(KeyValueEntryNode)                                                                             \
   X(ObjectLiteralNode)                                                                             \
   X(ExpressionStatementNode)                                                                       \
-  X(IfThenStatementNode)                                                                           \
-  X(IfThenElseStatementNode)                                                                       \
-  X(IfThenElseExpressionNode)                                                                      \
+  X(IfStatementNode)                                                                               \
+  X(IfExpressionNode)                                                                              \
   X(CatchClauseNode)                                                                               \
   X(CatchClauseBindingNode)                                                                        \
-  X(TryCatchExpressionNode)                                                                        \
+  X(TryExpressionNode)                                                                             \
+  X(TryStatementNode)                                                                              \
   X(CaseClauseNode)                                                                                \
   X(SwitchExpressionNode)                                                                          \
+  X(SwitchStatementNode)                                                                           \
   X(OrExpressionNode)                                                                              \
   X(AndExpressionNode)                                                                             \
   X(BitwiseOrExpressionNode)                                                                       \
@@ -656,7 +673,6 @@ struct TypeDeclarationNode {
   X(LabelStatementNode)                                                                            \
   X(GotoStatementNode)                                                                             \
   X(ContinueStatementNode)                                                                         \
-  X(ReturnValueStatementNode)                                                                      \
   X(ReturnStatementNode)                                                                           \
   X(FunctionParameterNode)                                                                         \
   X(FunctionImplicitParameterListNode)                                                             \
@@ -667,6 +683,7 @@ struct TypeDeclarationNode {
   X(FunctionDeclarationStatementNode)                                                              \
   X(FunctionExpressionNode)                                                                        \
   X(LambdaExpressionNode)                                                                          \
-  X(TypeDeclarationNode)
+  X(TypeDeclarationNode)                                                                           \
+  X(IntroductoryBindingsNode)
 
 } // namespace amelia

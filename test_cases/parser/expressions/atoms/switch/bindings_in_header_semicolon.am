@@ -1,0 +1,76 @@
+let x = switch(let z = 20; const y = x + z; y) {
+  case (1) 2
+  case (3) 4
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetAssignmentStatementNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x)
+      ),
+      expression=SwitchExpressionNode(
+        introductory_bindings=IntroductoryBindingsNode(
+          bindings=[
+            LetAssignmentStatementNode(
+              target=IdentifierNode(
+                token=IDENTIFIER(z)
+              ),
+              expression=NumberLiteralNode(
+                lit=NUMBER(20)
+              )
+            ),
+            EmptyStatementNode(),
+            ConstAssignmentStatementNode(
+              target=IdentifierNode(
+                token=IDENTIFIER(y)
+              ),
+              expression=AddExpressionNode(
+                left=IdentifierNode(
+                  token=IDENTIFIER(x)
+                ),
+                right=IdentifierNode(
+                  token=IDENTIFIER(z)
+                )
+              )
+            ),
+            EmptyStatementNode()
+          ]
+        ),
+        expr=IdentifierNode(
+          token=IDENTIFIER(y)
+        ),
+        clauses=[
+          CaseClauseNode(
+            introductory_bindings=IntroductoryBindingsNode(
+              bindings=[]
+            ),
+            exprs=[
+              NumberLiteralNode(
+                lit=NUMBER(1)
+              )
+            ],
+            body=NumberLiteralNode(
+              lit=NUMBER(2)
+            )
+          ),
+          CaseClauseNode(
+            introductory_bindings=IntroductoryBindingsNode(
+              bindings=[]
+            ),
+            exprs=[
+              NumberLiteralNode(
+                lit=NUMBER(3)
+              )
+            ],
+            body=NumberLiteralNode(
+              lit=NUMBER(4)
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

@@ -1,0 +1,75 @@
+switch(y) {
+  case (1) ++x
+  case (3) ++y
+  default if (z > 5) ++z else --z
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    SwitchStatementNode(
+      introductory_bindings=IntroductoryBindingsNode(
+        bindings=[]
+      ),
+      expr=IdentifierNode(
+        token=IDENTIFIER_NO_W(y)
+      ),
+      clauses=[
+        CaseClauseNode(
+          introductory_bindings=IntroductoryBindingsNode(
+            bindings=[]
+          ),
+          exprs=[
+            NumberLiteralNode(
+              lit=NUMBER(1)
+            )
+          ],
+          body=PreIncrementStatementNode(
+            target=IdentifierNode(
+              token=IDENTIFIER_NO_W(x)
+            )
+          )
+        ),
+        CaseClauseNode(
+          introductory_bindings=IntroductoryBindingsNode(
+            bindings=[]
+          ),
+          exprs=[
+            NumberLiteralNode(
+              lit=NUMBER(3)
+            )
+          ],
+          body=PreIncrementStatementNode(
+            target=IdentifierNode(
+              token=IDENTIFIER_NO_W(y)
+            )
+          )
+        )
+      ],
+      default_body=IfStatementNode(
+        introductory_bindings=IntroductoryBindingsNode(
+          bindings=[]
+        ),
+        condition=GreaterExpressionNode(
+          left=IdentifierNode(
+            token=IDENTIFIER_NO_W(z)
+          ),
+          right=NumberLiteralNode(
+            lit=NUMBER(5)
+          )
+        ),
+        then_branch=PreIncrementStatementNode(
+          target=IdentifierNode(
+            token=IDENTIFIER_NO_W(z)
+          )
+        ),
+        else_branch=PreDecrementStatementNode(
+          target=IdentifierNode(
+            token=IDENTIFIER_NO_W(z)
+          )
+        )
+      )
+    )
+  ]
+)
+*/

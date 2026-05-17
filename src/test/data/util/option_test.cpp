@@ -27,8 +27,8 @@ TEST_CASE("general usage") {
 
   opt = None();
   CHECK(!opt.has_value());
-  CHECK_THROWS_AS(opt.value(), RuntimeError);
-  CHECK_THROWS_AS(*opt, RuntimeError);
+  CHECK_THROWS_AS(opt.value(), std::runtime_error);
+  CHECK_THROWS_AS(*opt, std::runtime_error);
 
   Option<int> opt2 = Some(10);
   CHECK(opt2.has_value());

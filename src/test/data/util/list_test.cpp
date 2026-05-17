@@ -14,8 +14,8 @@ TEST_CASE("indexing") {
   CHECK(list[3] == 1);
   CHECK(list[4] == 5);
   CHECK(list[5] == 6);
-  CHECK_THROWS_AS(list[6], RuntimeError);
-  CHECK_THROWS_AS(list[100], RuntimeError);
+  CHECK_THROWS_AS(list[6], std::runtime_error);
+  CHECK_THROWS_AS(list[100], std::runtime_error);
 }
 
 TEST_CASE("push_back and size") {

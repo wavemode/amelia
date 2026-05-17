@@ -2,7 +2,7 @@
 
 namespace amelia {
 
-class AbstractString;
+struct AbstractString;
 
 struct IFileLoader {
   virtual void load_file(AbstractString &output, const AbstractString &file_path) = 0;

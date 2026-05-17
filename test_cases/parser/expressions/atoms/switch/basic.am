@@ -11,22 +11,35 @@ ModuleNode(
         token=IDENTIFIER(x)
       ),
       expression=SwitchExpressionNode(
+        introductory_bindings=IntroductoryBindingsNode(
+          bindings=[]
+        ),
         expr=IdentifierNode(
           token=IDENTIFIER_NO_W(y)
         ),
         clauses=[
           CaseClauseNode(
-            expr=NumberLiteralNode(
-              lit=NUMBER(1)
+            introductory_bindings=IntroductoryBindingsNode(
+              bindings=[]
             ),
+            exprs=[
+              NumberLiteralNode(
+                lit=NUMBER(1)
+              )
+            ],
             body=NumberLiteralNode(
               lit=NUMBER(2)
             )
           ),
           CaseClauseNode(
-            expr=NumberLiteralNode(
-              lit=NUMBER(3)
+            introductory_bindings=IntroductoryBindingsNode(
+              bindings=[]
             ),
+            exprs=[
+              NumberLiteralNode(
+                lit=NUMBER(3)
+              )
+            ],
             body=NumberLiteralNode(
               lit=NUMBER(4)
             )

@@ -10,7 +10,6 @@
 
 namespace amelia {
 
-struct RuntimeError;
 template <typename T> class SetIterator;
 
 template <typename T> class Set : public AbstractSet<T> {
@@ -88,21 +87,21 @@ public:
 
   const T &operator*() {
     if (at_end()) {
-      throw RuntimeError("Attempted to dereference end iterator");
+      throw std::runtime_error("Attempted to dereference end iterator");
     }
     return *m_begin;
   }
 
   const T *operator->() {
     if (at_end()) {
-      throw RuntimeError("Attempted to dereference end iterator");
+      throw std::runtime_error("Attempted to dereference end iterator");
     }
     return &(*m_begin);
   }
 
   SetIterator<T> &operator++() {
     if (at_end()) {
-      throw RuntimeError("Attempted to advance past the end of the set");
+      throw std::runtime_error("Attempted to advance past the end of the set");
     }
     ++m_begin;
     return *this;
@@ -110,7 +109,7 @@ public:
 
   SetIterator<T> operator++(int) {
     if (at_end()) {
-      throw RuntimeError("Attempted to advance past the end of the set");
+      throw std::runtime_error("Attempted to advance past the end of the set");
     }
     auto &tmp = *this;
     ++(*this);

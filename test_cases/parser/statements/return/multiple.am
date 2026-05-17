@@ -5,7 +5,7 @@ return x()
 ModuleNode(
   decls=[
     ReturnStatementNode(),
-    ReturnValueStatementNode(
+    ReturnStatementNode(
       expr=FunctionCallExpressionNode(
         callee=IdentifierNode(
           token=IDENTIFIER(x)

@@ -9,7 +9,10 @@ if (x) {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    IfThenElseStatementNode(
+    IfStatementNode(
+      introductory_bindings=IntroductoryBindingsNode(
+        bindings=[]
+      ),
       condition=IdentifierNode(
         token=IDENTIFIER_NO_W(x)
       ),
@@ -22,7 +25,10 @@ ModuleNode(
           )
         ]
       ),
-      else_branch=IfThenElseStatementNode(
+      else_branch=IfStatementNode(
+        introductory_bindings=IntroductoryBindingsNode(
+          bindings=[]
+        ),
         condition=IdentifierNode(
           token=IDENTIFIER_NO_W(z)
         ),

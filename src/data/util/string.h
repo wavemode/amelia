@@ -4,10 +4,10 @@
 
 #include "data/util/abstract_string.h"
 #include "data/util/list.h"
+#include "data/util/text.h"
 
 namespace amelia {
 
-class Text;
 template <typename T> class ConstSlice;
 class CharIterator;
 

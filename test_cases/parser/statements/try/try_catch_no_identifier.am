@@ -1,0 +1,27 @@
+try ++x catch (z) ++t
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    TryStatementNode(
+      try_block=PreIncrementStatementNode(
+        target=IdentifierNode(
+          token=IDENTIFIER_NO_W(x)
+        )
+      ),
+      clauses=[
+        CatchClauseNode(
+          exc_type=IdentifierNode(
+            token=IDENTIFIER_NO_W(z)
+          ),
+          body=PreIncrementStatementNode(
+            target=IdentifierNode(
+              token=IDENTIFIER_NO_W(t)
+            )
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

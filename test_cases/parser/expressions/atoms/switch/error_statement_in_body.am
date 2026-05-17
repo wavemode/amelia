@@ -1,0 +1,7 @@
+let x = switch(y) {
+  case (1) ++x
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("Expected expression, got token DOUBLE_PLUS(++) (at test_cases/parser/expressions/atoms/switch/error_statement_in_body.am:2:12)")
+*/

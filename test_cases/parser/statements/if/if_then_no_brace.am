@@ -4,7 +4,10 @@ if (x) y
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    IfThenStatementNode(
+    IfStatementNode(
+      introductory_bindings=IntroductoryBindingsNode(
+        bindings=[]
+      ),
       condition=IdentifierNode(
         token=IDENTIFIER_NO_W(x)
       ),

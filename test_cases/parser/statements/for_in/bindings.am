@@ -1,0 +1,86 @@
+for (
+  let w = [1, 2, 3, 4]
+  const y = w.map(x -> x * 2)
+  x in y
+) z
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ForInStatementNode(
+      introductory_bindings=IntroductoryBindingsNode(
+        bindings=[
+          LetAssignmentStatementNode(
+            target=IdentifierNode(
+              token=IDENTIFIER(w)
+            ),
+            expression=BracketExpressionNode(
+              exprs=[
+                NumberLiteralNode(
+                  lit=NUMBER(1)
+                ),
+                NumberLiteralNode(
+                  lit=NUMBER(2)
+                ),
+                NumberLiteralNode(
+                  lit=NUMBER(3)
+                ),
+                NumberLiteralNode(
+                  lit=NUMBER(4)
+                )
+              ]
+            )
+          ),
+          ConstAssignmentStatementNode(
+            target=IdentifierNode(
+              token=IDENTIFIER(y)
+            ),
+            expression=FunctionCallExpressionNode(
+              callee=FieldAccessExpressionNode(
+                object=IdentifierNode(
+                  token=IDENTIFIER(w)
+                ),
+                field=IdentifierNode(
+                  token=IDENTIFIER_NO_W(map)
+                )
+              ),
+              args=[
+                PositionalFunctionArgumentNode(
+                  expr=LambdaExpressionNode(
+                    parameters=[
+                      IdentifierNode(
+                        token=IDENTIFIER_NO_W(x)
+                      )
+                    ],
+                    body=MultiplyExpressionNode(
+                      left=IdentifierNode(
+                        token=IDENTIFIER(x)
+                      ),
+                      right=NumberLiteralNode(
+                        lit=NUMBER(2)
+                      )
+                    )
+                  )
+                )
+              ]
+            )
+          )
+        ]
+      ),
+      vars=[
+        IdentifierNode(
+          token=IDENTIFIER(x)
+        )
+      ],
+      iterable=IdentifierNode(
+        token=IDENTIFIER(y)
+      ),
+      body=ExpressionStatementNode(
+        expr=IdentifierNode(
+          token=IDENTIFIER(z)
+        )
+      )
+    )
+  ]
+)
+*/

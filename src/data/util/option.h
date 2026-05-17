@@ -1,10 +1,9 @@
 #pragma once
 
+#include <stdexcept>
 #include <utility>
 
 namespace amelia {
-
-class RuntimeError;
 
 struct None {};
 
@@ -95,14 +94,14 @@ public:
 
   T &value() {
     if (!m_has_value) {
-      throw RuntimeError("Attempted to access value of an empty Option");
+      throw std::runtime_error("Attempted to access value of an empty Option");
     }
     return *get();
   }
 
   const T &value() const {
     if (!m_has_value) {
-      throw RuntimeError("Attempted to access value of an empty Option");
+      throw std::runtime_error("Attempted to access value of an empty Option");
     }
     return *get();
   }
@@ -117,14 +116,14 @@ public:
 
   T *operator->() {
     if (!m_has_value) {
-      throw RuntimeError("Attempted to access value of an empty Option");
+      throw std::runtime_error("Attempted to access value of an empty Option");
     }
     return get();
   }
 
   const T *operator->() const {
     if (!m_has_value) {
-      throw RuntimeError("Attempted to access value of an empty Option");
+      throw std::runtime_error("Attempted to access value of an empty Option");
     }
     return get();
   }

@@ -5,7 +5,7 @@
 namespace amelia {
 
 class ParserResult;
-class LexerResult;
+struct LexerResult;
 
 struct Parser {
   static NodeId parse_module(ParserResult &output, const LexerResult &input);

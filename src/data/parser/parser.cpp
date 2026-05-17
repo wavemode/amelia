@@ -34,16 +34,51 @@ public:
       stmts.push_back(parse_statement());
 
       if (stmts.size() > 1) {
-        const Node &stmt = m_output.get_node(stmts[stmts.size() - 1]);
-        const Node &prev_stmt = m_output.get_node(stmts[stmts.size() - 2]);
-        if (stmt.type() != NodeType::EmptyStatementNode &&
-            prev_stmt.type() != NodeType::EmptyStatementNode &&
-            prev_stmt.location().line == stmt.location().line) {
-          throw_parser_error(
-              stmt_token.id, "Multiple statements on the same line must be separated by a semicolon"
-          );
-        }
+        enforce_statement_separator(stmts[stmts.size() - 2], stmts[stmts.size() - 1]);
       }
+    }
+  }
+
+  NodeId parse_introductory_bindings() {
+    auto start_token = peek();
+    List<NodeId> stmts;
+    while (peek().type == TokenType::KEYWORD_LET || peek().type == TokenType::KEYWORD_CONST ||
+           peek().type == TokenType::SEMICOLON) {
+      auto next_token = peek();
+      if (next_token.type == TokenType::KEYWORD_LET) {
+        stmts.push_back(parse_let_statement());
+      } else if (next_token.type == TokenType::KEYWORD_CONST) {
+        stmts.push_back(parse_const_statement());
+      } else {
+        stmts.push_back(parse_empty_statement());
+      }
+
+      if (stmts.size() > 1) {
+        enforce_statement_separator(stmts[stmts.size() - 2], stmts[stmts.size() - 1]);
+      }
+    }
+    return m_output.add_node(start_token.loc, IntroductoryBindingsNode{std::move(stmts)});
+  }
+
+  void enforce_statement_separator(NodeId left, NodeId right) {
+    const Node &stmt = m_output.get_node(left);
+    const Node &next_stmt = m_output.get_node(right);
+    if (stmt.type() != NodeType::EmptyStatementNode &&
+        next_stmt.type() != NodeType::EmptyStatementNode &&
+        stmt.location().line == next_stmt.location().line) {
+      throw_parser_error_at_location(
+          next_stmt.location(),
+          "Multiple statements on the same line must be separated by a semicolon"
+      );
+    }
+  }
+
+  void enforce_separator_after_introductory_bindings(NodeId bindings_node_id, NodeId next_stmt_id) {
+    const auto &bindings_node = m_output.get_node(bindings_node_id).as_IntroductoryBindingsNode();
+    if (bindings_node.bindings.size() > 0) {
+      enforce_statement_separator(
+          bindings_node.bindings[bindings_node.bindings.size() - 1], next_stmt_id
+      );
     }
   }
 
@@ -64,6 +99,10 @@ public:
       return parse_block_statement();
     case TokenType::KEYWORD_IF:
       return parse_if_statement();
+    case TokenType::KEYWORD_SWITCH:
+      return parse_switch_statement();
+    case TokenType::KEYWORD_TRY:
+      return parse_try_statement();
     case TokenType::KEYWORD_THROW:
       return parse_throw_statement();
     case TokenType::KEYWORD_FOR:
@@ -87,15 +126,96 @@ public:
       return parse_type_declaration();
     case TokenType::SEMICOLON:
       return parse_empty_statement();
+    default:
+      break;
     }
     return parse_expression_statement();
   }
 
+  NodeId parse_try_statement() {
+    auto try_token = next();
+    NodeId try_block = parse_statement();
+    List<NodeId> clauses;
+    while (peek().type == TokenType::KEYWORD_CATCH) {
+      clauses.push_back(parse_try_statement_catch_clause());
+    }
+    return m_output.add_node(try_token.loc, TryStatementNode{try_block, std::move(clauses)});
+  }
+
+  NodeId parse_try_statement_catch_clause() {
+    auto catch_token = next();
+    read_left_paren("Expected '(' after 'catch'");
+    Option<NodeId> var;
+    auto next_token = peek();
+    auto following_token = peek(1);
+    if ((next_token.type == TokenType::IDENTIFIER || next_token.type == TokenType::IDENTIFIER_NO_W
+        ) &&
+        following_token.type == TokenType::COLON) {
+      var = parse_identifier();
+      ++m_token_index; // consume the ':' token
+    }
+    NodeId exc_type = parse_expression();
+    read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after catch clause exception type");
+    NodeId body = parse_statement();
+    if (var.has_value()) {
+      return m_output.add_node(
+          catch_token.loc, CatchClauseBindingNode{var.value(), exc_type, body}
+      );
+    } else {
+      return m_output.add_node(catch_token.loc, CatchClauseNode{exc_type, body});
+    }
+  }
+
+  NodeId parse_switch_statement() {
+    auto switch_token = next();
+    read_left_paren("Expected '(' after 'switch'");
+    auto introductory_bindings = parse_introductory_bindings();
+    NodeId expr = parse_expression();
+    enforce_separator_after_introductory_bindings(introductory_bindings, expr);
+    read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after switch statement");
+    read_token_type(TokenType::LEFT_BRACE, "Expected '{' to start switch statement body");
+    List<NodeId> clauses;
+    while (peek().type == TokenType::KEYWORD_CASE) {
+      clauses.push_back(parse_switch_statement_case_clause());
+    }
+
+    Option<NodeId> default_body;
+    if (peek().type == TokenType::KEYWORD_DEFAULT) {
+      ++m_token_index; // consume the 'default' keyword
+      default_body = parse_statement();
+    }
+
+    read_token_type(TokenType::RIGHT_BRACE, "Expected '}' to end switch statement body");
+    return m_output.add_node(
+        switch_token.loc,
+        SwitchStatementNode{introductory_bindings, expr, std::move(clauses), default_body}
+    );
+  }
+
+  NodeId parse_switch_statement_case_clause() {
+    auto case_token = next();
+    read_left_paren("Expected '(' after 'case'");
+    NodeId introductory_bindings = parse_introductory_bindings();
+    List<NodeId> exprs;
+    do {
+      exprs.push_back(parse_expression());
+      if (peek().type == TokenType::COMMA) {
+        ++m_token_index; // consume the comma
+      }
+    } while (peek().type != TokenType::RIGHT_PAREN);
+    enforce_separator_after_introductory_bindings(introductory_bindings, exprs[0]);
+    ++m_token_index; // consume the right paren
+    NodeId body = parse_statement();
+    return m_output.add_node(
+        case_token.loc, CaseClauseNode{introductory_bindings, std::move(exprs), body}
+    );
+  }
+
   NodeId parse_type_declaration() {
     auto type_token = next();
-    auto name = require_expression();
+    auto name = parse_expression();
     read_token_type(TokenType::ASSIGN, "Expected '=' after type name in type declaration");
-    NodeId type_expr = require_expression();
+    NodeId type_expr = parse_expression();
     return m_output.add_node(type_token.loc, TypeDeclarationNode{name, type_expr});
   }
 
@@ -106,14 +226,13 @@ public:
 
   NodeId parse_return_statement() {
     auto return_token = next();
-    NodeId expr = -1;
-    if (peek().loc.line == return_token.loc.line) {
-      expr = try_parse_expression();
+    Option<NodeId> expr;
+    auto next_token = peek();
+    if (next_token.loc.line == return_token.loc.line && next_token.type != TokenType::SEMICOLON &&
+        next_token.type != TokenType::END_OF_FILE && next_token.type != TokenType::RIGHT_BRACE) {
+      expr = parse_expression();
     }
-    if (expr == -1) {
-      return m_output.add_node(return_token.loc, ReturnStatementNode{});
-    }
-    return m_output.add_node(return_token.loc, ReturnValueStatementNode{expr});
+    return m_output.add_node(return_token.loc, ReturnStatementNode{expr});
   }
 
   NodeId parse_function_declaration() {
@@ -165,7 +284,7 @@ public:
       }
     }
     ++m_token_index; // consume the ')' token
-    return std::move(parameters);
+    return parameters;
   }
 
   NodeId parse_function_parameter() {
@@ -179,13 +298,13 @@ public:
     Option<NodeId> type;
     if (peek().type == TokenType::COLON) {
       ++m_token_index; // consume the ':' token
-      type = require_expression();
+      type = parse_expression();
     }
 
     Option<NodeId> default_value;
     if (peek().type == TokenType::ASSIGN) {
       ++m_token_index; // consume the '=' token
-      default_value = require_expression();
+      default_value = parse_expression();
     }
 
     return m_output.add_node(
@@ -256,7 +375,7 @@ public:
     auto next_token = peek();
     if (next_token.type == TokenType::ARROW) {
       ++m_token_index; // consume the '->' token
-      return require_expression();
+      return parse_expression();
     }
     return None();
   }
@@ -282,49 +401,58 @@ public:
   NodeId parse_while_statement() {
     auto while_token = next();
     read_left_paren("Expected '(' after 'while' keyword in while statement");
-    NodeId condition = require_expression();
+    NodeId introductory_bindings = parse_introductory_bindings();
+    NodeId condition = parse_expression();
+    enforce_separator_after_introductory_bindings(introductory_bindings, condition);
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after condition in while statement");
     NodeId body = parse_statement();
-    return m_output.add_node(while_token.loc, WhileStatementNode{condition, body});
+    return m_output.add_node(
+        while_token.loc, WhileStatementNode{introductory_bindings, condition, body}
+    );
   }
 
   NodeId parse_for_in_statement() {
     auto for_token = next();
     read_left_paren("Expected '(' after 'for' keyword in for-in statement");
+    auto introductory_bindings = parse_introductory_bindings();
     List<NodeId> vars;
-    vars.push_back(require_expression());
+    vars.push_back(parse_expression());
+    enforce_separator_after_introductory_bindings(introductory_bindings, vars[0]);
     while (peek().type == TokenType::COMMA) {
       ++m_token_index; // consume the ',' token
-      vars.push_back(require_expression());
+      vars.push_back(parse_expression());
     }
     read_token_type(TokenType::KEYWORD_IN, "Expected 'in' keyword in for-in statement");
-    NodeId iterable = require_expression();
+    NodeId iterable = parse_expression();
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after iterable in for-in statement");
     NodeId body = parse_statement();
-    return m_output.add_node(for_token.loc, ForInStatementNode{std::move(vars), iterable, body});
+    return m_output.add_node(
+        for_token.loc, ForInStatementNode{introductory_bindings, std::move(vars), iterable, body}
+    );
   }
 
   NodeId parse_throw_statement() {
     auto throw_token = next();
-    NodeId expression = require_expression();
+    NodeId expression = parse_expression();
     return m_output.add_node(throw_token.loc, ThrowStatementNode{expression});
   }
 
   NodeId parse_if_statement() {
     auto if_token = next();
     read_left_paren("Expected '(' after 'if' keyword in if statement");
-    NodeId condition = require_expression();
+    NodeId introductory_bindings = parse_introductory_bindings();
+    NodeId condition = parse_expression();
+    enforce_separator_after_introductory_bindings(introductory_bindings, condition);
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after condition in if statement");
     NodeId then_branch = parse_statement();
+    Option<NodeId> else_branch;
     if (peek().type == TokenType::KEYWORD_ELSE) {
       ++m_token_index; // consume the 'else' keyword
-      NodeId else_branch = parse_statement();
-      return m_output.add_node(
-          if_token.loc, IfThenElseStatementNode{condition, then_branch, else_branch}
-      );
-    } else {
-      return m_output.add_node(if_token.loc, IfThenStatementNode{condition, then_branch});
+      else_branch = parse_statement();
     }
+    return m_output.add_node(
+        if_token.loc, IfStatementNode{introductory_bindings, condition, then_branch, else_branch}
+    );
   }
 
   NodeId parse_block_statement() {
@@ -339,28 +467,28 @@ public:
 
   NodeId parse_pre_increment_statement() {
     auto token = next();
-    NodeId operand = require_expression();
+    NodeId operand = parse_expression();
     return m_output.add_node(token.loc, PreIncrementStatementNode{operand});
   }
 
   NodeId parse_pre_decrement_statement() {
     auto token = next();
-    NodeId operand = require_expression();
+    NodeId operand = parse_expression();
     return m_output.add_node(token.loc, PreDecrementStatementNode{operand});
   }
 
   NodeId parse_const_statement() {
     auto const_token = next();
-    NodeId target = require_expression();
+    NodeId target = parse_expression();
     Option<NodeId> type_annotation;
     Option<NodeId> expression;
     if (peek().type == TokenType::COLON) {
       ++m_token_index; // consume the ':' token
-      type_annotation = require_expression();
+      type_annotation = parse_expression();
     }
     if (peek().type == TokenType::ASSIGN) {
       ++m_token_index; // consume the '=' token
-      expression = require_expression();
+      expression = parse_expression();
     }
     if (type_annotation.has_value()) {
       if (expression.has_value()) {
@@ -384,16 +512,16 @@ public:
 
   NodeId parse_let_statement() {
     auto let_token = next();
-    NodeId target = require_expression();
+    NodeId target = parse_expression();
     Option<NodeId> type_annotation;
     Option<NodeId> expression;
     if (peek().type == TokenType::COLON) {
       ++m_token_index; // consume the ':' token
-      type_annotation = require_expression();
+      type_annotation = parse_expression();
     }
     if (peek().type == TokenType::ASSIGN) {
       ++m_token_index; // consume the '=' token
-      expression = require_expression();
+      expression = parse_expression();
     }
     if (type_annotation.has_value()) {
       if (expression.has_value()) {
@@ -415,7 +543,7 @@ public:
 
   NodeId parse_expression_statement() {
     auto expr_token = peek();
-    NodeId expr = require_expression();
+    NodeId expr = parse_expression();
     auto next_token = peek();
     switch (next_token.type) {
     case TokenType::DOUBLE_PLUS_NO_W:
@@ -426,62 +554,53 @@ public:
       return m_output.add_node(expr_token.loc, PostDecrementStatementNode{expr});
     case TokenType::ASSIGN:
       ++m_token_index; // consume the '=' operator
-      return m_output.add_node(expr_token.loc, AssignmentStatementNode{expr, require_expression()});
+      return m_output.add_node(expr_token.loc, AssignmentStatementNode{expr, parse_expression()});
     case TokenType::PLUS_EQUAL:
       ++m_token_index; // consume the '+=' operator
-      return m_output.add_node(expr_token.loc, AddAssignStatementNode{expr, require_expression()});
+      return m_output.add_node(expr_token.loc, AddAssignStatementNode{expr, parse_expression()});
     case TokenType::MINUS_EQUAL:
       ++m_token_index; // consume the '-=' operator
-      return m_output.add_node(expr_token.loc, SubAssignStatementNode{expr, require_expression()});
+      return m_output.add_node(expr_token.loc, SubAssignStatementNode{expr, parse_expression()});
     case TokenType::STAR_EQUAL:
       ++m_token_index; // consume the '*=' operator
-      return m_output.add_node(expr_token.loc, MulAssignStatementNode{expr, require_expression()});
+      return m_output.add_node(expr_token.loc, MulAssignStatementNode{expr, parse_expression()});
     case TokenType::SLASH_EQUAL:
       ++m_token_index; // consume the '/=' operator
-      return m_output.add_node(expr_token.loc, DivAssignStatementNode{expr, require_expression()});
+      return m_output.add_node(expr_token.loc, DivAssignStatementNode{expr, parse_expression()});
     case TokenType::PERCENT_EQUAL:
       ++m_token_index; // consume the '%=' operator
-      return m_output.add_node(expr_token.loc, ModAssignStatementNode{expr, require_expression()});
+      return m_output.add_node(expr_token.loc, ModAssignStatementNode{expr, parse_expression()});
     case TokenType::LSHIFT_EQUAL:
       ++m_token_index; // consume the '<<=' operator
       return m_output.add_node(
-          expr_token.loc, LeftShiftAssignStatementNode{expr, require_expression()}
+          expr_token.loc, LeftShiftAssignStatementNode{expr, parse_expression()}
       );
     case TokenType::RSHIFT_EQUAL:
       ++m_token_index; // consume the '>>=' operator
       return m_output.add_node(
-          expr_token.loc, RightShiftAssignStatementNode{expr, require_expression()}
+          expr_token.loc, RightShiftAssignStatementNode{expr, parse_expression()}
       );
     case TokenType::AMPERSAND_EQUAL:
       ++m_token_index; // consume the '&=' operator
       return m_output.add_node(
-          expr_token.loc, BitwiseAndAssignStatementNode{expr, require_expression()}
+          expr_token.loc, BitwiseAndAssignStatementNode{expr, parse_expression()}
       );
     case TokenType::PIPE_EQUAL:
       ++m_token_index; // consume the '|=' operator
       return m_output.add_node(
-          expr_token.loc, BitwiseOrAssignStatementNode{expr, require_expression()}
+          expr_token.loc, BitwiseOrAssignStatementNode{expr, parse_expression()}
       );
     case TokenType::CARET_EQUAL:
       ++m_token_index; // consume the '^=' operator
       return m_output.add_node(
-          expr_token.loc, BitwiseXorAssignStatementNode{expr, require_expression()}
+          expr_token.loc, BitwiseXorAssignStatementNode{expr, parse_expression()}
       );
+    default:
+      return m_output.add_node(expr_token.loc, ExpressionStatementNode{expr});
     }
-    return m_output.add_node(expr_token.loc, ExpressionStatementNode{expr});
   }
 
-  NodeId require_expression() {
-    NodeId result = parse_descend_expr_or();
-    if (result == -1) {
-      String err("Expected expression, got token ");
-      m_token_formatter.format_token(err, m_token_index);
-      throw_parser_error_at_current_location(std::move(err));
-    }
-    return result;
-  }
-
-  NodeId try_parse_expression() {
+  NodeId parse_expression() {
     return parse_descend_expr_or();
   }
 
@@ -715,7 +834,7 @@ public:
         );
       } else if (next_token.type == TokenType::LEFT_BRACKET_NO_W) {
         ++m_token_index; // consume the '[' operator
-        NodeId index_expr = require_expression();
+        NodeId index_expr = parse_expression();
         read_token_type(
             TokenType::RIGHT_BRACKET, "Expected ']' after index expression in index access"
         );
@@ -732,7 +851,7 @@ public:
         ++m_token_index; // consume the ')' operator
         left = m_output.add_node(start_location, FunctionCallExpressionNode{left, std::move(args)});
       } else {
-        throw RuntimeError("unreachable");
+        throw std::runtime_error("unreachable");
       }
       next_token = peek();
     }
@@ -781,16 +900,17 @@ public:
     } else if (next_token.type == TokenType::LEFT_BRACE) {
       return parse_brace_expression();
     } else if (next_token.type == TokenType::KEYWORD_IF) {
-      return parse_if_then_else_expression();
+      return parse_if_expression();
     } else if (next_token.type == TokenType::KEYWORD_TRY) {
-      return parse_try_catch_expression();
+      return parse_try_expression();
     } else if (next_token.type == TokenType::KEYWORD_SWITCH) {
       return parse_switch_expression();
     } else if (next_token.type == TokenType::KEYWORD_FUN) {
       return parse_function_expression();
-    } else {
-      return -1;
     }
+    String err("Expected expression, got token ");
+    m_token_formatter.format_token(err, m_token_index);
+    throw_parser_error_at_current_location(std::move(err));
   }
 
   NodeId parse_function_expression() {
@@ -918,7 +1038,7 @@ public:
       break;
     case TokenType::KEYWORD_AS: {
       read_left_bracket("Expected '[' after 'operator as'");
-      auto type = require_expression();
+      auto type = parse_expression();
       read_token_type(
           TokenType::RIGHT_BRACKET, "Expected ']' after type in 'operator as' identifier"
       );
@@ -934,37 +1054,57 @@ public:
   NodeId parse_switch_expression() {
     auto switch_token = next();
     read_left_paren("Expected '(' after 'switch'");
-    NodeId expr = require_expression();
+    auto introductory_bindings = parse_introductory_bindings();
+    NodeId expr = parse_expression();
+    enforce_separator_after_introductory_bindings(introductory_bindings, expr);
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after switch expression");
     read_token_type(TokenType::LEFT_BRACE, "Expected '{' to start switch expression body");
     List<NodeId> clauses;
     while (peek().type == TokenType::KEYWORD_CASE) {
-      clauses.push_back(parse_case_clause());
+      clauses.push_back(parse_switch_expression_case_clause());
+    }
+    Option<NodeId> default_body;
+    if (peek().type == TokenType::KEYWORD_DEFAULT) {
+      ++m_token_index; // consume the 'default' keyword
+      default_body = parse_expression();
     }
     read_token_type(TokenType::RIGHT_BRACE, "Expected '}' to end switch expression body");
-    return m_output.add_node(switch_token.loc, SwitchExpressionNode{expr, std::move(clauses)});
+    return m_output.add_node(
+        switch_token.loc,
+        SwitchExpressionNode{introductory_bindings, expr, std::move(clauses), default_body}
+    );
   }
 
-  NodeId parse_case_clause() {
+  NodeId parse_switch_expression_case_clause() {
     auto case_token = next();
     read_left_paren("Expected '(' after 'case'");
-    NodeId expr = require_expression();
-    read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after case clause condition");
-    NodeId body = require_expression();
-    return m_output.add_node(case_token.loc, CaseClauseNode{expr, body});
+    NodeId introductory_bindings = parse_introductory_bindings();
+    List<NodeId> exprs;
+    do {
+      exprs.push_back(parse_expression());
+      if (peek().type == TokenType::COMMA) {
+        ++m_token_index; // consume the comma
+      }
+    } while (peek().type != TokenType::RIGHT_PAREN);
+    enforce_separator_after_introductory_bindings(introductory_bindings, exprs[0]);
+    ++m_token_index; // consume the right paren
+    NodeId body = parse_expression();
+    return m_output.add_node(
+        case_token.loc, CaseClauseNode{introductory_bindings, std::move(exprs), body}
+    );
   }
 
-  NodeId parse_try_catch_expression() {
+  NodeId parse_try_expression() {
     auto try_token = next();
-    NodeId try_block = require_expression();
+    NodeId try_block = parse_expression();
     List<NodeId> clauses;
     while (peek().type == TokenType::KEYWORD_CATCH) {
-      clauses.push_back(parse_catch_clause());
+      clauses.push_back(parse_try_expression_catch_clause());
     }
-    return m_output.add_node(try_token.loc, TryCatchExpressionNode{try_block, std::move(clauses)});
+    return m_output.add_node(try_token.loc, TryExpressionNode{try_block, std::move(clauses)});
   }
 
-  NodeId parse_catch_clause() {
+  NodeId parse_try_expression_catch_clause() {
     auto catch_token = next();
     read_left_paren("Expected '(' after 'catch'");
     Option<NodeId> var;
@@ -976,9 +1116,9 @@ public:
       var = parse_identifier();
       ++m_token_index; // consume the ':' token
     }
-    NodeId exc_type = require_expression();
+    NodeId exc_type = parse_expression();
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after catch clause exception type");
-    NodeId body = require_expression();
+    NodeId body = parse_expression();
     if (var.has_value()) {
       return m_output.add_node(
           catch_token.loc, CatchClauseBindingNode{var.value(), exc_type, body}
@@ -988,18 +1128,20 @@ public:
     }
   }
 
-  NodeId parse_if_then_else_expression() {
+  NodeId parse_if_expression() {
     auto if_token = next();
     read_left_paren("Expected '(' after 'if'");
-    NodeId condition = require_expression();
+    NodeId introductory_bindings = parse_introductory_bindings();
+    NodeId condition = parse_expression();
+    enforce_separator_after_introductory_bindings(introductory_bindings, condition);
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after condition in 'if' expression");
-    NodeId then_branch = require_expression();
+    NodeId then_branch = parse_expression();
     read_token_type(
         TokenType::KEYWORD_ELSE, "Expected 'else' after then-branch of 'if' expression"
     );
-    NodeId else_branch = require_expression();
+    NodeId else_branch = parse_expression();
     return m_output.add_node(
-        if_token.loc, IfThenElseExpressionNode{condition, then_branch, else_branch}
+        if_token.loc, IfExpressionNode{introductory_bindings, condition, then_branch, else_branch}
     );
   }
 
@@ -1043,7 +1185,7 @@ public:
       auto field_token = peek();
       auto field = expect_identifier("Expected field name immediately after dot in object literal");
       read_token_type(TokenType::ASSIGN, "Expected '=' after field name in object literal");
-      NodeId value = require_expression();
+      NodeId value = parse_expression();
       entries.push_back(m_output.add_node(field_token.loc, KeyValueEntryNode{field, value}));
       if (peek().type == TokenType::COMMA) {
         ++m_token_index; // consume the comma
@@ -1055,7 +1197,7 @@ public:
 
   void parse_comma_separated_expression_list(List<NodeId> &exprs, TokenType terminator) {
     while (peek().type != terminator) {
-      exprs.push_back(require_expression());
+      exprs.push_back(parse_expression());
       if (peek().type == TokenType::COMMA) {
         ++m_token_index;
       }
@@ -1130,7 +1272,7 @@ public:
         start_token.type == TokenType::LEFT_PAREN_NO_W) {
       List<NodeId> params = parse_function_parameter_list();
       read_token_type(TokenType::ARROW, "Expected '->' after lambda parameter");
-      NodeId body = require_expression();
+      NodeId body = parse_expression();
       return m_output.add_node(start_token.loc, LambdaExpressionNode{std::move(params), body});
     }
 
@@ -1138,7 +1280,7 @@ public:
         "Expected identifier or '(' to start lambda parameter list"
     );
     read_token_type(TokenType::ARROW, "Expected '->' after lambda parameter");
-    NodeId body = require_expression();
+    NodeId body = parse_expression();
     return m_output.add_node(start_token.loc, LambdaExpressionNode{{single_param}, body});
   }
 
@@ -1156,7 +1298,7 @@ public:
       name = parse_identifier();
       ++m_token_index; // consume the '=' token
     }
-    NodeId expr = require_expression();
+    NodeId expr = parse_expression();
     if (name.has_value()) {
       return m_output.add_node(next_token.loc, NamedFunctionArgumentNode{name.value(), expr});
     }
@@ -1201,8 +1343,8 @@ private:
   }
 
   TokenWithId next() {
-    if (m_token_index >= m_input.tokens().size()) {
-      throw RuntimeError("Attempting to read past end of token stream");
+    if (m_token_index >= static_cast<TokenId>(m_input.tokens().size())) {
+      throw std::runtime_error("Attempting to read past end of token stream");
     }
     auto token = m_input.get_token(m_token_index);
     TokenWithId result{m_token_index, token.type, token.location};
@@ -1211,8 +1353,8 @@ private:
   }
 
   TokenWithId peek(TokenId n = 0) const {
-    if (m_token_index + n >= m_input.tokens().size()) {
-      throw RuntimeError("Attempting to peek past end of token stream");
+    if (m_token_index + n >= static_cast<TokenId>(m_input.tokens().size())) {
+      throw std::runtime_error("Attempting to peek past end of token stream");
     }
     auto token = m_input.get_token(m_token_index + n);
     return TokenWithId{m_token_index + n, token.type, token.location};
@@ -1220,6 +1362,10 @@ private:
 
   [[noreturn]] void throw_parser_error_at_current_location(String message) const {
     throw_parser_error(m_token_index, std::move(message));
+  }
+
+  [[noreturn]] void throw_parser_error_at_location(Location location, String message) const {
+    throw ParserError(location, std::move(message));
   }
 
   [[noreturn]] void throw_parser_error(TokenId token_id, String message) const {

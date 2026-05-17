@@ -11,18 +11,18 @@ class Node {
 public:
 #define X(NODE_TYPE)                                                                               \
   Node(Location loc, NODE_TYPE node)                                                               \
-      : m_type(NodeType::NODE_TYPE), m_loc(loc), m_data(std::move(node)) {}                        \
+      : m_loc(loc), m_type(NodeType::NODE_TYPE), m_data(std::move(node)) {}                        \
                                                                                                    \
   NODE_TYPE &as_##NODE_TYPE() {                                                                    \
     if (m_type != NodeType::NODE_TYPE) {                                                           \
-      throw RuntimeError("Node type mismatch");                                                    \
+      throw std::runtime_error("Node type mismatch");                                              \
     }                                                                                              \
     return m_data.data_##NODE_TYPE;                                                                \
   }                                                                                                \
                                                                                                    \
   const NODE_TYPE &as_##NODE_TYPE() const {                                                        \
     if (m_type != NodeType::NODE_TYPE) {                                                           \
-      throw RuntimeError("Node type mismatch");                                                    \
+      throw std::runtime_error("Node type mismatch");                                              \
     }                                                                                              \
     return m_data.data_##NODE_TYPE;                                                                \
   }

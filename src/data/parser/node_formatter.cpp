@@ -113,22 +113,18 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
     print_node_field(out, "expr", n.expr, indent + 2);
     break;
   }
-  case NodeType::IfThenStatementNode: {
-    const auto &n = node.as_IfThenStatementNode();
-    print_node_field(out, "condition", n.condition, indent + 2);
-    print_node_field_with_comma(out, "then_branch", n.then_branch, indent + 2);
-    break;
-  }
-  case NodeType::IfThenElseStatementNode: {
-    const auto &n = node.as_IfThenElseStatementNode();
-    print_node_field(out, "condition", n.condition, indent + 2);
+  case NodeType::IfStatementNode: {
+    const auto &n = node.as_IfStatementNode();
+    print_node_field(out, "introductory_bindings", n.introductory_bindings, indent + 2);
+    print_node_field_with_comma(out, "condition", n.condition, indent + 2);
     print_node_field_with_comma(out, "then_branch", n.then_branch, indent + 2);
     print_node_field_with_comma(out, "else_branch", n.else_branch, indent + 2);
     break;
   }
-  case NodeType::IfThenElseExpressionNode: {
-    const auto &n = node.as_IfThenElseExpressionNode();
-    print_node_field(out, "condition", n.condition, indent + 2);
+  case NodeType::IfExpressionNode: {
+    const auto &n = node.as_IfExpressionNode();
+    print_node_field(out, "introductory_bindings", n.introductory_bindings, indent + 2);
+    print_node_field_with_comma(out, "condition", n.condition, indent + 2);
     print_node_field_with_comma(out, "then_branch", n.then_branch, indent + 2);
     print_node_field_with_comma(out, "else_branch", n.else_branch, indent + 2);
     break;
@@ -146,22 +142,39 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
     print_node_field_with_comma(out, "body", n.body, indent + 2);
     break;
   }
-  case NodeType::TryCatchExpressionNode: {
-    const auto &n = node.as_TryCatchExpressionNode();
+  case NodeType::TryExpressionNode: {
+    const auto &n = node.as_TryExpressionNode();
+    print_node_field(out, "try_block", n.try_block, indent + 2);
+    print_node_list_field_with_comma(out, "clauses", n.clauses.data(), indent + 2);
+    break;
+  }
+  case NodeType::TryStatementNode: {
+    const auto &n = node.as_TryStatementNode();
     print_node_field(out, "try_block", n.try_block, indent + 2);
     print_node_list_field_with_comma(out, "clauses", n.clauses.data(), indent + 2);
     break;
   }
   case NodeType::CaseClauseNode: {
     const auto &n = node.as_CaseClauseNode();
-    print_node_field(out, "expr", n.expr, indent + 2);
+    print_node_field(out, "introductory_bindings", n.introductory_bindings, indent + 2);
+    print_node_list_field_with_comma(out, "exprs", n.exprs.data(), indent + 2);
     print_node_field_with_comma(out, "body", n.body, indent + 2);
     break;
   }
   case NodeType::SwitchExpressionNode: {
     const auto &n = node.as_SwitchExpressionNode();
-    print_node_field(out, "expr", n.expr, indent + 2);
+    print_node_field(out, "introductory_bindings", n.introductory_bindings, indent + 2);
+    print_node_field_with_comma(out, "expr", n.expr, indent + 2);
     print_node_list_field_with_comma(out, "clauses", n.clauses.data(), indent + 2);
+    print_node_field_with_comma(out, "default_body", n.default_body, indent + 2);
+    break;
+  }
+  case NodeType::SwitchStatementNode: {
+    const auto &n = node.as_SwitchStatementNode();
+    print_node_field(out, "introductory_bindings", n.introductory_bindings, indent + 2);
+    print_node_field_with_comma(out, "expr", n.expr, indent + 2);
+    print_node_list_field_with_comma(out, "clauses", n.clauses.data(), indent + 2);
+    print_node_field_with_comma(out, "default_body", n.default_body, indent + 2);
     break;
   }
   case NodeType::OrExpressionNode: {
@@ -568,14 +581,16 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
   }
   case NodeType::ForInStatementNode: {
     const auto &n = node.as_ForInStatementNode();
-    print_node_list_field(out, "vars", n.vars.data(), indent + 2);
+    print_node_field(out, "introductory_bindings", n.introductory_bindings, indent + 2);
+    print_node_list_field_with_comma(out, "vars", n.vars.data(), indent + 2);
     print_node_field_with_comma(out, "iterable", n.iterable, indent + 2);
     print_node_field_with_comma(out, "body", n.body, indent + 2);
     break;
   }
   case NodeType::WhileStatementNode: {
     const auto &n = node.as_WhileStatementNode();
-    print_node_field(out, "condition", n.condition, indent + 2);
+    print_node_field(out, "introductory_bindings", n.introductory_bindings, indent + 2);
+    print_node_field_with_comma(out, "condition", n.condition, indent + 2);
     print_node_field_with_comma(out, "body", n.body, indent + 2);
     break;
   }
@@ -593,10 +608,7 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
     break;
   }
   case NodeType::ReturnStatementNode: {
-    break;
-  }
-  case NodeType::ReturnValueStatementNode: {
-    const auto &n = node.as_ReturnValueStatementNode();
+    const auto &n = node.as_ReturnStatementNode();
     print_node_field(out, "expr", n.expr, indent + 2);
     break;
   }
@@ -643,7 +655,7 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
     } else if (n.kind == FunctionCaptureKind::Ref) {
       kind = "ref";
     } else {
-      throw RuntimeError("unreachable");
+      throw std::runtime_error("unreachable");
     }
     print_field(out, "kind", kind, indent + 2);
     print_node_field_with_comma(out, "var", n.var, indent + 2);
@@ -674,8 +686,13 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
     print_node_field_with_comma(out, "type_expr", n.type_expr, indent + 2);
     break;
   }
+  case NodeType::IntroductoryBindingsNode: {
+    const auto &n = node.as_IntroductoryBindingsNode();
+    print_node_list_field(out, "bindings", n.bindings.data(), indent + 2);
+    break;
+  }
   default:
-    throw RuntimeError("Unknown node type");
+    throw std::runtime_error("Unknown node type");
   }
   if (out.text().size() > prior_size) {
     open_line(out, indent);

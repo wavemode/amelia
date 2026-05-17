@@ -6,7 +6,7 @@
 namespace amelia {
 
 class Text;
-class NumberLiteral;
+struct NumberLiteral;
 
 struct AbstractTokenRepository {
   virtual Text string_literal_contents(TokenId token_id) const = 0;

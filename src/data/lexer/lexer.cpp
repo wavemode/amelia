@@ -89,15 +89,12 @@ bool is_word_continue(uint32_t cp) noexcept {
   return is_word_start(cp) || (cp >= '0' && cp <= '9');
 }
 
-bool is_hex_digit(uint32_t cp) noexcept {
-  return (cp >= '0' && cp <= '9') || (cp >= 'a' && cp <= 'f') || (cp >= 'A' && cp <= 'F');
-}
-
 class LexerState {
 public:
   LexerState(LexerResult &output, LexerContext ctx, Text file_contents) noexcept
-      : m_file_contents(file_contents), m_input_iter(file_contents.begin()), m_ctx(ctx),
-        m_result(output), m_previous_char_was_whitespace(true), m_line(1), m_column(1) {}
+      : m_ctx(ctx), m_line(1), m_column(1), m_file_contents(file_contents),
+        m_input_iter(file_contents.begin()), m_previous_char_was_whitespace(true),
+        m_result(output) {}
 
   void read_file() {
     while (!at_end()) {
@@ -209,7 +206,7 @@ public:
     size_t quote_count = multiline ? 3 : 1;
     for (size_t i = 0; i < quote_count; ++i) {
       if (at_end() || next() != '"') {
-        throw RuntimeError("String literal does not start with expected quote characters");
+        throw std::runtime_error("String literal does not start with expected quote characters");
       }
     }
     size_t literal_buffer_start_size = m_result.string_literal_buffer_size();
@@ -598,7 +595,8 @@ public:
   }
 
   void read_number(Location start_location) {
-    NumberLiteral result{.has_decimal_point = false};
+    NumberLiteral result;
+    result.has_decimal_point = false;
     unsigned char base = 10;
     bool at_boundary = true;
     bool assumed_octal = false;
@@ -607,7 +605,7 @@ public:
     auto base_prefix_start = current_location();
 
     if (at_end()) {
-      throw RuntimeError("Expected number literal, but got empty input");
+      throw std::runtime_error("Expected number literal, but got empty input");
     }
 
     if (peek() == '0') {

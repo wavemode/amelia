@@ -1,0 +1,5 @@
+let w = try ++x catch (y : z) t
+
+/* EXPECTED_OUTPUT:
+ERROR("Expected expression, got token DOUBLE_PLUS(++) (at test_cases/parser/expressions/atoms/try/error_statement_body.am:1:13)")
+*/

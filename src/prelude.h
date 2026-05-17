@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdexcept>
+
 #include "data/util/abstract_list.h"
 #include "data/util/abstract_string.h"
 #include "data/util/char_iterator.h"
@@ -8,7 +10,6 @@
 #include "data/util/map.h"
 #include "data/util/option.h"
 #include "data/util/ref.h"
-#include "data/util/runtime_error.h"
 #include "data/util/set.h"
 #include "data/util/slice.h"
 #include "data/util/string.h"

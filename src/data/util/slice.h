@@ -7,7 +7,6 @@
 
 namespace amelia {
 
-class RuntimeError;
 template <typename T> class Slice;
 template <typename T> class SliceIterator;
 template <typename T> class ConstSlice;
@@ -47,7 +46,7 @@ public:
 
   T &operator[](size_t index) {
     if (index >= m_len) {
-      throw RuntimeError("Slice index out of range");
+      throw std::runtime_error("Slice index out of range");
     }
     return m_ptr[index];
   }
@@ -73,14 +72,14 @@ public:
 
   Slice<T> operator+(size_t offset) {
     if (offset > m_len) {
-      throw RuntimeError("Slice offset out of range");
+      throw std::runtime_error("Slice offset out of range");
     }
     return Slice(m_ptr + offset, m_len - offset);
   }
 
   ConstSlice<T> operator+(size_t offset) const {
     if (offset > m_len) {
-      throw RuntimeError("Slice offset out of range");
+      throw std::runtime_error("Slice offset out of range");
     }
     return ConstSlice(m_ptr + offset, m_len - offset);
   }
@@ -136,7 +135,7 @@ public:
 
   T &operator[](size_t index) {
     if (index >= m_len) {
-      throw RuntimeError("SliceIterator index out of range");
+      throw std::runtime_error("SliceIterator index out of range");
     }
     return m_ptr[index];
   }
@@ -151,7 +150,7 @@ public:
 
   T &operator*() {
     if (m_len == 0) {
-      throw RuntimeError("Dereferencing end of slice");
+      throw std::runtime_error("Dereferencing end of slice");
     }
 
     return *m_ptr;
@@ -175,14 +174,14 @@ public:
 
   SliceIterator<T> operator+(size_t offset) {
     if (offset > m_len) {
-      throw RuntimeError("Slice iterator offset out of range");
+      throw std::runtime_error("Slice iterator offset out of range");
     }
     return SliceIterator(m_ptr + offset, m_len - offset);
   }
 
   ConstSliceIterator<T> operator+(size_t offset) const {
     if (offset > m_len) {
-      throw RuntimeError("Slice iterator offset out of range");
+      throw std::runtime_error("Slice iterator offset out of range");
     }
     return ConstSliceIterator(m_ptr + offset, m_len - offset);
   }
@@ -225,7 +224,7 @@ public:
 
   const T &operator[](size_t index) const {
     if (index >= m_len) {
-      throw RuntimeError("Slice index out of range");
+      throw std::runtime_error("Slice index out of range");
     }
     return m_ptr[index];
   }
@@ -251,7 +250,7 @@ public:
 
   ConstSlice<T> operator+(size_t offset) const {
     if (offset > m_len) {
-      throw RuntimeError("Slice offset out of range");
+      throw std::runtime_error("Slice offset out of range");
     }
     return ConstSlice(m_ptr + offset, m_len - offset);
   }
@@ -295,7 +294,7 @@ public:
 
   const T &operator[](size_t index) {
     if (index >= m_len) {
-      throw RuntimeError("SliceIterator index out of range");
+      throw std::runtime_error("SliceIterator index out of range");
     }
     return m_ptr[index];
   }
@@ -310,7 +309,7 @@ public:
 
   const T &operator*() {
     if (m_len == 0) {
-      throw RuntimeError("Dereferencing end of slice");
+      throw std::runtime_error("Dereferencing end of slice");
     }
 
     return *m_ptr;
@@ -348,7 +347,7 @@ public:
 
   ConstSliceIterator<T> operator+(size_t offset) const {
     if (offset > m_len) {
-      throw RuntimeError("Slice iterator offset out of range");
+      throw std::runtime_error("Slice iterator offset out of range");
     }
     return ConstSliceIterator(m_ptr + offset, m_len - offset);
   }

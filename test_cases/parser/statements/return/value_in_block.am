@@ -1,0 +1,22 @@
+let x = { return 5 }
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetAssignmentStatementNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x)
+      ),
+      expression=BlockExpressionNode(
+        stmts=[
+          ReturnStatementNode(
+            expr=NumberLiteralNode(
+              lit=NUMBER(5)
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

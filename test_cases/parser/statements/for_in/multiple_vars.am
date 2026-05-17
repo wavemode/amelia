@@ -4,6 +4,9 @@ for (x, y in z) w();
 ModuleNode(
   decls=[
     ForInStatementNode(
+      introductory_bindings=IntroductoryBindingsNode(
+        bindings=[]
+      ),
       vars=[
         IdentifierNode(
           token=IDENTIFIER_NO_W(x)

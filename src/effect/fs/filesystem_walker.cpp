@@ -16,7 +16,7 @@ void FilesystemWalker::walk(
       if (!ignore_errors) {
         String err("Error iterating directory: ");
         err.append(Text::from(ec.message()));
-        throw RuntimeError(std::move(err));
+        throw std::runtime_error(err.c_str());
       }
       ec.clear();
       continue;

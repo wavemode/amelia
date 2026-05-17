@@ -12,7 +12,7 @@ void FileLoader::load_file(AbstractString &output, const AbstractString &file_pa
   if (!file) {
     String err("Failed to open file: ");
     err.append(file_path.text());
-    throw RuntimeError(std::move(err));
+    throw std::runtime_error(err.c_str());
   }
   std::ostringstream ss;
   ss << file.rdbuf();
