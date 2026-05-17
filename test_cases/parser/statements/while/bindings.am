@@ -10,7 +10,7 @@ ModuleNode(
     WhileStatementNode(
       introductory_bindings=IntroductoryBindingsNode(
         bindings=[
-          LetAssignmentStatementNode(
+          LetStatementNode(
             target=IdentifierNode(
               token=IDENTIFIER(w)
             ),
@@ -18,7 +18,7 @@ ModuleNode(
               lit=NUMBER(10)
             )
           ),
-          ConstAssignmentStatementNode(
+          ConstStatementNode(
             target=IdentifierNode(
               token=IDENTIFIER(x)
             ),

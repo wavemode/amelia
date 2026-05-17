@@ -3,7 +3,7 @@ let z = (x : int, y: float) -> x + y
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetAssignmentStatementNode(
+    LetStatementNode(
       target=IdentifierNode(
         token=IDENTIFIER(z)
       ),

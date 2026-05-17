@@ -7,7 +7,7 @@ let f = fun(x : int, y : float) -> double {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetAssignmentStatementNode(
+    LetStatementNode(
       target=IdentifierNode(
         token=IDENTIFIER(f)
       ),

@@ -503,24 +503,9 @@ public:
       ++m_token_index; // consume the '=' token
       expression = parse_expression();
     }
-    if (type_annotation.has_value()) {
-      if (expression.has_value()) {
-        return m_output.add_node(
-            const_token.loc,
-            ConstAssignAnnotationNode{target, type_annotation.value(), expression.value()}
-        );
-      } else {
-        return m_output.add_node(
-            const_token.loc, ConstAnnotationNode{target, type_annotation.value()}
-        );
-      }
-    } else if (expression.has_value()) {
-      return m_output.add_node(
-          const_token.loc, ConstAssignmentStatementNode{target, expression.value()}
-      );
-    } else {
-      return m_output.add_node(const_token.loc, ConstStatementNode{target});
-    }
+    return m_output.add_node(
+        const_token.loc, ConstStatementNode{target, type_annotation, expression}
+    );
   }
 
   NodeId parse_let_statement() {
@@ -536,22 +521,7 @@ public:
       ++m_token_index; // consume the '=' token
       expression = parse_expression();
     }
-    if (type_annotation.has_value()) {
-      if (expression.has_value()) {
-        return m_output.add_node(
-            let_token.loc,
-            LetAssignAnnotationNode{target, type_annotation.value(), expression.value()}
-        );
-      } else {
-        return m_output.add_node(let_token.loc, LetAnnotationNode{target, type_annotation.value()});
-      }
-    } else if (expression.has_value()) {
-      return m_output.add_node(
-          let_token.loc, LetAssignmentStatementNode{target, expression.value()}
-      );
-    } else {
-      return m_output.add_node(let_token.loc, LetStatementNode{target});
-    }
+    return m_output.add_node(let_token.loc, LetStatementNode{target, type_annotation, expression});
   }
 
   NodeId parse_expression_statement() {

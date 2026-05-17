@@ -22,49 +22,15 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
   case NodeType::LetStatementNode: {
     const auto &n = node.as_LetStatementNode();
     print_node_field(out, "target", n.target, indent + 2);
-    break;
-  }
-  case NodeType::LetAssignmentStatementNode: {
-    const auto &n = node.as_LetAssignmentStatementNode();
-    print_node_field(out, "target", n.target, indent + 2);
-    print_node_field_with_comma(out, "expression", n.expression, indent + 2);
-    break;
-  }
-  case NodeType::LetAssignAnnotationNode: {
-    const auto &n = node.as_LetAssignAnnotationNode();
-    print_node_field(out, "target", n.target, indent + 2);
     print_node_field_with_comma(out, "type", n.type, indent + 2);
     print_node_field_with_comma(out, "expression", n.expression, indent + 2);
-    break;
-  }
-  case NodeType::LetAnnotationNode: {
-    const auto &n = node.as_LetAnnotationNode();
-    print_node_field(out, "target", n.target, indent + 2);
-    print_node_field_with_comma(out, "type", n.type, indent + 2);
     break;
   }
   case NodeType::ConstStatementNode: {
     const auto &n = node.as_ConstStatementNode();
     print_node_field(out, "target", n.target, indent + 2);
-    break;
-  }
-  case NodeType::ConstAssignmentStatementNode: {
-    const auto &n = node.as_ConstAssignmentStatementNode();
-    print_node_field(out, "target", n.target, indent + 2);
-    print_node_field_with_comma(out, "expression", n.expression, indent + 2);
-    break;
-  }
-  case NodeType::ConstAssignAnnotationNode: {
-    const auto &n = node.as_ConstAssignAnnotationNode();
-    print_node_field(out, "target", n.target, indent + 2);
     print_node_field_with_comma(out, "type", n.type, indent + 2);
     print_node_field_with_comma(out, "expression", n.expression, indent + 2);
-    break;
-  }
-  case NodeType::ConstAnnotationNode: {
-    const auto &n = node.as_ConstAnnotationNode();
-    print_node_field(out, "target", n.target, indent + 2);
-    print_node_field_with_comma(out, "type", n.type, indent + 2);
     break;
   }
   case NodeType::StringLiteralNode: {

@@ -3,7 +3,7 @@ let f = fun (x : int = 4, y : float = 10.0) {}
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetAssignmentStatementNode(
+    LetStatementNode(
       target=IdentifierNode(
         token=IDENTIFIER(f)
       ),

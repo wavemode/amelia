@@ -14,6 +14,8 @@ struct ModuleNode {
   List<NodeId> decls;
 };
 
+struct EmptyStatementNode {};
+
 struct IdentifierNode {
   TokenId token;
 };
@@ -96,46 +98,16 @@ struct OperatorIdentifierNode {
   NodeId operator_node;
 };
 
-struct EmptyStatementNode {};
-
 struct LetStatementNode {
   NodeId target;
-};
-
-struct LetAssignmentStatementNode {
-  NodeId target;
-  NodeId expression;
-};
-
-struct LetAssignAnnotationNode {
-  NodeId target;
-  NodeId type;
-  NodeId expression;
-};
-
-struct LetAnnotationNode {
-  NodeId target;
-  NodeId type;
+  Option<NodeId> type;
+  Option<NodeId> expression;
 };
 
 struct ConstStatementNode {
   NodeId target;
-};
-
-struct ConstAssignmentStatementNode {
-  NodeId target;
-  NodeId expression;
-};
-
-struct ConstAssignAnnotationNode {
-  NodeId target;
-  NodeId type;
-  NodeId expression;
-};
-
-struct ConstAnnotationNode {
-  NodeId target;
-  NodeId type;
+  Option<NodeId> type;
+  Option<NodeId> expression;
 };
 
 struct PreIncrementStatementNode {
@@ -558,13 +530,7 @@ struct IntroductoryBindingsNode {
   X(IdentifierNode)                                                                                \
   X(EmptyStatementNode)                                                                            \
   X(LetStatementNode)                                                                              \
-  X(LetAssignmentStatementNode)                                                                    \
-  X(LetAssignAnnotationNode)                                                                       \
-  X(LetAnnotationNode)                                                                             \
   X(ConstStatementNode)                                                                            \
-  X(ConstAssignmentStatementNode)                                                                  \
-  X(ConstAssignAnnotationNode)                                                                     \
-  X(ConstAnnotationNode)                                                                           \
   X(StringLiteralNode)                                                                             \
   X(NumberLiteralNode)                                                                             \
   X(ParenthesizedExpressionNode)                                                                   \

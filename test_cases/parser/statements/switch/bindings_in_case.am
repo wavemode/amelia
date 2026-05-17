@@ -21,7 +21,7 @@ ModuleNode(
         CaseClauseNode(
           introductory_bindings=IntroductoryBindingsNode(
             bindings=[
-              LetAssignmentStatementNode(
+              LetStatementNode(
                 target=IdentifierNode(
                   token=IDENTIFIER(z)
                 ),
@@ -29,7 +29,7 @@ ModuleNode(
                   lit=NUMBER(10)
                 )
               ),
-              ConstAssignmentStatementNode(
+              ConstStatementNode(
                 target=IdentifierNode(
                   token=IDENTIFIER(y)
                 ),

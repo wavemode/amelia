@@ -8,14 +8,14 @@ else z
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetAssignmentStatementNode(
+    LetStatementNode(
       target=IdentifierNode(
         token=IDENTIFIER(a)
       ),
       expression=IfExpressionNode(
         introductory_bindings=IntroductoryBindingsNode(
           bindings=[
-            LetAssignmentStatementNode(
+            LetStatementNode(
               target=IdentifierNode(
                 token=IDENTIFIER(w)
               ),
@@ -23,7 +23,7 @@ ModuleNode(
                 lit=NUMBER(10)
               )
             ),
-            ConstAssignmentStatementNode(
+            ConstStatementNode(
               target=IdentifierNode(
                 token=IDENTIFIER(x)
               ),

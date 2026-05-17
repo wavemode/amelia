@@ -10,14 +10,14 @@ let x = switch(
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetAssignmentStatementNode(
+    LetStatementNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
       expression=SwitchExpressionNode(
         introductory_bindings=IntroductoryBindingsNode(
           bindings=[
-            LetAssignmentStatementNode(
+            LetStatementNode(
               target=IdentifierNode(
                 token=IDENTIFIER(z)
               ),
@@ -25,7 +25,7 @@ ModuleNode(
                 lit=NUMBER(10)
               )
             ),
-            ConstAssignmentStatementNode(
+            ConstStatementNode(
               target=IdentifierNode(
                 token=IDENTIFIER(y)
               ),

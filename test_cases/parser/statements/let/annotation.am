@@ -3,7 +3,7 @@ let x : int
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetAnnotationNode(
+    LetStatementNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
