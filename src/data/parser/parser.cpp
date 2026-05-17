@@ -29,71 +29,66 @@ public:
   }
 
   void parse_statements(List<NodeId> &stmts, TokenType terminator) {
-    bool previous_statement_ended_with_semicolon = false;
     while (peek().type != terminator) {
       auto stmt_token = peek();
       stmts.push_back(parse_statement());
 
-      if (!previous_statement_ended_with_semicolon && stmts.size() > 1) {
+      if (stmts.size() > 1) {
         const Node &stmt = m_output.get_node(stmts[stmts.size() - 1]);
         const Node &prev_stmt = m_output.get_node(stmts[stmts.size() - 2]);
-        if (prev_stmt.type() != NodeType::EmptyStatementNode &&
+        if (stmt.type() != NodeType::EmptyStatementNode &&
+            prev_stmt.type() != NodeType::EmptyStatementNode &&
             prev_stmt.location().line == stmt.location().line) {
           throw_parser_error(
               stmt_token.id, "Multiple statements on the same line must be separated by a semicolon"
           );
         }
       }
-
-      previous_statement_ended_with_semicolon = peek(-1).type == TokenType::SEMICOLON;
     }
   }
 
   NodeId parse_statement() {
     auto token = peek();
-    NodeId result;
-    bool is_empty = false;
-    if (token.type == TokenType::KEYWORD_LET) {
-      result = parse_let_statement();
-    } else if (token.type == TokenType::KEYWORD_CONST) {
-      result = parse_const_statement();
-    } else if (token.type == TokenType::DOUBLE_PLUS || token.type == TokenType::DOUBLE_PLUS_NO_W) {
-      result = parse_pre_increment_statement();
-    } else if (token.type == TokenType::DOUBLE_MINUS ||
-               token.type == TokenType::DOUBLE_MINUS_NO_W) {
-      result = parse_pre_decrement_statement();
-    } else if (token.type == TokenType::LEFT_BRACE) {
+    switch (token.type) {
+    case TokenType::KEYWORD_LET:
+      return parse_let_statement();
+    case TokenType::KEYWORD_CONST:
+      return parse_const_statement();
+    case TokenType::DOUBLE_PLUS:
+    case TokenType::DOUBLE_PLUS_NO_W:
+      return parse_pre_increment_statement();
+    case TokenType::DOUBLE_MINUS:
+    case TokenType::DOUBLE_MINUS_NO_W:
+      return parse_pre_decrement_statement();
+    case TokenType::LEFT_BRACE:
       return parse_block_statement();
-    } else if (token.type == TokenType::KEYWORD_IF) {
-      result = parse_if_statement();
-    } else if (token.type == TokenType::KEYWORD_THROW) {
-      result = parse_throw_statement();
-    } else if (token.type == TokenType::KEYWORD_FOR) {
-      result = parse_for_in_statement();
-    } else if (token.type == TokenType::KEYWORD_WHILE) {
-      result = parse_while_statement();
-    } else if (token.type == TokenType::KEYWORD_LABEL) {
-      result = parse_label_statement();
-    } else if (token.type == TokenType::KEYWORD_GOTO) {
-      result = parse_goto_statement();
-    } else if (token.type == TokenType::KEYWORD_CONTINUE) {
-      result = parse_continue_statement();
-    } else if (token.type == TokenType::KEYWORD_RETURN) {
-      result = parse_return_statement();
-    } else if (token.type == TokenType::KEYWORD_FUN && peek(1).type == TokenType::IDENTIFIER) {
-      result = parse_function_declaration();
-    } else if (token.type == TokenType::KEYWORD_TYPE) {
-      result = parse_type_declaration();
-    } else if (token.type == TokenType::SEMICOLON) {
-      result = parse_empty_statement();
-      is_empty = true;
-    } else {
-      result = parse_expression_statement();
+    case TokenType::KEYWORD_IF:
+      return parse_if_statement();
+    case TokenType::KEYWORD_THROW:
+      return parse_throw_statement();
+    case TokenType::KEYWORD_FOR:
+      return parse_for_in_statement();
+    case TokenType::KEYWORD_WHILE:
+      return parse_while_statement();
+    case TokenType::KEYWORD_LABEL:
+      return parse_label_statement();
+    case TokenType::KEYWORD_GOTO:
+      return parse_goto_statement();
+    case TokenType::KEYWORD_CONTINUE:
+      return parse_continue_statement();
+    case TokenType::KEYWORD_RETURN:
+      return parse_return_statement();
+    case TokenType::KEYWORD_FUN:
+      if (peek(1).type == TokenType::IDENTIFIER) {
+        return parse_function_declaration();
+      }
+      break;
+    case TokenType::KEYWORD_TYPE:
+      return parse_type_declaration();
+    case TokenType::SEMICOLON:
+      return parse_empty_statement();
     }
-    if (!is_empty && peek().type == TokenType::SEMICOLON) {
-      ++m_token_index; // consume one trailing ';' token
-    }
-    return result;
+    return parse_expression_statement();
   }
 
   NodeId parse_type_declaration() {
@@ -422,56 +417,56 @@ public:
     auto expr_token = peek();
     NodeId expr = require_expression();
     auto next_token = peek();
-    if (next_token.type == TokenType::DOUBLE_PLUS_NO_W) {
+    switch (next_token.type) {
+    case TokenType::DOUBLE_PLUS_NO_W:
       ++m_token_index; // consume the '++' operator
       return m_output.add_node(expr_token.loc, PostIncrementStatementNode{expr});
-    } else if (next_token.type == TokenType::DOUBLE_MINUS_NO_W) {
+    case TokenType::DOUBLE_MINUS_NO_W:
       ++m_token_index; // consume the '--' operator
       return m_output.add_node(expr_token.loc, PostDecrementStatementNode{expr});
-    } else if (next_token.type == TokenType::ASSIGN) {
+    case TokenType::ASSIGN:
       ++m_token_index; // consume the '=' operator
-      NodeId value = require_expression();
-      return m_output.add_node(expr_token.loc, AssignmentStatementNode{expr, value});
-    } else if (next_token.type == TokenType::PLUS_EQUAL) {
+      return m_output.add_node(expr_token.loc, AssignmentStatementNode{expr, require_expression()});
+    case TokenType::PLUS_EQUAL:
       ++m_token_index; // consume the '+=' operator
-      NodeId value = require_expression();
-      return m_output.add_node(expr_token.loc, AddAssignStatementNode{expr, value});
-    } else if (next_token.type == TokenType::MINUS_EQUAL) {
+      return m_output.add_node(expr_token.loc, AddAssignStatementNode{expr, require_expression()});
+    case TokenType::MINUS_EQUAL:
       ++m_token_index; // consume the '-=' operator
-      NodeId value = require_expression();
-      return m_output.add_node(expr_token.loc, SubAssignStatementNode{expr, value});
-    } else if (next_token.type == TokenType::STAR_EQUAL) {
+      return m_output.add_node(expr_token.loc, SubAssignStatementNode{expr, require_expression()});
+    case TokenType::STAR_EQUAL:
       ++m_token_index; // consume the '*=' operator
-      NodeId value = require_expression();
-      return m_output.add_node(expr_token.loc, MulAssignStatementNode{expr, value});
-    } else if (next_token.type == TokenType::SLASH_EQUAL) {
+      return m_output.add_node(expr_token.loc, MulAssignStatementNode{expr, require_expression()});
+    case TokenType::SLASH_EQUAL:
       ++m_token_index; // consume the '/=' operator
-      NodeId value = require_expression();
-      return m_output.add_node(expr_token.loc, DivAssignStatementNode{expr, value});
-    } else if (next_token.type == TokenType::PERCENT_EQUAL) {
+      return m_output.add_node(expr_token.loc, DivAssignStatementNode{expr, require_expression()});
+    case TokenType::PERCENT_EQUAL:
       ++m_token_index; // consume the '%=' operator
-      NodeId value = require_expression();
-      return m_output.add_node(expr_token.loc, ModAssignStatementNode{expr, value});
-    } else if (next_token.type == TokenType::LSHIFT_EQUAL) {
+      return m_output.add_node(expr_token.loc, ModAssignStatementNode{expr, require_expression()});
+    case TokenType::LSHIFT_EQUAL:
       ++m_token_index; // consume the '<<=' operator
-      NodeId value = require_expression();
-      return m_output.add_node(expr_token.loc, LeftShiftAssignStatementNode{expr, value});
-    } else if (next_token.type == TokenType::RSHIFT_EQUAL) {
+      return m_output.add_node(
+          expr_token.loc, LeftShiftAssignStatementNode{expr, require_expression()}
+      );
+    case TokenType::RSHIFT_EQUAL:
       ++m_token_index; // consume the '>>=' operator
-      NodeId value = require_expression();
-      return m_output.add_node(expr_token.loc, RightShiftAssignStatementNode{expr, value});
-    } else if (next_token.type == TokenType::AMPERSAND_EQUAL) {
+      return m_output.add_node(
+          expr_token.loc, RightShiftAssignStatementNode{expr, require_expression()}
+      );
+    case TokenType::AMPERSAND_EQUAL:
       ++m_token_index; // consume the '&=' operator
-      NodeId value = require_expression();
-      return m_output.add_node(expr_token.loc, BitwiseAndAssignStatementNode{expr, value});
-    } else if (next_token.type == TokenType::PIPE_EQUAL) {
+      return m_output.add_node(
+          expr_token.loc, BitwiseAndAssignStatementNode{expr, require_expression()}
+      );
+    case TokenType::PIPE_EQUAL:
       ++m_token_index; // consume the '|=' operator
-      NodeId value = require_expression();
-      return m_output.add_node(expr_token.loc, BitwiseOrAssignStatementNode{expr, value});
-    } else if (next_token.type == TokenType::CARET_EQUAL) {
+      return m_output.add_node(
+          expr_token.loc, BitwiseOrAssignStatementNode{expr, require_expression()}
+      );
+    case TokenType::CARET_EQUAL:
       ++m_token_index; // consume the '^=' operator
-      NodeId value = require_expression();
-      return m_output.add_node(expr_token.loc, BitwiseXorAssignStatementNode{expr, value});
+      return m_output.add_node(
+          expr_token.loc, BitwiseXorAssignStatementNode{expr, require_expression()}
+      );
     }
     return m_output.add_node(expr_token.loc, ExpressionStatementNode{expr});
   }

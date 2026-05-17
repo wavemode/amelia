@@ -4,6 +4,7 @@ return; f()
 ModuleNode(
   decls=[
     ReturnStatementNode(),
+    EmptyStatementNode(),
     ExpressionStatementNode(
       expr=FunctionCallExpressionNode(
         callee=IdentifierNode(

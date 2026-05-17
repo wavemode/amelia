@@ -27,7 +27,8 @@ ModuleNode(
           args=[]
         )
       )
-    )
+    ),
+    EmptyStatementNode()
   ]
 )
 */
