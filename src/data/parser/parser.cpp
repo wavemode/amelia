@@ -122,14 +122,126 @@ public:
         return parse_function_declaration();
       }
       break;
+    case TokenType::KEYWORD_CLASS:
+      return parse_class_declaration();
     case TokenType::KEYWORD_TYPE:
       return parse_type_declaration();
+    case TokenType::KEYWORD_LOCAL:
+      return parse_local_statement();
     case TokenType::SEMICOLON:
       return parse_empty_statement();
     default:
       break;
     }
     return parse_expression_statement();
+  }
+
+  NodeId parse_local_statement() {
+    auto local_token = next();
+    NodeId decl = parse_statement();
+    return m_output.add_node(local_token.loc, VisibilityNode{DeclarationVisibility::Local, decl});
+  }
+
+  NodeId parse_class_declaration() {
+    auto class_token = next();
+    auto name = expect_identifier("Expected class name after 'class' keyword");
+    read_token_type(TokenType::LEFT_BRACE, "Expected '{' to start class body");
+    List<NodeId> decls;
+    while (peek().type != TokenType::RIGHT_BRACE) {
+      decls.push_back(parse_class_body_declaration());
+      if (decls.size() > 1) {
+        enforce_statement_separator(decls[decls.size() - 2], decls[decls.size() - 1]);
+      }
+    }
+    read_token_type(TokenType::RIGHT_BRACE, "Expected '}' to end class body");
+    return m_output.add_node(class_token.loc, ClassDeclarationNode{name, std::move(decls)});
+  }
+
+  NodeId parse_class_body_declaration() {
+    auto next_token = peek();
+    switch (next_token.type) {
+    case TokenType::KEYWORD_STATIC:
+      return parse_class_static_declaration();
+    case TokenType::KEYWORD_CONST:
+      return parse_class_const_declaration();
+    case TokenType::IDENTIFIER:
+    case TokenType::IDENTIFIER_NO_W: {
+      auto following_token = peek(1);
+      if (following_token.type == TokenType::LEFT_PAREN ||
+          following_token.type == TokenType::LEFT_PAREN_NO_W) {
+        return parse_constructor_declaration();
+      }
+      return parse_class_field();
+    }
+    case TokenType::SEMICOLON:
+      return parse_empty_statement();
+    case TokenType::KEYWORD_PUBLIC:
+    case TokenType::KEYWORD_PRIVATE:
+    case TokenType::KEYWORD_PROTECTED:
+    case TokenType::KEYWORD_LOCAL:
+      return parse_class_body_visibility_declaration();
+    default:
+      throw_parser_error_at_current_location("Expected declaration");
+    }
+  }
+
+  NodeId parse_class_body_visibility_declaration() {
+    auto visibility_token = next();
+    DeclarationVisibility visibility;
+    switch (visibility_token.type) {
+    case TokenType::KEYWORD_PUBLIC:
+      visibility = DeclarationVisibility::Public;
+      break;
+    case TokenType::KEYWORD_PRIVATE:
+      visibility = DeclarationVisibility::Private;
+      break;
+    case TokenType::KEYWORD_PROTECTED:
+      visibility = DeclarationVisibility::Protected;
+      break;
+    case TokenType::KEYWORD_LOCAL:
+      visibility = DeclarationVisibility::Local;
+      break;
+    default:
+      throw std::runtime_error("Invalid visibility modifier");
+    }
+    NodeId decl = parse_class_body_declaration();
+    return m_output.add_node(visibility_token.loc, VisibilityNode{visibility, decl});
+  }
+
+  NodeId parse_constructor_declaration() {
+    auto start_location = peek().loc;
+    NodeId name = expect_identifier("Expected constructor name");
+    NodeId signature = parse_function_signature();
+    NodeId body = parse_function_body();
+    return m_output.add_node(start_location, ClassConstructorNode{name, signature, body});
+  }
+
+  NodeId parse_class_static_declaration() {
+    auto static_token = next();
+    NodeId decl = parse_class_body_declaration();
+    return m_output.add_node(static_token.loc, ClassStaticDeclarationNode{decl});
+  }
+
+  NodeId parse_class_const_declaration() {
+    auto const_token = next();
+    NodeId decl = parse_class_body_declaration();
+    return m_output.add_node(const_token.loc, ClassConstDeclarationNode{decl});
+  }
+
+  NodeId parse_class_field() {
+    auto start_location = peek().loc;
+    auto name = expect_identifier("Expected field name in class declaration");
+    Option<NodeId> type;
+    Option<NodeId> initializer;
+    if (peek().type == TokenType::COLON) {
+      ++m_token_index; // consume the ':' token
+      type = parse_expression();
+    }
+    if (peek().type == TokenType::ASSIGN) {
+      ++m_token_index; // consume the '=' token
+      initializer = parse_expression();
+    }
+    return m_output.add_node(start_location, ClassFieldNode{name, type, initializer});
   }
 
   NodeId parse_try_statement() {
@@ -157,13 +269,7 @@ public:
     NodeId exc_type = parse_expression();
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after catch clause exception type");
     NodeId body = parse_statement();
-    if (var.has_value()) {
-      return m_output.add_node(
-          catch_token.loc, CatchClauseBindingNode{var.value(), exc_type, body}
-      );
-    } else {
-      return m_output.add_node(catch_token.loc, CatchClauseNode{exc_type, body});
-    }
+    return m_output.add_node(catch_token.loc, CatchClauseNode{exc_type, var, body});
   }
 
   NodeId parse_switch_statement() {
@@ -244,9 +350,7 @@ public:
     if (next_token.type == TokenType::LEFT_BRACE || next_token.type == TokenType::ASSIGN) {
       body = parse_function_body();
     }
-    return m_output.add_node(
-        fun_token.loc, FunctionDeclarationStatementNode{name, signature, body}
-    );
+    return m_output.add_node(fun_token.loc, FunctionDeclarationNode{name, signature, body});
   }
 
   NodeId parse_function_body() {
@@ -254,16 +358,29 @@ public:
 
     Option<NodeId> expression;
     Option<List<NodeId>> stmts;
+    bool is_default = false;
+    bool is_deleted = false;
 
     if (start_token.type == TokenType::ASSIGN) {
-      expression = parse_expression();
+      auto next_token = peek();
+      if (next_token.type == TokenType::KEYWORD_DEFAULT) {
+        is_default = true;
+        ++m_token_index; // consume the 'default' keyword
+      } else if (next_token.type == TokenType::KEYWORD_DELETE) {
+        is_deleted = true;
+        ++m_token_index; // consume the 'delete' keyword
+      } else {
+        expression = parse_expression();
+      }
     } else {
       stmts = List<NodeId>();
       parse_statements(stmts.value(), TokenType::RIGHT_BRACE);
       ++m_token_index; // consume the '}' token
     }
 
-    return m_output.add_node(start_token.loc, FunctionBodyNode{expression, std::move(stmts)});
+    return m_output.add_node(
+        start_token.loc, FunctionBodyNode{expression, std::move(stmts), is_default, is_deleted}
+    );
   }
 
   NodeId parse_function_signature() {
@@ -860,40 +977,67 @@ public:
   }
 
   NodeId parse_atom() {
-    auto next_token = peek();
-    if (next_token.type == TokenType::IDENTIFIER || next_token.type == TokenType::IDENTIFIER_NO_W ||
-        next_token.type == TokenType::KEYWORD_OPERATOR) {
+    switch (peek().type) {
+    case TokenType::IDENTIFIER:
+    case TokenType::IDENTIFIER_NO_W:
+    case TokenType::KEYWORD_OPERATOR:
       if (is_start_of_lambda_expression()) {
         return parse_lambda_expression();
       }
       return parse_identifier();
-    } else if (next_token.type == TokenType::STRING_LITERAL) {
+    case TokenType::STRING_LITERAL:
       return parse_string_literal();
-    } else if (next_token.type == TokenType::NUMBER || next_token.type == TokenType::NUMBER_FIELD) {
+    case TokenType::NUMBER:
+    case TokenType::NUMBER_FIELD:
       return parse_number_literal();
-    } else if (next_token.type == TokenType::LEFT_PAREN ||
-               next_token.type == TokenType::LEFT_PAREN_NO_W) {
+    case TokenType::LEFT_PAREN:
+    case TokenType::LEFT_PAREN_NO_W:
       if (is_start_of_lambda_expression()) {
         return parse_lambda_expression();
       }
       return parse_parenthesized_expression();
-    } else if (next_token.type == TokenType::LEFT_BRACKET ||
-               next_token.type == TokenType::LEFT_BRACKET_NO_W) {
+    case TokenType::LEFT_BRACKET:
+    case TokenType::LEFT_BRACKET_NO_W:
       return parse_bracket_expression();
-    } else if (next_token.type == TokenType::LEFT_BRACE) {
+    case TokenType::LEFT_BRACE:
       return parse_brace_expression();
-    } else if (next_token.type == TokenType::KEYWORD_IF) {
+    case TokenType::KEYWORD_IF:
       return parse_if_expression();
-    } else if (next_token.type == TokenType::KEYWORD_TRY) {
+    case TokenType::KEYWORD_TRY:
       return parse_try_expression();
-    } else if (next_token.type == TokenType::KEYWORD_SWITCH) {
+    case TokenType::KEYWORD_SWITCH:
       return parse_switch_expression();
-    } else if (next_token.type == TokenType::KEYWORD_FUN) {
+    case TokenType::KEYWORD_FUN:
       return parse_function_expression();
+    case TokenType::KEYWORD_BOOL:
+      return parse_bool_type();
+    case TokenType::KEYWORD_TRUE:
+    case TokenType::KEYWORD_FALSE:
+      return parse_boolean_literal();
+    case TokenType::KEYWORD_THIS:
+      return parse_this_literal();
+    default:
+      String err("Expected expression, got token ");
+      m_token_formatter.format_token(err, m_token_index);
+      throw_parser_error_at_current_location(std::move(err));
     }
-    String err("Expected expression, got token ");
-    m_token_formatter.format_token(err, m_token_index);
-    throw_parser_error_at_current_location(std::move(err));
+  }
+
+  NodeId parse_this_literal() {
+    auto this_token = next();
+    return m_output.add_node(this_token.loc, ThisLiteralNode{});
+  }
+
+  NodeId parse_boolean_literal() {
+    auto bool_token = next();
+    return m_output.add_node(
+        bool_token.loc, BooleanLiteralNode{bool_token.type == TokenType::KEYWORD_TRUE}
+    );
+  }
+
+  NodeId parse_bool_type() {
+    auto bool_token = next();
+    return m_output.add_node(bool_token.loc, BoolTypeNode{});
   }
 
   NodeId parse_function_expression() {
@@ -1097,23 +1241,16 @@ public:
     read_left_paren("Expected '(' after 'catch'");
     Option<NodeId> var;
     auto next_token = peek();
-    auto following_token = peek(1);
     if ((next_token.type == TokenType::IDENTIFIER || next_token.type == TokenType::IDENTIFIER_NO_W
         ) &&
-        following_token.type == TokenType::COLON) {
+        peek(1).type == TokenType::COLON) {
       var = parse_identifier();
       ++m_token_index; // consume the ':' token
     }
     NodeId exc_type = parse_expression();
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after catch clause exception type");
     NodeId body = parse_expression();
-    if (var.has_value()) {
-      return m_output.add_node(
-          catch_token.loc, CatchClauseBindingNode{var.value(), exc_type, body}
-      );
-    } else {
-      return m_output.add_node(catch_token.loc, CatchClauseNode{exc_type, body});
-    }
+    return m_output.add_node(catch_token.loc, CatchClauseNode{exc_type, var, body});
   }
 
   NodeId parse_if_expression() {

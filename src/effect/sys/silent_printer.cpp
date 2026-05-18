@@ -5,12 +5,12 @@ namespace amelia {
 
 SilentPrinter::SilentPrinter() {}
 
-void SilentPrinter::print(Text str) {}
+void SilentPrinter::print(Text) {}
 
-void SilentPrinter::println(Text str) {}
+void SilentPrinter::println(Text) {}
 
-void SilentPrinter::err_print(Text str) {}
+void SilentPrinter::err_print(Text) {}
 
-void SilentPrinter::err_println(Text str) {}
+void SilentPrinter::err_println(Text) {}
 
 } // namespace amelia

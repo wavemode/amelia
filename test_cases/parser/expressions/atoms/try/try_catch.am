@@ -12,12 +12,12 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         clauses=[
-          CatchClauseBindingNode(
-            var=IdentifierNode(
-              token=IDENTIFIER_NO_W(y)
-            ),
+          CatchClauseNode(
             exc_type=IdentifierNode(
               token=IDENTIFIER(z)
+            ),
+            var=IdentifierNode(
+              token=IDENTIFIER_NO_W(y)
             ),
             body=IdentifierNode(
               token=IDENTIFIER(t)

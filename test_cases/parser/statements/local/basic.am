@@ -1,0 +1,19 @@
+local const x = 10
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    VisibilityNode(
+      visibility=local,
+      decl=ConstStatementNode(
+        target=IdentifierNode(
+          token=IDENTIFIER(x)
+        ),
+        expression=NumberLiteralNode(
+          lit=NUMBER(10)
+        )
+      )
+    )
+  ]
+)
+*/

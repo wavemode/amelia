@@ -1,0 +1,29 @@
+class A {
+  A() = delete
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ClassDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      decls=[
+        ClassConstructorNode(
+          name=IdentifierNode(
+            token=IDENTIFIER(A)
+          ),
+          signature=FunctionSignatureNode(
+            parameters=[]
+          ),
+          body=FunctionBodyNode(
+            is_default=false,
+            is_deleted=true
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

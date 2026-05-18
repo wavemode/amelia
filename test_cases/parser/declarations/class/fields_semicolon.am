@@ -1,0 +1,32 @@
+class A {  a: int; b: String }
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ClassDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      decls=[
+        ClassFieldNode(
+          name=IdentifierNode(
+            token=IDENTIFIER(a)
+          ),
+          type=IdentifierNode(
+            token=IDENTIFIER(int)
+          )
+        ),
+        EmptyStatementNode(),
+        ClassFieldNode(
+          name=IdentifierNode(
+            token=IDENTIFIER(b)
+          ),
+          type=IdentifierNode(
+            token=IDENTIFIER(String)
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

@@ -1,0 +1,5 @@
+fun f(x : int, y : float) with {}
+
+/* EXPECTED_OUTPUT:
+ERROR("Expected '(' after 'with' keyword in function signature (at test_cases/parser/declarations/fun/error_with_no_parens.am:1:32)")
+*/

@@ -1,0 +1,5 @@
+class A {  a: int b: String }
+
+/* EXPECTED_OUTPUT:
+ERROR("Multiple statements on the same line must be separated by a semicolon (at test_cases/parser/declarations/class/error_fields_no_separator.am:1:19)")
+*/

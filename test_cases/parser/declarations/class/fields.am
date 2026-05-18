@@ -1,0 +1,57 @@
+class A {
+  a: int
+  b: String
+  static c: float
+  const d: bool = true
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ClassDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      decls=[
+        ClassFieldNode(
+          name=IdentifierNode(
+            token=IDENTIFIER(a)
+          ),
+          type=IdentifierNode(
+            token=IDENTIFIER(int)
+          )
+        ),
+        ClassFieldNode(
+          name=IdentifierNode(
+            token=IDENTIFIER(b)
+          ),
+          type=IdentifierNode(
+            token=IDENTIFIER(String)
+          )
+        ),
+        ClassStaticDeclarationNode(
+          decl=ClassFieldNode(
+            name=IdentifierNode(
+              token=IDENTIFIER(c)
+            ),
+            type=IdentifierNode(
+              token=IDENTIFIER(float)
+            )
+          )
+        ),
+        ClassConstDeclarationNode(
+          decl=ClassFieldNode(
+            name=IdentifierNode(
+              token=IDENTIFIER(d)
+            ),
+            type=BoolTypeNode(),
+            initializer=BooleanLiteralNode(
+              value=true
+            )
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

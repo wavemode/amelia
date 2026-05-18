@@ -1,9 +1,9 @@
-fun f(x : int, y : float) with (a : long, b : short) {}
+fun f(x : int, y : float) with () {}
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    FunctionDeclarationStatementNode(
+    FunctionDeclarationNode(
       name=IdentifierNode(
         token=IDENTIFIER(f)
       ),
@@ -29,26 +29,7 @@ ModuleNode(
           )
         ],
         implicit_parameter_list=FunctionImplicitParameterListNode(
-          parameters=[
-            FunctionParameterNode(
-              variadic=false,
-              name=IdentifierNode(
-                token=IDENTIFIER_NO_W(a)
-              ),
-              type=IdentifierNode(
-                token=IDENTIFIER(long)
-              )
-            ),
-            FunctionParameterNode(
-              variadic=false,
-              name=IdentifierNode(
-                token=IDENTIFIER(b)
-              ),
-              type=IdentifierNode(
-                token=IDENTIFIER(short)
-              )
-            )
-          ]
+          parameters=[]
         )
       ),
       body=FunctionBodyNode(

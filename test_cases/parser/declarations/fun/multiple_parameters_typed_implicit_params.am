@@ -1,11 +1,9 @@
-fun f(x : int, y : float) -> double {
-  print("hello, world!")
-}
+fun f(x : int, y : float) with (a : long, b : short) {}
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    FunctionDeclarationStatementNode(
+    FunctionDeclarationNode(
       name=IdentifierNode(
         token=IDENTIFIER(f)
       ),
@@ -30,27 +28,31 @@ ModuleNode(
             )
           )
         ],
-        return_type=IdentifierNode(
-          token=IDENTIFIER(double)
+        implicit_parameter_list=FunctionImplicitParameterListNode(
+          parameters=[
+            FunctionParameterNode(
+              variadic=false,
+              name=IdentifierNode(
+                token=IDENTIFIER_NO_W(a)
+              ),
+              type=IdentifierNode(
+                token=IDENTIFIER(long)
+              )
+            ),
+            FunctionParameterNode(
+              variadic=false,
+              name=IdentifierNode(
+                token=IDENTIFIER(b)
+              ),
+              type=IdentifierNode(
+                token=IDENTIFIER(short)
+              )
+            )
+          ]
         )
       ),
       body=FunctionBodyNode(
-        stmts=[
-          ExpressionStatementNode(
-            expr=FunctionCallExpressionNode(
-              callee=IdentifierNode(
-                token=IDENTIFIER(print)
-              ),
-              args=[
-                PositionalFunctionArgumentNode(
-                  expr=StringLiteralNode(
-                    lit=STRING_LITERAL("hello, world!")
-                  )
-                )
-              ]
-            )
-          )
-        ]
+        stmts=[]
       )
     )
   ]

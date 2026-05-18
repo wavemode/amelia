@@ -1,0 +1,29 @@
+class A {
+  A() = default
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ClassDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      decls=[
+        ClassConstructorNode(
+          name=IdentifierNode(
+            token=IDENTIFIER(A)
+          ),
+          signature=FunctionSignatureNode(
+            parameters=[]
+          ),
+          body=FunctionBodyNode(
+            is_default=true,
+            is_deleted=false
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

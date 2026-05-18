@@ -1,9 +1,9 @@
-fun f() = 10
+fun f() {}
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    FunctionDeclarationStatementNode(
+    FunctionDeclarationNode(
       name=IdentifierNode(
         token=IDENTIFIER(f)
       ),
@@ -11,9 +11,7 @@ ModuleNode(
         parameters=[]
       ),
       body=FunctionBodyNode(
-        expression=NumberLiteralNode(
-          lit=NUMBER(10)
-        )
+        stmts=[]
       )
     )
   ]

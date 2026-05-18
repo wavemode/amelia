@@ -1,21 +1,30 @@
-fun f(...x : int) {}
+fun f(x : int, y : float) {}
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    FunctionDeclarationStatementNode(
+    FunctionDeclarationNode(
       name=IdentifierNode(
         token=IDENTIFIER(f)
       ),
       signature=FunctionSignatureNode(
         parameters=[
           FunctionParameterNode(
-            variadic=true,
+            variadic=false,
             name=IdentifierNode(
               token=IDENTIFIER_NO_W(x)
             ),
             type=IdentifierNode(
               token=IDENTIFIER(int)
+            )
+          ),
+          FunctionParameterNode(
+            variadic=false,
+            name=IdentifierNode(
+              token=IDENTIFIER(y)
+            ),
+            type=IdentifierNode(
+              token=IDENTIFIER(float)
             )
           )
         ]

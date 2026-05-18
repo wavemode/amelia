@@ -230,12 +230,7 @@ struct IfExpressionNode {
 
 struct CatchClauseNode {
   NodeId exc_type;
-  NodeId body;
-};
-
-struct CatchClauseBindingNode {
-  NodeId var;
-  NodeId exc_type;
+  Option<NodeId> var;
   NodeId body;
 };
 
@@ -498,9 +493,11 @@ struct FunctionSignatureNode {
 struct FunctionBodyNode {
   Option<NodeId> expression;
   Option<List<NodeId>> stmts;
+  bool is_default;
+  bool is_deleted;
 };
 
-struct FunctionDeclarationStatementNode {
+struct FunctionDeclarationNode {
   NodeId name;
   NodeId signature;
   Option<NodeId> body;
@@ -525,6 +522,51 @@ struct IntroductoryBindingsNode {
   List<NodeId> bindings;
 };
 
+struct ClassStaticDeclarationNode {
+  NodeId decl;
+};
+
+struct ClassConstDeclarationNode {
+  NodeId decl;
+};
+
+struct ClassFieldNode {
+  NodeId name;
+  Option<NodeId> type;
+  Option<NodeId> initializer;
+};
+
+struct ClassDeclarationNode {
+  NodeId name;
+  List<NodeId> decls;
+};
+
+struct BooleanLiteralNode {
+  bool value;
+};
+
+struct BoolTypeNode {};
+
+struct ThisLiteralNode {};
+
+struct ClassConstructorNode {
+  NodeId name;
+  NodeId signature;
+  NodeId body;
+};
+
+enum class DeclarationVisibility {
+  Public,
+  Private,
+  Protected,
+  Local,
+};
+
+struct VisibilityNode {
+  DeclarationVisibility visibility;
+  NodeId decl;
+};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
@@ -542,7 +584,6 @@ struct IntroductoryBindingsNode {
   X(IfStatementNode)                                                                               \
   X(IfExpressionNode)                                                                              \
   X(CatchClauseNode)                                                                               \
-  X(CatchClauseBindingNode)                                                                        \
   X(TryExpressionNode)                                                                             \
   X(TryStatementNode)                                                                              \
   X(CaseClauseNode)                                                                                \
@@ -647,10 +688,19 @@ struct IntroductoryBindingsNode {
   X(FunctionSignatureCaptureAnnotationListNode)                                                    \
   X(FunctionSignatureNode)                                                                         \
   X(FunctionBodyNode)                                                                              \
-  X(FunctionDeclarationStatementNode)                                                              \
+  X(FunctionDeclarationNode)                                                                       \
   X(FunctionExpressionNode)                                                                        \
   X(LambdaExpressionNode)                                                                          \
   X(TypeDeclarationNode)                                                                           \
-  X(IntroductoryBindingsNode)
+  X(IntroductoryBindingsNode)                                                                      \
+  X(ClassStaticDeclarationNode)                                                                    \
+  X(ClassConstDeclarationNode)                                                                     \
+  X(ClassFieldNode)                                                                                \
+  X(ClassDeclarationNode)                                                                          \
+  X(BooleanLiteralNode)                                                                            \
+  X(BoolTypeNode)                                                                                  \
+  X(ThisLiteralNode)                                                                               \
+  X(ClassConstructorNode)                                                                          \
+  X(VisibilityNode)
 
 } // namespace amelia

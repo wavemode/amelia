@@ -98,13 +98,7 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
   case NodeType::CatchClauseNode: {
     const auto &n = node.as_CatchClauseNode();
     print_node_field(out, "exc_type", n.exc_type, indent + 2);
-    print_node_field_with_comma(out, "body", n.body, indent + 2);
-    break;
-  }
-  case NodeType::CatchClauseBindingNode: {
-    const auto &n = node.as_CatchClauseBindingNode();
-    print_node_field(out, "var", n.var, indent + 2);
-    print_node_field_with_comma(out, "exc_type", n.exc_type, indent + 2);
+    print_node_field_with_comma(out, "var", n.var, indent + 2);
     print_node_field_with_comma(out, "body", n.body, indent + 2);
     break;
   }
@@ -600,8 +594,11 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
     const auto &n = node.as_FunctionBodyNode();
     if (n.expression.has_value()) {
       print_node_field(out, "expression", n.expression.value(), indent + 2);
-    } else {
+    } else if (n.stmts.has_value()) {
       print_node_list_field(out, "stmts", n.stmts.value().data(), indent + 2);
+    } else {
+      print_field(out, "is_default", n.is_default, indent + 2);
+      print_field_with_comma(out, "is_deleted", n.is_deleted, indent + 2);
     }
     break;
   }
@@ -631,8 +628,8 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
     print_node_field_with_comma(out, "var", n.var, indent + 2);
     break;
   }
-  case NodeType::FunctionDeclarationStatementNode: {
-    const auto &n = node.as_FunctionDeclarationStatementNode();
+  case NodeType::FunctionDeclarationNode: {
+    const auto &n = node.as_FunctionDeclarationNode();
     print_node_field(out, "name", n.name, indent + 2);
     print_node_field_with_comma(out, "signature", n.signature, indent + 2);
     print_node_field_with_comma(out, "body", n.body, indent + 2);
@@ -659,6 +656,68 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
   case NodeType::IntroductoryBindingsNode: {
     const auto &n = node.as_IntroductoryBindingsNode();
     print_node_list_field(out, "bindings", n.bindings.data(), indent + 2);
+    break;
+  }
+  case NodeType::ClassStaticDeclarationNode: {
+    const auto &n = node.as_ClassStaticDeclarationNode();
+    print_node_field(out, "decl", n.decl, indent + 2);
+    break;
+  }
+  case NodeType::ClassConstDeclarationNode: {
+    const auto &n = node.as_ClassConstDeclarationNode();
+    print_node_field(out, "decl", n.decl, indent + 2);
+    break;
+  }
+  case NodeType::ClassFieldNode: {
+    const auto &n = node.as_ClassFieldNode();
+    print_node_field(out, "name", n.name, indent + 2);
+    print_node_field_with_comma(out, "type", n.type, indent + 2);
+    print_node_field_with_comma(out, "initializer", n.initializer, indent + 2);
+    break;
+  }
+  case NodeType::ClassDeclarationNode: {
+    const auto &n = node.as_ClassDeclarationNode();
+    print_node_field(out, "name", n.name, indent + 2);
+    print_node_list_field_with_comma(out, "decls", n.decls.data(), indent + 2);
+    break;
+  }
+  case NodeType::BooleanLiteralNode: {
+    const auto &n = node.as_BooleanLiteralNode();
+    print_field(out, "value", n.value, indent + 2);
+    break;
+  }
+  case NodeType::BoolTypeNode: {
+    break;
+  }
+  case NodeType::ThisLiteralNode: {
+    break;
+  }
+  case NodeType::ClassConstructorNode: {
+    const auto &n = node.as_ClassConstructorNode();
+    print_node_field(out, "name", n.name, indent + 2);
+    print_node_field_with_comma(out, "signature", n.signature, indent + 2);
+    print_node_field_with_comma(out, "body", n.body, indent + 2);
+    break;
+  }
+  case NodeType::VisibilityNode: {
+    const auto &n = node.as_VisibilityNode();
+    Text visibility;
+    switch (n.visibility) {
+    case DeclarationVisibility::Public:
+      visibility = "public";
+      break;
+    case DeclarationVisibility::Private:
+      visibility = "private";
+      break;
+    case DeclarationVisibility::Protected:
+      visibility = "protected";
+      break;
+    case DeclarationVisibility::Local:
+      visibility = "local";
+      break;
+    }
+    print_field(out, "visibility", visibility, indent + 2);
+    print_node_field_with_comma(out, "decl", n.decl, indent + 2);
     break;
   }
   default:
@@ -739,6 +798,12 @@ void NodeFormatter::print_field(AbstractString &out, Text name, bool value, int 
 }
 
 void NodeFormatter::print_field_with_comma(AbstractString &out, Text name, Text value, int indent)
+    const {
+  out.append(',');
+  print_field(out, name, value, indent);
+}
+
+void NodeFormatter::print_field_with_comma(AbstractString &out, Text name, bool value, int indent)
     const {
   out.append(',');
   print_field(out, name, value, indent);

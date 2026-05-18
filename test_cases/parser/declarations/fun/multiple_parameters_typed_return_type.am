@@ -1,9 +1,9 @@
-fun f(x : int = 4, y : float = 10.0) {}
+fun f(x : int, y : float) -> double {}
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    FunctionDeclarationStatementNode(
+    FunctionDeclarationNode(
       name=IdentifierNode(
         token=IDENTIFIER(f)
       ),
@@ -16,9 +16,6 @@ ModuleNode(
             ),
             type=IdentifierNode(
               token=IDENTIFIER(int)
-            ),
-            default_value=NumberLiteralNode(
-              lit=NUMBER(4)
             )
           ),
           FunctionParameterNode(
@@ -28,12 +25,12 @@ ModuleNode(
             ),
             type=IdentifierNode(
               token=IDENTIFIER(float)
-            ),
-            default_value=NumberLiteralNode(
-              lit=NUMBER(10.0)
             )
           )
-        ]
+        ],
+        return_type=IdentifierNode(
+          token=IDENTIFIER(double)
+        )
       ),
       body=FunctionBodyNode(
         stmts=[]

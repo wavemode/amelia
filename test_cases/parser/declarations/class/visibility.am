@@ -1,0 +1,67 @@
+class A {
+  public A() {}
+  private a: int
+  protected b: String
+  local c: float
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ClassDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      decls=[
+        VisibilityNode(
+          visibility=public,
+          decl=ClassConstructorNode(
+            name=IdentifierNode(
+              token=IDENTIFIER(A)
+            ),
+            signature=FunctionSignatureNode(
+              parameters=[]
+            ),
+            body=FunctionBodyNode(
+              stmts=[]
+            )
+          )
+        ),
+        VisibilityNode(
+          visibility=private,
+          decl=ClassFieldNode(
+            name=IdentifierNode(
+              token=IDENTIFIER(a)
+            ),
+            type=IdentifierNode(
+              token=IDENTIFIER(int)
+            )
+          )
+        ),
+        VisibilityNode(
+          visibility=protected,
+          decl=ClassFieldNode(
+            name=IdentifierNode(
+              token=IDENTIFIER(b)
+            ),
+            type=IdentifierNode(
+              token=IDENTIFIER(String)
+            )
+          )
+        ),
+        VisibilityNode(
+          visibility=local,
+          decl=ClassFieldNode(
+            name=IdentifierNode(
+              token=IDENTIFIER(c)
+            ),
+            type=IdentifierNode(
+              token=IDENTIFIER(float)
+            )
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

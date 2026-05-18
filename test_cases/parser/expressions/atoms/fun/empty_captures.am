@@ -1,0 +1,76 @@
+let f = fun(
+  x : int,
+  y : float,
+) with (
+  a : long,
+  b : short,
+) [] -> int {
+
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetStatementNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(f)
+      ),
+      expression=FunctionExpressionNode(
+        signature=FunctionSignatureNode(
+          parameters=[
+            FunctionParameterNode(
+              variadic=false,
+              name=IdentifierNode(
+                token=IDENTIFIER(x)
+              ),
+              type=IdentifierNode(
+                token=IDENTIFIER(int)
+              )
+            ),
+            FunctionParameterNode(
+              variadic=false,
+              name=IdentifierNode(
+                token=IDENTIFIER(y)
+              ),
+              type=IdentifierNode(
+                token=IDENTIFIER(float)
+              )
+            )
+          ],
+          implicit_parameter_list=FunctionImplicitParameterListNode(
+            parameters=[
+              FunctionParameterNode(
+                variadic=false,
+                name=IdentifierNode(
+                  token=IDENTIFIER(a)
+                ),
+                type=IdentifierNode(
+                  token=IDENTIFIER(long)
+                )
+              ),
+              FunctionParameterNode(
+                variadic=false,
+                name=IdentifierNode(
+                  token=IDENTIFIER(b)
+                ),
+                type=IdentifierNode(
+                  token=IDENTIFIER(short)
+                )
+              )
+            ]
+          ),
+          capture_list=FunctionSignatureCaptureAnnotationListNode(
+            captures=[]
+          ),
+          return_type=IdentifierNode(
+            token=IDENTIFIER(int)
+          )
+        ),
+        body=FunctionBodyNode(
+          stmts=[]
+        )
+      )
+    )
+  ]
+)
+*/
