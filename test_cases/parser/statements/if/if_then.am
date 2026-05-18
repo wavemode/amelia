@@ -6,9 +6,7 @@ if (x) {
 ModuleNode(
   decls=[
     IfStatementNode(
-      introductory_decls=IntroductoryDeclsNode(
-        decls=[]
-      ),
+      introductory_decls=IntroductoryDeclsNode(),
       condition=IdentifierNode(
         token=IDENTIFIER_NO_W(x)
       ),

@@ -16,7 +16,7 @@ ModuleNode(
         token=IDENTIFIER(f)
       ),
       expression=FunctionExpressionNode(
-        signature=FunctionSignatureNode(,
+        signature=FunctionSignatureNode(
           parameters=[
             FunctionParameterNode(
               variadic=false,
@@ -59,15 +59,14 @@ ModuleNode(
               )
             ]
           ),
-          capture_list=FunctionSignatureCaptureAnnotationListNode(
-            captures=[]
-          ),
+          capture_list=FunctionSignatureCaptureAnnotationListNode(),
           return_type=IdentifierNode(
             token=IDENTIFIER(int)
           )
         ),
         body=FunctionBodyNode(
-          stmts=[]
+          is_default=false,
+          is_deleted=false
         )
       )
     )

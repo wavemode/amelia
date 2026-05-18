@@ -7,11 +7,10 @@ ModuleNode(
       name=IdentifierNode(
         token=IDENTIFIER(f)
       ),
-      signature=FunctionSignatureNode(,
-        parameters=[]
-      ),
+      signature=FunctionSignatureNode(),
       body=FunctionBodyNode(
-        stmts=[]
+        is_default=false,
+        is_deleted=false
       )
     )
   ]

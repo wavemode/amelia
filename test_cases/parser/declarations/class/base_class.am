@@ -13,8 +13,7 @@ ModuleNode(
             token=IDENTIFIER(B)
           )
         ]
-      ),
-      decls=[]
+      )
     )
   ]
 )

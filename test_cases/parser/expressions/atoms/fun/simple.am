@@ -8,11 +8,10 @@ ModuleNode(
         token=IDENTIFIER(f)
       ),
       expression=FunctionExpressionNode(
-        signature=FunctionSignatureNode(,
-          parameters=[]
-        ),
+        signature=FunctionSignatureNode(),
         body=FunctionBodyNode(
-          stmts=[]
+          is_default=false,
+          is_deleted=false
         )
       )
     )

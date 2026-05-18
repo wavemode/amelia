@@ -20,9 +20,7 @@ ModuleNode(
           name=IdentifierNode(
             token=IDENTIFIER(A)
           ),
-          signature=FunctionSignatureNode(,
-            parameters=[]
-          ),
+          signature=FunctionSignatureNode(),
           body=FunctionBodyNode(
             stmts=[
               AssignmentStatementNode(
@@ -47,7 +45,9 @@ ModuleNode(
                   lit=STRING_LITERAL("hello")
                 )
               )
-            ]
+            ],
+            is_default=false,
+            is_deleted=false
           )
         ),
         ClassFieldNode(

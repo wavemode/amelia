@@ -11,7 +11,7 @@ ModuleNode(
       name=IdentifierNode(
         token=IDENTIFIER(f)
       ),
-      signature=FunctionSignatureNode(,
+      signature=FunctionSignatureNode(
         parameters=[
           FunctionParameterNode(
             variadic=false,
@@ -71,7 +71,9 @@ ModuleNode(
               lit=NUMBER(10.0)
             )
           )
-        ]
+        ],
+        is_default=false,
+        is_deleted=false
       )
     )
   ]

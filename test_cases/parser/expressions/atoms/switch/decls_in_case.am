@@ -15,9 +15,7 @@ ModuleNode(
         token=IDENTIFIER(x)
       ),
       expression=SwitchExpressionNode(
-        introductory_decls=IntroductoryDeclsNode(
-          decls=[]
-        ),
+        introductory_decls=IntroductoryDeclsNode(),
         expr=IdentifierNode(
           token=IDENTIFIER_NO_W(w)
         ),
@@ -58,9 +56,7 @@ ModuleNode(
             )
           ),
           CaseClauseNode(
-            introductory_decls=IntroductoryDeclsNode(
-              decls=[]
-            ),
+            introductory_decls=IntroductoryDeclsNode(),
             exprs=[
               NumberLiteralNode(
                 lit=NUMBER(3)

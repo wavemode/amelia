@@ -18,9 +18,7 @@ ModuleNode(
           name=IdentifierNode(
             token=IDENTIFIER(say_age)
           ),
-          signature=FunctionSignatureNode(,
-            parameters=[]
-          ),
+          signature=FunctionSignatureNode(),
           body=FunctionBodyNode(
             stmts=[
               ExpressionStatementNode(
@@ -50,7 +48,9 @@ ModuleNode(
                   ]
                 )
               )
-            ]
+            ],
+            is_default=false,
+            is_deleted=false
           )
         ),
         ClassFieldNode(

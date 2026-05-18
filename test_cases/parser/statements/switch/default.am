@@ -8,17 +8,13 @@ switch(y) {
 ModuleNode(
   decls=[
     SwitchStatementNode(
-      introductory_decls=IntroductoryDeclsNode(
-        decls=[]
-      ),
+      introductory_decls=IntroductoryDeclsNode(),
       expr=IdentifierNode(
         token=IDENTIFIER_NO_W(y)
       ),
       clauses=[
         CaseClauseNode(
-          introductory_decls=IntroductoryDeclsNode(
-            decls=[]
-          ),
+          introductory_decls=IntroductoryDeclsNode(),
           exprs=[
             NumberLiteralNode(
               lit=NUMBER(1)
@@ -31,9 +27,7 @@ ModuleNode(
           )
         ),
         CaseClauseNode(
-          introductory_decls=IntroductoryDeclsNode(
-            decls=[]
-          ),
+          introductory_decls=IntroductoryDeclsNode(),
           exprs=[
             NumberLiteralNode(
               lit=NUMBER(3)
@@ -47,9 +41,7 @@ ModuleNode(
         )
       ],
       default_body=IfStatementNode(
-        introductory_decls=IntroductoryDeclsNode(
-          decls=[]
-        ),
+        introductory_decls=IntroductoryDeclsNode(),
         condition=GreaterExpressionNode(
           left=IdentifierNode(
             token=IDENTIFIER_NO_W(z)

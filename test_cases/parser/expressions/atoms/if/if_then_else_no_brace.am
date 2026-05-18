@@ -8,9 +8,7 @@ ModuleNode(
         token=IDENTIFIER(w)
       ),
       expression=IfExpressionNode(
-        introductory_decls=IntroductoryDeclsNode(
-          decls=[]
-        ),
+        introductory_decls=IntroductoryDeclsNode(),
         condition=IdentifierNode(
           token=IDENTIFIER_NO_W(x)
         ),

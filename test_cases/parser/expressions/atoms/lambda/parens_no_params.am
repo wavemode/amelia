@@ -8,7 +8,6 @@ ModuleNode(
         token=IDENTIFIER(x)
       ),
       expression=LambdaExpressionNode(
-        parameters=[],
         body=NumberLiteralNode(
           lit=NUMBER(10)
         )

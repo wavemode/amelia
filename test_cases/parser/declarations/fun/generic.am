@@ -34,7 +34,8 @@ ModuleNode(
         )
       ),
       body=FunctionBodyNode(
-        stmts=[]
+        is_default=false,
+        is_deleted=false
       )
     )
   ]

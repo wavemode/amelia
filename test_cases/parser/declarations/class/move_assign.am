@@ -20,7 +20,7 @@ ModuleNode(
           operator_ident=OperatorIdentifierNode(
             op=OperatorIdentMoveAssignNode()
           ),
-          signature=FunctionSignatureNode(,
+          signature=FunctionSignatureNode(
             parameters=[
               FunctionParameterNode(
                 variadic=false,
@@ -68,7 +68,9 @@ ModuleNode(
                   )
                 )
               )
-            ]
+            ],
+            is_default=false,
+            is_deleted=false
           )
         ),
         ClassFieldNode(

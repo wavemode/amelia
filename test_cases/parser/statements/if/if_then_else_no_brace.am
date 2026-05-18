@@ -8,9 +8,7 @@ else
 ModuleNode(
   decls=[
     IfStatementNode(
-      introductory_decls=IntroductoryDeclsNode(
-        decls=[]
-      ),
+      introductory_decls=IntroductoryDeclsNode(),
       condition=IdentifierNode(
         token=IDENTIFIER_NO_W(x)
       ),
@@ -18,16 +16,14 @@ ModuleNode(
         expr=FunctionCallExpressionNode(
           callee=IdentifierNode(
             token=IDENTIFIER(y)
-          ),
-          args=[]
+          )
         )
       ),
       else_branch=ExpressionStatementNode(
         expr=FunctionCallExpressionNode(
           callee=IdentifierNode(
             token=IDENTIFIER(z)
-          ),
-          args=[]
+          )
         )
       )
     ),

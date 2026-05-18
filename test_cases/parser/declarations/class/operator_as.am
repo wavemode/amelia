@@ -20,13 +20,13 @@ ModuleNode(
               )
             )
           ),
-          signature=FunctionSignatureNode(,
-            parameters=[]
-          ),
+          signature=FunctionSignatureNode(),
           body=FunctionBodyNode(
             expression=NumberLiteralNode(
               lit=NUMBER(10)
-            )
+            ),
+            is_default=false,
+            is_deleted=false
           )
         ),
         ClassFieldNode(

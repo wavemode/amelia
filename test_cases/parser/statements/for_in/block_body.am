@@ -7,9 +7,7 @@ for (x in y) {
 ModuleNode(
   decls=[
     ForInStatementNode(
-      introductory_decls=IntroductoryDeclsNode(
-        decls=[]
-      ),
+      introductory_decls=IntroductoryDeclsNode(),
       vars=[
         IdentifierNode(
           token=IDENTIFIER_NO_W(x)
@@ -24,16 +22,14 @@ ModuleNode(
             expr=FunctionCallExpressionNode(
               callee=IdentifierNode(
                 token=IDENTIFIER(z)
-              ),
-              args=[]
+              )
             )
           ),
           ExpressionStatementNode(
             expr=FunctionCallExpressionNode(
               callee=IdentifierNode(
                 token=IDENTIFIER(t)
-              ),
-              args=[]
+              )
             )
           )
         ]

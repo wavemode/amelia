@@ -14,9 +14,7 @@ ModuleNode(
           name=IdentifierNode(
             token=IDENTIFIER(A)
           ),
-          signature=FunctionSignatureNode(,
-            parameters=[]
-          ),
+          signature=FunctionSignatureNode(),
           body=FunctionBodyNode(
             is_default=false,
             is_deleted=true

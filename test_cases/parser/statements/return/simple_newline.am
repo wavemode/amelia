@@ -9,8 +9,7 @@ ModuleNode(
       expr=FunctionCallExpressionNode(
         callee=IdentifierNode(
           token=IDENTIFIER(x)
-        ),
-        args=[]
+        )
       )
     )
   ]

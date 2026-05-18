@@ -16,8 +16,7 @@ ModuleNode(
             )
           )
         ]
-      ),
-      decls=[]
+      )
     )
   ]
 )

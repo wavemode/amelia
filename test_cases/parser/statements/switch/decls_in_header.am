@@ -41,9 +41,7 @@ ModuleNode(
       ),
       clauses=[
         CaseClauseNode(
-          introductory_decls=IntroductoryDeclsNode(
-            decls=[]
-          ),
+          introductory_decls=IntroductoryDeclsNode(),
           exprs=[
             NumberLiteralNode(
               lit=NUMBER(1)
@@ -56,9 +54,7 @@ ModuleNode(
           )
         ),
         CaseClauseNode(
-          introductory_decls=IntroductoryDeclsNode(
-            decls=[]
-          ),
+          introductory_decls=IntroductoryDeclsNode(),
           exprs=[
             NumberLiteralNode(
               lit=NUMBER(3)
