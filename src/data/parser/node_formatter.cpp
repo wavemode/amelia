@@ -678,6 +678,9 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
   case NodeType::ClassDeclarationNode: {
     const auto &n = node.as_ClassDeclarationNode();
     print_node_field(out, "name", n.name, indent + 2);
+    print_node_field_with_comma(
+        out, "implicit_parameter_list", n.implicit_parameter_list, indent + 2
+    );
     print_node_list_field_with_comma(out, "decls", n.decls.data(), indent + 2);
     break;
   }

@@ -145,6 +145,7 @@ public:
   NodeId parse_class_declaration() {
     auto class_token = next();
     auto name = expect_identifier("Expected class name after 'class' keyword");
+    Option<NodeId> implicit_parameter_list = try_parse_implicit_parameter_list();
     read_token_type(TokenType::LEFT_BRACE, "Expected '{' to start class body");
     List<NodeId> decls;
     while (peek().type != TokenType::RIGHT_BRACE) {
@@ -154,7 +155,9 @@ public:
       }
     }
     read_token_type(TokenType::RIGHT_BRACE, "Expected '}' to end class body");
-    return m_output.add_node(class_token.loc, ClassDeclarationNode{name, std::move(decls)});
+    return m_output.add_node(
+        class_token.loc, ClassDeclarationNode{name, implicit_parameter_list, std::move(decls)}
+    );
   }
 
   NodeId parse_class_body_declaration() {
@@ -180,6 +183,8 @@ public:
     case TokenType::KEYWORD_PROTECTED:
     case TokenType::KEYWORD_LOCAL:
       return parse_class_body_visibility_declaration();
+    case TokenType::KEYWORD_FUN:
+      return parse_function_declaration();
     default:
       throw_parser_error_at_current_location("Expected declaration");
     }

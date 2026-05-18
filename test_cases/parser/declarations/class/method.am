@@ -1,0 +1,68 @@
+class A {
+  fun say_age() {
+    println("I am ", this.age, " years old")
+  }
+
+  a: int
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ClassDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      decls=[
+        FunctionDeclarationNode(
+          name=IdentifierNode(
+            token=IDENTIFIER(say_age)
+          ),
+          signature=FunctionSignatureNode(
+            parameters=[]
+          ),
+          body=FunctionBodyNode(
+            stmts=[
+              ExpressionStatementNode(
+                expr=FunctionCallExpressionNode(
+                  callee=IdentifierNode(
+                    token=IDENTIFIER(println)
+                  ),
+                  args=[
+                    PositionalFunctionArgumentNode(
+                      expr=StringLiteralNode(
+                        lit=STRING_LITERAL("I am ")
+                      )
+                    ),
+                    PositionalFunctionArgumentNode(
+                      expr=FieldAccessExpressionNode(
+                        object=ThisLiteralNode(),
+                        field=IdentifierNode(
+                          token=IDENTIFIER_NO_W(age)
+                        )
+                      )
+                    ),
+                    PositionalFunctionArgumentNode(
+                      expr=StringLiteralNode(
+                        lit=STRING_LITERAL(" years old")
+                      )
+                    )
+                  ]
+                )
+              )
+            ]
+          )
+        ),
+        ClassFieldNode(
+          name=IdentifierNode(
+            token=IDENTIFIER(a)
+          ),
+          type=IdentifierNode(
+            token=IDENTIFIER(int)
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

@@ -538,6 +538,7 @@ struct ClassFieldNode {
 
 struct ClassDeclarationNode {
   NodeId name;
+  Option<NodeId> implicit_parameter_list;
   List<NodeId> decls;
 };
 
