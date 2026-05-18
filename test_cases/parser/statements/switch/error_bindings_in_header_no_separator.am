@@ -1,8 +1,0 @@
-switch(let z = 20; const y = x + z  y) {
-  case (1) ++x
-  case (3) ++y
-}
-
-/* EXPECTED_OUTPUT:
-ERROR("Multiple statements on the same line must be separated by a semicolon (at test_cases/parser/statements/switch/error_bindings_in_header_no_separator.am:1:37)")
-*/

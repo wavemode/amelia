@@ -4,8 +4,8 @@ for (x, y in z) w();
 ModuleNode(
   decls=[
     ForInStatementNode(
-      introductory_bindings=IntroductoryBindingsNode(
-        bindings=[]
+      introductory_decls=IntroductoryDeclsNode(
+        decls=[]
       ),
       vars=[
         IdentifierNode(

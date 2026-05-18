@@ -8,8 +8,8 @@ while (
 ModuleNode(
   decls=[
     WhileStatementNode(
-      introductory_bindings=IntroductoryBindingsNode(
-        bindings=[
+      introductory_decls=IntroductoryDeclsNode(
+        decls=[
           LetDeclarationNode(
             target=IdentifierNode(
               token=IDENTIFIER(w)

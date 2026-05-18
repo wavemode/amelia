@@ -8,8 +8,8 @@ for (
 ModuleNode(
   decls=[
     ForInStatementNode(
-      introductory_bindings=IntroductoryBindingsNode(
-        bindings=[
+      introductory_decls=IntroductoryDeclsNode(
+        decls=[
           LetDeclarationNode(
             target=IdentifierNode(
               token=IDENTIFIER(w)

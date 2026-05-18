@@ -81,7 +81,7 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
   }
   case NodeType::IfStatementNode: {
     const auto &n = node.as_IfStatementNode();
-    print_node_field(out, "introductory_bindings", n.introductory_bindings, indent + 2);
+    print_node_field(out, "introductory_decls", n.introductory_decls, indent + 2);
     print_node_field_with_comma(out, "condition", n.condition, indent + 2);
     print_node_field_with_comma(out, "then_branch", n.then_branch, indent + 2);
     print_node_field_with_comma(out, "else_branch", n.else_branch, indent + 2);
@@ -89,7 +89,7 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
   }
   case NodeType::IfExpressionNode: {
     const auto &n = node.as_IfExpressionNode();
-    print_node_field(out, "introductory_bindings", n.introductory_bindings, indent + 2);
+    print_node_field(out, "introductory_decls", n.introductory_decls, indent + 2);
     print_node_field_with_comma(out, "condition", n.condition, indent + 2);
     print_node_field_with_comma(out, "then_branch", n.then_branch, indent + 2);
     print_node_field_with_comma(out, "else_branch", n.else_branch, indent + 2);
@@ -116,14 +116,14 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
   }
   case NodeType::CaseClauseNode: {
     const auto &n = node.as_CaseClauseNode();
-    print_node_field(out, "introductory_bindings", n.introductory_bindings, indent + 2);
+    print_node_field(out, "introductory_decls", n.introductory_decls, indent + 2);
     print_node_list_field_with_comma(out, "exprs", n.exprs.data(), indent + 2);
     print_node_field_with_comma(out, "body", n.body, indent + 2);
     break;
   }
   case NodeType::SwitchExpressionNode: {
     const auto &n = node.as_SwitchExpressionNode();
-    print_node_field(out, "introductory_bindings", n.introductory_bindings, indent + 2);
+    print_node_field(out, "introductory_decls", n.introductory_decls, indent + 2);
     print_node_field_with_comma(out, "expr", n.expr, indent + 2);
     print_node_list_field_with_comma(out, "clauses", n.clauses.data(), indent + 2);
     print_node_field_with_comma(out, "default_body", n.default_body, indent + 2);
@@ -131,7 +131,7 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
   }
   case NodeType::SwitchStatementNode: {
     const auto &n = node.as_SwitchStatementNode();
-    print_node_field(out, "introductory_bindings", n.introductory_bindings, indent + 2);
+    print_node_field(out, "introductory_decls", n.introductory_decls, indent + 2);
     print_node_field_with_comma(out, "expr", n.expr, indent + 2);
     print_node_list_field_with_comma(out, "clauses", n.clauses.data(), indent + 2);
     print_node_field_with_comma(out, "default_body", n.default_body, indent + 2);
@@ -554,7 +554,7 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
   }
   case NodeType::ForInStatementNode: {
     const auto &n = node.as_ForInStatementNode();
-    print_node_field(out, "introductory_bindings", n.introductory_bindings, indent + 2);
+    print_node_field(out, "introductory_decls", n.introductory_decls, indent + 2);
     print_node_list_field_with_comma(out, "vars", n.vars.data(), indent + 2);
     print_node_field_with_comma(out, "iterable", n.iterable, indent + 2);
     print_node_field_with_comma(out, "body", n.body, indent + 2);
@@ -562,7 +562,7 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
   }
   case NodeType::WhileStatementNode: {
     const auto &n = node.as_WhileStatementNode();
-    print_node_field(out, "introductory_bindings", n.introductory_bindings, indent + 2);
+    print_node_field(out, "introductory_decls", n.introductory_decls, indent + 2);
     print_node_field_with_comma(out, "condition", n.condition, indent + 2);
     print_node_field_with_comma(out, "body", n.body, indent + 2);
     break;
@@ -667,9 +667,9 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
     print_node_field_with_comma(out, "type_expr", n.type_expr, indent + 2);
     break;
   }
-  case NodeType::IntroductoryBindingsNode: {
-    const auto &n = node.as_IntroductoryBindingsNode();
-    print_node_list_field(out, "bindings", n.bindings.data(), indent + 2);
+  case NodeType::IntroductoryDeclsNode: {
+    const auto &n = node.as_IntroductoryDeclsNode();
+    print_node_list_field(out, "decls", n.decls.data(), indent + 2);
     break;
   }
   case NodeType::ClassStaticDeclarationNode: {

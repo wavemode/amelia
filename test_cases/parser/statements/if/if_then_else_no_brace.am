@@ -8,8 +8,8 @@ else
 ModuleNode(
   decls=[
     IfStatementNode(
-      introductory_bindings=IntroductoryBindingsNode(
-        bindings=[]
+      introductory_decls=IntroductoryDeclsNode(
+        decls=[]
       ),
       condition=IdentifierNode(
         token=IDENTIFIER_NO_W(x)

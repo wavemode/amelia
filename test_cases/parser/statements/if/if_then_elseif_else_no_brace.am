@@ -7,8 +7,8 @@ else u
 ModuleNode(
   decls=[
     IfStatementNode(
-      introductory_bindings=IntroductoryBindingsNode(
-        bindings=[]
+      introductory_decls=IntroductoryDeclsNode(
+        decls=[]
       ),
       condition=IdentifierNode(
         token=IDENTIFIER_NO_W(x)
@@ -19,8 +19,8 @@ ModuleNode(
         )
       ),
       else_branch=IfStatementNode(
-        introductory_bindings=IntroductoryBindingsNode(
-          bindings=[]
+        introductory_decls=IntroductoryDeclsNode(
+          decls=[]
         ),
         condition=IdentifierNode(
           token=IDENTIFIER_NO_W(z)

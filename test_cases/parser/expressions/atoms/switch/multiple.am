@@ -11,16 +11,16 @@ ModuleNode(
         token=IDENTIFIER(x)
       ),
       expression=SwitchExpressionNode(
-        introductory_bindings=IntroductoryBindingsNode(
-          bindings=[]
+        introductory_decls=IntroductoryDeclsNode(
+          decls=[]
         ),
         expr=IdentifierNode(
           token=IDENTIFIER_NO_W(y)
         ),
         clauses=[
           CaseClauseNode(
-            introductory_bindings=IntroductoryBindingsNode(
-              bindings=[]
+            introductory_decls=IntroductoryDeclsNode(
+              decls=[]
             ),
             exprs=[
               NumberLiteralNode(
@@ -32,8 +32,8 @@ ModuleNode(
             )
           ),
           CaseClauseNode(
-            introductory_bindings=IntroductoryBindingsNode(
-              bindings=[]
+            introductory_decls=IntroductoryDeclsNode(
+              decls=[]
             ),
             exprs=[
               NumberLiteralNode(

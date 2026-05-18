@@ -4,8 +4,8 @@ while (x) z
 ModuleNode(
   decls=[
     WhileStatementNode(
-      introductory_bindings=IntroductoryBindingsNode(
-        bindings=[]
+      introductory_decls=IntroductoryDeclsNode(
+        decls=[]
       ),
       condition=IdentifierNode(
         token=IDENTIFIER_NO_W(x)

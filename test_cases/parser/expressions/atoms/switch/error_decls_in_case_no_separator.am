@@ -1,0 +1,10 @@
+let x = switch(w) {
+  case (
+    let z = 10; const y = x + z  y
+  ) 2
+  case (3) 4
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("Multiple statements on the same line must be separated by a semicolon (at test_cases/parser/expressions/atoms/switch/error_decls_in_case_no_separator.am:3:34)")
+*/

@@ -225,14 +225,14 @@ struct ObjectLiteralNode {
 };
 
 struct IfStatementNode {
-  NodeId introductory_bindings;
+  NodeId introductory_decls;
   NodeId condition;
   NodeId then_branch;
   Option<NodeId> else_branch;
 };
 
 struct IfExpressionNode {
-  NodeId introductory_bindings;
+  NodeId introductory_decls;
   NodeId condition;
   NodeId then_branch;
   NodeId else_branch;
@@ -255,20 +255,20 @@ struct TryStatementNode {
 };
 
 struct CaseClauseNode {
-  NodeId introductory_bindings;
+  NodeId introductory_decls;
   List<NodeId> exprs;
   NodeId body;
 };
 
 struct SwitchExpressionNode {
-  NodeId introductory_bindings;
+  NodeId introductory_decls;
   NodeId expr;
   List<NodeId> clauses;
   Option<NodeId> default_body;
 };
 
 struct SwitchStatementNode {
-  NodeId introductory_bindings;
+  NodeId introductory_decls;
   NodeId expr;
   List<NodeId> clauses;
   Option<NodeId> default_body;
@@ -441,14 +441,14 @@ struct ThrowStatementNode {
 };
 
 struct ForInStatementNode {
-  NodeId introductory_bindings;
+  NodeId introductory_decls;
   List<NodeId> vars;
   NodeId iterable;
   NodeId body;
 };
 
 struct WhileStatementNode {
-  NodeId introductory_bindings;
+  NodeId introductory_decls;
   NodeId condition;
   NodeId body;
 };
@@ -529,8 +529,8 @@ struct TypeDeclarationNode {
   NodeId type_expr;
 };
 
-struct IntroductoryBindingsNode {
-  List<NodeId> bindings;
+struct IntroductoryDeclsNode {
+  List<NodeId> decls;
 };
 
 struct ClassStaticDeclarationNode {
@@ -741,7 +741,7 @@ struct MoveExpressionNode {
   X(FunctionExpressionNode)                                                                        \
   X(LambdaExpressionNode)                                                                          \
   X(TypeDeclarationNode)                                                                           \
-  X(IntroductoryBindingsNode)                                                                      \
+  X(IntroductoryDeclsNode)                                                                         \
   X(ClassStaticDeclarationNode)                                                                    \
   X(ClassConstDeclarationNode)                                                                     \
   X(ClassFieldNode)                                                                                \

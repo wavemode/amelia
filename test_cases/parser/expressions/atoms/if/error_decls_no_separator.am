@@ -1,0 +1,8 @@
+let a = if (
+  let w = 10; const x = w + 5  x > 10
+) y
+else z
+
+/* EXPECTED_OUTPUT:
+ERROR("Multiple statements on the same line must be separated by a semicolon (at test_cases/parser/expressions/atoms/if/error_decls_no_separator.am:2:32)")
+*/

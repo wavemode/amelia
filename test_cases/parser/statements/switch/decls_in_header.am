@@ -11,8 +11,8 @@ switch(
 ModuleNode(
   decls=[
     SwitchStatementNode(
-      introductory_bindings=IntroductoryBindingsNode(
-        bindings=[
+      introductory_decls=IntroductoryDeclsNode(
+        decls=[
           LetDeclarationNode(
             target=IdentifierNode(
               token=IDENTIFIER(z)
@@ -41,8 +41,8 @@ ModuleNode(
       ),
       clauses=[
         CaseClauseNode(
-          introductory_bindings=IntroductoryBindingsNode(
-            bindings=[]
+          introductory_decls=IntroductoryDeclsNode(
+            decls=[]
           ),
           exprs=[
             NumberLiteralNode(
@@ -56,8 +56,8 @@ ModuleNode(
           )
         ),
         CaseClauseNode(
-          introductory_bindings=IntroductoryBindingsNode(
-            bindings=[]
+          introductory_decls=IntroductoryDeclsNode(
+            decls=[]
           ),
           exprs=[
             NumberLiteralNode(

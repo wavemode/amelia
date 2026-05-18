@@ -1,8 +1,0 @@
-for (
-  let w = [1, 2, 3, 4]
-  const y = w.map(x -> x * 2)  x in y
-) z
-
-/* EXPECTED_OUTPUT:
-ERROR("Multiple statements on the same line must be separated by a semicolon (at test_cases/parser/statements/for_in/error_bindings_no_separator.am:3:32)")
-*/

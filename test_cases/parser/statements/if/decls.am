@@ -1,5 +1,6 @@
 if (
-  let w = 10
+  type T = int
+  let w : T = 10
   const x = w + 5
   x > 10
 ) {
@@ -12,11 +13,22 @@ if (
 ModuleNode(
   decls=[
     IfStatementNode(
-      introductory_bindings=IntroductoryBindingsNode(
-        bindings=[
+      introductory_decls=IntroductoryDeclsNode(
+        decls=[
+          TypeDeclarationNode(
+            name=IdentifierNode(
+              token=IDENTIFIER(T)
+            ),
+            type_expr=IdentifierNode(
+              token=IDENTIFIER(int)
+            )
+          ),
           LetDeclarationNode(
             target=IdentifierNode(
               token=IDENTIFIER(w)
+            ),
+            type=IdentifierNode(
+              token=IDENTIFIER(T)
             ),
             expression=NumberLiteralNode(
               lit=NUMBER(10)
