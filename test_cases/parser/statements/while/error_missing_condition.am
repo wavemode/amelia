@@ -1,5 +1,7 @@
-while () z
+let example = {
+  while () z
+}
 
 /* EXPECTED_OUTPUT:
-ERROR("Expected expression, got token RIGHT_PAREN()) (at test_cases/parser/statements/while/error_missing_condition.am:1:8)")
+ERROR("Expected expression, got token RIGHT_PAREN()) (at test_cases/parser/statements/while/error_missing_condition.am:2:10)")
 */

@@ -1,15 +1,26 @@
-if (x); else;
+let a = {
+  if (x); else;
+}
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    IfStatementNode(
-      introductory_decls=IntroductoryDeclsNode(),
-      condition=IdentifierNode(
-        token=IDENTIFIER_NO_W(x)
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(a)
       ),
-      then_branch=EmptyStatementNode(),
-      else_branch=EmptyStatementNode()
+      expression=BlockExpressionNode(
+        stmts=[
+          IfStatementNode(
+            introductory_decls=IntroductoryDeclsNode(),
+            condition=IdentifierNode(
+              token=IDENTIFIER_NO_W(x)
+            ),
+            then_branch=EmptyStatementNode(),
+            else_branch=EmptyStatementNode()
+          )
+        ]
+      )
     )
   ]
 )

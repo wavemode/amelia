@@ -1,23 +1,34 @@
-x %= 5
-y %= 6
+let example = {
+  x %= 5
+  y %= 6
+}
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ModAssignStatementNode(
+    LetDeclarationNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x)
+        token=IDENTIFIER(example)
       ),
-      expression=NumberLiteralNode(
-        lit=NUMBER(5)
-      )
-    ),
-    ModAssignStatementNode(
-      target=IdentifierNode(
-        token=IDENTIFIER(y)
-      ),
-      expression=NumberLiteralNode(
-        lit=NUMBER(6)
+      expression=BlockExpressionNode(
+        stmts=[
+          ModAssignStatementNode(
+            target=IdentifierNode(
+              token=IDENTIFIER(x)
+            ),
+            expression=NumberLiteralNode(
+              lit=NUMBER(5)
+            )
+          ),
+          ModAssignStatementNode(
+            target=IdentifierNode(
+              token=IDENTIFIER(y)
+            ),
+            expression=NumberLiteralNode(
+              lit=NUMBER(6)
+            )
+          )
+        ]
       )
     )
   ]

@@ -1,33 +1,44 @@
-if (x)
-  y()
-else
-  z();
+let a = {
+  if (x)
+    y()
+  else
+    z();
+}
 
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    IfStatementNode(
-      introductory_decls=IntroductoryDeclsNode(),
-      condition=IdentifierNode(
-        token=IDENTIFIER_NO_W(x)
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(a)
       ),
-      then_branch=ExpressionStatementNode(
-        expr=FunctionCallExpressionNode(
-          callee=IdentifierNode(
-            token=IDENTIFIER(y)
-          )
-        )
-      ),
-      else_branch=ExpressionStatementNode(
-        expr=FunctionCallExpressionNode(
-          callee=IdentifierNode(
-            token=IDENTIFIER(z)
-          )
-        )
+      expression=BlockExpressionNode(
+        stmts=[
+          IfStatementNode(
+            introductory_decls=IntroductoryDeclsNode(),
+            condition=IdentifierNode(
+              token=IDENTIFIER_NO_W(x)
+            ),
+            then_branch=ExpressionStatementNode(
+              expr=FunctionCallExpressionNode(
+                callee=IdentifierNode(
+                  token=IDENTIFIER(y)
+                )
+              )
+            ),
+            else_branch=ExpressionStatementNode(
+              expr=FunctionCallExpressionNode(
+                callee=IdentifierNode(
+                  token=IDENTIFIER(z)
+                )
+              )
+            )
+          ),
+          EmptyStatementNode()
+        ]
       )
-    ),
-    EmptyStatementNode()
+    )
   ]
 )
 */

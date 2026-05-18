@@ -1,47 +1,58 @@
-switch(y) {
-  case (1) ++x
-  case (3, 4) ++y
+let example = {
+  switch(y) {
+    case (1) ++x
+    case (3, 4) ++y
+  }
 }
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    SwitchStatementNode(
-      introductory_decls=IntroductoryDeclsNode(),
-      expr=IdentifierNode(
-        token=IDENTIFIER_NO_W(y)
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(example)
       ),
-      clauses=[
-        CaseClauseNode(
-          introductory_decls=IntroductoryDeclsNode(),
-          exprs=[
-            NumberLiteralNode(
-              lit=NUMBER(1)
-            )
-          ],
-          body=PreIncrementStatementNode(
-            target=IdentifierNode(
-              token=IDENTIFIER_NO_W(x)
-            )
-          )
-        ),
-        CaseClauseNode(
-          introductory_decls=IntroductoryDeclsNode(),
-          exprs=[
-            NumberLiteralNode(
-              lit=NUMBER(3)
-            ),
-            NumberLiteralNode(
-              lit=NUMBER(4)
-            )
-          ],
-          body=PreIncrementStatementNode(
-            target=IdentifierNode(
+      expression=BlockExpressionNode(
+        stmts=[
+          SwitchStatementNode(
+            introductory_decls=IntroductoryDeclsNode(),
+            expr=IdentifierNode(
               token=IDENTIFIER_NO_W(y)
-            )
+            ),
+            clauses=[
+              CaseClauseNode(
+                introductory_decls=IntroductoryDeclsNode(),
+                exprs=[
+                  NumberLiteralNode(
+                    lit=NUMBER(1)
+                  )
+                ],
+                body=PreIncrementStatementNode(
+                  target=IdentifierNode(
+                    token=IDENTIFIER_NO_W(x)
+                  )
+                )
+              ),
+              CaseClauseNode(
+                introductory_decls=IntroductoryDeclsNode(),
+                exprs=[
+                  NumberLiteralNode(
+                    lit=NUMBER(3)
+                  ),
+                  NumberLiteralNode(
+                    lit=NUMBER(4)
+                  )
+                ],
+                body=PreIncrementStatementNode(
+                  target=IdentifierNode(
+                    token=IDENTIFIER_NO_W(y)
+                  )
+                )
+              )
+            ]
           )
-        )
-      ]
+        ]
+      )
     )
   ]
 )

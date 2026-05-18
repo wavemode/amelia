@@ -1,23 +1,34 @@
-x = 5
-y = 6
+let z = {
+  x = 5
+  y = 6
+}
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    AssignmentStatementNode(
+    LetDeclarationNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x)
+        token=IDENTIFIER(z)
       ),
-      expression=NumberLiteralNode(
-        lit=NUMBER(5)
-      )
-    ),
-    AssignmentStatementNode(
-      target=IdentifierNode(
-        token=IDENTIFIER(y)
-      ),
-      expression=NumberLiteralNode(
-        lit=NUMBER(6)
+      expression=BlockExpressionNode(
+        stmts=[
+          AssignmentStatementNode(
+            target=IdentifierNode(
+              token=IDENTIFIER(x)
+            ),
+            expression=NumberLiteralNode(
+              lit=NUMBER(5)
+            )
+          ),
+          AssignmentStatementNode(
+            target=IdentifierNode(
+              token=IDENTIFIER(y)
+            ),
+            expression=NumberLiteralNode(
+              lit=NUMBER(6)
+            )
+          )
+        ]
       )
     )
   ]

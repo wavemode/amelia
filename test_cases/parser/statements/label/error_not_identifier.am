@@ -1,5 +1,7 @@
-label 10
+let example = {
+  label 10
+}
 
 /* EXPECTED_OUTPUT:
-ERROR("Expected identifier after 'label' keyword in label statement (at test_cases/parser/statements/label/error_not_identifier.am:1:7)")
+ERROR("Expected identifier after 'label' keyword in label statement (at test_cases/parser/statements/label/error_not_identifier.am:2:9)")
 */

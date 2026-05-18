@@ -1,5 +1,7 @@
-let x = y.0e4
+let x = {
+  y.0e4
+}
 
 /* EXPECTED_OUTPUT:
-ERROR("Multiple statements on the same line must be separated by a semicolon (at test_cases/parser/expressions/operators/numeric_field_access/error_number_has_exponent.am:1:10)")
+ERROR("Multiple statements on the same line must be separated by a semicolon (at test_cases/parser/expressions/operators/numeric_field_access/error_number_has_exponent.am:2:4)")
 */

@@ -776,6 +776,11 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   case NodeType::MoveCtorNameNode: {
     break;
   }
+  case NodeType::ImplicitDeclarationNode: {
+    const auto &n = node.as_ImplicitDeclarationNode();
+    print_node_field(out, "decl", n.decl);
+    break;
+  }
   default:
     throw std::runtime_error("Unknown node type");
   }

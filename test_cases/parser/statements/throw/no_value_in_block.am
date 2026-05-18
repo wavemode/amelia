@@ -1,12 +1,17 @@
-{ throw }
+let example = { throw }
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    BlockStatementNode(
-      stmts=[
-        ThrowStatementNode()
-      ]
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(example)
+      ),
+      expression=BlockExpressionNode(
+        stmts=[
+          ThrowStatementNode()
+        ]
+      )
     )
   ]
 )

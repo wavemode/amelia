@@ -1,10 +1,13 @@
-a
+let x = a
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ExpressionStatementNode(
-      expr=IdentifierNode(
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x)
+      ),
+      expression=IdentifierNode(
         token=IDENTIFIER(a)
       )
     )

@@ -1,9 +1,20 @@
-return
+let example = {
+  return
+}
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ReturnStatementNode()
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(example)
+      ),
+      expression=BlockExpressionNode(
+        stmts=[
+          ReturnStatementNode()
+        ]
+      )
+    )
   ]
 )
 */

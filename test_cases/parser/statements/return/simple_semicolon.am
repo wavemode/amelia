@@ -1,15 +1,26 @@
-return; f()
+let example = {
+  return; f()
+}
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ReturnStatementNode(),
-    EmptyStatementNode(),
-    ExpressionStatementNode(
-      expr=FunctionCallExpressionNode(
-        callee=IdentifierNode(
-          token=IDENTIFIER(f)
-        )
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(example)
+      ),
+      expression=BlockExpressionNode(
+        stmts=[
+          ReturnStatementNode(),
+          EmptyStatementNode(),
+          ExpressionStatementNode(
+            expr=FunctionCallExpressionNode(
+              callee=IdentifierNode(
+                token=IDENTIFIER(f)
+              )
+            )
+          )
+        ]
       )
     )
   ]

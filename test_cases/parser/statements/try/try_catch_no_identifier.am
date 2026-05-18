@@ -1,26 +1,37 @@
-try ++x catch (z) ++t
+let example = {
+  try ++x catch (z) ++t
+}
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    TryStatementNode(
-      try_block=PreIncrementStatementNode(
-        target=IdentifierNode(
-          token=IDENTIFIER_NO_W(x)
-        )
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(example)
       ),
-      clauses=[
-        CatchClauseNode(
-          exc_type=IdentifierNode(
-            token=IDENTIFIER_NO_W(z)
-          ),
-          body=PreIncrementStatementNode(
-            target=IdentifierNode(
-              token=IDENTIFIER_NO_W(t)
-            )
+      expression=BlockExpressionNode(
+        stmts=[
+          TryStatementNode(
+            try_block=PreIncrementStatementNode(
+              target=IdentifierNode(
+                token=IDENTIFIER_NO_W(x)
+              )
+            ),
+            clauses=[
+              CatchClauseNode(
+                exc_type=IdentifierNode(
+                  token=IDENTIFIER_NO_W(z)
+                ),
+                body=PreIncrementStatementNode(
+                  target=IdentifierNode(
+                    token=IDENTIFIER_NO_W(t)
+                  )
+                )
+              )
+            ]
           )
-        )
-      ]
+        ]
+      )
     )
   ]
 )

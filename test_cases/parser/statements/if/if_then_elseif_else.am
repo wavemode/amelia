@@ -1,51 +1,62 @@
-if (x) {
-  y
-} else if (z) {
-  t
-} else {
-  u
+let example = {
+  if (x) {
+    y
+  } else if (z) {
+    t
+  } else {
+    u
+  }
 }
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    IfStatementNode(
-      introductory_decls=IntroductoryDeclsNode(),
-      condition=IdentifierNode(
-        token=IDENTIFIER_NO_W(x)
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(example)
       ),
-      then_branch=BlockStatementNode(
+      expression=BlockExpressionNode(
         stmts=[
-          ExpressionStatementNode(
-            expr=IdentifierNode(
-              token=IDENTIFIER(y)
+          IfStatementNode(
+            introductory_decls=IntroductoryDeclsNode(),
+            condition=IdentifierNode(
+              token=IDENTIFIER_NO_W(x)
+            ),
+            then_branch=BlockStatementNode(
+              stmts=[
+                ExpressionStatementNode(
+                  expr=IdentifierNode(
+                    token=IDENTIFIER(y)
+                  )
+                )
+              ]
+            ),
+            else_branch=IfStatementNode(
+              introductory_decls=IntroductoryDeclsNode(),
+              condition=IdentifierNode(
+                token=IDENTIFIER_NO_W(z)
+              ),
+              then_branch=BlockStatementNode(
+                stmts=[
+                  ExpressionStatementNode(
+                    expr=IdentifierNode(
+                      token=IDENTIFIER(t)
+                    )
+                  )
+                ]
+              ),
+              else_branch=BlockStatementNode(
+                stmts=[
+                  ExpressionStatementNode(
+                    expr=IdentifierNode(
+                      token=IDENTIFIER(u)
+                    )
+                  )
+                ]
+              )
             )
           )
         ]
-      ),
-      else_branch=IfStatementNode(
-        introductory_decls=IntroductoryDeclsNode(),
-        condition=IdentifierNode(
-          token=IDENTIFIER_NO_W(z)
-        ),
-        then_branch=BlockStatementNode(
-          stmts=[
-            ExpressionStatementNode(
-              expr=IdentifierNode(
-                token=IDENTIFIER(t)
-              )
-            )
-          ]
-        ),
-        else_branch=BlockStatementNode(
-          stmts=[
-            ExpressionStatementNode(
-              expr=IdentifierNode(
-                token=IDENTIFIER(u)
-              )
-            )
-          ]
-        )
       )
     )
   ]

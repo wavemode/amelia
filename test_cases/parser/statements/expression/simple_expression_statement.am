@@ -1,11 +1,22 @@
-x
+let z = {
+  x
+}
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ExpressionStatementNode(
-      expr=IdentifierNode(
-        token=IDENTIFIER(x)
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(z)
+      ),
+      expression=BlockExpressionNode(
+        stmts=[
+          ExpressionStatementNode(
+            expr=IdentifierNode(
+              token=IDENTIFIER(x)
+            )
+          )
+        ]
       )
     )
   ]

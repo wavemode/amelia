@@ -1,14 +1,25 @@
-if (x);
+let example = {
+  if (x);
+}
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    IfStatementNode(
-      introductory_decls=IntroductoryDeclsNode(),
-      condition=IdentifierNode(
-        token=IDENTIFIER_NO_W(x)
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(example)
       ),
-      then_branch=EmptyStatementNode()
+      expression=BlockExpressionNode(
+        stmts=[
+          IfStatementNode(
+            introductory_decls=IntroductoryDeclsNode(),
+            condition=IdentifierNode(
+              token=IDENTIFIER_NO_W(x)
+            ),
+            then_branch=EmptyStatementNode()
+          )
+        ]
+      )
     )
   ]
 )

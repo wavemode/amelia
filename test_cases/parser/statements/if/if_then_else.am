@@ -1,31 +1,42 @@
-if (x) {
-  y
-} else {
-  z
+let a = {
+  if (x) {
+    y
+  } else {
+    z
+  }
 }
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    IfStatementNode(
-      introductory_decls=IntroductoryDeclsNode(),
-      condition=IdentifierNode(
-        token=IDENTIFIER_NO_W(x)
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(a)
       ),
-      then_branch=BlockStatementNode(
+      expression=BlockExpressionNode(
         stmts=[
-          ExpressionStatementNode(
-            expr=IdentifierNode(
-              token=IDENTIFIER(y)
-            )
-          )
-        ]
-      ),
-      else_branch=BlockStatementNode(
-        stmts=[
-          ExpressionStatementNode(
-            expr=IdentifierNode(
-              token=IDENTIFIER(z)
+          IfStatementNode(
+            introductory_decls=IntroductoryDeclsNode(),
+            condition=IdentifierNode(
+              token=IDENTIFIER_NO_W(x)
+            ),
+            then_branch=BlockStatementNode(
+              stmts=[
+                ExpressionStatementNode(
+                  expr=IdentifierNode(
+                    token=IDENTIFIER(y)
+                  )
+                )
+              ]
+            ),
+            else_branch=BlockStatementNode(
+              stmts=[
+                ExpressionStatementNode(
+                  expr=IdentifierNode(
+                    token=IDENTIFIER(z)
+                  )
+                )
+              ]
             )
           )
         ]

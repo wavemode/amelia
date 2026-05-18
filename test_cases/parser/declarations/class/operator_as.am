@@ -1,5 +1,5 @@
 class A {
-  operator as int() = 10
+  operator as int() = this.a
 
   a: int
 }
@@ -22,8 +22,11 @@ ModuleNode(
           ),
           signature=FunctionSignatureNode(),
           body=FunctionBodyNode(
-            expression=NumberLiteralNode(
-              lit=NUMBER(10)
+            expression=FieldAccessExpressionNode(
+              object=ThisLiteralNode(),
+              field=IdentifierNode(
+                token=IDENTIFIER_NO_W(a)
+              )
             ),
             is_default=false,
             is_deleted=false

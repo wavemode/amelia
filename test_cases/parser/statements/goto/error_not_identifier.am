@@ -1,5 +1,7 @@
-goto 10
+let z = {
+  goto 10
+}
 
 /* EXPECTED_OUTPUT:
-ERROR("Expected identifier after 'goto' keyword in goto statement (at test_cases/parser/statements/goto/error_not_identifier.am:1:6)")
+ERROR("Expected identifier after 'goto' keyword in goto statement (at test_cases/parser/statements/goto/error_not_identifier.am:2:8)")
 */

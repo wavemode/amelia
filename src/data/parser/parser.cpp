@@ -22,10 +22,24 @@ public:
       : m_output(output), m_input(input), m_token_index(0), m_token_formatter(input) {}
 
   NodeId parse_module() {
-    List<NodeId> top_level_statements;
+    List<NodeId> decls;
     auto start_token = peek();
-    parse_statements(top_level_statements, TokenType::END_OF_FILE);
-    return m_output.add_node(start_token.loc, ModuleNode{std::move(top_level_statements)});
+    parse_top_level_declarations(decls);
+    return m_output.add_node(start_token.loc, ModuleNode{std::move(decls)});
+  }
+
+  void parse_top_level_declarations(List<NodeId> &decls) {
+    while (peek().type != TokenType::END_OF_FILE) {
+      auto decl = try_parse_top_level_declaration();
+      if (!decl.has_value()) {
+        throw_parser_error_at_current_location("Expected declaration");
+      }
+      decls.push_back(decl.value());
+
+      if (decls.size() > 1) {
+        enforce_statement_separator(decls[decls.size() - 2], decls[decls.size() - 1]);
+      }
+    }
   }
 
   void parse_statements(List<NodeId> &stmts, TokenType terminator) {
@@ -75,6 +89,17 @@ public:
     }
   }
 
+  Option<NodeId> try_parse_top_level_declaration() {
+    auto token = peek();
+    switch (token.type) {
+    case TokenType::KEYWORD_LOCAL:
+      return parse_local_declaration();
+    default:
+      break;
+    }
+    return try_parse_declaration();
+  }
+
   Option<NodeId> try_parse_declaration() {
     auto token = peek();
     switch (token.type) {
@@ -91,16 +116,24 @@ public:
       return parse_class_declaration();
     case TokenType::KEYWORD_TYPE:
       return parse_type_declaration();
-    case TokenType::KEYWORD_LOCAL:
-      return parse_local_declaration();
     case TokenType::KEYWORD_OPERATOR:
       return parse_operator_function_declaration();
+    case TokenType::KEYWORD_IMPLICIT:
+      return parse_implicit_declaration();
     case TokenType::SEMICOLON:
       return parse_empty_statement();
     default:
       break;
     }
     return None();
+  }
+
+  NodeId expect_declaration(Text error_message) {
+    auto decl = try_parse_declaration();
+    if (!decl.has_value()) {
+      throw_parser_error_at_current_location(String(error_message));
+    }
+    return decl.value();
   }
 
   NodeId parse_statement() {
@@ -157,6 +190,12 @@ public:
     return parse_expression_statement();
   }
 
+  NodeId parse_implicit_declaration() {
+    auto implicit_token = next();
+    NodeId decl = expect_declaration("Expected declaration after 'implicit' keyword");
+    return m_output.add_node(implicit_token.loc, ImplicitDeclarationNode{decl});
+  }
+
   NodeId parse_operator_function_declaration() {
     auto operator_token = peek();
     auto operator_ident = parse_operator_ident();
@@ -169,7 +208,7 @@ public:
 
   NodeId parse_local_declaration() {
     auto local_token = next();
-    NodeId decl = parse_statement();
+    NodeId decl = expect_declaration("Expected declaration after 'local' keyword");
     return m_output.add_node(local_token.loc, VisibilityNode{DeclarationVisibility::Local, decl});
   }
 
@@ -240,11 +279,7 @@ public:
     default:
       break;
     }
-    auto decl = try_parse_declaration();
-    if (decl.has_value()) {
-      return decl.value();
-    }
-    throw_parser_error_at_current_location("Expected declaration");
+    return expect_declaration("Expected declaration in class body");
   }
 
   NodeId parse_class_body_visibility_declaration() {

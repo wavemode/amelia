@@ -1,70 +1,81 @@
-switch(let z = 20; const y = x + z; y) {
-  case (1) ++x
-  case (3) ++y
+let example = {
+  switch(let z = 20; const y = x + z; y) {
+    case (1) ++x
+    case (3) ++y
+  }
 }
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    SwitchStatementNode(
-      introductory_decls=IntroductoryDeclsNode(
-        decls=[
-          LetDeclarationNode(
-            target=IdentifierNode(
-              token=IDENTIFIER(z)
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(example)
+      ),
+      expression=BlockExpressionNode(
+        stmts=[
+          SwitchStatementNode(
+            introductory_decls=IntroductoryDeclsNode(
+              decls=[
+                LetDeclarationNode(
+                  target=IdentifierNode(
+                    token=IDENTIFIER(z)
+                  ),
+                  expression=NumberLiteralNode(
+                    lit=NUMBER(20)
+                  )
+                ),
+                EmptyStatementNode(),
+                ConstDeclarationNode(
+                  target=IdentifierNode(
+                    token=IDENTIFIER(y)
+                  ),
+                  expression=AddExpressionNode(
+                    left=IdentifierNode(
+                      token=IDENTIFIER(x)
+                    ),
+                    right=IdentifierNode(
+                      token=IDENTIFIER(z)
+                    )
+                  )
+                ),
+                EmptyStatementNode()
+              ]
             ),
-            expression=NumberLiteralNode(
-              lit=NUMBER(20)
-            )
-          ),
-          EmptyStatementNode(),
-          ConstDeclarationNode(
-            target=IdentifierNode(
+            expr=IdentifierNode(
               token=IDENTIFIER(y)
             ),
-            expression=AddExpressionNode(
-              left=IdentifierNode(
-                token=IDENTIFIER(x)
+            clauses=[
+              CaseClauseNode(
+                introductory_decls=IntroductoryDeclsNode(),
+                exprs=[
+                  NumberLiteralNode(
+                    lit=NUMBER(1)
+                  )
+                ],
+                body=PreIncrementStatementNode(
+                  target=IdentifierNode(
+                    token=IDENTIFIER_NO_W(x)
+                  )
+                )
               ),
-              right=IdentifierNode(
-                token=IDENTIFIER(z)
+              CaseClauseNode(
+                introductory_decls=IntroductoryDeclsNode(),
+                exprs=[
+                  NumberLiteralNode(
+                    lit=NUMBER(3)
+                  )
+                ],
+                body=PreIncrementStatementNode(
+                  target=IdentifierNode(
+                    token=IDENTIFIER_NO_W(y)
+                  )
+                )
               )
-            )
-          ),
-          EmptyStatementNode()
+            ]
+          )
         ]
-      ),
-      expr=IdentifierNode(
-        token=IDENTIFIER(y)
-      ),
-      clauses=[
-        CaseClauseNode(
-          introductory_decls=IntroductoryDeclsNode(),
-          exprs=[
-            NumberLiteralNode(
-              lit=NUMBER(1)
-            )
-          ],
-          body=PreIncrementStatementNode(
-            target=IdentifierNode(
-              token=IDENTIFIER_NO_W(x)
-            )
-          )
-        ),
-        CaseClauseNode(
-          introductory_decls=IntroductoryDeclsNode(),
-          exprs=[
-            NumberLiteralNode(
-              lit=NUMBER(3)
-            )
-          ],
-          body=PreIncrementStatementNode(
-            target=IdentifierNode(
-              token=IDENTIFIER_NO_W(y)
-            )
-          )
-        )
-      ]
+      )
     )
   ]
 )

@@ -1,8 +1,10 @@
-while (
-  let w = 10
-  const x = w + 5  x > 20
-) z
+let example = {
+  while (
+    let w = 10
+    const x = w + 5  x > 20
+  ) z
+}
 
 /* EXPECTED_OUTPUT:
-ERROR("Multiple statements on the same line must be separated by a semicolon (at test_cases/parser/statements/while/error_decls_no_separator.am:3:20)")
+ERROR("Multiple statements on the same line must be separated by a semicolon (at test_cases/parser/statements/while/error_decls_no_separator.am:4:22)")
 */

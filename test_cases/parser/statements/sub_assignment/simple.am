@@ -1,14 +1,25 @@
-x -= 5
+let example = {
+  x -= 5
+}
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    SubAssignStatementNode(
+    LetDeclarationNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x)
+        token=IDENTIFIER(example)
       ),
-      expression=NumberLiteralNode(
-        lit=NUMBER(5)
+      expression=BlockExpressionNode(
+        stmts=[
+          SubAssignStatementNode(
+            target=IdentifierNode(
+              token=IDENTIFIER(x)
+            ),
+            expression=NumberLiteralNode(
+              lit=NUMBER(5)
+            )
+          )
+        ]
       )
     )
   ]

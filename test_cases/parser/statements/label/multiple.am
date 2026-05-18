@@ -1,17 +1,28 @@
-label x
-label y
+let example = {
+  label x
+  label y
+}
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LabelStatementNode(
-      label=IdentifierNode(
-        token=IDENTIFIER(x)
-      )
-    ),
-    LabelStatementNode(
-      label=IdentifierNode(
-        token=IDENTIFIER(y)
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(example)
+      ),
+      expression=BlockExpressionNode(
+        stmts=[
+          LabelStatementNode(
+            label=IdentifierNode(
+              token=IDENTIFIER(x)
+            )
+          ),
+          LabelStatementNode(
+            label=IdentifierNode(
+              token=IDENTIFIER(y)
+            )
+          )
+        ]
       )
     )
   ]

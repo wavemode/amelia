@@ -613,6 +613,10 @@ struct MoveExpressionNode {
   NodeId expr;
 };
 
+struct ImplicitDeclarationNode {
+  NodeId decl;
+};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
@@ -758,6 +762,7 @@ struct MoveExpressionNode {
   X(CopyExpressionNode)                                                                            \
   X(MoveExpressionNode)                                                                            \
   X(CopyCtorNameNode)                                                                              \
-  X(MoveCtorNameNode)
+  X(MoveCtorNameNode)                                                                              \
+  X(ImplicitDeclarationNode)
 
 } // namespace amelia

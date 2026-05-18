@@ -1,22 +1,35 @@
-for (x in y) z
+let z = {
+  for (x in y) a()
+}
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ForInStatementNode(
-      introductory_decls=IntroductoryDeclsNode(),
-      vars=[
-        IdentifierNode(
-          token=IDENTIFIER_NO_W(x)
-        )
-      ],
-      iterable=IdentifierNode(
-        token=IDENTIFIER(y)
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(z)
       ),
-      body=ExpressionStatementNode(
-        expr=IdentifierNode(
-          token=IDENTIFIER(z)
-        )
+      expression=BlockExpressionNode(
+        stmts=[
+          ForInStatementNode(
+            introductory_decls=IntroductoryDeclsNode(),
+            vars=[
+              IdentifierNode(
+                token=IDENTIFIER_NO_W(x)
+              )
+            ],
+            iterable=IdentifierNode(
+              token=IDENTIFIER(y)
+            ),
+            body=ExpressionStatementNode(
+              expr=FunctionCallExpressionNode(
+                callee=IdentifierNode(
+                  token=IDENTIFIER(a)
+                )
+              )
+            )
+          )
+        ]
       )
     )
   ]

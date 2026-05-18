@@ -1,11 +1,22 @@
-goto x
+let z = {
+  goto x
+}
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    GotoStatementNode(
-      label=IdentifierNode(
-        token=IDENTIFIER(x)
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(z)
+      ),
+      expression=BlockExpressionNode(
+        stmts=[
+          GotoStatementNode(
+            label=IdentifierNode(
+              token=IDENTIFIER(x)
+            )
+          )
+        ]
       )
     )
   ]

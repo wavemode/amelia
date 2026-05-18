@@ -1,17 +1,28 @@
-while (x) z
+let example = {
+  while (x) z
+}
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    WhileStatementNode(
-      introductory_decls=IntroductoryDeclsNode(),
-      condition=IdentifierNode(
-        token=IDENTIFIER_NO_W(x)
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(example)
       ),
-      body=ExpressionStatementNode(
-        expr=IdentifierNode(
-          token=IDENTIFIER(z)
-        )
+      expression=BlockExpressionNode(
+        stmts=[
+          WhileStatementNode(
+            introductory_decls=IntroductoryDeclsNode(),
+            condition=IdentifierNode(
+              token=IDENTIFIER_NO_W(x)
+            ),
+            body=ExpressionStatementNode(
+              expr=IdentifierNode(
+                token=IDENTIFIER(z)
+              )
+            )
+          )
+        ]
       )
     )
   ]

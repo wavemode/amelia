@@ -1,17 +1,28 @@
-x++
-y++
+let example = {
+  x++
+  y++
+}
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    PostIncrementStatementNode(
+    LetDeclarationNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x)
-      )
-    ),
-    PostIncrementStatementNode(
-      target=IdentifierNode(
-        token=IDENTIFIER(y)
+        token=IDENTIFIER(example)
+      ),
+      expression=BlockExpressionNode(
+        stmts=[
+          PostIncrementStatementNode(
+            target=IdentifierNode(
+              token=IDENTIFIER(x)
+            )
+          ),
+          PostIncrementStatementNode(
+            target=IdentifierNode(
+              token=IDENTIFIER(y)
+            )
+          )
+        ]
       )
     )
   ]

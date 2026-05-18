@@ -1,5 +1,7 @@
-if (x)
+let a = {
+  if (x)
+}
 
 /* EXPECTED_OUTPUT:
-ERROR("Expected expression, got token END_OF_FILE() (at test_cases/parser/statements/if/error_no_then.am:6:1)")
+ERROR("Expected expression, got token RIGHT_BRACE(}) (at test_cases/parser/statements/if/error_no_then.am:3:1)")
 */

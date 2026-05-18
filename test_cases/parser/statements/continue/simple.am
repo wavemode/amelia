@@ -1,9 +1,20 @@
-continue
+let z = {
+  continue
+}
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ContinueStatementNode()
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(z)
+      ),
+      expression=BlockExpressionNode(
+        stmts=[
+          ContinueStatementNode()
+        ]
+      )
+    )
   ]
 )
 */

@@ -1,14 +1,25 @@
-x |= 5
+let z = {
+  x |= 5
+}
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    BitwiseOrAssignStatementNode(
+    LetDeclarationNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x)
+        token=IDENTIFIER(z)
       ),
-      expression=NumberLiteralNode(
-        lit=NUMBER(5)
+      expression=BlockExpressionNode(
+        stmts=[
+          BitwiseOrAssignStatementNode(
+            target=IdentifierNode(
+              token=IDENTIFIER(x)
+            ),
+            expression=NumberLiteralNode(
+              lit=NUMBER(5)
+            )
+          )
+        ]
       )
     )
   ]

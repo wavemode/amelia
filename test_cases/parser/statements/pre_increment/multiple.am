@@ -1,17 +1,28 @@
-++x
-++y
+let example = {
+  ++x
+  ++y
+}
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    PreIncrementStatementNode(
+    LetDeclarationNode(
       target=IdentifierNode(
-        token=IDENTIFIER_NO_W(x)
-      )
-    ),
-    PreIncrementStatementNode(
-      target=IdentifierNode(
-        token=IDENTIFIER_NO_W(y)
+        token=IDENTIFIER(example)
+      ),
+      expression=BlockExpressionNode(
+        stmts=[
+          PreIncrementStatementNode(
+            target=IdentifierNode(
+              token=IDENTIFIER_NO_W(x)
+            )
+          ),
+          PreIncrementStatementNode(
+            target=IdentifierNode(
+              token=IDENTIFIER_NO_W(y)
+            )
+          )
+        ]
       )
     )
   ]

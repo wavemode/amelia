@@ -1,11 +1,22 @@
-x--
+let example = {
+  x--
+}
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    PostDecrementStatementNode(
+    LetDeclarationNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x)
+        token=IDENTIFIER(example)
+      ),
+      expression=BlockExpressionNode(
+        stmts=[
+          PostDecrementStatementNode(
+            target=IdentifierNode(
+              token=IDENTIFIER(x)
+            )
+          )
+        ]
       )
     )
   ]

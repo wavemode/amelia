@@ -1,10 +1,13 @@
-[1, 2, 3].map(x -> x + 1)
+let x = [1, 2, 3].map(x -> x + 1)
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ExpressionStatementNode(
-      expr=FunctionCallExpressionNode(
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x)
+      ),
+      expression=FunctionCallExpressionNode(
         callee=FieldAccessExpressionNode(
           object=BracketExpressionNode(
             exprs=[

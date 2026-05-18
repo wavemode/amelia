@@ -1,18 +1,29 @@
-if (x) y
+let example = {
+  if (x) y
+}
 
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    IfStatementNode(
-      introductory_decls=IntroductoryDeclsNode(),
-      condition=IdentifierNode(
-        token=IDENTIFIER_NO_W(x)
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(example)
       ),
-      then_branch=ExpressionStatementNode(
-        expr=IdentifierNode(
-          token=IDENTIFIER(y)
-        )
+      expression=BlockExpressionNode(
+        stmts=[
+          IfStatementNode(
+            introductory_decls=IntroductoryDeclsNode(),
+            condition=IdentifierNode(
+              token=IDENTIFIER_NO_W(x)
+            ),
+            then_branch=ExpressionStatementNode(
+              expr=IdentifierNode(
+                token=IDENTIFIER(y)
+              )
+            )
+          )
+        ]
       )
     )
   ]
