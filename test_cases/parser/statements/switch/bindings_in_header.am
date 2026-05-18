@@ -13,7 +13,7 @@ ModuleNode(
     SwitchStatementNode(
       introductory_bindings=IntroductoryBindingsNode(
         bindings=[
-          LetStatementNode(
+          LetDeclarationNode(
             target=IdentifierNode(
               token=IDENTIFIER(z)
             ),
@@ -21,7 +21,7 @@ ModuleNode(
               lit=NUMBER(10)
             )
           ),
-          ConstStatementNode(
+          ConstDeclarationNode(
             target=IdentifierNode(
               token=IDENTIFIER(y)
             ),

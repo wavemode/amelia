@@ -1,0 +1,23 @@
+let x = copy y * z
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x)
+      ),
+      expression=MultiplyExpressionNode(
+        left=CopyExpressionNode(
+          expr=IdentifierNode(
+            token=IDENTIFIER(y)
+          )
+        ),
+        right=IdentifierNode(
+          token=IDENTIFIER(z)
+        )
+      )
+    )
+  ]
+)
+*/

@@ -10,7 +10,7 @@ let x = switch(w) {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetStatementNode(
+    LetDeclarationNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
@@ -25,7 +25,7 @@ ModuleNode(
           CaseClauseNode(
             introductory_bindings=IntroductoryBindingsNode(
               bindings=[
-                LetStatementNode(
+                LetDeclarationNode(
                   target=IdentifierNode(
                     token=IDENTIFIER(z)
                   ),
@@ -33,7 +33,7 @@ ModuleNode(
                     lit=NUMBER(10)
                   )
                 ),
-                ConstStatementNode(
+                ConstDeclarationNode(
                   target=IdentifierNode(
                     token=IDENTIFIER(y)
                   ),

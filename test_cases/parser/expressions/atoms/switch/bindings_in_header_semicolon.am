@@ -6,14 +6,14 @@ let x = switch(let z = 20; const y = x + z; y) {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetStatementNode(
+    LetDeclarationNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
       expression=SwitchExpressionNode(
         introductory_bindings=IntroductoryBindingsNode(
           bindings=[
-            LetStatementNode(
+            LetDeclarationNode(
               target=IdentifierNode(
                 token=IDENTIFIER(z)
               ),
@@ -22,7 +22,7 @@ ModuleNode(
               )
             ),
             EmptyStatementNode(),
-            ConstStatementNode(
+            ConstDeclarationNode(
               target=IdentifierNode(
                 token=IDENTIFIER(y)
               ),

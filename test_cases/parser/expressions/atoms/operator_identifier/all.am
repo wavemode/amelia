@@ -72,7 +72,11 @@ x.operator [ ]
 // OperatorIdentFuncallNode
 x.operator()
 // OperatorIdentAsNode
-x.operator as[int]
+x.operator as int
+// OperatorIdentCopyAssignNode
+x.operator copy=
+// OperatorIdentMoveAssignNode
+x.operator move =
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
@@ -83,7 +87,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentAddNode()
+          op=OperatorIdentAddNode()
         )
       )
     ),
@@ -93,7 +97,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentSubNode()
+          op=OperatorIdentSubNode()
         )
       )
     ),
@@ -103,7 +107,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentStarNode()
+          op=OperatorIdentStarNode()
         )
       )
     ),
@@ -113,7 +117,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentDivNode()
+          op=OperatorIdentDivNode()
         )
       )
     ),
@@ -123,7 +127,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentModNode()
+          op=OperatorIdentModNode()
         )
       )
     ),
@@ -133,7 +137,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentIncNode()
+          op=OperatorIdentIncNode()
         )
       )
     ),
@@ -143,7 +147,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentIncNode()
+          op=OperatorIdentIncNode()
         )
       )
     ),
@@ -153,7 +157,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentDecNode()
+          op=OperatorIdentDecNode()
         )
       )
     ),
@@ -163,7 +167,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentDecNode()
+          op=OperatorIdentDecNode()
         )
       )
     ),
@@ -173,7 +177,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentEqNode()
+          op=OperatorIdentEqNode()
         )
       )
     ),
@@ -183,7 +187,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentNeqNode()
+          op=OperatorIdentNeqNode()
         )
       )
     ),
@@ -193,7 +197,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentGtNode()
+          op=OperatorIdentGtNode()
         )
       )
     ),
@@ -203,7 +207,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentLtNode()
+          op=OperatorIdentLtNode()
         )
       )
     ),
@@ -213,7 +217,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentGteNode()
+          op=OperatorIdentGteNode()
         )
       )
     ),
@@ -223,7 +227,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentLteNode()
+          op=OperatorIdentLteNode()
         )
       )
     ),
@@ -233,7 +237,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentNotNode()
+          op=OperatorIdentNotNode()
         )
       )
     ),
@@ -243,7 +247,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentNotNode()
+          op=OperatorIdentNotNode()
         )
       )
     ),
@@ -253,7 +257,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentAndNode()
+          op=OperatorIdentAndNode()
         )
       )
     ),
@@ -263,7 +267,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentOrNode()
+          op=OperatorIdentOrNode()
         )
       )
     ),
@@ -273,7 +277,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentBitwiseNotNode()
+          op=OperatorIdentBitwiseNotNode()
         )
       )
     ),
@@ -283,7 +287,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentAmpersandNode()
+          op=OperatorIdentAmpersandNode()
         )
       )
     ),
@@ -293,7 +297,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentBitwiseOrNode()
+          op=OperatorIdentBitwiseOrNode()
         )
       )
     ),
@@ -303,7 +307,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentBitwiseXorNode()
+          op=OperatorIdentBitwiseXorNode()
         )
       )
     ),
@@ -313,7 +317,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentLeftShiftNode()
+          op=OperatorIdentLeftShiftNode()
         )
       )
     ),
@@ -323,7 +327,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentRightShiftNode()
+          op=OperatorIdentRightShiftNode()
         )
       )
     ),
@@ -333,7 +337,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentAssignNode()
+          op=OperatorIdentAssignNode()
         )
       )
     ),
@@ -343,7 +347,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentAddAssignNode()
+          op=OperatorIdentAddAssignNode()
         )
       )
     ),
@@ -353,7 +357,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentSubAssignNode()
+          op=OperatorIdentSubAssignNode()
         )
       )
     ),
@@ -363,7 +367,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentMulAssignNode()
+          op=OperatorIdentMulAssignNode()
         )
       )
     ),
@@ -373,7 +377,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentDivAssignNode()
+          op=OperatorIdentDivAssignNode()
         )
       )
     ),
@@ -383,7 +387,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentModAssignNode()
+          op=OperatorIdentModAssignNode()
         )
       )
     ),
@@ -393,7 +397,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentBitwiseAndAssignNode()
+          op=OperatorIdentBitwiseAndAssignNode()
         )
       )
     ),
@@ -403,7 +407,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentBitwiseOrAssignNode()
+          op=OperatorIdentBitwiseOrAssignNode()
         )
       )
     ),
@@ -413,7 +417,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentBitwiseXorAssignNode()
+          op=OperatorIdentBitwiseXorAssignNode()
         )
       )
     ),
@@ -423,7 +427,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentLeftShiftAssignNode()
+          op=OperatorIdentLeftShiftAssignNode()
         )
       )
     ),
@@ -433,7 +437,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentRightShiftAssignNode()
+          op=OperatorIdentRightShiftAssignNode()
         )
       )
     ),
@@ -443,7 +447,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentIxNode()
+          op=OperatorIdentIxNode()
         )
       )
     ),
@@ -453,7 +457,7 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentFuncallNode()
+          op=OperatorIdentFuncallNode()
         )
       )
     ),
@@ -463,11 +467,31 @@ ModuleNode(
           token=IDENTIFIER(x)
         ),
         field=OperatorIdentifierNode(
-          operator_node=OperatorIdentAsNode(
+          op=OperatorIdentAsNode(
             type=IdentifierNode(
-              token=IDENTIFIER_NO_W(int)
+              token=IDENTIFIER(int)
             )
           )
+        )
+      )
+    ),
+    ExpressionStatementNode(
+      expr=FieldAccessExpressionNode(
+        object=IdentifierNode(
+          token=IDENTIFIER(x)
+        ),
+        field=OperatorIdentifierNode(
+          op=OperatorIdentCopyAssignNode()
+        )
+      )
+    ),
+    ExpressionStatementNode(
+      expr=FieldAccessExpressionNode(
+        object=IdentifierNode(
+          token=IDENTIFIER(x)
+        ),
+        field=OperatorIdentifierNode(
+          op=OperatorIdentMoveAssignNode()
         )
       )
     )

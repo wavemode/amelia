@@ -3,7 +3,7 @@ const x : int = 5
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ConstStatementNode(
+    ConstDeclarationNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),

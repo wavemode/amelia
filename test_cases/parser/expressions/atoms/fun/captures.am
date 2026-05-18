@@ -11,7 +11,7 @@ let f = fun(
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetStatementNode(
+    LetDeclarationNode(
       target=IdentifierNode(
         token=IDENTIFIER(f)
       ),

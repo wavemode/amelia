@@ -5,7 +5,7 @@ ModuleNode(
   decls=[
     VisibilityNode(
       visibility=local,
-      decl=ConstStatementNode(
+      decl=ConstDeclarationNode(
         target=IdentifierNode(
           token=IDENTIFIER(x)
         ),

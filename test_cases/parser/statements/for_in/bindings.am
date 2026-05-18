@@ -10,7 +10,7 @@ ModuleNode(
     ForInStatementNode(
       introductory_bindings=IntroductoryBindingsNode(
         bindings=[
-          LetStatementNode(
+          LetDeclarationNode(
             target=IdentifierNode(
               token=IDENTIFIER(w)
             ),
@@ -31,7 +31,7 @@ ModuleNode(
               ]
             )
           ),
-          ConstStatementNode(
+          ConstDeclarationNode(
             target=IdentifierNode(
               token=IDENTIFIER(y)
             ),

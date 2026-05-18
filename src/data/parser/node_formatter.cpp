@@ -19,15 +19,15 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
   case NodeType::EmptyStatementNode: {
     break;
   }
-  case NodeType::LetStatementNode: {
-    const auto &n = node.as_LetStatementNode();
+  case NodeType::LetDeclarationNode: {
+    const auto &n = node.as_LetDeclarationNode();
     print_node_field(out, "target", n.target, indent + 2);
     print_node_field_with_comma(out, "type", n.type, indent + 2);
     print_node_field_with_comma(out, "expression", n.expression, indent + 2);
     break;
   }
-  case NodeType::ConstStatementNode: {
-    const auto &n = node.as_ConstStatementNode();
+  case NodeType::ConstDeclarationNode: {
+    const auto &n = node.as_ConstDeclarationNode();
     print_node_field(out, "target", n.target, indent + 2);
     print_node_field_with_comma(out, "type", n.type, indent + 2);
     print_node_field_with_comma(out, "expression", n.expression, indent + 2);
@@ -463,6 +463,12 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
   case NodeType::OperatorIdentFuncallNode: {
     break;
   }
+  case NodeType::OperatorIdentCopyAssignNode: {
+    break;
+  }
+  case NodeType::OperatorIdentMoveAssignNode: {
+    break;
+  }
   case NodeType::OperatorIdentAsNode: {
     const auto &n = node.as_OperatorIdentAsNode();
     print_node_field(out, "type", n.type, indent + 2);
@@ -470,7 +476,14 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
   }
   case NodeType::OperatorIdentifierNode: {
     const auto &n = node.as_OperatorIdentifierNode();
-    print_node_field(out, "operator_node", n.operator_node, indent + 2);
+    print_node_field(out, "op", n.op, indent + 2);
+    break;
+  }
+  case NodeType::OperatorFunctionDeclarationNode: {
+    const auto &n = node.as_OperatorFunctionDeclarationNode();
+    print_node_field(out, "operator_ident", n.operator_ident, indent + 2);
+    print_node_field_with_comma(out, "signature", n.signature, indent + 2);
+    print_node_field_with_comma(out, "body", n.body, indent + 2);
     break;
   }
   case NodeType::AssignmentStatementNode: {
@@ -754,6 +767,22 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
     }
     print_field(out, "visibility", visibility, indent + 2);
     print_node_field_with_comma(out, "decl", n.decl, indent + 2);
+    break;
+  }
+  case NodeType::CopyExpressionNode: {
+    const auto &n = node.as_CopyExpressionNode();
+    print_node_field(out, "expr", n.expr, indent + 2);
+    break;
+  }
+  case NodeType::MoveExpressionNode: {
+    const auto &n = node.as_MoveExpressionNode();
+    print_node_field(out, "expr", n.expr, indent + 2);
+    break;
+  }
+  case NodeType::CopyCtorNameNode: {
+    break;
+  }
+  case NodeType::MoveCtorNameNode: {
     break;
   }
   default:

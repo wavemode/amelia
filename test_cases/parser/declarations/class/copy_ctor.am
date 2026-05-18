@@ -1,0 +1,92 @@
+class A {
+  copy(o) {
+    this.a = copy o.a
+    this.b = copy o.b
+  }
+
+  a: int
+  b: String
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ClassDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      decls=[
+        ClassConstructorNode(
+          name=CopyCtorNameNode(),
+          signature=FunctionSignatureNode(,
+            parameters=[
+              FunctionParameterNode(
+                variadic=false,
+                name=IdentifierNode(
+                  token=IDENTIFIER_NO_W(o)
+                )
+              )
+            ]
+          ),
+          body=FunctionBodyNode(
+            stmts=[
+              AssignmentStatementNode(
+                target=FieldAccessExpressionNode(
+                  object=ThisLiteralNode(),
+                  field=IdentifierNode(
+                    token=IDENTIFIER_NO_W(a)
+                  )
+                ),
+                expression=CopyExpressionNode(
+                  expr=FieldAccessExpressionNode(
+                    object=IdentifierNode(
+                      token=IDENTIFIER(o)
+                    ),
+                    field=IdentifierNode(
+                      token=IDENTIFIER_NO_W(a)
+                    )
+                  )
+                )
+              ),
+              AssignmentStatementNode(
+                target=FieldAccessExpressionNode(
+                  object=ThisLiteralNode(),
+                  field=IdentifierNode(
+                    token=IDENTIFIER_NO_W(b)
+                  )
+                ),
+                expression=CopyExpressionNode(
+                  expr=FieldAccessExpressionNode(
+                    object=IdentifierNode(
+                      token=IDENTIFIER(o)
+                    ),
+                    field=IdentifierNode(
+                      token=IDENTIFIER_NO_W(b)
+                    )
+                  )
+                )
+              )
+            ]
+          )
+        ),
+        ClassFieldNode(
+          name=IdentifierNode(
+            token=IDENTIFIER(a)
+          ),
+          type=IdentifierNode(
+            token=IDENTIFIER(int)
+          )
+        ),
+        ClassFieldNode(
+          name=IdentifierNode(
+            token=IDENTIFIER(b)
+          ),
+          type=IdentifierNode(
+            token=IDENTIFIER(String)
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

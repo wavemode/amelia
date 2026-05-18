@@ -1,0 +1,60 @@
+class A {
+  operator +(other) = this.a + other.a
+
+  a: int
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ClassDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      decls=[
+        OperatorFunctionDeclarationNode(
+          operator_ident=OperatorIdentifierNode(
+            op=OperatorIdentAddNode()
+          ),
+          signature=FunctionSignatureNode(,
+            parameters=[
+              FunctionParameterNode(
+                variadic=false,
+                name=IdentifierNode(
+                  token=IDENTIFIER_NO_W(other)
+                )
+              )
+            ]
+          ),
+          body=FunctionBodyNode(
+            expression=AddExpressionNode(
+              left=FieldAccessExpressionNode(
+                object=ThisLiteralNode(),
+                field=IdentifierNode(
+                  token=IDENTIFIER_NO_W(a)
+                )
+              ),
+              right=FieldAccessExpressionNode(
+                object=IdentifierNode(
+                  token=IDENTIFIER(other)
+                ),
+                field=IdentifierNode(
+                  token=IDENTIFIER_NO_W(a)
+                )
+              )
+            )
+          )
+        ),
+        ClassFieldNode(
+          name=IdentifierNode(
+            token=IDENTIFIER(a)
+          ),
+          type=IdentifierNode(
+            token=IDENTIFIER(int)
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

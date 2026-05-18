@@ -6,7 +6,7 @@ ModuleNode(
     EmptyStatementNode(),
     EmptyStatementNode(),
     EmptyStatementNode(),
-    LetStatementNode(
+    LetDeclarationNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
@@ -15,7 +15,7 @@ ModuleNode(
       )
     ),
     EmptyStatementNode(),
-    ConstStatementNode(
+    ConstDeclarationNode(
       target=IdentifierNode(
         token=IDENTIFIER(a)
       ),

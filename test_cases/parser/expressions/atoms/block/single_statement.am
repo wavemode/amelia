@@ -5,13 +5,13 @@ let x = {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetStatementNode(
+    LetDeclarationNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
       expression=BlockExpressionNode(
         stmts=[
-          LetStatementNode(
+          LetDeclarationNode(
             target=IdentifierNode(
               token=IDENTIFIER(y)
             ),

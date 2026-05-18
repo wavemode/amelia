@@ -90,21 +90,31 @@ struct OperatorIdentIxNode {};
 
 struct OperatorIdentFuncallNode {};
 
+struct OperatorIdentCopyAssignNode {};
+
+struct OperatorIdentMoveAssignNode {};
+
 struct OperatorIdentAsNode {
   NodeId type;
 };
 
 struct OperatorIdentifierNode {
-  NodeId operator_node;
+  NodeId op;
 };
 
-struct LetStatementNode {
+struct OperatorFunctionDeclarationNode {
+  NodeId operator_ident;
+  NodeId signature;
+  Option<NodeId> body;
+};
+
+struct LetDeclarationNode {
   NodeId target;
   Option<NodeId> type;
   Option<NodeId> expression;
 };
 
-struct ConstStatementNode {
+struct ConstDeclarationNode {
   NodeId target;
   Option<NodeId> type;
   Option<NodeId> expression;
@@ -573,10 +583,14 @@ struct BoolTypeNode {};
 
 struct ThisLiteralNode {};
 
+struct CopyCtorNameNode {};
+
+struct MoveCtorNameNode {};
+
 struct ClassConstructorNode {
   NodeId name;
   NodeId signature;
-  NodeId body;
+  Option<NodeId> body;
 };
 
 enum class DeclarationVisibility {
@@ -591,12 +605,20 @@ struct VisibilityNode {
   NodeId decl;
 };
 
+struct CopyExpressionNode {
+  NodeId expr;
+};
+
+struct MoveExpressionNode {
+  NodeId expr;
+};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
   X(EmptyStatementNode)                                                                            \
-  X(LetStatementNode)                                                                              \
-  X(ConstStatementNode)                                                                            \
+  X(LetDeclarationNode)                                                                            \
+  X(ConstDeclarationNode)                                                                          \
   X(StringLiteralNode)                                                                             \
   X(NumberLiteralNode)                                                                             \
   X(ParenthesizedExpressionNode)                                                                   \
@@ -687,7 +709,10 @@ struct VisibilityNode {
   X(OperatorIdentRightShiftAssignNode)                                                             \
   X(OperatorIdentIxNode)                                                                           \
   X(OperatorIdentFuncallNode)                                                                      \
+  X(OperatorIdentCopyAssignNode)                                                                   \
+  X(OperatorIdentMoveAssignNode)                                                                   \
   X(OperatorIdentAsNode)                                                                           \
+  X(OperatorFunctionDeclarationNode)                                                               \
   X(OperatorIdentifierNode)                                                                        \
   X(AssignmentStatementNode)                                                                       \
   X(AddAssignStatementNode)                                                                        \
@@ -729,6 +754,10 @@ struct VisibilityNode {
   X(VisibilityNode)                                                                                \
   X(GenericParameterNode)                                                                          \
   X(GenericParameterListNode)                                                                      \
-  X(TypeConstraintNode)
+  X(TypeConstraintNode)                                                                            \
+  X(CopyExpressionNode)                                                                            \
+  X(MoveExpressionNode)                                                                            \
+  X(CopyCtorNameNode)                                                                              \
+  X(MoveCtorNameNode)
 
 } // namespace amelia

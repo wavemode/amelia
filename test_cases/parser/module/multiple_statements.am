@@ -4,7 +4,7 @@ const a = b
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetStatementNode(
+    LetDeclarationNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
@@ -12,7 +12,7 @@ ModuleNode(
         token=IDENTIFIER(y)
       )
     ),
-    ConstStatementNode(
+    ConstDeclarationNode(
       target=IdentifierNode(
         token=IDENTIFIER(a)
       ),

@@ -3,7 +3,7 @@ let w = x(y=5)(z)
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetStatementNode(
+    LetDeclarationNode(
       target=IdentifierNode(
         token=IDENTIFIER(w)
       ),

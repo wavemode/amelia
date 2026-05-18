@@ -1,0 +1,20 @@
+let w = move move x
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(w)
+      ),
+      expression=MoveExpressionNode(
+        expr=MoveExpressionNode(
+          expr=IdentifierNode(
+            token=IDENTIFIER(x)
+          )
+        )
+      )
+    )
+  ]
+)
+*/
