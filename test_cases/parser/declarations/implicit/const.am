@@ -1,0 +1,29 @@
+let example = {
+  implicit const x = 10
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(example)
+      ),
+      expression=BlockExpressionNode(
+        stmts=[
+          ImplicitDeclarationNode(
+            decl=ConstDeclarationNode(
+              target=IdentifierNode(
+                token=IDENTIFIER(x)
+              ),
+              expression=NumberLiteralNode(
+                lit=NUMBER(10)
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

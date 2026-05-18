@@ -1,0 +1,7 @@
+let example = {
+  implicit class A {}
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("Expected 'let', 'const', or 'fun' declaration after 'implicit' keyword (at test_cases/parser/declarations/implicit/error_not_binding.am:2:12)")
+*/
