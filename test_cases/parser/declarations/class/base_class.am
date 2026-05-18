@@ -1,0 +1,21 @@
+class A : B {}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ClassDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      base_class_list=ClassBaseClassListNode(
+        base_classes=[
+          IdentifierNode(
+            token=IDENTIFIER(B)
+          )
+        ]
+      ),
+      decls=[]
+    )
+  ]
+)
+*/

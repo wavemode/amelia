@@ -1,0 +1,29 @@
+class A : B, C[D] {}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ClassDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      base_class_list=ClassBaseClassListNode(
+        base_classes=[
+          IdentifierNode(
+            token=IDENTIFIER(B)
+          ),
+          IndexingExpressionNode(
+            object=IdentifierNode(
+              token=IDENTIFIER(C)
+            ),
+            index=IdentifierNode(
+              token=IDENTIFIER_NO_W(D)
+            )
+          )
+        ]
+      ),
+      decls=[]
+    )
+  ]
+)
+*/

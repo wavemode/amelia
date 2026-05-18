@@ -19,7 +19,7 @@ ModuleNode(
             name=IdentifierNode(
               token=IDENTIFIER(A)
             ),
-            signature=FunctionSignatureNode(
+            signature=FunctionSignatureNode(,
               parameters=[]
             ),
             body=FunctionBodyNode(

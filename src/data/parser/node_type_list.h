@@ -464,7 +464,7 @@ struct FunctionParameterNode {
   Option<NodeId> default_value;
 };
 
-struct FunctionImplicitParameterListNode {
+struct ImplicitParameterListNode {
   List<NodeId> parameters;
 };
 
@@ -484,6 +484,7 @@ struct FunctionSignatureCaptureAnnotationListNode {
 };
 
 struct FunctionSignatureNode {
+  Option<NodeId> generic_parameter_list;
   List<NodeId> parameters;
   Option<NodeId> implicit_parameter_list;
   Option<NodeId> capture_list;
@@ -536,10 +537,32 @@ struct ClassFieldNode {
   Option<NodeId> initializer;
 };
 
+struct ClassBaseClassListNode {
+  List<NodeId> base_classes;
+};
+
 struct ClassDeclarationNode {
   NodeId name;
+  Option<NodeId> generic_parameter_list;
+  Option<NodeId> base_class_list;
   Option<NodeId> implicit_parameter_list;
   List<NodeId> decls;
+};
+
+struct GenericParameterNode {
+  bool is_const;
+  NodeId name;
+  Option<NodeId> constraint;
+};
+
+struct TypeConstraintNode {
+  NodeId type;
+  Option<NodeId> constraint;
+};
+
+struct GenericParameterListNode {
+  List<NodeId> parameters;
+  Option<List<NodeId>> additional_constraints;
 };
 
 struct BooleanLiteralNode {
@@ -684,7 +707,7 @@ struct VisibilityNode {
   X(ContinueStatementNode)                                                                         \
   X(ReturnStatementNode)                                                                           \
   X(FunctionParameterNode)                                                                         \
-  X(FunctionImplicitParameterListNode)                                                             \
+  X(ImplicitParameterListNode)                                                                     \
   X(FunctionSignatureCaptureAnnotationNode)                                                        \
   X(FunctionSignatureCaptureAnnotationListNode)                                                    \
   X(FunctionSignatureNode)                                                                         \
@@ -701,7 +724,11 @@ struct VisibilityNode {
   X(BooleanLiteralNode)                                                                            \
   X(BoolTypeNode)                                                                                  \
   X(ThisLiteralNode)                                                                               \
+  X(ClassBaseClassListNode)                                                                        \
   X(ClassConstructorNode)                                                                          \
-  X(VisibilityNode)
+  X(VisibilityNode)                                                                                \
+  X(GenericParameterNode)                                                                          \
+  X(GenericParameterListNode)                                                                      \
+  X(TypeConstraintNode)
 
 } // namespace amelia

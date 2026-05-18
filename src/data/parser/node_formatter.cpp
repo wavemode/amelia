@@ -582,7 +582,8 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
   }
   case NodeType::FunctionSignatureNode: {
     const auto &n = node.as_FunctionSignatureNode();
-    print_node_list_field(out, "parameters", n.parameters.data(), indent + 2);
+    print_node_field(out, "generic_parameter_list", n.generic_parameter_list, indent + 2);
+    print_node_list_field_with_comma(out, "parameters", n.parameters.data(), indent + 2);
     print_node_field_with_comma(
         out, "implicit_parameter_list", n.implicit_parameter_list, indent + 2
     );
@@ -602,8 +603,8 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
     }
     break;
   }
-  case NodeType::FunctionImplicitParameterListNode: {
-    const auto &n = node.as_FunctionImplicitParameterListNode();
+  case NodeType::ImplicitParameterListNode: {
+    const auto &n = node.as_ImplicitParameterListNode();
     print_node_list_field(out, "parameters", n.parameters.data(), indent + 2);
     break;
   }
@@ -675,13 +676,45 @@ void NodeFormatter::format_node_with_indent(AbstractString &out, NodeId node_id,
     print_node_field_with_comma(out, "initializer", n.initializer, indent + 2);
     break;
   }
+  case NodeType::ClassBaseClassListNode: {
+    const auto &n = node.as_ClassBaseClassListNode();
+    print_node_list_field(out, "base_classes", n.base_classes.data(), indent + 2);
+    break;
+  }
   case NodeType::ClassDeclarationNode: {
     const auto &n = node.as_ClassDeclarationNode();
     print_node_field(out, "name", n.name, indent + 2);
     print_node_field_with_comma(
+        out, "generic_parameter_list", n.generic_parameter_list, indent + 2
+    );
+    print_node_field_with_comma(out, "base_class_list", n.base_class_list, indent + 2);
+    print_node_field_with_comma(
         out, "implicit_parameter_list", n.implicit_parameter_list, indent + 2
     );
     print_node_list_field_with_comma(out, "decls", n.decls.data(), indent + 2);
+    break;
+  }
+  case NodeType::GenericParameterNode: {
+    const auto &n = node.as_GenericParameterNode();
+    print_field(out, "is_const", n.is_const, indent + 2);
+    print_node_field_with_comma(out, "name", n.name, indent + 2);
+    print_node_field_with_comma(out, "constraint", n.constraint, indent + 2);
+    break;
+  }
+  case NodeType::TypeConstraintNode: {
+    const auto &n = node.as_TypeConstraintNode();
+    print_node_field(out, "type", n.type, indent + 2);
+    print_node_field_with_comma(out, "constraint", n.constraint, indent + 2);
+    break;
+  }
+  case NodeType::GenericParameterListNode: {
+    const auto &n = node.as_GenericParameterListNode();
+    print_node_list_field(out, "parameters", n.parameters.data(), indent + 2);
+    if (n.additional_constraints.has_value()) {
+      print_node_list_field_with_comma(
+          out, "additional_constraints", n.additional_constraints.value().data(), indent + 2
+      );
+    }
     break;
   }
   case NodeType::BooleanLiteralNode: {

@@ -7,7 +7,7 @@ ModuleNode(
       name=IdentifierNode(
         token=IDENTIFIER(f)
       ),
-      signature=FunctionSignatureNode(
+      signature=FunctionSignatureNode(,
         parameters=[
           FunctionParameterNode(
             variadic=false,

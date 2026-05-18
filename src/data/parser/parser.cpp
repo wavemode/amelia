@@ -145,6 +145,8 @@ public:
   NodeId parse_class_declaration() {
     auto class_token = next();
     auto name = expect_identifier("Expected class name after 'class' keyword");
+    Option<NodeId> generic_parameter_list = try_parse_generic_parameter_list();
+    Option<NodeId> base_class_list = try_parse_base_class_list();
     Option<NodeId> implicit_parameter_list = try_parse_implicit_parameter_list();
     read_token_type(TokenType::LEFT_BRACE, "Expected '{' to start class body");
     List<NodeId> decls;
@@ -156,8 +158,27 @@ public:
     }
     read_token_type(TokenType::RIGHT_BRACE, "Expected '}' to end class body");
     return m_output.add_node(
-        class_token.loc, ClassDeclarationNode{name, implicit_parameter_list, std::move(decls)}
+        class_token.loc,
+        ClassDeclarationNode{
+            name, generic_parameter_list, base_class_list, implicit_parameter_list, std::move(decls)
+        }
     );
+  }
+
+  Option<NodeId> try_parse_base_class_list() {
+    if (peek().type == TokenType::COLON) {
+      ++m_token_index; // consume the ':' token
+      List<NodeId> base_classes;
+      base_classes.push_back(
+          expect_identifier("Expected base class name after ':' in class declaration")
+      );
+      while (peek().type == TokenType::COMMA) {
+        ++m_token_index; // consume the ',' token
+        base_classes.push_back(parse_expression());
+      }
+      return Some(m_output.add_node(peek(-1).loc, ClassBaseClassListNode{std::move(base_classes)}));
+    }
+    return None();
   }
 
   NodeId parse_class_body_declaration() {
@@ -247,6 +268,72 @@ public:
       initializer = parse_expression();
     }
     return m_output.add_node(start_location, ClassFieldNode{name, type, initializer});
+  }
+
+  Option<NodeId> try_parse_generic_parameter_list() {
+    auto start_token = peek();
+    if (start_token.type == TokenType::LEFT_BRACKET_NO_W) {
+      ++m_token_index; // consume the left bracket
+      List<NodeId> parameters;
+      do {
+        parameters.push_back(parse_generic_parameter());
+        if (peek().type == TokenType::COMMA) {
+          ++m_token_index; // consume the comma
+        }
+      } while (peek().type != TokenType::RIGHT_BRACKET);
+      read_token_type(TokenType::RIGHT_BRACKET, "Expected ']' to end generic parameter list");
+
+      Option<List<NodeId>> additional_constraints;
+      if (peek().type == TokenType::KEYWORD_WHEN) {
+        ++m_token_index; // consume the 'when' keyword
+        read_left_paren("Expected '(' after 'when' in generic parameter list");
+        List<NodeId> constraints;
+        do {
+          constraints.push_back(parse_type_constraint());
+          if (peek().type == TokenType::COMMA) {
+            ++m_token_index; // consume the comma
+          }
+        } while (peek().type != TokenType::RIGHT_PAREN);
+        read_token_type(
+            TokenType::RIGHT_PAREN,
+            "Expected ')' to end additional constraints in generic parameter list"
+        );
+        additional_constraints = std::move(constraints);
+      }
+
+      return Some(m_output.add_node(
+          start_token.loc,
+          GenericParameterListNode{std::move(parameters), std::move(additional_constraints)}
+      ));
+    }
+    return None();
+  }
+
+  NodeId parse_generic_parameter() {
+    auto start_token = peek();
+    bool is_const = false;
+    if (start_token.type == TokenType::KEYWORD_CONST) {
+      is_const = true;
+      ++m_token_index; // consume the 'const' keyword
+    }
+    NodeId type = expect_identifier("Expected type name for generic parameter");
+    Option<NodeId> constraint;
+    if (peek().type == TokenType::COLON) {
+      ++m_token_index; // consume the ':' token
+      constraint = parse_expression();
+    }
+    return m_output.add_node(start_token.loc, GenericParameterNode{is_const, type, constraint});
+  }
+
+  NodeId parse_type_constraint() {
+    auto start_token = peek();
+    NodeId lhs = parse_expression();
+    Option<NodeId> rhs;
+    if (peek().type == TokenType::COLON) {
+      ++m_token_index; // consume the ':' token
+      rhs = parse_expression();
+    }
+    return m_output.add_node(start_token.loc, TypeConstraintNode{lhs, rhs});
   }
 
   NodeId parse_try_statement() {
@@ -391,6 +478,7 @@ public:
   NodeId parse_function_signature() {
     auto start_position = peek().loc;
 
+    Option<NodeId> generic_parameter_list = try_parse_generic_parameter_list();
     List<NodeId> parameters = parse_function_parameter_list();
     Option<NodeId> implicit_parameter_list = try_parse_implicit_parameter_list();
     Option<NodeId> capture_list = try_parse_function_signature_capture_annotation_list();
@@ -399,7 +487,11 @@ public:
     return m_output.add_node(
         start_position,
         FunctionSignatureNode{
-            std::move(parameters), implicit_parameter_list, capture_list, return_type
+            generic_parameter_list,
+            std::move(parameters),
+            implicit_parameter_list,
+            capture_list,
+            return_type
         }
     );
   }
@@ -456,7 +548,7 @@ public:
       }
       ++m_token_index; // consume the ')' token
       return Some(m_output.add_node(
-          next_token.loc, FunctionImplicitParameterListNode{std::move(implicit_parameters)}
+          next_token.loc, ImplicitParameterListNode{std::move(implicit_parameters)}
       ));
     }
     return None();

@@ -1,4 +1,4 @@
-class A with (x: int) {}
+class A[T : int] {}
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
@@ -7,14 +7,14 @@ ModuleNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),
-      implicit_parameter_list=ImplicitParameterListNode(
+      generic_parameter_list=GenericParameterListNode(
         parameters=[
-          FunctionParameterNode(
-            variadic=false,
+          GenericParameterNode(
+            is_const=false,
             name=IdentifierNode(
-              token=IDENTIFIER_NO_W(x)
+              token=IDENTIFIER_NO_W(T)
             ),
-            type=IdentifierNode(
+            constraint=IdentifierNode(
               token=IDENTIFIER(int)
             )
           )

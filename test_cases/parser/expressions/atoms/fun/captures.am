@@ -16,7 +16,7 @@ ModuleNode(
         token=IDENTIFIER(f)
       ),
       expression=FunctionExpressionNode(
-        signature=FunctionSignatureNode(
+        signature=FunctionSignatureNode(,
           parameters=[
             FunctionParameterNode(
               variadic=false,
@@ -37,7 +37,7 @@ ModuleNode(
               )
             )
           ],
-          implicit_parameter_list=FunctionImplicitParameterListNode(
+          implicit_parameter_list=ImplicitParameterListNode(
             parameters=[
               FunctionParameterNode(
                 variadic=false,

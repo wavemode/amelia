@@ -1,4 +1,4 @@
-fun f(x : int, y : float) -> double {}
+fun f[T](x : T) -> T {}
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
@@ -7,7 +7,17 @@ ModuleNode(
       name=IdentifierNode(
         token=IDENTIFIER(f)
       ),
-      signature=FunctionSignatureNode(,
+      signature=FunctionSignatureNode(
+        generic_parameter_list=GenericParameterListNode(
+          parameters=[
+            GenericParameterNode(
+              is_const=false,
+              name=IdentifierNode(
+                token=IDENTIFIER_NO_W(T)
+              )
+            )
+          ]
+        ),
         parameters=[
           FunctionParameterNode(
             variadic=false,
@@ -15,21 +25,12 @@ ModuleNode(
               token=IDENTIFIER_NO_W(x)
             ),
             type=IdentifierNode(
-              token=IDENTIFIER(int)
-            )
-          ),
-          FunctionParameterNode(
-            variadic=false,
-            name=IdentifierNode(
-              token=IDENTIFIER(y)
-            ),
-            type=IdentifierNode(
-              token=IDENTIFIER(float)
+              token=IDENTIFIER(T)
             )
           )
         ],
         return_type=IdentifierNode(
-          token=IDENTIFIER(double)
+          token=IDENTIFIER(T)
         )
       ),
       body=FunctionBodyNode(
