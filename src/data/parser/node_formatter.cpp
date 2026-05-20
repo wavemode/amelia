@@ -886,6 +886,20 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "decl", n.decl);
     break;
   }
+  case NodeType::EnumDeclarationNode: {
+    const auto &n = node.as_EnumDeclarationNode();
+    print_node_field(out, "name", n.name);
+    print_node_field(out, "repr_type", n.repr_type);
+    print_node_field(out, "base_type_list", n.base_type_list);
+    print_node_field(out, "variants", n.variants);
+    break;
+  }
+  case NodeType::EnumVariantNode: {
+    const auto &n = node.as_EnumVariantNode();
+    print_node_field(out, "name", n.name);
+    print_node_field(out, "value", n.value);
+    break;
+  }
   default:
     throw std::runtime_error("Unknown node type");
   }

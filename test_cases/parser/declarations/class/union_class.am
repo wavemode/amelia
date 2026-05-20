@@ -5,9 +5,9 @@ union class A {
 
   fun print_value() {
     switch (this.type) {
-      case (A::X) println(this.x)
-      case (A::Y) println(this.y)
-      case (A::Z) println(this.z)
+      case (X) println(this.x)
+      case (Y) println(this.y)
+      case (Z) println(this.z)
     }
   }
 }
@@ -93,13 +93,8 @@ ModuleNode(
                     CaseClauseNode(
                       header=CaseClauseHeaderNode(
                         exprs=[
-                          ScopeResolutionExpressionNode(
-                            scope=IdentifierNode(
-                              token=IDENTIFIER_NO_W(A)
-                            ),
-                            name=IdentifierNode(
-                              token=IDENTIFIER_NO_W(X)
-                            )
+                          IdentifierNode(
+                            token=IDENTIFIER_NO_W(X)
                           )
                         ]
                       ),
@@ -124,13 +119,8 @@ ModuleNode(
                     CaseClauseNode(
                       header=CaseClauseHeaderNode(
                         exprs=[
-                          ScopeResolutionExpressionNode(
-                            scope=IdentifierNode(
-                              token=IDENTIFIER_NO_W(A)
-                            ),
-                            name=IdentifierNode(
-                              token=IDENTIFIER_NO_W(Y)
-                            )
+                          IdentifierNode(
+                            token=IDENTIFIER_NO_W(Y)
                           )
                         ]
                       ),
@@ -155,13 +145,8 @@ ModuleNode(
                     CaseClauseNode(
                       header=CaseClauseHeaderNode(
                         exprs=[
-                          ScopeResolutionExpressionNode(
-                            scope=IdentifierNode(
-                              token=IDENTIFIER_NO_W(A)
-                            ),
-                            name=IdentifierNode(
-                              token=IDENTIFIER_NO_W(Z)
-                            )
+                          IdentifierNode(
+                            token=IDENTIFIER_NO_W(Z)
                           )
                         ]
                       ),

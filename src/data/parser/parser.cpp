@@ -165,10 +165,7 @@ public:
       ++m_token_index; // consume the '...' token
       return m_output.add_node(item_token.loc, ImportItemWildcardNode{});
     } else {
-      if (!is_identifier(item_token.type)) {
-        throw_parser_error_at_current_location("Expected identifier or '...' in import item list");
-      }
-      auto name = parse_identifier();
+      auto name = expect_identifier("Expected identifier or '...' in import item list");
       auto alias = try_parse_import_alias();
       return m_output.add_node(item_token.loc, ImportItemNode{name, alias});
     }
@@ -221,10 +218,48 @@ public:
       return parse_record_declaration();
     case TokenType::KEYWORD_UNION:
       return parse_union_declaration();
+    case TokenType::KEYWORD_ENUM:
+      return parse_enum_declaration();
     default:
       break;
     }
     return None();
+  }
+
+  NodeId parse_enum_declaration() {
+    auto enum_token = next();
+    auto name = expect_identifier("Expected enum name after 'enum' keyword");
+    Option<NodeId> repr_type;
+    auto next_token = peek();
+    if (next_token.type == TokenType::LEFT_PAREN || next_token.type == TokenType::LEFT_PAREN_NO_W) {
+      ++m_token_index; // consume the '(' token
+      repr_type = parse_type_expression();
+      read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after enum representation type");
+    }
+    auto base_types = try_parse_base_type_list();
+    read_token_type(TokenType::LEFT_BRACE, "Expected '{' to begin enum declaration");
+    List<NodeId> variants;
+    while (peek().type != TokenType::RIGHT_BRACE) {
+      variants.push_back(parse_enum_variant());
+      if (peek().type == TokenType::COMMA) {
+        ++m_token_index; // consume the ',' token
+      }
+    }
+    read_token_type(TokenType::RIGHT_BRACE, "Expected '}' to end enum declaration");
+    return m_output.add_node(
+        enum_token.loc, EnumDeclarationNode{name, repr_type, base_types, std::move(variants)}
+    );
+  }
+
+  NodeId parse_enum_variant() {
+    auto start_token = peek();
+    auto name = expect_identifier("Expected enum variant name");
+    Option<NodeId> value;
+    if (peek().type == TokenType::ASSIGN) {
+      ++m_token_index; // consume the '=' token
+      value = parse_expression();
+    }
+    return m_output.add_node(start_token.loc, EnumVariantNode{name, value});
   }
 
   NodeId parse_record_declaration() {
@@ -361,7 +396,7 @@ public:
     auto concept_token = next();
     auto name = expect_identifier("Expected concept name after 'concept' keyword");
     Option<NodeId> generic_parameter_list = try_parse_generic_parameter_list();
-    Option<NodeId> base_concept_list = try_parse_base_class_list();
+    Option<NodeId> base_concept_list = try_parse_base_type_list();
     Option<NodeId> implicit_parameter_list = try_parse_implicit_parameter_list();
     read_token_type(TokenType::LEFT_BRACE, "Expected '{' to start concept body");
     List<NodeId> decls;
@@ -388,7 +423,7 @@ public:
     auto class_token = next();
     auto name = expect_identifier("Expected class name after 'class' keyword");
     Option<NodeId> generic_parameter_list = try_parse_generic_parameter_list();
-    Option<NodeId> base_class_list = try_parse_base_class_list();
+    Option<NodeId> base_class_list = try_parse_base_type_list();
     Option<NodeId> implicit_parameter_list = try_parse_implicit_parameter_list();
     read_token_type(TokenType::LEFT_BRACE, "Expected '{' to start class body");
     List<NodeId> decls;
@@ -407,18 +442,16 @@ public:
     );
   }
 
-  Option<NodeId> try_parse_base_class_list() {
+  Option<NodeId> try_parse_base_type_list() {
     if (peek().type == TokenType::COLON) {
       ++m_token_index; // consume the ':' token
-      List<NodeId> base_classes;
-      base_classes.push_back(
-          expect_identifier("Expected base class name after ':' in class declaration")
-      );
+      List<NodeId> base_types;
+      base_types.push_back(expect_identifier("Expected base type name after ':'"));
       while (peek().type == TokenType::COMMA) {
         ++m_token_index; // consume the ',' token
-        base_classes.push_back(parse_type_expression());
+        base_types.push_back(parse_type_expression());
       }
-      return Some(m_output.add_node(peek(-1).loc, BaseTypeListNode{std::move(base_classes)}));
+      return Some(m_output.add_node(peek(-1).loc, BaseTypeListNode{std::move(base_types)}));
     }
     return None();
   }
@@ -1871,7 +1904,7 @@ public:
 
   NodeId expect_identifier(Text error_message) {
     auto token = peek();
-    if (!is_identifier(token.type) && token.type != TokenType::KEYWORD_OPERATOR) {
+    if (!is_identifier(token.type)) {
       throw_parser_error(token.id, String(error_message));
     }
     return parse_identifier();

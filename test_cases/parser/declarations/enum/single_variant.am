@@ -1,0 +1,22 @@
+enum A {
+  FirstOption,
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    EnumDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      variants=[
+        EnumVariantNode(
+          name=IdentifierNode(
+            token=IDENTIFIER(FirstOption)
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

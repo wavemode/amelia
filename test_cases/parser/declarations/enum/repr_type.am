@@ -1,0 +1,38 @@
+enum A (uint) {
+  X = 0, Y, Z
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    EnumDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      repr_type=PrimitiveTypeNode(
+        token=KEYWORD_UINT(uint)
+      ),
+      variants=[
+        EnumVariantNode(
+          name=IdentifierNode(
+            token=IDENTIFIER(X)
+          ),
+          value=NumberLiteralNode(
+            lit=NUMBER(0)
+          )
+        ),
+        EnumVariantNode(
+          name=IdentifierNode(
+            token=IDENTIFIER(Y)
+          )
+        ),
+        EnumVariantNode(
+          name=IdentifierNode(
+            token=IDENTIFIER(Z)
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

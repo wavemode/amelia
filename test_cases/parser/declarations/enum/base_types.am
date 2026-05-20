@@ -1,0 +1,23 @@
+enum A : B, C {}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    EnumDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      base_type_list=BaseTypeListNode(
+        base_classes=[
+          IdentifierNode(
+            token=IDENTIFIER(B)
+          ),
+          IdentifierNode(
+            token=IDENTIFIER(C)
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

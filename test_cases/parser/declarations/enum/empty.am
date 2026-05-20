@@ -1,0 +1,13 @@
+enum A {}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    EnumDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      )
+    )
+  ]
+)
+*/

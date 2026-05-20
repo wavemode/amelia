@@ -702,6 +702,18 @@ struct UnionDeclarationNode {
   NodeId decl;
 };
 
+struct EnumDeclarationNode {
+  NodeId name;
+  Option<NodeId> repr_type;
+  Option<NodeId> base_type_list;
+  List<NodeId> variants;
+};
+
+struct EnumVariantNode {
+  NodeId name;
+  Option<NodeId> value;
+};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
@@ -868,6 +880,8 @@ struct UnionDeclarationNode {
   X(AsyncDeclarationNode)                                                                          \
   X(ExternDeclarationNode)                                                                         \
   X(RecordDeclarationNode)                                                                         \
-  X(UnionDeclarationNode)
+  X(UnionDeclarationNode)                                                                          \
+  X(EnumDeclarationNode)                                                                           \
+  X(EnumVariantNode)
 
 } // namespace amelia
