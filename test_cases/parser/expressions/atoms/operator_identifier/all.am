@@ -74,10 +74,6 @@ let y = {
   x.operator()
   // OperatorIdentAsNode
   x.operator as int
-  // OperatorIdentCopyAssignNode
-  x.operator copy=
-  // OperatorIdentMoveAssignNode
-  x.operator move =
   // OperatorIdentIxAssignNode
   x.operator[]=
 }
@@ -482,26 +478,6 @@ ModuleNode(
                     token=IDENTIFIER(int)
                   )
                 )
-              )
-            )
-          ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
-              object=IdentifierNode(
-                token=IDENTIFIER(x)
-              ),
-              field=OperatorIdentifierNode(
-                op=OperatorIdentCopyAssignNode()
-              )
-            )
-          ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
-              object=IdentifierNode(
-                token=IDENTIFIER(x)
-              ),
-              field=OperatorIdentifierNode(
-                op=OperatorIdentMoveAssignNode()
               )
             )
           ),

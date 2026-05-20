@@ -3,7 +3,7 @@ class A {
     println("I am ", this.age, " years old")
   }
 
-  a: int
+  age: int
 }
 
 /* EXPECTED_OUTPUT:
@@ -55,7 +55,7 @@ ModuleNode(
         ),
         ClassFieldNode(
           name=IdentifierNode(
-            token=IDENTIFIER(a)
+            token=IDENTIFIER(age)
           ),
           type=IdentifierNode(
             token=IDENTIFIER(int)

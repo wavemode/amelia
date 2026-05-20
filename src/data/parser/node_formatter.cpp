@@ -474,12 +474,6 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   case NodeType::OperatorIdentFuncallNode: {
     break;
   }
-  case NodeType::OperatorIdentCopyAssignNode: {
-    break;
-  }
-  case NodeType::OperatorIdentMoveAssignNode: {
-    break;
-  }
   case NodeType::OperatorIdentIxAssignNode: {
     break;
   }
@@ -682,6 +676,16 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   }
   case NodeType::ClassConstDeclarationNode: {
     const auto &n = node.as_ClassConstDeclarationNode();
+    print_node_field(out, "decl", n.decl);
+    break;
+  }
+  case NodeType::ClassCopyDeclarationNode: {
+    const auto &n = node.as_ClassCopyDeclarationNode();
+    print_node_field(out, "decl", n.decl);
+    break;
+  }
+  case NodeType::ClassMoveDeclarationNode: {
+    const auto &n = node.as_ClassMoveDeclarationNode();
     print_node_field(out, "decl", n.decl);
     break;
   }

@@ -1,0 +1,55 @@
+class A {
+  move operator as int() = (move this).a
+
+  a: int
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ClassDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      decls=[
+        ClassMoveDeclarationNode(
+          decl=OperatorFunctionDeclarationNode(
+            operator_ident=OperatorIdentifierNode(
+              op=OperatorIdentAsNode(
+                type=IdentifierNode(
+                  token=IDENTIFIER(int)
+                )
+              )
+            ),
+            signature=FunctionSignatureNode(),
+            body=FunctionBodyNode(
+              expression=FieldAccessExpressionNode(
+                object=ParenthesizedExpressionNode(
+                  exprs=[
+                    MoveExpressionNode(
+                      expr=ThisLiteralNode()
+                    )
+                  ]
+                ),
+                field=IdentifierNode(
+                  token=IDENTIFIER_NO_W(a)
+                )
+              ),
+              is_default=false,
+              is_deleted=false
+            )
+          )
+        ),
+        ClassFieldNode(
+          name=IdentifierNode(
+            token=IDENTIFIER(a)
+          ),
+          type=IdentifierNode(
+            token=IDENTIFIER(int)
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

@@ -277,12 +277,15 @@ public:
       return parse_class_static_declaration();
     case TokenType::KEYWORD_CONST:
       return parse_class_const_declaration();
+    case TokenType::KEYWORD_COPY:
+      return parse_class_copy_declaration();
+    case TokenType::KEYWORD_MOVE: {
+      return parse_class_move_declaration();
+    }
     case TokenType::IDENTIFIER:
     case TokenType::IDENTIFIER_NO_W:
     case TokenType::QUOTED_IDENTIFIER:
-    case TokenType::QUOTED_IDENTIFIER_NO_W:
-    case TokenType::KEYWORD_COPY:
-    case TokenType::KEYWORD_MOVE: {
+    case TokenType::QUOTED_IDENTIFIER_NO_W: {
       auto following_token = peek(1);
       if (following_token.type == TokenType::LEFT_PAREN ||
           following_token.type == TokenType::LEFT_PAREN_NO_W ||
@@ -291,7 +294,7 @@ public:
         return parse_constructor_declaration();
       }
       return parse_class_field();
-    }
+    } break;
     case TokenType::KEYWORD_PUBLIC:
     case TokenType::KEYWORD_PRIVATE:
     case TokenType::KEYWORD_PROTECTED:
@@ -355,6 +358,18 @@ public:
     return m_output.add_node(const_token.loc, ClassConstDeclarationNode{decl});
   }
 
+  NodeId parse_class_copy_declaration() {
+    auto copy_token = next();
+    NodeId decl = parse_class_body_declaration();
+    return m_output.add_node(copy_token.loc, ClassCopyDeclarationNode{decl});
+  }
+
+  NodeId parse_class_move_declaration() {
+    auto move_token = next();
+    NodeId decl = parse_class_body_declaration();
+    return m_output.add_node(move_token.loc, ClassMoveDeclarationNode{decl});
+  }
+
   NodeId parse_class_field() {
     auto start_location = peek().loc;
     auto name = expect_identifier("Expected field name in class declaration");
@@ -373,7 +388,8 @@ public:
 
   Option<NodeId> try_parse_generic_parameter_list() {
     auto start_token = peek();
-    if (start_token.type == TokenType::LEFT_BRACKET_NO_W) {
+    if (start_token.type == TokenType::LEFT_BRACKET_NO_W ||
+        start_token.type == TokenType::LEFT_BRACKET) {
       ++m_token_index; // consume the left bracket
       List<NodeId> parameters;
       do {
@@ -1389,14 +1405,6 @@ public:
       read_token_type(TokenType::RIGHT_PAREN, "Expected ')' following 'operator('");
       operator_node = m_output.add_node(start_location, OperatorIdentFuncallNode{});
       break;
-    case TokenType::KEYWORD_COPY:
-      read_token_type(TokenType::ASSIGN, "Expected '=' following 'operator copy'");
-      operator_node = m_output.add_node(start_location, OperatorIdentCopyAssignNode{});
-      break;
-    case TokenType::KEYWORD_MOVE:
-      read_token_type(TokenType::ASSIGN, "Expected '=' following 'operator move'");
-      operator_node = m_output.add_node(start_location, OperatorIdentMoveAssignNode{});
-      break;
     case TokenType::KEYWORD_AS: {
       auto type = parse_type_expression();
       operator_node = m_output.add_node(start_location, OperatorIdentAsNode{type});
@@ -1465,6 +1473,10 @@ public:
       read_left_paren("Expected '(' after 'when' in case clause");
       when_clause = parse_expression();
       read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after condition in 'when' clause");
+    }
+
+    if (!introductory_decls.has_value() && !exprs.has_value() && !when_clause.has_value()) {
+      throw_parser_error(start_token.id, "Expected case clause header");
     }
 
     return m_output.add_node(

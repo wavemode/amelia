@@ -90,10 +90,6 @@ struct OperatorIdentIxNode {};
 
 struct OperatorIdentFuncallNode {};
 
-struct OperatorIdentCopyAssignNode {};
-
-struct OperatorIdentMoveAssignNode {};
-
 struct OperatorIdentIxAssignNode {};
 
 struct OperatorIdentAsNode {
@@ -544,6 +540,14 @@ struct ClassConstDeclarationNode {
   NodeId decl;
 };
 
+struct ClassCopyDeclarationNode {
+  NodeId decl;
+};
+
+struct ClassMoveDeclarationNode {
+  NodeId decl;
+};
+
 struct ClassFieldNode {
   NodeId name;
   Option<NodeId> type;
@@ -717,8 +721,6 @@ struct ImplicitDeclarationNode {
   X(OperatorIdentRightShiftAssignNode)                                                             \
   X(OperatorIdentIxNode)                                                                           \
   X(OperatorIdentFuncallNode)                                                                      \
-  X(OperatorIdentCopyAssignNode)                                                                   \
-  X(OperatorIdentMoveAssignNode)                                                                   \
   X(OperatorIdentIxAssignNode)                                                                     \
   X(OperatorIdentAsNode)                                                                           \
   X(OperatorFunctionDeclarationNode)                                                               \
@@ -752,6 +754,8 @@ struct ImplicitDeclarationNode {
   X(TypeDeclarationNode)                                                                           \
   X(ClassStaticDeclarationNode)                                                                    \
   X(ClassConstDeclarationNode)                                                                     \
+  X(ClassCopyDeclarationNode)                                                                      \
+  X(ClassMoveDeclarationNode)                                                                      \
   X(ClassFieldNode)                                                                                \
   X(ClassDeclarationNode)                                                                          \
   X(BooleanLiteralNode)                                                                            \

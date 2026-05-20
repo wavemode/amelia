@@ -1,0 +1,9 @@
+let example = {
+  switch(y) {
+    case 3
+  }
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("Expected case clause header (at test_cases/parser/statements/switch/error_no_header.am:3:10)")
+*/

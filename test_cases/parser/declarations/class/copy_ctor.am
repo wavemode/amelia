@@ -1,5 +1,5 @@
 class A {
-  copy(o) {
+  copy A(o) {
     this.a = copy o.a
     this.b = copy o.b
   }
@@ -16,59 +16,63 @@ ModuleNode(
         token=IDENTIFIER(A)
       ),
       decls=[
-        ClassConstructorNode(
-          name=CopyCtorNameNode(),
-          signature=FunctionSignatureNode(
-            parameters=[
-              FunctionParameterNode(
-                variadic=false,
-                name=IdentifierNode(
-                  token=IDENTIFIER_NO_W(o)
-                )
-              )
-            ]
-          ),
-          body=FunctionBodyNode(
-            stmts=[
-              AssignmentStatementNode(
-                target=FieldAccessExpressionNode(
-                  object=ThisLiteralNode(),
-                  field=IdentifierNode(
-                    token=IDENTIFIER_NO_W(a)
+        ClassCopyDeclarationNode(
+          decl=ClassConstructorNode(
+            name=IdentifierNode(
+              token=IDENTIFIER(A)
+            ),
+            signature=FunctionSignatureNode(
+              parameters=[
+                FunctionParameterNode(
+                  variadic=false,
+                  name=IdentifierNode(
+                    token=IDENTIFIER_NO_W(o)
                   )
-                ),
-                expression=CopyExpressionNode(
-                  expr=FieldAccessExpressionNode(
-                    object=IdentifierNode(
-                      token=IDENTIFIER(o)
-                    ),
+                )
+              ]
+            ),
+            body=FunctionBodyNode(
+              stmts=[
+                AssignmentStatementNode(
+                  target=FieldAccessExpressionNode(
+                    object=ThisLiteralNode(),
                     field=IdentifierNode(
                       token=IDENTIFIER_NO_W(a)
                     )
-                  )
-                )
-              ),
-              AssignmentStatementNode(
-                target=FieldAccessExpressionNode(
-                  object=ThisLiteralNode(),
-                  field=IdentifierNode(
-                    token=IDENTIFIER_NO_W(b)
+                  ),
+                  expression=CopyExpressionNode(
+                    expr=FieldAccessExpressionNode(
+                      object=IdentifierNode(
+                        token=IDENTIFIER(o)
+                      ),
+                      field=IdentifierNode(
+                        token=IDENTIFIER_NO_W(a)
+                      )
+                    )
                   )
                 ),
-                expression=CopyExpressionNode(
-                  expr=FieldAccessExpressionNode(
-                    object=IdentifierNode(
-                      token=IDENTIFIER(o)
-                    ),
+                AssignmentStatementNode(
+                  target=FieldAccessExpressionNode(
+                    object=ThisLiteralNode(),
                     field=IdentifierNode(
                       token=IDENTIFIER_NO_W(b)
                     )
+                  ),
+                  expression=CopyExpressionNode(
+                    expr=FieldAccessExpressionNode(
+                      object=IdentifierNode(
+                        token=IDENTIFIER(o)
+                      ),
+                      field=IdentifierNode(
+                        token=IDENTIFIER_NO_W(b)
+                      )
+                    )
                   )
                 )
-              )
-            ],
-            is_default=false,
-            is_deleted=false
+              ],
+              is_default=false,
+              is_deleted=false
+            )
           )
         ),
         ClassFieldNode(

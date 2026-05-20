@@ -1,5 +1,5 @@
 class A {
-  operator move=(o) {
+  move operator=(o) {
     this.a = move o.a
     this.b = move o.b
   }
@@ -16,61 +16,63 @@ ModuleNode(
         token=IDENTIFIER(A)
       ),
       decls=[
-        OperatorFunctionDeclarationNode(
-          operator_ident=OperatorIdentifierNode(
-            op=OperatorIdentMoveAssignNode()
-          ),
-          signature=FunctionSignatureNode(
-            parameters=[
-              FunctionParameterNode(
-                variadic=false,
-                name=IdentifierNode(
-                  token=IDENTIFIER_NO_W(o)
-                )
-              )
-            ]
-          ),
-          body=FunctionBodyNode(
-            stmts=[
-              AssignmentStatementNode(
-                target=FieldAccessExpressionNode(
-                  object=ThisLiteralNode(),
-                  field=IdentifierNode(
-                    token=IDENTIFIER_NO_W(a)
+        ClassMoveDeclarationNode(
+          decl=OperatorFunctionDeclarationNode(
+            operator_ident=OperatorIdentifierNode(
+              op=OperatorIdentAssignNode()
+            ),
+            signature=FunctionSignatureNode(
+              parameters=[
+                FunctionParameterNode(
+                  variadic=false,
+                  name=IdentifierNode(
+                    token=IDENTIFIER_NO_W(o)
                   )
-                ),
-                expression=MoveExpressionNode(
-                  expr=FieldAccessExpressionNode(
-                    object=IdentifierNode(
-                      token=IDENTIFIER(o)
-                    ),
+                )
+              ]
+            ),
+            body=FunctionBodyNode(
+              stmts=[
+                AssignmentStatementNode(
+                  target=FieldAccessExpressionNode(
+                    object=ThisLiteralNode(),
                     field=IdentifierNode(
                       token=IDENTIFIER_NO_W(a)
                     )
-                  )
-                )
-              ),
-              AssignmentStatementNode(
-                target=FieldAccessExpressionNode(
-                  object=ThisLiteralNode(),
-                  field=IdentifierNode(
-                    token=IDENTIFIER_NO_W(b)
+                  ),
+                  expression=MoveExpressionNode(
+                    expr=FieldAccessExpressionNode(
+                      object=IdentifierNode(
+                        token=IDENTIFIER(o)
+                      ),
+                      field=IdentifierNode(
+                        token=IDENTIFIER_NO_W(a)
+                      )
+                    )
                   )
                 ),
-                expression=MoveExpressionNode(
-                  expr=FieldAccessExpressionNode(
-                    object=IdentifierNode(
-                      token=IDENTIFIER(o)
-                    ),
+                AssignmentStatementNode(
+                  target=FieldAccessExpressionNode(
+                    object=ThisLiteralNode(),
                     field=IdentifierNode(
                       token=IDENTIFIER_NO_W(b)
                     )
+                  ),
+                  expression=MoveExpressionNode(
+                    expr=FieldAccessExpressionNode(
+                      object=IdentifierNode(
+                        token=IDENTIFIER(o)
+                      ),
+                      field=IdentifierNode(
+                        token=IDENTIFIER_NO_W(b)
+                      )
+                    )
                   )
                 )
-              )
-            ],
-            is_default=false,
-            is_deleted=false
+              ],
+              is_default=false,
+              is_deleted=false
+            )
           )
         ),
         ClassFieldNode(
