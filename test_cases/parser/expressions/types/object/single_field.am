@@ -1,0 +1,25 @@
+let x : { a: int }
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x)
+      ),
+      type=ObjectTypeNode(
+        entries=[
+          KeyValueEntryNode(
+            key=IdentifierNode(
+              token=IDENTIFIER(a)
+            ),
+            value=IdentifierNode(
+              token=IDENTIFIER(int)
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

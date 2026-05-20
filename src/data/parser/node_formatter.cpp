@@ -73,6 +73,11 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "entries", n.entries);
     break;
   }
+  case NodeType::ObjectTypeNode: {
+    const auto &n = node.as_ObjectTypeNode();
+    print_node_field(out, "entries", n.entries);
+    break;
+  }
   case NodeType::KeyValueEntryNode: {
     const auto &n = node.as_KeyValueEntryNode();
     print_node_field(out, "key", n.key);

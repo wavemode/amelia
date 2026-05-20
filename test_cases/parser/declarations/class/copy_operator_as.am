@@ -1,5 +1,5 @@
 class A {
-  copy operator as int() = (move this).a
+  copy operator as int() = copy this.a
 
   a: int
 }
@@ -23,16 +23,12 @@ ModuleNode(
             ),
             signature=FunctionSignatureNode(),
             body=FunctionBodyNode(
-              expression=FieldAccessExpressionNode(
-                object=ParenthesizedExpressionNode(
-                  exprs=[
-                    MoveExpressionNode(
-                      expr=ThisLiteralNode()
-                    )
-                  ]
-                ),
-                field=IdentifierNode(
-                  token=IDENTIFIER_NO_W(a)
+              expression=CopyExpressionNode(
+                expr=FieldAccessExpressionNode(
+                  object=ThisLiteralNode(),
+                  field=IdentifierNode(
+                    token=IDENTIFIER_NO_W(a)
+                  )
                 )
               ),
               is_default=false,

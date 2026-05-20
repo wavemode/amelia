@@ -1545,8 +1545,14 @@ public:
 
   NodeId parse_brace_expression() {
     auto next_token = peek(1);
+    if (next_token.type == TokenType::END_OF_FILE) {
+      throw_parser_error_at_current_location("Unexpected end of file after '{'. Expected object "
+                                             "literal, object type, or block expression.");
+    }
     if (next_token.type == TokenType::RIGHT_BRACE || next_token.type == TokenType::DOT) {
       return parse_object_literal();
+    } else if (is_identifier(next_token.type) && peek(2).type == TokenType::COLON) {
+      return parse_object_type();
     }
     return parse_block_expression();
   }
@@ -1575,6 +1581,23 @@ public:
     }
     ++m_token_index; // consume the right brace
     return m_output.add_node(open_brace.loc, ObjectLiteralNode{std::move(entries)});
+  }
+
+  NodeId parse_object_type() {
+    auto open_brace = next();
+    List<NodeId> entries;
+    while (peek().type != TokenType::RIGHT_BRACE) {
+      auto field_token = peek();
+      auto field = expect_identifier("Expected field name in object literal");
+      read_token_type(TokenType::COLON, "Expected ':' after field name in object type");
+      NodeId type = parse_expression();
+      entries.push_back(m_output.add_node(field_token.loc, KeyValueEntryNode{field, type}));
+      if (peek().type == TokenType::COMMA) {
+        ++m_token_index; // consume the comma
+      }
+    }
+    ++m_token_index; // consume the right brace
+    return m_output.add_node(open_brace.loc, ObjectTypeNode{std::move(entries)});
   }
 
   void parse_comma_separated_expression_list(List<NodeId> &exprs, TokenType terminator) {

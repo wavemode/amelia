@@ -222,6 +222,10 @@ struct ObjectLiteralNode {
   List<NodeId> entries;
 };
 
+struct ObjectTypeNode {
+  List<NodeId> entries;
+};
+
 struct IfStatementNode {
   List<NodeId> introductory_decls;
   NodeId condition;
@@ -637,6 +641,7 @@ struct ImplicitDeclarationNode {
   X(BlockExpressionNode)                                                                           \
   X(KeyValueEntryNode)                                                                             \
   X(ObjectLiteralNode)                                                                             \
+  X(ObjectTypeNode)                                                                                \
   X(ExpressionStatementNode)                                                                       \
   X(IfStatementNode)                                                                               \
   X(IfExpressionNode)                                                                              \
