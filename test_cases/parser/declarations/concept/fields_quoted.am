@@ -1,0 +1,56 @@
+concept A {
+  `a`: int
+  `b`: String
+  static `c`: float
+  const `d`: bool
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ConceptDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      decls=[
+        ClassFieldNode(
+          name=IdentifierNode(
+            token=QUOTED_IDENTIFIER(`a`)
+          ),
+          type=PrimitiveTypeNode(
+            token=KEYWORD_INT(int)
+          )
+        ),
+        ClassFieldNode(
+          name=IdentifierNode(
+            token=QUOTED_IDENTIFIER(`b`)
+          ),
+          type=IdentifierNode(
+            token=IDENTIFIER(String)
+          )
+        ),
+        ClassStaticDeclarationNode(
+          decl=ClassFieldNode(
+            name=IdentifierNode(
+              token=QUOTED_IDENTIFIER(`c`)
+            ),
+            type=PrimitiveTypeNode(
+              token=KEYWORD_FLOAT(float)
+            )
+          )
+        ),
+        ClassConstDeclarationNode(
+          decl=ClassFieldNode(
+            name=IdentifierNode(
+              token=QUOTED_IDENTIFIER(`d`)
+            ),
+            type=PrimitiveTypeNode(
+              token=KEYWORD_BOOL(bool)
+            )
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

@@ -1,0 +1,49 @@
+concept A {
+  Self [T] (o: T) {}
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ConceptDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      decls=[
+        ClassConstructorNode(
+          name=IdentifierNode(
+            token=KEYWORD_SELF_TYPE(Self)
+          ),
+          signature=FunctionSignatureNode(
+            generic_parameter_list=GenericParameterListNode(
+              parameters=[
+                GenericParameterNode(
+                  is_const=false,
+                  name=IdentifierNode(
+                    token=IDENTIFIER_NO_W(T)
+                  )
+                )
+              ]
+            ),
+            parameters=[
+              FunctionParameterNode(
+                variadic=false,
+                name=IdentifierNode(
+                  token=IDENTIFIER_NO_W(o)
+                ),
+                type=IdentifierNode(
+                  token=IDENTIFIER(T)
+                )
+              )
+            ]
+          ),
+          body=FunctionBodyNode(
+            is_default=false,
+            is_deleted=false
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

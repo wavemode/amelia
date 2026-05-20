@@ -1,0 +1,23 @@
+concept A {
+  Self()
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ConceptDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      decls=[
+        ClassConstructorNode(
+          name=IdentifierNode(
+            token=KEYWORD_SELF_TYPE(Self)
+          ),
+          signature=FunctionSignatureNode()
+        )
+      ]
+    )
+  ]
+)
+*/

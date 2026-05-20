@@ -1,0 +1,35 @@
+concept A {
+  operator +(other) -> Self
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ConceptDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      decls=[
+        OperatorFunctionDeclarationNode(
+          operator_ident=OperatorIdentifierNode(
+            op=OperatorIdentAddNode()
+          ),
+          signature=FunctionSignatureNode(
+            parameters=[
+              FunctionParameterNode(
+                variadic=false,
+                name=IdentifierNode(
+                  token=IDENTIFIER_NO_W(other)
+                )
+              )
+            ],
+            return_type=IdentifierNode(
+              token=KEYWORD_SELF_TYPE(Self)
+            )
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

@@ -1,0 +1,40 @@
+concept A {
+  copy operator=(o) -> &Self
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ConceptDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      decls=[
+        ClassCopyDeclarationNode(
+          decl=OperatorFunctionDeclarationNode(
+            operator_ident=OperatorIdentifierNode(
+              op=OperatorIdentAssignNode()
+            ),
+            signature=FunctionSignatureNode(
+              parameters=[
+                FunctionParameterNode(
+                  variadic=false,
+                  name=IdentifierNode(
+                    token=IDENTIFIER_NO_W(o)
+                  )
+                )
+              ],
+              return_type=RefExpressionNode(
+                is_const=false,
+                expr=IdentifierNode(
+                  token=KEYWORD_SELF_TYPE(Self)
+                )
+              )
+            )
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

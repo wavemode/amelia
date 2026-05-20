@@ -1,0 +1,32 @@
+concept A {  a: int; b: String }
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ConceptDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      decls=[
+        ClassFieldNode(
+          name=IdentifierNode(
+            token=IDENTIFIER(a)
+          ),
+          type=PrimitiveTypeNode(
+            token=KEYWORD_INT(int)
+          )
+        ),
+        EmptyStatementNode(),
+        ClassFieldNode(
+          name=IdentifierNode(
+            token=IDENTIFIER(b)
+          ),
+          type=IdentifierNode(
+            token=IDENTIFIER(String)
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

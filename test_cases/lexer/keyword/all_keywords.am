@@ -5,7 +5,7 @@ try
 catch
 static
 this
-This
+Self
 module
 bool
 byte
@@ -76,7 +76,7 @@ KEYWORD_TRY(try)
 KEYWORD_CATCH(catch)
 KEYWORD_STATIC(static)
 KEYWORD_THIS(this)
-KEYWORD_THIS_TYPE(This)
+KEYWORD_SELF_TYPE(Self)
 KEYWORD_MODULE(module)
 KEYWORD_BOOL(bool)
 KEYWORD_BYTE(byte)

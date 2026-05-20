@@ -558,7 +558,7 @@ struct ClassFieldNode {
   Option<NodeId> initializer;
 };
 
-struct ClassBaseClassListNode {
+struct BaseTypeListNode {
   List<NodeId> base_classes;
 };
 
@@ -600,7 +600,7 @@ struct BooleanLiteralNode {
 
 struct ThisLiteralNode {};
 
-struct ThisTypeNode {};
+struct SelfTypeNode {};
 
 struct CopyCtorNameNode {};
 
@@ -820,8 +820,8 @@ struct ModuleDeclarationNode {
   X(ConceptDeclarationNode)                                                                        \
   X(BooleanLiteralNode)                                                                            \
   X(ThisLiteralNode)                                                                               \
-  X(ThisTypeNode)                                                                                  \
-  X(ClassBaseClassListNode)                                                                        \
+  X(SelfTypeNode)                                                                                  \
+  X(BaseTypeListNode)                                                                              \
   X(ClassConstructorNode)                                                                          \
   X(VisibilityNode)                                                                                \
   X(GenericParameterNode)                                                                          \

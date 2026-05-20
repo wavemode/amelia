@@ -1,0 +1,34 @@
+concept A {
+  move Self(o)
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ConceptDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      decls=[
+        ClassMoveDeclarationNode(
+          decl=ClassConstructorNode(
+            name=IdentifierNode(
+              token=KEYWORD_SELF_TYPE(Self)
+            ),
+            signature=FunctionSignatureNode(
+              parameters=[
+                FunctionParameterNode(
+                  variadic=false,
+                  name=IdentifierNode(
+                    token=IDENTIFIER_NO_W(o)
+                  )
+                )
+              ]
+            )
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

@@ -701,8 +701,8 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "initializer", n.initializer);
     break;
   }
-  case NodeType::ClassBaseClassListNode: {
-    const auto &n = node.as_ClassBaseClassListNode();
+  case NodeType::BaseTypeListNode: {
+    const auto &n = node.as_BaseTypeListNode();
     print_node_field(out, "base_classes", n.base_classes);
     break;
   }
@@ -761,7 +761,7 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   case NodeType::ThisLiteralNode: {
     break;
   }
-  case NodeType::ThisTypeNode: {
+  case NodeType::SelfTypeNode: {
     break;
   }
   case NodeType::ClassConstructorNode: {

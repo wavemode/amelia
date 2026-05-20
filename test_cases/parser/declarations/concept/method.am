@@ -1,0 +1,23 @@
+concept A {
+  fun say_age()
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ConceptDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      decls=[
+        FunctionDeclarationNode(
+          name=IdentifierNode(
+            token=IDENTIFIER(say_age)
+          ),
+          signature=FunctionSignatureNode()
+        )
+      ]
+    )
+  ]
+)
+*/

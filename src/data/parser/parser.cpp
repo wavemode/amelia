@@ -12,7 +12,8 @@ namespace {
 
 bool is_identifier(TokenType type) {
   return type == TokenType::IDENTIFIER || type == TokenType::IDENTIFIER_NO_W ||
-         type == TokenType::QUOTED_IDENTIFIER || type == TokenType::QUOTED_IDENTIFIER_NO_W;
+         type == TokenType::QUOTED_IDENTIFIER || type == TokenType::QUOTED_IDENTIFIER_NO_W ||
+         type == TokenType::KEYWORD_SELF_TYPE;
 }
 
 bool is_identifier_no_w(TokenType type) {
@@ -385,7 +386,7 @@ public:
         ++m_token_index; // consume the ',' token
         base_classes.push_back(parse_type_expression());
       }
-      return Some(m_output.add_node(peek(-1).loc, ClassBaseClassListNode{std::move(base_classes)}));
+      return Some(m_output.add_node(peek(-1).loc, BaseTypeListNode{std::move(base_classes)}));
     }
     return None();
   }
@@ -405,7 +406,8 @@ public:
     case TokenType::IDENTIFIER:
     case TokenType::IDENTIFIER_NO_W:
     case TokenType::QUOTED_IDENTIFIER:
-    case TokenType::QUOTED_IDENTIFIER_NO_W: {
+    case TokenType::QUOTED_IDENTIFIER_NO_W:
+    case TokenType::KEYWORD_SELF_TYPE: {
       auto following_token = peek(1);
       if (following_token.type == TokenType::LEFT_PAREN ||
           following_token.type == TokenType::LEFT_PAREN_NO_W ||
@@ -1386,6 +1388,7 @@ public:
     case TokenType::IDENTIFIER_NO_W:
     case TokenType::QUOTED_IDENTIFIER:
     case TokenType::QUOTED_IDENTIFIER_NO_W:
+    case TokenType::KEYWORD_SELF_TYPE:
       if (is_start_of_lambda_expression()) {
         return parse_lambda_expression();
       }
@@ -1421,8 +1424,6 @@ public:
       return parse_boolean_literal();
     case TokenType::KEYWORD_THIS:
       return parse_this_literal();
-    case TokenType::KEYWORD_THIS_TYPE:
-      return parse_this_type();
     case TokenType::KEYWORD_DEFAULT:
       return parse_default_literal();
     case TokenType::KEYWORD_BOOL:
@@ -1470,7 +1471,7 @@ public:
 
   NodeId parse_this_type() {
     auto this_type_token = next();
-    return m_output.add_node(this_type_token.loc, ThisTypeNode{});
+    return m_output.add_node(this_type_token.loc, SelfTypeNode{});
   }
 
   NodeId parse_boolean_literal() {

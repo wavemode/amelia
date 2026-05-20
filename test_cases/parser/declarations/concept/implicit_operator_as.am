@@ -1,0 +1,29 @@
+concept A {
+  implicit operator as int()
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ConceptDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      decls=[
+        ImplicitDeclarationNode(
+          decl=OperatorFunctionDeclarationNode(
+            operator_ident=OperatorIdentifierNode(
+              op=OperatorIdentAsNode(
+                type=PrimitiveTypeNode(
+                  token=KEYWORD_INT(int)
+                )
+              )
+            ),
+            signature=FunctionSignatureNode()
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

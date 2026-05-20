@@ -1,13 +1,13 @@
-class A : B, C[D] {}
+concept A : B, C[D] {}
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ClassDeclarationNode(
+    ConceptDeclarationNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),
-      base_class_list=BaseTypeListNode(
+      base_concept_list=BaseTypeListNode(
         base_classes=[
           IdentifierNode(
             token=IDENTIFIER(B)

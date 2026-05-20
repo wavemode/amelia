@@ -1,0 +1,13 @@
+concept A {}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ConceptDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      )
+    )
+  ]
+)
+*/

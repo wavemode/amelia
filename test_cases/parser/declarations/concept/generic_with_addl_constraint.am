@@ -1,0 +1,33 @@
+concept A[T] when (T : Movable) {}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ConceptDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      generic_parameter_list=GenericParameterListNode(
+        parameters=[
+          GenericParameterNode(
+            is_const=false,
+            name=IdentifierNode(
+              token=IDENTIFIER_NO_W(T)
+            )
+          )
+        ],
+        additional_constraints=[
+          TypeConstraintNode(
+            type=IdentifierNode(
+              token=IDENTIFIER_NO_W(T)
+            ),
+            constraint=IdentifierNode(
+              token=IDENTIFIER(Movable)
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/
