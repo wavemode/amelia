@@ -12,6 +12,7 @@ namespace amelia {
   X(KEYWORD_CATCH)                                                                                 \
   X(KEYWORD_STATIC)                                                                                \
   X(KEYWORD_THIS)                                                                                  \
+  X(KEYWORD_THIS_TYPE)                                                                             \
   X(KEYWORD_MODULE)                                                                                \
   X(KEYWORD_VOID)                                                                                  \
   X(KEYWORD_THROW)                                                                                 \

@@ -750,6 +750,9 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   case NodeType::ThisLiteralNode: {
     break;
   }
+  case NodeType::ThisTypeNode: {
+    break;
+  }
   case NodeType::ClassConstructorNode: {
     const auto &n = node.as_ClassConstructorNode();
     print_node_field(out, "name", n.name);

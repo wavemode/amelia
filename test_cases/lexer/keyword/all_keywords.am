@@ -5,6 +5,7 @@ try
 catch
 static
 this
+This
 module
 void
 throw
@@ -65,6 +66,7 @@ KEYWORD_TRY(try)
 KEYWORD_CATCH(catch)
 KEYWORD_STATIC(static)
 KEYWORD_THIS(this)
+KEYWORD_THIS_TYPE(This)
 KEYWORD_MODULE(module)
 KEYWORD_VOID(void)
 KEYWORD_THROW(throw)

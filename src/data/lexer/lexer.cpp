@@ -24,6 +24,7 @@ const Map<Text, TokenType> keywords = {
     {"catch", TokenType::KEYWORD_CATCH},
     {"static", TokenType::KEYWORD_STATIC},
     {"this", TokenType::KEYWORD_THIS},
+    {"This", TokenType::KEYWORD_THIS_TYPE},
     {"module", TokenType::KEYWORD_MODULE},
     {"void", TokenType::KEYWORD_VOID},
     {"throw", TokenType::KEYWORD_THROW},

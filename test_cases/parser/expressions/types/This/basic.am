@@ -1,0 +1,14 @@
+let x : This
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x)
+      ),
+      type=ThisTypeNode()
+    )
+  ]
+)
+*/

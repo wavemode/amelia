@@ -594,6 +594,8 @@ struct BoolTypeNode {};
 
 struct ThisLiteralNode {};
 
+struct ThisTypeNode {};
+
 struct CopyCtorNameNode {};
 
 struct MoveCtorNameNode {};
@@ -776,6 +778,7 @@ struct ImplTypeExpressionNode {
   X(BooleanLiteralNode)                                                                            \
   X(BoolTypeNode)                                                                                  \
   X(ThisLiteralNode)                                                                               \
+  X(ThisTypeNode)                                                                                  \
   X(ClassBaseClassListNode)                                                                        \
   X(ClassConstructorNode)                                                                          \
   X(VisibilityNode)                                                                                \
