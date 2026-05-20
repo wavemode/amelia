@@ -1145,7 +1145,7 @@ public:
 
   NodeId parse_descend_expr_field_ix_funcall() {
     auto start_location = peek().loc;
-    auto left = parse_descend_expr_impl();
+    auto left = parse_descend_expr_impl_any();
     auto next_token = peek();
     while (next_token.type == TokenType::DOT_NO_W || next_token.type == TokenType::NUMBER_FIELD ||
            next_token.type == TokenType::LEFT_BRACKET_NO_W ||
@@ -1215,7 +1215,7 @@ public:
       NodeId expr = parse_type_expression();
       left = m_output.add_node(start_location, RefExpressionNode{is_const, expr});
     } else {
-      left = parse_descend_expr_impl();
+      left = parse_descend_expr_impl_any();
     }
     while (peek().type == TokenType::LEFT_BRACKET_NO_W) {
       ++m_token_index; // consume the '[' operator
@@ -1228,12 +1228,16 @@ public:
     return left;
   }
 
-  NodeId parse_descend_expr_impl() {
+  NodeId parse_descend_expr_impl_any() {
     auto start_token = peek();
     if (start_token.type == TokenType::KEYWORD_IMPL) {
       ++m_token_index; // consume the 'impl' keyword
       NodeId type_expr = parse_type_expression();
       return m_output.add_node(start_token.loc, ImplTypeExpressionNode{type_expr});
+    } else if (start_token.type == TokenType::KEYWORD_ANY) {
+      ++m_token_index; // consume the 'any' keyword
+      NodeId type_expr = parse_type_expression();
+      return m_output.add_node(start_token.loc, AnyTypeExpressionNode{type_expr});
     }
     return parse_descend_expr_scope_resolution();
   }

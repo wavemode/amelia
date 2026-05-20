@@ -638,6 +638,10 @@ struct ImplTypeExpressionNode {
   NodeId type;
 };
 
+struct AnyTypeExpressionNode {
+  NodeId type;
+};
+
 struct PrimitiveTypeNode {
   TokenId token;
 };
@@ -789,6 +793,7 @@ struct AutoTypeNode {};
   X(GenericParameterListNode)                                                                      \
   X(TypeConstraintNode)                                                                            \
   X(ImplTypeExpressionNode)                                                                        \
+  X(AnyTypeExpressionNode)                                                                         \
   X(CopyExpressionNode)                                                                            \
   X(MoveExpressionNode)                                                                            \
   X(CopyCtorNameNode)                                                                              \
