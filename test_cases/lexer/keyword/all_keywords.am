@@ -65,7 +65,6 @@ while
 for
 in
 label
-abstract
 super
 
 /* EXPECTED_OUTPUT:
@@ -136,7 +135,6 @@ KEYWORD_WHILE(while)
 KEYWORD_FOR(for)
 KEYWORD_IN(in)
 KEYWORD_LABEL(label)
-KEYWORD_ABSTRACT(abstract)
 KEYWORD_SUPER(super)
 END_OF_FILE()
 */

@@ -84,7 +84,6 @@ const Map<Text, TokenType> keywords = {
     {"for", TokenType::KEYWORD_FOR},
     {"in", TokenType::KEYWORD_IN},
     {"label", TokenType::KEYWORD_LABEL},
-    {"abstract", TokenType::KEYWORD_ABSTRACT},
     {"super", TokenType::KEYWORD_SUPER},
 };
 

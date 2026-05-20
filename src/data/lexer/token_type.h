@@ -72,7 +72,6 @@ namespace amelia {
   X(KEYWORD_FOR)                                                                                   \
   X(KEYWORD_IN)                                                                                    \
   X(KEYWORD_LABEL)                                                                                 \
-  X(KEYWORD_ABSTRACT)                                                                              \
   X(KEYWORD_SUPER)                                                                                 \
   X(ELLIPSIS)                                                                                      \
   X(ASSIGN)                                                                                        \
