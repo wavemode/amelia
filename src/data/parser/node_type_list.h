@@ -628,6 +628,12 @@ struct ImplicitDeclarationNode {
   NodeId decl;
 };
 
+struct DefaultDeclarationNode {
+  NodeId decl;
+};
+
+struct DefaultLiteralNode {};
+
 struct ImplTypeExpressionNode {
   NodeId type;
 };
@@ -781,6 +787,8 @@ struct ImplTypeExpressionNode {
   X(MoveExpressionNode)                                                                            \
   X(CopyCtorNameNode)                                                                              \
   X(MoveCtorNameNode)                                                                              \
-  X(ImplicitDeclarationNode)
+  X(ImplicitDeclarationNode)                                                                       \
+  X(DefaultDeclarationNode)                                                                        \
+  X(DefaultLiteralNode)
 
 } // namespace amelia

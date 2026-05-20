@@ -300,10 +300,26 @@ public:
     case TokenType::KEYWORD_PROTECTED:
     case TokenType::KEYWORD_LOCAL:
       return parse_class_body_visibility_declaration();
+    case TokenType::KEYWORD_IMPLICIT:
+      return parse_class_body_implicit_declaration();
+    case TokenType::KEYWORD_DEFAULT:
+      return parse_class_body_default_declaration();
     default:
       break;
     }
     return expect_local_declaration("Expected declaration in class body");
+  }
+
+  NodeId parse_class_body_default_declaration() {
+    auto default_token = next();
+    auto decl = parse_class_body_declaration();
+    return m_output.add_node(default_token.loc, DefaultDeclarationNode{decl});
+  }
+
+  NodeId parse_class_body_implicit_declaration() {
+    auto implicit_token = next();
+    auto decl = parse_class_body_declaration();
+    return m_output.add_node(implicit_token.loc, ImplicitDeclarationNode{decl});
   }
 
   NodeId parse_class_body_visibility_declaration() {
@@ -1283,11 +1299,18 @@ public:
       return parse_boolean_literal();
     case TokenType::KEYWORD_THIS:
       return parse_this_literal();
+    case TokenType::KEYWORD_DEFAULT:
+      return parse_default_literal();
     default:
       String err("Expected expression, got token ");
       m_token_formatter.format_token(err, m_token_index);
       throw_parser_error_at_current_location(std::move(err));
     }
+  }
+
+  NodeId parse_default_literal() {
+    auto default_token = next();
+    return m_output.add_node(default_token.loc, DefaultLiteralNode{});
   }
 
   NodeId parse_this_literal() {

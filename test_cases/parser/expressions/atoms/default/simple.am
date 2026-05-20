@@ -1,0 +1,17 @@
+let a: int = default
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(a)
+      ),
+      type=IdentifierNode(
+        token=IDENTIFIER(int)
+      ),
+      expression=DefaultLiteralNode()
+    )
+  ]
+)
+*/
