@@ -352,6 +352,8 @@ public:
       return parse_continue_statement();
     case TokenType::KEYWORD_RETURN:
       return parse_return_statement();
+    case TokenType::KEYWORD_BREAK:
+      return parse_break_statement();
     default:
       break;
     }
@@ -360,6 +362,11 @@ public:
       return decl.value();
     }
     return parse_expression_statement();
+  }
+
+  NodeId parse_break_statement() {
+    auto break_token = next();
+    return m_output.add_node(break_token.loc, BreakStatementNode{});
   }
 
   NodeId parse_implicit_declaration() {

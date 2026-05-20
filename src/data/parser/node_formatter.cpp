@@ -914,8 +914,9 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "expr", n.expr);
     break;
   }
-  default:
-    throw std::runtime_error("Unknown node type");
+  case NodeType::BreakStatementNode: {
+    break;
+  }
   }
   m_current_indent -= 2;
   if (m_fields_printed > 0) {
