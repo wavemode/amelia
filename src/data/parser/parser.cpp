@@ -215,10 +215,18 @@ public:
       return parse_override_declaration();
     case TokenType::KEYWORD_ASYNC:
       return parse_async_declaration();
+    case TokenType::KEYWORD_EXTERN:
+      return parse_extern_declaration();
     default:
       break;
     }
     return None();
+  }
+
+  NodeId parse_extern_declaration() {
+    auto extern_token = next();
+    auto decl = expect_declaration("Expected declaration after 'extern' keyword");
+    return m_output.add_node(extern_token.loc, ExternDeclarationNode{decl});
   }
 
   NodeId parse_async_declaration() {

@@ -871,6 +871,11 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "decl", n.decl);
     break;
   }
+  case NodeType::ExternDeclarationNode: {
+    const auto &n = node.as_ExternDeclarationNode();
+    print_node_field(out, "decl", n.decl);
+    break;
+  }
   default:
     throw std::runtime_error("Unknown node type");
   }

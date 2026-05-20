@@ -690,6 +690,10 @@ struct ModuleDeclarationNode {
   Option<List<NodeId>> decls;
 };
 
+struct ExternDeclarationNode {
+  NodeId decl;
+};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
@@ -853,6 +857,7 @@ struct ModuleDeclarationNode {
   X(ImportItemNode)                                                                                \
   X(ImportItemWildcardNode)                                                                        \
   X(ModuleDeclarationNode)                                                                         \
-  X(AsyncDeclarationNode)
+  X(AsyncDeclarationNode)                                                                          \
+  X(ExternDeclarationNode)
 
 } // namespace amelia

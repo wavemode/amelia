@@ -1,0 +1,20 @@
+extern fun f() {}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ExternDeclarationNode(
+      decl=FunctionDeclarationNode(
+        name=IdentifierNode(
+          token=IDENTIFIER(f)
+        ),
+        signature=FunctionSignatureNode(),
+        body=FunctionBodyNode(
+          is_default=false,
+          is_deleted=false
+        )
+      )
+    )
+  ]
+)
+*/
