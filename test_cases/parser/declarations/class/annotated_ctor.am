@@ -1,0 +1,33 @@
+class A {
+  @anno
+  A() {}
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ClassDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      decls=[
+        AnnotationNode(
+          name=IdentifierNode(
+            token=IDENTIFIER_NO_W(anno)
+          ),
+          stmt=ClassConstructorNode(
+            name=IdentifierNode(
+              token=IDENTIFIER(A)
+            ),
+            signature=FunctionSignatureNode(),
+            body=FunctionBodyNode(
+              is_default=false,
+              is_deleted=false
+            )
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

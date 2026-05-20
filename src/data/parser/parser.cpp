@@ -219,10 +219,20 @@ public:
       return parse_union_declaration();
     case TokenType::KEYWORD_ENUM:
       return parse_enum_declaration();
+    case TokenType::AT:
+      return parse_annotated_declaration();
     default:
       break;
     }
     return None();
+  }
+
+  NodeId parse_annotated_declaration() {
+    auto at_token = next();
+    auto name = parse_annotation_name();
+    auto args = try_parse_annotation_arguments();
+    auto stmt = expect_declaration("Expected declaration after annotation");
+    return m_output.add_node(at_token.loc, AnnotationNode{name, args, stmt});
   }
 
   NodeId parse_enum_declaration() {
@@ -354,6 +364,8 @@ public:
       return parse_return_statement();
     case TokenType::KEYWORD_BREAK:
       return parse_break_statement();
+    case TokenType::AT:
+      return parse_annotated_statement();
     default:
       break;
     }
@@ -362,6 +374,40 @@ public:
       return decl.value();
     }
     return parse_expression_statement();
+  }
+
+  NodeId parse_annotated_statement() {
+    auto at_token = next();
+    auto name = parse_annotation_name();
+    auto args = try_parse_annotation_arguments();
+    auto stmt = parse_statement();
+    return m_output.add_node(at_token.loc, AnnotationNode{name, args, stmt});
+  }
+
+  NodeId parse_annotation_name() {
+    auto token = peek();
+    if (!is_identifier_no_w(token.type)) {
+      throw_parser_error_at_current_location(
+          "Expected identifier immediately after '@' in annotation name"
+      );
+    }
+    return parse_identifier();
+  }
+
+  Option<List<NodeId>> try_parse_annotation_arguments() {
+    if (peek().type == TokenType::LEFT_PAREN_NO_W) {
+      ++m_token_index; // consume the '(' token
+      List<NodeId> args_list;
+      while (peek().type != TokenType::RIGHT_PAREN) {
+        args_list.push_back(parse_function_call_argument());
+        if (peek().type == TokenType::COMMA) {
+          ++m_token_index; // consume the comma
+        }
+      }
+      read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after annotation arguments");
+      return Some(std::move(args_list));
+    }
+    return None();
   }
 
   NodeId parse_break_statement() {
@@ -497,10 +543,20 @@ public:
       return parse_class_body_override_declaration();
     case TokenType::TILDE:
       return parse_destructor_declaration();
+    case TokenType::AT:
+      return parse_class_body_annotated_declaration();
     default:
       break;
     }
     return expect_local_declaration("Expected declaration in class body");
+  }
+
+  NodeId parse_class_body_annotated_declaration() {
+    auto at_token = next();
+    auto name = parse_annotation_name();
+    auto args = try_parse_annotation_arguments();
+    auto stmt = parse_class_body_declaration();
+    return m_output.add_node(at_token.loc, AnnotationNode{name, args, stmt});
   }
 
   NodeId parse_destructor_declaration() {

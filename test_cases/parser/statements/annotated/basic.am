@@ -1,0 +1,30 @@
+let x = {
+  @anno
+  ++y
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x)
+      ),
+      expression=BlockExpressionNode(
+        stmts=[
+          AnnotationNode(
+            name=IdentifierNode(
+              token=IDENTIFIER_NO_W(anno)
+            ),
+            stmt=PreIncrementStatementNode(
+              target=IdentifierNode(
+                token=IDENTIFIER_NO_W(y)
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

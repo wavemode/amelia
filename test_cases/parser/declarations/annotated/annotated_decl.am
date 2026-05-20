@@ -1,0 +1,40 @@
+@anno(a=1, b=2)
+let x = 4
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    AnnotationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER_NO_W(anno)
+      ),
+      args=[
+        NamedFunctionArgumentNode(
+          name=IdentifierNode(
+            token=IDENTIFIER_NO_W(a)
+          ),
+          expr=NumberLiteralNode(
+            lit=NUMBER(1)
+          )
+        ),
+        NamedFunctionArgumentNode(
+          name=IdentifierNode(
+            token=IDENTIFIER(b)
+          ),
+          expr=NumberLiteralNode(
+            lit=NUMBER(2)
+          )
+        )
+      ],
+      stmt=LetDeclarationNode(
+        target=IdentifierNode(
+          token=IDENTIFIER(x)
+        ),
+        expression=NumberLiteralNode(
+          lit=NUMBER(4)
+        )
+      )
+    )
+  ]
+)
+*/

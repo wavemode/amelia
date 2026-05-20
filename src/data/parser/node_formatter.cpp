@@ -920,6 +920,13 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   case NodeType::BreakStatementNode: {
     break;
   }
+  case NodeType::AnnotationNode: {
+    const auto &n = node.as_AnnotationNode();
+    print_node_field(out, "name", n.name);
+    print_node_field(out, "args", n.args);
+    print_node_field(out, "stmt", n.stmt);
+    break;
+  }
   }
   m_current_indent -= 2;
   if (m_fields_printed > 0) {

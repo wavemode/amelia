@@ -1,0 +1,6 @@
+@anno(a=1, b=2)
+x = 4
+
+/* EXPECTED_OUTPUT:
+ERROR("Expected declaration after annotation (at test_cases/parser/declarations/annotated/error_annotated_statement.am:2:1)")
+*/
