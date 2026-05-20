@@ -15,7 +15,6 @@ ModuleNode(
       expression=BlockExpressionNode(
         stmts=[
           ForInStatementNode(
-            introductory_decls=IntroductoryDeclsNode(),
             vars=[
               IdentifierNode(
                 token=IDENTIFIER_NO_W(x)

@@ -62,7 +62,7 @@ public:
     }
   }
 
-  NodeId parse_introductory_decls() {
+  List<NodeId> parse_introductory_decls() {
     auto start_token = peek();
     List<NodeId> decls;
     while (true) {
@@ -75,7 +75,7 @@ public:
         enforce_statement_separator(decls[decls.size() - 2], decls[decls.size() - 1]);
       }
     }
-    return m_output.add_node(start_token.loc, IntroductoryDeclsNode{std::move(decls)});
+    return decls;
   }
 
   void enforce_statement_separator(NodeId left, NodeId right) {
@@ -91,10 +91,9 @@ public:
     }
   }
 
-  void enforce_separator_after_introductory_decls(NodeId decls_node_id, NodeId next_stmt_id) {
-    const auto &decls_node = m_output.get_node(decls_node_id).as_IntroductoryDeclsNode();
-    if (decls_node.decls.size() > 0) {
-      enforce_statement_separator(decls_node.decls[decls_node.decls.size() - 1], next_stmt_id);
+  void enforce_separator_after_introductory_decls(const List<NodeId> &decls, NodeId next_stmt_id) {
+    if (decls.size() > 0) {
+      enforce_statement_separator(decls[decls.size() - 1], next_stmt_id);
     }
   }
 
@@ -486,7 +485,7 @@ public:
     read_token_type(TokenType::RIGHT_BRACE, "Expected '}' to end switch statement body");
     return m_output.add_node(
         switch_token.loc,
-        SwitchStatementNode{introductory_decls, expr, std::move(clauses), default_body}
+        SwitchStatementNode{std::move(introductory_decls), expr, std::move(clauses), default_body}
     );
   }
 
@@ -711,13 +710,13 @@ public:
   NodeId parse_while_statement() {
     auto while_token = next();
     read_left_paren("Expected '(' after 'while' keyword in while statement");
-    NodeId introductory_decls = parse_introductory_decls();
+    List<NodeId> introductory_decls = parse_introductory_decls();
     NodeId condition = parse_expression();
     enforce_separator_after_introductory_decls(introductory_decls, condition);
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after condition in while statement");
     NodeId body = parse_statement();
     return m_output.add_node(
-        while_token.loc, WhileStatementNode{introductory_decls, condition, body}
+        while_token.loc, WhileStatementNode{std::move(introductory_decls), condition, body}
     );
   }
 
@@ -737,7 +736,8 @@ public:
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after iterable in for-in statement");
     NodeId body = parse_statement();
     return m_output.add_node(
-        for_token.loc, ForInStatementNode{introductory_decls, std::move(vars), iterable, body}
+        for_token.loc,
+        ForInStatementNode{std::move(introductory_decls), std::move(vars), iterable, body}
     );
   }
 
@@ -755,7 +755,7 @@ public:
   NodeId parse_if_statement() {
     auto if_token = next();
     read_left_paren("Expected '(' after 'if' keyword in if statement");
-    NodeId introductory_decls = parse_introductory_decls();
+    List<NodeId> introductory_decls = parse_introductory_decls();
     NodeId condition = parse_expression();
     enforce_separator_after_introductory_decls(introductory_decls, condition);
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after condition in if statement");
@@ -766,7 +766,8 @@ public:
       else_branch = parse_statement();
     }
     return m_output.add_node(
-        if_token.loc, IfStatementNode{introductory_decls, condition, then_branch, else_branch}
+        if_token.loc,
+        IfStatementNode{std::move(introductory_decls), condition, then_branch, else_branch}
     );
   }
 
@@ -1427,7 +1428,7 @@ public:
     read_token_type(TokenType::RIGHT_BRACE, "Expected '}' to end switch expression body");
     return m_output.add_node(
         switch_token.loc,
-        SwitchExpressionNode{introductory_decls, expr, std::move(clauses), default_body}
+        SwitchExpressionNode{std::move(introductory_decls), expr, std::move(clauses), default_body}
     );
   }
 
@@ -1440,7 +1441,7 @@ public:
 
   NodeId parse_case_clause_header() {
     auto start_token = peek();
-    Option<NodeId> introductory_decls;
+    Option<List<NodeId>> introductory_decls;
     Option<List<NodeId>> exprs;
     Option<NodeId> when_clause;
 
@@ -1467,7 +1468,8 @@ public:
     }
 
     return m_output.add_node(
-        start_token.loc, CaseClauseHeaderNode{introductory_decls, std::move(exprs), when_clause}
+        start_token.loc,
+        CaseClauseHeaderNode{std::move(introductory_decls), std::move(exprs), when_clause}
     );
   }
 
@@ -1498,7 +1500,7 @@ public:
   NodeId parse_if_expression() {
     auto if_token = next();
     read_left_paren("Expected '(' after 'if'");
-    NodeId introductory_decls = parse_introductory_decls();
+    List<NodeId> introductory_decls = parse_introductory_decls();
     NodeId condition = parse_expression();
     enforce_separator_after_introductory_decls(introductory_decls, condition);
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after condition in 'if' expression");
@@ -1508,7 +1510,8 @@ public:
     );
     NodeId else_branch = parse_expression();
     return m_output.add_node(
-        if_token.loc, IfExpressionNode{introductory_decls, condition, then_branch, else_branch}
+        if_token.loc,
+        IfExpressionNode{std::move(introductory_decls), condition, then_branch, else_branch}
     );
   }
 

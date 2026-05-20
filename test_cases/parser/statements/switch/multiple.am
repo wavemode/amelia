@@ -15,14 +15,12 @@ ModuleNode(
       expression=BlockExpressionNode(
         stmts=[
           SwitchStatementNode(
-            introductory_decls=IntroductoryDeclsNode(),
             expr=IdentifierNode(
               token=IDENTIFIER_NO_W(y)
             ),
             clauses=[
               CaseClauseNode(
                 header=CaseClauseHeaderNode(
-                  introductory_decls=IntroductoryDeclsNode(),
                   exprs=[
                     NumberLiteralNode(
                       lit=NUMBER(1)
@@ -37,7 +35,6 @@ ModuleNode(
               ),
               CaseClauseNode(
                 header=CaseClauseHeaderNode(
-                  introductory_decls=IntroductoryDeclsNode(),
                   exprs=[
                     NumberLiteralNode(
                       lit=NUMBER(3)

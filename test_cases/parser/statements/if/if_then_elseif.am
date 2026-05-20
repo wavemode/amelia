@@ -16,7 +16,6 @@ ModuleNode(
       expression=BlockExpressionNode(
         stmts=[
           IfStatementNode(
-            introductory_decls=IntroductoryDeclsNode(),
             condition=IdentifierNode(
               token=IDENTIFIER_NO_W(x)
             ),
@@ -30,7 +29,6 @@ ModuleNode(
               ]
             ),
             else_branch=IfStatementNode(
-              introductory_decls=IntroductoryDeclsNode(),
               condition=IdentifierNode(
                 token=IDENTIFIER_NO_W(z)
               ),

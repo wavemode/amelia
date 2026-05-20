@@ -21,42 +21,40 @@ ModuleNode(
       expression=BlockExpressionNode(
         stmts=[
           IfStatementNode(
-            introductory_decls=IntroductoryDeclsNode(
-              decls=[
-                TypeDeclarationNode(
-                  name=IdentifierNode(
-                    token=IDENTIFIER(T)
-                  ),
-                  type_expr=IdentifierNode(
-                    token=IDENTIFIER(int)
-                  )
+            introductory_decls=[
+              TypeDeclarationNode(
+                name=IdentifierNode(
+                  token=IDENTIFIER(T)
                 ),
-                LetDeclarationNode(
-                  target=IdentifierNode(
+                type_expr=IdentifierNode(
+                  token=IDENTIFIER(int)
+                )
+              ),
+              LetDeclarationNode(
+                target=IdentifierNode(
+                  token=IDENTIFIER(w)
+                ),
+                type=IdentifierNode(
+                  token=IDENTIFIER(T)
+                ),
+                expression=NumberLiteralNode(
+                  lit=NUMBER(10)
+                )
+              ),
+              ConstDeclarationNode(
+                target=IdentifierNode(
+                  token=IDENTIFIER(x)
+                ),
+                expression=AddExpressionNode(
+                  left=IdentifierNode(
                     token=IDENTIFIER(w)
                   ),
-                  type=IdentifierNode(
-                    token=IDENTIFIER(T)
-                  ),
-                  expression=NumberLiteralNode(
-                    lit=NUMBER(10)
-                  )
-                ),
-                ConstDeclarationNode(
-                  target=IdentifierNode(
-                    token=IDENTIFIER(x)
-                  ),
-                  expression=AddExpressionNode(
-                    left=IdentifierNode(
-                      token=IDENTIFIER(w)
-                    ),
-                    right=NumberLiteralNode(
-                      lit=NUMBER(5)
-                    )
+                  right=NumberLiteralNode(
+                    lit=NUMBER(5)
                   )
                 )
-              ]
-            ),
+              )
+            ],
             condition=GreaterExpressionNode(
               left=IdentifierNode(
                 token=IDENTIFIER(x)

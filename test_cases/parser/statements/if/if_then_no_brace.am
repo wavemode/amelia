@@ -13,7 +13,6 @@ ModuleNode(
       expression=BlockExpressionNode(
         stmts=[
           IfStatementNode(
-            introductory_decls=IntroductoryDeclsNode(),
             condition=IdentifierNode(
               token=IDENTIFIER_NO_W(x)
             ),

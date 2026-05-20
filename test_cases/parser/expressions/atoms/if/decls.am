@@ -13,31 +13,29 @@ ModuleNode(
         token=IDENTIFIER(a)
       ),
       expression=IfExpressionNode(
-        introductory_decls=IntroductoryDeclsNode(
-          decls=[
-            LetDeclarationNode(
-              target=IdentifierNode(
+        introductory_decls=[
+          LetDeclarationNode(
+            target=IdentifierNode(
+              token=IDENTIFIER(w)
+            ),
+            expression=NumberLiteralNode(
+              lit=NUMBER(10)
+            )
+          ),
+          ConstDeclarationNode(
+            target=IdentifierNode(
+              token=IDENTIFIER(x)
+            ),
+            expression=AddExpressionNode(
+              left=IdentifierNode(
                 token=IDENTIFIER(w)
               ),
-              expression=NumberLiteralNode(
-                lit=NUMBER(10)
-              )
-            ),
-            ConstDeclarationNode(
-              target=IdentifierNode(
-                token=IDENTIFIER(x)
-              ),
-              expression=AddExpressionNode(
-                left=IdentifierNode(
-                  token=IDENTIFIER(w)
-                ),
-                right=NumberLiteralNode(
-                  lit=NUMBER(5)
-                )
+              right=NumberLiteralNode(
+                lit=NUMBER(5)
               )
             )
-          ]
-        ),
+          )
+        ],
         condition=GreaterExpressionNode(
           left=IdentifierNode(
             token=IDENTIFIER(x)

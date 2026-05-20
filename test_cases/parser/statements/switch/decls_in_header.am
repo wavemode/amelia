@@ -19,38 +19,35 @@ ModuleNode(
       expression=BlockExpressionNode(
         stmts=[
           SwitchStatementNode(
-            introductory_decls=IntroductoryDeclsNode(
-              decls=[
-                LetDeclarationNode(
-                  target=IdentifierNode(
-                    token=IDENTIFIER(z)
-                  ),
-                  expression=NumberLiteralNode(
-                    lit=NUMBER(10)
-                  )
+            introductory_decls=[
+              LetDeclarationNode(
+                target=IdentifierNode(
+                  token=IDENTIFIER(z)
                 ),
-                ConstDeclarationNode(
-                  target=IdentifierNode(
-                    token=IDENTIFIER(y)
+                expression=NumberLiteralNode(
+                  lit=NUMBER(10)
+                )
+              ),
+              ConstDeclarationNode(
+                target=IdentifierNode(
+                  token=IDENTIFIER(y)
+                ),
+                expression=AddExpressionNode(
+                  left=IdentifierNode(
+                    token=IDENTIFIER(x)
                   ),
-                  expression=AddExpressionNode(
-                    left=IdentifierNode(
-                      token=IDENTIFIER(x)
-                    ),
-                    right=IdentifierNode(
-                      token=IDENTIFIER(z)
-                    )
+                  right=IdentifierNode(
+                    token=IDENTIFIER(z)
                   )
                 )
-              ]
-            ),
+              )
+            ],
             expr=IdentifierNode(
               token=IDENTIFIER(y)
             ),
             clauses=[
               CaseClauseNode(
                 header=CaseClauseHeaderNode(
-                  introductory_decls=IntroductoryDeclsNode(),
                   exprs=[
                     NumberLiteralNode(
                       lit=NUMBER(1)
@@ -65,7 +62,6 @@ ModuleNode(
               ),
               CaseClauseNode(
                 header=CaseClauseHeaderNode(
-                  introductory_decls=IntroductoryDeclsNode(),
                   exprs=[
                     NumberLiteralNode(
                       lit=NUMBER(3)

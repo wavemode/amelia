@@ -675,11 +675,6 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "type_expr", n.type_expr);
     break;
   }
-  case NodeType::IntroductoryDeclsNode: {
-    const auto &n = node.as_IntroductoryDeclsNode();
-    print_node_field(out, "decls", n.decls);
-    break;
-  }
   case NodeType::ClassStaticDeclarationNode: {
     const auto &n = node.as_ClassStaticDeclarationNode();
     print_node_field(out, "decl", n.decl);
