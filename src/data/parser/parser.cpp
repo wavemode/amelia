@@ -1304,12 +1304,17 @@ public:
     } else if (next_token.type == TokenType::AMPERSAND) {
       ++m_token_index; // consume the '&' operator
       bool is_const = false;
-      if (peek().type == TokenType::KEYWORD_CONST) {
+      bool is_move = false;
+      auto next_next_token = peek();
+      if (next_token.type == TokenType::KEYWORD_CONST) {
         is_const = true;
         ++m_token_index; // consume the 'const' keyword
+      } else if (next_next_token.type == TokenType::KEYWORD_MOVE) {
+        is_move = true;
+        ++m_token_index; // consume the 'move' keyword
       }
       NodeId expr = parse_descend_expr_await_ref_copy_move_inline();
-      return m_output.add_node(start_location, RefExpressionNode{is_const, expr});
+      return m_output.add_node(start_location, RefExpressionNode{is_const, is_move, expr});
     } else if (next_token.type == TokenType::KEYWORD_INLINE) {
       ++m_token_index; // consume the 'inline' keyword
       NodeId expr = parse_descend_expr_await_ref_copy_move_inline();
@@ -1420,12 +1425,17 @@ public:
     } else if (next_token.type == TokenType::AMPERSAND) {
       ++m_token_index; // consume the '&' operator
       bool is_const = false;
-      if (peek().type == TokenType::KEYWORD_CONST) {
+      bool is_move = false;
+      auto next_token = peek();
+      if (next_token.type == TokenType::KEYWORD_CONST) {
         is_const = true;
         ++m_token_index; // consume the 'const' keyword
+      } else if (next_token.type == TokenType::KEYWORD_MOVE) {
+        is_move = true;
+        ++m_token_index; // consume the 'move' keyword
       }
       NodeId expr = parse_type_expression();
-      left = m_output.add_node(start_location, RefExpressionNode{is_const, expr});
+      left = m_output.add_node(start_location, RefExpressionNode{is_const, is_move, expr});
     } else if (next_token.type == TokenType::EXCLAM || next_token.type == TokenType::EXCLAM_NO_W) {
       ++m_token_index; // consume the '!' operator
       NodeId expr = parse_type_expression();

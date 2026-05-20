@@ -1,4 +1,4 @@
-let x : &[T]
+let x : &const int
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
@@ -8,14 +8,10 @@ ModuleNode(
         token=IDENTIFIER(x)
       ),
       type=RefExpressionNode(
-        is_const=false,
+        is_const=true,
         is_move=false,
-        expr=BracketExpressionNode(
-          exprs=[
-            IdentifierNode(
-              token=IDENTIFIER_NO_W(T)
-            )
-          ]
+        expr=PrimitiveTypeNode(
+          token=KEYWORD_INT(int)
         )
       )
     )

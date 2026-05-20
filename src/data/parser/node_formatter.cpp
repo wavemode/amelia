@@ -264,6 +264,7 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   case NodeType::RefExpressionNode: {
     const auto &n = node.as_RefExpressionNode();
     print_field(out, "is_const", n.is_const);
+    print_field(out, "is_move", n.is_move);
     print_node_field(out, "expr", n.expr);
     break;
   }
