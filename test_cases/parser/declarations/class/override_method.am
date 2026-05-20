@@ -27,7 +27,7 @@ ModuleNode(
                       token=IDENTIFIER(println)
                     ),
                     args=[
-                      PositionalFunctionArgumentNode(
+                      FunctionArgumentNode(
                         expr=FieldAccessExpressionNode(
                           object=ThisLiteralNode(),
                           field=IdentifierNode(

@@ -421,12 +421,8 @@ struct IndexingExpressionNode {
   NodeId index;
 };
 
-struct PositionalFunctionArgumentNode {
-  NodeId expr;
-};
-
-struct NamedFunctionArgumentNode {
-  NodeId name;
+struct FunctionArgumentNode {
+  Option<NodeId> name;
   NodeId expr;
 };
 
@@ -789,8 +785,7 @@ struct BreakStatementNode {};
   X(FieldAccessExpressionNode)                                                                     \
   X(NumericFieldAccessExpressionNode)                                                              \
   X(IndexingExpressionNode)                                                                        \
-  X(PositionalFunctionArgumentNode)                                                                \
-  X(NamedFunctionArgumentNode)                                                                     \
+  X(FunctionArgumentNode)                                                                          \
   X(FunctionCallExpressionNode)                                                                    \
   X(ScopeResolutionExpressionNode)                                                                 \
   X(PreIncrementStatementNode)                                                                     \

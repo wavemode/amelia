@@ -12,7 +12,7 @@ ModuleNode(
           token=IDENTIFIER(y)
         ),
         args=[
-          NamedFunctionArgumentNode(
+          FunctionArgumentNode(
             name=IdentifierNode(
               token=IDENTIFIER_NO_W(a)
             ),

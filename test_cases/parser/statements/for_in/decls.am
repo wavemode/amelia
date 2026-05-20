@@ -52,7 +52,7 @@ ModuleNode(
                     )
                   ),
                   args=[
-                    PositionalFunctionArgumentNode(
+                    FunctionArgumentNode(
                       expr=LambdaExpressionNode(
                         parameters=[
                           IdentifierNode(

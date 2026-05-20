@@ -45,7 +45,7 @@ ModuleNode(
                   token=IDENTIFIER(print)
                 ),
                 args=[
-                  PositionalFunctionArgumentNode(
+                  FunctionArgumentNode(
                     expr=StringLiteralNode(
                       lit=STRING_LITERAL("hello, world!")
                     )
@@ -59,7 +59,7 @@ ModuleNode(
                   token=IDENTIFIER(print)
                 ),
                 args=[
-                  PositionalFunctionArgumentNode(
+                  FunctionArgumentNode(
                     expr=StringLiteralNode(
                       lit=STRING_LITERAL("goodbye, world...")
                     )

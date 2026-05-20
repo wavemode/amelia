@@ -2087,10 +2087,7 @@ public:
       ++m_token_index; // consume the '=' token
     }
     NodeId expr = parse_expression();
-    if (name.has_value()) {
-      return m_output.add_node(next_token.loc, NamedFunctionArgumentNode{name.value(), expr});
-    }
-    return m_output.add_node(next_token.loc, PositionalFunctionArgumentNode{expr});
+    return m_output.add_node(next_token.loc, FunctionArgumentNode{name, expr});
   }
 
 private:

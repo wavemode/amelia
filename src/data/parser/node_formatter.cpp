@@ -322,13 +322,8 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "index", n.index);
     break;
   }
-  case NodeType::PositionalFunctionArgumentNode: {
-    const auto &n = node.as_PositionalFunctionArgumentNode();
-    print_node_field(out, "expr", n.expr);
-    break;
-  }
-  case NodeType::NamedFunctionArgumentNode: {
-    const auto &n = node.as_NamedFunctionArgumentNode();
+  case NodeType::FunctionArgumentNode: {
+    const auto &n = node.as_FunctionArgumentNode();
     print_node_field(out, "name", n.name);
     print_node_field(out, "expr", n.expr);
     break;

@@ -13,7 +13,7 @@ ModuleNode(
             token=IDENTIFIER_NO_W(y)
           ),
           args=[
-            PositionalFunctionArgumentNode(
+            FunctionArgumentNode(
               expr=IdentifierNode(
                 token=IDENTIFIER_NO_W(z)
               )

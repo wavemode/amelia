@@ -50,7 +50,7 @@ ModuleNode(
                   token=IDENTIFIER(println)
                 ),
                 args=[
-                  PositionalFunctionArgumentNode(
+                  FunctionArgumentNode(
                     expr=StringLiteralNode(
                       lit=STRING_LITERAL("hi")
                     )

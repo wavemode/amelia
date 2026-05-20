@@ -28,12 +28,12 @@ ModuleNode(
                       token=IDENTIFIER(println)
                     ),
                     args=[
-                      PositionalFunctionArgumentNode(
+                      FunctionArgumentNode(
                         expr=StringLiteralNode(
                           lit=STRING_LITERAL("I am ")
                         )
                       ),
-                      PositionalFunctionArgumentNode(
+                      FunctionArgumentNode(
                         expr=FieldAccessExpressionNode(
                           object=ParenthesizedExpressionNode(
                             exprs=[
@@ -47,7 +47,7 @@ ModuleNode(
                           )
                         )
                       ),
-                      PositionalFunctionArgumentNode(
+                      FunctionArgumentNode(
                         expr=StringLiteralNode(
                           lit=STRING_LITERAL(" years old")
                         )

@@ -9,7 +9,7 @@ ModuleNode(
         token=IDENTIFIER_NO_W(anno)
       ),
       args=[
-        NamedFunctionArgumentNode(
+        FunctionArgumentNode(
           name=IdentifierNode(
             token=IDENTIFIER_NO_W(a)
           ),
@@ -17,7 +17,7 @@ ModuleNode(
             lit=NUMBER(1)
           )
         ),
-        NamedFunctionArgumentNode(
+        FunctionArgumentNode(
           name=IdentifierNode(
             token=IDENTIFIER(b)
           ),
