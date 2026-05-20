@@ -206,10 +206,28 @@ public:
       return parse_operator_function_declaration();
     case TokenType::SEMICOLON:
       return parse_empty_statement();
+    case TokenType::KEYWORD_CONCEPT:
+      return parse_concept_declaration();
+    case TokenType::KEYWORD_OPEN:
+      return parse_open_declaration();
+    case TokenType::KEYWORD_OVERRIDE:
+      return parse_override_declaration();
     default:
       break;
     }
     return None();
+  }
+
+  NodeId parse_override_declaration() {
+    auto override_token = next();
+    NodeId decl = expect_declaration("Expected declaration after 'override' keyword");
+    return m_output.add_node(override_token.loc, OverrideDeclarationNode{decl});
+  }
+
+  NodeId parse_open_declaration() {
+    auto open_token = next();
+    auto decl = expect_declaration("Expected declaration after 'open' keyword");
+    return m_output.add_node(open_token.loc, OpenDeclarationNode{decl});
   }
 
   NodeId parse_module_declaration() {
@@ -286,13 +304,7 @@ public:
   NodeId parse_implicit_declaration() {
     auto implicit_token = next();
     auto next_token = peek();
-    if (next_token.type != TokenType::KEYWORD_LET && next_token.type != TokenType::KEYWORD_CONST &&
-        next_token.type != TokenType::KEYWORD_FUN) {
-      throw_parser_error_at_current_location(
-          "Expected 'let', 'const', or 'fun' declaration after 'implicit' keyword"
-      );
-    }
-    NodeId decl = try_parse_declaration().value();
+    NodeId decl = expect_declaration("Expected declaration after 'implicit' keyword");
     return m_output.add_node(implicit_token.loc, ImplicitDeclarationNode{decl});
   }
 
@@ -310,6 +322,33 @@ public:
     auto local_token = next();
     NodeId decl = expect_declaration("Expected declaration after 'local' keyword");
     return m_output.add_node(local_token.loc, VisibilityNode{DeclarationVisibility::Local, decl});
+  }
+
+  NodeId parse_concept_declaration() {
+    auto concept_token = next();
+    auto name = expect_identifier("Expected concept name after 'concept' keyword");
+    Option<NodeId> generic_parameter_list = try_parse_generic_parameter_list();
+    Option<NodeId> base_concept_list = try_parse_base_class_list();
+    Option<NodeId> implicit_parameter_list = try_parse_implicit_parameter_list();
+    read_token_type(TokenType::LEFT_BRACE, "Expected '{' to start concept body");
+    List<NodeId> decls;
+    while (peek().type != TokenType::RIGHT_BRACE) {
+      decls.push_back(parse_class_body_declaration());
+      if (decls.size() > 1) {
+        enforce_statement_separator(decls[decls.size() - 2], decls[decls.size() - 1]);
+      }
+    }
+    read_token_type(TokenType::RIGHT_BRACE, "Expected '}' to end concept body");
+    return m_output.add_node(
+        concept_token.loc,
+        ConceptDeclarationNode{
+            name,
+            generic_parameter_list,
+            base_concept_list,
+            implicit_parameter_list,
+            std::move(decls)
+        }
+    );
   }
 
   NodeId parse_class_declaration() {
@@ -1398,6 +1437,7 @@ public:
     case TokenType::KEYWORD_USIZE:
     case TokenType::KEYWORD_FLOAT:
     case TokenType::KEYWORD_DOUBLE:
+    case TokenType::KEYWORD_NULL:
       return parse_primitive_type();
     case TokenType::KEYWORD_AUTO:
       return parse_auto_type();

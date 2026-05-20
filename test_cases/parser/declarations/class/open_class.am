@@ -1,0 +1,15 @@
+open class A {}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    OpenDeclarationNode(
+      decl=ClassDeclarationNode(
+        name=IdentifierNode(
+          token=IDENTIFIER(A)
+        )
+      )
+    )
+  ]
+)
+*/

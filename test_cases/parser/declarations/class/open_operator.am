@@ -1,0 +1,44 @@
+class A {
+  open operator+= (other)
+
+  a: int
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ClassDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      decls=[
+        OpenDeclarationNode(
+          decl=OperatorFunctionDeclarationNode(
+            operator_ident=OperatorIdentifierNode(
+              op=OperatorIdentAddAssignNode()
+            ),
+            signature=FunctionSignatureNode(
+              parameters=[
+                FunctionParameterNode(
+                  variadic=false,
+                  name=IdentifierNode(
+                    token=IDENTIFIER_NO_W(other)
+                  )
+                )
+              ]
+            )
+          )
+        ),
+        ClassFieldNode(
+          name=IdentifierNode(
+            token=IDENTIFIER(a)
+          ),
+          type=PrimitiveTypeNode(
+            token=KEYWORD_INT(int)
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

@@ -715,6 +715,15 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "decls", n.decls);
     break;
   }
+  case NodeType::ConceptDeclarationNode: {
+    const auto &n = node.as_ConceptDeclarationNode();
+    print_node_field(out, "name", n.name);
+    print_node_field(out, "generic_parameter_list", n.generic_parameter_list);
+    print_node_field(out, "base_concept_list", n.base_concept_list);
+    print_node_field(out, "implicit_parameter_list", n.implicit_parameter_list);
+    print_node_field(out, "decls", n.decls);
+    break;
+  }
   case NodeType::GenericParameterNode: {
     const auto &n = node.as_GenericParameterNode();
     print_field(out, "is_const", n.is_const);
@@ -801,6 +810,16 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   }
   case NodeType::ImplicitDeclarationNode: {
     const auto &n = node.as_ImplicitDeclarationNode();
+    print_node_field(out, "decl", n.decl);
+    break;
+  }
+  case NodeType::OpenDeclarationNode: {
+    const auto &n = node.as_OpenDeclarationNode();
+    print_node_field(out, "decl", n.decl);
+    break;
+  }
+  case NodeType::OverrideDeclarationNode: {
+    const auto &n = node.as_OverrideDeclarationNode();
     print_node_field(out, "decl", n.decl);
     break;
   }

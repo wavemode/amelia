@@ -570,6 +570,14 @@ struct ClassDeclarationNode {
   List<NodeId> decls;
 };
 
+struct ConceptDeclarationNode {
+  NodeId name;
+  Option<NodeId> generic_parameter_list;
+  Option<NodeId> base_concept_list;
+  Option<NodeId> implicit_parameter_list;
+  List<NodeId> decls;
+};
+
 struct GenericParameterNode {
   bool is_const;
   NodeId name;
@@ -625,6 +633,14 @@ struct MoveExpressionNode {
 };
 
 struct ImplicitDeclarationNode {
+  NodeId decl;
+};
+
+struct OpenDeclarationNode {
+  NodeId decl;
+};
+
+struct OverrideDeclarationNode {
   NodeId decl;
 };
 
@@ -801,6 +817,7 @@ struct ModuleDeclarationNode {
   X(ClassMoveDeclarationNode)                                                                      \
   X(ClassFieldNode)                                                                                \
   X(ClassDeclarationNode)                                                                          \
+  X(ConceptDeclarationNode)                                                                        \
   X(BooleanLiteralNode)                                                                            \
   X(ThisLiteralNode)                                                                               \
   X(ThisTypeNode)                                                                                  \
@@ -817,6 +834,8 @@ struct ModuleDeclarationNode {
   X(CopyCtorNameNode)                                                                              \
   X(MoveCtorNameNode)                                                                              \
   X(ImplicitDeclarationNode)                                                                       \
+  X(OpenDeclarationNode)                                                                           \
+  X(OverrideDeclarationNode)                                                                       \
   X(DefaultDeclarationNode)                                                                        \
   X(DefaultLiteralNode)                                                                            \
   X(PrimitiveTypeNode)                                                                             \
