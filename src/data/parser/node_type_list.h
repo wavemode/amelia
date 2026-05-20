@@ -601,6 +601,8 @@ struct BooleanLiteralNode {
 
 struct ThisLiteralNode {};
 
+struct SuperLiteralNode {};
+
 struct SelfTypeNode {};
 
 struct CopyCtorNameNode {};
@@ -866,6 +868,7 @@ struct BreakStatementNode {};
   X(ConceptDeclarationNode)                                                                        \
   X(BooleanLiteralNode)                                                                            \
   X(ThisLiteralNode)                                                                               \
+  X(SuperLiteralNode)                                                                              \
   X(SelfTypeNode)                                                                                  \
   X(BaseTypeListNode)                                                                              \
   X(ClassConstructorNode)                                                                          \

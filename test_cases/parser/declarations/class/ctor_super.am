@@ -1,0 +1,88 @@
+class A : B {
+  A() {
+    super()
+  }
+
+  A(a: int) {
+    super[B](a)
+  }
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ClassDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      base_class_list=BaseTypeListNode(
+        base_classes=[
+          IdentifierNode(
+            token=IDENTIFIER(B)
+          )
+        ]
+      ),
+      decls=[
+        ClassConstructorNode(
+          name=IdentifierNode(
+            token=IDENTIFIER(A)
+          ),
+          signature=FunctionSignatureNode(),
+          body=FunctionBodyNode(
+            stmts=[
+              ExpressionStatementNode(
+                expr=FunctionCallExpressionNode(
+                  callee=SuperLiteralNode()
+                )
+              )
+            ],
+            is_default=false,
+            is_deleted=false
+          )
+        ),
+        ClassConstructorNode(
+          name=IdentifierNode(
+            token=IDENTIFIER(A)
+          ),
+          signature=FunctionSignatureNode(
+            parameters=[
+              FunctionParameterNode(
+                variadic=false,
+                name=IdentifierNode(
+                  token=IDENTIFIER_NO_W(a)
+                ),
+                type=PrimitiveTypeNode(
+                  token=KEYWORD_INT(int)
+                )
+              )
+            ]
+          ),
+          body=FunctionBodyNode(
+            stmts=[
+              ExpressionStatementNode(
+                expr=FunctionCallExpressionNode(
+                  callee=IndexingExpressionNode(
+                    object=SuperLiteralNode(),
+                    index=IdentifierNode(
+                      token=IDENTIFIER_NO_W(B)
+                    )
+                  ),
+                  args=[
+                    PositionalFunctionArgumentNode(
+                      expr=IdentifierNode(
+                        token=IDENTIFIER_NO_W(a)
+                      )
+                    )
+                  ]
+                )
+              )
+            ],
+            is_default=false,
+            is_deleted=false
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

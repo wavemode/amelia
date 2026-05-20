@@ -767,6 +767,9 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   case NodeType::ThisLiteralNode: {
     break;
   }
+  case NodeType::SuperLiteralNode: {
+    break;
+  }
   case NodeType::SelfTypeNode: {
     break;
   }

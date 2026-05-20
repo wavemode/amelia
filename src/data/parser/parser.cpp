@@ -1539,6 +1539,8 @@ public:
       return parse_boolean_literal();
     case TokenType::KEYWORD_THIS:
       return parse_this_literal();
+    case TokenType::KEYWORD_SUPER:
+      return parse_super_literal();
     case TokenType::KEYWORD_DEFAULT:
       return parse_default_literal();
     case TokenType::KEYWORD_BOOL:
@@ -1582,6 +1584,11 @@ public:
   NodeId parse_this_literal() {
     auto this_token = next();
     return m_output.add_node(this_token.loc, ThisLiteralNode{});
+  }
+
+  NodeId parse_super_literal() {
+    auto super_token = next();
+    return m_output.add_node(super_token.loc, SuperLiteralNode{});
   }
 
   NodeId parse_this_type() {
