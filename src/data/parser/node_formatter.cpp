@@ -121,9 +121,15 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   }
   case NodeType::CaseClauseNode: {
     const auto &n = node.as_CaseClauseNode();
+    print_node_field(out, "header", n.header);
+    print_node_field(out, "body", n.body);
+    break;
+  }
+  case NodeType::CaseClauseHeaderNode: {
+    const auto &n = node.as_CaseClauseHeaderNode();
     print_node_field(out, "introductory_decls", n.introductory_decls);
     print_node_field(out, "exprs", n.exprs);
-    print_node_field(out, "body", n.body);
+    print_node_field(out, "when_clause", n.when_clause);
     break;
   }
   case NodeType::SwitchExpressionNode: {
@@ -793,6 +799,29 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   }
   out.append(')');
   m_fields_printed = previous_fields_printed;
+}
+
+void NodeFormatter::print_node_field(
+    AbstractString &out, Text name, const List<NodeId> &nodes_value
+) {
+  if (nodes_value.size() == 0)
+    return;
+  open_line(out);
+  out.append(name);
+  out.append("=[");
+  int old_fields_printed = m_fields_printed;
+  m_fields_printed = 0;
+  m_current_indent += 2;
+  for (size_t i = 0; i < nodes_value.size(); ++i) {
+    open_line(out);
+    format_node(out, nodes_value[i]);
+  }
+  m_current_indent -= 2;
+  if (m_fields_printed > 0) {
+    open_line(out, false);
+  }
+  out.append(']');
+  m_fields_printed = old_fields_printed;
 }
 
 void NodeFormatter::print_node_field(

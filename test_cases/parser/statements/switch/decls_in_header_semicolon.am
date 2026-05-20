@@ -47,12 +47,14 @@ ModuleNode(
             ),
             clauses=[
               CaseClauseNode(
-                introductory_decls=IntroductoryDeclsNode(),
-                exprs=[
-                  NumberLiteralNode(
-                    lit=NUMBER(1)
-                  )
-                ],
+                header=CaseClauseHeaderNode(
+                  introductory_decls=IntroductoryDeclsNode(),
+                  exprs=[
+                    NumberLiteralNode(
+                      lit=NUMBER(1)
+                    )
+                  ]
+                ),
                 body=PreIncrementStatementNode(
                   target=IdentifierNode(
                     token=IDENTIFIER_NO_W(x)
@@ -60,12 +62,14 @@ ModuleNode(
                 )
               ),
               CaseClauseNode(
-                introductory_decls=IntroductoryDeclsNode(),
-                exprs=[
-                  NumberLiteralNode(
-                    lit=NUMBER(3)
-                  )
-                ],
+                header=CaseClauseHeaderNode(
+                  introductory_decls=IntroductoryDeclsNode(),
+                  exprs=[
+                    NumberLiteralNode(
+                      lit=NUMBER(3)
+                    )
+                  ]
+                ),
                 body=PreIncrementStatementNode(
                   target=IdentifierNode(
                     token=IDENTIFIER_NO_W(y)

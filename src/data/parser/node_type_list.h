@@ -257,9 +257,14 @@ struct TryStatementNode {
 };
 
 struct CaseClauseNode {
-  NodeId introductory_decls;
-  List<NodeId> exprs;
+  NodeId header;
   NodeId body;
+};
+
+struct CaseClauseHeaderNode {
+  Option<NodeId> introductory_decls;
+  Option<List<NodeId>> exprs;
+  Option<NodeId> when_clause;
 };
 
 struct SwitchExpressionNode {
@@ -639,6 +644,7 @@ struct ImplicitDeclarationNode {
   X(TryExpressionNode)                                                                             \
   X(TryStatementNode)                                                                              \
   X(CaseClauseNode)                                                                                \
+  X(CaseClauseHeaderNode)                                                                          \
   X(SwitchExpressionNode)                                                                          \
   X(SwitchStatementNode)                                                                           \
   X(OrExpressionNode)                                                                              \
@@ -717,7 +723,7 @@ struct ImplicitDeclarationNode {
   X(OperatorIdentFuncallNode)                                                                      \
   X(OperatorIdentCopyAssignNode)                                                                   \
   X(OperatorIdentMoveAssignNode)                                                                   \
-  X(OperatorIdentIxAssignNode) \
+  X(OperatorIdentIxAssignNode)                                                                     \
   X(OperatorIdentAsNode)                                                                           \
   X(OperatorFunctionDeclarationNode)                                                               \
   X(OperatorIdentifierNode)                                                                        \

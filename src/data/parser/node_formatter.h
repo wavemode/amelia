@@ -17,6 +17,8 @@ public:
   void format_node(AbstractString &out, NodeId node_id);
 
 private:
+  void print_node_field(AbstractString &out, Text name, const List<NodeId> &nodes_value);
+
   void print_node_field(AbstractString &out, Text name, const Option<List<NodeId>> &nodes);
 
   void print_node_field(AbstractString &out, Text name, Option<NodeId> node_id);

@@ -1,7 +1,7 @@
 let example = {
   switch(y) {
     case (1) ++x
-    case (3) ++y
+    case (3) when (z==2) ++y
   }
 }
 
@@ -42,7 +42,15 @@ ModuleNode(
                     NumberLiteralNode(
                       lit=NUMBER(3)
                     )
-                  ]
+                  ],
+                  when_clause=EqualsExpressionNode(
+                    left=IdentifierNode(
+                      token=IDENTIFIER_NO_W(z)
+                    ),
+                    right=NumberLiteralNode(
+                      lit=NUMBER(2)
+                    )
+                  )
                 ),
                 body=PreIncrementStatementNode(
                   target=IdentifierNode(

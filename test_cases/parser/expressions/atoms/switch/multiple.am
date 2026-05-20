@@ -17,26 +17,30 @@ ModuleNode(
         ),
         clauses=[
           CaseClauseNode(
-            introductory_decls=IntroductoryDeclsNode(),
-            exprs=[
-              NumberLiteralNode(
-                lit=NUMBER(1)
-              )
-            ],
+            header=CaseClauseHeaderNode(
+              introductory_decls=IntroductoryDeclsNode(),
+              exprs=[
+                NumberLiteralNode(
+                  lit=NUMBER(1)
+                )
+              ]
+            ),
             body=NumberLiteralNode(
               lit=NUMBER(2)
             )
           ),
           CaseClauseNode(
-            introductory_decls=IntroductoryDeclsNode(),
-            exprs=[
-              NumberLiteralNode(
-                lit=NUMBER(3)
-              ),
-              NumberLiteralNode(
-                lit=NUMBER(4)
-              )
-            ],
+            header=CaseClauseHeaderNode(
+              introductory_decls=IntroductoryDeclsNode(),
+              exprs=[
+                NumberLiteralNode(
+                  lit=NUMBER(3)
+                ),
+                NumberLiteralNode(
+                  lit=NUMBER(4)
+                )
+              ]
+            ),
             body=NumberLiteralNode(
               lit=NUMBER(5)
             )

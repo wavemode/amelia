@@ -492,21 +492,9 @@ public:
 
   NodeId parse_switch_statement_case_clause() {
     auto case_token = next();
-    read_left_paren("Expected '(' after 'case'");
-    NodeId introductory_decls = parse_introductory_decls();
-    List<NodeId> exprs;
-    do {
-      exprs.push_back(parse_expression());
-      if (peek().type == TokenType::COMMA) {
-        ++m_token_index; // consume the comma
-      }
-    } while (peek().type != TokenType::RIGHT_PAREN);
-    enforce_separator_after_introductory_decls(introductory_decls, exprs[0]);
-    ++m_token_index; // consume the right paren
+    NodeId header = parse_case_clause_header();
     NodeId body = parse_statement();
-    return m_output.add_node(
-        case_token.loc, CaseClauseNode{introductory_decls, std::move(exprs), body}
-    );
+    return m_output.add_node(case_token.loc, CaseClauseNode{header, body});
   }
 
   NodeId parse_type_declaration() {
@@ -1445,20 +1433,41 @@ public:
 
   NodeId parse_switch_expression_case_clause() {
     auto case_token = next();
-    read_left_paren("Expected '(' after 'case'");
-    NodeId introductory_decls = parse_introductory_decls();
-    List<NodeId> exprs;
-    do {
-      exprs.push_back(parse_expression());
-      if (peek().type == TokenType::COMMA) {
-        ++m_token_index; // consume the comma
-      }
-    } while (peek().type != TokenType::RIGHT_PAREN);
-    enforce_separator_after_introductory_decls(introductory_decls, exprs[0]);
-    ++m_token_index; // consume the right paren
+    NodeId header = parse_case_clause_header();
     NodeId body = parse_expression();
+    return m_output.add_node(case_token.loc, CaseClauseNode{header, body});
+  }
+
+  NodeId parse_case_clause_header() {
+    auto start_token = peek();
+    Option<NodeId> introductory_decls;
+    Option<List<NodeId>> exprs;
+    Option<NodeId> when_clause;
+
+    if (start_token.type == TokenType::LEFT_PAREN ||
+        start_token.type == TokenType::LEFT_PAREN_NO_W) {
+      ++m_token_index; // consume the left paren
+      introductory_decls = parse_introductory_decls();
+      exprs = List<NodeId>();
+      do {
+        exprs.value().push_back(parse_expression());
+        if (peek().type == TokenType::COMMA) {
+          ++m_token_index; // consume the comma
+        }
+      } while (peek().type != TokenType::RIGHT_PAREN);
+      enforce_separator_after_introductory_decls(introductory_decls.value(), exprs.value()[0]);
+      ++m_token_index; // consume the right paren
+    }
+
+    if (peek().type == TokenType::KEYWORD_WHEN) {
+      ++m_token_index; // consume the 'when' keyword
+      read_left_paren("Expected '(' after 'when' in case clause");
+      when_clause = parse_expression();
+      read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after condition in 'when' clause");
+    }
+
     return m_output.add_node(
-        case_token.loc, CaseClauseNode{introductory_decls, std::move(exprs), body}
+        start_token.loc, CaseClauseHeaderNode{introductory_decls, std::move(exprs), when_clause}
     );
   }
 

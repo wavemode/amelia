@@ -1,7 +1,7 @@
 let example = {
   switch(y) {
-    case (1) ++x
-    case (3) ++y
+    case (1) ++y
+    case when (y < 10 && y > 3) --y
   }
 }
 
@@ -31,20 +31,32 @@ ModuleNode(
                 ),
                 body=PreIncrementStatementNode(
                   target=IdentifierNode(
-                    token=IDENTIFIER_NO_W(x)
+                    token=IDENTIFIER_NO_W(y)
                   )
                 )
               ),
               CaseClauseNode(
                 header=CaseClauseHeaderNode(
-                  introductory_decls=IntroductoryDeclsNode(),
-                  exprs=[
-                    NumberLiteralNode(
-                      lit=NUMBER(3)
+                  when_clause=AndExpressionNode(
+                    left=LessExpressionNode(
+                      left=IdentifierNode(
+                        token=IDENTIFIER_NO_W(y)
+                      ),
+                      right=NumberLiteralNode(
+                        lit=NUMBER(10)
+                      )
+                    ),
+                    right=GreaterExpressionNode(
+                      left=IdentifierNode(
+                        token=IDENTIFIER(y)
+                      ),
+                      right=NumberLiteralNode(
+                        lit=NUMBER(3)
+                      )
                     )
-                  ]
+                  )
                 ),
-                body=PreIncrementStatementNode(
+                body=PreDecrementStatementNode(
                   target=IdentifierNode(
                     token=IDENTIFIER_NO_W(y)
                   )
