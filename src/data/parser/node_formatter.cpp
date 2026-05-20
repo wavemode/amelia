@@ -908,6 +908,11 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "value", n.value);
     break;
   }
+  case NodeType::InlineExpressionNode: {
+    const auto &n = node.as_InlineExpressionNode();
+    print_node_field(out, "expr", n.expr);
+    break;
+  }
   default:
     throw std::runtime_error("Unknown node type");
   }

@@ -1,0 +1,20 @@
+let x = inline y()
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x)
+      ),
+      expression=InlineExpressionNode(
+        expr=FunctionCallExpressionNode(
+          callee=IdentifierNode(
+            token=IDENTIFIER(y)
+          )
+        )
+      )
+    )
+  ]
+)
+*/

@@ -1268,12 +1268,12 @@ public:
 
   NodeId parse_descend_expr_mul_div_mod() {
     auto start_location = peek().loc;
-    NodeId left = parse_descend_expr_await_ref_copy_move();
+    NodeId left = parse_descend_expr_await_ref_copy_move_inline();
     auto next_token = peek();
     while (next_token.type == TokenType::STAR || next_token.type == TokenType::SLASH ||
            next_token.type == TokenType::PERCENT) {
       ++m_token_index; // consume the operator
-      NodeId right = parse_descend_expr_await_ref_copy_move();
+      NodeId right = parse_descend_expr_await_ref_copy_move_inline();
       if (next_token.type == TokenType::STAR) {
         left = m_output.add_node(start_location, MultiplyExpressionNode{left, right});
       } else if (next_token.type == TokenType::SLASH) {
@@ -1286,20 +1286,20 @@ public:
     return left;
   }
 
-  NodeId parse_descend_expr_await_ref_copy_move() {
+  NodeId parse_descend_expr_await_ref_copy_move_inline() {
     auto next_token = peek();
     auto start_location = next_token.loc;
     if (next_token.type == TokenType::KEYWORD_AWAIT) {
       ++m_token_index; // consume the 'await' keyword
-      NodeId expr = parse_descend_expr_await_ref_copy_move();
+      NodeId expr = parse_descend_expr_await_ref_copy_move_inline();
       return m_output.add_node(start_location, AwaitExpressionNode{expr});
     } else if (next_token.type == TokenType::KEYWORD_MOVE) {
       ++m_token_index; // consume the 'move' keyword
-      NodeId expr = parse_descend_expr_await_ref_copy_move();
+      NodeId expr = parse_descend_expr_await_ref_copy_move_inline();
       return m_output.add_node(start_location, MoveExpressionNode{expr});
     } else if (next_token.type == TokenType::KEYWORD_COPY) {
       ++m_token_index; // consume the 'copy' keyword
-      NodeId expr = parse_descend_expr_await_ref_copy_move();
+      NodeId expr = parse_descend_expr_await_ref_copy_move_inline();
       return m_output.add_node(start_location, CopyExpressionNode{expr});
     } else if (next_token.type == TokenType::AMPERSAND) {
       ++m_token_index; // consume the '&' operator
@@ -1308,8 +1308,12 @@ public:
         is_const = true;
         ++m_token_index; // consume the 'const' keyword
       }
-      NodeId expr = parse_descend_expr_await_ref_copy_move();
+      NodeId expr = parse_descend_expr_await_ref_copy_move_inline();
       return m_output.add_node(start_location, RefExpressionNode{is_const, expr});
+    } else if (next_token.type == TokenType::KEYWORD_INLINE) {
+      ++m_token_index; // consume the 'inline' keyword
+      NodeId expr = parse_descend_expr_await_ref_copy_move_inline();
+      return m_output.add_node(start_location, InlineExpressionNode{expr});
     }
     return parse_descend_pos_neg_deref_not_bitnot_ell();
   }

@@ -721,6 +721,10 @@ struct EnumVariantNode {
   Option<NodeId> value;
 };
 
+struct InlineExpressionNode {
+  NodeId expr;
+};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
@@ -890,6 +894,7 @@ struct EnumVariantNode {
   X(RecordDeclarationNode)                                                                         \
   X(UnionDeclarationNode)                                                                          \
   X(EnumDeclarationNode)                                                                           \
-  X(EnumVariantNode)
+  X(EnumVariantNode)                                                                               \
+  X(InlineExpressionNode)
 
 } // namespace amelia
