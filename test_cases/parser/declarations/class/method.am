@@ -57,8 +57,8 @@ ModuleNode(
           name=IdentifierNode(
             token=IDENTIFIER(age)
           ),
-          type=IdentifierNode(
-            token=IDENTIFIER(int)
+          type=PrimitiveTypeNode(
+            token=KEYWORD_INT(int)
           )
         )
       ]

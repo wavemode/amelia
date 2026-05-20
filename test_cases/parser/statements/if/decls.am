@@ -26,8 +26,8 @@ ModuleNode(
                 name=IdentifierNode(
                   token=IDENTIFIER(T)
                 ),
-                type_expr=IdentifierNode(
-                  token=IDENTIFIER(int)
+                type_expr=PrimitiveTypeNode(
+                  token=KEYWORD_INT(int)
                 )
               ),
               LetDeclarationNode(

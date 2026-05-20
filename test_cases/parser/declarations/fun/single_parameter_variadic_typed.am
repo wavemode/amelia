@@ -14,8 +14,8 @@ ModuleNode(
             name=IdentifierNode(
               token=IDENTIFIER_NO_W(x)
             ),
-            type=IdentifierNode(
-              token=IDENTIFIER(int)
+            type=PrimitiveTypeNode(
+              token=KEYWORD_INT(int)
             )
           )
         ]

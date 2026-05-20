@@ -590,8 +590,6 @@ struct BooleanLiteralNode {
   bool value;
 };
 
-struct BoolTypeNode {};
-
 struct ThisLiteralNode {};
 
 struct ThisTypeNode {};
@@ -639,6 +637,12 @@ struct DefaultLiteralNode {};
 struct ImplTypeExpressionNode {
   NodeId type;
 };
+
+struct PrimitiveTypeNode {
+  TokenId token;
+};
+
+struct AutoTypeNode {};
 
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
@@ -776,7 +780,6 @@ struct ImplTypeExpressionNode {
   X(ClassFieldNode)                                                                                \
   X(ClassDeclarationNode)                                                                          \
   X(BooleanLiteralNode)                                                                            \
-  X(BoolTypeNode)                                                                                  \
   X(ThisLiteralNode)                                                                               \
   X(ThisTypeNode)                                                                                  \
   X(ClassBaseClassListNode)                                                                        \
@@ -792,6 +795,8 @@ struct ImplTypeExpressionNode {
   X(MoveCtorNameNode)                                                                              \
   X(ImplicitDeclarationNode)                                                                       \
   X(DefaultDeclarationNode)                                                                        \
-  X(DefaultLiteralNode)
+  X(DefaultLiteralNode)                                                                            \
+  X(PrimitiveTypeNode)                                                                             \
+  X(AutoTypeNode)
 
 } // namespace amelia

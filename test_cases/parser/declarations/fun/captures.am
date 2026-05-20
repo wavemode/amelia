@@ -22,8 +22,8 @@ ModuleNode(
             name=IdentifierNode(
               token=IDENTIFIER(x)
             ),
-            type=IdentifierNode(
-              token=IDENTIFIER(int)
+            type=PrimitiveTypeNode(
+              token=KEYWORD_INT(int)
             )
           ),
           FunctionParameterNode(
@@ -31,8 +31,8 @@ ModuleNode(
             name=IdentifierNode(
               token=IDENTIFIER(y)
             ),
-            type=IdentifierNode(
-              token=IDENTIFIER(float)
+            type=PrimitiveTypeNode(
+              token=KEYWORD_FLOAT(float)
             )
           )
         ],
@@ -43,8 +43,8 @@ ModuleNode(
               name=IdentifierNode(
                 token=IDENTIFIER(a)
               ),
-              type=IdentifierNode(
-                token=IDENTIFIER(long)
+              type=PrimitiveTypeNode(
+                token=KEYWORD_LONG(long)
               )
             ),
             FunctionParameterNode(
@@ -52,8 +52,8 @@ ModuleNode(
               name=IdentifierNode(
                 token=IDENTIFIER(b)
               ),
-              type=IdentifierNode(
-                token=IDENTIFIER(short)
+              type=PrimitiveTypeNode(
+                token=KEYWORD_SHORT(short)
               )
             )
           ]
@@ -80,8 +80,8 @@ ModuleNode(
             )
           ]
         ),
-        return_type=IdentifierNode(
-          token=IDENTIFIER(int)
+        return_type=PrimitiveTypeNode(
+          token=KEYWORD_INT(int)
         )
       ),
       body=FunctionBodyNode(

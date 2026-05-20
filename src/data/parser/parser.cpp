@@ -1292,8 +1292,6 @@ public:
       return parse_switch_expression();
     case TokenType::KEYWORD_FUN:
       return parse_function_expression();
-    case TokenType::KEYWORD_BOOL:
-      return parse_bool_type();
     case TokenType::KEYWORD_TRUE:
     case TokenType::KEYWORD_FALSE:
       return parse_boolean_literal();
@@ -1303,11 +1301,36 @@ public:
       return parse_this_type();
     case TokenType::KEYWORD_DEFAULT:
       return parse_default_literal();
+    case TokenType::KEYWORD_BOOL:
+    case TokenType::KEYWORD_BYTE:
+    case TokenType::KEYWORD_SHORT:
+    case TokenType::KEYWORD_INT:
+    case TokenType::KEYWORD_LONG:
+    case TokenType::KEYWORD_UBYTE:
+    case TokenType::KEYWORD_USHORT:
+    case TokenType::KEYWORD_UINT:
+    case TokenType::KEYWORD_ULONG:
+    case TokenType::KEYWORD_USIZE:
+    case TokenType::KEYWORD_FLOAT:
+    case TokenType::KEYWORD_DOUBLE:
+      return parse_primitive_type();
+    case TokenType::KEYWORD_AUTO:
+      return parse_auto_type();
     default:
       String err("Expected expression, got token ");
       m_token_formatter.format_token(err, m_token_index);
       throw_parser_error_at_current_location(std::move(err));
     }
+  }
+
+  NodeId parse_auto_type() {
+    auto auto_token = next();
+    return m_output.add_node(auto_token.loc, AutoTypeNode{});
+  }
+
+  NodeId parse_primitive_type() {
+    auto type_token = next();
+    return m_output.add_node(type_token.loc, PrimitiveTypeNode{type_token.id});
   }
 
   NodeId parse_default_literal() {
@@ -1330,11 +1353,6 @@ public:
     return m_output.add_node(
         bool_token.loc, BooleanLiteralNode{bool_token.type == TokenType::KEYWORD_TRUE}
     );
-  }
-
-  NodeId parse_bool_type() {
-    auto bool_token = next();
-    return m_output.add_node(bool_token.loc, BoolTypeNode{});
   }
 
   NodeId parse_function_expression() {

@@ -13,16 +13,16 @@ ModuleNode(
             key=IdentifierNode(
               token=IDENTIFIER(a)
             ),
-            value=IdentifierNode(
-              token=IDENTIFIER(int)
+            value=PrimitiveTypeNode(
+              token=KEYWORD_INT(int)
             )
           ),
           KeyValueEntryNode(
             key=IdentifierNode(
               token=IDENTIFIER(b)
             ),
-            value=IdentifierNode(
-              token=IDENTIFIER(float)
+            value=PrimitiveTypeNode(
+              token=KEYWORD_FLOAT(float)
             )
           )
         ]

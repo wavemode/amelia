@@ -9,8 +9,8 @@ ModuleNode(
       ),
       type=BracketExpressionNode(
         exprs=[
-          IdentifierNode(
-            token=IDENTIFIER_NO_W(int)
+          PrimitiveTypeNode(
+            token=KEYWORD_INT(int)
           ),
           NumberLiteralNode(
             lit=NUMBER(4)

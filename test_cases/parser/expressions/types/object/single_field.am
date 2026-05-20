@@ -13,8 +13,8 @@ ModuleNode(
             key=IdentifierNode(
               token=IDENTIFIER(a)
             ),
-            value=IdentifierNode(
-              token=IDENTIFIER(int)
+            value=PrimitiveTypeNode(
+              token=KEYWORD_INT(int)
             )
           )
         ]

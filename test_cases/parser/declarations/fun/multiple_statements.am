@@ -18,8 +18,8 @@ ModuleNode(
             name=IdentifierNode(
               token=IDENTIFIER_NO_W(x)
             ),
-            type=IdentifierNode(
-              token=IDENTIFIER(int)
+            type=PrimitiveTypeNode(
+              token=KEYWORD_INT(int)
             )
           ),
           FunctionParameterNode(
@@ -27,13 +27,13 @@ ModuleNode(
             name=IdentifierNode(
               token=IDENTIFIER(y)
             ),
-            type=IdentifierNode(
-              token=IDENTIFIER(float)
+            type=PrimitiveTypeNode(
+              token=KEYWORD_FLOAT(float)
             )
           )
         ],
-        return_type=IdentifierNode(
-          token=IDENTIFIER(double)
+        return_type=PrimitiveTypeNode(
+          token=KEYWORD_DOUBLE(double)
         )
       ),
       body=FunctionBodyNode(

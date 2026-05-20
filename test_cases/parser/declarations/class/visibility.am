@@ -32,8 +32,8 @@ ModuleNode(
             name=IdentifierNode(
               token=IDENTIFIER(a)
             ),
-            type=IdentifierNode(
-              token=IDENTIFIER(int)
+            type=PrimitiveTypeNode(
+              token=KEYWORD_INT(int)
             )
           )
         ),
@@ -54,8 +54,8 @@ ModuleNode(
             name=IdentifierNode(
               token=IDENTIFIER(c)
             ),
-            type=IdentifierNode(
-              token=IDENTIFIER(float)
+            type=PrimitiveTypeNode(
+              token=KEYWORD_FLOAT(float)
             )
           )
         )

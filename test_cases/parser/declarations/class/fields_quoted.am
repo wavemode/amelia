@@ -17,8 +17,8 @@ ModuleNode(
           name=IdentifierNode(
             token=QUOTED_IDENTIFIER(`a`)
           ),
-          type=IdentifierNode(
-            token=IDENTIFIER(int)
+          type=PrimitiveTypeNode(
+            token=KEYWORD_INT(int)
           )
         ),
         ClassFieldNode(
@@ -34,8 +34,8 @@ ModuleNode(
             name=IdentifierNode(
               token=QUOTED_IDENTIFIER(`c`)
             ),
-            type=IdentifierNode(
-              token=IDENTIFIER(float)
+            type=PrimitiveTypeNode(
+              token=KEYWORD_FLOAT(float)
             )
           )
         ),
@@ -44,7 +44,9 @@ ModuleNode(
             name=IdentifierNode(
               token=QUOTED_IDENTIFIER(`d`)
             ),
-            type=BoolTypeNode(),
+            type=PrimitiveTypeNode(
+              token=KEYWORD_BOOL(bool)
+            ),
             initializer=BooleanLiteralNode(
               value=true
             )

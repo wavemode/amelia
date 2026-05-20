@@ -9,8 +9,8 @@ ModuleNode(
         target=IdentifierNode(
           token=IDENTIFIER(x)
         ),
-        type=IdentifierNode(
-          token=IDENTIFIER(int)
+        type=PrimitiveTypeNode(
+          token=KEYWORD_INT(int)
         ),
         expression=NumberLiteralNode(
           lit=NUMBER(40)

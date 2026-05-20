@@ -15,8 +15,8 @@ ModuleNode(
         OperatorFunctionDeclarationNode(
           operator_ident=OperatorIdentifierNode(
             op=OperatorIdentAsNode(
-              type=IdentifierNode(
-                token=IDENTIFIER(int)
+              type=PrimitiveTypeNode(
+                token=KEYWORD_INT(int)
               )
             )
           ),
@@ -36,8 +36,8 @@ ModuleNode(
           name=IdentifierNode(
             token=IDENTIFIER(a)
           ),
-          type=IdentifierNode(
-            token=IDENTIFIER(int)
+          type=PrimitiveTypeNode(
+            token=KEYWORD_INT(int)
           )
         )
       ]

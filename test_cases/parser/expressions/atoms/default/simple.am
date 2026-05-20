@@ -7,8 +7,8 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(a)
       ),
-      type=IdentifierNode(
-        token=IDENTIFIER(int)
+      type=PrimitiveTypeNode(
+        token=KEYWORD_INT(int)
       ),
       expression=DefaultLiteralNode()
     )

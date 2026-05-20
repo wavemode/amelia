@@ -744,9 +744,6 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_field(out, "value", n.value);
     break;
   }
-  case NodeType::BoolTypeNode: {
-    break;
-  }
   case NodeType::ThisLiteralNode: {
     break;
   }
@@ -808,6 +805,14 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     break;
   }
   case NodeType::DefaultLiteralNode: {
+    break;
+  }
+  case NodeType::PrimitiveTypeNode: {
+    const auto &n = node.as_PrimitiveTypeNode();
+    print_token_field(out, "token", n.token);
+    break;
+  }
+  case NodeType::AutoTypeNode: {
     break;
   }
   default:

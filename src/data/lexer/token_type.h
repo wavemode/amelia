@@ -14,7 +14,6 @@ namespace amelia {
   X(KEYWORD_THIS)                                                                                  \
   X(KEYWORD_THIS_TYPE)                                                                             \
   X(KEYWORD_MODULE)                                                                                \
-  X(KEYWORD_VOID)                                                                                  \
   X(KEYWORD_THROW)                                                                                 \
   X(KEYWORD_IMPORT)                                                                                \
   X(KEYWORD_AS)                                                                                    \
@@ -25,7 +24,6 @@ namespace amelia {
   X(KEYWORD_RECORD)                                                                                \
   X(KEYWORD_TYPE)                                                                                  \
   X(KEYWORD_CONCEPT)                                                                               \
-  X(KEYWORD_BOOL)                                                                                  \
   X(KEYWORD_AUTO)                                                                                  \
   X(KEYWORD_LET)                                                                                   \
   X(KEYWORD_CONST)                                                                                 \
@@ -36,6 +34,18 @@ namespace amelia {
   X(KEYWORD_AWAIT)                                                                                 \
   X(KEYWORD_TRUE)                                                                                  \
   X(KEYWORD_FALSE)                                                                                 \
+  X(KEYWORD_BOOL)                                                                                  \
+  X(KEYWORD_BYTE)                                                                                  \
+  X(KEYWORD_SHORT)                                                                                 \
+  X(KEYWORD_INT)                                                                                   \
+  X(KEYWORD_LONG)                                                                                  \
+  X(KEYWORD_UBYTE)                                                                                 \
+  X(KEYWORD_USHORT)                                                                                \
+  X(KEYWORD_UINT)                                                                                  \
+  X(KEYWORD_ULONG)                                                                                 \
+  X(KEYWORD_USIZE)                                                                                 \
+  X(KEYWORD_FLOAT)                                                                                 \
+  X(KEYWORD_DOUBLE)                                                                                \
   X(KEYWORD_NULL)                                                                                  \
   X(KEYWORD_DEFAULT)                                                                               \
   X(KEYWORD_OPEN)                                                                                  \

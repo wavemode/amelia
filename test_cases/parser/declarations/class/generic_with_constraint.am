@@ -1,4 +1,4 @@
-class A[T : int] {}
+class A[const T : int] {}
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
@@ -10,12 +10,12 @@ ModuleNode(
       generic_parameter_list=GenericParameterListNode(
         parameters=[
           GenericParameterNode(
-            is_const=false,
+            is_const=true,
             name=IdentifierNode(
-              token=IDENTIFIER_NO_W(T)
+              token=IDENTIFIER(T)
             ),
-            constraint=IdentifierNode(
-              token=IDENTIFIER(int)
+            constraint=PrimitiveTypeNode(
+              token=KEYWORD_INT(int)
             )
           )
         ]

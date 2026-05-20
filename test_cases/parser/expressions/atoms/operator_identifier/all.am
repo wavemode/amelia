@@ -474,8 +474,8 @@ ModuleNode(
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentAsNode(
-                  type=IdentifierNode(
-                    token=IDENTIFIER(int)
+                  type=PrimitiveTypeNode(
+                    token=KEYWORD_INT(int)
                   )
                 )
               )
