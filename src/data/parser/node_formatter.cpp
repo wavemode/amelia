@@ -861,6 +861,7 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   case NodeType::ImportItemNode: {
     const auto &n = node.as_ImportItemNode();
     print_node_field(out, "name", n.name);
+    print_node_field(out, "sub_items", n.sub_items);
     print_node_field(out, "alias", n.alias);
     break;
   }

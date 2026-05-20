@@ -1,0 +1,54 @@
+import a::b ( c ( d ( e (...) as f ) as g ) as h ) as i
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ImportDeclarationNode(
+      path=ScopeResolutionExpressionNode(
+        scope=IdentifierNode(
+          token=IDENTIFIER(a)
+        ),
+        name=IdentifierNode(
+          token=IDENTIFIER_NO_W(b)
+        )
+      ),
+      items=[
+        ImportItemNode(
+          name=IdentifierNode(
+            token=IDENTIFIER(c)
+          ),
+          sub_items=[
+            ImportItemNode(
+              name=IdentifierNode(
+                token=IDENTIFIER(d)
+              ),
+              sub_items=[
+                ImportItemNode(
+                  name=IdentifierNode(
+                    token=IDENTIFIER(e)
+                  ),
+                  sub_items=[
+                    ImportItemWildcardNode()
+                  ],
+                  alias=IdentifierNode(
+                    token=IDENTIFIER(f)
+                  )
+                )
+              ],
+              alias=IdentifierNode(
+                token=IDENTIFIER(g)
+              )
+            )
+          ],
+          alias=IdentifierNode(
+            token=IDENTIFIER(h)
+          )
+        )
+      ],
+      alias=IdentifierNode(
+        token=IDENTIFIER(i)
+      )
+    )
+  ]
+)
+*/

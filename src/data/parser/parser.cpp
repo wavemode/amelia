@@ -166,8 +166,9 @@ public:
       return m_output.add_node(item_token.loc, ImportItemWildcardNode{});
     } else {
       auto name = expect_identifier("Expected identifier or '...' in import item list");
+      auto sub_items = try_parse_import_items();
       auto alias = try_parse_import_alias();
-      return m_output.add_node(item_token.loc, ImportItemNode{name, alias});
+      return m_output.add_node(item_token.loc, ImportItemNode{name, std::move(sub_items), alias});
     }
   }
 
