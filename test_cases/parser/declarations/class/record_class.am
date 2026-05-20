@@ -1,0 +1,69 @@
+record class A {
+  a: int
+  b: float
+  c: double
+
+  fun d() = println("hi")
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    RecordDeclarationNode(
+      decl=ClassDeclarationNode(
+        name=IdentifierNode(
+          token=IDENTIFIER(A)
+        ),
+        decls=[
+          ClassFieldNode(
+            name=IdentifierNode(
+              token=IDENTIFIER(a)
+            ),
+            type=PrimitiveTypeNode(
+              token=KEYWORD_INT(int)
+            )
+          ),
+          ClassFieldNode(
+            name=IdentifierNode(
+              token=IDENTIFIER(b)
+            ),
+            type=PrimitiveTypeNode(
+              token=KEYWORD_FLOAT(float)
+            )
+          ),
+          ClassFieldNode(
+            name=IdentifierNode(
+              token=IDENTIFIER(c)
+            ),
+            type=PrimitiveTypeNode(
+              token=KEYWORD_DOUBLE(double)
+            )
+          ),
+          FunctionDeclarationNode(
+            name=IdentifierNode(
+              token=IDENTIFIER(d)
+            ),
+            signature=FunctionSignatureNode(),
+            body=FunctionBodyNode(
+              expression=FunctionCallExpressionNode(
+                callee=IdentifierNode(
+                  token=IDENTIFIER(println)
+                ),
+                args=[
+                  PositionalFunctionArgumentNode(
+                    expr=StringLiteralNode(
+                      lit=STRING_LITERAL("hi")
+                    )
+                  )
+                ]
+              ),
+              is_default=false,
+              is_deleted=false
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

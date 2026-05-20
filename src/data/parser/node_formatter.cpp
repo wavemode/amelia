@@ -876,6 +876,16 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "decl", n.decl);
     break;
   }
+  case NodeType::RecordDeclarationNode: {
+    const auto &n = node.as_RecordDeclarationNode();
+    print_node_field(out, "decl", n.decl);
+    break;
+  }
+  case NodeType::UnionDeclarationNode: {
+    const auto &n = node.as_UnionDeclarationNode();
+    print_node_field(out, "decl", n.decl);
+    break;
+  }
   default:
     throw std::runtime_error("Unknown node type");
   }

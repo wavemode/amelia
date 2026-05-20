@@ -217,10 +217,26 @@ public:
       return parse_async_declaration();
     case TokenType::KEYWORD_EXTERN:
       return parse_extern_declaration();
+    case TokenType::KEYWORD_RECORD:
+      return parse_record_declaration();
+    case TokenType::KEYWORD_UNION:
+      return parse_union_declaration();
     default:
       break;
     }
     return None();
+  }
+
+  NodeId parse_record_declaration() {
+    auto record_token = next();
+    auto decl = expect_declaration("Expected declaration after 'record' keyword");
+    return m_output.add_node(record_token.loc, RecordDeclarationNode{decl});
+  }
+
+  NodeId parse_union_declaration() {
+    auto union_token = next();
+    auto decl = expect_declaration("Expected declaration after 'union' keyword");
+    return m_output.add_node(union_token.loc, UnionDeclarationNode{decl});
   }
 
   NodeId parse_extern_declaration() {
@@ -1291,7 +1307,8 @@ public:
       if (next_token.type == TokenType::DOT_NO_W) {
         ++m_token_index; // consume the '.' operator
         auto next_type = peek().type;
-        if (!is_identifier_no_w(next_type) && next_type != TokenType::KEYWORD_OPERATOR) {
+        if (!is_identifier_no_w(next_type) && next_type != TokenType::KEYWORD_OPERATOR &&
+            next_type != TokenType::KEYWORD_TYPE) {
           throw_parser_error_at_current_location(
               "Expected identifier immediately after '.' in field access expression"
           );

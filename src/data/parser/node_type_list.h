@@ -694,6 +694,14 @@ struct ExternDeclarationNode {
   NodeId decl;
 };
 
+struct RecordDeclarationNode {
+  NodeId decl;
+};
+
+struct UnionDeclarationNode {
+  NodeId decl;
+};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
@@ -858,6 +866,8 @@ struct ExternDeclarationNode {
   X(ImportItemWildcardNode)                                                                        \
   X(ModuleDeclarationNode)                                                                         \
   X(AsyncDeclarationNode)                                                                          \
-  X(ExternDeclarationNode)
+  X(ExternDeclarationNode)                                                                         \
+  X(RecordDeclarationNode)                                                                         \
+  X(UnionDeclarationNode)
 
 } // namespace amelia
