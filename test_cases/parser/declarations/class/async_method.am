@@ -1,0 +1,29 @@
+class A {
+  async fun foo() {}
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ClassDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      decls=[
+        AsyncDeclarationNode(
+          decl=FunctionDeclarationNode(
+            name=IdentifierNode(
+              token=IDENTIFIER(foo)
+            ),
+            signature=FunctionSignatureNode(),
+            body=FunctionBodyNode(
+              is_default=false,
+              is_deleted=false
+            )
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

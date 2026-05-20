@@ -1,0 +1,29 @@
+class A {
+  open ~A() {}
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ClassDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      decls=[
+        OpenDeclarationNode(
+          decl=ClassDestructorNode(
+            name=IdentifierNode(
+              token=IDENTIFIER_NO_W(A)
+            ),
+            signature=FunctionSignatureNode(),
+            body=FunctionBodyNode(
+              is_default=false,
+              is_deleted=false
+            )
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

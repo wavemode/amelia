@@ -776,6 +776,13 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "body", n.body);
     break;
   }
+  case NodeType::ClassDestructorNode: {
+    const auto &n = node.as_ClassDestructorNode();
+    print_node_field(out, "name", n.name);
+    print_node_field(out, "signature", n.signature);
+    print_node_field(out, "body", n.body);
+    break;
+  }
   case NodeType::VisibilityNode: {
     const auto &n = node.as_VisibilityNode();
     Text visibility;

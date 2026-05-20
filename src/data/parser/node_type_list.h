@@ -612,6 +612,12 @@ struct ClassConstructorNode {
   Option<NodeId> body;
 };
 
+struct ClassDestructorNode {
+  NodeId name;
+  NodeId signature;
+  Option<NodeId> body;
+};
+
 enum class DeclarationVisibility {
   Public,
   Private,
@@ -855,6 +861,7 @@ struct EnumVariantNode {
   X(SelfTypeNode)                                                                                  \
   X(BaseTypeListNode)                                                                              \
   X(ClassConstructorNode)                                                                          \
+  X(ClassDestructorNode)                                                                           \
   X(VisibilityNode)                                                                                \
   X(GenericParameterNode)                                                                          \
   X(GenericParameterListNode)                                                                      \

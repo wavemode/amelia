@@ -208,8 +208,6 @@ public:
       return parse_concept_declaration();
     case TokenType::KEYWORD_OPEN:
       return parse_open_declaration();
-    case TokenType::KEYWORD_OVERRIDE:
-      return parse_override_declaration();
     case TokenType::KEYWORD_ASYNC:
       return parse_async_declaration();
     case TokenType::KEYWORD_EXTERN:
@@ -284,12 +282,6 @@ public:
     auto async_token = next();
     auto decl = expect_declaration("Expected declaration after 'async' keyword");
     return m_output.add_node(async_token.loc, AsyncDeclarationNode{decl});
-  }
-
-  NodeId parse_override_declaration() {
-    auto override_token = next();
-    NodeId decl = expect_declaration("Expected declaration after 'override' keyword");
-    return m_output.add_node(override_token.loc, OverrideDeclarationNode{decl});
   }
 
   NodeId parse_open_declaration() {
@@ -491,10 +483,37 @@ public:
       return parse_class_body_implicit_declaration();
     case TokenType::KEYWORD_DEFAULT:
       return parse_class_body_default_declaration();
+    case TokenType::KEYWORD_OPEN:
+      return parse_class_body_open_declaration();
+    case TokenType::KEYWORD_OVERRIDE:
+      return parse_class_body_override_declaration();
+    case TokenType::TILDE:
+      return parse_destructor_declaration();
     default:
       break;
     }
     return expect_local_declaration("Expected declaration in class body");
+  }
+
+  NodeId parse_destructor_declaration() {
+    ++m_token_index; // consume the '~' token
+    auto name_token = peek();
+    NodeId name = expect_identifier("Expected destructor name");
+    NodeId signature = parse_function_signature();
+    Option<NodeId> body = try_parse_function_body();
+    return m_output.add_node(name_token.loc, ClassDestructorNode{name, signature, body});
+  }
+
+  NodeId parse_class_body_open_declaration() {
+    auto open_token = next();
+    NodeId decl = parse_class_body_declaration();
+    return m_output.add_node(open_token.loc, OpenDeclarationNode{decl});
+  }
+
+  NodeId parse_class_body_override_declaration() {
+    auto override_token = next();
+    NodeId decl = parse_class_body_declaration();
+    return m_output.add_node(override_token.loc, OverrideDeclarationNode{decl});
   }
 
   NodeId parse_class_body_default_declaration() {
