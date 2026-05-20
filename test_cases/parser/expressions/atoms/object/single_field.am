@@ -7,7 +7,7 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expression=ObjectLiteralNode(
+      expression=AnonymousStructLiteralNode(
         entries=[
           KeyValueEntryNode(
             key=IdentifierNode(

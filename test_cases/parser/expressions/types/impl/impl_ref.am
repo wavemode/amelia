@@ -1,0 +1,35 @@
+fun f(x: &impl X) {}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    FunctionDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(f)
+      ),
+      signature=FunctionSignatureNode(
+        parameters=[
+          FunctionParameterNode(
+            variadic=false,
+            name=IdentifierNode(
+              token=IDENTIFIER_NO_W(x)
+            ),
+            type=RefExpressionNode(
+              is_const=false,
+              expr=ImplTypeExpressionNode(
+                type=IdentifierNode(
+                  token=IDENTIFIER(X)
+                )
+              )
+            )
+          )
+        ]
+      ),
+      body=FunctionBodyNode(
+        is_default=false,
+        is_deleted=false
+      )
+    )
+  ]
+)
+*/

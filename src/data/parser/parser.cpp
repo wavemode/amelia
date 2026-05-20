@@ -263,7 +263,7 @@ public:
       );
       while (peek().type == TokenType::COMMA) {
         ++m_token_index; // consume the ',' token
-        base_classes.push_back(parse_expression());
+        base_classes.push_back(parse_type_expression());
       }
       return Some(m_output.add_node(peek(-1).loc, ClassBaseClassListNode{std::move(base_classes)}));
     }
@@ -816,7 +816,7 @@ public:
     Option<NodeId> expression;
     if (peek().type == TokenType::COLON) {
       ++m_token_index; // consume the ':' token
-      type_annotation = parse_expression();
+      type_annotation = parse_type_expression();
     }
     if (peek().type == TokenType::ASSIGN) {
       ++m_token_index; // consume the '=' token
@@ -834,7 +834,7 @@ public:
     Option<NodeId> expression;
     if (peek().type == TokenType::COLON) {
       ++m_token_index; // consume the ':' token
-      type_annotation = parse_expression();
+      type_annotation = parse_type_expression();
     }
     if (peek().type == TokenType::ASSIGN) {
       ++m_token_index; // consume the '=' token
@@ -1123,7 +1123,7 @@ public:
 
   NodeId parse_descend_expr_field_ix_funcall() {
     auto start_location = peek().loc;
-    auto left = parse_descend_expr_scope_resolution();
+    auto left = parse_descend_expr_impl();
     auto next_token = peek();
     while (next_token.type == TokenType::DOT_NO_W || next_token.type == TokenType::NUMBER_FIELD ||
            next_token.type == TokenType::LEFT_BRACKET_NO_W ||
@@ -1171,21 +1171,49 @@ public:
   }
 
   NodeId parse_type_expression() {
-    // a "type expression" is just a normal expression, but descending from the precendence level
-    // of the index operator (x[y]), while excluding the function call and field access operations
-    auto start_location = peek().loc;
-    auto left = parse_descend_expr_scope_resolution();
     auto next_token = peek();
-    while (next_token.type == TokenType::LEFT_BRACKET_NO_W) {
+    auto start_location = next_token.loc;
+    NodeId left;
+    if (next_token.type == TokenType::STAR) {
+      ++m_token_index; // consume the '*' operator
+      bool is_const = false;
+      if (peek().type == TokenType::KEYWORD_CONST) {
+        is_const = true;
+        ++m_token_index; // consume the 'const' keyword
+      }
+      NodeId expr = parse_type_expression();
+      left = m_output.add_node(start_location, DerefExpressionNode{is_const, expr});
+    } else if (next_token.type == TokenType::AMPERSAND) {
+      ++m_token_index; // consume the '&' operator
+      bool is_const = false;
+      if (peek().type == TokenType::KEYWORD_CONST) {
+        is_const = true;
+        ++m_token_index; // consume the 'const' keyword
+      }
+      NodeId expr = parse_type_expression();
+      left = m_output.add_node(start_location, RefExpressionNode{is_const, expr});
+    } else {
+      left = parse_descend_expr_impl();
+    }
+    while (peek().type == TokenType::LEFT_BRACKET_NO_W) {
       ++m_token_index; // consume the '[' operator
       NodeId index_expr = parse_expression();
       read_token_type(
           TokenType::RIGHT_BRACKET, "Expected ']' after index expression in index access"
       );
       left = m_output.add_node(start_location, IndexingExpressionNode{left, index_expr});
-      next_token = peek();
     }
     return left;
+  }
+
+  NodeId parse_descend_expr_impl() {
+    auto start_token = peek();
+    if (start_token.type == TokenType::KEYWORD_IMPL) {
+      ++m_token_index; // consume the 'impl' keyword
+      NodeId type_expr = parse_type_expression();
+      return m_output.add_node(start_token.loc, ImplTypeExpressionNode{type_expr});
+    }
+    return parse_descend_expr_scope_resolution();
   }
 
   NodeId parse_descend_expr_scope_resolution() {
@@ -1580,7 +1608,7 @@ public:
       }
     }
     ++m_token_index; // consume the right brace
-    return m_output.add_node(open_brace.loc, ObjectLiteralNode{std::move(entries)});
+    return m_output.add_node(open_brace.loc, AnonymousStructLiteralNode{std::move(entries)});
   }
 
   NodeId parse_object_type() {
@@ -1590,14 +1618,14 @@ public:
       auto field_token = peek();
       auto field = expect_identifier("Expected field name in object literal");
       read_token_type(TokenType::COLON, "Expected ':' after field name in object type");
-      NodeId type = parse_expression();
+      NodeId type = parse_type_expression();
       entries.push_back(m_output.add_node(field_token.loc, KeyValueEntryNode{field, type}));
       if (peek().type == TokenType::COMMA) {
         ++m_token_index; // consume the comma
       }
     }
     ++m_token_index; // consume the right brace
-    return m_output.add_node(open_brace.loc, ObjectTypeNode{std::move(entries)});
+    return m_output.add_node(open_brace.loc, AnonymousStructTypeNode{std::move(entries)});
   }
 
   void parse_comma_separated_expression_list(List<NodeId> &exprs, TokenType terminator) {

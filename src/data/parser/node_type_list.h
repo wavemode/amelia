@@ -218,11 +218,11 @@ struct BitwiseXorAssignStatementNode {
   NodeId expression;
 };
 
-struct ObjectLiteralNode {
+struct AnonymousStructLiteralNode {
   List<NodeId> entries;
 };
 
-struct ObjectTypeNode {
+struct AnonymousStructTypeNode {
   List<NodeId> entries;
 };
 
@@ -628,6 +628,10 @@ struct ImplicitDeclarationNode {
   NodeId decl;
 };
 
+struct ImplTypeExpressionNode {
+  NodeId type;
+};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
@@ -640,8 +644,8 @@ struct ImplicitDeclarationNode {
   X(BracketExpressionNode)                                                                         \
   X(BlockExpressionNode)                                                                           \
   X(KeyValueEntryNode)                                                                             \
-  X(ObjectLiteralNode)                                                                             \
-  X(ObjectTypeNode)                                                                                \
+  X(AnonymousStructLiteralNode)                                                                    \
+  X(AnonymousStructTypeNode)                                                                       \
   X(ExpressionStatementNode)                                                                       \
   X(IfStatementNode)                                                                               \
   X(IfExpressionNode)                                                                              \
@@ -772,6 +776,7 @@ struct ImplicitDeclarationNode {
   X(GenericParameterNode)                                                                          \
   X(GenericParameterListNode)                                                                      \
   X(TypeConstraintNode)                                                                            \
+  X(ImplTypeExpressionNode)                                                                        \
   X(CopyExpressionNode)                                                                            \
   X(MoveExpressionNode)                                                                            \
   X(CopyCtorNameNode)                                                                              \

@@ -68,13 +68,13 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "stmts", n.stmts);
     break;
   }
-  case NodeType::ObjectLiteralNode: {
-    const auto &n = node.as_ObjectLiteralNode();
+  case NodeType::AnonymousStructLiteralNode: {
+    const auto &n = node.as_AnonymousStructLiteralNode();
     print_node_field(out, "entries", n.entries);
     break;
   }
-  case NodeType::ObjectTypeNode: {
-    const auto &n = node.as_ObjectTypeNode();
+  case NodeType::AnonymousStructTypeNode: {
+    const auto &n = node.as_AnonymousStructTypeNode();
     print_node_field(out, "entries", n.entries);
     break;
   }
@@ -726,6 +726,11 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     const auto &n = node.as_TypeConstraintNode();
     print_node_field(out, "type", n.type);
     print_node_field(out, "constraint", n.constraint);
+    break;
+  }
+  case NodeType::ImplTypeExpressionNode: {
+    const auto &n = node.as_ImplTypeExpressionNode();
+    print_node_field(out, "type", n.type);
     break;
   }
   case NodeType::GenericParameterListNode: {
