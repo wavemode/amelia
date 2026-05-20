@@ -538,7 +538,13 @@ public:
 
   NodeId parse_function_declaration() {
     auto fun_token = next();
-    auto name = expect_identifier("Expected function name after 'fun' keyword");
+
+    if (!is_identifier(peek().type)) {
+      throw_parser_error_at_current_location("Expected function name after 'fun' keyword");
+    }
+    // allow function name to be a scope resolution expression (A::b)
+    auto name = parse_descend_expr_scope_resolution();
+
     NodeId signature = parse_function_signature();
     Option<NodeId> body = try_parse_function_body();
     return m_output.add_node(fun_token.loc, FunctionDeclarationNode{name, signature, body});
@@ -1240,10 +1246,11 @@ public:
     case TokenType::IDENTIFIER_NO_W:
     case TokenType::QUOTED_IDENTIFIER:
     case TokenType::QUOTED_IDENTIFIER_NO_W:
-    case TokenType::KEYWORD_OPERATOR:
       if (is_start_of_lambda_expression()) {
         return parse_lambda_expression();
       }
+    // fallthrough...
+    case TokenType::KEYWORD_OPERATOR:
       return parse_identifier();
     case TokenType::STRING_LITERAL:
       return parse_string_literal();

@@ -1,0 +1,28 @@
+fun A::B::c() {}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    FunctionDeclarationNode(
+      name=ScopeResolutionExpressionNode(
+        scope=ScopeResolutionExpressionNode(
+          scope=IdentifierNode(
+            token=IDENTIFIER(A)
+          ),
+          name=IdentifierNode(
+            token=IDENTIFIER_NO_W(B)
+          )
+        ),
+        name=IdentifierNode(
+          token=IDENTIFIER_NO_W(c)
+        )
+      ),
+      signature=FunctionSignatureNode(),
+      body=FunctionBodyNode(
+        is_default=false,
+        is_deleted=false
+      )
+    )
+  ]
+)
+*/
