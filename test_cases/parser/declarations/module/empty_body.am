@@ -1,0 +1,13 @@
+module a {}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ModuleDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(a)
+      )
+    )
+  ]
+)
+*/

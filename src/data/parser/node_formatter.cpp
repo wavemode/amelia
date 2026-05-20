@@ -836,6 +836,12 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   case NodeType::ImportItemWildcardNode: {
     break;
   }
+  case NodeType::ModuleDeclarationNode: {
+    const auto &n = node.as_ModuleDeclarationNode();
+    print_node_field(out, "name", n.name);
+    print_node_field(out, "decls", n.decls);
+    break;
+  }
   default:
     throw std::runtime_error("Unknown node type");
   }

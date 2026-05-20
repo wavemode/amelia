@@ -187,6 +187,8 @@ public:
   Option<NodeId> try_parse_declaration() {
     auto token = peek();
     switch (token.type) {
+    case TokenType::KEYWORD_MODULE:
+      return parse_module_declaration();
     case TokenType::KEYWORD_LET:
       return parse_let_declaration();
     case TokenType::KEYWORD_CONST:
@@ -208,6 +210,20 @@ public:
       break;
     }
     return None();
+  }
+
+  NodeId parse_module_declaration() {
+    auto module_token = next();
+    auto name = expect_identifier("Expected module name after 'module' keyword");
+    Option<List<NodeId>> decls;
+    if (peek().type == TokenType::LEFT_BRACE) {
+      ++m_token_index; // consume the '{' token
+      List<NodeId> decls_list;
+      parse_top_level_declarations(decls_list, TokenType::RIGHT_BRACE);
+      decls = std::move(decls_list);
+      read_token_type(TokenType::RIGHT_BRACE, "Expected '}' to end module declaration");
+    }
+    return m_output.add_node(module_token.loc, ModuleDeclarationNode{name, decls});
   }
 
   NodeId expect_declaration(Text error_message) {

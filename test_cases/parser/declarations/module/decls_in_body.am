@@ -1,0 +1,30 @@
+module a {
+  fun f() = 10
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ModuleDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(a)
+      ),
+      decls=[
+        FunctionDeclarationNode(
+          name=IdentifierNode(
+            token=IDENTIFIER(f)
+          ),
+          signature=FunctionSignatureNode(),
+          body=FunctionBodyNode(
+            expression=NumberLiteralNode(
+              lit=NUMBER(10)
+            ),
+            is_default=false,
+            is_deleted=false
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

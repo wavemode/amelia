@@ -661,6 +661,11 @@ struct ImportItemNode {
 
 struct ImportItemWildcardNode {};
 
+struct ModuleDeclarationNode {
+  NodeId name;
+  Option<List<NodeId>> decls;
+};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
@@ -818,6 +823,7 @@ struct ImportItemWildcardNode {};
   X(AutoTypeNode)                                                                                  \
   X(ImportDeclarationNode)                                                                         \
   X(ImportItemNode)                                                                                \
-  X(ImportItemWildcardNode)
+  X(ImportItemWildcardNode)                                                                        \
+  X(ModuleDeclarationNode)
 
 } // namespace amelia
