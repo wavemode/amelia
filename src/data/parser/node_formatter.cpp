@@ -474,6 +474,9 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   case NodeType::OperatorIdentMoveAssignNode: {
     break;
   }
+  case NodeType::OperatorIdentIxAssignNode: {
+    break;
+  }
   case NodeType::OperatorIdentAsNode: {
     const auto &n = node.as_OperatorIdentAsNode();
     print_node_field(out, "type", n.type);

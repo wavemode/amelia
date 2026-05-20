@@ -1388,7 +1388,12 @@ public:
     case TokenType::LEFT_BRACKET:
     case TokenType::LEFT_BRACKET_NO_W:
       read_token_type(TokenType::RIGHT_BRACKET, "Expected ']' following 'operator['");
-      operator_node = m_output.add_node(start_location, OperatorIdentIxNode{});
+      if (peek().type == TokenType::ASSIGN) {
+        ++m_token_index; // consume the '=' token
+        operator_node = m_output.add_node(start_location, OperatorIdentIxAssignNode{});
+      } else {
+        operator_node = m_output.add_node(start_location, OperatorIdentIxNode{});
+      }
       break;
     case TokenType::LEFT_PAREN:
     case TokenType::LEFT_PAREN_NO_W:

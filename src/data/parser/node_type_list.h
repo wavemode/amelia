@@ -94,6 +94,8 @@ struct OperatorIdentCopyAssignNode {};
 
 struct OperatorIdentMoveAssignNode {};
 
+struct OperatorIdentIxAssignNode {};
+
 struct OperatorIdentAsNode {
   NodeId type;
 };
@@ -715,6 +717,7 @@ struct ImplicitDeclarationNode {
   X(OperatorIdentFuncallNode)                                                                      \
   X(OperatorIdentCopyAssignNode)                                                                   \
   X(OperatorIdentMoveAssignNode)                                                                   \
+  X(OperatorIdentIxAssignNode) \
   X(OperatorIdentAsNode)                                                                           \
   X(OperatorFunctionDeclarationNode)                                                               \
   X(OperatorIdentifierNode)                                                                        \
