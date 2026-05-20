@@ -820,6 +820,22 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   case NodeType::AutoTypeNode: {
     break;
   }
+  case NodeType::ImportDeclarationNode: {
+    const auto &n = node.as_ImportDeclarationNode();
+    print_node_field(out, "path", n.path);
+    print_node_field(out, "items", n.items);
+    print_node_field(out, "alias", n.alias);
+    break;
+  }
+  case NodeType::ImportItemNode: {
+    const auto &n = node.as_ImportItemNode();
+    print_node_field(out, "name", n.name);
+    print_node_field(out, "alias", n.alias);
+    break;
+  }
+  case NodeType::ImportItemWildcardNode: {
+    break;
+  }
   default:
     throw std::runtime_error("Unknown node type");
   }

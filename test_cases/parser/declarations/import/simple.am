@@ -1,0 +1,18 @@
+import a::b
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ImportDeclarationNode(
+      path=ScopeResolutionExpressionNode(
+        scope=IdentifierNode(
+          token=IDENTIFIER(a)
+        ),
+        name=IdentifierNode(
+          token=IDENTIFIER_NO_W(b)
+        )
+      )
+    )
+  ]
+)
+*/

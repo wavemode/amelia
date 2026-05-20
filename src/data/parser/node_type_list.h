@@ -648,6 +648,19 @@ struct PrimitiveTypeNode {
 
 struct AutoTypeNode {};
 
+struct ImportDeclarationNode {
+  NodeId path;
+  Option<List<NodeId>> items;
+  Option<NodeId> alias;
+};
+
+struct ImportItemNode {
+  NodeId name;
+  Option<NodeId> alias;
+};
+
+struct ImportItemWildcardNode {};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
@@ -802,6 +815,9 @@ struct AutoTypeNode {};
   X(DefaultDeclarationNode)                                                                        \
   X(DefaultLiteralNode)                                                                            \
   X(PrimitiveTypeNode)                                                                             \
-  X(AutoTypeNode)
+  X(AutoTypeNode)                                                                                  \
+  X(ImportDeclarationNode)                                                                         \
+  X(ImportItemNode)                                                                                \
+  X(ImportItemWildcardNode)
 
 } // namespace amelia

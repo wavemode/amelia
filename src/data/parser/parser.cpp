@@ -102,10 +102,75 @@ public:
     switch (token.type) {
     case TokenType::KEYWORD_LOCAL:
       return parse_local_declaration();
+    case TokenType::KEYWORD_IMPORT:
+      return parse_import_declaration();
     default:
       break;
     }
     return try_parse_declaration();
+  }
+
+  NodeId parse_import_declaration() {
+    auto import_token = next();
+    auto next_token = peek();
+    if (!is_identifier(next_token.type)) {
+      throw_parser_error_at_current_location(
+          "Expected identifier after 'import' keyword in import declaration"
+      );
+    }
+    auto path = parse_descend_expr_scope_resolution();
+    auto items = try_parse_import_items();
+    auto alias = try_parse_import_alias();
+    return m_output.add_node(
+        import_token.loc, ImportDeclarationNode{path, std::move(items), alias}
+    );
+  }
+
+  Option<NodeId> try_parse_import_alias() {
+    if (peek().type == TokenType::KEYWORD_AS) {
+      ++m_token_index; // consume the 'as' token
+      if (!is_identifier(peek().type)) {
+        throw_parser_error_at_current_location(
+            "Expected identifier after 'as' keyword in import alias"
+        );
+      }
+      return parse_identifier();
+    }
+    return None();
+  }
+
+  Option<List<NodeId>> try_parse_import_items() {
+    auto start_token = peek();
+    Option<List<NodeId>> result;
+    if (start_token.type == TokenType::LEFT_PAREN ||
+        start_token.type == TokenType::LEFT_PAREN_NO_W) {
+      ++m_token_index; // consume the '(' token
+      List<NodeId> items;
+      while (peek().type != TokenType::RIGHT_PAREN) {
+        items.push_back(parse_import_item());
+        if (peek().type == TokenType::COMMA) {
+          ++m_token_index; // consume the ',' token
+        }
+      }
+      read_token_type(TokenType::RIGHT_PAREN, "Expected ')' to end import item list");
+      result = std::move(items);
+    }
+    return result;
+  }
+
+  NodeId parse_import_item() {
+    auto item_token = peek();
+    if (item_token.type == TokenType::ELLIPSIS) {
+      ++m_token_index; // consume the '...' token
+      return m_output.add_node(item_token.loc, ImportItemWildcardNode{});
+    } else {
+      if (!is_identifier(item_token.type)) {
+        throw_parser_error_at_current_location("Expected identifier or '...' in import item list");
+      }
+      auto name = parse_identifier();
+      auto alias = try_parse_import_alias();
+      return m_output.add_node(item_token.loc, ImportItemNode{name, alias});
+    }
   }
 
   Option<NodeId> try_parse_local_declaration() {
