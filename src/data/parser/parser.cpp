@@ -1336,6 +1336,10 @@ public:
       }
       NodeId expr = parse_type_expression();
       left = m_output.add_node(start_location, RefExpressionNode{is_const, expr});
+    } else if (next_token.type == TokenType::EXCLAM || next_token.type == TokenType::EXCLAM_NO_W) {
+      ++m_token_index; // consume the '!' operator
+      NodeId expr = parse_type_expression();
+      left = m_output.add_node(start_location, NotExpressionNode{expr});
     } else {
       left = parse_descend_expr_impl_any();
     }

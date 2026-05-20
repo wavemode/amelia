@@ -1,0 +1,34 @@
+fun f[T : !Movable]() {}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    FunctionDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(f)
+      ),
+      signature=FunctionSignatureNode(
+        generic_parameter_list=GenericParameterListNode(
+          parameters=[
+            GenericParameterNode(
+              is_const=false,
+              name=IdentifierNode(
+                token=IDENTIFIER_NO_W(T)
+              ),
+              constraint=NotExpressionNode(
+                expr=IdentifierNode(
+                  token=IDENTIFIER_NO_W(Movable)
+                )
+              )
+            )
+          ]
+        )
+      ),
+      body=FunctionBodyNode(
+        is_default=false,
+        is_deleted=false
+      )
+    )
+  ]
+)
+*/
