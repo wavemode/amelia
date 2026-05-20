@@ -747,6 +747,11 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "type", n.type);
     break;
   }
+  case NodeType::AsyncExpressionNode: {
+    const auto &n = node.as_AsyncExpressionNode();
+    print_node_field(out, "expr", n.expr);
+    break;
+  }
   case NodeType::GenericParameterListNode: {
     const auto &n = node.as_GenericParameterListNode();
     print_node_field(out, "parameters", n.parameters);

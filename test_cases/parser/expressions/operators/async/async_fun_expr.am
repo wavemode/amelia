@@ -1,0 +1,22 @@
+let x = async fun() {}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x)
+      ),
+      expression=AsyncExpressionNode(
+        expr=FunctionExpressionNode(
+          signature=FunctionSignatureNode(),
+          body=FunctionBodyNode(
+            is_default=false,
+            is_deleted=false
+          )
+        )
+      )
+    )
+  ]
+)
+*/

@@ -662,6 +662,10 @@ struct AnyTypeExpressionNode {
   NodeId type;
 };
 
+struct AsyncExpressionNode {
+  NodeId expr;
+};
+
 struct PrimitiveTypeNode {
   TokenId token;
 };
@@ -833,6 +837,7 @@ struct ModuleDeclarationNode {
   X(TypeConstraintNode)                                                                            \
   X(ImplTypeExpressionNode)                                                                        \
   X(AnyTypeExpressionNode)                                                                         \
+  X(AsyncExpressionNode)                                                                           \
   X(CopyExpressionNode)                                                                            \
   X(MoveExpressionNode)                                                                            \
   X(CopyCtorNameNode)                                                                              \
