@@ -650,6 +650,10 @@ struct DefaultDeclarationNode {
 
 struct DefaultLiteralNode {};
 
+struct AsyncDeclarationNode {
+  NodeId decl;
+};
+
 struct ImplTypeExpressionNode {
   NodeId type;
 };
@@ -843,6 +847,7 @@ struct ModuleDeclarationNode {
   X(ImportDeclarationNode)                                                                         \
   X(ImportItemNode)                                                                                \
   X(ImportItemWildcardNode)                                                                        \
-  X(ModuleDeclarationNode)
+  X(ModuleDeclarationNode)                                                                         \
+  X(AsyncDeclarationNode)
 
 } // namespace amelia

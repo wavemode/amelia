@@ -213,10 +213,18 @@ public:
       return parse_open_declaration();
     case TokenType::KEYWORD_OVERRIDE:
       return parse_override_declaration();
+    case TokenType::KEYWORD_ASYNC:
+      return parse_async_declaration();
     default:
       break;
     }
     return None();
+  }
+
+  NodeId parse_async_declaration() {
+    auto async_token = next();
+    auto decl = expect_declaration("Expected declaration after 'async' keyword");
+    return m_output.add_node(async_token.loc, AsyncDeclarationNode{decl});
   }
 
   NodeId parse_override_declaration() {

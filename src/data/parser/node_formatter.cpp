@@ -861,6 +861,11 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "decls", n.decls);
     break;
   }
+  case NodeType::AsyncDeclarationNode: {
+    const auto &n = node.as_AsyncDeclarationNode();
+    print_node_field(out, "decl", n.decl);
+    break;
+  }
   default:
     throw std::runtime_error("Unknown node type");
   }
