@@ -1,0 +1,13 @@
+let `x`
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=QUOTED_IDENTIFIER(`x`)
+      )
+    )
+  ]
+)
+*/

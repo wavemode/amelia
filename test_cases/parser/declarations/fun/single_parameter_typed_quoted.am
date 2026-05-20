@@ -1,0 +1,30 @@
+fun f(`x` : int) {}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    FunctionDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(f)
+      ),
+      signature=FunctionSignatureNode(
+        parameters=[
+          FunctionParameterNode(
+            variadic=false,
+            name=IdentifierNode(
+              token=QUOTED_IDENTIFIER_NO_W(`x`)
+            ),
+            type=IdentifierNode(
+              token=IDENTIFIER(int)
+            )
+          )
+        ]
+      ),
+      body=FunctionBodyNode(
+        is_default=false,
+        is_deleted=false
+      )
+    )
+  ]
+)
+*/

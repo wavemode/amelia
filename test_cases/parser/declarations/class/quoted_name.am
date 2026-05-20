@@ -1,0 +1,13 @@
+class `A` {}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ClassDeclarationNode(
+      name=IdentifierNode(
+        token=QUOTED_IDENTIFIER(`A`)
+      )
+    )
+  ]
+)
+*/

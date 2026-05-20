@@ -1,0 +1,18 @@
+fun `f`() {}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    FunctionDeclarationNode(
+      name=IdentifierNode(
+        token=QUOTED_IDENTIFIER(`f`)
+      ),
+      signature=FunctionSignatureNode(),
+      body=FunctionBodyNode(
+        is_default=false,
+        is_deleted=false
+      )
+    )
+  ]
+)
+*/

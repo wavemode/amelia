@@ -121,6 +121,8 @@ namespace amelia {
   X(NUMBER_FIELD)                                                                                  \
   X(IDENTIFIER)                                                                                    \
   X(IDENTIFIER_NO_W)                                                                               \
+  X(QUOTED_IDENTIFIER)                                                                             \
+  X(QUOTED_IDENTIFIER_NO_W)                                                                        \
   X(DOUBLE_COLON_NO_W)                                                                             \
   X(AT)                                                                                            \
   X(STRING_LITERAL)                                                                                \

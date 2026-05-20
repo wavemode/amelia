@@ -1,0 +1,21 @@
+let x = y.`z`
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x)
+      ),
+      expression=FieldAccessExpressionNode(
+        object=IdentifierNode(
+          token=IDENTIFIER(y)
+        ),
+        field=IdentifierNode(
+          token=QUOTED_IDENTIFIER_NO_W(`z`)
+        )
+      )
+    )
+  ]
+)
+*/

@@ -10,6 +10,15 @@ namespace amelia {
 
 namespace {
 
+bool is_identifier(TokenType type) {
+  return type == TokenType::IDENTIFIER || type == TokenType::IDENTIFIER_NO_W ||
+         type == TokenType::QUOTED_IDENTIFIER || type == TokenType::QUOTED_IDENTIFIER_NO_W;
+}
+
+bool is_identifier_no_w(TokenType type) {
+  return type == TokenType::IDENTIFIER_NO_W || type == TokenType::QUOTED_IDENTIFIER_NO_W;
+}
+
 struct TokenWithId {
   TokenId id;
   TokenType type;
@@ -118,11 +127,11 @@ public:
       return parse_let_declaration();
     case TokenType::KEYWORD_CONST:
       return parse_const_declaration();
-    case TokenType::KEYWORD_FUN:
-      if (peek(1).type == TokenType::IDENTIFIER) {
+    case TokenType::KEYWORD_FUN: {
+      if (is_identifier(peek(1).type)) {
         return parse_function_declaration();
       }
-      break;
+    } break;
     case TokenType::KEYWORD_CLASS:
       return parse_class_declaration();
     case TokenType::KEYWORD_TYPE:
@@ -184,19 +193,6 @@ public:
       return parse_continue_statement();
     case TokenType::KEYWORD_RETURN:
       return parse_return_statement();
-    case TokenType::KEYWORD_FUN:
-      if (peek(1).type == TokenType::IDENTIFIER) {
-        return parse_function_declaration();
-      }
-      break;
-    case TokenType::KEYWORD_CLASS:
-      return parse_class_declaration();
-    case TokenType::KEYWORD_TYPE:
-      return parse_type_declaration();
-    case TokenType::KEYWORD_LOCAL:
-      return parse_local_declaration();
-    case TokenType::SEMICOLON:
-      return parse_empty_statement();
     default:
       break;
     }
@@ -284,6 +280,8 @@ public:
       return parse_class_const_declaration();
     case TokenType::IDENTIFIER:
     case TokenType::IDENTIFIER_NO_W:
+    case TokenType::QUOTED_IDENTIFIER:
+    case TokenType::QUOTED_IDENTIFIER_NO_W:
     case TokenType::KEYWORD_COPY:
     case TokenType::KEYWORD_MOVE: {
       auto following_token = peek(1);
@@ -456,9 +454,7 @@ public:
     Option<NodeId> var;
     auto next_token = peek();
     auto following_token = peek(1);
-    if ((next_token.type == TokenType::IDENTIFIER || next_token.type == TokenType::IDENTIFIER_NO_W
-        ) &&
-        following_token.type == TokenType::COLON) {
+    if (is_identifier(next_token.type) && following_token.type == TokenType::COLON) {
       var = parse_identifier();
       ++m_token_index; // consume the ':' token
     }
@@ -1130,7 +1126,7 @@ public:
       if (next_token.type == TokenType::DOT_NO_W) {
         ++m_token_index; // consume the '.' operator
         auto next_type = peek().type;
-        if (next_type != TokenType::IDENTIFIER_NO_W && next_type != TokenType::KEYWORD_OPERATOR) {
+        if (!is_identifier_no_w(next_type) && next_type != TokenType::KEYWORD_OPERATOR) {
           throw_parser_error_at_current_location(
               "Expected identifier immediately after '.' in field access expression"
           );
@@ -1193,7 +1189,7 @@ public:
     while (peek().type == TokenType::DOUBLE_COLON_NO_W) {
       ++m_token_index; // consume the '::' operator
       auto next_type = peek().type;
-      if (next_type != TokenType::IDENTIFIER_NO_W && next_type != TokenType::KEYWORD_OPERATOR) {
+      if (!is_identifier_no_w(next_type) && next_type != TokenType::KEYWORD_OPERATOR) {
         throw_parser_error_at_current_location(
             "Expected identifier immediately after '::' in scope resolution expression"
         );
@@ -1209,6 +1205,8 @@ public:
     switch (peek().type) {
     case TokenType::IDENTIFIER:
     case TokenType::IDENTIFIER_NO_W:
+    case TokenType::QUOTED_IDENTIFIER:
+    case TokenType::QUOTED_IDENTIFIER_NO_W:
     case TokenType::KEYWORD_OPERATOR:
       if (is_start_of_lambda_expression()) {
         return parse_lambda_expression();
@@ -1473,10 +1471,7 @@ public:
     auto catch_token = next();
     read_left_paren("Expected '(' after 'catch'");
     Option<NodeId> var;
-    auto next_token = peek();
-    if ((next_token.type == TokenType::IDENTIFIER || next_token.type == TokenType::IDENTIFIER_NO_W
-        ) &&
-        peek(1).type == TokenType::COLON) {
+    if (is_identifier(peek().type) && peek(1).type == TokenType::COLON) {
       var = parse_identifier();
       ++m_token_index; // consume the ':' token
     }
@@ -1574,8 +1569,7 @@ public:
 
   NodeId expect_identifier(Text error_message) {
     auto token = peek();
-    if (token.type != TokenType::IDENTIFIER && token.type != TokenType::IDENTIFIER_NO_W &&
-        token.type != TokenType::KEYWORD_OPERATOR) {
+    if (!is_identifier(token.type) && token.type != TokenType::KEYWORD_OPERATOR) {
       throw_parser_error(token.id, String(error_message));
     }
     return parse_identifier();
@@ -1590,7 +1584,7 @@ public:
 
   bool is_start_of_lambda_expression() {
     auto next_token = peek();
-    if (next_token.type == TokenType::IDENTIFIER || next_token.type == TokenType::IDENTIFIER_NO_W) {
+    if (is_identifier(next_token.type)) {
       return peek(1).type == TokenType::ARROW;
     } else if (next_token.type == TokenType::LEFT_PAREN ||
                next_token.type == TokenType::LEFT_PAREN_NO_W) {
@@ -1607,8 +1601,7 @@ public:
           an identifier. If we see anything else, this isn't a lambda parameter list.
         */
 
-        if (next_token.type == TokenType::IDENTIFIER ||
-            next_token.type == TokenType::IDENTIFIER_NO_W) {
+        if (is_identifier(next_token.type)) {
           if (peek(lookahead + 1).type == TokenType::COLON) {
             return true;
           }
@@ -1650,9 +1643,7 @@ public:
   NodeId parse_function_call_argument() {
     Option<NodeId> name;
     auto next_token = peek();
-    if ((next_token.type == TokenType::IDENTIFIER || next_token.type == TokenType::IDENTIFIER_NO_W
-        ) &&
-        peek(1).type == TokenType::ASSIGN) {
+    if (is_identifier(next_token.type) && peek(1).type == TokenType::ASSIGN) {
       name = parse_identifier();
       ++m_token_index; // consume the '=' token
     }

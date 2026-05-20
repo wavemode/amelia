@@ -165,11 +165,40 @@ public:
       read_number(start_location);
     } else if (is_word_start(cp)) {
       read_word(start_location);
+    } else if (cp == '`') {
+      read_quoted_ident(start_location);
     } else {
       String msg = "Unexpected character: '";
       msg.append(cp);
       msg.append('\'');
       throw_lexer_error(start_location, std::move(msg));
+    }
+  }
+
+  void read_quoted_ident(Location start_location) {
+    next();
+    while (true) {
+      if (at_end()) {
+        throw_lexer_error_at_current_location(
+            "Unterminated quoted identifier - unexpected end of input"
+        );
+      }
+      uint32_t ch = peek();
+      if (ch == '`') {
+        next();
+        if (!at_end() && peek() == '`') {
+          next();
+        } else {
+          break;
+        }
+      } else {
+        next();
+      }
+    }
+    if (previous_char_was_whitespace()) {
+      emit_token(TokenType::QUOTED_IDENTIFIER, start_location);
+    } else {
+      emit_token(TokenType::QUOTED_IDENTIFIER_NO_W, start_location);
     }
   }
 

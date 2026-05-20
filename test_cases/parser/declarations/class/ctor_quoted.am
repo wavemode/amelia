@@ -1,0 +1,73 @@
+class A {
+  `A`() {
+    this.a = 0
+    this.b = "hello"
+  }
+
+  a: int
+  b: String
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ClassDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      decls=[
+        ClassConstructorNode(
+          name=IdentifierNode(
+            token=QUOTED_IDENTIFIER(`A`)
+          ),
+          signature=FunctionSignatureNode(),
+          body=FunctionBodyNode(
+            stmts=[
+              AssignmentStatementNode(
+                target=FieldAccessExpressionNode(
+                  object=ThisLiteralNode(),
+                  field=IdentifierNode(
+                    token=IDENTIFIER_NO_W(a)
+                  )
+                ),
+                expression=NumberLiteralNode(
+                  lit=NUMBER(0)
+                )
+              ),
+              AssignmentStatementNode(
+                target=FieldAccessExpressionNode(
+                  object=ThisLiteralNode(),
+                  field=IdentifierNode(
+                    token=IDENTIFIER_NO_W(b)
+                  )
+                ),
+                expression=StringLiteralNode(
+                  lit=STRING_LITERAL("hello")
+                )
+              )
+            ],
+            is_default=false,
+            is_deleted=false
+          )
+        ),
+        ClassFieldNode(
+          name=IdentifierNode(
+            token=IDENTIFIER(a)
+          ),
+          type=IdentifierNode(
+            token=IDENTIFIER(int)
+          )
+        ),
+        ClassFieldNode(
+          name=IdentifierNode(
+            token=IDENTIFIER(b)
+          ),
+          type=IdentifierNode(
+            token=IDENTIFIER(String)
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

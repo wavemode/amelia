@@ -1,0 +1,8 @@
+`a`.`b``c`
+
+/* EXPECTED_OUTPUT:
+QUOTED_IDENTIFIER(`a`)
+DOT_NO_W(.)
+QUOTED_IDENTIFIER_NO_W(`b``c`)
+END_OF_FILE()
+*/
