@@ -1,0 +1,82 @@
+let example = {
+  try {
+    let x = 10
+  } catch (e) {
+    println("error")
+  } else {
+    println(x)
+  }
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(example)
+      ),
+      expression=BlockExpressionNode(
+        stmts=[
+          TryStatementNode(
+            try_block=BlockStatementNode(
+              stmts=[
+                LetDeclarationNode(
+                  target=IdentifierNode(
+                    token=IDENTIFIER(x)
+                  ),
+                  expression=NumberLiteralNode(
+                    lit=NUMBER(10)
+                  )
+                )
+              ]
+            ),
+            catch_clauses=[
+              CatchClauseNode(
+                exc_type=IdentifierNode(
+                  token=IDENTIFIER_NO_W(e)
+                ),
+                body=BlockStatementNode(
+                  stmts=[
+                    ExpressionStatementNode(
+                      expr=FunctionCallExpressionNode(
+                        callee=IdentifierNode(
+                          token=IDENTIFIER(println)
+                        ),
+                        args=[
+                          FunctionArgumentNode(
+                            expr=StringLiteralNode(
+                              lit="error"
+                            )
+                          )
+                        ]
+                      )
+                    )
+                  ]
+                )
+              )
+            ],
+            else_branch=BlockStatementNode(
+              stmts=[
+                ExpressionStatementNode(
+                  expr=FunctionCallExpressionNode(
+                    callee=IdentifierNode(
+                      token=IDENTIFIER(println)
+                    ),
+                    args=[
+                      FunctionArgumentNode(
+                        expr=IdentifierNode(
+                          token=IDENTIFIER_NO_W(x)
+                        )
+                      )
+                    ]
+                  )
+                )
+              ]
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

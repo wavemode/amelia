@@ -776,11 +776,18 @@ public:
   NodeId parse_try_statement() {
     auto try_token = next();
     NodeId try_block = parse_statement();
-    List<NodeId> clauses;
+    List<NodeId> catch_clauses;
     while (peek().type == TokenType::KEYWORD_CATCH) {
-      clauses.push_back(parse_try_statement_catch_clause());
+      catch_clauses.push_back(parse_try_statement_catch_clause());
     }
-    return m_output.add_node(try_token.loc, TryStatementNode{try_block, std::move(clauses)});
+    Option<NodeId> else_branch;
+    if (peek().type == TokenType::KEYWORD_ELSE) {
+      ++m_token_index; // consume the 'else' token
+      else_branch = parse_statement();
+    }
+    return m_output.add_node(
+        try_token.loc, TryStatementNode{try_block, std::move(catch_clauses), else_branch}
+    );
   }
 
   NodeId parse_try_statement_catch_clause() {
@@ -1931,11 +1938,18 @@ public:
   NodeId parse_try_expression() {
     auto try_token = next();
     NodeId try_block = parse_expression();
-    List<NodeId> clauses;
+    List<NodeId> catch_clauses;
     while (peek().type == TokenType::KEYWORD_CATCH) {
-      clauses.push_back(parse_try_expression_catch_clause());
+      catch_clauses.push_back(parse_try_expression_catch_clause());
     }
-    return m_output.add_node(try_token.loc, TryExpressionNode{try_block, std::move(clauses)});
+    Option<NodeId> else_branch;
+    if (peek().type == TokenType::KEYWORD_ELSE) {
+      ++m_token_index; // consume the 'else' keyword
+      else_branch = parse_expression();
+    }
+    return m_output.add_node(
+        try_token.loc, TryExpressionNode{try_block, std::move(catch_clauses), else_branch}
+    );
   }
 
   NodeId parse_try_expression_catch_clause() {
@@ -2091,10 +2105,6 @@ public:
       int lookahead = 1;
       next_token = peek(lookahead);
       while (next_token.type != TokenType::RIGHT_PAREN) {
-        if (next_token.type == TokenType::END_OF_FILE) {
-          return false;
-        }
-
         /*
           In a nutshell - in a parenthesized lambda parameter list, we should only see identifiers
           and commas. The only exception is the colon character, which can appear immediately after

@@ -11,7 +11,7 @@ ModuleNode(
         try_block=IdentifierNode(
           token=IDENTIFIER(x)
         ),
-        clauses=[
+        catch_clauses=[
           CatchClauseNode(
             exc_type=IdentifierNode(
               token=IDENTIFIER(z)

@@ -128,13 +128,15 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   case NodeType::TryExpressionNode: {
     const auto &n = node.as_TryExpressionNode();
     print_node_field(out, "try_block", n.try_block);
-    print_node_field(out, "clauses", n.clauses);
+    print_node_field(out, "catch_clauses", n.catch_clauses);
+    print_node_field(out, "else_branch", n.else_branch);
     break;
   }
   case NodeType::TryStatementNode: {
     const auto &n = node.as_TryStatementNode();
     print_node_field(out, "try_block", n.try_block);
-    print_node_field(out, "clauses", n.clauses);
+    print_node_field(out, "catch_clauses", n.catch_clauses);
+    print_node_field(out, "else_branch", n.else_branch);
     break;
   }
   case NodeType::CaseClauseNode: {

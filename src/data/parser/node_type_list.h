@@ -252,12 +252,14 @@ struct CatchClauseNode {
 
 struct TryExpressionNode {
   NodeId try_block;
-  List<NodeId> clauses;
+  List<NodeId> catch_clauses;
+  Option<NodeId> else_branch;
 };
 
 struct TryStatementNode {
   NodeId try_block;
-  List<NodeId> clauses;
+  List<NodeId> catch_clauses;
+  Option<NodeId> else_branch;
 };
 
 struct CaseClauseNode {

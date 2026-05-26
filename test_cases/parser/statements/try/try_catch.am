@@ -17,7 +17,7 @@ ModuleNode(
                 token=IDENTIFIER_NO_W(x)
               )
             ),
-            clauses=[
+            catch_clauses=[
               CatchClauseNode(
                 exc_type=IdentifierNode(
                   token=IDENTIFIER(z)
