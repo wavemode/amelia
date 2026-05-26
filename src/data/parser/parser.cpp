@@ -1879,7 +1879,6 @@ public:
     auto start_token = peek();
     Option<List<NodeId>> introductory_decls;
     Option<List<NodeId>> exprs;
-    Option<NodeId> when_clause;
 
     if (start_token.type == TokenType::LEFT_PAREN ||
         start_token.type == TokenType::LEFT_PAREN_NO_W) {
@@ -1896,12 +1895,7 @@ public:
       ++m_token_index; // consume the right paren
     }
 
-    if (peek().type == TokenType::KEYWORD_WHEN) {
-      ++m_token_index; // consume the 'when' keyword
-      read_left_paren("Expected '(' after 'when' in case clause");
-      when_clause = parse_expression();
-      read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after condition in 'when' clause");
-    }
+    Option<NodeId> when_clause = try_parse_when_clause();
 
     if (!introductory_decls.has_value() && !exprs.has_value() && !when_clause.has_value()) {
       throw_parser_error(start_token.id, "Expected case clause header");
@@ -1911,6 +1905,23 @@ public:
         start_token.loc,
         CaseClauseHeaderNode{std::move(introductory_decls), std::move(exprs), when_clause}
     );
+  }
+
+  Option<NodeId> try_parse_when_clause() {
+    Option<NodeId> when_clause;
+    auto start_token = peek();
+    if (start_token.type == TokenType::KEYWORD_WHEN) {
+      ++m_token_index; // consume the 'when' keyword
+      read_left_paren("Expected '(' after 'when' in case clause");
+      auto introductory_decls = parse_introductory_decls();
+      NodeId condition = parse_expression();
+      enforce_separator_after_introductory_decls(introductory_decls, condition);
+      when_clause = m_output.add_node(
+          start_token.loc, WhenClauseNode{std::move(introductory_decls), condition}
+      );
+      read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after condition in 'when' clause");
+    }
+    return when_clause;
   }
 
   NodeId parse_try_expression() {

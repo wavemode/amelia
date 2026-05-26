@@ -137,6 +137,12 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "when_clause", n.when_clause);
     break;
   }
+  case NodeType::WhenClauseNode: {
+    const auto &n = node.as_WhenClauseNode();
+    print_node_field(out, "introductory_decls", n.introductory_decls);
+    print_node_field(out, "condition", n.condition);
+    break;
+  }
   case NodeType::SwitchExpressionNode: {
     const auto &n = node.as_SwitchExpressionNode();
     print_node_field(out, "introductory_decls", n.introductory_decls);

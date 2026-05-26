@@ -40,12 +40,14 @@ ModuleNode(
                       lit=NUMBER(3)
                     )
                   ],
-                  when_clause=EqualsExpressionNode(
-                    left=IdentifierNode(
-                      token=IDENTIFIER_NO_W(z)
-                    ),
-                    right=NumberLiteralNode(
-                      lit=NUMBER(2)
+                  when_clause=WhenClauseNode(
+                    condition=EqualsExpressionNode(
+                      left=IdentifierNode(
+                        token=IDENTIFIER_NO_W(z)
+                      ),
+                      right=NumberLiteralNode(
+                        lit=NUMBER(2)
+                      )
                     )
                   )
                 ),

@@ -1,7 +1,7 @@
 let example = {
   switch(y) {
-    case (1) ++y
-    case when (y < 10 && y > 3) --y
+    case (1) ++x
+    case (3) when (let z = 5; z == y) ++y
   }
 }
 
@@ -29,34 +29,40 @@ ModuleNode(
                 ),
                 body=PreIncrementStatementNode(
                   target=IdentifierNode(
-                    token=IDENTIFIER_NO_W(y)
+                    token=IDENTIFIER_NO_W(x)
                   )
                 )
               ),
               CaseClauseNode(
                 header=CaseClauseHeaderNode(
+                  exprs=[
+                    NumberLiteralNode(
+                      lit=NUMBER(3)
+                    )
+                  ],
                   when_clause=WhenClauseNode(
-                    condition=AndExpressionNode(
-                      left=LessExpressionNode(
-                        left=IdentifierNode(
-                          token=IDENTIFIER_NO_W(y)
+                    introductory_decls=[
+                      LetDeclarationNode(
+                        target=IdentifierNode(
+                          token=IDENTIFIER(z)
                         ),
-                        right=NumberLiteralNode(
-                          lit=NUMBER(10)
+                        expression=NumberLiteralNode(
+                          lit=NUMBER(5)
                         )
                       ),
-                      right=GreaterExpressionNode(
-                        left=IdentifierNode(
-                          token=IDENTIFIER(y)
-                        ),
-                        right=NumberLiteralNode(
-                          lit=NUMBER(3)
-                        )
+                      EmptyStatementNode()
+                    ],
+                    condition=EqualsExpressionNode(
+                      left=IdentifierNode(
+                        token=IDENTIFIER(z)
+                      ),
+                      right=IdentifierNode(
+                        token=IDENTIFIER(y)
                       )
                     )
                   )
                 ),
-                body=PreDecrementStatementNode(
+                body=PreIncrementStatementNode(
                   target=IdentifierNode(
                     token=IDENTIFIER_NO_W(y)
                   )

@@ -267,6 +267,11 @@ struct CaseClauseHeaderNode {
   Option<NodeId> when_clause;
 };
 
+struct WhenClauseNode {
+  List<NodeId> introductory_decls;
+  NodeId condition;
+};
+
 struct SwitchExpressionNode {
   List<NodeId> introductory_decls;
   NodeId expr;
@@ -758,6 +763,7 @@ struct BreakStatementNode {};
   X(TryStatementNode)                                                                              \
   X(CaseClauseNode)                                                                                \
   X(CaseClauseHeaderNode)                                                                          \
+  X(WhenClauseNode)                                                                                \
   X(SwitchExpressionNode)                                                                          \
   X(SwitchStatementNode)                                                                           \
   X(OrExpressionNode)                                                                              \

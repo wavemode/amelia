@@ -1,0 +1,10 @@
+let example = {
+  switch(y) {
+    case (1) ++x
+    case (3) when (let z = 5 z == y) ++y
+  }
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("Multiple statements on the same line must be separated by a semicolon (at test_cases/parser/statements/switch/error_when_introductory_decls_no_sep.am:4:30)")
+*/
