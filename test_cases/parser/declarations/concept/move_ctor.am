@@ -9,25 +9,27 @@ ModuleNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),
-      decls=[
-        ClassMoveDeclarationNode(
-          decl=ClassConstructorNode(
-            name=IdentifierNode(
-              token=KEYWORD_SELF_TYPE(Self)
-            ),
-            signature=FunctionSignatureNode(
-              parameters=[
-                FunctionParameterNode(
-                  variadic=false,
-                  name=IdentifierNode(
-                    token=IDENTIFIER_NO_W(o)
+      body=ClassBodyNode(
+        decls=[
+          ClassMoveDeclarationNode(
+            decl=ClassConstructorNode(
+              name=IdentifierNode(
+                token=KEYWORD_SELF_TYPE(Self)
+              ),
+              signature=FunctionSignatureNode(
+                parameters=[
+                  FunctionParameterNode(
+                    variadic=false,
+                    name=IdentifierNode(
+                      token=IDENTIFIER_NO_W(o)
+                    )
                   )
-                )
-              ]
+                ]
+              )
             )
           )
-        )
-      ]
+        ]
+      )
     )
   ]
 )

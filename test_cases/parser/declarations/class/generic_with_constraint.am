@@ -19,7 +19,8 @@ ModuleNode(
             )
           )
         ]
-      )
+      ),
+      body=ClassBodyNode()
     )
   ]
 )

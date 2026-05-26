@@ -485,23 +485,11 @@ public:
     Option<NodeId> generic_parameter_list = try_parse_generic_parameter_list();
     Option<NodeId> base_concept_list = try_parse_base_type_list();
     Option<NodeId> implicit_parameter_list = try_parse_implicit_parameter_list();
-    read_token_type(TokenType::LEFT_BRACE, "Expected '{' to start concept body");
-    List<NodeId> decls;
-    while (peek().type != TokenType::RIGHT_BRACE) {
-      decls.push_back(parse_class_body_declaration());
-      if (decls.size() > 1) {
-        enforce_statement_separator(decls[decls.size() - 2], decls[decls.size() - 1]);
-      }
-    }
-    read_token_type(TokenType::RIGHT_BRACE, "Expected '}' to end concept body");
+    Option<NodeId> body = try_parse_class_body();
     return m_output.add_node(
         concept_token.loc,
         ConceptDeclarationNode{
-            name,
-            generic_parameter_list,
-            base_concept_list,
-            implicit_parameter_list,
-            std::move(decls)
+            name, generic_parameter_list, base_concept_list, implicit_parameter_list, body
         }
     );
   }
@@ -512,21 +500,30 @@ public:
     Option<NodeId> generic_parameter_list = try_parse_generic_parameter_list();
     Option<NodeId> base_class_list = try_parse_base_type_list();
     Option<NodeId> implicit_parameter_list = try_parse_implicit_parameter_list();
-    read_token_type(TokenType::LEFT_BRACE, "Expected '{' to start class body");
-    List<NodeId> decls;
-    while (peek().type != TokenType::RIGHT_BRACE) {
-      decls.push_back(parse_class_body_declaration());
-      if (decls.size() > 1) {
-        enforce_statement_separator(decls[decls.size() - 2], decls[decls.size() - 1]);
-      }
-    }
-    read_token_type(TokenType::RIGHT_BRACE, "Expected '}' to end class body");
+    Option<NodeId> body = try_parse_class_body();
     return m_output.add_node(
         class_token.loc,
         ClassDeclarationNode{
-            name, generic_parameter_list, base_class_list, implicit_parameter_list, std::move(decls)
+            name, generic_parameter_list, base_class_list, implicit_parameter_list, body
         }
     );
+  }
+
+  Option<NodeId> try_parse_class_body() {
+    Option<NodeId> result;
+    if (peek().type == TokenType::LEFT_BRACE) {
+      ++m_token_index; // consume the '{' token
+      List<NodeId> decls;
+      while (peek().type != TokenType::RIGHT_BRACE) {
+        decls.push_back(parse_class_body_declaration());
+        if (decls.size() > 1) {
+          enforce_statement_separator(decls[decls.size() - 2], decls[decls.size() - 1]);
+        }
+      }
+      read_token_type(TokenType::RIGHT_BRACE, "Expected '}' to end class body");
+      result = m_output.add_node(peek(-1).loc, ClassBodyNode{std::move(decls)});
+    }
+    return result;
   }
 
   Option<NodeId> try_parse_base_type_list() {
@@ -842,8 +839,11 @@ public:
   NodeId parse_type_declaration() {
     auto type_token = next();
     auto name = parse_expression();
-    read_token_type(TokenType::ASSIGN, "Expected '=' after type name in type declaration");
-    NodeId type_expr = parse_type_expression();
+    Option<NodeId> type_expr;
+    if (peek().type == TokenType::ASSIGN) {
+      ++m_token_index; // consume the '=' token
+      type_expr = parse_type_expression();
+    }
     return m_output.add_node(type_token.loc, TypeDeclarationNode{name, type_expr});
   }
 

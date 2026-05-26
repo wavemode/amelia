@@ -9,16 +9,18 @@ ModuleNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),
-      decls=[
-        DefaultDeclarationNode(
-          decl=ClassConstructorNode(
-            name=IdentifierNode(
-              token=KEYWORD_SELF_TYPE(Self)
-            ),
-            signature=FunctionSignatureNode()
+      body=ClassBodyNode(
+        decls=[
+          DefaultDeclarationNode(
+            decl=ClassConstructorNode(
+              name=IdentifierNode(
+                token=KEYWORD_SELF_TYPE(Self)
+              ),
+              signature=FunctionSignatureNode()
+            )
           )
-        )
-      ]
+        ]
+      )
     )
   ]
 )

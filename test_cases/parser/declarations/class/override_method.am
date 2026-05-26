@@ -12,47 +12,49 @@ ModuleNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),
-      decls=[
-        OverrideDeclarationNode(
-          decl=FunctionDeclarationNode(
-            name=IdentifierNode(
-              token=IDENTIFIER(say_age)
-            ),
-            signature=FunctionSignatureNode(),
-            body=FunctionBodyNode(
-              stmts=[
-                ExpressionStatementNode(
-                  expr=FunctionCallExpressionNode(
-                    callee=IdentifierNode(
-                      token=IDENTIFIER(println)
-                    ),
-                    args=[
-                      FunctionArgumentNode(
-                        expr=FieldAccessExpressionNode(
-                          object=ThisLiteralNode(),
-                          field=IdentifierNode(
-                            token=IDENTIFIER_NO_W(age)
+      body=ClassBodyNode(
+        decls=[
+          OverrideDeclarationNode(
+            decl=FunctionDeclarationNode(
+              name=IdentifierNode(
+                token=IDENTIFIER(say_age)
+              ),
+              signature=FunctionSignatureNode(),
+              body=FunctionBodyNode(
+                stmts=[
+                  ExpressionStatementNode(
+                    expr=FunctionCallExpressionNode(
+                      callee=IdentifierNode(
+                        token=IDENTIFIER(println)
+                      ),
+                      args=[
+                        FunctionArgumentNode(
+                          expr=FieldAccessExpressionNode(
+                            object=ThisLiteralNode(),
+                            field=IdentifierNode(
+                              token=IDENTIFIER_NO_W(age)
+                            )
                           )
                         )
-                      )
-                    ]
+                      ]
+                    )
                   )
-                )
-              ],
-              is_default=false,
-              is_deleted=false
+                ],
+                is_default=false,
+                is_deleted=false
+              )
+            )
+          ),
+          ClassFieldNode(
+            name=IdentifierNode(
+              token=IDENTIFIER(age)
+            ),
+            type=PrimitiveTypeNode(
+              token=KEYWORD_INT(int)
             )
           )
-        ),
-        ClassFieldNode(
-          name=IdentifierNode(
-            token=IDENTIFIER(age)
-          ),
-          type=PrimitiveTypeNode(
-            token=KEYWORD_INT(int)
-          )
-        )
-      ]
+        ]
+      )
     )
   ]
 )

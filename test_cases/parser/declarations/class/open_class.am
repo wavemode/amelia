@@ -7,7 +7,8 @@ ModuleNode(
       decl=ClassDeclarationNode(
         name=IdentifierNode(
           token=IDENTIFIER(A)
-        )
+        ),
+        body=ClassBodyNode()
       )
     )
   ]

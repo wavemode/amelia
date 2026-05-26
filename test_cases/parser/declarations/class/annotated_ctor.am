@@ -10,23 +10,25 @@ ModuleNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),
-      decls=[
-        AnnotationNode(
-          name=IdentifierNode(
-            token=IDENTIFIER_NO_W(anno)
-          ),
-          stmt=ClassConstructorNode(
+      body=ClassBodyNode(
+        decls=[
+          AnnotationNode(
             name=IdentifierNode(
-              token=IDENTIFIER(A)
+              token=IDENTIFIER_NO_W(anno)
             ),
-            signature=FunctionSignatureNode(),
-            body=FunctionBodyNode(
-              is_default=false,
-              is_deleted=false
+            stmt=ClassConstructorNode(
+              name=IdentifierNode(
+                token=IDENTIFIER(A)
+              ),
+              signature=FunctionSignatureNode(),
+              body=FunctionBodyNode(
+                is_default=false,
+                is_deleted=false
+              )
             )
           )
-        )
-      ]
+        ]
+      )
     )
   ]
 )

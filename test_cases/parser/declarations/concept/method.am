@@ -9,14 +9,16 @@ ModuleNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),
-      decls=[
-        FunctionDeclarationNode(
-          name=IdentifierNode(
-            token=IDENTIFIER(say_age)
-          ),
-          signature=FunctionSignatureNode()
-        )
-      ]
+      body=ClassBodyNode(
+        decls=[
+          FunctionDeclarationNode(
+            name=IdentifierNode(
+              token=IDENTIFIER(say_age)
+            ),
+            signature=FunctionSignatureNode()
+          )
+        ]
+      )
     )
   ]
 )

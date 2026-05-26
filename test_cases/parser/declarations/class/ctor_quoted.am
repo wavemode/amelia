@@ -15,58 +15,60 @@ ModuleNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),
-      decls=[
-        ClassConstructorNode(
-          name=IdentifierNode(
-            token=QUOTED_IDENTIFIER(`A`)
-          ),
-          signature=FunctionSignatureNode(),
-          body=FunctionBodyNode(
-            stmts=[
-              AssignmentStatementNode(
-                target=FieldAccessExpressionNode(
-                  object=ThisLiteralNode(),
-                  field=IdentifierNode(
-                    token=IDENTIFIER_NO_W(a)
+      body=ClassBodyNode(
+        decls=[
+          ClassConstructorNode(
+            name=IdentifierNode(
+              token=QUOTED_IDENTIFIER(`A`)
+            ),
+            signature=FunctionSignatureNode(),
+            body=FunctionBodyNode(
+              stmts=[
+                AssignmentStatementNode(
+                  target=FieldAccessExpressionNode(
+                    object=ThisLiteralNode(),
+                    field=IdentifierNode(
+                      token=IDENTIFIER_NO_W(a)
+                    )
+                  ),
+                  expression=NumberLiteralNode(
+                    lit=NUMBER(0)
                   )
                 ),
-                expression=NumberLiteralNode(
-                  lit=NUMBER(0)
-                )
-              ),
-              AssignmentStatementNode(
-                target=FieldAccessExpressionNode(
-                  object=ThisLiteralNode(),
-                  field=IdentifierNode(
-                    token=IDENTIFIER_NO_W(b)
+                AssignmentStatementNode(
+                  target=FieldAccessExpressionNode(
+                    object=ThisLiteralNode(),
+                    field=IdentifierNode(
+                      token=IDENTIFIER_NO_W(b)
+                    )
+                  ),
+                  expression=StringLiteralNode(
+                    lit=STRING_LITERAL("hello")
                   )
-                ),
-                expression=StringLiteralNode(
-                  lit=STRING_LITERAL("hello")
                 )
-              )
-            ],
-            is_default=false,
-            is_deleted=false
-          )
-        ),
-        ClassFieldNode(
-          name=IdentifierNode(
-            token=IDENTIFIER(a)
+              ],
+              is_default=false,
+              is_deleted=false
+            )
           ),
-          type=PrimitiveTypeNode(
-            token=KEYWORD_INT(int)
-          )
-        ),
-        ClassFieldNode(
-          name=IdentifierNode(
-            token=IDENTIFIER(b)
+          ClassFieldNode(
+            name=IdentifierNode(
+              token=IDENTIFIER(a)
+            ),
+            type=PrimitiveTypeNode(
+              token=KEYWORD_INT(int)
+            )
           ),
-          type=IdentifierNode(
-            token=IDENTIFIER(String)
+          ClassFieldNode(
+            name=IdentifierNode(
+              token=IDENTIFIER(b)
+            ),
+            type=IdentifierNode(
+              token=IDENTIFIER(String)
+            )
           )
-        )
-      ]
+        ]
+      )
     )
   ]
 )

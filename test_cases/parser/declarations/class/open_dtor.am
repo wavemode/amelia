@@ -9,20 +9,22 @@ ModuleNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),
-      decls=[
-        OpenDeclarationNode(
-          decl=ClassDestructorNode(
-            name=IdentifierNode(
-              token=IDENTIFIER_NO_W(A)
-            ),
-            signature=FunctionSignatureNode(),
-            body=FunctionBodyNode(
-              is_default=false,
-              is_deleted=false
+      body=ClassBodyNode(
+        decls=[
+          OpenDeclarationNode(
+            decl=ClassDestructorNode(
+              name=IdentifierNode(
+                token=IDENTIFIER_NO_W(A)
+              ),
+              signature=FunctionSignatureNode(),
+              body=FunctionBodyNode(
+                is_default=false,
+                is_deleted=false
+              )
             )
           )
-        )
-      ]
+        ]
+      )
     )
   ]
 )

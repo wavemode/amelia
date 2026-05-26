@@ -13,7 +13,8 @@ ModuleNode(
             token=IDENTIFIER(B)
           )
         ]
-      )
+      ),
+      body=ClassBodyNode()
     )
   ]
 )

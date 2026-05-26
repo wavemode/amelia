@@ -1,13 +1,12 @@
-class A {}
+type A
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ClassDeclarationNode(
+    TypeDeclarationNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
-      ),
-      body=ClassBodyNode()
+      )
     )
   ]
 )

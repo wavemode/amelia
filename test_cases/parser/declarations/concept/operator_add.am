@@ -9,26 +9,28 @@ ModuleNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),
-      decls=[
-        OperatorFunctionDeclarationNode(
-          operator_ident=OperatorIdentifierNode(
-            op=OperatorIdentAddNode()
-          ),
-          signature=FunctionSignatureNode(
-            parameters=[
-              FunctionParameterNode(
-                variadic=false,
-                name=IdentifierNode(
-                  token=IDENTIFIER_NO_W(other)
+      body=ClassBodyNode(
+        decls=[
+          OperatorFunctionDeclarationNode(
+            operator_ident=OperatorIdentifierNode(
+              op=OperatorIdentAddNode()
+            ),
+            signature=FunctionSignatureNode(
+              parameters=[
+                FunctionParameterNode(
+                  variadic=false,
+                  name=IdentifierNode(
+                    token=IDENTIFIER_NO_W(other)
+                  )
                 )
+              ],
+              return_type=IdentifierNode(
+                token=KEYWORD_SELF_TYPE(Self)
               )
-            ],
-            return_type=IdentifierNode(
-              token=KEYWORD_SELF_TYPE(Self)
             )
           )
-        )
-      ]
+        ]
+      )
     )
   ]
 )

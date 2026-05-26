@@ -12,44 +12,46 @@ ModuleNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),
-      decls=[
-        ClassFieldNode(
-          name=IdentifierNode(
-            token=IDENTIFIER(a)
-          ),
-          type=PrimitiveTypeNode(
-            token=KEYWORD_INT(int)
-          )
-        ),
-        ClassFieldNode(
-          name=IdentifierNode(
-            token=IDENTIFIER(b)
-          ),
-          type=IdentifierNode(
-            token=IDENTIFIER(String)
-          )
-        ),
-        ClassStaticDeclarationNode(
-          decl=ClassFieldNode(
+      body=ClassBodyNode(
+        decls=[
+          ClassFieldNode(
             name=IdentifierNode(
-              token=IDENTIFIER(c)
+              token=IDENTIFIER(a)
             ),
             type=PrimitiveTypeNode(
-              token=KEYWORD_FLOAT(float)
+              token=KEYWORD_INT(int)
             )
-          )
-        ),
-        ClassConstDeclarationNode(
-          decl=ClassFieldNode(
+          ),
+          ClassFieldNode(
             name=IdentifierNode(
-              token=IDENTIFIER(d)
+              token=IDENTIFIER(b)
             ),
-            type=PrimitiveTypeNode(
-              token=KEYWORD_BOOL(bool)
+            type=IdentifierNode(
+              token=IDENTIFIER(String)
+            )
+          ),
+          ClassStaticDeclarationNode(
+            decl=ClassFieldNode(
+              name=IdentifierNode(
+                token=IDENTIFIER(c)
+              ),
+              type=PrimitiveTypeNode(
+                token=KEYWORD_FLOAT(float)
+              )
+            )
+          ),
+          ClassConstDeclarationNode(
+            decl=ClassFieldNode(
+              name=IdentifierNode(
+                token=IDENTIFIER(d)
+              ),
+              type=PrimitiveTypeNode(
+                token=KEYWORD_BOOL(bool)
+              )
             )
           )
-        )
-      ]
+        ]
+      )
     )
   ]
 )

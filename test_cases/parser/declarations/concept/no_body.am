@@ -1,13 +1,12 @@
-class A {}
+concept A
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ClassDeclarationNode(
+    ConceptDeclarationNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
-      ),
-      body=ClassBodyNode()
+      )
     )
   ]
 )

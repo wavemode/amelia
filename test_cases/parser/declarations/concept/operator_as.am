@@ -9,18 +9,20 @@ ModuleNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),
-      decls=[
-        OperatorFunctionDeclarationNode(
-          operator_ident=OperatorIdentifierNode(
-            op=OperatorIdentAsNode(
-              type=PrimitiveTypeNode(
-                token=KEYWORD_INT(int)
+      body=ClassBodyNode(
+        decls=[
+          OperatorFunctionDeclarationNode(
+            operator_ident=OperatorIdentifierNode(
+              op=OperatorIdentAsNode(
+                type=PrimitiveTypeNode(
+                  token=KEYWORD_INT(int)
+                )
               )
-            )
-          ),
-          signature=FunctionSignatureNode()
-        )
-      ]
+            ),
+            signature=FunctionSignatureNode()
+          )
+        ]
+      )
     )
   ]
 )

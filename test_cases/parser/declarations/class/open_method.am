@@ -10,28 +10,30 @@ ModuleNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),
-      decls=[
-        OpenDeclarationNode(
-          decl=FunctionDeclarationNode(
-            name=IdentifierNode(
-              token=IDENTIFIER(say_age)
-            ),
-            signature=FunctionSignatureNode(
-              return_type=PrimitiveTypeNode(
-                token=KEYWORD_NULL(null)
+      body=ClassBodyNode(
+        decls=[
+          OpenDeclarationNode(
+            decl=FunctionDeclarationNode(
+              name=IdentifierNode(
+                token=IDENTIFIER(say_age)
+              ),
+              signature=FunctionSignatureNode(
+                return_type=PrimitiveTypeNode(
+                  token=KEYWORD_NULL(null)
+                )
               )
             )
-          )
-        ),
-        ClassFieldNode(
-          name=IdentifierNode(
-            token=IDENTIFIER(age)
           ),
-          type=PrimitiveTypeNode(
-            token=KEYWORD_INT(int)
+          ClassFieldNode(
+            name=IdentifierNode(
+              token=IDENTIFIER(age)
+            ),
+            type=PrimitiveTypeNode(
+              token=KEYWORD_INT(int)
+            )
           )
-        )
-      ]
+        ]
+      )
     )
   ]
 )

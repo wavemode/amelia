@@ -6,7 +6,8 @@ ModuleNode(
     ConceptDeclarationNode(
       name=IdentifierNode(
         token=QUOTED_IDENTIFIER(`A`)
-      )
+      ),
+      body=ClassBodyNode()
     )
   ]
 )

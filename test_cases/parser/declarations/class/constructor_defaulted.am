@@ -9,18 +9,20 @@ ModuleNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),
-      decls=[
-        ClassConstructorNode(
-          name=IdentifierNode(
-            token=IDENTIFIER(A)
-          ),
-          signature=FunctionSignatureNode(),
-          body=FunctionBodyNode(
-            is_default=true,
-            is_deleted=false
+      body=ClassBodyNode(
+        decls=[
+          ClassConstructorNode(
+            name=IdentifierNode(
+              token=IDENTIFIER(A)
+            ),
+            signature=FunctionSignatureNode(),
+            body=FunctionBodyNode(
+              is_default=true,
+              is_deleted=false
+            )
           )
-        )
-      ]
+        ]
+      )
     )
   ]
 )

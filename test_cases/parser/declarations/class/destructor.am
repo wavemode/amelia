@@ -11,34 +11,36 @@ ModuleNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),
-      decls=[
-        ClassDestructorNode(
-          name=IdentifierNode(
-            token=IDENTIFIER_NO_W(A)
-          ),
-          signature=FunctionSignatureNode(),
-          body=FunctionBodyNode(
-            stmts=[
-              ExpressionStatementNode(
-                expr=FunctionCallExpressionNode(
-                  callee=IdentifierNode(
-                    token=IDENTIFIER(println)
-                  ),
-                  args=[
-                    FunctionArgumentNode(
-                      expr=StringLiteralNode(
-                        lit=STRING_LITERAL("destroying")
+      body=ClassBodyNode(
+        decls=[
+          ClassDestructorNode(
+            name=IdentifierNode(
+              token=IDENTIFIER_NO_W(A)
+            ),
+            signature=FunctionSignatureNode(),
+            body=FunctionBodyNode(
+              stmts=[
+                ExpressionStatementNode(
+                  expr=FunctionCallExpressionNode(
+                    callee=IdentifierNode(
+                      token=IDENTIFIER(println)
+                    ),
+                    args=[
+                      FunctionArgumentNode(
+                        expr=StringLiteralNode(
+                          lit=STRING_LITERAL("destroying")
+                        )
                       )
-                    )
-                  ]
+                    ]
+                  )
                 )
-              )
-            ],
-            is_default=false,
-            is_deleted=false
+              ],
+              is_default=false,
+              is_deleted=false
+            )
           )
-        )
-      ]
+        ]
+      )
     )
   ]
 )

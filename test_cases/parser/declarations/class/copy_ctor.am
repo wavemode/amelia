@@ -15,83 +15,85 @@ ModuleNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),
-      decls=[
-        ClassCopyDeclarationNode(
-          decl=ClassConstructorNode(
-            name=IdentifierNode(
-              token=IDENTIFIER(A)
-            ),
-            signature=FunctionSignatureNode(
-              parameters=[
-                FunctionParameterNode(
-                  variadic=false,
-                  name=IdentifierNode(
-                    token=IDENTIFIER_NO_W(o)
-                  )
-                )
-              ]
-            ),
-            body=FunctionBodyNode(
-              stmts=[
-                AssignmentStatementNode(
-                  target=FieldAccessExpressionNode(
-                    object=ThisLiteralNode(),
-                    field=IdentifierNode(
-                      token=IDENTIFIER_NO_W(a)
+      body=ClassBodyNode(
+        decls=[
+          ClassCopyDeclarationNode(
+            decl=ClassConstructorNode(
+              name=IdentifierNode(
+                token=IDENTIFIER(A)
+              ),
+              signature=FunctionSignatureNode(
+                parameters=[
+                  FunctionParameterNode(
+                    variadic=false,
+                    name=IdentifierNode(
+                      token=IDENTIFIER_NO_W(o)
                     )
-                  ),
-                  expression=CopyExpressionNode(
-                    expr=FieldAccessExpressionNode(
-                      object=IdentifierNode(
-                        token=IDENTIFIER(o)
-                      ),
+                  )
+                ]
+              ),
+              body=FunctionBodyNode(
+                stmts=[
+                  AssignmentStatementNode(
+                    target=FieldAccessExpressionNode(
+                      object=ThisLiteralNode(),
                       field=IdentifierNode(
                         token=IDENTIFIER_NO_W(a)
                       )
-                    )
-                  )
-                ),
-                AssignmentStatementNode(
-                  target=FieldAccessExpressionNode(
-                    object=ThisLiteralNode(),
-                    field=IdentifierNode(
-                      token=IDENTIFIER_NO_W(b)
+                    ),
+                    expression=CopyExpressionNode(
+                      expr=FieldAccessExpressionNode(
+                        object=IdentifierNode(
+                          token=IDENTIFIER(o)
+                        ),
+                        field=IdentifierNode(
+                          token=IDENTIFIER_NO_W(a)
+                        )
+                      )
                     )
                   ),
-                  expression=CopyExpressionNode(
-                    expr=FieldAccessExpressionNode(
-                      object=IdentifierNode(
-                        token=IDENTIFIER(o)
-                      ),
+                  AssignmentStatementNode(
+                    target=FieldAccessExpressionNode(
+                      object=ThisLiteralNode(),
                       field=IdentifierNode(
                         token=IDENTIFIER_NO_W(b)
                       )
+                    ),
+                    expression=CopyExpressionNode(
+                      expr=FieldAccessExpressionNode(
+                        object=IdentifierNode(
+                          token=IDENTIFIER(o)
+                        ),
+                        field=IdentifierNode(
+                          token=IDENTIFIER_NO_W(b)
+                        )
+                      )
                     )
                   )
-                )
-              ],
-              is_default=false,
-              is_deleted=false
+                ],
+                is_default=false,
+                is_deleted=false
+              )
+            )
+          ),
+          ClassFieldNode(
+            name=IdentifierNode(
+              token=IDENTIFIER(a)
+            ),
+            type=PrimitiveTypeNode(
+              token=KEYWORD_INT(int)
+            )
+          ),
+          ClassFieldNode(
+            name=IdentifierNode(
+              token=IDENTIFIER(b)
+            ),
+            type=IdentifierNode(
+              token=IDENTIFIER(String)
             )
           )
-        ),
-        ClassFieldNode(
-          name=IdentifierNode(
-            token=IDENTIFIER(a)
-          ),
-          type=PrimitiveTypeNode(
-            token=KEYWORD_INT(int)
-          )
-        ),
-        ClassFieldNode(
-          name=IdentifierNode(
-            token=IDENTIFIER(b)
-          ),
-          type=IdentifierNode(
-            token=IDENTIFIER(String)
-          )
-        )
-      ]
+        ]
+      )
     )
   ]
 )

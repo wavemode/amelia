@@ -13,63 +13,65 @@ ModuleNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),
-      decls=[
-        ClassMoveDeclarationNode(
-          decl=FunctionDeclarationNode(
-            name=IdentifierNode(
-              token=IDENTIFIER(say_age)
-            ),
-            signature=FunctionSignatureNode(),
-            body=FunctionBodyNode(
-              stmts=[
-                ExpressionStatementNode(
-                  expr=FunctionCallExpressionNode(
-                    callee=IdentifierNode(
-                      token=IDENTIFIER(println)
-                    ),
-                    args=[
-                      FunctionArgumentNode(
-                        expr=StringLiteralNode(
-                          lit=STRING_LITERAL("I am ")
-                        )
+      body=ClassBodyNode(
+        decls=[
+          ClassMoveDeclarationNode(
+            decl=FunctionDeclarationNode(
+              name=IdentifierNode(
+                token=IDENTIFIER(say_age)
+              ),
+              signature=FunctionSignatureNode(),
+              body=FunctionBodyNode(
+                stmts=[
+                  ExpressionStatementNode(
+                    expr=FunctionCallExpressionNode(
+                      callee=IdentifierNode(
+                        token=IDENTIFIER(println)
                       ),
-                      FunctionArgumentNode(
-                        expr=FieldAccessExpressionNode(
-                          object=ParenthesizedExpressionNode(
-                            exprs=[
-                              MoveExpressionNode(
-                                expr=ThisLiteralNode()
-                              )
-                            ]
-                          ),
-                          field=IdentifierNode(
-                            token=IDENTIFIER_NO_W(age)
+                      args=[
+                        FunctionArgumentNode(
+                          expr=StringLiteralNode(
+                            lit=STRING_LITERAL("I am ")
+                          )
+                        ),
+                        FunctionArgumentNode(
+                          expr=FieldAccessExpressionNode(
+                            object=ParenthesizedExpressionNode(
+                              exprs=[
+                                MoveExpressionNode(
+                                  expr=ThisLiteralNode()
+                                )
+                              ]
+                            ),
+                            field=IdentifierNode(
+                              token=IDENTIFIER_NO_W(age)
+                            )
+                          )
+                        ),
+                        FunctionArgumentNode(
+                          expr=StringLiteralNode(
+                            lit=STRING_LITERAL(" years old")
                           )
                         )
-                      ),
-                      FunctionArgumentNode(
-                        expr=StringLiteralNode(
-                          lit=STRING_LITERAL(" years old")
-                        )
-                      )
-                    ]
+                      ]
+                    )
                   )
-                )
-              ],
-              is_default=false,
-              is_deleted=false
+                ],
+                is_default=false,
+                is_deleted=false
+              )
+            )
+          ),
+          ClassFieldNode(
+            name=IdentifierNode(
+              token=IDENTIFIER(age)
+            ),
+            type=PrimitiveTypeNode(
+              token=KEYWORD_INT(int)
             )
           )
-        ),
-        ClassFieldNode(
-          name=IdentifierNode(
-            token=IDENTIFIER(age)
-          ),
-          type=PrimitiveTypeNode(
-            token=KEYWORD_INT(int)
-          )
-        )
-      ]
+        ]
+      )
     )
   ]
 )

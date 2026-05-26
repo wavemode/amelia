@@ -9,20 +9,22 @@ ModuleNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),
-      decls=[
-        AsyncDeclarationNode(
-          decl=FunctionDeclarationNode(
-            name=IdentifierNode(
-              token=IDENTIFIER(foo)
-            ),
-            signature=FunctionSignatureNode(),
-            body=FunctionBodyNode(
-              is_default=false,
-              is_deleted=false
+      body=ClassBodyNode(
+        decls=[
+          AsyncDeclarationNode(
+            decl=FunctionDeclarationNode(
+              name=IdentifierNode(
+                token=IDENTIFIER(foo)
+              ),
+              signature=FunctionSignatureNode(),
+              body=FunctionBodyNode(
+                is_default=false,
+                is_deleted=false
+              )
             )
           )
-        )
-      ]
+        ]
+      )
     )
   ]
 )

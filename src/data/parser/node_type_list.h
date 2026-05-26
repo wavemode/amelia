@@ -535,7 +535,7 @@ struct LambdaExpressionNode {
 
 struct TypeDeclarationNode {
   NodeId name;
-  NodeId type_expr;
+  Option<NodeId> type_expr;
 };
 
 struct ClassStaticDeclarationNode {
@@ -569,6 +569,10 @@ struct ClassDeclarationNode {
   Option<NodeId> generic_parameter_list;
   Option<NodeId> base_class_list;
   Option<NodeId> implicit_parameter_list;
+  Option<NodeId> body;
+};
+
+struct ClassBodyNode {
   List<NodeId> decls;
 };
 
@@ -577,7 +581,7 @@ struct ConceptDeclarationNode {
   Option<NodeId> generic_parameter_list;
   Option<NodeId> base_concept_list;
   Option<NodeId> implicit_parameter_list;
-  List<NodeId> decls;
+  Option<NodeId> body;
 };
 
 struct GenericParameterNode {
@@ -877,6 +881,7 @@ struct BreakStatementNode {};
   X(ClassFieldNode)                                                                                \
   X(ClassDeclarationNode)                                                                          \
   X(ConceptDeclarationNode)                                                                        \
+  X(ClassBodyNode)                                                                                 \
   X(BooleanLiteralNode)                                                                            \
   X(ThisLiteralNode)                                                                               \
   X(SuperLiteralNode)                                                                              \

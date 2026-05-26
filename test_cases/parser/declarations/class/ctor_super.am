@@ -22,66 +22,68 @@ ModuleNode(
           )
         ]
       ),
-      decls=[
-        ClassConstructorNode(
-          name=IdentifierNode(
-            token=IDENTIFIER(A)
-          ),
-          signature=FunctionSignatureNode(),
-          body=FunctionBodyNode(
-            stmts=[
-              ExpressionStatementNode(
-                expr=FunctionCallExpressionNode(
-                  callee=SuperLiteralNode()
+      body=ClassBodyNode(
+        decls=[
+          ClassConstructorNode(
+            name=IdentifierNode(
+              token=IDENTIFIER(A)
+            ),
+            signature=FunctionSignatureNode(),
+            body=FunctionBodyNode(
+              stmts=[
+                ExpressionStatementNode(
+                  expr=FunctionCallExpressionNode(
+                    callee=SuperLiteralNode()
+                  )
                 )
-              )
-            ],
-            is_default=false,
-            is_deleted=false
-          )
-        ),
-        ClassConstructorNode(
-          name=IdentifierNode(
-            token=IDENTIFIER(A)
+              ],
+              is_default=false,
+              is_deleted=false
+            )
           ),
-          signature=FunctionSignatureNode(
-            parameters=[
-              FunctionParameterNode(
-                variadic=false,
-                name=IdentifierNode(
-                  token=IDENTIFIER_NO_W(a)
-                ),
-                type=PrimitiveTypeNode(
-                  token=KEYWORD_INT(int)
-                )
-              )
-            ]
-          ),
-          body=FunctionBodyNode(
-            stmts=[
-              ExpressionStatementNode(
-                expr=FunctionCallExpressionNode(
-                  callee=IndexingExpressionNode(
-                    object=SuperLiteralNode(),
-                    index=IdentifierNode(
-                      token=IDENTIFIER_NO_W(B)
-                    )
+          ClassConstructorNode(
+            name=IdentifierNode(
+              token=IDENTIFIER(A)
+            ),
+            signature=FunctionSignatureNode(
+              parameters=[
+                FunctionParameterNode(
+                  variadic=false,
+                  name=IdentifierNode(
+                    token=IDENTIFIER_NO_W(a)
                   ),
-                  args=[
-                    FunctionArgumentNode(
-                      expr=IdentifierNode(
-                        token=IDENTIFIER_NO_W(a)
-                      )
-                    )
-                  ]
+                  type=PrimitiveTypeNode(
+                    token=KEYWORD_INT(int)
+                  )
                 )
-              )
-            ],
-            is_default=false,
-            is_deleted=false
+              ]
+            ),
+            body=FunctionBodyNode(
+              stmts=[
+                ExpressionStatementNode(
+                  expr=FunctionCallExpressionNode(
+                    callee=IndexingExpressionNode(
+                      object=SuperLiteralNode(),
+                      index=IdentifierNode(
+                        token=IDENTIFIER_NO_W(B)
+                      )
+                    ),
+                    args=[
+                      FunctionArgumentNode(
+                        expr=IdentifierNode(
+                          token=IDENTIFIER_NO_W(a)
+                        )
+                      )
+                    ]
+                  )
+                )
+              ],
+              is_default=false,
+              is_deleted=false
+            )
           )
-        )
-      ]
+        ]
+      )
     )
   ]
 )

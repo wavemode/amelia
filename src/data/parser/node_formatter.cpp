@@ -714,7 +714,7 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "generic_parameter_list", n.generic_parameter_list);
     print_node_field(out, "base_class_list", n.base_class_list);
     print_node_field(out, "implicit_parameter_list", n.implicit_parameter_list);
-    print_node_field(out, "decls", n.decls);
+    print_node_field(out, "body", n.body);
     break;
   }
   case NodeType::ConceptDeclarationNode: {
@@ -723,6 +723,11 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "generic_parameter_list", n.generic_parameter_list);
     print_node_field(out, "base_concept_list", n.base_concept_list);
     print_node_field(out, "implicit_parameter_list", n.implicit_parameter_list);
+    print_node_field(out, "body", n.body);
+    break;
+  }
+  case NodeType::ClassBodyNode: {
+    const auto &n = node.as_ClassBodyNode();
     print_node_field(out, "decls", n.decls);
     break;
   }

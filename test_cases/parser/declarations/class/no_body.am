@@ -1,4 +1,4 @@
-class A {}
+class A
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
@@ -6,8 +6,7 @@ ModuleNode(
     ClassDeclarationNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
-      ),
-      body=ClassBodyNode()
+      )
     )
   ]
 )

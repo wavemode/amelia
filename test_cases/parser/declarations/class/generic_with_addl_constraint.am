@@ -36,7 +36,8 @@ ModuleNode(
             )
           )
         ]
-      )
+      ),
+      body=ClassBodyNode()
     )
   ]
 )
