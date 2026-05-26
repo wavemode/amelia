@@ -67,7 +67,7 @@ public:
     auto start_token = peek();
     List<NodeId> decls;
     while (true) {
-      auto decl = try_parse_local_declaration();
+      auto decl = try_parse_declaration();
       if (!decl.has_value()) {
         break;
       }
@@ -203,17 +203,6 @@ public:
     }
   }
 
-  Option<NodeId> try_parse_local_declaration() {
-    auto token = peek();
-    switch (token.type) {
-    case TokenType::KEYWORD_IMPLICIT:
-      return parse_implicit_declaration();
-    default:
-      break;
-    }
-    return try_parse_declaration();
-  }
-
   Option<NodeId> try_parse_declaration() {
     auto token = peek();
     switch (token.type) {
@@ -347,7 +336,7 @@ public:
   }
 
   NodeId expect_local_declaration(Text error_message) {
-    auto decl = try_parse_local_declaration();
+    auto decl = try_parse_declaration();
     if (!decl.has_value()) {
       throw_parser_error_at_current_location(String(error_message));
     }
@@ -392,7 +381,7 @@ public:
     default:
       break;
     }
-    auto decl = try_parse_local_declaration();
+    auto decl = try_parse_declaration();
     if (decl.has_value()) {
       return decl.value();
     }
@@ -436,13 +425,6 @@ public:
   NodeId parse_break_statement() {
     auto break_token = next();
     return m_output.add_node(break_token.loc, BreakStatementNode{});
-  }
-
-  NodeId parse_implicit_declaration() {
-    auto implicit_token = next();
-    auto next_token = peek();
-    NodeId decl = expect_declaration("Expected declaration after 'implicit' keyword");
-    return m_output.add_node(implicit_token.loc, ImplicitDeclarationNode{decl});
   }
 
   NodeId parse_operator_function_declaration() {
