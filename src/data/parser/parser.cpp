@@ -497,7 +497,12 @@ public:
 
   NodeId parse_class_declaration() {
     auto class_token = next();
-    auto name = expect_identifier("Expected class name after 'class' keyword");
+    if (!is_identifier(peek().type)) {
+      throw_parser_error_at_current_location(
+          "Expected identifier after 'class' keyword in class declaration"
+      );
+    }
+    auto name = parse_descend_expr_scope_resolution();
     Option<NodeId> generic_parameter_list = try_parse_generic_parameter_list();
     Option<NodeId> base_class_list = try_parse_base_type_list();
     Option<NodeId> implicit_parameter_list = try_parse_implicit_parameter_list();
@@ -839,13 +844,19 @@ public:
 
   NodeId parse_type_declaration() {
     auto type_token = next();
-    auto name = parse_expression();
+    if (!is_identifier(peek().type)) {
+      throw_parser_error_at_current_location("Expected type name after 'type' keyword");
+    }
+    auto name = parse_descend_expr_scope_resolution();
+    Option<NodeId> generic_parameter_list = try_parse_generic_parameter_list();
     Option<NodeId> type_expr;
     if (peek().type == TokenType::ASSIGN) {
       ++m_token_index; // consume the '=' token
       type_expr = parse_type_expression();
     }
-    return m_output.add_node(type_token.loc, TypeDeclarationNode{name, type_expr});
+    return m_output.add_node(
+        type_token.loc, TypeDeclarationNode{name, generic_parameter_list, type_expr}
+    );
   }
 
   NodeId parse_continue_statement() {

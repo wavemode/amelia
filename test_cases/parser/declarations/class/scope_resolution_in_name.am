@@ -1,0 +1,23 @@
+class A::B::C
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ClassDeclarationNode(
+      name=ScopeResolutionExpressionNode(
+        scope=ScopeResolutionExpressionNode(
+          scope=IdentifierNode(
+            token=IDENTIFIER(A)
+          ),
+          name=IdentifierNode(
+            token=IDENTIFIER_NO_W(B)
+          )
+        ),
+        name=IdentifierNode(
+          token=IDENTIFIER_NO_W(C)
+        )
+      )
+    )
+  ]
+)
+*/

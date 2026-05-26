@@ -4,13 +4,18 @@ type A[B] = C
 ModuleNode(
   decls=[
     TypeDeclarationNode(
-      name=IndexingExpressionNode(
-        object=IdentifierNode(
-          token=IDENTIFIER(A)
-        ),
-        index=IdentifierNode(
-          token=IDENTIFIER_NO_W(B)
-        )
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      generic_parameter_list=GenericParameterListNode(
+        parameters=[
+          GenericParameterNode(
+            is_const=false,
+            name=IdentifierNode(
+              token=IDENTIFIER_NO_W(B)
+            )
+          )
+        ]
       ),
       type_expr=IdentifierNode(
         token=IDENTIFIER(C)

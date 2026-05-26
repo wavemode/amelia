@@ -673,6 +673,7 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   case NodeType::TypeDeclarationNode: {
     const auto &n = node.as_TypeDeclarationNode();
     print_node_field(out, "name", n.name);
+    print_node_field(out, "generic_parameter_list", n.generic_parameter_list);
     print_node_field(out, "type_expr", n.type_expr);
     break;
   }

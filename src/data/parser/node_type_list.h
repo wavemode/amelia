@@ -535,6 +535,7 @@ struct LambdaExpressionNode {
 
 struct TypeDeclarationNode {
   NodeId name;
+  Option<NodeId> generic_parameter_list;
   Option<NodeId> type_expr;
 };
 
