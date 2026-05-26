@@ -1,0 +1,6 @@
+/* EXPECTED_OUTPUT:
+STRING_LITERAL("")
+END_OF_FILE()
+*/
+
+r""""""

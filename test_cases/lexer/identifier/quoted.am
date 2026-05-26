@@ -1,8 +1,8 @@
-`a`.`b``c`
+` a `.`b\`c`
 
 /* EXPECTED_OUTPUT:
-QUOTED_IDENTIFIER(`a`)
+QUOTED_IDENTIFIER(` a `)
 DOT_NO_W(.)
-QUOTED_IDENTIFIER_NO_W(`b``c`)
+QUOTED_IDENTIFIER_NO_W(`b\`c`)
 END_OF_FILE()
 */

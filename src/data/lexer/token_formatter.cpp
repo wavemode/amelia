@@ -12,9 +12,6 @@ void TokenFormatter::format_token(AbstractString &out, size_t token_id) const {
   out.append("(");
   switch (token.type) {
   case TokenType::STRING_LITERAL:
-  case TokenType::MULTILINE_STRING_LITERAL:
-  case TokenType::RAW_STRING_LITERAL:
-  case TokenType::RAW_MULTILINE_STRING_LITERAL:
     out.append('"');
     Lexer::read_string_literal(out, token.contents, true);
     out.append('"');
@@ -23,6 +20,12 @@ void TokenFormatter::format_token(AbstractString &out, size_t token_id) const {
     out.append('\'');
     Lexer::read_char_literal(out, token.contents, true);
     out.append('\'');
+    break;
+  case TokenType::QUOTED_IDENTIFIER:
+  case TokenType::QUOTED_IDENTIFIER_NO_W:
+    out.append('`');
+    Lexer::read_quoted_ident(out, token.contents, true);
+    out.append('`');
     break;
   default:
     out.append(token.contents);

@@ -190,7 +190,8 @@ public:
     }
   }
 
-  void read_quoted_ident(Location start_location) {
+  List<char> &read_quoted_ident(Location start_location) {
+    m_scratch_buffer.clear();
     next();
     while (true) {
       if (at_end()) {
@@ -198,23 +199,110 @@ public:
             "Unterminated quoted identifier - unexpected end of input"
         );
       }
-      uint32_t ch = peek();
-      if (ch == '`') {
+      auto ch = peek();
+      switch (ch) {
+      case '`':
         next();
-        if (!at_end() && peek() == '`') {
+        goto done;
+      case '\\': {
+        next();
+        if (at_end()) {
+          throw_lexer_error_at_current_location(
+              "Unexpected end of input after backslash in quoted identifier"
+          );
+        }
+        switch (peek()) {
+        case 'a':
           next();
-        } else {
+          append_code_point_to_scratch_buffer('\a');
+          break;
+        case 'b':
+          next();
+          append_code_point_to_scratch_buffer('\b');
+          break;
+        case 'f':
+          next();
+          append_code_point_to_scratch_buffer('\f');
+          break;
+        case 'n':
+          next();
+          append_code_point_to_scratch_buffer('\n');
+          break;
+        case 'r':
+          next();
+          append_code_point_to_scratch_buffer('\r');
+          break;
+        case 't':
+          next();
+          append_code_point_to_scratch_buffer('\t');
+          break;
+        case 'v':
+          next();
+          append_code_point_to_scratch_buffer('\v');
+          break;
+        case '\\':
+          next();
+          append_code_point_to_scratch_buffer('\\');
+          break;
+        case '\'':
+          next();
+          append_code_point_to_scratch_buffer('\'');
+          break;
+        case '"':
+          next();
+          append_code_point_to_scratch_buffer('"');
+          break;
+        case '`':
+          next();
+          append_code_point_to_scratch_buffer('`');
+          break;
+        case 'x': {
+          next();
+          m_scratch_buffer.push_back(static_cast<char>(read_hex_chars(2)));
           break;
         }
-      } else {
+        case 'u':
+          next();
+          append_code_point_to_scratch_buffer(read_hex_chars(4));
+          break;
+        case 'U':
+          next();
+          append_code_point_to_scratch_buffer(read_hex_chars(8));
+          break;
+        case '\r':
+          next();
+          if (!at_end() && peek() == '\n') {
+            next();
+          }
+          break;
+        case '\n':
+          next();
+          break;
+        default: {
+          String msg = "Invalid escape sequence in quoted identifier: '\\";
+          msg.append(peek());
+          msg.append('\'');
+          throw_lexer_error_at_current_location(std::move(msg));
+        }
+        }
+      } break;
+      case '\r':
+      case '\n':
+        throw_lexer_error_at_current_location("Unterminated quoted identifier - unexpected newline"
+        );
+      default:
         next();
+        append_code_point_to_scratch_buffer(ch);
+        break;
       }
     }
+  done:
     if (previous_char_was_whitespace()) {
       emit_token(TokenType::QUOTED_IDENTIFIER, start_location);
     } else {
       emit_token(TokenType::QUOTED_IDENTIFIER_NO_W, start_location);
     }
+    return m_scratch_buffer;
   }
 
   uint32_t read_char_literal(Location start_location) {
@@ -279,6 +367,10 @@ public:
       case '"':
         next();
         result = '\"';
+        break;
+      case '`':
+        next();
+        result = '`';
         break;
       case 'x':
         next();
@@ -356,26 +448,16 @@ public:
   }
 
   List<char> &read_quote(Location start_location) {
-    Text first_three_chars = peek_n(3);
-    if (first_three_chars == "\"\"\"") {
-      return read_string(start_location, true, false);
-    } else {
-      return read_string(start_location, false, false);
-    }
+    return read_string(start_location, false);
   }
 
   List<char> &read_raw_quote(Location start_location) {
-    Text first_three_chars = peek_n(3);
-    if (first_three_chars == "\"\"\"") {
-      return read_string(start_location, true, true);
-    } else {
-      return read_string(start_location, false, true);
-    }
+    return read_string(start_location, true);
   }
 
-  List<char> &read_string(Location start_location, bool multiline, bool is_raw) {
+  List<char> &read_string(Location start_location, bool is_raw) {
     try {
-      return read_string_literal(start_location, multiline, is_raw);
+      return read_string_literal(start_location, is_raw);
     } catch (InvalidUTF8Error &e) {
       String err;
       err.append("Invalid string literal: ");
@@ -384,14 +466,27 @@ public:
     }
   }
 
-  List<char> &read_string_literal(Location start_location, bool multiline, bool is_raw) {
-    size_t quote_count = multiline ? 3 : 1;
-    for (size_t i = 0; i < quote_count; ++i) {
-      if (at_end() || next() != '"') {
-        throw std::runtime_error("String literal does not start with expected quote characters");
-      }
-    }
+  List<char> &read_string_literal(Location start_location, bool is_raw) {
     m_scratch_buffer.clear();
+    size_t quote_count = 0;
+    while (!at_end() && peek() == '"') {
+      next();
+      ++quote_count;
+    }
+    if (quote_count == 0) {
+      throw_lexer_error_at_current_location("Expected string literal to start with a quote");
+    }
+    if (quote_count == 2 || quote_count == 6) {
+      // empty string
+      emit_token(TokenType::STRING_LITERAL, start_location);
+      return m_scratch_buffer;
+    }
+    if (quote_count != 1 && quote_count != 3) {
+      throw_lexer_error_at_current_location(
+          "Invalid string literal - expected either 1 or 3 quotes at the start"
+      );
+    }
+    bool multiline = quote_count == 3;
     size_t quotes_in_a_row = 0;
     while (true) {
       if (at_end()) {
@@ -448,6 +543,10 @@ public:
         case '"':
           next();
           append_code_point_to_scratch_buffer('\"');
+          break;
+        case '`':
+          next();
+          append_code_point_to_scratch_buffer('`');
           break;
         case '\r':
           next();
@@ -1297,6 +1396,9 @@ void Lexer::read_char_literal(AbstractString &out, Text input, bool escape) {
   if (input.size() == 0) {
     throw std::runtime_error("Expected character literal, but got empty input");
   }
+  if (input.begin().peek() != '\'') {
+    throw std::runtime_error("Expected character literal to start with single quote");
+  }
   uint32_t cp = state.read_char_literal(start_location);
   if (escape) {
     switch (cp) {
@@ -1342,6 +1444,66 @@ void Lexer::read_char_literal(AbstractString &out, Text input, bool escape) {
     }
   } else {
     out.append(cp);
+  }
+}
+
+void Lexer::read_quoted_ident(AbstractString &out, Text input, bool escape) {
+  LexerResult result;
+  LexerState state(result, LexerContext{"(anon)"}, input);
+  auto start_location = state.current_location();
+  if (input.size() == 0) {
+    throw std::runtime_error("Expected quoted identifier, but got empty input");
+  }
+  if (input.begin().peek() != '`') {
+    throw std::runtime_error("Expected quoted identifier to start with backtick");
+  }
+  auto text = Text(state.read_quoted_ident(start_location).data());
+  if (escape) {
+    for (uint32_t cp : text) {
+      switch (cp) {
+      case '\a':
+        out.append('\\');
+        out.append('a');
+        break;
+      case '\b':
+        out.append('\\');
+        out.append('b');
+        break;
+      case '\f':
+        out.append('\\');
+        out.append('f');
+        break;
+      case '\n':
+        out.append('\\');
+        out.append('n');
+        break;
+      case '\r':
+        out.append('\\');
+        out.append('r');
+        break;
+      case '\t':
+        out.append('\\');
+        out.append('t');
+        break;
+      case '\v':
+        out.append('\\');
+        out.append('v');
+        break;
+      case '`':
+        out.append('\\');
+        out.append('`');
+        break;
+      case '\\':
+        out.append('\\');
+        out.append('\\');
+        break;
+      default:
+        out.append(cp);
+        break;
+      }
+    }
+  } else {
+    out.append(text);
   }
 }
 

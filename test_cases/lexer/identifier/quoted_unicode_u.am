@@ -1,0 +1,6 @@
+`\u65e5\u672c\u8a9e`
+
+/* EXPECTED_OUTPUT:
+QUOTED_IDENTIFIER(`日本語`)
+END_OF_FILE()
+*/

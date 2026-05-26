@@ -1,0 +1,6 @@
+`日本語`
+
+/* EXPECTED_OUTPUT:
+QUOTED_IDENTIFIER(`日本語`)
+END_OF_FILE()
+*/

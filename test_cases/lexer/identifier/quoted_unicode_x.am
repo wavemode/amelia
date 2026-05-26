@@ -1,0 +1,6 @@
+`\xe6\x97\xa5\xe6\x9c\xac\xe8\xaa\x9e`
+
+/* EXPECTED_OUTPUT:
+QUOTED_IDENTIFIER(`日本語`)
+END_OF_FILE()
+*/

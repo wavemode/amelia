@@ -1,0 +1,5 @@
+/* EXPECTED_OUTPUT:
+ERROR("Invalid string literal - expected either 1 or 3 quotes at the start (at test_cases/lexer/string/error_bad_number_of_quotes.am:5:6)")
+*/
+
+"""""

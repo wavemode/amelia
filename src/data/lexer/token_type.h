@@ -138,9 +138,6 @@ namespace amelia {
   X(AT)                                                                                            \
   X(CHAR_LITERAL)                                                                                  \
   X(STRING_LITERAL)                                                                                \
-  X(MULTILINE_STRING_LITERAL)                                                                      \
-  X(RAW_STRING_LITERAL)                                                                            \
-  X(RAW_MULTILINE_STRING_LITERAL)                                                                  \
   X(END_OF_FILE)
 
 struct AbstractString;
