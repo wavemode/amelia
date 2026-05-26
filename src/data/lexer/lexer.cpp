@@ -35,7 +35,6 @@ const Map<Text, TokenType> keywords = {
     {"ushort", TokenType::KEYWORD_USHORT},
     {"uint", TokenType::KEYWORD_UINT},
     {"ulong", TokenType::KEYWORD_ULONG},
-    {"usize", TokenType::KEYWORD_USIZE},
     {"float", TokenType::KEYWORD_FLOAT},
     {"double", TokenType::KEYWORD_DOUBLE},
     {"throw", TokenType::KEYWORD_THROW},

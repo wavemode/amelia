@@ -1669,7 +1669,6 @@ public:
     case TokenType::KEYWORD_USHORT:
     case TokenType::KEYWORD_UINT:
     case TokenType::KEYWORD_ULONG:
-    case TokenType::KEYWORD_USIZE:
     case TokenType::KEYWORD_FLOAT:
     case TokenType::KEYWORD_DOUBLE:
     case TokenType::KEYWORD_NULL:

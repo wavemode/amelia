@@ -44,7 +44,6 @@ namespace amelia {
   X(KEYWORD_USHORT)                                                                                \
   X(KEYWORD_UINT)                                                                                  \
   X(KEYWORD_ULONG)                                                                                 \
-  X(KEYWORD_USIZE)                                                                                 \
   X(KEYWORD_FLOAT)                                                                                 \
   X(KEYWORD_DOUBLE)                                                                                \
   X(KEYWORD_NULL)                                                                                  \

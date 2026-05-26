@@ -16,7 +16,6 @@ ubyte
 ushort
 uint
 ulong
-usize
 float
 double
 throw
@@ -87,7 +86,6 @@ KEYWORD_UBYTE(ubyte)
 KEYWORD_USHORT(ushort)
 KEYWORD_UINT(uint)
 KEYWORD_ULONG(ulong)
-KEYWORD_USIZE(usize)
 KEYWORD_FLOAT(float)
 KEYWORD_DOUBLE(double)
 KEYWORD_THROW(throw)
