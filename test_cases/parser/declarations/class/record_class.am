@@ -53,7 +53,7 @@ ModuleNode(
                   args=[
                     FunctionArgumentNode(
                       expr=StringLiteralNode(
-                        lit=STRING_LITERAL("hi")
+                        lit="hi"
                       )
                     )
                   ]

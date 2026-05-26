@@ -17,7 +17,7 @@ ModuleNode(
             lit=NUMBER(5)
           ),
           StringLiteralNode(
-            lit=STRING_LITERAL("hello")
+            lit="hello"
           ),
           NumberLiteralNode(
             lit=NUMBER(6.7)

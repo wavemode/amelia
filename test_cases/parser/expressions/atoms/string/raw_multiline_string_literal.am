@@ -10,7 +10,7 @@ ModuleNode(
         token=IDENTIFIER(x)
       ),
       expression=StringLiteralNode(
-        lit=STRING_LITERAL("\nhello, world\\!\n")
+        lit="\nhello, world\\!\n"
       )
     )
   ]

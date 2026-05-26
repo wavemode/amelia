@@ -30,7 +30,7 @@ ModuleNode(
                     args=[
                       FunctionArgumentNode(
                         expr=StringLiteralNode(
-                          lit=STRING_LITERAL("I am ")
+                          lit="I am "
                         )
                       ),
                       FunctionArgumentNode(
@@ -43,7 +43,7 @@ ModuleNode(
                       ),
                       FunctionArgumentNode(
                         expr=StringLiteralNode(
-                          lit=STRING_LITERAL(" years old")
+                          lit=" years old"
                         )
                       )
                     ]

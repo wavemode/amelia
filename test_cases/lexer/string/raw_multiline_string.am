@@ -2,6 +2,7 @@ r"""hello
     world\\\"""
 
 /* EXPECTED_OUTPUT:
-STRING_LITERAL("hello\n    world\\\\\\")
+STRING_LITERAL(r"""hello
+    world\\\""")
 END_OF_FILE()
 */

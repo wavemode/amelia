@@ -43,7 +43,7 @@ ModuleNode(
                     )
                   ),
                   expression=StringLiteralNode(
-                    lit=STRING_LITERAL("hello")
+                    lit="hello"
                   )
                 )
               ],

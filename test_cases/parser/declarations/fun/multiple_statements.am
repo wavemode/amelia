@@ -46,7 +46,7 @@ ModuleNode(
               args=[
                 FunctionArgumentNode(
                   expr=StringLiteralNode(
-                    lit=STRING_LITERAL("hello, world!")
+                    lit="hello, world!"
                   )
                 )
               ]
@@ -60,7 +60,7 @@ ModuleNode(
               args=[
                 FunctionArgumentNode(
                   expr=StringLiteralNode(
-                    lit=STRING_LITERAL("goodbye, world...")
+                    lit="goodbye, world..."
                   )
                 )
               ]

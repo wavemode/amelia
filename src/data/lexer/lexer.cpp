@@ -9,7 +9,6 @@
 #include "data/lexer/token.h"
 #include "data/source/location.h"
 #include "data/source/number_literal.h"
-#include "data/source/string_literal.h"
 #include "data/util/text_utils.h"
 
 namespace amelia {
@@ -103,8 +102,8 @@ class LexerState {
 public:
   LexerState(LexerResult &output, LexerContext ctx, Text file_contents) noexcept
       : m_ctx(ctx), m_line(1), m_column(1), m_file_contents(file_contents),
-        m_input_iter(file_contents.begin()), m_previous_char_was_whitespace(true),
-        m_result(output) {}
+        m_input_iter(file_contents.begin()), m_previous_char_was_whitespace(true), m_result(output),
+        m_scratch_buffer() {}
 
   void read_file() {
     while (!at_end()) {
@@ -212,27 +211,27 @@ public:
     }
   }
 
-  void read_quote(Location start_location) {
+  List<char> &read_quote(Location start_location) {
     Text first_three_chars = peek_n(3);
     if (first_three_chars == "\"\"\"") {
-      read_string(start_location, true, false);
+      return read_string(start_location, true, false);
     } else {
-      read_string(start_location, false, false);
+      return read_string(start_location, false, false);
     }
   }
 
-  void read_raw_quote(Location start_location) {
+  List<char> &read_raw_quote(Location start_location) {
     Text first_three_chars = peek_n(3);
     if (first_three_chars == "\"\"\"") {
-      read_string(start_location, true, true);
+      return read_string(start_location, true, true);
     } else {
-      read_string(start_location, false, true);
+      return read_string(start_location, false, true);
     }
   }
 
-  void read_string(Location start_location, bool multiline, bool is_raw) {
+  List<char> &read_string(Location start_location, bool multiline, bool is_raw) {
     try {
-      read_string_literal(start_location, multiline, is_raw);
+      return read_string_literal(start_location, multiline, is_raw);
     } catch (InvalidUTF8Error &e) {
       String err;
       err.append("Invalid string literal: ");
@@ -241,14 +240,14 @@ public:
     }
   }
 
-  void read_string_literal(Location start_location, bool multiline, bool is_raw) {
+  List<char> &read_string_literal(Location start_location, bool multiline, bool is_raw) {
     size_t quote_count = multiline ? 3 : 1;
     for (size_t i = 0; i < quote_count; ++i) {
       if (at_end() || next() != '"') {
         throw std::runtime_error("String literal does not start with expected quote characters");
       }
     }
-    size_t literal_buffer_start_size = m_result.string_literal_buffer_size();
+    m_scratch_buffer.clear();
     size_t quotes_in_a_row = 0;
     while (true) {
       if (at_end()) {
@@ -268,43 +267,43 @@ public:
         switch (ch) {
         case 'a':
           next();
-          m_result.append_byte_to_string_literal_buffer('\a');
+          CharIterator::append(m_scratch_buffer, '\a');
           break;
         case 'b':
           next();
-          m_result.append_byte_to_string_literal_buffer('\b');
+          CharIterator::append(m_scratch_buffer, '\b');
           break;
         case 'f':
           next();
-          m_result.append_byte_to_string_literal_buffer('\f');
+          CharIterator::append(m_scratch_buffer, '\f');
           break;
         case 'n':
           next();
-          m_result.append_byte_to_string_literal_buffer('\n');
+          CharIterator::append(m_scratch_buffer, '\n');
           break;
         case 'r':
           next();
-          m_result.append_byte_to_string_literal_buffer('\r');
+          CharIterator::append(m_scratch_buffer, '\r');
           break;
         case 't':
           next();
-          m_result.append_byte_to_string_literal_buffer('\t');
+          CharIterator::append(m_scratch_buffer, '\t');
           break;
         case 'v':
           next();
-          m_result.append_byte_to_string_literal_buffer('\v');
+          CharIterator::append(m_scratch_buffer, '\v');
           break;
         case '\\':
           next();
-          m_result.append_byte_to_string_literal_buffer('\\');
+          CharIterator::append(m_scratch_buffer, '\\');
           break;
         case '\'':
           next();
-          m_result.append_byte_to_string_literal_buffer('\'');
+          CharIterator::append(m_scratch_buffer, '\'');
           break;
         case '"':
           next();
-          m_result.append_byte_to_string_literal_buffer('\"');
+          CharIterator::append(m_scratch_buffer, '\"');
           break;
         case '\r':
           next();
@@ -317,15 +316,15 @@ public:
           break;
         case 'x':
           next();
-          m_result.append_byte_to_string_literal_buffer(static_cast<char>(read_hex_chars(2)));
+          m_scratch_buffer.push_back(static_cast<char>(read_hex_chars(2)));
           break;
         case 'u':
           next();
-          m_result.append_code_point_to_string_literal_buffer(read_hex_chars(4));
+          CharIterator::append(m_scratch_buffer, read_hex_chars(4));
           break;
         case 'U':
           next();
-          m_result.append_code_point_to_string_literal_buffer(read_hex_chars(8));
+          CharIterator::append(m_scratch_buffer, read_hex_chars(8));
           break;
         default:
           String msg = "Invalid escape sequence: '\\";
@@ -347,16 +346,16 @@ public:
           throw_lexer_error_at_current_location("Unterminated string literal - unexpected newline");
         }
         while (quotes_in_a_row > 0) {
-          m_result.append_byte_to_string_literal_buffer('"');
+          CharIterator::append(m_scratch_buffer, '"');
           --quotes_in_a_row;
         }
-        m_result.append_code_point_to_string_literal_buffer(ch);
+        CharIterator::append(m_scratch_buffer, ch);
         next();
       }
     }
-    size_t token_id = emit_token(TokenType::STRING_LITERAL, start_location);
-    auto result = StringLiteral{literal_buffer_start_size, m_result.string_literal_buffer_size()};
-    m_result.add_string_literal(token_id, result);
+    emit_token(TokenType::STRING_LITERAL, start_location);
+    m_scratch_buffer.push_back('\0');
+    return m_scratch_buffer;
   }
 
   uint32_t read_hex_chars(size_t num_chars) {
@@ -633,7 +632,7 @@ public:
     }
   }
 
-  void read_number(Location start_location) {
+  NumberLiteral read_number(Location start_location) {
     NumberLiteral result;
     result.has_decimal_point = false;
     unsigned char base = 10;
@@ -893,16 +892,15 @@ public:
       throw_lexer_error_at_current_location("Number literal must have at least one digit");
     }
 
-    size_t token_id;
     if (!previous_char_was_whitespace() && result.base_prefix.size() == 0 &&
         result.exponent_digits.size() == 0 && result.exponent_sign.size() == 0 &&
         result.exponent_prefix.size() == 0 && result.integer_digits.size() == 0 &&
         result.has_decimal_point && result.fractional_digits.size() > 0) {
-      token_id = emit_token(TokenType::NUMBER_FIELD, start_location);
+      emit_token(TokenType::NUMBER_FIELD, start_location);
     } else {
-      token_id = emit_token(TokenType::NUMBER, start_location);
+      emit_token(TokenType::NUMBER, start_location);
     }
-    m_result.add_number_literal(token_id, result);
+    return result;
   }
 
   void read_equal(Location start_location) {
@@ -978,7 +976,6 @@ public:
     }
   }
 
-private:
   bool previous_char_was_whitespace() const {
     return m_previous_char_was_whitespace;
   }
@@ -1047,6 +1044,7 @@ private:
     throw LexerError(loc, std::move(message));
   }
 
+private:
   LexerContext m_ctx;
   size_t m_line;
   size_t m_column;
@@ -1055,6 +1053,8 @@ private:
   bool m_previous_char_was_whitespace;
 
   LexerResult &m_result;
+
+  List<char> m_scratch_buffer;
 };
 
 } // namespace
@@ -1062,6 +1062,88 @@ private:
 void Lexer::tokenize(LexerResult &output, LexerContext ctx, Text input) {
   LexerState state(output, ctx, input);
   state.read_file();
+}
+
+void Lexer::read_string_literal(AbstractString &out, Text input, bool escape) {
+  LexerResult result;
+  LexerState state(result, LexerContext{"(anon)"}, input);
+  auto start_location = state.current_location();
+  if (input.size() == 0) {
+    throw std::runtime_error("Expected string literal, but got empty input");
+  }
+  Text text;
+  switch (state.peek()) {
+  case '"':
+    text = Text::from(state.read_quote(start_location).data().ptr());
+    break;
+  case 'r':
+    state.next();
+    if (state.peek() != '"') {
+      throw std::runtime_error(
+          "Expected string literal, but got 'r' followed by non-quote character"
+      );
+    }
+    text = Text::from(state.read_raw_quote(start_location).data().ptr());
+    break;
+  default:
+    throw std::runtime_error("Expected string literal");
+  }
+  if (escape) {
+    for (uint32_t cp : text) {
+      switch (cp) {
+      case '\a':
+        out.append('\\');
+        out.append('a');
+        break;
+      case '\b':
+        out.append('\\');
+        out.append('b');
+        break;
+      case '\f':
+        out.append('\\');
+        out.append('f');
+        break;
+      case '\n':
+        out.append('\\');
+        out.append('n');
+        break;
+      case '\r':
+        out.append('\\');
+        out.append('r');
+        break;
+      case '\t':
+        out.append('\\');
+        out.append('t');
+        break;
+      case '\v':
+        out.append('\\');
+        out.append('v');
+        break;
+      case '"':
+        out.append('\\');
+        out.append('"');
+        break;
+      case '\\':
+        out.append('\\');
+        out.append('\\');
+        break;
+      default:
+        out.append(cp);
+      }
+    }
+  } else {
+    out.append(text);
+  }
+}
+
+NumberLiteral Lexer::read_number_literal(Text input) {
+  LexerResult result;
+  LexerState state(result, LexerContext{"(anon)"}, input);
+  auto start_location = state.current_location();
+  if (input.size() == 0) {
+    throw std::runtime_error("Expected number literal, but got empty input");
+  }
+  return state.read_number(start_location);
 }
 
 } // namespace amelia

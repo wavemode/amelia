@@ -28,7 +28,7 @@ ModuleNode(
                     args=[
                       FunctionArgumentNode(
                         expr=StringLiteralNode(
-                          lit=STRING_LITERAL("destroying")
+                          lit="destroying"
                         )
                       )
                     ]

@@ -33,6 +33,7 @@ private:
 
   void print_indent(AbstractString &out) const;
 
+  const AbstractTokenRepository &m_token_repo;
   const TokenFormatter m_token_formatter;
   const AbstractNodeRepository &m_node_repo;
   int m_fields_printed;

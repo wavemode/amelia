@@ -1,6 +1,6 @@
 "\u65e5\u672c\u8a9e"
 
 /* EXPECTED_OUTPUT:
-STRING_LITERAL("日本語")
+STRING_LITERAL("\u65e5\u672c\u8a9e")
 END_OF_FILE()
 */

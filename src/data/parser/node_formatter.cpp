@@ -1,12 +1,14 @@
 #include "node_formatter.h"
 
+#include "data/lexer/lexer.h"
+
 namespace amelia {
 
 NodeFormatter::NodeFormatter(
     const AbstractNodeRepository &node_repo, const AbstractTokenRepository &token_repo
 )
-    : m_token_formatter(TokenFormatter(token_repo)), m_node_repo(node_repo), m_fields_printed(0),
-      m_current_indent(0) {}
+    : m_token_repo(token_repo), m_token_formatter(TokenFormatter(token_repo)),
+      m_node_repo(node_repo), m_fields_printed(0), m_current_indent(0) {}
 
 void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   const Node &node = m_node_repo.get_node(node_id);
@@ -40,7 +42,10 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   }
   case NodeType::StringLiteralNode: {
     const auto &n = node.as_StringLiteralNode();
-    print_token_field(out, "lit", n.lit);
+    open_line(out);
+    out.append("lit=\"");
+    Lexer::read_string_literal(out, m_token_repo.get_token(n.lit).contents, true);
+    out.append('"');
     break;
   }
   case NodeType::NumberLiteralNode: {

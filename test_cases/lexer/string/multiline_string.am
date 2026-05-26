@@ -2,7 +2,8 @@
 there"""xy
 
 /* EXPECTED_OUTPUT:
-STRING_LITERAL("hi\nthere")
+STRING_LITERAL("""hi
+there""")
 IDENTIFIER_NO_W(xy)
 END_OF_FILE()
 */

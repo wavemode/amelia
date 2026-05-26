@@ -4,8 +4,6 @@
 
 #include "data/lexer/abstract_token_repository.h"
 #include "data/lexer/token.h"
-#include "data/source/number_literal.h"
-#include "data/source/string_literal.h"
 #include "prelude.h"
 
 namespace amelia {
@@ -13,24 +11,6 @@ namespace amelia {
 struct LexerResult : public AbstractTokenRepository {
   ConstSlice<Token> tokens() const {
     return m_tokens.data();
-  }
-
-  Text string_literal_contents(TokenId token_id) const override {
-    auto lit = get_string_literal(token_id);
-    if (lit.buffer_end > m_string_literal_buffer.size() || lit.buffer_start > lit.buffer_end) {
-      throw std::runtime_error("Invalid string literal buffer start and end");
-    }
-    return Text(ConstSlice(
-        m_string_literal_buffer.data().ptr() + lit.buffer_start, lit.buffer_end - lit.buffer_start
-    ));
-  }
-
-  NumberLiteral get_number_literal(TokenId token_id) const override {
-    auto result = m_number_literals.find(token_id);
-    if (!result.has_value()) {
-      throw std::runtime_error("Token does not have a number literal");
-    }
-    return result.value();
   }
 
   Token get_token(TokenId token_id) const override {
@@ -46,39 +26,8 @@ struct LexerResult : public AbstractTokenRepository {
     return token_id;
   }
 
-  void add_string_literal(TokenId token_id, StringLiteral lit) {
-    m_string_literals.set(token_id, lit);
-  }
-
-  void add_number_literal(TokenId token_id, NumberLiteral lit) {
-    m_number_literals.set(token_id, lit);
-  }
-
-  size_t string_literal_buffer_size() const {
-    return m_string_literal_buffer.size();
-  }
-
-  void append_byte_to_string_literal_buffer(char byte) {
-    m_string_literal_buffer.push_back(byte);
-  }
-
-  void append_code_point_to_string_literal_buffer(uint32_t code_point) {
-    CharIterator::append(m_string_literal_buffer, code_point);
-  }
-
 private:
-  StringLiteral get_string_literal(TokenId token_id) const {
-    auto result = m_string_literals.find(token_id);
-    if (!result.has_value()) {
-      throw std::runtime_error("Token does not have a string literal");
-    }
-    return result.value();
-  }
-
   List<Token> m_tokens;
-  List<char> m_string_literal_buffer;
-  Map<TokenId, StringLiteral> m_string_literals;
-  Map<TokenId, NumberLiteral> m_number_literals;
 };
 
 } // namespace amelia
