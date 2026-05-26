@@ -737,6 +737,7 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_field(out, "is_const", n.is_const);
     print_node_field(out, "name", n.name);
     print_node_field(out, "constraint", n.constraint);
+    print_node_field(out, "default_value", n.default_value);
     break;
   }
   case NodeType::TypeConstraintNode: {

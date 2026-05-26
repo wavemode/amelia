@@ -769,7 +769,15 @@ public:
       ++m_token_index; // consume the ':' token
       constraint = parse_type_expression();
     }
-    return m_output.add_node(start_token.loc, GenericParameterNode{is_const, type, constraint});
+
+    Option<NodeId> default_value;
+    if (peek().type == TokenType::ASSIGN) {
+      ++m_token_index; // consume the '=' token
+      default_value = parse_type_expression();
+    }
+    return m_output.add_node(
+        start_token.loc, GenericParameterNode{is_const, type, constraint, default_value}
+    );
   }
 
   NodeId parse_type_constraint() {

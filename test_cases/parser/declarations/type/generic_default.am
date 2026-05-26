@@ -1,0 +1,29 @@
+type A[B = int] = C
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    TypeDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      generic_parameter_list=GenericParameterListNode(
+        parameters=[
+          GenericParameterNode(
+            is_const=false,
+            name=IdentifierNode(
+              token=IDENTIFIER_NO_W(B)
+            ),
+            default_value=PrimitiveTypeNode(
+              token=KEYWORD_INT(int)
+            )
+          )
+        ]
+      ),
+      type_expr=IdentifierNode(
+        token=IDENTIFIER(C)
+      )
+    )
+  ]
+)
+*/

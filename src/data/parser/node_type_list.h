@@ -589,6 +589,7 @@ struct GenericParameterNode {
   bool is_const;
   NodeId name;
   Option<NodeId> constraint;
+  Option<NodeId> default_value;
 };
 
 struct TypeConstraintNode {

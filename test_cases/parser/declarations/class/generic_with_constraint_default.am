@@ -1,0 +1,30 @@
+class A[const T : int = 10] {}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ClassDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      generic_parameter_list=GenericParameterListNode(
+        parameters=[
+          GenericParameterNode(
+            is_const=true,
+            name=IdentifierNode(
+              token=IDENTIFIER(T)
+            ),
+            constraint=PrimitiveTypeNode(
+              token=KEYWORD_INT(int)
+            ),
+            default_value=NumberLiteralNode(
+              lit=NUMBER(10)
+            )
+          )
+        ]
+      ),
+      body=ClassBodyNode()
+    )
+  ]
+)
+*/
