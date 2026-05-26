@@ -1,0 +1,7 @@
+clasa A {
+  extern fun f() {}
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("Expected declaration (at test_cases/parser/declarations/extern/error_not_allowed_in_class_scope.am:1:1)")
+*/

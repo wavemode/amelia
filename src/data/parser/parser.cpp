@@ -112,10 +112,19 @@ public:
       return parse_import_declaration();
     case TokenType::KEYWORD_EXPORT:
       return parse_export_top_level_declaration();
+    case TokenType::KEYWORD_EXTERN:
+      return parse_extern_top_level_declaration();
     default:
       break;
     }
     return try_parse_declaration();
+  }
+
+  NodeId parse_extern_top_level_declaration() {
+    auto extern_token = next();
+    auto decl = expect_top_level_declaration("Expected top-level declaration after 'extern' keyword"
+    );
+    return m_output.add_node(extern_token.loc, ExternDeclarationNode{decl});
   }
 
   NodeId expect_top_level_declaration(Text error_message) {
@@ -233,8 +242,6 @@ public:
       return parse_open_declaration();
     case TokenType::KEYWORD_ASYNC:
       return parse_async_declaration();
-    case TokenType::KEYWORD_EXTERN:
-      return parse_extern_declaration();
     case TokenType::KEYWORD_RECORD:
       return parse_record_declaration();
     case TokenType::KEYWORD_UNION:
@@ -303,12 +310,6 @@ public:
     auto union_token = next();
     auto decl = expect_declaration("Expected declaration after 'union' keyword");
     return m_output.add_node(union_token.loc, UnionDeclarationNode{decl});
-  }
-
-  NodeId parse_extern_declaration() {
-    auto extern_token = next();
-    auto decl = expect_declaration("Expected declaration after 'extern' keyword");
-    return m_output.add_node(extern_token.loc, ExternDeclarationNode{decl});
   }
 
   NodeId parse_async_declaration() {

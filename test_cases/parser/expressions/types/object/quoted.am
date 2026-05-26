@@ -1,0 +1,33 @@
+let x : { `a`: int, b: float }
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x)
+      ),
+      type=AnonymousStructTypeNode(
+        entries=[
+          KeyValueEntryNode(
+            key=IdentifierNode(
+              token=QUOTED_IDENTIFIER(`a`)
+            ),
+            value=PrimitiveTypeNode(
+              token=KEYWORD_INT(int)
+            )
+          ),
+          KeyValueEntryNode(
+            key=IdentifierNode(
+              token=IDENTIFIER(b)
+            ),
+            value=PrimitiveTypeNode(
+              token=KEYWORD_FLOAT(float)
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/
