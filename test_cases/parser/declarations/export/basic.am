@@ -1,0 +1,15 @@
+export class A {}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ExportDeclarationNode(
+      decl=ClassDeclarationNode(
+        name=IdentifierNode(
+          token=IDENTIFIER(A)
+        )
+      )
+    )
+  ]
+)
+*/

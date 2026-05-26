@@ -21,6 +21,7 @@ float
 double
 throw
 import
+export
 as
 switch
 case
@@ -91,6 +92,7 @@ KEYWORD_FLOAT(float)
 KEYWORD_DOUBLE(double)
 KEYWORD_THROW(throw)
 KEYWORD_IMPORT(import)
+KEYWORD_EXPORT(export)
 KEYWORD_AS(as)
 KEYWORD_SWITCH(switch)
 KEYWORD_CASE(case)

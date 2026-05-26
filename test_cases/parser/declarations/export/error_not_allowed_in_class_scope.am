@@ -1,0 +1,7 @@
+class A {
+  export x : int
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("Expected declaration in class body (at test_cases/parser/declarations/export/error_not_allowed_in_class_scope.am:2:3)")
+*/

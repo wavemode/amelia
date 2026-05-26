@@ -40,6 +40,7 @@ const Map<Text, TokenType> keywords = {
     {"double", TokenType::KEYWORD_DOUBLE},
     {"throw", TokenType::KEYWORD_THROW},
     {"import", TokenType::KEYWORD_IMPORT},
+    {"export", TokenType::KEYWORD_EXPORT},
     {"as", TokenType::KEYWORD_AS},
     {"switch", TokenType::KEYWORD_SWITCH},
     {"case", TokenType::KEYWORD_CASE},

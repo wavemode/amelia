@@ -659,6 +659,10 @@ struct AsyncDeclarationNode {
   NodeId decl;
 };
 
+struct ExportDeclarationNode {
+  NodeId decl;
+};
+
 struct ImplTypeExpressionNode {
   NodeId type;
 };
@@ -898,6 +902,7 @@ struct BreakStatementNode {};
   X(ModuleDeclarationNode)                                                                         \
   X(AsyncDeclarationNode)                                                                          \
   X(ExternDeclarationNode)                                                                         \
+  X(ExportDeclarationNode)                                                                         \
   X(RecordDeclarationNode)                                                                         \
   X(UnionDeclarationNode)                                                                          \
   X(EnumDeclarationNode)                                                                           \
