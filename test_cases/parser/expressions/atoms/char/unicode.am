@@ -1,0 +1,19 @@
+let c : char = '日'
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(c)
+      ),
+      type=PrimitiveTypeNode(
+        token=KEYWORD_CHAR(char)
+      ),
+      expression=CharLiteralNode(
+        lit='日'
+      )
+    )
+  ]
+)
+*/

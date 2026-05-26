@@ -1,0 +1,6 @@
+/* EXPECTED_OUTPUT:
+ERROR("Unterminated character literal - unexpected newline (at test_cases/lexer/char/error_newline.am:5:2)")
+*/
+
+'
+'

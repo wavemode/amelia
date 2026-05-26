@@ -1,0 +1,5 @@
+/* EXPECTED_OUTPUT:
+ERROR("Unterminated character literal - unexpected end of input (at test_cases/lexer/char/error_unterminated.am:5:2)")
+*/
+
+'

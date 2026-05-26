@@ -1,0 +1,16 @@
+let c = '\U000065e5'
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(c)
+      ),
+      expression=CharLiteralNode(
+        lit='日'
+      )
+    )
+  ]
+)
+*/

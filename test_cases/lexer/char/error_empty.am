@@ -1,0 +1,5 @@
+/* EXPECTED_OUTPUT:
+ERROR("Empty character literal (at test_cases/lexer/char/error_empty.am:5:2)")
+*/
+
+''

@@ -20,6 +20,18 @@ struct IdentifierNode {
   TokenId token;
 };
 
+struct StringLiteralNode {
+  TokenId lit;
+};
+
+struct CharLiteralNode {
+  TokenId lit;
+};
+
+struct NumberLiteralNode {
+  TokenId lit;
+};
+
 struct OperatorIdentAddNode {};
 
 struct OperatorIdentSubNode {};
@@ -132,14 +144,6 @@ struct PreDecrementStatementNode {
 
 struct PostDecrementStatementNode {
   NodeId target;
-};
-
-struct StringLiteralNode {
-  TokenId lit;
-};
-
-struct NumberLiteralNode {
-  TokenId lit;
 };
 
 struct ParenthesizedExpressionNode {
@@ -754,6 +758,7 @@ struct BreakStatementNode {};
   X(LetDeclarationNode)                                                                            \
   X(ConstDeclarationNode)                                                                          \
   X(StringLiteralNode)                                                                             \
+  X(CharLiteralNode)                                                                               \
   X(NumberLiteralNode)                                                                             \
   X(ParenthesizedExpressionNode)                                                                   \
   X(BracketExpressionNode)                                                                         \

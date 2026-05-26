@@ -1,0 +1,5 @@
+'\U00110000'
+
+/* EXPECTED_OUTPUT:
+ERROR("Invalid UTF-8 code point: Invalid UTF-8 data (at test_cases/lexer/char/error_invalid_code_point.am:1:12)")
+*/

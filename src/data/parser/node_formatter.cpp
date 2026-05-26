@@ -48,6 +48,14 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     out.append('"');
     break;
   }
+  case NodeType::CharLiteralNode: {
+    const auto &n = node.as_CharLiteralNode();
+    open_line(out);
+    out.append("lit='");
+    Lexer::read_char_literal(out, m_token_repo.get_token(n.lit).contents, true);
+    out.append('\'');
+    break;
+  }
   case NodeType::NumberLiteralNode: {
     const auto &n = node.as_NumberLiteralNode();
     print_token_field(out, "lit", n.lit);

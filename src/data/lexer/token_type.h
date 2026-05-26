@@ -46,6 +46,7 @@ namespace amelia {
   X(KEYWORD_ULONG)                                                                                 \
   X(KEYWORD_FLOAT)                                                                                 \
   X(KEYWORD_DOUBLE)                                                                                \
+  X(KEYWORD_CHAR)                                                                                  \
   X(KEYWORD_NULL)                                                                                  \
   X(KEYWORD_DEFAULT)                                                                               \
   X(KEYWORD_OPEN)                                                                                  \
@@ -135,6 +136,7 @@ namespace amelia {
   X(QUOTED_IDENTIFIER_NO_W)                                                                        \
   X(DOUBLE_COLON_NO_W)                                                                             \
   X(AT)                                                                                            \
+  X(CHAR_LITERAL)                                                                                  \
   X(STRING_LITERAL)                                                                                \
   X(MULTILINE_STRING_LITERAL)                                                                      \
   X(RAW_STRING_LITERAL)                                                                            \

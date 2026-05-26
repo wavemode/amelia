@@ -5,7 +5,7 @@
             "name": "Launch",
             "type": "lldb",
             "request": "launch",
-            "program": "${workspaceRoot}/build/amelia",
+            "program": "${workspaceRoot}/build/debug/amelia",
             "args": [],
             "cwd": "${workspaceRoot}",
             "preLaunchTask": "make build"
@@ -14,15 +14,15 @@
             "name": "Launch Tests",
             "type": "lldb",
             "request": "launch",
-            "program": "${workspaceRoot}/build/amelia_test",
+            "program": "${workspaceRoot}/build/debug/amelia_test",
             "args": [
-                "-ts=Parser"
+                "-ts=Lexer"
             ],
             "cwd": "${workspaceRoot}",
             "preLaunchTask": "make build-test",
             "env": {
                 // "AMELIA_UPDATE_TEST_CASES": "1",
-                "AMELIA_TEST_CASE_FILTER": "test_cases/parser/expressions/operators/numeric_field_access/left_assoc.am"
+                "AMELIA_TEST_CASE_FILTER": "test_cases/lexer/char/unicode_x.am"
             }
         }
     ]

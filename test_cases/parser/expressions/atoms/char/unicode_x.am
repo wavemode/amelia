@@ -1,0 +1,16 @@
+let c = '\xe6\x97\xa5'
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(c)
+      ),
+      expression=CharLiteralNode(
+        lit='日'
+      )
+    )
+  ]
+)
+*/

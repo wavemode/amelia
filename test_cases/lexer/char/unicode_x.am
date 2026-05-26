@@ -1,0 +1,6 @@
+'\xe6\x97\xa5'
+
+/* EXPECTED_OUTPUT:
+CHAR_LITERAL('日')
+END_OF_FILE()
+*/

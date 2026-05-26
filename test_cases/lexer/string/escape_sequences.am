@@ -2,7 +2,6 @@
 "
 
 /* EXPECTED_OUTPUT:
-STRING_LITERAL("\a\b\f\n\r\t\v\\\'\"\
-")
+STRING_LITERAL("\a\b\f\n\r\t\v\\'\"")
 END_OF_FILE()
 */

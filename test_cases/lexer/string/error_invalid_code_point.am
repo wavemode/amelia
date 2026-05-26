@@ -1,5 +1,5 @@
 "\U00110000"
 
 /* EXPECTED_OUTPUT:
-ERROR("Invalid string literal: Invalid UTF-8 data (at test_cases/lexer/string/error_invalid_code_point.am:1:1)")
+ERROR("Invalid UTF-8 code point: Invalid UTF-8 data (at test_cases/lexer/string/error_invalid_code_point.am:1:12)")
 */

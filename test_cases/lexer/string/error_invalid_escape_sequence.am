@@ -1,5 +1,5 @@
 "\q"
 
 /* EXPECTED_OUTPUT:
-ERROR("Invalid escape sequence: '\q' (at test_cases/lexer/string/error_invalid_escape_sequence.am:1:3)")
+ERROR("Invalid escape sequence in string literal: '\q' (at test_cases/lexer/string/error_invalid_escape_sequence.am:1:3)")
 */

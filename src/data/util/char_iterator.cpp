@@ -93,6 +93,8 @@ void CharIterator::validate(ConstSlice<char> str) {
       utf8::next(begin, end);
     } catch (const utf8::invalid_utf8 &) {
       throw amelia::InvalidUTF8Error();
+    } catch (const utf8::not_enough_room &) {
+      throw amelia::InvalidUTF8Error();
     }
   }
 }

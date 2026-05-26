@@ -18,6 +18,7 @@ uint
 ulong
 float
 double
+char
 throw
 import
 export
@@ -88,6 +89,7 @@ KEYWORD_UINT(uint)
 KEYWORD_ULONG(ulong)
 KEYWORD_FLOAT(float)
 KEYWORD_DOUBLE(double)
+KEYWORD_CHAR(char)
 KEYWORD_THROW(throw)
 KEYWORD_IMPORT(import)
 KEYWORD_EXPORT(export)

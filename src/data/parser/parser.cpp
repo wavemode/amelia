@@ -1611,6 +1611,8 @@ public:
       return parse_identifier();
     case TokenType::STRING_LITERAL:
       return parse_string_literal();
+    case TokenType::CHAR_LITERAL:
+      return parse_char_literal();
     case TokenType::NUMBER:
     case TokenType::NUMBER_FIELD:
       return parse_number_literal();
@@ -1653,6 +1655,7 @@ public:
     case TokenType::KEYWORD_ULONG:
     case TokenType::KEYWORD_FLOAT:
     case TokenType::KEYWORD_DOUBLE:
+    case TokenType::KEYWORD_CHAR:
     case TokenType::KEYWORD_NULL:
       return parse_primitive_type();
     case TokenType::KEYWORD_AUTO:
@@ -2052,6 +2055,11 @@ public:
   NodeId parse_string_literal() {
     auto token = next();
     return m_output.add_node(token.loc, StringLiteralNode{token.id});
+  }
+
+  NodeId parse_char_literal() {
+    auto token = next();
+    return m_output.add_node(token.loc, CharLiteralNode{token.id});
   }
 
   NodeId parse_number_literal() {

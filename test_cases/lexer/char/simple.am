@@ -1,0 +1,6 @@
+/* EXPECTED_OUTPUT:
+CHAR_LITERAL('4')
+END_OF_FILE()
+*/
+
+'4'

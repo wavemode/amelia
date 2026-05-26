@@ -1,0 +1,5 @@
+'\q'
+
+/* EXPECTED_OUTPUT:
+ERROR("Invalid escape sequence in char literal: '\q' (at test_cases/lexer/char/error_invalid_escape_sequence.am:1:3)")
+*/

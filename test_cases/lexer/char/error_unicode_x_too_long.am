@@ -1,0 +1,5 @@
+'\xe6\x97\xa5\x00'
+
+/* EXPECTED_OUTPUT:
+ERROR("Character literal contains more than one UTF-8 code point (at test_cases/lexer/char/error_unicode_x_too_long.am:1:1)")
+*/

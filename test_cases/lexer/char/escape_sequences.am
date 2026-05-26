@@ -1,0 +1,25 @@
+'\a'
+'\b'
+'\f'
+'\n'
+'\r'
+'\t'
+'\v'
+'\\'
+'\''
+'\"'
+
+
+/* EXPECTED_OUTPUT:
+CHAR_LITERAL('\a')
+CHAR_LITERAL('\b')
+CHAR_LITERAL('\f')
+CHAR_LITERAL('\n')
+CHAR_LITERAL('\r')
+CHAR_LITERAL('\t')
+CHAR_LITERAL('\v')
+CHAR_LITERAL('\\')
+CHAR_LITERAL('\'')
+CHAR_LITERAL('"')
+END_OF_FILE()
+*/

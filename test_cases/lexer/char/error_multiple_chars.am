@@ -1,0 +1,5 @@
+'ab'
+
+/* EXPECTED_OUTPUT:
+ERROR("Expected closing single quote for character literal (at test_cases/lexer/char/error_multiple_chars.am:1:3)")
+*/

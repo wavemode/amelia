@@ -1,0 +1,16 @@
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(c)
+      ),
+      expression=CharLiteralNode(
+        lit='4'
+      )
+    )
+  ]
+)
+*/
+
+let c = '4'

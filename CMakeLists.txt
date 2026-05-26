@@ -7,7 +7,7 @@ set(CMAKE_C_FLAGS_DEBUG "-O0")
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     message(STATUS "Enabling Sanitizers: Address and Undefined Behavior")
-    add_compile_options("-fsanitize=address,undefined" "-fno-omit-frame-pointer" "-g1" "-gsplit-dwarf")
+    add_compile_options("-fsanitize=address,undefined" "-fno-omit-frame-pointer" "-g" "-gsplit-dwarf")
     add_link_options("-fsanitize=address,undefined" "-gsplit-dwarf")
 endif()
 

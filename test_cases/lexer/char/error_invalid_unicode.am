@@ -1,0 +1,5 @@
+'\uD800'
+
+/* EXPECTED_OUTPUT:
+ERROR("Invalid UTF-8 code point: Invalid UTF-8 data (at test_cases/lexer/char/error_invalid_unicode.am:1:8)")
+*/
