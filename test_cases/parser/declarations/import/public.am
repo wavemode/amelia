@@ -1,0 +1,21 @@
+public import a::b
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    VisibilityNode(
+      visibility=public,
+      decl=ImportDeclarationNode(
+        path=ScopeResolutionExpressionNode(
+          scope=IdentifierNode(
+            token=IDENTIFIER(a)
+          ),
+          name=IdentifierNode(
+            token=IDENTIFIER_NO_W(b)
+          )
+        )
+      )
+    )
+  ]
+)
+*/

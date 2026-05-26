@@ -102,13 +102,26 @@ public:
     auto token = peek();
     switch (token.type) {
     case TokenType::KEYWORD_LOCAL:
-      return parse_local_declaration();
+      return parse_top_level_visibility_declaration();
+    case TokenType::KEYWORD_PUBLIC:
+      if (peek(1).type == TokenType::KEYWORD_IMPORT) {
+        return parse_top_level_visibility_declaration();
+      }
+      break;
     case TokenType::KEYWORD_IMPORT:
       return parse_import_declaration();
     default:
       break;
     }
     return try_parse_declaration();
+  }
+
+  NodeId expect_top_level_declaration(Text error_message) {
+    auto decl = try_parse_top_level_declaration();
+    if (!decl.has_value()) {
+      throw_parser_error_at_current_location(String(error_message));
+    }
+    return decl.value();
   }
 
   NodeId parse_import_declaration() {
@@ -432,10 +445,29 @@ public:
     );
   }
 
-  NodeId parse_local_declaration() {
-    auto local_token = next();
-    NodeId decl = expect_declaration("Expected declaration after 'local' keyword");
-    return m_output.add_node(local_token.loc, VisibilityNode{DeclarationVisibility::Local, decl});
+  NodeId parse_top_level_visibility_declaration() {
+    auto visibility_token = next();
+    DeclarationVisibility visibility;
+    switch (visibility_token.type) {
+    case TokenType::KEYWORD_PUBLIC:
+      visibility = DeclarationVisibility::Public;
+      break;
+    case TokenType::KEYWORD_PRIVATE:
+      visibility = DeclarationVisibility::Private;
+      break;
+    case TokenType::KEYWORD_PROTECTED:
+      visibility = DeclarationVisibility::Protected;
+      break;
+    case TokenType::KEYWORD_LOCAL:
+      visibility = DeclarationVisibility::Local;
+      break;
+    default:
+      throw_parser_error_at_current_location("Invalid visibility keyword");
+    }
+    NodeId decl = expect_top_level_declaration(
+        "Expected top-level declaration after visibility modifier"
+    );
+    return m_output.add_node(visibility_token.loc, VisibilityNode{visibility, decl});
   }
 
   NodeId parse_concept_declaration() {
