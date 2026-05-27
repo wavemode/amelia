@@ -961,7 +961,7 @@ public:
       variadic = true;
       ++m_token_index; // consume the '...' token
     }
-    auto name = expect_identifier("Expected parameter name in function signature");
+    auto name = parse_expression();
     Option<NodeId> type;
     if (peek().type == TokenType::COLON) {
       ++m_token_index; // consume the ':' token
@@ -1714,12 +1714,10 @@ public:
   NodeId parse_function_expression() {
     auto fun_token = next();
     NodeId signature = parse_function_signature();
-    if (peek().type != TokenType::LEFT_BRACE) {
-      throw_parser_error_at_current_location(
-          "Expected '{' to begin function body in function expression"
-      );
+    Option<NodeId> body;
+    if (peek().type == TokenType::LEFT_BRACE) {
+      body = try_parse_function_body();
     }
-    NodeId body = try_parse_function_body().value();
     return m_output.add_node(fun_token.loc, FunctionExpressionNode{signature, body});
   }
 

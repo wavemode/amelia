@@ -531,7 +531,7 @@ struct FunctionDeclarationNode {
 
 struct FunctionExpressionNode {
   NodeId signature;
-  NodeId body;
+  Option<NodeId> body;
 };
 
 struct LambdaExpressionNode {

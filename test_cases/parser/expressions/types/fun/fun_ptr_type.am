@@ -1,0 +1,49 @@
+let x : fun(Vec[int], Vec[int]) -> Vec[int]
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x)
+      ),
+      type=FunctionExpressionNode(
+        signature=FunctionSignatureNode(
+          parameters=[
+            FunctionParameterNode(
+              variadic=false,
+              name=IndexingExpressionNode(
+                object=IdentifierNode(
+                  token=IDENTIFIER_NO_W(Vec)
+                ),
+                index=PrimitiveTypeNode(
+                  token=KEYWORD_INT(int)
+                )
+              )
+            ),
+            FunctionParameterNode(
+              variadic=false,
+              name=IndexingExpressionNode(
+                object=IdentifierNode(
+                  token=IDENTIFIER(Vec)
+                ),
+                index=PrimitiveTypeNode(
+                  token=KEYWORD_INT(int)
+                )
+              )
+            )
+          ],
+          return_type=IndexingExpressionNode(
+            object=IdentifierNode(
+              token=IDENTIFIER(Vec)
+            ),
+            index=PrimitiveTypeNode(
+              token=KEYWORD_INT(int)
+            )
+          )
+        )
+      )
+    )
+  ]
+)
+*/
