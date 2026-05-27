@@ -456,10 +456,26 @@ public:
     default:
       throw_parser_error_at_current_location("Invalid visibility keyword");
     }
+
+    Option<NodeId> scope;
+    auto next_token = peek();
+    if (next_token.type == TokenType::LEFT_PAREN || next_token.type == TokenType::LEFT_PAREN_NO_W) {
+      ++m_token_index; // consume the '(' token
+      if (!is_identifier(peek().type)) {
+        throw_parser_error_at_current_location(
+            "Expected identifier after '(' in visibility declaration"
+        );
+      }
+      scope = parse_descend_expr_scope_resolution();
+      read_token_type(
+          TokenType::RIGHT_PAREN, "Expected ')' after scope name in visibility declaration"
+      );
+    }
+
     NodeId decl = expect_top_level_declaration(
         "Expected top-level declaration after visibility modifier"
     );
-    return m_output.add_node(visibility_token.loc, VisibilityNode{visibility, decl});
+    return m_output.add_node(visibility_token.loc, VisibilityNode{visibility, scope, decl});
   }
 
   NodeId parse_concept_declaration() {
@@ -638,7 +654,7 @@ public:
       throw std::runtime_error("Invalid visibility modifier");
     }
     NodeId decl = parse_class_body_declaration();
-    return m_output.add_node(visibility_token.loc, VisibilityNode{visibility, decl});
+    return m_output.add_node(visibility_token.loc, VisibilityNode{visibility, None(), decl});
   }
 
   NodeId parse_constructor_declaration() {

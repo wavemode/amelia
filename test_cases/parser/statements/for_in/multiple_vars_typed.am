@@ -16,11 +16,25 @@ ModuleNode(
               ForInVariableNode(
                 name=IdentifierNode(
                   token=IDENTIFIER_NO_W(x)
+                ),
+                type=RefExpressionNode(
+                  is_const=false,
+                  is_move=false,
+                  expr=PrimitiveTypeNode(
+                    token=KEYWORD_INT(int)
+                  )
                 )
               ),
               ForInVariableNode(
                 name=IdentifierNode(
                   token=IDENTIFIER(y)
+                ),
+                type=RefExpressionNode(
+                  is_const=false,
+                  is_move=false,
+                  expr=IdentifierNode(
+                    token=IDENTIFIER_NO_W(String)
+                  )
                 )
               )
             ],

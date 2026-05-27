@@ -648,6 +648,7 @@ enum class DeclarationVisibility {
 
 struct VisibilityNode {
   DeclarationVisibility visibility;
+  Option<NodeId> scope;
   NodeId decl;
 };
 

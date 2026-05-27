@@ -834,6 +834,7 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
       break;
     }
     print_field(out, "visibility", visibility);
+    print_node_field(out, "scope", n.scope);
     print_node_field(out, "decl", n.decl);
     break;
   }
