@@ -74,8 +74,10 @@ ModuleNode(
               )
             ],
             vars=[
-              IdentifierNode(
-                token=IDENTIFIER(x)
+              ForInVariableNode(
+                name=IdentifierNode(
+                  token=IDENTIFIER(x)
+                )
               )
             ],
             iterable=IdentifierNode(

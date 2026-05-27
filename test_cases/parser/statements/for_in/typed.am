@@ -1,8 +1,5 @@
 let z = {
-  for (x in y) {
-    z()
-    t()
-  }
+  for (x : int in y) a()
 }
 
 /* EXPECTED_OUTPUT:
@@ -19,29 +16,21 @@ ModuleNode(
               ForInVariableNode(
                 name=IdentifierNode(
                   token=IDENTIFIER_NO_W(x)
+                ),
+                type=PrimitiveTypeNode(
+                  token=KEYWORD_INT(int)
                 )
               )
             ],
             iterable=IdentifierNode(
               token=IDENTIFIER(y)
             ),
-            body=BlockStatementNode(
-              stmts=[
-                ExpressionStatementNode(
-                  expr=FunctionCallExpressionNode(
-                    callee=IdentifierNode(
-                      token=IDENTIFIER(z)
-                    )
-                  )
-                ),
-                ExpressionStatementNode(
-                  expr=FunctionCallExpressionNode(
-                    callee=IdentifierNode(
-                      token=IDENTIFIER(t)
-                    )
-                  )
+            body=ExpressionStatementNode(
+              expr=FunctionCallExpressionNode(
+                callee=IdentifierNode(
+                  token=IDENTIFIER(a)
                 )
-              ]
+              )
             )
           )
         ]

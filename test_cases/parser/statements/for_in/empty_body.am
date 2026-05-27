@@ -13,8 +13,10 @@ ModuleNode(
         stmts=[
           ForInStatementNode(
             vars=[
-              IdentifierNode(
-                token=IDENTIFIER_NO_W(x)
+              ForInVariableNode(
+                name=IdentifierNode(
+                  token=IDENTIFIER_NO_W(x)
+                )
               )
             ],
             iterable=IdentifierNode(

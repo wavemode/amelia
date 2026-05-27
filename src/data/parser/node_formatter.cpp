@@ -590,6 +590,12 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "body", n.body);
     break;
   }
+  case NodeType::ForInVariableNode: {
+    const auto &n = node.as_ForInVariableNode();
+    print_node_field(out, "name", n.name);
+    print_node_field(out, "type", n.type);
+    break;
+  }
   case NodeType::WhileStatementNode: {
     const auto &n = node.as_WhileStatementNode();
     print_node_field(out, "introductory_decls", n.introductory_decls);

@@ -1,5 +1,5 @@
 let z = {
-  for (x, y in z) w();
+  for (x : &int, y : &String in z) w();
 }
 
 /* EXPECTED_OUTPUT:

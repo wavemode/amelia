@@ -462,6 +462,11 @@ struct ForInStatementNode {
   NodeId body;
 };
 
+struct ForInVariableNode {
+  NodeId name;
+  Option<NodeId> type;
+};
+
 struct WhileStatementNode {
   List<NodeId> introductory_decls;
   NodeId condition;
@@ -868,6 +873,7 @@ struct BreakStatementNode {};
   X(BitwiseOrAssignStatementNode)                                                                  \
   X(BitwiseXorAssignStatementNode)                                                                 \
   X(ForInStatementNode)                                                                            \
+  X(ForInVariableNode)                                                                             \
   X(WhileStatementNode)                                                                            \
   X(LabelStatementNode)                                                                            \
   X(GotoStatementNode)                                                                             \
