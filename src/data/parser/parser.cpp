@@ -150,7 +150,7 @@ public:
           "Expected identifier after 'import' keyword in import declaration"
       );
     }
-    auto path = parse_descend_expr_scope_resolution();
+    auto path = parse_scoped_name();
     auto items = try_parse_import_items();
     auto alias = try_parse_import_alias();
     return m_output.add_node(
@@ -466,7 +466,7 @@ public:
             "Expected identifier after '(' in visibility declaration"
         );
       }
-      scope = parse_descend_expr_scope_resolution();
+      scope = parse_scoped_name();
       read_token_type(
           TokenType::RIGHT_PAREN, "Expected ')' after scope name in visibility declaration"
       );
@@ -500,7 +500,7 @@ public:
           "Expected identifier after 'class' keyword in class declaration"
       );
     }
-    auto name = parse_descend_expr_scope_resolution();
+    auto name = parse_scoped_name();
     Option<NodeId> generic_parameter_list = try_parse_generic_parameter_list();
     Option<NodeId> base_class_list = try_parse_base_type_list();
     Option<NodeId> implicit_parameter_list = try_parse_implicit_parameter_list();
@@ -860,7 +860,7 @@ public:
     if (!is_identifier(peek().type)) {
       throw_parser_error_at_current_location("Expected type name after 'type' keyword");
     }
-    auto name = parse_descend_expr_scope_resolution();
+    auto name = parse_scoped_name();
     Option<NodeId> generic_parameter_list = try_parse_generic_parameter_list();
     Option<NodeId> type_expr;
     if (peek().type == TokenType::ASSIGN) {
@@ -894,8 +894,7 @@ public:
     if (!is_identifier(peek().type)) {
       throw_parser_error_at_current_location("Expected function name after 'fun' keyword");
     }
-    // allow function name to be a scope resolution expression (A::b)
-    auto name = parse_descend_expr_scope_resolution();
+    auto name = parse_scoped_name();
 
     NodeId signature = parse_function_signature();
     Option<NodeId> body = try_parse_function_body();
@@ -1429,57 +1428,61 @@ public:
     return left;
   }
 
-  NodeId parse_descend_expr_await_ref_copy_move_inline() {
+  NodeId parse_type_expression() {
+    return parse_descend_expr_await_ref_copy_move_inline(false);
+  }
+
+  NodeId parse_descend_expr_await_ref_copy_move_inline(bool allow_funcall = true) {
     auto next_token = peek();
     auto start_location = next_token.loc;
     if (next_token.type == TokenType::KEYWORD_AWAIT) {
       ++m_token_index; // consume the 'await' keyword
-      NodeId expr = parse_descend_expr_await_ref_copy_move_inline();
+      NodeId expr = parse_descend_expr_await_ref_copy_move_inline(allow_funcall);
       return m_output.add_node(start_location, AwaitExpressionNode{expr});
     } else if (next_token.type == TokenType::KEYWORD_MOVE) {
       ++m_token_index; // consume the 'move' keyword
-      NodeId expr = parse_descend_expr_await_ref_copy_move_inline();
+      NodeId expr = parse_descend_expr_await_ref_copy_move_inline(allow_funcall);
       return m_output.add_node(start_location, MoveExpressionNode{expr});
     } else if (next_token.type == TokenType::KEYWORD_COPY) {
       ++m_token_index; // consume the 'copy' keyword
-      NodeId expr = parse_descend_expr_await_ref_copy_move_inline();
+      NodeId expr = parse_descend_expr_await_ref_copy_move_inline(allow_funcall);
       return m_output.add_node(start_location, CopyExpressionNode{expr});
     } else if (next_token.type == TokenType::AMPERSAND) {
       ++m_token_index; // consume the '&' operator
       bool is_const = false;
       bool is_move = false;
-      auto next_next_token = peek();
-      if (next_token.type == TokenType::KEYWORD_CONST) {
+      auto following_token = peek();
+      if (following_token.type == TokenType::KEYWORD_CONST) {
         is_const = true;
         ++m_token_index; // consume the 'const' keyword
-      } else if (next_next_token.type == TokenType::KEYWORD_MOVE) {
+      } else if (following_token.type == TokenType::KEYWORD_MOVE) {
         is_move = true;
         ++m_token_index; // consume the 'move' keyword
       }
-      NodeId expr = parse_descend_expr_await_ref_copy_move_inline();
+      NodeId expr = parse_descend_expr_await_ref_copy_move_inline(allow_funcall);
       return m_output.add_node(start_location, RefExpressionNode{is_const, is_move, expr});
     } else if (next_token.type == TokenType::KEYWORD_INLINE) {
       ++m_token_index; // consume the 'inline' keyword
-      NodeId expr = parse_descend_expr_await_ref_copy_move_inline();
+      NodeId expr = parse_descend_expr_await_ref_copy_move_inline(allow_funcall);
       return m_output.add_node(start_location, InlineExpressionNode{expr});
     }
-    return parse_descend_pos_neg_deref_not_bitnot_ell();
+    return parse_descend_expr_pos_neg_deref_not_bitnot_ell(allow_funcall);
   }
 
-  NodeId parse_descend_pos_neg_deref_not_bitnot_ell() {
+  NodeId parse_descend_expr_pos_neg_deref_not_bitnot_ell(bool allow_funcall = true) {
     auto next_token = peek();
     auto start_location = next_token.loc;
     if (next_token.type == TokenType::PLUS) {
       ++m_token_index; // consume the '+' operator
-      NodeId expr = parse_descend_pos_neg_deref_not_bitnot_ell();
+      NodeId expr = parse_descend_expr_pos_neg_deref_not_bitnot_ell(allow_funcall);
       return m_output.add_node(start_location, PositiveExpressionNode{expr});
     } else if (next_token.type == TokenType::MINUS) {
       ++m_token_index; // consume the '-' operator
-      NodeId expr = parse_descend_pos_neg_deref_not_bitnot_ell();
+      NodeId expr = parse_descend_expr_pos_neg_deref_not_bitnot_ell(allow_funcall);
       return m_output.add_node(start_location, NegativeExpressionNode{expr});
     } else if (next_token.type == TokenType::TILDE) {
       ++m_token_index; // consume the '~' operator
-      NodeId expr = parse_descend_pos_neg_deref_not_bitnot_ell();
+      NodeId expr = parse_descend_expr_pos_neg_deref_not_bitnot_ell(allow_funcall);
       return m_output.add_node(start_location, BitwiseNotExpressionNode{expr});
     } else if (next_token.type == TokenType::STAR) {
       ++m_token_index; // consume the '*' operator
@@ -1488,27 +1491,54 @@ public:
         is_const = true;
         ++m_token_index; // consume the 'const' keyword
       }
-      NodeId expr = parse_descend_pos_neg_deref_not_bitnot_ell();
+      NodeId expr = parse_descend_expr_pos_neg_deref_not_bitnot_ell(allow_funcall);
       return m_output.add_node(start_location, DerefExpressionNode{is_const, expr});
     } else if (next_token.type == TokenType::EXCLAM || next_token.type == TokenType::EXCLAM_NO_W) {
       ++m_token_index; // consume the '!' operator
-      NodeId expr = parse_descend_pos_neg_deref_not_bitnot_ell();
+      NodeId expr = parse_descend_expr_pos_neg_deref_not_bitnot_ell(allow_funcall);
       return m_output.add_node(start_location, NotExpressionNode{expr});
     } else if (next_token.type == TokenType::ELLIPSIS) {
       ++m_token_index; // consume the '...' operator
-      NodeId expr = parse_descend_pos_neg_deref_not_bitnot_ell();
+      NodeId expr = parse_descend_expr_pos_neg_deref_not_bitnot_ell(allow_funcall);
       return m_output.add_node(start_location, EllipsisExpressionNode{expr});
     }
-    return parse_descend_expr_field_ix_funcall();
+    return parse_descend_expr_impl_any_async(allow_funcall);
   }
 
-  NodeId parse_descend_expr_field_ix_funcall() {
+  NodeId parse_descend_expr_impl_any_async(bool allow_funcall = true) {
+    auto start_token = peek();
+    if (start_token.type == TokenType::KEYWORD_IMPL) {
+      ++m_token_index; // consume the 'impl' keyword
+      NodeId type_expr = parse_descend_expr_impl_any_async(allow_funcall);
+      return m_output.add_node(start_token.loc, ImplTypeExpressionNode{type_expr});
+    } else if (start_token.type == TokenType::KEYWORD_ANY) {
+      ++m_token_index; // consume the 'any' keyword
+      NodeId type_expr = parse_descend_expr_impl_any_async(allow_funcall);
+      return m_output.add_node(start_token.loc, AnyTypeExpressionNode{type_expr});
+    } else if (start_token.type == TokenType::KEYWORD_ASYNC) {
+      ++m_token_index; // consume the 'async' keyword
+      NodeId type_expr = parse_descend_expr_impl_any_async(allow_funcall);
+      return m_output.add_node(start_token.loc, AsyncExpressionNode{type_expr});
+    }
+    return parse_descend_expr_field_ix_funcall_scope(allow_funcall);
+  }
+
+  NodeId parse_scoped_name() {
+    return parse_descend_expr_field_ix_funcall_scope(false, false, false);
+  }
+
+  NodeId parse_descend_expr_field_ix_funcall_scope(
+      bool allow_funcall = true, bool allow_ix = true, bool allow_field = true
+  ) {
     auto start_location = peek().loc;
-    auto left = parse_descend_expr_impl_any_async();
+    auto left = parse_atom();
     auto next_token = peek();
-    while (next_token.type == TokenType::DOT_NO_W || next_token.type == TokenType::NUMBER_FIELD ||
-           next_token.type == TokenType::LEFT_BRACKET_NO_W ||
-           next_token.type == TokenType::LEFT_PAREN_NO_W) {
+    while (((next_token.type == TokenType::DOT_NO_W || next_token.type == TokenType::NUMBER_FIELD
+            ) &&
+            allow_field) ||
+           (next_token.type == TokenType::LEFT_BRACKET_NO_W && allow_ix) ||
+           (next_token.type == TokenType::LEFT_PAREN_NO_W && allow_funcall) ||
+           next_token.type == TokenType::DOUBLE_COLON_NO_W) {
       if (next_token.type == TokenType::DOT_NO_W) {
         ++m_token_index; // consume the '.' operator
         auto next_type = peek().type;
@@ -1528,11 +1558,22 @@ public:
         );
       } else if (next_token.type == TokenType::LEFT_BRACKET_NO_W) {
         ++m_token_index; // consume the '[' operator
-        NodeId index_expr = parse_expression();
-        read_token_type(
-            TokenType::RIGHT_BRACKET, "Expected ']' after index expression in index access"
-        );
-        left = m_output.add_node(start_location, IndexingExpressionNode{left, index_expr});
+        List<NodeId> indices;
+        while (peek().type != TokenType::RIGHT_BRACKET) {
+          auto index_start_location = peek().loc;
+          Option<NodeId> name;
+          if (is_identifier(peek().type) && peek(1).type == TokenType::ASSIGN) {
+            name = parse_identifier();
+            ++m_token_index; // consume the '=' token
+          }
+          NodeId value = parse_expression();
+          if (peek().type == TokenType::COMMA) {
+            ++m_token_index; // consume the comma
+          }
+          indices.push_back(m_output.add_node(index_start_location, IndexNode{name, value}));
+        }
+        ++m_token_index; // consume the ']' token
+        left = m_output.add_node(start_location, IndexingExpressionNode{left, std::move(indices)});
       } else if (next_token.type == TokenType::LEFT_PAREN_NO_W) {
         ++m_token_index; // consume the '(' operator
         List<NodeId> args;
@@ -1544,91 +1585,21 @@ public:
         }
         ++m_token_index; // consume the ')' operator
         left = m_output.add_node(start_location, FunctionCallExpressionNode{left, std::move(args)});
+      } else if (next_token.type == TokenType::DOUBLE_COLON_NO_W) {
+        ++m_token_index; // consume the '::' operator
+        auto next_type = peek().type;
+        if (!is_identifier_no_w(next_type) && next_type != TokenType::KEYWORD_OPERATOR) {
+          throw_parser_error_at_current_location(
+              "Expected identifier immediately after '::' in scope resolution expression"
+          );
+        }
+        left = m_output.add_node(
+            start_location, ScopeResolutionExpressionNode{left, parse_identifier()}
+        );
       } else {
         throw std::runtime_error("unreachable");
       }
       next_token = peek();
-    }
-    return left;
-  }
-
-  NodeId parse_type_expression() {
-    auto next_token = peek();
-    auto start_location = next_token.loc;
-    NodeId left;
-    if (next_token.type == TokenType::STAR) {
-      ++m_token_index; // consume the '*' operator
-      bool is_const = false;
-      if (peek().type == TokenType::KEYWORD_CONST) {
-        is_const = true;
-        ++m_token_index; // consume the 'const' keyword
-      }
-      NodeId expr = parse_type_expression();
-      left = m_output.add_node(start_location, DerefExpressionNode{is_const, expr});
-    } else if (next_token.type == TokenType::AMPERSAND) {
-      ++m_token_index; // consume the '&' operator
-      bool is_const = false;
-      bool is_move = false;
-      auto next_token = peek();
-      if (next_token.type == TokenType::KEYWORD_CONST) {
-        is_const = true;
-        ++m_token_index; // consume the 'const' keyword
-      } else if (next_token.type == TokenType::KEYWORD_MOVE) {
-        is_move = true;
-        ++m_token_index; // consume the 'move' keyword
-      }
-      NodeId expr = parse_type_expression();
-      left = m_output.add_node(start_location, RefExpressionNode{is_const, is_move, expr});
-    } else if (next_token.type == TokenType::EXCLAM || next_token.type == TokenType::EXCLAM_NO_W) {
-      ++m_token_index; // consume the '!' operator
-      NodeId expr = parse_type_expression();
-      left = m_output.add_node(start_location, NotExpressionNode{expr});
-    } else {
-      left = parse_descend_expr_impl_any_async();
-    }
-    while (peek().type == TokenType::LEFT_BRACKET_NO_W) {
-      ++m_token_index; // consume the '[' operator
-      NodeId index_expr = parse_expression();
-      read_token_type(
-          TokenType::RIGHT_BRACKET, "Expected ']' after index expression in index access"
-      );
-      left = m_output.add_node(start_location, IndexingExpressionNode{left, index_expr});
-    }
-    return left;
-  }
-
-  NodeId parse_descend_expr_impl_any_async() {
-    auto start_token = peek();
-    if (start_token.type == TokenType::KEYWORD_IMPL) {
-      ++m_token_index; // consume the 'impl' keyword
-      NodeId type_expr = parse_type_expression();
-      return m_output.add_node(start_token.loc, ImplTypeExpressionNode{type_expr});
-    } else if (start_token.type == TokenType::KEYWORD_ANY) {
-      ++m_token_index; // consume the 'any' keyword
-      NodeId type_expr = parse_type_expression();
-      return m_output.add_node(start_token.loc, AnyTypeExpressionNode{type_expr});
-    } else if (start_token.type == TokenType::KEYWORD_ASYNC) {
-      ++m_token_index; // consume the 'async' keyword
-      NodeId type_expr = parse_type_expression();
-      return m_output.add_node(start_token.loc, AsyncExpressionNode{type_expr});
-    }
-    return parse_descend_expr_scope_resolution();
-  }
-
-  NodeId parse_descend_expr_scope_resolution() {
-    auto start_location = peek().loc;
-    NodeId left = parse_atom();
-    while (peek().type == TokenType::DOUBLE_COLON_NO_W) {
-      ++m_token_index; // consume the '::' operator
-      auto next_type = peek().type;
-      if (!is_identifier_no_w(next_type) && next_type != TokenType::KEYWORD_OPERATOR) {
-        throw_parser_error_at_current_location(
-            "Expected identifier immediately after '::' in scope resolution expression"
-        );
-      }
-      left = m_output.add_node(
-          start_location, ScopeResolutionExpressionNode{left, parse_identifier()}
-      );
     }
     return left;
   }

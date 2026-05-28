@@ -1,0 +1,32 @@
+let x = T[U]::V()
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x)
+      ),
+      expression=FunctionCallExpressionNode(
+        callee=ScopeResolutionExpressionNode(
+          scope=IndexingExpressionNode(
+            object=IdentifierNode(
+              token=IDENTIFIER(T)
+            ),
+            indices=[
+              IndexNode(
+                value=IdentifierNode(
+                  token=IDENTIFIER_NO_W(U)
+                )
+              )
+            ]
+          ),
+          name=IdentifierNode(
+            token=IDENTIFIER_NO_W(V)
+          )
+        )
+      )
+    )
+  ]
+)
+*/

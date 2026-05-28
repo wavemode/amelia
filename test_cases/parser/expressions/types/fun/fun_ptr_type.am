@@ -1,4 +1,4 @@
-let x : fun(Vec[int], Vec[int]) -> Vec[int]
+let x : fun(List[int], List[int]) -> List[int]
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
@@ -14,32 +14,44 @@ ModuleNode(
               variadic=false,
               name=IndexingExpressionNode(
                 object=IdentifierNode(
-                  token=IDENTIFIER_NO_W(Vec)
+                  token=IDENTIFIER_NO_W(List)
                 ),
-                index=PrimitiveTypeNode(
-                  token=KEYWORD_INT(int)
-                )
+                indices=[
+                  IndexNode(
+                    value=PrimitiveTypeNode(
+                      token=KEYWORD_INT(int)
+                    )
+                  )
+                ]
               )
             ),
             FunctionParameterNode(
               variadic=false,
               name=IndexingExpressionNode(
                 object=IdentifierNode(
-                  token=IDENTIFIER(Vec)
+                  token=IDENTIFIER(List)
                 ),
-                index=PrimitiveTypeNode(
-                  token=KEYWORD_INT(int)
-                )
+                indices=[
+                  IndexNode(
+                    value=PrimitiveTypeNode(
+                      token=KEYWORD_INT(int)
+                    )
+                  )
+                ]
               )
             )
           ],
           return_type=IndexingExpressionNode(
             object=IdentifierNode(
-              token=IDENTIFIER(Vec)
+              token=IDENTIFIER(List)
             ),
-            index=PrimitiveTypeNode(
-              token=KEYWORD_INT(int)
-            )
+            indices=[
+              IndexNode(
+                value=PrimitiveTypeNode(
+                  token=KEYWORD_INT(int)
+                )
+              )
+            ]
           )
         )
       )

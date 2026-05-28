@@ -1,4 +1,4 @@
-let x = y[z]
+let x = y[z, w]
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
@@ -15,6 +15,11 @@ ModuleNode(
           IndexNode(
             value=IdentifierNode(
               token=IDENTIFIER_NO_W(z)
+            )
+          ),
+          IndexNode(
+            value=IdentifierNode(
+              token=IDENTIFIER(w)
             )
           )
         ]

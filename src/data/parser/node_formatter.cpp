@@ -340,7 +340,13 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   case NodeType::IndexingExpressionNode: {
     const auto &n = node.as_IndexingExpressionNode();
     print_node_field(out, "object", n.object);
-    print_node_field(out, "index", n.index);
+    print_node_field(out, "indices", n.indices);
+    break;
+  }
+  case NodeType::IndexNode: {
+    const auto &n = node.as_IndexNode();
+    print_node_field(out, "name", n.name);
+    print_node_field(out, "value", n.value);
     break;
   }
   case NodeType::FunctionArgumentNode: {

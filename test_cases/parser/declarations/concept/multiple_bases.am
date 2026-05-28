@@ -16,9 +16,13 @@ ModuleNode(
             object=IdentifierNode(
               token=IDENTIFIER(C)
             ),
-            index=IdentifierNode(
-              token=IDENTIFIER_NO_W(D)
-            )
+            indices=[
+              IndexNode(
+                value=IdentifierNode(
+                  token=IDENTIFIER_NO_W(D)
+                )
+              )
+            ]
           )
         ]
       ),

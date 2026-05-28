@@ -1,4 +1,4 @@
-let x = !y[z]
+let x = T[U]::V
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
@@ -7,18 +7,21 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expression=NotExpressionNode(
-        expr=IndexingExpressionNode(
+      expression=ScopeResolutionExpressionNode(
+        scope=IndexingExpressionNode(
           object=IdentifierNode(
-            token=IDENTIFIER_NO_W(y)
+            token=IDENTIFIER(T)
           ),
           indices=[
             IndexNode(
               value=IdentifierNode(
-                token=IDENTIFIER_NO_W(z)
+                token=IDENTIFIER_NO_W(U)
               )
             )
           ]
+        ),
+        name=IdentifierNode(
+          token=IDENTIFIER_NO_W(V)
         )
       )
     )

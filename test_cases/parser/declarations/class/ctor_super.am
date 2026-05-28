@@ -64,9 +64,13 @@ ModuleNode(
                   expr=FunctionCallExpressionNode(
                     callee=IndexingExpressionNode(
                       object=SuperLiteralNode(),
-                      index=IdentifierNode(
-                        token=IDENTIFIER_NO_W(B)
-                      )
+                      indices=[
+                        IndexNode(
+                          value=IdentifierNode(
+                            token=IDENTIFIER_NO_W(B)
+                          )
+                        )
+                      ]
                     ),
                     args=[
                       FunctionArgumentNode(

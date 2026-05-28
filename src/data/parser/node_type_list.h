@@ -429,7 +429,12 @@ struct NumericFieldAccessExpressionNode {
 
 struct IndexingExpressionNode {
   NodeId object;
-  NodeId index;
+  List<NodeId> indices;
+};
+
+struct IndexNode {
+  Option<NodeId> name;
+  NodeId value;
 };
 
 struct FunctionArgumentNode {
@@ -814,6 +819,7 @@ struct BreakStatementNode {};
   X(FieldAccessExpressionNode)                                                                     \
   X(NumericFieldAccessExpressionNode)                                                              \
   X(IndexingExpressionNode)                                                                        \
+  X(IndexNode)                                                                                     \
   X(FunctionArgumentNode)                                                                          \
   X(FunctionCallExpressionNode)                                                                    \
   X(ScopeResolutionExpressionNode)                                                                 \

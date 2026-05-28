@@ -1,4 +1,4 @@
-let x = y[z]
+let x = y[]
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
@@ -10,14 +10,7 @@ ModuleNode(
       expression=IndexingExpressionNode(
         object=IdentifierNode(
           token=IDENTIFIER(y)
-        ),
-        indices=[
-          IndexNode(
-            value=IdentifierNode(
-              token=IDENTIFIER_NO_W(z)
-            )
-          )
-        ]
+        )
       )
     )
   ]

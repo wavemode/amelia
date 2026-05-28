@@ -16,13 +16,13 @@
             "request": "launch",
             "program": "${workspaceRoot}/build/debug/amelia_test",
             "args": [
-                "-ts=Lexer"
+                "-ts=Parser"
             ],
             "cwd": "${workspaceRoot}",
             "preLaunchTask": "make build-test",
             "env": {
                 // "AMELIA_UPDATE_TEST_CASES": "1",
-                "AMELIA_TEST_CASE_FILTER": "test_cases/lexer/char/unicode_x.am"
+                "AMELIA_TEST_CASE_FILTER": "test_cases/parser/expressions/types/ref/const.am"
             }
         }
     ]
