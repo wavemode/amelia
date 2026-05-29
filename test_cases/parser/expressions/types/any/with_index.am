@@ -1,0 +1,27 @@
+let x : any T[U]
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x)
+      ),
+      type=AnyTypeExpressionNode(
+        type=IndexingExpressionNode(
+          object=IdentifierNode(
+            token=IDENTIFIER(T)
+          ),
+          indices=[
+            IndexNode(
+              value=IdentifierNode(
+                token=IDENTIFIER_NO_W(U)
+              )
+            )
+          ]
+        )
+      )
+    )
+  ]
+)
+*/

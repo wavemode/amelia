@@ -1,0 +1,28 @@
+let x : *T[U]
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x)
+      ),
+      type=DerefExpressionNode(
+        is_const=false,
+        expr=IndexingExpressionNode(
+          object=IdentifierNode(
+            token=IDENTIFIER_NO_W(T)
+          ),
+          indices=[
+            IndexNode(
+              value=IdentifierNode(
+                token=IDENTIFIER_NO_W(U)
+              )
+            )
+          ]
+        )
+      )
+    )
+  ]
+)
+*/
