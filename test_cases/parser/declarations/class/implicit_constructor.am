@@ -41,7 +41,7 @@ ModuleNode(
                         token=IDENTIFIER_NO_W(a)
                       )
                     ),
-                    expression=IdentifierNode(
+                    expr=IdentifierNode(
                       token=IDENTIFIER(a)
                     )
                   )

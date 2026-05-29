@@ -31,7 +31,7 @@ ModuleNode(
                       token=IDENTIFIER_NO_W(a)
                     )
                   ),
-                  expression=NumberLiteralNode(
+                  expr=NumberLiteralNode(
                     lit=NUMBER(0)
                   )
                 ),
@@ -42,7 +42,7 @@ ModuleNode(
                       token=IDENTIFIER_NO_W(b)
                     )
                   ),
-                  expression=StringLiteralNode(
+                  expr=StringLiteralNode(
                     lit="hello"
                   )
                 )

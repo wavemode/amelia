@@ -41,7 +41,7 @@ ModuleNode(
                         token=IDENTIFIER_NO_W(a)
                       )
                     ),
-                    expression=CopyExpressionNode(
+                    expr=CopyExpressionNode(
                       expr=FieldAccessExpressionNode(
                         object=IdentifierNode(
                           token=IDENTIFIER(o)
@@ -59,7 +59,7 @@ ModuleNode(
                         token=IDENTIFIER_NO_W(b)
                       )
                     ),
-                    expression=CopyExpressionNode(
+                    expr=CopyExpressionNode(
                       expr=FieldAccessExpressionNode(
                         object=IdentifierNode(
                           token=IDENTIFIER(o)

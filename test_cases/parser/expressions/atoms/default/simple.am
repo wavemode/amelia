@@ -10,7 +10,7 @@ ModuleNode(
       type=PrimitiveTypeNode(
         token=KEYWORD_INT(int)
       ),
-      expression=DefaultLiteralNode()
+      expr=DefaultLiteralNode()
     )
   ]
 )

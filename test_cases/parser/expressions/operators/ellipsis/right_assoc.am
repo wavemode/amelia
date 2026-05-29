@@ -7,7 +7,7 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expression=EllipsisExpressionNode(
+      expr=EllipsisExpressionNode(
         expr=EllipsisExpressionNode(
           expr=IdentifierNode(
             token=IDENTIFIER_NO_W(y)

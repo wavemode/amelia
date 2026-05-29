@@ -7,7 +7,7 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expression=BitwiseOrExpressionNode(
+      expr=BitwiseOrExpressionNode(
         left=IdentifierNode(
           token=IDENTIFIER(y)
         ),

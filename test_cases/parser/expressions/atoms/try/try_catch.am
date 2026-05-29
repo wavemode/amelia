@@ -7,7 +7,7 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(w)
       ),
-      expression=TryExpressionNode(
+      expr=TryExpressionNode(
         try_block=IdentifierNode(
           token=IDENTIFIER(x)
         ),

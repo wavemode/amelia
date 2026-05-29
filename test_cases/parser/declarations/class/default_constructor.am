@@ -29,7 +29,7 @@ ModuleNode(
                         token=IDENTIFIER_NO_W(a)
                       )
                     ),
-                    expression=NumberLiteralNode(
+                    expr=NumberLiteralNode(
                       lit=NUMBER(10)
                     )
                   )

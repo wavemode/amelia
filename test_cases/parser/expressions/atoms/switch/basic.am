@@ -10,7 +10,7 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expression=SwitchExpressionNode(
+      expr=SwitchExpressionNode(
         expr=IdentifierNode(
           token=IDENTIFIER_NO_W(y)
         ),

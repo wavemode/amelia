@@ -11,7 +11,7 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expression=ParenthesizedExpressionNode(
+      expr=ParenthesizedExpressionNode(
         exprs=[
           NumberLiteralNode(
             lit=NUMBER(5)

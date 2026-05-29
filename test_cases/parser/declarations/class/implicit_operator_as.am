@@ -23,7 +23,7 @@ ModuleNode(
               ),
               signature=FunctionSignatureNode(),
               body=FunctionBodyNode(
-                expression=FieldAccessExpressionNode(
+                expr=FieldAccessExpressionNode(
                   object=ThisLiteralNode(),
                   field=IdentifierNode(
                     token=IDENTIFIER_NO_W(a)

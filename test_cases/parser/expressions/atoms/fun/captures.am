@@ -15,7 +15,7 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(f)
       ),
-      expression=FunctionExpressionNode(
+      expr=FunctionExpressionNode(
         signature=FunctionSignatureNode(
           parameters=[
             FunctionParameterNode(

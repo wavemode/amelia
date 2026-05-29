@@ -7,7 +7,7 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expression=RightShiftExpressionNode(
+      expr=RightShiftExpressionNode(
         left=IdentifierNode(
           token=IDENTIFIER(y)
         ),

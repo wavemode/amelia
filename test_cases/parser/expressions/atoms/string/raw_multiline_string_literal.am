@@ -9,7 +9,7 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expression=StringLiteralNode(
+      expr=StringLiteralNode(
         lit="\nhello, world\\!\n"
       )
     )

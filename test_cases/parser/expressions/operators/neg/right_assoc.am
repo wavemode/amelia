@@ -7,7 +7,7 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expression=NegativeExpressionNode(
+      expr=NegativeExpressionNode(
         expr=NegativeExpressionNode(
           expr=IdentifierNode(
             token=IDENTIFIER_NO_W(y)

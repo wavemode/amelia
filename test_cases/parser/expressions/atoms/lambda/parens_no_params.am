@@ -7,7 +7,7 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expression=LambdaExpressionNode(
+      expr=LambdaExpressionNode(
         body=NumberLiteralNode(
           lit=NUMBER(10)
         )

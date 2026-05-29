@@ -121,13 +121,13 @@ struct OperatorFunctionDeclarationNode {
 struct LetDeclarationNode {
   NodeId target;
   Option<NodeId> type;
-  Option<NodeId> expression;
+  Option<NodeId> expr;
 };
 
 struct ConstDeclarationNode {
   NodeId target;
   Option<NodeId> type;
-  Option<NodeId> expression;
+  Option<NodeId> expr;
 };
 
 struct PreIncrementStatementNode {
@@ -169,57 +169,57 @@ struct ExpressionStatementNode {
 
 struct AssignmentStatementNode {
   NodeId target;
-  NodeId expression;
+  NodeId expr;
 };
 
 struct AddAssignStatementNode {
   NodeId target;
-  NodeId expression;
+  NodeId expr;
 };
 
 struct SubAssignStatementNode {
   NodeId target;
-  NodeId expression;
+  NodeId expr;
 };
 
 struct MulAssignStatementNode {
   NodeId target;
-  NodeId expression;
+  NodeId expr;
 };
 
 struct DivAssignStatementNode {
   NodeId target;
-  NodeId expression;
+  NodeId expr;
 };
 
 struct ModAssignStatementNode {
   NodeId target;
-  NodeId expression;
+  NodeId expr;
 };
 
 struct LeftShiftAssignStatementNode {
   NodeId target;
-  NodeId expression;
+  NodeId expr;
 };
 
 struct RightShiftAssignStatementNode {
   NodeId target;
-  NodeId expression;
+  NodeId expr;
 };
 
 struct BitwiseAndAssignStatementNode {
   NodeId target;
-  NodeId expression;
+  NodeId expr;
 };
 
 struct BitwiseOrAssignStatementNode {
   NodeId target;
-  NodeId expression;
+  NodeId expr;
 };
 
 struct BitwiseXorAssignStatementNode {
   NodeId target;
-  NodeId expression;
+  NodeId expr;
 };
 
 struct AnonymousStructLiteralNode {
@@ -527,7 +527,7 @@ struct FunctionSignatureNode {
 };
 
 struct FunctionBodyNode {
-  Option<NodeId> expression;
+  Option<NodeId> expr;
   Option<List<NodeId>> stmts;
   bool is_default;
   bool is_deleted;

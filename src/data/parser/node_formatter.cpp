@@ -30,14 +30,14 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     const auto &n = node.as_LetDeclarationNode();
     print_node_field(out, "target", n.target);
     print_node_field(out, "type", n.type);
-    print_node_field(out, "expression", n.expression);
+    print_node_field(out, "expr", n.expr);
     break;
   }
   case NodeType::ConstDeclarationNode: {
     const auto &n = node.as_ConstDeclarationNode();
     print_node_field(out, "target", n.target);
     print_node_field(out, "type", n.type);
-    print_node_field(out, "expression", n.expression);
+    print_node_field(out, "expr", n.expr);
     break;
   }
   case NodeType::StringLiteralNode: {
@@ -525,67 +525,67 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   case NodeType::AssignmentStatementNode: {
     const auto &n = node.as_AssignmentStatementNode();
     print_node_field(out, "target", n.target);
-    print_node_field(out, "expression", n.expression);
+    print_node_field(out, "expr", n.expr);
     break;
   }
   case NodeType::AddAssignStatementNode: {
     const auto &n = node.as_AddAssignStatementNode();
     print_node_field(out, "target", n.target);
-    print_node_field(out, "expression", n.expression);
+    print_node_field(out, "expr", n.expr);
     break;
   }
   case NodeType::SubAssignStatementNode: {
     const auto &n = node.as_SubAssignStatementNode();
     print_node_field(out, "target", n.target);
-    print_node_field(out, "expression", n.expression);
+    print_node_field(out, "expr", n.expr);
     break;
   }
   case NodeType::MulAssignStatementNode: {
     const auto &n = node.as_MulAssignStatementNode();
     print_node_field(out, "target", n.target);
-    print_node_field(out, "expression", n.expression);
+    print_node_field(out, "expr", n.expr);
     break;
   }
   case NodeType::DivAssignStatementNode: {
     const auto &n = node.as_DivAssignStatementNode();
     print_node_field(out, "target", n.target);
-    print_node_field(out, "expression", n.expression);
+    print_node_field(out, "expr", n.expr);
     break;
   }
   case NodeType::ModAssignStatementNode: {
     const auto &n = node.as_ModAssignStatementNode();
     print_node_field(out, "target", n.target);
-    print_node_field(out, "expression", n.expression);
+    print_node_field(out, "expr", n.expr);
     break;
   }
   case NodeType::LeftShiftAssignStatementNode: {
     const auto &n = node.as_LeftShiftAssignStatementNode();
     print_node_field(out, "target", n.target);
-    print_node_field(out, "expression", n.expression);
+    print_node_field(out, "expr", n.expr);
     break;
   }
   case NodeType::RightShiftAssignStatementNode: {
     const auto &n = node.as_RightShiftAssignStatementNode();
     print_node_field(out, "target", n.target);
-    print_node_field(out, "expression", n.expression);
+    print_node_field(out, "expr", n.expr);
     break;
   }
   case NodeType::BitwiseAndAssignStatementNode: {
     const auto &n = node.as_BitwiseAndAssignStatementNode();
     print_node_field(out, "target", n.target);
-    print_node_field(out, "expression", n.expression);
+    print_node_field(out, "expr", n.expr);
     break;
   }
   case NodeType::BitwiseOrAssignStatementNode: {
     const auto &n = node.as_BitwiseOrAssignStatementNode();
     print_node_field(out, "target", n.target);
-    print_node_field(out, "expression", n.expression);
+    print_node_field(out, "expr", n.expr);
     break;
   }
   case NodeType::BitwiseXorAssignStatementNode: {
     const auto &n = node.as_BitwiseXorAssignStatementNode();
     print_node_field(out, "target", n.target);
-    print_node_field(out, "expression", n.expression);
+    print_node_field(out, "expr", n.expr);
     break;
   }
   case NodeType::ForInStatementNode: {
@@ -646,7 +646,7 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   }
   case NodeType::FunctionBodyNode: {
     const auto &n = node.as_FunctionBodyNode();
-    print_node_field(out, "expression", n.expression);
+    print_node_field(out, "expr", n.expr);
     print_node_field(out, "stmts", n.stmts);
     print_field(out, "is_default", n.is_default);
     print_field(out, "is_deleted", n.is_deleted);

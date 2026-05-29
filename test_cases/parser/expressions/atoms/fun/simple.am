@@ -7,7 +7,7 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(f)
       ),
-      expression=FunctionExpressionNode(
+      expr=FunctionExpressionNode(
         signature=FunctionSignatureNode(),
         body=FunctionBodyNode(
           is_default=false,

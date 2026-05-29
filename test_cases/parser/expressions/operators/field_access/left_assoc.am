@@ -7,7 +7,7 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(w)
       ),
-      expression=FieldAccessExpressionNode(
+      expr=FieldAccessExpressionNode(
         object=FieldAccessExpressionNode(
           object=IdentifierNode(
             token=IDENTIFIER(x)

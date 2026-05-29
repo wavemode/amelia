@@ -9,7 +9,7 @@ ModuleNode(
       ),
       signature=FunctionSignatureNode(),
       body=FunctionBodyNode(
-        expression=NumberLiteralNode(
+        expr=NumberLiteralNode(
           lit=NUMBER(10)
         ),
         is_default=false,

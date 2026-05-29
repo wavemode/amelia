@@ -9,13 +9,13 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expression=BlockExpressionNode(
+      expr=BlockExpressionNode(
         stmts=[
           LetDeclarationNode(
             target=IdentifierNode(
               token=IDENTIFIER(y)
             ),
-            expression=NumberLiteralNode(
+            expr=NumberLiteralNode(
               lit=NUMBER(1)
             )
           )

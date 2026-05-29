@@ -13,7 +13,7 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(z)
       ),
-      expression=BlockExpressionNode(
+      expr=BlockExpressionNode(
         stmts=[
           ForInStatementNode(
             introductory_decls=[
@@ -21,7 +21,7 @@ ModuleNode(
                 target=IdentifierNode(
                   token=IDENTIFIER(w)
                 ),
-                expression=BracketExpressionNode(
+                expr=BracketExpressionNode(
                   exprs=[
                     NumberLiteralNode(
                       lit=NUMBER(1)
@@ -42,7 +42,7 @@ ModuleNode(
                 target=IdentifierNode(
                   token=IDENTIFIER(y)
                 ),
-                expression=FunctionCallExpressionNode(
+                expr=FunctionCallExpressionNode(
                   callee=FieldAccessExpressionNode(
                     object=IdentifierNode(
                       token=IDENTIFIER(w)

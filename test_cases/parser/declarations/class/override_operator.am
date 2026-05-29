@@ -39,7 +39,7 @@ ModuleNode(
                         token=IDENTIFIER_NO_W(a)
                       )
                     ),
-                    expression=FieldAccessExpressionNode(
+                    expr=FieldAccessExpressionNode(
                       object=IdentifierNode(
                         token=IDENTIFIER(other)
                       ),

@@ -7,7 +7,7 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expression=FunctionCallExpressionNode(
+      expr=FunctionCallExpressionNode(
         callee=FieldAccessExpressionNode(
           object=BracketExpressionNode(
             exprs=[

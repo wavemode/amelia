@@ -15,7 +15,7 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(example)
       ),
-      expression=BlockExpressionNode(
+      expr=BlockExpressionNode(
         stmts=[
           SwitchStatementNode(
             expr=IdentifierNode(
@@ -49,7 +49,7 @@ ModuleNode(
                         target=IdentifierNode(
                           token=IDENTIFIER(z)
                         ),
-                        expression=NumberLiteralNode(
+                        expr=NumberLiteralNode(
                           lit=NUMBER(5)
                         )
                       )

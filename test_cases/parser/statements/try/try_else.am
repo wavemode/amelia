@@ -15,7 +15,7 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(example)
       ),
-      expression=BlockExpressionNode(
+      expr=BlockExpressionNode(
         stmts=[
           TryStatementNode(
             try_block=BlockStatementNode(
@@ -24,7 +24,7 @@ ModuleNode(
                   target=IdentifierNode(
                     token=IDENTIFIER(x)
                   ),
-                  expression=NumberLiteralNode(
+                  expr=NumberLiteralNode(
                     lit=NUMBER(10)
                   )
                 )

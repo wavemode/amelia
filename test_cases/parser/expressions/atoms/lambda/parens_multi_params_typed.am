@@ -7,7 +7,7 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(z)
       ),
-      expression=LambdaExpressionNode(
+      expr=LambdaExpressionNode(
         parameters=[
           FunctionParameterNode(
             variadic=false,

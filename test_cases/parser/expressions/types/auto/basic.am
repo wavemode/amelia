@@ -8,7 +8,7 @@ ModuleNode(
         token=IDENTIFIER(x)
       ),
       type=AutoTypeNode(),
-      expression=NumberLiteralNode(
+      expr=NumberLiteralNode(
         lit=NUMBER(10)
       )
     )

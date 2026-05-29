@@ -10,7 +10,7 @@ ModuleNode(
       type=PrimitiveTypeNode(
         token=KEYWORD_CHAR(char)
       ),
-      expression=CharLiteralNode(
+      expr=CharLiteralNode(
         lit='日'
       )
     )

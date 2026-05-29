@@ -7,7 +7,7 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expression=NotEqualsExpressionNode(
+      expr=NotEqualsExpressionNode(
         left=IdentifierNode(
           token=IDENTIFIER(y)
         ),

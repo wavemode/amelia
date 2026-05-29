@@ -7,7 +7,7 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(w)
       ),
-      expression=GreaterEqualsExpressionNode(
+      expr=GreaterEqualsExpressionNode(
         left=GreaterEqualsExpressionNode(
           left=IdentifierNode(
             token=IDENTIFIER(x)

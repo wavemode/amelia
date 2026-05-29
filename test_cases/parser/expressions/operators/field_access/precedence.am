@@ -7,7 +7,7 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expression=NotExpressionNode(
+      expr=NotExpressionNode(
         expr=FieldAccessExpressionNode(
           object=IdentifierNode(
             token=IDENTIFIER_NO_W(y)

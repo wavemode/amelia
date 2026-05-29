@@ -9,7 +9,7 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(example)
       ),
-      expression=BlockExpressionNode(
+      expr=BlockExpressionNode(
         stmts=[
           PostIncrementStatementNode(
             target=IdentifierNode(

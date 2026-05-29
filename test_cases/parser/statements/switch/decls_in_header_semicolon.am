@@ -12,7 +12,7 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(example)
       ),
-      expression=BlockExpressionNode(
+      expr=BlockExpressionNode(
         stmts=[
           SwitchStatementNode(
             introductory_decls=[
@@ -20,7 +20,7 @@ ModuleNode(
                 target=IdentifierNode(
                   token=IDENTIFIER(z)
                 ),
-                expression=NumberLiteralNode(
+                expr=NumberLiteralNode(
                   lit=NUMBER(20)
                 )
               ),
@@ -29,7 +29,7 @@ ModuleNode(
                 target=IdentifierNode(
                   token=IDENTIFIER(y)
                 ),
-                expression=AddExpressionNode(
+                expr=AddExpressionNode(
                   left=IdentifierNode(
                     token=IDENTIFIER(x)
                   ),

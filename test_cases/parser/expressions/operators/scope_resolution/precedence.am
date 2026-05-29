@@ -7,7 +7,7 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(w)
       ),
-      expression=FunctionCallExpressionNode(
+      expr=FunctionCallExpressionNode(
         callee=ScopeResolutionExpressionNode(
           scope=IdentifierNode(
             token=IDENTIFIER(x)

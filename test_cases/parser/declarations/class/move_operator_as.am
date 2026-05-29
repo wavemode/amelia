@@ -24,7 +24,7 @@ ModuleNode(
               ),
               signature=FunctionSignatureNode(),
               body=FunctionBodyNode(
-                expression=FieldAccessExpressionNode(
+                expr=FieldAccessExpressionNode(
                   object=ParenthesizedExpressionNode(
                     exprs=[
                       MoveExpressionNode(

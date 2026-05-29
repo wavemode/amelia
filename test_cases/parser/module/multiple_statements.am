@@ -8,7 +8,7 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expression=IdentifierNode(
+      expr=IdentifierNode(
         token=IDENTIFIER(y)
       )
     ),
@@ -16,7 +16,7 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(a)
       ),
-      expression=IdentifierNode(
+      expr=IdentifierNode(
         token=IDENTIFIER(b)
       )
     )

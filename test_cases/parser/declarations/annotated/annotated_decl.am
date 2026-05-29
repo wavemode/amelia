@@ -30,7 +30,7 @@ ModuleNode(
         target=IdentifierNode(
           token=IDENTIFIER(x)
         ),
-        expression=NumberLiteralNode(
+        expr=NumberLiteralNode(
           lit=NUMBER(4)
         )
       )

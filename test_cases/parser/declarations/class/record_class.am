@@ -46,7 +46,7 @@ ModuleNode(
               ),
               signature=FunctionSignatureNode(),
               body=FunctionBodyNode(
-                expression=FunctionCallExpressionNode(
+                expr=FunctionCallExpressionNode(
                   callee=IdentifierNode(
                     token=IDENTIFIER(println)
                   ),

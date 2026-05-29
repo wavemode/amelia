@@ -7,7 +7,7 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expression=AwaitExpressionNode(
+      expr=AwaitExpressionNode(
         expr=IdentifierNode(
           token=IDENTIFIER(y)
         )

@@ -20,7 +20,7 @@ ModuleNode(
         type=PrimitiveTypeNode(
           token=KEYWORD_INT(int)
         ),
-        expression=NumberLiteralNode(
+        expr=NumberLiteralNode(
           lit=NUMBER(40)
         )
       )

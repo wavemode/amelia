@@ -9,7 +9,7 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(a)
       ),
-      expression=BlockExpressionNode(
+      expr=BlockExpressionNode(
         stmts=[
           IfStatementNode(
             condition=IdentifierNode(

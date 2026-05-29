@@ -10,7 +10,7 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(z)
       ),
-      expression=BlockExpressionNode(
+      expr=BlockExpressionNode(
         stmts=[
           GotoStatementNode(
             label=IdentifierNode(

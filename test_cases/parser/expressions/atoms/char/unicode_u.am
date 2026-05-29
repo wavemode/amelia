@@ -7,7 +7,7 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(c)
       ),
-      expression=CharLiteralNode(
+      expr=CharLiteralNode(
         lit='日'
       )
     )

@@ -7,7 +7,7 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expression=BracketExpressionNode(
+      expr=BracketExpressionNode(
         exprs=[
           NumberLiteralNode(
             lit=NUMBER(1)

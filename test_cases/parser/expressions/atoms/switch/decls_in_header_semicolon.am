@@ -10,13 +10,13 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expression=SwitchExpressionNode(
+      expr=SwitchExpressionNode(
         introductory_decls=[
           LetDeclarationNode(
             target=IdentifierNode(
               token=IDENTIFIER(z)
             ),
-            expression=NumberLiteralNode(
+            expr=NumberLiteralNode(
               lit=NUMBER(20)
             )
           ),
@@ -25,7 +25,7 @@ ModuleNode(
             target=IdentifierNode(
               token=IDENTIFIER(y)
             ),
-            expression=AddExpressionNode(
+            expr=AddExpressionNode(
               left=IdentifierNode(
                 token=IDENTIFIER(x)
               ),

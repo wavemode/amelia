@@ -28,7 +28,7 @@ ModuleNode(
               ]
             ),
             body=FunctionBodyNode(
-              expression=AddExpressionNode(
+              expr=AddExpressionNode(
                 left=FieldAccessExpressionNode(
                   object=ThisLiteralNode(),
                   field=IdentifierNode(

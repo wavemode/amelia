@@ -85,7 +85,7 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(y)
       ),
-      expression=BlockExpressionNode(
+      expr=BlockExpressionNode(
         stmts=[
           ExpressionStatementNode(
             expr=FieldAccessExpressionNode(

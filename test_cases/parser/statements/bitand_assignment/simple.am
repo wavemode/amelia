@@ -9,13 +9,13 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(z)
       ),
-      expression=BlockExpressionNode(
+      expr=BlockExpressionNode(
         stmts=[
           BitwiseAndAssignStatementNode(
             target=IdentifierNode(
               token=IDENTIFIER(x)
             ),
-            expression=NumberLiteralNode(
+            expr=NumberLiteralNode(
               lit=NUMBER(5)
             )
           )

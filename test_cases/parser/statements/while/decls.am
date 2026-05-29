@@ -13,7 +13,7 @@ ModuleNode(
       target=IdentifierNode(
         token=IDENTIFIER(example)
       ),
-      expression=BlockExpressionNode(
+      expr=BlockExpressionNode(
         stmts=[
           WhileStatementNode(
             introductory_decls=[
@@ -21,7 +21,7 @@ ModuleNode(
                 target=IdentifierNode(
                   token=IDENTIFIER(w)
                 ),
-                expression=NumberLiteralNode(
+                expr=NumberLiteralNode(
                   lit=NUMBER(10)
                 )
               ),
@@ -29,7 +29,7 @@ ModuleNode(
                 target=IdentifierNode(
                   token=IDENTIFIER(x)
                 ),
-                expression=AddExpressionNode(
+                expr=AddExpressionNode(
                   left=IdentifierNode(
                     token=IDENTIFIER(w)
                   ),
