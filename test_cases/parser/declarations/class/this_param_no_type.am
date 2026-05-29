@@ -1,0 +1,36 @@
+class A {
+  fun explicit_this(this) {}
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ClassDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      body=ClassBodyNode(
+        decls=[
+          FunctionDeclarationNode(
+            name=IdentifierNode(
+              token=IDENTIFIER(explicit_this)
+            ),
+            signature=FunctionSignatureNode(
+              parameters=[
+                FunctionParameterNode(
+                  variadic=false,
+                  name=ThisLiteralNode()
+                )
+              ]
+            ),
+            body=FunctionBodyNode(
+              is_default=false,
+              is_deleted=false
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/
