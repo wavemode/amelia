@@ -1,5 +1,5 @@
 concept A {
-  copy Self(o)
+  copy This(o)
 }
 
 /* EXPECTED_OUTPUT:
@@ -14,7 +14,7 @@ ModuleNode(
           ClassCopyDeclarationNode(
             decl=ClassConstructorNode(
               name=IdentifierNode(
-                token=KEYWORD_SELF_TYPE(Self)
+                token=KEYWORD_THIS_TYPE(This)
               ),
               signature=FunctionSignatureNode(
                 parameters=[

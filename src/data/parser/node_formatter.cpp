@@ -805,7 +805,7 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   case NodeType::SuperLiteralNode: {
     break;
   }
-  case NodeType::SelfTypeNode: {
+  case NodeType::ThisTypeNode: {
     break;
   }
   case NodeType::ClassConstructorNode: {

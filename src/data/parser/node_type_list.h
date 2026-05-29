@@ -626,7 +626,7 @@ struct ThisLiteralNode {};
 
 struct SuperLiteralNode {};
 
-struct SelfTypeNode {};
+struct ThisTypeNode {};
 
 struct CopyCtorNameNode {};
 
@@ -907,7 +907,7 @@ struct BreakStatementNode {};
   X(BooleanLiteralNode)                                                                            \
   X(ThisLiteralNode)                                                                               \
   X(SuperLiteralNode)                                                                              \
-  X(SelfTypeNode)                                                                                  \
+  X(ThisTypeNode)                                                                                  \
   X(BaseTypeListNode)                                                                              \
   X(ClassConstructorNode)                                                                          \
   X(ClassDestructorNode)                                                                           \

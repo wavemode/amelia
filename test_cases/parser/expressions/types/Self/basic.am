@@ -1,4 +1,4 @@
-let x : Self
+let x : This
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
@@ -8,7 +8,7 @@ ModuleNode(
         token=IDENTIFIER(x)
       ),
       type=IdentifierNode(
-        token=KEYWORD_SELF_TYPE(Self)
+        token=KEYWORD_THIS_TYPE(This)
       )
     )
   ]

@@ -1,5 +1,5 @@
 concept A {
-  operator +(other) -> Self
+  operator +(other) -> This
 }
 
 /* EXPECTED_OUTPUT:
@@ -25,7 +25,7 @@ ModuleNode(
                 )
               ],
               return_type=IdentifierNode(
-                token=KEYWORD_SELF_TYPE(Self)
+                token=KEYWORD_THIS_TYPE(This)
               )
             )
           )

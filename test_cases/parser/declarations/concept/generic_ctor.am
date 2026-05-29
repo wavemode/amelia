@@ -1,5 +1,5 @@
 concept A {
-  Self [T] (o: T) {}
+  This [T] (o: T) {}
 }
 
 /* EXPECTED_OUTPUT:
@@ -13,7 +13,7 @@ ModuleNode(
         decls=[
           ClassConstructorNode(
             name=IdentifierNode(
-              token=KEYWORD_SELF_TYPE(Self)
+              token=KEYWORD_THIS_TYPE(This)
             ),
             signature=FunctionSignatureNode(
               generic_parameter_list=GenericParameterListNode(

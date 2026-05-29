@@ -1,5 +1,5 @@
 concept A {
-  default Self()
+  default This()
 }
 
 /* EXPECTED_OUTPUT:
@@ -14,7 +14,7 @@ ModuleNode(
           DefaultDeclarationNode(
             decl=ClassConstructorNode(
               name=IdentifierNode(
-                token=KEYWORD_SELF_TYPE(Self)
+                token=KEYWORD_THIS_TYPE(This)
               ),
               signature=FunctionSignatureNode()
             )

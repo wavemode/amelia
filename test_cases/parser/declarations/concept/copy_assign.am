@@ -1,5 +1,5 @@
 concept A {
-  copy operator=(o) -> &Self
+  copy operator=(o) -> &This
 }
 
 /* EXPECTED_OUTPUT:
@@ -29,7 +29,7 @@ ModuleNode(
                   is_const=false,
                   is_move=false,
                   expr=IdentifierNode(
-                    token=KEYWORD_SELF_TYPE(Self)
+                    token=KEYWORD_THIS_TYPE(This)
                   )
                 )
               )

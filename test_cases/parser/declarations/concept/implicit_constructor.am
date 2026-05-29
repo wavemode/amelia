@@ -1,5 +1,5 @@
 concept A {
-  implicit Self(a: int)
+  implicit This(a: int)
 }
 
 /* EXPECTED_OUTPUT:
@@ -14,7 +14,7 @@ ModuleNode(
           ImplicitDeclarationNode(
             decl=ClassConstructorNode(
               name=IdentifierNode(
-                token=KEYWORD_SELF_TYPE(Self)
+                token=KEYWORD_THIS_TYPE(This)
               ),
               signature=FunctionSignatureNode(
                 parameters=[

@@ -13,7 +13,7 @@ namespace {
 bool is_identifier(TokenType type) {
   return type == TokenType::IDENTIFIER || type == TokenType::IDENTIFIER_NO_W ||
          type == TokenType::QUOTED_IDENTIFIER || type == TokenType::QUOTED_IDENTIFIER_NO_W ||
-         type == TokenType::KEYWORD_SELF_TYPE;
+         type == TokenType::KEYWORD_THIS_TYPE;
 }
 
 bool is_identifier_no_w(TokenType type) {
@@ -560,7 +560,7 @@ public:
     case TokenType::IDENTIFIER_NO_W:
     case TokenType::QUOTED_IDENTIFIER:
     case TokenType::QUOTED_IDENTIFIER_NO_W:
-    case TokenType::KEYWORD_SELF_TYPE: {
+    case TokenType::KEYWORD_THIS_TYPE: {
       auto following_token = peek(1);
       if (following_token.type == TokenType::LEFT_PAREN ||
           following_token.type == TokenType::LEFT_PAREN_NO_W ||
@@ -1610,7 +1610,7 @@ public:
     case TokenType::IDENTIFIER_NO_W:
     case TokenType::QUOTED_IDENTIFIER:
     case TokenType::QUOTED_IDENTIFIER_NO_W:
-    case TokenType::KEYWORD_SELF_TYPE:
+    case TokenType::KEYWORD_THIS_TYPE:
       if (is_start_of_lambda_expression()) {
         return parse_lambda_expression();
       }
@@ -1702,7 +1702,7 @@ public:
 
   NodeId parse_this_type() {
     auto this_type_token = next();
-    return m_output.add_node(this_type_token.loc, SelfTypeNode{});
+    return m_output.add_node(this_type_token.loc, ThisTypeNode{});
   }
 
   NodeId parse_boolean_literal() {
