@@ -158,6 +158,11 @@ struct BlockExpressionNode {
   List<NodeId> stmts;
 };
 
+struct WithExpressionNode {
+  List<NodeId> args;
+  NodeId body;
+};
+
 struct KeyValueEntryNode {
   NodeId key;
   NodeId value;
@@ -776,6 +781,7 @@ struct BreakStatementNode {};
   X(ParenthesizedExpressionNode)                                                                   \
   X(BracketExpressionNode)                                                                         \
   X(BlockExpressionNode)                                                                           \
+  X(WithExpressionNode)                                                                            \
   X(KeyValueEntryNode)                                                                             \
   X(AnonymousStructLiteralNode)                                                                    \
   X(AnonymousStructTypeNode)                                                                       \

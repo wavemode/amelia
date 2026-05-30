@@ -81,6 +81,12 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "stmts", n.stmts);
     break;
   }
+  case NodeType::WithExpressionNode: {
+    const auto &n = node.as_WithExpressionNode();
+    print_node_field(out, "args", n.args);
+    print_node_field(out, "body", n.body);
+    break;
+  }
   case NodeType::AnonymousStructLiteralNode: {
     const auto &n = node.as_AnonymousStructLiteralNode();
     print_node_field(out, "entries", n.entries);

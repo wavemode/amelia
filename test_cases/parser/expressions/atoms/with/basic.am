@@ -1,0 +1,33 @@
+let x = with(a = b, c) d
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x)
+      ),
+      expr=WithExpressionNode(
+        args=[
+          FunctionArgumentNode(
+            name=IdentifierNode(
+              token=IDENTIFIER_NO_W(a)
+            ),
+            expr=IdentifierNode(
+              token=IDENTIFIER(b)
+            )
+          ),
+          FunctionArgumentNode(
+            expr=IdentifierNode(
+              token=IDENTIFIER(c)
+            )
+          )
+        ],
+        body=IdentifierNode(
+          token=IDENTIFIER(d)
+        )
+      )
+    )
+  ]
+)
+*/

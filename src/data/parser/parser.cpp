@@ -1668,11 +1668,28 @@ public:
       return parse_primitive_type();
     case TokenType::KEYWORD_AUTO:
       return parse_auto_type();
+    case TokenType::KEYWORD_WITH:
+      return parse_with_expression();
     default:
       String err("Expected expression, got token ");
       m_token_formatter.format_token(err, m_token_index);
       throw_parser_error_at_current_location(std::move(err));
     }
+  }
+
+  NodeId parse_with_expression() {
+    auto with_token = next();
+    read_left_paren("Expected '(' after 'with' keyword in with expression");
+    List<NodeId> args;
+    while (peek().type != TokenType::RIGHT_PAREN) {
+      args.push_back(parse_function_call_argument());
+      if (peek().type == TokenType::COMMA) {
+        ++m_token_index; // consume the comma
+      }
+    }
+    read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after arguments in with expression");
+    NodeId body = parse_expression();
+    return m_output.add_node(with_token.loc, WithExpressionNode{std::move(args), body});
   }
 
   NodeId parse_auto_type() {
