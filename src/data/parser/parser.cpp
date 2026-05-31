@@ -503,14 +503,41 @@ public:
     auto name = parse_scoped_name();
     Option<NodeId> generic_parameter_list = try_parse_generic_parameter_list();
     Option<NodeId> base_class_list = try_parse_base_type_list();
+    Option<NodeId> header_decls = try_parse_class_header_decls();
     Option<NodeId> implicit_parameter_list = try_parse_implicit_parameter_list();
     Option<NodeId> body = try_parse_class_body();
     return m_output.add_node(
         class_token.loc,
         ClassDeclarationNode{
-            name, generic_parameter_list, base_class_list, implicit_parameter_list, body
+            name,
+            generic_parameter_list,
+            base_class_list,
+            header_decls,
+            implicit_parameter_list,
+            body
         }
     );
+  }
+
+  Option<NodeId> try_parse_class_header_decls() {
+    Option<NodeId> result;
+    auto start_token = peek();
+    if (start_token.type == TokenType::LEFT_PAREN ||
+        start_token.type == TokenType::LEFT_PAREN_NO_W) {
+      ++m_token_index; // consume the '(' token
+      List<NodeId> decls;
+      while (peek().type != TokenType::RIGHT_PAREN) {
+        decls.push_back(parse_class_body_declaration());
+        if (peek().type == TokenType::COMMA) {
+          ++m_token_index; // consume the ',' token
+        } else {
+          break;
+        }
+      }
+      read_token_type(TokenType::RIGHT_PAREN, "Expected ')' to end class header declarations");
+      result = m_output.add_node(start_token.loc, ClassHeaderDeclsNode{std::move(decls)});
+    }
+    return result;
   }
 
   Option<NodeId> try_parse_class_body() {

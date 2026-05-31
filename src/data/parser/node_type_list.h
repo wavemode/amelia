@@ -590,8 +590,13 @@ struct ClassDeclarationNode {
   NodeId name;
   Option<NodeId> generic_parameter_list;
   Option<NodeId> base_class_list;
+  Option<NodeId> header_decls;
   Option<NodeId> implicit_parameter_list;
   Option<NodeId> body;
+};
+
+struct ClassHeaderDeclsNode {
+  List<NodeId> decls;
 };
 
 struct ClassBodyNode {
@@ -921,6 +926,7 @@ struct ExclamationMarkExpressionNode {
   X(ClassFieldNode)                                                                                \
   X(ClassDeclarationNode)                                                                          \
   X(ConceptDeclarationNode)                                                                        \
+  X(ClassHeaderDeclsNode)                                                                          \
   X(ClassBodyNode)                                                                                 \
   X(BooleanLiteralNode)                                                                            \
   X(ThisLiteralNode)                                                                               \

@@ -1,8 +1,8 @@
-record class A {
-  a: int
-  b: float
-  c: double
-
+record class A (
+  a: int,
+  b: float,
+  c: double,
+) {
   fun d() = println("hi")
 }
 
@@ -14,7 +14,7 @@ ModuleNode(
         name=IdentifierNode(
           token=IDENTIFIER(A)
         ),
-        body=ClassBodyNode(
+        header_decls=ClassHeaderDeclsNode(
           decls=[
             ClassFieldNode(
               name=IdentifierNode(
@@ -39,7 +39,11 @@ ModuleNode(
               type=PrimitiveTypeNode(
                 token=KEYWORD_DOUBLE(double)
               )
-            ),
+            )
+          ]
+        ),
+        body=ClassBodyNode(
+          decls=[
             FunctionDeclarationNode(
               name=IdentifierNode(
                 token=IDENTIFIER(d)
