@@ -24,7 +24,6 @@ char
 null
 throw
 import
-export
 as
 switch
 case
@@ -98,13 +97,13 @@ KEYWORD_CHAR(char)
 KEYWORD_NULL(null)
 KEYWORD_THROW(throw)
 KEYWORD_IMPORT(import)
-KEYWORD_EXPORT(export)
 KEYWORD_AS(as)
 KEYWORD_SWITCH(switch)
 KEYWORD_CASE(case)
 KEYWORD_CLASS(class)
 KEYWORD_UNION(union)
 KEYWORD_RECORD(record)
+KEYWORD_SEALED(sealed)
 KEYWORD_TYPE(type)
 KEYWORD_CONCEPT(concept)
 KEYWORD_AUTO(auto)

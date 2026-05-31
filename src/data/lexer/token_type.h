@@ -16,7 +16,6 @@ namespace amelia {
   X(KEYWORD_MODULE)                                                                                \
   X(KEYWORD_THROW)                                                                                 \
   X(KEYWORD_IMPORT)                                                                                \
-  X(KEYWORD_EXPORT)                                                                                \
   X(KEYWORD_AS)                                                                                    \
   X(KEYWORD_SWITCH)                                                                                \
   X(KEYWORD_CASE)                                                                                  \

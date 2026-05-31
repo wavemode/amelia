@@ -1,9 +1,9 @@
-export class A {}
+extern class A {}
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ExportDeclarationNode(
+    ExternDeclarationNode(
       decl=ClassDeclarationNode(
         name=IdentifierNode(
           token=IDENTIFIER(A)

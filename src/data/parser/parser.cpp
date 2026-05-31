@@ -110,8 +110,6 @@ public:
       break;
     case TokenType::KEYWORD_IMPORT:
       return parse_import_declaration();
-    case TokenType::KEYWORD_EXPORT:
-      return parse_export_top_level_declaration();
     case TokenType::KEYWORD_EXTERN:
       return parse_extern_top_level_declaration();
     default:
@@ -133,13 +131,6 @@ public:
       throw_parser_error_at_current_location(String(error_message));
     }
     return decl.value();
-  }
-
-  NodeId parse_export_top_level_declaration() {
-    auto export_token = next();
-    auto decl = expect_top_level_declaration("Expected top-level declaration after 'export' keyword"
-    );
-    return m_output.add_node(export_token.loc, ExportDeclarationNode{decl});
   }
 
   NodeId parse_import_declaration() {
