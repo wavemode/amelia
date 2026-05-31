@@ -1520,25 +1520,27 @@ public:
       NodeId type_expr = parse_descend_expr_impl_any_async(allow_funcall);
       return m_output.add_node(start_token.loc, AsyncExpressionNode{type_expr});
     }
-    return parse_descend_expr_field_ix_funcall_scope(allow_funcall);
+    return parse_descend_expr_field_ix_funcall_scope_question_exclam(allow_funcall);
   }
 
   NodeId parse_scoped_name() {
-    return parse_descend_expr_field_ix_funcall_scope(false, false, false);
+    return parse_descend_expr_field_ix_funcall_scope_question_exclam(false, false, false);
   }
 
-  NodeId parse_descend_expr_field_ix_funcall_scope(
+  NodeId parse_descend_expr_field_ix_funcall_scope_question_exclam(
       bool allow_funcall = true, bool allow_ix = true, bool allow_field = true
   ) {
     auto start_location = peek().loc;
     auto left = parse_atom();
     auto next_token = peek();
-    while (((next_token.type == TokenType::DOT_NO_W || next_token.type == TokenType::NUMBER_FIELD
-            ) &&
-            allow_field) ||
-           (next_token.type == TokenType::LEFT_BRACKET_NO_W && allow_ix) ||
-           (next_token.type == TokenType::LEFT_PAREN_NO_W && allow_funcall) ||
-           next_token.type == TokenType::DOUBLE_COLON_NO_W) {
+    while (
+        ((next_token.type == TokenType::DOT_NO_W || next_token.type == TokenType::NUMBER_FIELD) &&
+         allow_field) ||
+        (next_token.type == TokenType::LEFT_BRACKET_NO_W && allow_ix) ||
+        (next_token.type == TokenType::LEFT_PAREN_NO_W && allow_funcall) ||
+        next_token.type == TokenType::DOUBLE_COLON_NO_W ||
+        next_token.type == TokenType::QUESTION_NO_W || next_token.type == TokenType::EXCLAM_NO_W
+    ) {
       if (next_token.type == TokenType::DOT_NO_W) {
         ++m_token_index; // consume the '.' operator
         auto next_type = peek().type;
@@ -1596,6 +1598,12 @@ public:
         left = m_output.add_node(
             start_location, ScopeResolutionExpressionNode{left, parse_identifier()}
         );
+      } else if (next_token.type == TokenType::QUESTION_NO_W) {
+        ++m_token_index; // consume the '?'
+        left = m_output.add_node(start_location, QuestionMarkExpressionNode{left});
+      } else if (next_token.type == TokenType::EXCLAM_NO_W) {
+        ++m_token_index; // consume the '!'
+        left = m_output.add_node(start_location, ExclamationMarkExpressionNode{left});
       } else {
         throw std::runtime_error("unreachable");
       }

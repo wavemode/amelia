@@ -979,6 +979,16 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "expr", n.expr);
     break;
   }
+  case NodeType::QuestionMarkExpressionNode: {
+    const auto &n = node.as_QuestionMarkExpressionNode();
+    print_node_field(out, "expr", n.expr);
+    break;
+  }
+  case NodeType::ExclamationMarkExpressionNode: {
+    const auto &n = node.as_ExclamationMarkExpressionNode();
+    print_node_field(out, "expr", n.expr);
+    break;
+  }
   }
   m_current_indent -= 2;
   if (m_fields_printed > 0) {

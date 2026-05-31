@@ -1,0 +1,18 @@
+let x = y?
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x)
+      ),
+      expr=QuestionMarkExpressionNode(
+        expr=IdentifierNode(
+          token=IDENTIFIER(y)
+        )
+      )
+    )
+  ]
+)
+*/

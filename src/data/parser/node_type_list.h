@@ -773,6 +773,14 @@ struct TypeOfExpressionNode {
 
 struct BreakStatementNode {};
 
+struct QuestionMarkExpressionNode {
+  NodeId expr;
+};
+
+struct ExclamationMarkExpressionNode {
+  NodeId expr;
+};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
@@ -953,6 +961,8 @@ struct BreakStatementNode {};
   X(InlineExpressionNode)                                                                          \
   X(BreakStatementNode)                                                                            \
   X(AnnotationNode)                                                                                \
-  X(TypeOfExpressionNode)
+  X(TypeOfExpressionNode)                                                                          \
+  X(QuestionMarkExpressionNode)                                                                    \
+  X(ExclamationMarkExpressionNode)
 
 } // namespace amelia
