@@ -1,0 +1,48 @@
+union A {
+  a: int
+  b: float
+  c: double = 5.4
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    UnionDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      body=ClassBodyNode(
+        decls=[
+          ClassFieldNode(
+            name=IdentifierNode(
+              token=IDENTIFIER(a)
+            ),
+            type=PrimitiveTypeNode(
+              token=KEYWORD_INT(int)
+            )
+          ),
+          ClassFieldNode(
+            name=IdentifierNode(
+              token=IDENTIFIER(b)
+            ),
+            type=PrimitiveTypeNode(
+              token=KEYWORD_FLOAT(float)
+            )
+          ),
+          ClassFieldNode(
+            name=IdentifierNode(
+              token=IDENTIFIER(c)
+            ),
+            type=PrimitiveTypeNode(
+              token=KEYWORD_DOUBLE(double)
+            ),
+            initializer=NumberLiteralNode(
+              lit=NUMBER(5.4)
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

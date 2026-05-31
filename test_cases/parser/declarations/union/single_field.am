@@ -1,0 +1,27 @@
+union A {
+  a: int
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    UnionDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      body=ClassBodyNode(
+        decls=[
+          ClassFieldNode(
+            name=IdentifierNode(
+              token=IDENTIFIER(a)
+            ),
+            type=PrimitiveTypeNode(
+              token=KEYWORD_INT(int)
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

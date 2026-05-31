@@ -297,8 +297,12 @@ public:
 
   NodeId parse_union_declaration() {
     auto union_token = next();
-    auto decl = expect_declaration("Expected declaration after 'union' keyword");
-    return m_output.add_node(union_token.loc, UnionDeclarationNode{decl});
+    auto name = parse_scoped_name();
+    Option<NodeId> generic_parameter_list = try_parse_generic_parameter_list();
+    Option<NodeId> body = try_parse_class_body();
+    return m_output.add_node(
+        union_token.loc, UnionDeclarationNode{name, generic_parameter_list, body}
+    );
   }
 
   NodeId parse_async_declaration() {
@@ -1551,6 +1555,9 @@ public:
   }
 
   NodeId parse_scoped_name() {
+    if (!is_identifier(peek().type)) {
+      throw_parser_error_at_current_location("Expected identifier");
+    }
     return parse_descend_expr_field_ix_funcall_scope_question_exclam(false, false, false);
   }
 

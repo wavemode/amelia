@@ -1,0 +1,13 @@
+union A
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    UnionDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      )
+    )
+  ]
+)
+*/

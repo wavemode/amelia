@@ -747,7 +747,9 @@ struct RecordDeclarationNode {
 };
 
 struct UnionDeclarationNode {
-  NodeId decl;
+  NodeId name;
+  Option<NodeId> generic_parameter_list;
+  Option<NodeId> body;
 };
 
 struct EnumDeclarationNode {

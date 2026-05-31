@@ -1,5 +1,5 @@
 record class A (
-  a: int,
+  a: int = 5,
   b: float,
   c: double,
 ) {
@@ -22,6 +22,9 @@ ModuleNode(
               ),
               type=PrimitiveTypeNode(
                 token=KEYWORD_INT(int)
+              ),
+              initializer=NumberLiteralNode(
+                lit=NUMBER(5)
               )
             ),
             ClassFieldNode(

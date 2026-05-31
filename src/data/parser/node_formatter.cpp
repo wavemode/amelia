@@ -948,7 +948,9 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   }
   case NodeType::UnionDeclarationNode: {
     const auto &n = node.as_UnionDeclarationNode();
-    print_node_field(out, "decl", n.decl);
+    print_node_field(out, "name", n.name);
+    print_node_field(out, "generic_parameter_list", n.generic_parameter_list);
+    print_node_field(out, "body", n.body);
     break;
   }
   case NodeType::EnumDeclarationNode: {
