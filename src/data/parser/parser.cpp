@@ -1663,6 +1663,8 @@ public:
     case TokenType::KEYWORD_ULONG:
     case TokenType::KEYWORD_FLOAT:
     case TokenType::KEYWORD_DOUBLE:
+    case TokenType::KEYWORD_BITINT:
+    case TokenType::KEYWORD_UBITINT:
     case TokenType::KEYWORD_CHAR:
     case TokenType::KEYWORD_NULL:
       return parse_primitive_type();

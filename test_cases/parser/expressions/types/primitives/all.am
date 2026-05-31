@@ -1,0 +1,142 @@
+let x_bool : bool
+let x_byte : byte
+let x_short : short
+let x_int : int
+let x_long : long
+let x_ubyte : ubyte
+let x_ushort : ushort
+let x_uint : uint
+let x_ulong : ulong
+let x_float : float
+let x_double : double
+let x_bitint : bitint
+let x_ubitint : ubitint
+let x_char : char
+let x_null : null
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x_bool)
+      ),
+      type=PrimitiveTypeNode(
+        token=KEYWORD_BOOL(bool)
+      )
+    ),
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x_byte)
+      ),
+      type=PrimitiveTypeNode(
+        token=KEYWORD_BYTE(byte)
+      )
+    ),
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x_short)
+      ),
+      type=PrimitiveTypeNode(
+        token=KEYWORD_SHORT(short)
+      )
+    ),
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x_int)
+      ),
+      type=PrimitiveTypeNode(
+        token=KEYWORD_INT(int)
+      )
+    ),
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x_long)
+      ),
+      type=PrimitiveTypeNode(
+        token=KEYWORD_LONG(long)
+      )
+    ),
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x_ubyte)
+      ),
+      type=PrimitiveTypeNode(
+        token=KEYWORD_UBYTE(ubyte)
+      )
+    ),
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x_ushort)
+      ),
+      type=PrimitiveTypeNode(
+        token=KEYWORD_USHORT(ushort)
+      )
+    ),
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x_uint)
+      ),
+      type=PrimitiveTypeNode(
+        token=KEYWORD_UINT(uint)
+      )
+    ),
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x_ulong)
+      ),
+      type=PrimitiveTypeNode(
+        token=KEYWORD_ULONG(ulong)
+      )
+    ),
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x_float)
+      ),
+      type=PrimitiveTypeNode(
+        token=KEYWORD_FLOAT(float)
+      )
+    ),
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x_double)
+      ),
+      type=PrimitiveTypeNode(
+        token=KEYWORD_DOUBLE(double)
+      )
+    ),
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x_bitint)
+      ),
+      type=PrimitiveTypeNode(
+        token=KEYWORD_BITINT(bitint)
+      )
+    ),
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x_ubitint)
+      ),
+      type=PrimitiveTypeNode(
+        token=KEYWORD_UBITINT(ubitint)
+      )
+    ),
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x_char)
+      ),
+      type=PrimitiveTypeNode(
+        token=KEYWORD_CHAR(char)
+      )
+    ),
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x_null)
+      ),
+      type=PrimitiveTypeNode(
+        token=KEYWORD_NULL(null)
+      )
+    )
+  ]
+)
+*/

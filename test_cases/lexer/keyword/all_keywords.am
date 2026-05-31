@@ -18,7 +18,10 @@ uint
 ulong
 float
 double
+bitint
+ubitint
 char
+null
 throw
 import
 export
@@ -40,7 +43,6 @@ async
 await
 true
 false
-null
 default
 open
 override
@@ -89,7 +91,10 @@ KEYWORD_UINT(uint)
 KEYWORD_ULONG(ulong)
 KEYWORD_FLOAT(float)
 KEYWORD_DOUBLE(double)
+KEYWORD_BITINT(bitint)
+KEYWORD_UBITINT(ubitint)
 KEYWORD_CHAR(char)
+KEYWORD_NULL(null)
 KEYWORD_THROW(throw)
 KEYWORD_IMPORT(import)
 KEYWORD_EXPORT(export)
@@ -111,7 +116,6 @@ KEYWORD_ASYNC(async)
 KEYWORD_AWAIT(await)
 KEYWORD_TRUE(true)
 KEYWORD_FALSE(false)
-KEYWORD_NULL(null)
 KEYWORD_DEFAULT(default)
 KEYWORD_OPEN(open)
 KEYWORD_OVERRIDE(override)

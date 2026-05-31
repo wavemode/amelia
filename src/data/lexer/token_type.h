@@ -47,6 +47,8 @@ namespace amelia {
   X(KEYWORD_FLOAT)                                                                                 \
   X(KEYWORD_DOUBLE)                                                                                \
   X(KEYWORD_CHAR)                                                                                  \
+  X(KEYWORD_BITINT)                                                                                \
+  X(KEYWORD_UBITINT)                                                                               \
   X(KEYWORD_NULL)                                                                                  \
   X(KEYWORD_DEFAULT)                                                                               \
   X(KEYWORD_OPEN)                                                                                  \
