@@ -24,6 +24,7 @@ namespace amelia {
   X(KEYWORD_UNION)                                                                                 \
   X(KEYWORD_RECORD)                                                                                \
   X(KEYWORD_TYPE)                                                                                  \
+  X(KEYWORD_TYPEOF)                                                                                \
   X(KEYWORD_CONCEPT)                                                                               \
   X(KEYWORD_AUTO)                                                                                  \
   X(KEYWORD_LET)                                                                                   \

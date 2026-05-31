@@ -767,6 +767,10 @@ struct AnnotationNode {
   NodeId stmt;
 };
 
+struct TypeOfExpressionNode {
+  NodeId expr;
+};
+
 struct BreakStatementNode {};
 
 #define NODE_TYPE_LIST                                                                             \
@@ -948,6 +952,7 @@ struct BreakStatementNode {};
   X(EnumVariantNode)                                                                               \
   X(InlineExpressionNode)                                                                          \
   X(BreakStatementNode)                                                                            \
-  X(AnnotationNode)
+  X(AnnotationNode)                                                                                \
+  X(TypeOfExpressionNode)
 
 } // namespace amelia

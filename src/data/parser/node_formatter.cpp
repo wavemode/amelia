@@ -974,6 +974,11 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "stmt", n.stmt);
     break;
   }
+  case NodeType::TypeOfExpressionNode: {
+    const auto &n = node.as_TypeOfExpressionNode();
+    print_node_field(out, "expr", n.expr);
+    break;
+  }
   }
   m_current_indent -= 2;
   if (m_fields_printed > 0) {

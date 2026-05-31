@@ -1672,11 +1672,19 @@ public:
       return parse_auto_type();
     case TokenType::KEYWORD_WITH:
       return parse_with_expression();
+    case TokenType::KEYWORD_TYPEOF:
+      return parse_typeof_expression();
     default:
       String err("Expected expression, got token ");
       m_token_formatter.format_token(err, m_token_index);
       throw_parser_error_at_current_location(std::move(err));
     }
+  }
+
+  NodeId parse_typeof_expression() {
+    auto typeof_token = next();
+    NodeId expr = parse_expression();
+    return m_output.add_node(typeof_token.loc, TypeOfExpressionNode{expr});
   }
 
   NodeId parse_with_expression() {

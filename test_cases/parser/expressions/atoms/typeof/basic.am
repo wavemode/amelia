@@ -1,0 +1,26 @@
+let y : typeof 5 + 5 = 10
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(y)
+      ),
+      type=TypeOfExpressionNode(
+        expr=AddExpressionNode(
+          left=NumberLiteralNode(
+            lit=NUMBER(5)
+          ),
+          right=NumberLiteralNode(
+            lit=NUMBER(5)
+          )
+        )
+      ),
+      expr=NumberLiteralNode(
+        lit=NUMBER(10)
+      )
+    )
+  ]
+)
+*/
