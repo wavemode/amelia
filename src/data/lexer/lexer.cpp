@@ -49,6 +49,7 @@ const Map<Text, TokenType> keywords = {
     {"class", TokenType::KEYWORD_CLASS},
     {"union", TokenType::KEYWORD_UNION},
     {"record", TokenType::KEYWORD_RECORD},
+    {"sealed", TokenType::KEYWORD_SEALED},
     {"type", TokenType::KEYWORD_TYPE},
     {"typeof", TokenType::KEYWORD_TYPEOF},
     {"concept", TokenType::KEYWORD_CONCEPT},

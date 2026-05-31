@@ -788,6 +788,10 @@ struct ExclamationMarkExpressionNode {
   NodeId expr;
 };
 
+struct SealedDeclarationNode {
+  NodeId decl;
+};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
@@ -971,6 +975,7 @@ struct ExclamationMarkExpressionNode {
   X(AnnotationNode)                                                                                \
   X(TypeOfExpressionNode)                                                                          \
   X(QuestionMarkExpressionNode)                                                                    \
-  X(ExclamationMarkExpressionNode)
+  X(ExclamationMarkExpressionNode)                                                                 \
+  X(SealedDeclarationNode)
 
 } // namespace amelia

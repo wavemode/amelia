@@ -997,6 +997,11 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "expr", n.expr);
     break;
   }
+  case NodeType::SealedDeclarationNode: {
+    const auto &n = node.as_SealedDeclarationNode();
+    print_node_field(out, "decl", n.decl);
+    break;
+  }
   }
   m_current_indent -= 2;
   if (m_fields_printed > 0) {

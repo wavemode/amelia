@@ -23,6 +23,7 @@ namespace amelia {
   X(KEYWORD_CLASS)                                                                                 \
   X(KEYWORD_UNION)                                                                                 \
   X(KEYWORD_RECORD)                                                                                \
+  X(KEYWORD_SEALED)                                                                                \
   X(KEYWORD_TYPE)                                                                                  \
   X(KEYWORD_TYPEOF)                                                                                \
   X(KEYWORD_CONCEPT)                                                                               \

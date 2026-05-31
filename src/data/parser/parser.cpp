@@ -233,6 +233,8 @@ public:
       return parse_async_declaration();
     case TokenType::KEYWORD_RECORD:
       return parse_record_declaration();
+    case TokenType::KEYWORD_SEALED:
+      return parse_sealed_declaration();
     case TokenType::KEYWORD_UNION:
       return parse_union_declaration();
     case TokenType::KEYWORD_ENUM:
@@ -243,6 +245,12 @@ public:
       break;
     }
     return None();
+  }
+
+  NodeId parse_sealed_declaration() {
+    auto sealed_token = next();
+    auto decl = expect_declaration("Expected declaration after 'sealed' keyword");
+    return m_output.add_node(sealed_token.loc, SealedDeclarationNode{decl});
   }
 
   NodeId parse_annotated_declaration() {
