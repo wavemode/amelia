@@ -792,6 +792,10 @@ struct SealedDeclarationNode {
   NodeId decl;
 };
 
+struct MutDeclarationNode {
+  NodeId decl;
+};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
@@ -976,6 +980,7 @@ struct SealedDeclarationNode {
   X(TypeOfExpressionNode)                                                                          \
   X(QuestionMarkExpressionNode)                                                                    \
   X(ExclamationMarkExpressionNode)                                                                 \
-  X(SealedDeclarationNode)
+  X(SealedDeclarationNode)                                                                         \
+  X(MutDeclarationNode)
 
 } // namespace amelia

@@ -54,6 +54,7 @@ namespace amelia {
   X(KEYWORD_DEFAULT)                                                                               \
   X(KEYWORD_OPEN)                                                                                  \
   X(KEYWORD_OVERRIDE)                                                                              \
+  X(KEYWORD_MUT)                                                                                   \
   X(KEYWORD_LOCAL)                                                                                 \
   X(KEYWORD_PUBLIC)                                                                                \
   X(KEYWORD_PRIVATE)                                                                               \

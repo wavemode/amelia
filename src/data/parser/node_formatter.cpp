@@ -1002,6 +1002,11 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "decl", n.decl);
     break;
   }
+  case NodeType::MutDeclarationNode: {
+    const auto &n = node.as_MutDeclarationNode();
+    print_node_field(out, "decl", n.decl);
+    break;
+  }
   }
   m_current_indent -= 2;
   if (m_fields_printed > 0) {

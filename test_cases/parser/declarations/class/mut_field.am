@@ -1,0 +1,38 @@
+class A {
+  mut a: int
+  b: String
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ClassDeclarationNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(A)
+      ),
+      body=ClassBodyNode(
+        decls=[
+          MutDeclarationNode(
+            decl=ClassFieldNode(
+              name=IdentifierNode(
+                token=IDENTIFIER(a)
+              ),
+              type=PrimitiveTypeNode(
+                token=KEYWORD_INT(int)
+              )
+            )
+          ),
+          ClassFieldNode(
+            name=IdentifierNode(
+              token=IDENTIFIER(b)
+            ),
+            type=IdentifierNode(
+              token=IDENTIFIER(String)
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

@@ -46,6 +46,7 @@ false
 default
 open
 override
+mut
 local
 public
 private
@@ -119,6 +120,7 @@ KEYWORD_FALSE(false)
 KEYWORD_DEFAULT(default)
 KEYWORD_OPEN(open)
 KEYWORD_OVERRIDE(override)
+KEYWORD_MUT(mut)
 KEYWORD_LOCAL(local)
 KEYWORD_PUBLIC(public)
 KEYWORD_PRIVATE(private)

@@ -65,6 +65,7 @@ const Map<Text, TokenType> keywords = {
     {"default", TokenType::KEYWORD_DEFAULT},
     {"open", TokenType::KEYWORD_OPEN},
     {"override", TokenType::KEYWORD_OVERRIDE},
+    {"mut", TokenType::KEYWORD_MUT},
     {"local", TokenType::KEYWORD_LOCAL},
     {"public", TokenType::KEYWORD_PUBLIC},
     {"private", TokenType::KEYWORD_PRIVATE},

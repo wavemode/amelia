@@ -617,10 +617,18 @@ public:
       return parse_destructor_declaration();
     case TokenType::AT:
       return parse_class_body_annotated_declaration();
+    case TokenType::KEYWORD_MUT:
+      return parse_mut_class_body_declaration();
     default:
       break;
     }
     return expect_local_declaration("Expected declaration in class body");
+  }
+
+  NodeId parse_mut_class_body_declaration() {
+    auto mut_token = next();
+    auto decl = parse_class_body_declaration();
+    return m_output.add_node(mut_token.loc, MutDeclarationNode{decl});
   }
 
   NodeId parse_class_body_annotated_declaration() {
