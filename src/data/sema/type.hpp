@@ -1,0 +1,201 @@
+#pragma once
+
+#include <variant>
+
+#include "prelude.hpp"
+
+#include "data/source/declaration_visibility.hpp"
+#include "data/sema/type_kind.hpp"
+
+namespace amelia {
+
+enum class BuiltinTypeKind {
+  Byte,
+  UByte,
+  Short,
+  UShort,
+  Int,
+  UInt,
+  Long,
+  ULong,
+  Float,
+  Double,
+  Bool,
+  Char,
+  Str,
+  Null,
+  Never,
+  Unknown,
+};
+
+class Type {
+public:
+  struct Alias {
+    TypeId target;
+  };
+  struct Apply {};
+  struct Builtin {
+    BuiltinTypeKind kind;
+  };
+  struct Bitint {};
+  struct Tuple {};
+  struct Struct {};
+  struct Reference {};
+  struct Pointer {};
+  struct Array {};
+  struct Slice {};
+  struct Impl {};
+  struct TypeExpr {};
+  struct Const {};
+  struct Class {};
+  struct Union {};
+  struct Function {};
+  struct FunctionPointer {};
+  struct Concept {};
+  struct Variable {};
+
+#define X(TYPE_KIND)                                                                               \
+  Type(DeclarationVisibility vis, TYPE_KIND type)                                                  \
+      : visibility(vis), m_kind(TypeKind::TYPE_KIND), m_data(std::move(type)) {}                   \
+                                                                                                   \
+  TYPE_KIND &as_##TYPE_KIND() {                                                                    \
+    if (m_kind != TypeKind::TYPE_KIND) {                                                           \
+      throw std::runtime_error("Type kind mismatch");                                              \
+    }                                                                                              \
+    return m_data.data_##TYPE_KIND;                                                                \
+  }                                                                                                \
+                                                                                                   \
+  const TYPE_KIND &as_##TYPE_KIND() const {                                                        \
+    if (m_kind != TypeKind::TYPE_KIND) {                                                           \
+      throw std::runtime_error("Type kind mismatch");                                              \
+    }                                                                                              \
+    return m_data.data_##TYPE_KIND;                                                                \
+  }
+  TYPE_KIND_LIST
+#undef X
+
+  ~Type() {
+    m_data.destroy(m_kind);
+  }
+
+  Type(const Type &other)
+      : visibility(other.visibility), m_kind(other.m_kind), m_data(other.m_kind, other.m_data),
+        memo_name(other.memo_name), memo_resolve(other.memo_resolve) {}
+
+  Type(Type &&other) noexcept
+      : visibility(other.visibility), m_kind(other.m_kind),
+        m_data(other.m_kind, std::move(other.m_data)), memo_name(std::move(other.memo_name)),
+        memo_resolve(std::move(other.memo_resolve)) {}
+
+  TypeKind kind() const {
+    return m_kind;
+  }
+
+  Type &operator=(const Type &other) {
+    if (this != &other) {
+      visibility = other.visibility;
+      memo_name = other.memo_name;
+      memo_resolve = other.memo_resolve;
+      if (m_kind == other.m_kind) {
+        m_data.assign(m_kind, other.m_data);
+      } else {
+        m_data.destroy(m_kind);
+        m_kind = other.m_kind;
+        new (&m_data) TypeData(m_kind, other.m_data);
+      }
+    }
+    return *this;
+  }
+
+  Type &operator=(Type &&other) {
+    if (this != &other) {
+      visibility = other.visibility;
+      memo_name = std::move(other.memo_name);
+      memo_resolve = std::move(other.memo_resolve);
+      if (m_kind == other.m_kind) {
+        m_data.assign(m_kind, std::move(other.m_data));
+      } else {
+        m_data.destroy(m_kind);
+        m_kind = other.m_kind;
+        new (&m_data) TypeData(m_kind, std::move(other.m_data));
+      }
+    }
+    return *this;
+  }
+
+  DeclarationVisibility visibility;
+  Option<String> memo_name;
+  Option<TypeId> memo_resolve;
+
+private:
+  union TypeData {
+#define X(TYPE_KIND)                                                                               \
+  TYPE_KIND data_##TYPE_KIND;                                                                      \
+                                                                                                   \
+  explicit TypeData(TYPE_KIND type) : data_##TYPE_KIND(std::move(type)) {}
+    TYPE_KIND_LIST
+#undef X
+
+    TypeData(TypeKind kind, const TypeData &other) {
+      switch (kind) {
+#define X(TYPE_KIND)                                                                               \
+  case TypeKind::TYPE_KIND:                                                                        \
+    new (&data_##TYPE_KIND) TYPE_KIND(other.data_##TYPE_KIND);                                     \
+    break;
+        TYPE_KIND_LIST
+#undef X
+      }
+    }
+
+    TypeData(TypeKind kind, TypeData &&other) {
+      switch (kind) {
+#define X(TYPE_KIND)                                                                               \
+  case TypeKind::TYPE_KIND:                                                                        \
+    new (&data_##TYPE_KIND) TYPE_KIND(std::move(other.data_##TYPE_KIND));                          \
+    break;
+        TYPE_KIND_LIST
+#undef X
+      }
+    }
+
+    void assign(TypeKind kind, const TypeData &other) {
+      switch (kind) {
+#define X(TYPE_KIND)                                                                               \
+  case TypeKind::TYPE_KIND:                                                                        \
+    data_##TYPE_KIND = other.data_##TYPE_KIND;                                                     \
+    break;
+        TYPE_KIND_LIST
+#undef X
+      }
+    }
+
+    void assign(TypeKind kind, TypeData &&other) {
+      switch (kind) {
+#define X(TYPE_KIND)                                                                               \
+  case TypeKind::TYPE_KIND:                                                                        \
+    data_##TYPE_KIND = std::move(other.data_##TYPE_KIND);                                          \
+    break;
+        TYPE_KIND_LIST
+#undef X
+      }
+    }
+
+    void destroy(TypeKind kind) noexcept {
+      switch (kind) {
+#define X(TYPE_KIND)                                                                               \
+  case TypeKind::TYPE_KIND:                                                                        \
+    data_##TYPE_KIND.~TYPE_KIND();                                                                 \
+    break;
+        TYPE_KIND_LIST
+#undef X
+      }
+    }
+
+    ~TypeData() {}
+  };
+
+  TypeKind m_kind;
+  TypeData m_data;
+};
+
+} // namespace amelia

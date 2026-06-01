@@ -4,8 +4,8 @@
 #include <windows.h>
 #endif
 
-#include "console_printer.h"
-#include "prelude.h"
+#include "console_printer.hpp"
+#include "prelude.hpp"
 
 namespace amelia {
 

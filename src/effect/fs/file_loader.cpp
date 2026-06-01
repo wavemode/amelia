@@ -2,8 +2,8 @@
 #include <sstream>
 #include <string>
 
-#include "file_loader.h"
-#include "prelude.h"
+#include "file_loader.hpp"
+#include "prelude.hpp"
 
 namespace amelia {
 

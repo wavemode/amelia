@@ -1,5 +1,5 @@
-#include "silent_printer.h"
-#include "prelude.h"
+#include "silent_printer.hpp"
+#include "prelude.hpp"
 
 namespace amelia {
 

@@ -1,17 +1,17 @@
 #include <doctest.h>
 
-#include "prelude.h"
+#include "prelude.hpp"
 
-#include "action/testing/compiler_test_cases.h"
-#include "data/testing/compiler_test_case_collection.h"
-#include "data/testing/compiler_test_case_outcome.h"
-#include "data/util/text_utils.h"
-#include "effect/fs/file_loader.h"
-#include "effect/fs/file_writer.h"
-#include "effect/fs/filesystem_walker.h"
-#include "effect/sys/console_printer.h"
-#include "effect/sys/environment_reader.h"
-#include "system/testing/parser_test_case_runner.h"
+#include "action/testing/compiler_test_cases.hpp"
+#include "data/testing/compiler_test_case_collection.hpp"
+#include "data/testing/compiler_test_case_outcome.hpp"
+#include "data/util/text_utils.hpp"
+#include "effect/fs/file_loader.hpp"
+#include "effect/fs/file_writer.hpp"
+#include "effect/fs/filesystem_walker.hpp"
+#include "effect/sys/console_printer.hpp"
+#include "effect/sys/environment_reader.hpp"
+#include "system/testing/parser_test_case_runner.hpp"
 
 TEST_SUITE_BEGIN("Parser");
 

@@ -1,8 +1,8 @@
 #include <filesystem>
 #include <iostream>
 
-#include "filesystem_walker.h"
-#include "prelude.h"
+#include "filesystem_walker.hpp"
+#include "prelude.hpp"
 
 namespace amelia {
 

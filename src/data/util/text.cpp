@@ -1,8 +1,8 @@
 #include <cstring>
 #include <string_view>
 
-#include "prelude.h"
-#include "text.h"
+#include "prelude.hpp"
+#include "text.hpp"
 
 namespace amelia {
 

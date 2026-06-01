@@ -1,10 +1,10 @@
-#include "parser.h"
-#include "prelude.h"
+#include "parser.hpp"
+#include "prelude.hpp"
 
-#include "data/lexer/lexer_result.h"
-#include "data/lexer/token_formatter.h"
-#include "data/parser/parser_error.h"
-#include "data/parser/parser_result.h"
+#include "data/lexer/lexer_result.hpp"
+#include "data/lexer/token_formatter.hpp"
+#include "data/parser/parser_error.hpp"
+#include "data/parser/parser_result.hpp"
 
 namespace amelia {
 

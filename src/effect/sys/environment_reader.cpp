@@ -1,8 +1,8 @@
 #include <cstdlib>
 #include <cstring>
 
-#include "environment_reader.h"
-#include "prelude.h"
+#include "environment_reader.hpp"
+#include "prelude.hpp"
 
 namespace amelia {
 void EnvironmentReader::get_env(AbstractString &output, const AbstractString &name) {

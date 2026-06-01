@@ -1,8 +1,8 @@
 #include <doctest.h>
 
-#include "prelude.h"
+#include "prelude.hpp"
 
-#include "data/util/text_utils.h"
+#include "data/util/text_utils.hpp"
 
 TEST_SUITE_BEGIN("TextUtils");
 

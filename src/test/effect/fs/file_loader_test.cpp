@@ -1,8 +1,8 @@
 #include <doctest.h>
 
-#include "prelude.h"
+#include "prelude.hpp"
 
-#include "effect/fs/file_loader.h"
+#include "effect/fs/file_loader.hpp"
 
 TEST_SUITE_BEGIN("FileLoader");
 

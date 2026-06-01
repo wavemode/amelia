@@ -1,0 +1,21 @@
+#pragma once
+
+#include <stdexcept>
+
+#include "data/source/location.hpp"
+#include "data/util/string.hpp"
+
+namespace amelia {
+
+/**
+ * @class SourceLocationError
+ * @brief Exception associated with a specific location in source code input.
+ */
+struct SourceLocationError : public std::exception {
+  const String message;
+
+  SourceLocationError(Location loc, String message);
+  const char *what() const noexcept override;
+};
+
+} // namespace amelia

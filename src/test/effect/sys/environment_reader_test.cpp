@@ -2,9 +2,9 @@
 
 #include <doctest.h>
 
-#include "prelude.h"
+#include "prelude.hpp"
 
-#include "effect/sys/environment_reader.h"
+#include "effect/sys/environment_reader.hpp"
 
 TEST_SUITE_BEGIN("EnvironmentReader");
 

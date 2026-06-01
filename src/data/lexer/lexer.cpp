@@ -1,15 +1,15 @@
 #include <cstdint>
 
-#include "lexer.h"
-#include "prelude.h"
+#include "lexer.hpp"
+#include "prelude.hpp"
 
-#include "data/lexer/lexer_context.h"
-#include "data/lexer/lexer_error.h"
-#include "data/lexer/lexer_result.h"
-#include "data/lexer/token.h"
-#include "data/source/location.h"
-#include "data/source/number_literal.h"
-#include "data/util/text_utils.h"
+#include "data/lexer/lexer_context.hpp"
+#include "data/lexer/lexer_error.hpp"
+#include "data/lexer/lexer_result.hpp"
+#include "data/lexer/token.hpp"
+#include "data/source/location.hpp"
+#include "data/source/number_literal.hpp"
+#include "data/util/text_utils.hpp"
 
 namespace amelia {
 

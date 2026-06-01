@@ -1,6 +1,6 @@
-#include "node_formatter.h"
+#include "node_formatter.hpp"
 
-#include "data/lexer/lexer.h"
+#include "data/lexer/lexer.hpp"
 
 namespace amelia {
 

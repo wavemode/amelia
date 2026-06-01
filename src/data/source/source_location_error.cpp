@@ -1,7 +1,7 @@
-#include "source_location_error.h"
-#include "prelude.h"
+#include "source_location_error.hpp"
+#include "prelude.hpp"
 
-#include "data/util/text_utils.h"
+#include "data/util/text_utils.hpp"
 
 namespace amelia {
 

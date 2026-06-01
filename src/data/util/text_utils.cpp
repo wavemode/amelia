@@ -1,6 +1,6 @@
-#include "text_utils.h"
+#include "text_utils.hpp"
 
-#include "prelude.h"
+#include "prelude.hpp"
 
 namespace amelia {
 

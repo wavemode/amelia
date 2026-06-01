@@ -2,7 +2,7 @@
 
 #include <doctest.h>
 
-#include "prelude.h"
+#include "prelude.hpp"
 
 TEST_SUITE_BEGIN("String");
 

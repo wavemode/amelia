@@ -4,8 +4,8 @@
 #include <string_view>
 #include <utility>
 
-#include "prelude.h"
-#include "string.h"
+#include "prelude.hpp"
+#include "string.hpp"
 
 namespace amelia {
 

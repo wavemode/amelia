@@ -1,8 +1,8 @@
 #include <doctest.h>
 
-#include "prelude.h"
+#include "prelude.hpp"
 
-#include "data/util/option.h"
+#include "data/util/option.hpp"
 
 TEST_SUITE_BEGIN("Option");
 

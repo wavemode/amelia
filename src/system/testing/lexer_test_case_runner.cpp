@@ -1,7 +1,7 @@
-#include "lexer_test_case_runner.h"
+#include "lexer_test_case_runner.hpp"
 
-#include "action/testing/compiler_test_cases.h"
-#include "data/testing/compiler_test_case.h"
+#include "action/testing/compiler_test_cases.hpp"
+#include "data/testing/compiler_test_case.hpp"
 
 namespace amelia {
 

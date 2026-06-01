@@ -1,28 +1,28 @@
 #include <cstddef>
 
-#include "compiler_test_cases.h"
+#include "compiler_test_cases.hpp"
 
-#include "interface/fs/file_loader.h"
-#include "interface/fs/file_writer.h"
-#include "interface/fs/filesystem_walker.h"
-#include "interface/sys/environment_reader.h"
-#include "interface/sys/printer.h"
-#include "interface/testing/test_case_runner.h"
+#include "interface/fs/file_loader.hpp"
+#include "interface/fs/file_writer.hpp"
+#include "interface/fs/filesystem_walker.hpp"
+#include "interface/sys/environment_reader.hpp"
+#include "interface/sys/printer.hpp"
+#include "interface/testing/test_case_runner.hpp"
 
-#include "data/lexer/lexer.h"
-#include "data/lexer/lexer_context.h"
-#include "data/lexer/lexer_result.h"
-#include "data/lexer/token.h"
-#include "data/lexer/token_formatter.h"
-#include "data/parser/node_formatter.h"
-#include "data/parser/parser.h"
-#include "data/parser/parser_result.h"
-#include "data/source/source_location_error.h"
-#include "data/testing/compiler_test_case.h"
-#include "data/testing/compiler_test_case_collection.h"
-#include "data/testing/compiler_test_case_outcome.h"
+#include "data/lexer/lexer.hpp"
+#include "data/lexer/lexer_context.hpp"
+#include "data/lexer/lexer_result.hpp"
+#include "data/lexer/token.hpp"
+#include "data/lexer/token_formatter.hpp"
+#include "data/parser/node_formatter.hpp"
+#include "data/parser/parser.hpp"
+#include "data/parser/parser_result.hpp"
+#include "data/source/source_location_error.hpp"
+#include "data/testing/compiler_test_case.hpp"
+#include "data/testing/compiler_test_case_collection.hpp"
+#include "data/testing/compiler_test_case_outcome.hpp"
 
-#include "data/util/text_utils.h"
+#include "data/util/text_utils.hpp"
 
 namespace amelia {
 

@@ -2,9 +2,9 @@
 #include <fstream>
 #include <iostream>
 
-#include "file_writer.h"
+#include "file_writer.hpp"
 
-#include "prelude.h"
+#include "prelude.hpp"
 
 namespace amelia {
 

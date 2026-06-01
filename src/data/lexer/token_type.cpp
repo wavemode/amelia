@@ -1,5 +1,5 @@
-#include "token_type.h"
-#include "prelude.h"
+#include "token_type.hpp"
+#include "prelude.hpp"
 
 namespace amelia {
 void token_type_to_string(AbstractString &out, TokenType type) {

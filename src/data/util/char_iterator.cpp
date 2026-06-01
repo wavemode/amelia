@@ -1,7 +1,7 @@
 #include <stdexcept>
 #include <utfcpp/utf8.h>
 
-#include "prelude.h"
+#include "prelude.hpp"
 
 namespace amelia {
 

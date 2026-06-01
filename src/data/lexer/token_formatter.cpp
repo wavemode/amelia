@@ -1,6 +1,6 @@
-#include "token_formatter.h"
+#include "token_formatter.hpp"
 
-#include "data/lexer/lexer.h"
+#include "data/lexer/lexer.hpp"
 
 namespace amelia {
 
