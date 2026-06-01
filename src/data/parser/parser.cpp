@@ -1488,13 +1488,17 @@ public:
     } else if (next_token.type == TokenType::AMPERSAND) {
       ++m_token_index; // consume the '&' operator
       bool is_const = false;
+      bool is_move = false;
       auto following_token = peek();
       if (following_token.type == TokenType::KEYWORD_CONST) {
         is_const = true;
         ++m_token_index; // consume the 'const' keyword
+      } else if (following_token.type == TokenType::KEYWORD_MOVE) {
+        is_move = true;
+        ++m_token_index; // consume the 'move' keyword
       }
       NodeId expr = parse_descend_expr_await_ref_copy_move_inline(allow_funcall);
-      return m_output.add_node(start_location, RefExpressionNode{is_const, expr});
+      return m_output.add_node(start_location, RefExpressionNode{is_const, is_move, expr});
     } else if (next_token.type == TokenType::KEYWORD_INLINE) {
       ++m_token_index; // consume the 'inline' keyword
       NodeId expr = parse_descend_expr_await_ref_copy_move_inline(allow_funcall);
