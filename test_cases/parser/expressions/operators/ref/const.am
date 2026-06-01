@@ -9,6 +9,7 @@ ModuleNode(
       ),
       type=RefExpressionNode(
         is_const=true,
+        is_move=false,
         expr=PrimitiveTypeNode(
           token=KEYWORD_INT(int)
         )

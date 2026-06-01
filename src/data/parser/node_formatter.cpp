@@ -291,6 +291,7 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   case NodeType::RefExpressionNode: {
     const auto &n = node.as_RefExpressionNode();
     print_field(out, "is_const", n.is_const);
+    print_field(out, "is_move", n.is_move);
     print_node_field(out, "expr", n.expr);
     break;
   }
@@ -670,14 +671,16 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   case NodeType::FunctionSignatureCaptureAnnotationNode: {
     const auto &n = node.as_FunctionSignatureCaptureAnnotationNode();
     Text kind;
-    if (n.kind == FunctionCaptureKind::Copy) {
+    switch (n.kind) {
+    case FunctionCaptureKind::Copy:
       kind = "copy";
-    } else if (n.kind == FunctionCaptureKind::Move) {
+      break;
+    case FunctionCaptureKind::Move:
       kind = "move";
-    } else if (n.kind == FunctionCaptureKind::Ref) {
+      break;
+    case FunctionCaptureKind::Ref:
       kind = "ref";
-    } else {
-      throw std::runtime_error("unreachable");
+      break;
     }
     print_field(out, "kind", kind);
     print_node_field(out, "var", n.var);

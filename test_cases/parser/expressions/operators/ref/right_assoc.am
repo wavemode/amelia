@@ -9,8 +9,10 @@ ModuleNode(
       ),
       expr=RefExpressionNode(
         is_const=false,
+        is_move=false,
         expr=RefExpressionNode(
           is_const=false,
+          is_move=false,
           expr=IdentifierNode(
             token=IDENTIFIER(x)
           )
