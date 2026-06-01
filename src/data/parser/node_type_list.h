@@ -389,7 +389,6 @@ struct ModuloExpressionNode {
 
 struct RefExpressionNode {
   bool is_const;
-  bool is_move;
   NodeId expr;
 };
 
