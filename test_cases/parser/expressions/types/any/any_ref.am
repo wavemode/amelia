@@ -16,7 +16,6 @@ ModuleNode(
             ),
             type=RefExpressionNode(
               is_const=false,
-              is_move=false,
               expr=AnyTypeExpressionNode(
                 type=IdentifierNode(
                   token=IDENTIFIER(X)
