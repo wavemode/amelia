@@ -1,7 +1,7 @@
 sealed class A {
-  record class B : A (b: int)
-  record class C : A (c: float)
-  record class D : A (d: double)
+  record class B(b: int) : A
+  record class C(c: float) : A
+  record class D(d: double) : A
 }
 
 /* EXPECTED_OUTPUT:

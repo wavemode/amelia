@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdexcept>
+#include <cstdint>
 #include <cstddef>
 
 #include "data/util/abstract_list.hpp"
@@ -17,6 +18,7 @@
 #include "data/util/text.hpp"
 
 namespace amelia {
+  using ModuleId = int32_t;
   using TypeId = int32_t;
   using NodeId = int32_t;
   using TokenId = int32_t;

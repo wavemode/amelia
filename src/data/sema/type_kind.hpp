@@ -1,7 +1,7 @@
 #define TYPE_KIND_LIST                                                                             \
   X(Alias)                                                                                         \
   X(Apply)                                                                                         \
-  X(Builtin)                                                                                       \
+  X(Primitive)                                                                                       \
   X(Bitint)                                                                                        \
   X(Tuple)                                                                                         \
   X(Struct)                                                                                        \
@@ -10,7 +10,6 @@
   X(Array)                                                                                         \
   X(Slice)                                                                                         \
   X(Impl)                                                                                          \
-  X(TypeExpr)                                                                                      \
   X(Const)                                                                                         \
   X(Class)                                                                                         \
   X(Union)                                                                                         \

@@ -4,6 +4,8 @@
 
 namespace amelia {
 
+using TokenId = int32_t;
+
 #define TOKEN_TYPE_LIST                                                                            \
   X(KEYWORD_FUN)                                                                                   \
   X(KEYWORD_IF)                                                                                    \

@@ -21,6 +21,9 @@ file(GLOB_RECURSE SOURCES_UTIL "${CMAKE_CURRENT_SOURCE_DIR}/src/util/*.cpp")
 file(GLOB_RECURSE SOURCES_DATA "${CMAKE_CURRENT_SOURCE_DIR}/src/data/*.cpp")
 file(GLOB_RECURSE SOURCES_EFFECT "${CMAKE_CURRENT_SOURCE_DIR}/src/effect/*.cpp")
 file(GLOB_RECURSE SOURCES_TEST "${CMAKE_CURRENT_SOURCE_DIR}/src/test/*.cpp")
+set(SOURCES_VENDOR
+    "${CMAKE_CURRENT_SOURCE_DIR}/vendor/sha2.c"
+)
 
 add_library(amelia_warnings INTERFACE)
 target_compile_options(
@@ -37,6 +40,7 @@ add_library(amelia_core
     ${SOURCES_UTIL}
     ${SOURCES_DATA}
     ${SOURCES_EFFECT}
+    ${SOURCES_VENDOR}
 )
 target_include_directories(amelia_core PUBLIC src vendor)
 target_compile_features(amelia_core PUBLIC cxx_std_20)

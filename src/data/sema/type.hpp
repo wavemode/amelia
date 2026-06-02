@@ -9,7 +9,7 @@
 
 namespace amelia {
 
-enum class BuiltinTypeKind {
+enum class PrimitiveKind {
   Byte,
   UByte,
   Short,
@@ -30,12 +30,10 @@ enum class BuiltinTypeKind {
 
 class Type {
 public:
-  struct Alias {
-    TypeId target;
-  };
+  struct Alias {};
   struct Apply {};
-  struct Builtin {
-    BuiltinTypeKind kind;
+  struct Primitive {
+    PrimitiveKind primitive_kind;
   };
   struct Bitint {};
   struct Tuple {};
@@ -45,7 +43,6 @@ public:
   struct Array {};
   struct Slice {};
   struct Impl {};
-  struct TypeExpr {};
   struct Const {};
   struct Class {};
   struct Union {};
@@ -80,12 +77,11 @@ public:
 
   Type(const Type &other)
       : visibility(other.visibility), m_kind(other.m_kind), m_data(other.m_kind, other.m_data),
-        memo_name(other.memo_name), memo_resolve(other.memo_resolve) {}
+        memo_name(other.memo_name) {}
 
   Type(Type &&other) noexcept
       : visibility(other.visibility), m_kind(other.m_kind),
-        m_data(other.m_kind, std::move(other.m_data)), memo_name(std::move(other.memo_name)),
-        memo_resolve(std::move(other.memo_resolve)) {}
+        m_data(other.m_kind, std::move(other.m_data)), memo_name(std::move(other.memo_name)) {}
 
   TypeKind kind() const {
     return m_kind;
@@ -95,7 +91,6 @@ public:
     if (this != &other) {
       visibility = other.visibility;
       memo_name = other.memo_name;
-      memo_resolve = other.memo_resolve;
       if (m_kind == other.m_kind) {
         m_data.assign(m_kind, other.m_data);
       } else {
@@ -111,7 +106,6 @@ public:
     if (this != &other) {
       visibility = other.visibility;
       memo_name = std::move(other.memo_name);
-      memo_resolve = std::move(other.memo_resolve);
       if (m_kind == other.m_kind) {
         m_data.assign(m_kind, std::move(other.m_data));
       } else {
@@ -125,7 +119,6 @@ public:
 
   DeclarationVisibility visibility;
   Option<String> memo_name;
-  Option<TypeId> memo_resolve;
 
 private:
   union TypeData {

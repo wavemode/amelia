@@ -505,8 +505,8 @@ public:
     }
     auto name = parse_scoped_name();
     Option<NodeId> generic_parameter_list = try_parse_generic_parameter_list();
-    Option<NodeId> base_class_list = try_parse_base_type_list();
     Option<NodeId> header_decls = try_parse_class_header_decls();
+    Option<NodeId> base_class_list = try_parse_base_type_list();
     Option<NodeId> implicit_parameter_list = try_parse_implicit_parameter_list();
     Option<NodeId> body = try_parse_class_body();
     return m_output.add_node(
