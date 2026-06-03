@@ -13,10 +13,12 @@
   X(Const)                                                                                         \
   X(Class)                                                                                         \
   X(Union)                                                                                         \
+  X(Concept)                                                                                       \
   X(Function)                                                                                      \
   X(FunctionPointer)                                                                               \
-  X(Concept)                                                                                       \
-  X(Variable)
+  X(Variable) \
+  X(TypeDecl) \
+  X(ModuleDecl)
 
 namespace amelia {
 

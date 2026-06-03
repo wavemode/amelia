@@ -50,6 +50,8 @@ public:
   struct FunctionPointer {};
   struct Concept {};
   struct Variable {};
+  struct TypeDecl {};
+  struct ModuleDecl {};
 
 #define X(TYPE_KIND)                                                                               \
   Type(DeclarationVisibility vis, TYPE_KIND type)                                                  \

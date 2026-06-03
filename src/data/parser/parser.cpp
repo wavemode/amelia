@@ -1732,7 +1732,9 @@ public:
 
   NodeId parse_typeof_expression() {
     auto typeof_token = next();
+    read_left_paren("Expected '(' after 'typeof' keyword in typeof expression");
     NodeId expr = parse_expression();
+    read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after expression in typeof expression");
     return m_output.add_node(typeof_token.loc, TypeOfExpressionNode{expr});
   }
 

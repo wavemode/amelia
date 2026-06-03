@@ -1,4 +1,4 @@
-let y : typeof 5 + 5 = 10
+let y : typeof(5 + 5) = 10
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
