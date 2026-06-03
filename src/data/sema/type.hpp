@@ -1,7 +1,5 @@
 #pragma once
 
-#include <variant>
-
 #include "prelude.hpp"
 
 #include "data/source/declaration_visibility.hpp"

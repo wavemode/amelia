@@ -16,7 +16,7 @@ void FileLoader::load_file(AbstractString &output, const AbstractString &file_pa
   }
   std::ostringstream ss;
   ss << file.rdbuf();
-  output.assign(Text::from(ss.str()));
+  output.assign(Text::from(ss.str().c_str()));
 }
 
 } // namespace amelia

@@ -1,4 +1,5 @@
 #include <cstring>
+#include <string>
 #include <string_view>
 
 #include "prelude.hpp"
@@ -11,8 +12,6 @@ Text::Text() noexcept = default;
 Text::Text(ConstSlice<char> str) : m_slice(str) {
   CharIterator::validate(m_slice);
 }
-
-Text::Text(const std::string &str) : Text(ConstSlice(str.c_str(), str.size())) {}
 
 ConstSlice<char> Text::data() const noexcept {
   return m_slice;
@@ -65,10 +64,6 @@ bool Text::operator>(const Text &other) const noexcept {
 
 bool Text::operator>=(const Text &other) const noexcept {
   return !(*this < other);
-}
-
-Text Text::from(const std::string &str) {
-  return Text(ConstSlice(str.c_str(), str.size()));
 }
 
 Text Text::from(const char *c_str) {

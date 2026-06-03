@@ -1,4 +1,4 @@
-#include <iostream>
+#include <cstdio>
 
 #if defined(_WIN32)
 #include <windows.h>
@@ -16,21 +16,21 @@ ConsolePrinter::ConsolePrinter() {
 }
 
 void ConsolePrinter::print(Text str) {
-  std::cout.write(str.data().ptr(), str.data().size());
+  std::fwrite(str.data().ptr(), 1, str.data().size(), stdout);
 }
 
 void ConsolePrinter::println(Text str) {
   print(str);
-  std::cout << std::endl;
+  std::fputc('\n', stdout);
 }
 
 void ConsolePrinter::err_print(Text str) {
-  std::cerr.write(str.data().ptr(), str.data().size());
+  std::fwrite(str.data().ptr(), 1, str.data().size(), stderr);
 }
 
 void ConsolePrinter::err_println(Text str) {
   err_print(str);
-  std::cerr << std::endl;
+  std::fputc('\n', stderr);
 }
 
 } // namespace amelia

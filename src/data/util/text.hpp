@@ -37,12 +37,6 @@ public:
   explicit Text(ConstSlice<char> str);
 
   /**
-   * @brief Construct a Text from a std::string object.
-   * @throws InvalidUTF8Error if the input string is not valid UTF-8 from beginning to end.
-   */
-  explicit Text(const std::string &str);
-
-  /**
    * @return A Slice representing the underlying UTF-8 data of this Text.
    * The slice is valid until the next non-const method call on this Text instance.
    */
@@ -97,12 +91,6 @@ public:
    * based on the sequence of Unicode code points.
    */
   bool operator>=(const Text &other) const noexcept;
-
-  /**
-   * @brief Creates a Text from a std::string. The input string must be valid UTF-8.
-   * @throws InvalidUTF8Error if the input string is not valid UTF-8 from beginning to end.
-   */
-  static Text from(const std::string &str);
 
   /**
    * @brief Creates a Text from a null-terminated C-style string. The input string must be valid

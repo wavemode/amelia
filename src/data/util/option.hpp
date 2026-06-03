@@ -1,8 +1,7 @@
 #pragma once
 
-#include <utility>
-
 #include "data/util/runtime_error.hpp"
+#include "data/util/utility.hpp"
 
 namespace amelia {
 

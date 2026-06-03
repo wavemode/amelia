@@ -559,17 +559,17 @@ Text TextUtils::tail_bytes(Text input, size_t index_start) {
 
 void TextUtils::to_string(AbstractString &output, int64_t value) {
   std::string s1 = std::to_string(value);
-  output.append(Text::from(s1));
+  output.append(Text::from(s1.c_str()));
 }
 
 void TextUtils::to_string(AbstractString &output, size_t value) {
   std::string s1 = std::to_string(value);
-  output.append(Text::from(s1));
+  output.append(Text::from(s1.c_str()));
 }
 
 void TextUtils::to_string(AbstractString &output, double value) {
   std::string s1 = std::to_string(value);
-  output.append(Text::from(s1));
+  output.append(Text::from(s1.c_str()));
 }
 
 void TextUtils::to_string(AbstractString &output, bool value) {

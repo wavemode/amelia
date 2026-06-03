@@ -1,5 +1,4 @@
 #include <filesystem>
-#include <iostream>
 
 #include "filesystem_walker.hpp"
 #include "prelude.hpp"
@@ -15,7 +14,7 @@ void FilesystemWalker::walk(
     if (ec) {
       if (!ignore_errors) {
         String err("Error iterating directory: ");
-        err.append(Text::from(ec.message()));
+        err.append(Text::from(ec.message().c_str()));
         throw RuntimeError(err.c_str());
       }
       ec.clear();
