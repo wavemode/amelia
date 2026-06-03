@@ -725,7 +725,7 @@ public:
       visibility = DeclVisibility::Local;
       break;
     default:
-      throw std::runtime_error("Invalid visibility modifier");
+      throw RuntimeError("Invalid visibility modifier");
     }
     NodeId decl = parse_class_body_decl();
     return m_output.add_node(visibility_token.loc, VisibilityNode{visibility, None(), decl});
@@ -1654,7 +1654,7 @@ public:
         ++m_token_index; // consume the '!'
         left = m_output.add_node(start_location, ExclamationMarkExprNode{left});
       } else {
-        throw std::runtime_error("unreachable");
+        throw RuntimeError("unreachable");
       }
       next_token = peek();
     }
@@ -2286,7 +2286,7 @@ private:
 
   TokenWithId next() {
     if (m_token_index >= static_cast<TokenId>(m_input.tokens().size())) {
-      throw std::runtime_error("Attempting to read past end of token stream");
+      throw RuntimeError("Attempting to read past end of token stream");
     }
     auto token = m_input.get_token(m_token_index);
     TokenWithId result{m_token_index, token.type, token.location};
@@ -2296,7 +2296,7 @@ private:
 
   TokenWithId peek(TokenId n = 0) const {
     if (m_token_index + n >= static_cast<TokenId>(m_input.tokens().size())) {
-      throw std::runtime_error("Attempting to peek past end of token stream");
+      throw RuntimeError("Attempting to peek past end of token stream");
     }
     auto token = m_input.get_token(m_token_index + n);
     return TokenWithId{m_token_index + n, token.type, token.location};

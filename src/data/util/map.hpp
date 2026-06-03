@@ -2,10 +2,10 @@
 
 #include <cstddef>
 #include <initializer_list>
-#include <stdexcept>
 #include <unordered_map>
 #include <utility>
 
+#include "data/util/runtime_error.hpp"
 #include "data/util/abstract_iterator.hpp"
 #include "data/util/abstract_map.hpp"
 #include "data/util/option.hpp"
@@ -38,13 +38,13 @@ public:
 
   V &get(const K &key) override {
     if (!has(key)) {
-      throw std::runtime_error("Key not found in map");
+      throw RuntimeError("Key not found in map");
     }
     return m_map.at(key);
   }
   const V &get(const K &key) const override {
     if (!has(key)) {
-      throw std::runtime_error("Key not found in map");
+      throw RuntimeError("Key not found in map");
     }
     return m_map.at(key);
   }
@@ -71,7 +71,7 @@ public:
   V remove_and_get(const K &key) {
     auto it = m_map.find(key);
     if (it == m_map.end()) {
-      throw std::runtime_error("Key not found in map");
+      throw RuntimeError("Key not found in map");
     }
     V value = std::move(it->second);
     m_map.erase(it);
@@ -289,21 +289,21 @@ public:
 
   value_type &operator*() {
     if (at_end()) {
-      throw std::runtime_error("Attempted to dereference end iterator");
+      throw RuntimeError("Attempted to dereference end iterator");
     }
     return *m_begin;
   }
 
   value_type *operator->() {
     if (at_end()) {
-      throw std::runtime_error("Attempted to dereference end iterator");
+      throw RuntimeError("Attempted to dereference end iterator");
     }
     return &(*m_begin);
   }
 
   MapPairIterator<K, V> &operator++() {
     if (at_end()) {
-      throw std::runtime_error("Attempted to advance past the end of the map");
+      throw RuntimeError("Attempted to advance past the end of the map");
     }
     ++m_begin;
     return *this;
@@ -311,7 +311,7 @@ public:
 
   MapPairIterator<K, V> operator++(int) {
     if (at_end()) {
-      throw std::runtime_error("Attempted to advance past the end of the map");
+      throw RuntimeError("Attempted to advance past the end of the map");
     }
     auto &tmp = *this;
     ++(*this);
@@ -458,7 +458,7 @@ public:
 
   value_type &operator*() {
     if (at_end()) {
-      throw std::runtime_error("Attempted to dereference end iterator");
+      throw RuntimeError("Attempted to dereference end iterator");
     }
     return *m_begin;
   }
@@ -486,14 +486,14 @@ public:
 
   value_type *operator->() {
     if (at_end()) {
-      throw std::runtime_error("Attempted to dereference end iterator");
+      throw RuntimeError("Attempted to dereference end iterator");
     }
     return &(*m_begin);
   }
 
   ConstMapPairIterator<K, V> &operator++() {
     if (at_end()) {
-      throw std::runtime_error("Attempted to advance past the end of the map");
+      throw RuntimeError("Attempted to advance past the end of the map");
     }
     ++m_begin;
     return *this;
@@ -501,7 +501,7 @@ public:
 
   ConstMapPairIterator<K, V> operator++(int) {
     if (at_end()) {
-      throw std::runtime_error("Attempted to advance past the end of the map");
+      throw RuntimeError("Attempted to advance past the end of the map");
     }
     auto &tmp = *this;
     ++(*this);

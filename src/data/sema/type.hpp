@@ -59,14 +59,14 @@ public:
                                                                                                    \
   TYPE_KIND &as_##TYPE_KIND() {                                                                    \
     if (m_kind != TypeKind::TYPE_KIND) {                                                           \
-      throw std::runtime_error("Type kind mismatch");                                              \
+      throw RuntimeError("Type kind mismatch");                                              \
     }                                                                                              \
     return m_data.data_##TYPE_KIND;                                                                \
   }                                                                                                \
                                                                                                    \
   const TYPE_KIND &as_##TYPE_KIND() const {                                                        \
     if (m_kind != TypeKind::TYPE_KIND) {                                                           \
-      throw std::runtime_error("Type kind mismatch");                                              \
+      throw RuntimeError("Type kind mismatch");                                              \
     }                                                                                              \
     return m_data.data_##TYPE_KIND;                                                                \
   }

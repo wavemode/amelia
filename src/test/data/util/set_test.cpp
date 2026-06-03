@@ -94,6 +94,6 @@ TEST_CASE("iterator - manual") {
   CHECK(seen.has("b"));
   CHECK(seen.has("c"));
 
-  CHECK_THROWS_AS(*it, std::runtime_error);
-  CHECK_THROWS_AS(*end, std::runtime_error);
+  CHECK_THROWS_AS(*it, RuntimeError);
+  CHECK_THROWS_AS(*end, RuntimeError);
 }

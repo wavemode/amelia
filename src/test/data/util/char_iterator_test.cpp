@@ -1,6 +1,5 @@
 #include <cstdint>
 #include <cstring>
-#include <stdexcept>
 
 #include <doctest.h>
 

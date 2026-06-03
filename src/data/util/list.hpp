@@ -3,9 +3,9 @@
 #include <algorithm>
 #include <cstddef>
 #include <initializer_list>
-#include <stdexcept>
 #include <vector>
 
+#include "data/util/runtime_error.hpp"
 #include "data/util/abstract_list.hpp"
 
 namespace amelia {
@@ -58,7 +58,7 @@ public:
 
   void pop_back() {
     if (m_vec.empty()) {
-      throw std::runtime_error("Cannot pop_back from an empty list");
+      throw RuntimeError("Cannot pop_back from an empty list");
     }
     m_vec.pop_back();
   }
@@ -102,14 +102,14 @@ public:
 
   T &operator[](size_t index) override {
     if (index >= size()) {
-      throw std::runtime_error("List index out of range");
+      throw RuntimeError("List index out of range");
     }
     return m_vec[index];
   }
 
   const T &operator[](size_t index) const {
     if (index >= size()) {
-      throw std::runtime_error("List index out of range");
+      throw RuntimeError("List index out of range");
     }
     return m_vec[index];
   }

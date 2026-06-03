@@ -15,14 +15,14 @@ public:
                                                                                                    \
   NODE_TYPE &as_##NODE_TYPE() {                                                                    \
     if (m_type != NodeType::NODE_TYPE) {                                                           \
-      throw std::runtime_error("Node type mismatch");                                              \
+      throw RuntimeError("Node type mismatch");                                              \
     }                                                                                              \
     return m_data.data_##NODE_TYPE;                                                                \
   }                                                                                                \
                                                                                                    \
   const NODE_TYPE &as_##NODE_TYPE() const {                                                        \
     if (m_type != NodeType::NODE_TYPE) {                                                           \
-      throw std::runtime_error("Node type mismatch");                                              \
+      throw RuntimeError("Node type mismatch");                                              \
     }                                                                                              \
     return m_data.data_##NODE_TYPE;                                                                \
   }

@@ -13,7 +13,7 @@ class ParserResult : public AbstractNodeRepository {
 public:
   const Node &get_node(NodeId id) const override {
     if (id >= static_cast<NodeId>(m_nodes.size())) {
-      throw std::runtime_error("Invalid node ID");
+      throw RuntimeError("Invalid node ID");
     }
     return m_nodes[id];
   }

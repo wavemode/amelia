@@ -15,7 +15,7 @@ struct LexerResult : public AbstractTokenRepository {
 
   Token get_token(TokenId token_id) const override {
     if (token_id >= static_cast<TokenId>(m_tokens.size())) {
-      throw std::runtime_error("Invalid token ID");
+      throw RuntimeError("Invalid token ID");
     }
     return m_tokens[token_id];
   }
