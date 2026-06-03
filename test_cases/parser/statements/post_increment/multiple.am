@@ -6,18 +6,18 @@ let example = {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(example)
       ),
-      expr=BlockExpressionNode(
+      expr=BlockExprNode(
         stmts=[
-          PostIncrementStatementNode(
+          PostIncrementStmtNode(
             target=IdentifierNode(
               token=IDENTIFIER(x)
             )
           ),
-          PostIncrementStatementNode(
+          PostIncrementStmtNode(
             target=IdentifierNode(
               token=IDENTIFIER(y)
             )

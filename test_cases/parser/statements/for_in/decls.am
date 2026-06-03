@@ -9,19 +9,19 @@ let z = {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(z)
       ),
-      expr=BlockExpressionNode(
+      expr=BlockExprNode(
         stmts=[
-          ForInStatementNode(
+          ForInStmtNode(
             introductory_decls=[
-              LetDeclarationNode(
+              LetDeclNode(
                 target=IdentifierNode(
                   token=IDENTIFIER(w)
                 ),
-                expr=BracketExpressionNode(
+                expr=BracketExprNode(
                   exprs=[
                     NumberLiteralNode(
                       lit=NUMBER(1)
@@ -38,12 +38,12 @@ ModuleNode(
                   ]
                 )
               ),
-              ConstDeclarationNode(
+              ConstDeclNode(
                 target=IdentifierNode(
                   token=IDENTIFIER(y)
                 ),
-                expr=FunctionCallExpressionNode(
-                  callee=FieldAccessExpressionNode(
+                expr=FunctionCallExprNode(
+                  callee=FieldAccessExprNode(
                     object=IdentifierNode(
                       token=IDENTIFIER(w)
                     ),
@@ -53,13 +53,13 @@ ModuleNode(
                   ),
                   args=[
                     FunctionArgumentNode(
-                      expr=LambdaExpressionNode(
+                      expr=LambdaExprNode(
                         parameters=[
                           IdentifierNode(
                             token=IDENTIFIER_NO_W(x)
                           )
                         ],
-                        body=MultiplyExpressionNode(
+                        body=MultiplyExprNode(
                           left=IdentifierNode(
                             token=IDENTIFIER(x)
                           ),
@@ -83,8 +83,8 @@ ModuleNode(
             iterable=IdentifierNode(
               token=IDENTIFIER(y)
             ),
-            body=ExpressionStatementNode(
-              expr=FunctionCallExpressionNode(
+            body=ExprStmtNode(
+              expr=FunctionCallExprNode(
                 callee=IdentifierNode(
                   token=IDENTIFIER(a)
                 )

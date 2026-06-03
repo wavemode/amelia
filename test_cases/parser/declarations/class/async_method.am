@@ -5,14 +5,14 @@ class A {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ClassDeclarationNode(
+    ClassDeclNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),
       body=ClassBodyNode(
         decls=[
-          AsyncDeclarationNode(
-            decl=FunctionDeclarationNode(
+          AsyncDeclNode(
+            decl=FunctionDeclNode(
               name=IdentifierNode(
                 token=IDENTIFIER(foo)
               ),

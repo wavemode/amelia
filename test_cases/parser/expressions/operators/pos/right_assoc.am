@@ -3,12 +3,12 @@ let x = + +y
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expr=PositiveExpressionNode(
-        expr=PositiveExpressionNode(
+      expr=PositiveExprNode(
+        expr=PositiveExprNode(
           expr=IdentifierNode(
             token=IDENTIFIER_NO_W(y)
           )

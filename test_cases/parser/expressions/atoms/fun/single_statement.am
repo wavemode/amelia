@@ -5,11 +5,11 @@ let f = fun(x : int, y : float) -> double {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(f)
       ),
-      expr=FunctionExpressionNode(
+      expr=FunctionExprNode(
         signature=FunctionSignatureNode(
           parameters=[
             FunctionParameterNode(
@@ -37,8 +37,8 @@ ModuleNode(
         ),
         body=FunctionBodyNode(
           stmts=[
-            ExpressionStatementNode(
-              expr=FunctionCallExpressionNode(
+            ExprStmtNode(
+              expr=FunctionCallExprNode(
                 callee=IdentifierNode(
                   token=IDENTIFIER(print)
                 ),

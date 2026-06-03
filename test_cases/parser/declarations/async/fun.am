@@ -3,8 +3,8 @@ async fun f() {}
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    AsyncDeclarationNode(
-      decl=FunctionDeclarationNode(
+    AsyncDeclNode(
+      decl=FunctionDeclNode(
         name=IdentifierNode(
           token=IDENTIFIER(f)
         ),

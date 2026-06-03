@@ -1,0 +1,38 @@
+record class A (int, list[float])
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    RecordDeclNode(
+      decl=ClassDeclNode(
+        name=IdentifierNode(
+          token=IDENTIFIER(A)
+        ),
+        header_decls=ClassHeaderDeclsNode(
+          decls=[
+            ClassHeaderFieldDeclNode(
+              type=PrimitiveTypeNode(
+                token=KEYWORD_INT(int)
+              )
+            ),
+            ClassHeaderFieldDeclNode(
+              type=IndexingExprNode(
+                object=IdentifierNode(
+                  token=IDENTIFIER(list)
+                ),
+                indices=[
+                  IndexNode(
+                    value=PrimitiveTypeNode(
+                      token=KEYWORD_FLOAT(float)
+                    )
+                  )
+                ]
+              )
+            )
+          ]
+        )
+      )
+    )
+  ]
+)
+*/

@@ -3,11 +3,11 @@ let w = if(x)y else z
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(w)
       ),
-      expr=IfExpressionNode(
+      expr=IfExprNode(
         condition=IdentifierNode(
           token=IDENTIFIER_NO_W(x)
         ),

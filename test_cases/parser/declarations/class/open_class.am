@@ -3,8 +3,8 @@ open class A {}
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    OpenDeclarationNode(
-      decl=ClassDeclarationNode(
+    OpenDeclNode(
+      decl=ClassDeclNode(
         name=IdentifierNode(
           token=IDENTIFIER(A)
         ),

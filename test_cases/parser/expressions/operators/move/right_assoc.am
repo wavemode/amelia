@@ -3,12 +3,12 @@ let w = move move x
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(w)
       ),
-      expr=MoveExpressionNode(
-        expr=MoveExpressionNode(
+      expr=MoveExprNode(
+        expr=MoveExprNode(
           expr=IdentifierNode(
             token=IDENTIFIER(x)
           )

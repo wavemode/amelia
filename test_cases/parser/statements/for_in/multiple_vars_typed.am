@@ -5,19 +5,19 @@ let z = {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(z)
       ),
-      expr=BlockExpressionNode(
+      expr=BlockExprNode(
         stmts=[
-          ForInStatementNode(
+          ForInStmtNode(
             vars=[
               ForInVariableNode(
                 name=IdentifierNode(
                   token=IDENTIFIER_NO_W(x)
                 ),
-                type=RefExpressionNode(
+                type=RefExprNode(
                   is_const=false,
                   is_move=false,
                   expr=PrimitiveTypeNode(
@@ -29,7 +29,7 @@ ModuleNode(
                 name=IdentifierNode(
                   token=IDENTIFIER(y)
                 ),
-                type=RefExpressionNode(
+                type=RefExprNode(
                   is_const=false,
                   is_move=false,
                   expr=IdentifierNode(
@@ -41,15 +41,15 @@ ModuleNode(
             iterable=IdentifierNode(
               token=IDENTIFIER(z)
             ),
-            body=ExpressionStatementNode(
-              expr=FunctionCallExpressionNode(
+            body=ExprStmtNode(
+              expr=FunctionCallExprNode(
                 callee=IdentifierNode(
                   token=IDENTIFIER(w)
                 )
               )
             )
           ),
-          EmptyStatementNode()
+          EmptyStmtNode()
         ]
       )
     )

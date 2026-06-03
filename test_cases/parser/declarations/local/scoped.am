@@ -5,7 +5,7 @@ ModuleNode(
   decls=[
     VisibilityNode(
       visibility=local,
-      scope=ScopeResolutionExpressionNode(
+      scope=ScopeResolutionExprNode(
         scope=IdentifierNode(
           token=IDENTIFIER_NO_W(a)
         ),
@@ -13,7 +13,7 @@ ModuleNode(
           token=IDENTIFIER_NO_W(b)
         )
       ),
-      decl=ConstDeclarationNode(
+      decl=ConstDeclNode(
         target=IdentifierNode(
           token=IDENTIFIER(x)
         ),

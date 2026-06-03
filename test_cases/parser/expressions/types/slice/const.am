@@ -3,14 +3,14 @@ let x : &const [T]
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      type=RefExpressionNode(
+      type=RefExprNode(
         is_const=true,
         is_move=false,
-        expr=BracketExpressionNode(
+        expr=BracketExprNode(
           exprs=[
             IdentifierNode(
               token=IDENTIFIER_NO_W(T)

@@ -3,13 +3,13 @@ let example = { throw x }
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(example)
       ),
-      expr=BlockExpressionNode(
+      expr=BlockExprNode(
         stmts=[
-          ThrowStatementNode(
+          ThrowStmtNode(
             expr=IdentifierNode(
               token=IDENTIFIER(x)
             )

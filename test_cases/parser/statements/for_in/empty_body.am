@@ -5,13 +5,13 @@ let z = {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(z)
       ),
-      expr=BlockExpressionNode(
+      expr=BlockExprNode(
         stmts=[
-          ForInStatementNode(
+          ForInStmtNode(
             vars=[
               ForInVariableNode(
                 name=IdentifierNode(
@@ -22,7 +22,7 @@ ModuleNode(
             iterable=IdentifierNode(
               token=IDENTIFIER(y)
             ),
-            body=EmptyStatementNode()
+            body=EmptyStmtNode()
           )
         ]
       )

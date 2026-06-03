@@ -3,9 +3,9 @@ fun A::B::c() {}
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    FunctionDeclarationNode(
-      name=ScopeResolutionExpressionNode(
-        scope=ScopeResolutionExpressionNode(
+    FunctionDeclNode(
+      name=ScopeResolutionExprNode(
+        scope=ScopeResolutionExprNode(
           scope=IdentifierNode(
             token=IDENTIFIER(A)
           ),

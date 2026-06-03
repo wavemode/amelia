@@ -3,12 +3,12 @@ let x = async fun() {}
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expr=AsyncExpressionNode(
-        expr=FunctionExpressionNode(
+      expr=AsyncExprNode(
+        expr=FunctionExprNode(
           signature=FunctionSignatureNode(),
           body=FunctionBodyNode(
             is_default=false,

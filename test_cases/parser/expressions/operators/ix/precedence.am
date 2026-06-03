@@ -3,12 +3,12 @@ let x = !y[z]
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expr=NotExpressionNode(
-        expr=IndexingExpressionNode(
+      expr=NotExprNode(
+        expr=IndexingExprNode(
           object=IdentifierNode(
             token=IDENTIFIER_NO_W(y)
           ),

@@ -5,16 +5,16 @@ let example = {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(example)
       ),
-      expr=BlockExpressionNode(
+      expr=BlockExprNode(
         stmts=[
-          ReturnStatementNode(),
-          EmptyStatementNode(),
-          ExpressionStatementNode(
-            expr=FunctionCallExpressionNode(
+          ReturnStmtNode(),
+          EmptyStmtNode(),
+          ExprStmtNode(
+            expr=FunctionCallExprNode(
               callee=IdentifierNode(
                 token=IDENTIFIER(f)
               )

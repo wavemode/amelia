@@ -3,11 +3,11 @@ let x = with(a = b, c) d
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expr=WithExpressionNode(
+      expr=WithExprNode(
         args=[
           FunctionArgumentNode(
             name=IdentifierNode(

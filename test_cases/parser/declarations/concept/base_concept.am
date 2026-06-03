@@ -3,7 +3,7 @@ concept A : B {}
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ConceptDeclarationNode(
+    ConceptDeclNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),

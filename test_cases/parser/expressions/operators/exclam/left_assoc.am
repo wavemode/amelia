@@ -3,12 +3,12 @@ let w = x!!
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(w)
       ),
-      expr=ExclamationMarkExpressionNode(
-        expr=ExclamationMarkExpressionNode(
+      expr=ExclamationMarkExprNode(
+        expr=ExclamationMarkExprNode(
           expr=IdentifierNode(
             token=IDENTIFIER(x)
           )

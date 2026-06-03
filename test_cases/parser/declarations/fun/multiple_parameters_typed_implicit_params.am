@@ -3,7 +3,7 @@ fun f(x : int, y : float) with (a : long, b : short) {}
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    FunctionDeclarationNode(
+    FunctionDeclNode(
       name=IdentifierNode(
         token=IDENTIFIER(f)
       ),

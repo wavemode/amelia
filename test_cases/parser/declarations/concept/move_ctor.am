@@ -5,13 +5,13 @@ concept A {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ConceptDeclarationNode(
+    ConceptDeclNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),
       body=ClassBodyNode(
         decls=[
-          ClassMoveDeclarationNode(
+          ClassMoveDeclNode(
             decl=ClassConstructorNode(
               name=IdentifierNode(
                 token=KEYWORD_THIS_TYPE(This)

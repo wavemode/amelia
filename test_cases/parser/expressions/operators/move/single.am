@@ -3,11 +3,11 @@ let x = move y
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expr=MoveExpressionNode(
+      expr=MoveExprNode(
         expr=IdentifierNode(
           token=IDENTIFIER(y)
         )

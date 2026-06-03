@@ -1,0 +1,39 @@
+record class A (
+  const a: int,
+  const float
+)
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    RecordDeclNode(
+      decl=ClassDeclNode(
+        name=IdentifierNode(
+          token=IDENTIFIER(A)
+        ),
+        header_decls=ClassHeaderDeclsNode(
+          decls=[
+            ClassHeaderConstDeclNode(
+              decl=ClassHeaderFieldDeclNode(
+                name=IdentifierNode(
+                  token=IDENTIFIER(a)
+                ),
+                type=PrimitiveTypeNode(
+                  token=KEYWORD_INT(int)
+                )
+              )
+            ),
+            ClassHeaderConstDeclNode(
+              decl=ClassHeaderFieldDeclNode(
+                type=PrimitiveTypeNode(
+                  token=KEYWORD_FLOAT(float)
+                )
+              )
+            )
+          ]
+        )
+      )
+    )
+  ]
+)
+*/

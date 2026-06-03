@@ -3,13 +3,13 @@ let x : impl T::U[V]
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      type=ImplTypeExpressionNode(
-        type=IndexingExpressionNode(
-          object=ScopeResolutionExpressionNode(
+      type=ImplTypeExprNode(
+        type=IndexingExprNode(
+          object=ScopeResolutionExprNode(
             scope=IdentifierNode(
               token=IDENTIFIER(T)
             ),

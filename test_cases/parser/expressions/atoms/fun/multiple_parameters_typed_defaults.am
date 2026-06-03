@@ -3,11 +3,11 @@ let f = fun (x : int = 4, y : float = 10.0) {}
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(f)
       ),
-      expr=FunctionExpressionNode(
+      expr=FunctionExprNode(
         signature=FunctionSignatureNode(
           parameters=[
             FunctionParameterNode(

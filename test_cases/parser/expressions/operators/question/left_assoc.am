@@ -3,12 +3,12 @@ let w = x??
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(w)
       ),
-      expr=QuestionMarkExpressionNode(
-        expr=QuestionMarkExpressionNode(
+      expr=QuestionMarkExprNode(
+        expr=QuestionMarkExprNode(
           expr=IdentifierNode(
             token=IDENTIFIER(x)
           )

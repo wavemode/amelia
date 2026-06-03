@@ -3,12 +3,12 @@ let x = ... y*z
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expr=MultiplyExpressionNode(
-        left=EllipsisExpressionNode(
+      expr=MultiplyExprNode(
+        left=EllipsisExprNode(
           expr=IdentifierNode(
             token=IDENTIFIER(y)
           )

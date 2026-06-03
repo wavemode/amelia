@@ -8,28 +8,28 @@ class A {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ClassDeclarationNode(
+    ClassDeclNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),
       body=ClassBodyNode(
         decls=[
-          OverrideDeclarationNode(
-            decl=FunctionDeclarationNode(
+          OverrideDeclNode(
+            decl=FunctionDeclNode(
               name=IdentifierNode(
                 token=IDENTIFIER(say_age)
               ),
               signature=FunctionSignatureNode(),
               body=FunctionBodyNode(
                 stmts=[
-                  ExpressionStatementNode(
-                    expr=FunctionCallExpressionNode(
+                  ExprStmtNode(
+                    expr=FunctionCallExprNode(
                       callee=IdentifierNode(
                         token=IDENTIFIER(println)
                       ),
                       args=[
                         FunctionArgumentNode(
-                          expr=FieldAccessExpressionNode(
+                          expr=FieldAccessExprNode(
                             object=ThisLiteralNode(),
                             field=IdentifierNode(
                               token=IDENTIFIER_NO_W(age)

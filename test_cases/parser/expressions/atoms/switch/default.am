@@ -7,11 +7,11 @@ let x = switch(y) {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expr=SwitchExpressionNode(
+      expr=SwitchExprNode(
         expr=IdentifierNode(
           token=IDENTIFIER_NO_W(y)
         ),

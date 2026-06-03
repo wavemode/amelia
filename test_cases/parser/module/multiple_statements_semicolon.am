@@ -3,10 +3,10 @@
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    EmptyStatementNode(),
-    EmptyStatementNode(),
-    EmptyStatementNode(),
-    LetDeclarationNode(
+    EmptyStmtNode(),
+    EmptyStmtNode(),
+    EmptyStmtNode(),
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
@@ -14,8 +14,8 @@ ModuleNode(
         token=IDENTIFIER(y)
       )
     ),
-    EmptyStatementNode(),
-    ConstDeclarationNode(
+    EmptyStmtNode(),
+    ConstDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(a)
       ),
@@ -23,9 +23,9 @@ ModuleNode(
         token=IDENTIFIER(b)
       )
     ),
-    EmptyStatementNode(),
-    EmptyStatementNode(),
-    EmptyStatementNode()
+    EmptyStmtNode(),
+    EmptyStmtNode(),
+    EmptyStmtNode()
   ]
 )
 */

@@ -3,12 +3,12 @@ let x : any T[U]
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      type=AnyTypeExpressionNode(
-        type=IndexingExpressionNode(
+      type=AnyTypeExprNode(
+        type=IndexingExprNode(
           object=IdentifierNode(
             token=IDENTIFIER(T)
           ),

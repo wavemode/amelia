@@ -3,15 +3,15 @@ let w = x || y && z
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(w)
       ),
-      expr=OrExpressionNode(
+      expr=OrExprNode(
         left=IdentifierNode(
           token=IDENTIFIER(x)
         ),
-        right=AndExpressionNode(
+        right=AndExprNode(
           left=IdentifierNode(
             token=IDENTIFIER(y)
           ),

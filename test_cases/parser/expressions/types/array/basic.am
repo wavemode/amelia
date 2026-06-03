@@ -3,11 +3,11 @@ let x : [int, 4]
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      type=BracketExpressionNode(
+      type=BracketExprNode(
         exprs=[
           PrimitiveTypeNode(
             token=KEYWORD_INT(int)

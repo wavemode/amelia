@@ -3,12 +3,12 @@ let x = ... ...y
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expr=EllipsisExpressionNode(
-        expr=EllipsisExpressionNode(
+      expr=EllipsisExprNode(
+        expr=EllipsisExprNode(
           expr=IdentifierNode(
             token=IDENTIFIER_NO_W(y)
           )

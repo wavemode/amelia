@@ -5,13 +5,13 @@ let z = {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(z)
       ),
-      expr=BlockExpressionNode(
+      expr=BlockExprNode(
         stmts=[
-          ForInStatementNode(
+          ForInStmtNode(
             vars=[
               ForInVariableNode(
                 name=IdentifierNode(
@@ -27,15 +27,15 @@ ModuleNode(
             iterable=IdentifierNode(
               token=IDENTIFIER(z)
             ),
-            body=ExpressionStatementNode(
-              expr=FunctionCallExpressionNode(
+            body=ExprStmtNode(
+              expr=FunctionCallExprNode(
                 callee=IdentifierNode(
                   token=IDENTIFIER(w)
                 )
               )
             )
           ),
-          EmptyStatementNode()
+          EmptyStmtNode()
         ]
       )
     )

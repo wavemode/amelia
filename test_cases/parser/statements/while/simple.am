@@ -5,17 +5,17 @@ let example = {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(example)
       ),
-      expr=BlockExpressionNode(
+      expr=BlockExprNode(
         stmts=[
-          WhileStatementNode(
+          WhileStmtNode(
             condition=IdentifierNode(
               token=IDENTIFIER_NO_W(x)
             ),
-            body=ExpressionStatementNode(
+            body=ExprStmtNode(
               expr=IdentifierNode(
                 token=IDENTIFIER(z)
               )

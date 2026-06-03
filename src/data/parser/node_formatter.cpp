@@ -23,18 +23,18 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_token_field(out, "token", n.token);
     break;
   }
-  case NodeType::EmptyStatementNode: {
+  case NodeType::EmptyStmtNode: {
     break;
   }
-  case NodeType::LetDeclarationNode: {
-    const auto &n = node.as_LetDeclarationNode();
+  case NodeType::LetDeclNode: {
+    const auto &n = node.as_LetDeclNode();
     print_node_field(out, "target", n.target);
     print_node_field(out, "type", n.type);
     print_node_field(out, "expr", n.expr);
     break;
   }
-  case NodeType::ConstDeclarationNode: {
-    const auto &n = node.as_ConstDeclarationNode();
+  case NodeType::ConstDeclNode: {
+    const auto &n = node.as_ConstDeclNode();
     print_node_field(out, "target", n.target);
     print_node_field(out, "type", n.type);
     print_node_field(out, "expr", n.expr);
@@ -61,8 +61,8 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_token_field(out, "lit", n.lit);
     break;
   }
-  case NodeType::ParenthesizedExpressionNode: {
-    const auto &n = node.as_ParenthesizedExpressionNode();
+  case NodeType::ParenthesizedExprNode: {
+    const auto &n = node.as_ParenthesizedExprNode();
     print_node_field(out, "exprs", n.exprs);
     break;
   }
@@ -71,18 +71,18 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "decls", n.decls);
     break;
   }
-  case NodeType::BracketExpressionNode: {
-    const auto &n = node.as_BracketExpressionNode();
+  case NodeType::BracketExprNode: {
+    const auto &n = node.as_BracketExprNode();
     print_node_field(out, "exprs", n.exprs);
     break;
   }
-  case NodeType::BlockExpressionNode: {
-    const auto &n = node.as_BlockExpressionNode();
+  case NodeType::BlockExprNode: {
+    const auto &n = node.as_BlockExprNode();
     print_node_field(out, "stmts", n.stmts);
     break;
   }
-  case NodeType::WithExpressionNode: {
-    const auto &n = node.as_WithExpressionNode();
+  case NodeType::WithExprNode: {
+    const auto &n = node.as_WithExprNode();
     print_node_field(out, "args", n.args);
     print_node_field(out, "body", n.body);
     break;
@@ -103,21 +103,21 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "value", n.value);
     break;
   }
-  case NodeType::ExpressionStatementNode: {
-    const auto &n = node.as_ExpressionStatementNode();
+  case NodeType::ExprStmtNode: {
+    const auto &n = node.as_ExprStmtNode();
     print_node_field(out, "expr", n.expr);
     break;
   }
-  case NodeType::IfStatementNode: {
-    const auto &n = node.as_IfStatementNode();
+  case NodeType::IfStmtNode: {
+    const auto &n = node.as_IfStmtNode();
     print_node_field(out, "introductory_decls", n.introductory_decls);
     print_node_field(out, "condition", n.condition);
     print_node_field(out, "then_branch", n.then_branch);
     print_node_field(out, "else_branch", n.else_branch);
     break;
   }
-  case NodeType::IfExpressionNode: {
-    const auto &n = node.as_IfExpressionNode();
+  case NodeType::IfExprNode: {
+    const auto &n = node.as_IfExprNode();
     print_node_field(out, "introductory_decls", n.introductory_decls);
     print_node_field(out, "condition", n.condition);
     print_node_field(out, "then_branch", n.then_branch);
@@ -131,15 +131,15 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "body", n.body);
     break;
   }
-  case NodeType::TryExpressionNode: {
-    const auto &n = node.as_TryExpressionNode();
+  case NodeType::TryExprNode: {
+    const auto &n = node.as_TryExprNode();
     print_node_field(out, "try_block", n.try_block);
     print_node_field(out, "catch_clauses", n.catch_clauses);
     print_node_field(out, "else_branch", n.else_branch);
     break;
   }
-  case NodeType::TryStatementNode: {
-    const auto &n = node.as_TryStatementNode();
+  case NodeType::TryStmtNode: {
+    const auto &n = node.as_TryStmtNode();
     print_node_field(out, "try_block", n.try_block);
     print_node_field(out, "catch_clauses", n.catch_clauses);
     print_node_field(out, "else_branch", n.else_branch);
@@ -164,187 +164,187 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "condition", n.condition);
     break;
   }
-  case NodeType::SwitchExpressionNode: {
-    const auto &n = node.as_SwitchExpressionNode();
+  case NodeType::SwitchExprNode: {
+    const auto &n = node.as_SwitchExprNode();
     print_node_field(out, "introductory_decls", n.introductory_decls);
     print_node_field(out, "expr", n.expr);
     print_node_field(out, "clauses", n.clauses);
     print_node_field(out, "default_body", n.default_body);
     break;
   }
-  case NodeType::SwitchStatementNode: {
-    const auto &n = node.as_SwitchStatementNode();
+  case NodeType::SwitchStmtNode: {
+    const auto &n = node.as_SwitchStmtNode();
     print_node_field(out, "introductory_decls", n.introductory_decls);
     print_node_field(out, "expr", n.expr);
     print_node_field(out, "clauses", n.clauses);
     print_node_field(out, "default_body", n.default_body);
     break;
   }
-  case NodeType::OrExpressionNode: {
-    const auto &n = node.as_OrExpressionNode();
+  case NodeType::OrExprNode: {
+    const auto &n = node.as_OrExprNode();
     print_node_field(out, "left", n.left);
     print_node_field(out, "right", n.right);
     break;
   }
-  case NodeType::AndExpressionNode: {
-    const auto &n = node.as_AndExpressionNode();
+  case NodeType::AndExprNode: {
+    const auto &n = node.as_AndExprNode();
     print_node_field(out, "left", n.left);
     print_node_field(out, "right", n.right);
     break;
   }
-  case NodeType::BitwiseOrExpressionNode: {
-    const auto &n = node.as_BitwiseOrExpressionNode();
+  case NodeType::BitwiseOrExprNode: {
+    const auto &n = node.as_BitwiseOrExprNode();
     print_node_field(out, "left", n.left);
     print_node_field(out, "right", n.right);
     break;
   }
-  case NodeType::BitwiseXorExpressionNode: {
-    const auto &n = node.as_BitwiseXorExpressionNode();
+  case NodeType::BitwiseXorExprNode: {
+    const auto &n = node.as_BitwiseXorExprNode();
     print_node_field(out, "left", n.left);
     print_node_field(out, "right", n.right);
     break;
   }
-  case NodeType::BitwiseAndExpressionNode: {
-    const auto &n = node.as_BitwiseAndExpressionNode();
+  case NodeType::BitwiseAndExprNode: {
+    const auto &n = node.as_BitwiseAndExprNode();
     print_node_field(out, "left", n.left);
     print_node_field(out, "right", n.right);
     break;
   }
-  case NodeType::EqualsExpressionNode: {
-    const auto &n = node.as_EqualsExpressionNode();
+  case NodeType::EqualsExprNode: {
+    const auto &n = node.as_EqualsExprNode();
     print_node_field(out, "left", n.left);
     print_node_field(out, "right", n.right);
     break;
   }
-  case NodeType::NotEqualsExpressionNode: {
-    const auto &n = node.as_NotEqualsExpressionNode();
+  case NodeType::NotEqualsExprNode: {
+    const auto &n = node.as_NotEqualsExprNode();
     print_node_field(out, "left", n.left);
     print_node_field(out, "right", n.right);
     break;
   }
-  case NodeType::GreaterEqualsExpressionNode: {
-    const auto &n = node.as_GreaterEqualsExpressionNode();
+  case NodeType::GreaterEqualsExprNode: {
+    const auto &n = node.as_GreaterEqualsExprNode();
     print_node_field(out, "left", n.left);
     print_node_field(out, "right", n.right);
     break;
   }
-  case NodeType::LessEqualsExpressionNode: {
-    const auto &n = node.as_LessEqualsExpressionNode();
+  case NodeType::LessEqualsExprNode: {
+    const auto &n = node.as_LessEqualsExprNode();
     print_node_field(out, "left", n.left);
     print_node_field(out, "right", n.right);
     break;
   }
-  case NodeType::GreaterExpressionNode: {
-    const auto &n = node.as_GreaterExpressionNode();
+  case NodeType::GreaterExprNode: {
+    const auto &n = node.as_GreaterExprNode();
     print_node_field(out, "left", n.left);
     print_node_field(out, "right", n.right);
     break;
   }
-  case NodeType::LessExpressionNode: {
-    const auto &n = node.as_LessExpressionNode();
+  case NodeType::LessExprNode: {
+    const auto &n = node.as_LessExprNode();
     print_node_field(out, "left", n.left);
     print_node_field(out, "right", n.right);
     break;
   }
-  case NodeType::LeftShiftExpressionNode: {
-    const auto &n = node.as_LeftShiftExpressionNode();
+  case NodeType::LeftShiftExprNode: {
+    const auto &n = node.as_LeftShiftExprNode();
     print_node_field(out, "left", n.left);
     print_node_field(out, "right", n.right);
     break;
   }
-  case NodeType::RightShiftExpressionNode: {
-    const auto &n = node.as_RightShiftExpressionNode();
+  case NodeType::RightShiftExprNode: {
+    const auto &n = node.as_RightShiftExprNode();
     print_node_field(out, "left", n.left);
     print_node_field(out, "right", n.right);
     break;
   }
-  case NodeType::AddExpressionNode: {
-    const auto &n = node.as_AddExpressionNode();
+  case NodeType::AddExprNode: {
+    const auto &n = node.as_AddExprNode();
     print_node_field(out, "left", n.left);
     print_node_field(out, "right", n.right);
     break;
   }
-  case NodeType::SubtractExpressionNode: {
-    const auto &n = node.as_SubtractExpressionNode();
+  case NodeType::SubtractExprNode: {
+    const auto &n = node.as_SubtractExprNode();
     print_node_field(out, "left", n.left);
     print_node_field(out, "right", n.right);
     break;
   }
-  case NodeType::MultiplyExpressionNode: {
-    const auto &n = node.as_MultiplyExpressionNode();
+  case NodeType::MultiplyExprNode: {
+    const auto &n = node.as_MultiplyExprNode();
     print_node_field(out, "left", n.left);
     print_node_field(out, "right", n.right);
     break;
   }
-  case NodeType::DivideExpressionNode: {
-    const auto &n = node.as_DivideExpressionNode();
+  case NodeType::DivideExprNode: {
+    const auto &n = node.as_DivideExprNode();
     print_node_field(out, "left", n.left);
     print_node_field(out, "right", n.right);
     break;
   }
-  case NodeType::ModuloExpressionNode: {
-    const auto &n = node.as_ModuloExpressionNode();
+  case NodeType::ModuloExprNode: {
+    const auto &n = node.as_ModuloExprNode();
     print_node_field(out, "left", n.left);
     print_node_field(out, "right", n.right);
     break;
   }
-  case NodeType::RefExpressionNode: {
-    const auto &n = node.as_RefExpressionNode();
+  case NodeType::RefExprNode: {
+    const auto &n = node.as_RefExprNode();
     print_field(out, "is_const", n.is_const);
     print_field(out, "is_move", n.is_move);
     print_node_field(out, "expr", n.expr);
     break;
   }
-  case NodeType::AwaitExpressionNode: {
-    const auto &n = node.as_AwaitExpressionNode();
+  case NodeType::AwaitExprNode: {
+    const auto &n = node.as_AwaitExprNode();
     print_node_field(out, "expr", n.expr);
     break;
   }
-  case NodeType::NotExpressionNode: {
-    const auto &n = node.as_NotExpressionNode();
+  case NodeType::NotExprNode: {
+    const auto &n = node.as_NotExprNode();
     print_node_field(out, "expr", n.expr);
     break;
   }
-  case NodeType::BitwiseNotExpressionNode: {
-    const auto &n = node.as_BitwiseNotExpressionNode();
+  case NodeType::BitwiseNotExprNode: {
+    const auto &n = node.as_BitwiseNotExprNode();
     print_node_field(out, "expr", n.expr);
     break;
   }
-  case NodeType::DerefExpressionNode: {
-    const auto &n = node.as_DerefExpressionNode();
+  case NodeType::DerefExprNode: {
+    const auto &n = node.as_DerefExprNode();
     print_field(out, "is_const", n.is_const);
     print_node_field(out, "expr", n.expr);
     break;
   }
-  case NodeType::PositiveExpressionNode: {
-    const auto &n = node.as_PositiveExpressionNode();
+  case NodeType::PositiveExprNode: {
+    const auto &n = node.as_PositiveExprNode();
     print_node_field(out, "expr", n.expr);
     break;
   }
-  case NodeType::NegativeExpressionNode: {
-    const auto &n = node.as_NegativeExpressionNode();
+  case NodeType::NegativeExprNode: {
+    const auto &n = node.as_NegativeExprNode();
     print_node_field(out, "expr", n.expr);
     break;
   }
-  case NodeType::EllipsisExpressionNode: {
-    const auto &n = node.as_EllipsisExpressionNode();
+  case NodeType::EllipsisExprNode: {
+    const auto &n = node.as_EllipsisExprNode();
     print_node_field(out, "expr", n.expr);
     break;
   }
-  case NodeType::FieldAccessExpressionNode: {
-    const auto &n = node.as_FieldAccessExpressionNode();
+  case NodeType::FieldAccessExprNode: {
+    const auto &n = node.as_FieldAccessExprNode();
     print_node_field(out, "object", n.object);
     print_node_field(out, "field", n.field);
     break;
   }
-  case NodeType::NumericFieldAccessExpressionNode: {
-    const auto &n = node.as_NumericFieldAccessExpressionNode();
+  case NodeType::NumericFieldAccessExprNode: {
+    const auto &n = node.as_NumericFieldAccessExprNode();
     print_node_field(out, "object", n.object);
     print_token_field(out, "lit", n.lit);
     break;
   }
-  case NodeType::IndexingExpressionNode: {
-    const auto &n = node.as_IndexingExpressionNode();
+  case NodeType::IndexingExprNode: {
+    const auto &n = node.as_IndexingExprNode();
     print_node_field(out, "object", n.object);
     print_node_field(out, "indices", n.indices);
     break;
@@ -361,45 +361,45 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "expr", n.expr);
     break;
   }
-  case NodeType::FunctionCallExpressionNode: {
-    const auto &n = node.as_FunctionCallExpressionNode();
+  case NodeType::FunctionCallExprNode: {
+    const auto &n = node.as_FunctionCallExprNode();
     print_node_field(out, "callee", n.callee);
     print_node_field(out, "args", n.args);
     break;
   }
-  case NodeType::ScopeResolutionExpressionNode: {
-    const auto &n = node.as_ScopeResolutionExpressionNode();
+  case NodeType::ScopeResolutionExprNode: {
+    const auto &n = node.as_ScopeResolutionExprNode();
     print_node_field(out, "scope", n.scope);
     print_node_field(out, "name", n.name);
     break;
   }
-  case NodeType::PreIncrementStatementNode: {
-    const auto &n = node.as_PreIncrementStatementNode();
+  case NodeType::PreIncrementStmtNode: {
+    const auto &n = node.as_PreIncrementStmtNode();
     print_node_field(out, "target", n.target);
     break;
   }
-  case NodeType::PostIncrementStatementNode: {
-    const auto &n = node.as_PostIncrementStatementNode();
+  case NodeType::PostIncrementStmtNode: {
+    const auto &n = node.as_PostIncrementStmtNode();
     print_node_field(out, "target", n.target);
     break;
   }
-  case NodeType::PreDecrementStatementNode: {
-    const auto &n = node.as_PreDecrementStatementNode();
+  case NodeType::PreDecrementStmtNode: {
+    const auto &n = node.as_PreDecrementStmtNode();
     print_node_field(out, "target", n.target);
     break;
   }
-  case NodeType::PostDecrementStatementNode: {
-    const auto &n = node.as_PostDecrementStatementNode();
+  case NodeType::PostDecrementStmtNode: {
+    const auto &n = node.as_PostDecrementStmtNode();
     print_node_field(out, "target", n.target);
     break;
   }
-  case NodeType::BlockStatementNode: {
-    const auto &n = node.as_BlockStatementNode();
+  case NodeType::BlockStmtNode: {
+    const auto &n = node.as_BlockStmtNode();
     print_node_field(out, "stmts", n.stmts);
     break;
   }
-  case NodeType::ThrowStatementNode: {
-    const auto &n = node.as_ThrowStatementNode();
+  case NodeType::ThrowStmtNode: {
+    const auto &n = node.as_ThrowStmtNode();
     print_node_field(out, "expr", n.expr);
     break;
   }
@@ -521,81 +521,81 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "op", n.op);
     break;
   }
-  case NodeType::OperatorFunctionDeclarationNode: {
-    const auto &n = node.as_OperatorFunctionDeclarationNode();
+  case NodeType::OperatorFunctionDeclNode: {
+    const auto &n = node.as_OperatorFunctionDeclNode();
     print_node_field(out, "operator_ident", n.operator_ident);
     print_node_field(out, "signature", n.signature);
     print_node_field(out, "body", n.body);
     break;
   }
-  case NodeType::AssignmentStatementNode: {
-    const auto &n = node.as_AssignmentStatementNode();
+  case NodeType::AssignmentStmtNode: {
+    const auto &n = node.as_AssignmentStmtNode();
     print_node_field(out, "target", n.target);
     print_node_field(out, "expr", n.expr);
     break;
   }
-  case NodeType::AddAssignStatementNode: {
-    const auto &n = node.as_AddAssignStatementNode();
+  case NodeType::AddAssignStmtNode: {
+    const auto &n = node.as_AddAssignStmtNode();
     print_node_field(out, "target", n.target);
     print_node_field(out, "expr", n.expr);
     break;
   }
-  case NodeType::SubAssignStatementNode: {
-    const auto &n = node.as_SubAssignStatementNode();
+  case NodeType::SubAssignStmtNode: {
+    const auto &n = node.as_SubAssignStmtNode();
     print_node_field(out, "target", n.target);
     print_node_field(out, "expr", n.expr);
     break;
   }
-  case NodeType::MulAssignStatementNode: {
-    const auto &n = node.as_MulAssignStatementNode();
+  case NodeType::MulAssignStmtNode: {
+    const auto &n = node.as_MulAssignStmtNode();
     print_node_field(out, "target", n.target);
     print_node_field(out, "expr", n.expr);
     break;
   }
-  case NodeType::DivAssignStatementNode: {
-    const auto &n = node.as_DivAssignStatementNode();
+  case NodeType::DivAssignStmtNode: {
+    const auto &n = node.as_DivAssignStmtNode();
     print_node_field(out, "target", n.target);
     print_node_field(out, "expr", n.expr);
     break;
   }
-  case NodeType::ModAssignStatementNode: {
-    const auto &n = node.as_ModAssignStatementNode();
+  case NodeType::ModAssignStmtNode: {
+    const auto &n = node.as_ModAssignStmtNode();
     print_node_field(out, "target", n.target);
     print_node_field(out, "expr", n.expr);
     break;
   }
-  case NodeType::LeftShiftAssignStatementNode: {
-    const auto &n = node.as_LeftShiftAssignStatementNode();
+  case NodeType::LeftShiftAssignStmtNode: {
+    const auto &n = node.as_LeftShiftAssignStmtNode();
     print_node_field(out, "target", n.target);
     print_node_field(out, "expr", n.expr);
     break;
   }
-  case NodeType::RightShiftAssignStatementNode: {
-    const auto &n = node.as_RightShiftAssignStatementNode();
+  case NodeType::RightShiftAssignStmtNode: {
+    const auto &n = node.as_RightShiftAssignStmtNode();
     print_node_field(out, "target", n.target);
     print_node_field(out, "expr", n.expr);
     break;
   }
-  case NodeType::BitwiseAndAssignStatementNode: {
-    const auto &n = node.as_BitwiseAndAssignStatementNode();
+  case NodeType::BitwiseAndAssignStmtNode: {
+    const auto &n = node.as_BitwiseAndAssignStmtNode();
     print_node_field(out, "target", n.target);
     print_node_field(out, "expr", n.expr);
     break;
   }
-  case NodeType::BitwiseOrAssignStatementNode: {
-    const auto &n = node.as_BitwiseOrAssignStatementNode();
+  case NodeType::BitwiseOrAssignStmtNode: {
+    const auto &n = node.as_BitwiseOrAssignStmtNode();
     print_node_field(out, "target", n.target);
     print_node_field(out, "expr", n.expr);
     break;
   }
-  case NodeType::BitwiseXorAssignStatementNode: {
-    const auto &n = node.as_BitwiseXorAssignStatementNode();
+  case NodeType::BitwiseXorAssignStmtNode: {
+    const auto &n = node.as_BitwiseXorAssignStmtNode();
     print_node_field(out, "target", n.target);
     print_node_field(out, "expr", n.expr);
     break;
   }
-  case NodeType::ForInStatementNode: {
-    const auto &n = node.as_ForInStatementNode();
+  case NodeType::ForInStmtNode: {
+    const auto &n = node.as_ForInStmtNode();
     print_node_field(out, "introductory_decls", n.introductory_decls);
     print_node_field(out, "vars", n.vars);
     print_node_field(out, "iterable", n.iterable);
@@ -608,28 +608,28 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "type", n.type);
     break;
   }
-  case NodeType::WhileStatementNode: {
-    const auto &n = node.as_WhileStatementNode();
+  case NodeType::WhileStmtNode: {
+    const auto &n = node.as_WhileStmtNode();
     print_node_field(out, "introductory_decls", n.introductory_decls);
     print_node_field(out, "condition", n.condition);
     print_node_field(out, "body", n.body);
     break;
   }
-  case NodeType::LabelStatementNode: {
-    const auto &n = node.as_LabelStatementNode();
+  case NodeType::LabelStmtNode: {
+    const auto &n = node.as_LabelStmtNode();
     print_node_field(out, "label", n.label);
     break;
   }
-  case NodeType::GotoStatementNode: {
-    const auto &n = node.as_GotoStatementNode();
+  case NodeType::GotoStmtNode: {
+    const auto &n = node.as_GotoStmtNode();
     print_node_field(out, "label", n.label);
     break;
   }
-  case NodeType::ContinueStatementNode: {
+  case NodeType::ContinueStmtNode: {
     break;
   }
-  case NodeType::ReturnStatementNode: {
-    const auto &n = node.as_ReturnStatementNode();
+  case NodeType::ReturnStmtNode: {
+    const auto &n = node.as_ReturnStmtNode();
     print_node_field(out, "expr", n.expr);
     break;
   }
@@ -686,49 +686,49 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "var", n.var);
     break;
   }
-  case NodeType::FunctionDeclarationNode: {
-    const auto &n = node.as_FunctionDeclarationNode();
+  case NodeType::FunctionDeclNode: {
+    const auto &n = node.as_FunctionDeclNode();
     print_node_field(out, "name", n.name);
     print_node_field(out, "signature", n.signature);
     print_node_field(out, "body", n.body);
     break;
   }
-  case NodeType::FunctionExpressionNode: {
-    const auto &n = node.as_FunctionExpressionNode();
+  case NodeType::FunctionExprNode: {
+    const auto &n = node.as_FunctionExprNode();
     print_node_field(out, "signature", n.signature);
     print_node_field(out, "body", n.body);
     break;
   }
-  case NodeType::LambdaExpressionNode: {
-    const auto &n = node.as_LambdaExpressionNode();
+  case NodeType::LambdaExprNode: {
+    const auto &n = node.as_LambdaExprNode();
     print_node_field(out, "parameters", n.parameters);
     print_node_field(out, "body", n.body);
     break;
   }
-  case NodeType::TypeDeclarationNode: {
-    const auto &n = node.as_TypeDeclarationNode();
+  case NodeType::TypeDeclNode: {
+    const auto &n = node.as_TypeDeclNode();
     print_node_field(out, "name", n.name);
     print_node_field(out, "generic_parameter_list", n.generic_parameter_list);
     print_node_field(out, "type_expr", n.type_expr);
     break;
   }
-  case NodeType::ClassStaticDeclarationNode: {
-    const auto &n = node.as_ClassStaticDeclarationNode();
+  case NodeType::ClassStaticDeclNode: {
+    const auto &n = node.as_ClassStaticDeclNode();
     print_node_field(out, "decl", n.decl);
     break;
   }
-  case NodeType::ClassConstDeclarationNode: {
-    const auto &n = node.as_ClassConstDeclarationNode();
+  case NodeType::ClassConstDeclNode: {
+    const auto &n = node.as_ClassConstDeclNode();
     print_node_field(out, "decl", n.decl);
     break;
   }
-  case NodeType::ClassCopyDeclarationNode: {
-    const auto &n = node.as_ClassCopyDeclarationNode();
+  case NodeType::ClassCopyDeclNode: {
+    const auto &n = node.as_ClassCopyDeclNode();
     print_node_field(out, "decl", n.decl);
     break;
   }
-  case NodeType::ClassMoveDeclarationNode: {
-    const auto &n = node.as_ClassMoveDeclarationNode();
+  case NodeType::ClassMoveDeclNode: {
+    const auto &n = node.as_ClassMoveDeclNode();
     print_node_field(out, "decl", n.decl);
     break;
   }
@@ -744,8 +744,8 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "base_classes", n.base_classes);
     break;
   }
-  case NodeType::ClassDeclarationNode: {
-    const auto &n = node.as_ClassDeclarationNode();
+  case NodeType::ClassDeclNode: {
+    const auto &n = node.as_ClassDeclNode();
     print_node_field(out, "name", n.name);
     print_node_field(out, "generic_parameter_list", n.generic_parameter_list);
     print_node_field(out, "base_class_list", n.base_class_list);
@@ -754,8 +754,8 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "body", n.body);
     break;
   }
-  case NodeType::ConceptDeclarationNode: {
-    const auto &n = node.as_ConceptDeclarationNode();
+  case NodeType::ConceptDeclNode: {
+    const auto &n = node.as_ConceptDeclNode();
     print_node_field(out, "name", n.name);
     print_node_field(out, "generic_parameter_list", n.generic_parameter_list);
     print_node_field(out, "base_concept_list", n.base_concept_list);
@@ -773,6 +773,18 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "decls", n.decls);
     break;
   }
+  case NodeType::ClassHeaderConstDeclNode: {
+    const auto &n = node.as_ClassHeaderConstDeclNode();
+    print_node_field(out, "decl", n.decl);
+    break;
+  }
+  case NodeType::ClassHeaderFieldDeclNode: {
+    const auto &n = node.as_ClassHeaderFieldDeclNode();
+    print_node_field(out, "name", n.name);
+    print_node_field(out, "type", n.type);
+    print_node_field(out, "default_value", n.default_value);
+    break;
+  }
   case NodeType::GenericParameterNode: {
     const auto &n = node.as_GenericParameterNode();
     print_field(out, "is_const", n.is_const);
@@ -787,18 +799,18 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "constraint", n.constraint);
     break;
   }
-  case NodeType::ImplTypeExpressionNode: {
-    const auto &n = node.as_ImplTypeExpressionNode();
+  case NodeType::ImplTypeExprNode: {
+    const auto &n = node.as_ImplTypeExprNode();
     print_node_field(out, "type", n.type);
     break;
   }
-  case NodeType::AnyTypeExpressionNode: {
-    const auto &n = node.as_AnyTypeExpressionNode();
+  case NodeType::AnyTypeExprNode: {
+    const auto &n = node.as_AnyTypeExprNode();
     print_node_field(out, "type", n.type);
     break;
   }
-  case NodeType::AsyncExpressionNode: {
-    const auto &n = node.as_AsyncExpressionNode();
+  case NodeType::AsyncExprNode: {
+    const auto &n = node.as_AsyncExprNode();
     print_node_field(out, "expr", n.expr);
     break;
   }
@@ -840,16 +852,16 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     const auto &n = node.as_VisibilityNode();
     Text visibility;
     switch (n.visibility) {
-    case DeclarationVisibility::Public:
+    case DeclVisibility::Public:
       visibility = "public";
       break;
-    case DeclarationVisibility::Private:
+    case DeclVisibility::Private:
       visibility = "private";
       break;
-    case DeclarationVisibility::Protected:
+    case DeclVisibility::Protected:
       visibility = "protected";
       break;
-    case DeclarationVisibility::Local:
+    case DeclVisibility::Local:
       visibility = "local";
       break;
     }
@@ -858,13 +870,13 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "decl", n.decl);
     break;
   }
-  case NodeType::CopyExpressionNode: {
-    const auto &n = node.as_CopyExpressionNode();
+  case NodeType::CopyExprNode: {
+    const auto &n = node.as_CopyExprNode();
     print_node_field(out, "expr", n.expr);
     break;
   }
-  case NodeType::MoveExpressionNode: {
-    const auto &n = node.as_MoveExpressionNode();
+  case NodeType::MoveExprNode: {
+    const auto &n = node.as_MoveExprNode();
     print_node_field(out, "expr", n.expr);
     break;
   }
@@ -874,23 +886,23 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   case NodeType::MoveCtorNameNode: {
     break;
   }
-  case NodeType::ImplicitDeclarationNode: {
-    const auto &n = node.as_ImplicitDeclarationNode();
+  case NodeType::ImplicitDeclNode: {
+    const auto &n = node.as_ImplicitDeclNode();
     print_node_field(out, "decl", n.decl);
     break;
   }
-  case NodeType::OpenDeclarationNode: {
-    const auto &n = node.as_OpenDeclarationNode();
+  case NodeType::OpenDeclNode: {
+    const auto &n = node.as_OpenDeclNode();
     print_node_field(out, "decl", n.decl);
     break;
   }
-  case NodeType::OverrideDeclarationNode: {
-    const auto &n = node.as_OverrideDeclarationNode();
+  case NodeType::OverrideDeclNode: {
+    const auto &n = node.as_OverrideDeclNode();
     print_node_field(out, "decl", n.decl);
     break;
   }
-  case NodeType::DefaultDeclarationNode: {
-    const auto &n = node.as_DefaultDeclarationNode();
+  case NodeType::DefaultDeclNode: {
+    const auto &n = node.as_DefaultDeclNode();
     print_node_field(out, "decl", n.decl);
     break;
   }
@@ -905,8 +917,8 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   case NodeType::AutoTypeNode: {
     break;
   }
-  case NodeType::ImportDeclarationNode: {
-    const auto &n = node.as_ImportDeclarationNode();
+  case NodeType::ImportDeclNode: {
+    const auto &n = node.as_ImportDeclNode();
     print_node_field(out, "path", n.path);
     print_node_field(out, "items", n.items);
     print_node_field(out, "alias", n.alias);
@@ -922,41 +934,41 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   case NodeType::ImportItemWildcardNode: {
     break;
   }
-  case NodeType::ModuleDeclarationNode: {
-    const auto &n = node.as_ModuleDeclarationNode();
+  case NodeType::ModuleDeclNode: {
+    const auto &n = node.as_ModuleDeclNode();
     print_node_field(out, "name", n.name);
     print_node_field(out, "decls", n.decls);
     break;
   }
-  case NodeType::AsyncDeclarationNode: {
-    const auto &n = node.as_AsyncDeclarationNode();
+  case NodeType::AsyncDeclNode: {
+    const auto &n = node.as_AsyncDeclNode();
     print_node_field(out, "decl", n.decl);
     break;
   }
-  case NodeType::ExternDeclarationNode: {
-    const auto &n = node.as_ExternDeclarationNode();
+  case NodeType::ExternDeclNode: {
+    const auto &n = node.as_ExternDeclNode();
     print_node_field(out, "decl", n.decl);
     break;
   }
-  case NodeType::ExportDeclarationNode: {
-    const auto &n = node.as_ExportDeclarationNode();
+  case NodeType::ExportDeclNode: {
+    const auto &n = node.as_ExportDeclNode();
     print_node_field(out, "decl", n.decl);
     break;
   }
-  case NodeType::RecordDeclarationNode: {
-    const auto &n = node.as_RecordDeclarationNode();
+  case NodeType::RecordDeclNode: {
+    const auto &n = node.as_RecordDeclNode();
     print_node_field(out, "decl", n.decl);
     break;
   }
-  case NodeType::UnionDeclarationNode: {
-    const auto &n = node.as_UnionDeclarationNode();
+  case NodeType::UnionDeclNode: {
+    const auto &n = node.as_UnionDeclNode();
     print_node_field(out, "name", n.name);
     print_node_field(out, "generic_parameter_list", n.generic_parameter_list);
     print_node_field(out, "body", n.body);
     break;
   }
-  case NodeType::EnumDeclarationNode: {
-    const auto &n = node.as_EnumDeclarationNode();
+  case NodeType::EnumDeclNode: {
+    const auto &n = node.as_EnumDeclNode();
     print_node_field(out, "name", n.name);
     print_node_field(out, "repr_type", n.repr_type);
     print_node_field(out, "base_type_list", n.base_type_list);
@@ -969,7 +981,7 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "value", n.value);
     break;
   }
-  case NodeType::BreakStatementNode: {
+  case NodeType::BreakStmtNode: {
     break;
   }
   case NodeType::AnnotationNode: {
@@ -979,33 +991,33 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "stmt", n.stmt);
     break;
   }
-  case NodeType::TypeOfExpressionNode: {
-    const auto &n = node.as_TypeOfExpressionNode();
+  case NodeType::TypeOfExprNode: {
+    const auto &n = node.as_TypeOfExprNode();
     print_node_field(out, "expr", n.expr);
     break;
   }
-  case NodeType::QuestionMarkExpressionNode: {
-    const auto &n = node.as_QuestionMarkExpressionNode();
+  case NodeType::QuestionMarkExprNode: {
+    const auto &n = node.as_QuestionMarkExprNode();
     print_node_field(out, "expr", n.expr);
     break;
   }
-  case NodeType::ExclamationMarkExpressionNode: {
-    const auto &n = node.as_ExclamationMarkExpressionNode();
+  case NodeType::ExclamationMarkExprNode: {
+    const auto &n = node.as_ExclamationMarkExprNode();
     print_node_field(out, "expr", n.expr);
     break;
   }
-  case NodeType::SealedDeclarationNode: {
-    const auto &n = node.as_SealedDeclarationNode();
+  case NodeType::SealedDeclNode: {
+    const auto &n = node.as_SealedDeclNode();
     print_node_field(out, "decl", n.decl);
     break;
   }
-  case NodeType::MutDeclarationNode: {
-    const auto &n = node.as_MutDeclarationNode();
+  case NodeType::MutDeclNode: {
+    const auto &n = node.as_MutDeclNode();
     print_node_field(out, "decl", n.decl);
     break;
   }
-  case NodeType::InlineDeclarationNode: {
-    const auto &n = node.as_InlineDeclarationNode();
+  case NodeType::InlineDeclNode: {
+    const auto &n = node.as_InlineDeclNode();
     print_node_field(out, "decl", n.decl);
     break;
   }

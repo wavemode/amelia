@@ -3,13 +3,13 @@ let x = {;}
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expr=BlockExpressionNode(
+      expr=BlockExprNode(
         stmts=[
-          EmptyStatementNode()
+          EmptyStmtNode()
         ]
       )
     )

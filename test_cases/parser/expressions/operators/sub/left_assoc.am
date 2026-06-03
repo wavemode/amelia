@@ -3,12 +3,12 @@ let w = x - y - z
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(w)
       ),
-      expr=SubtractExpressionNode(
-        left=SubtractExpressionNode(
+      expr=SubtractExprNode(
+        left=SubtractExprNode(
           left=IdentifierNode(
             token=IDENTIFIER(x)
           ),

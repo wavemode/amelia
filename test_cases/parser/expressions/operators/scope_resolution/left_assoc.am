@@ -3,12 +3,12 @@ let w = x::y::z
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(w)
       ),
-      expr=ScopeResolutionExpressionNode(
-        scope=ScopeResolutionExpressionNode(
+      expr=ScopeResolutionExprNode(
+        scope=ScopeResolutionExprNode(
           scope=IdentifierNode(
             token=IDENTIFIER(x)
           ),

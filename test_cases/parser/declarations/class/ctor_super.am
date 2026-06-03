@@ -11,7 +11,7 @@ class A : B {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ClassDeclarationNode(
+    ClassDeclNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),
@@ -31,8 +31,8 @@ ModuleNode(
             signature=FunctionSignatureNode(),
             body=FunctionBodyNode(
               stmts=[
-                ExpressionStatementNode(
-                  expr=FunctionCallExpressionNode(
+                ExprStmtNode(
+                  expr=FunctionCallExprNode(
                     callee=SuperLiteralNode()
                   )
                 )
@@ -60,9 +60,9 @@ ModuleNode(
             ),
             body=FunctionBodyNode(
               stmts=[
-                ExpressionStatementNode(
-                  expr=FunctionCallExpressionNode(
-                    callee=IndexingExpressionNode(
+                ExprStmtNode(
+                  expr=FunctionCallExprNode(
+                    callee=IndexingExprNode(
                       object=SuperLiteralNode(),
                       indices=[
                         IndexNode(

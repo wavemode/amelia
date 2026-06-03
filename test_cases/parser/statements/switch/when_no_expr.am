@@ -8,13 +8,13 @@ let example = {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(example)
       ),
-      expr=BlockExpressionNode(
+      expr=BlockExprNode(
         stmts=[
-          SwitchStatementNode(
+          SwitchStmtNode(
             expr=IdentifierNode(
               token=IDENTIFIER_NO_W(y)
             ),
@@ -27,7 +27,7 @@ ModuleNode(
                     )
                   ]
                 ),
-                body=PreIncrementStatementNode(
+                body=PreIncrementStmtNode(
                   target=IdentifierNode(
                     token=IDENTIFIER_NO_W(y)
                   )
@@ -36,8 +36,8 @@ ModuleNode(
               CaseClauseNode(
                 header=CaseClauseHeaderNode(
                   when_clause=WhenClauseNode(
-                    condition=AndExpressionNode(
-                      left=LessExpressionNode(
+                    condition=AndExprNode(
+                      left=LessExprNode(
                         left=IdentifierNode(
                           token=IDENTIFIER_NO_W(y)
                         ),
@@ -45,7 +45,7 @@ ModuleNode(
                           lit=NUMBER(10)
                         )
                       ),
-                      right=GreaterExpressionNode(
+                      right=GreaterExprNode(
                         left=IdentifierNode(
                           token=IDENTIFIER(y)
                         ),
@@ -56,7 +56,7 @@ ModuleNode(
                     )
                   )
                 ),
-                body=PreDecrementStatementNode(
+                body=PreDecrementStmtNode(
                   target=IdentifierNode(
                     token=IDENTIFIER_NO_W(y)
                   )

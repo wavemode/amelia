@@ -9,25 +9,25 @@ record class A (
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    RecordDeclarationNode(
-      decl=ClassDeclarationNode(
+    RecordDeclNode(
+      decl=ClassDeclNode(
         name=IdentifierNode(
           token=IDENTIFIER(A)
         ),
         header_decls=ClassHeaderDeclsNode(
           decls=[
-            ClassFieldNode(
+            ClassHeaderFieldDeclNode(
               name=IdentifierNode(
                 token=IDENTIFIER(a)
               ),
               type=PrimitiveTypeNode(
                 token=KEYWORD_INT(int)
               ),
-              initializer=NumberLiteralNode(
+              default_value=NumberLiteralNode(
                 lit=NUMBER(5)
               )
             ),
-            ClassFieldNode(
+            ClassHeaderFieldDeclNode(
               name=IdentifierNode(
                 token=IDENTIFIER(b)
               ),
@@ -35,7 +35,7 @@ ModuleNode(
                 token=KEYWORD_FLOAT(float)
               )
             ),
-            ClassFieldNode(
+            ClassHeaderFieldDeclNode(
               name=IdentifierNode(
                 token=IDENTIFIER(c)
               ),
@@ -47,13 +47,13 @@ ModuleNode(
         ),
         body=ClassBodyNode(
           decls=[
-            FunctionDeclarationNode(
+            FunctionDeclNode(
               name=IdentifierNode(
                 token=IDENTIFIER(d)
               ),
               signature=FunctionSignatureNode(),
               body=FunctionBodyNode(
-                expr=FunctionCallExpressionNode(
+                expr=FunctionCallExprNode(
                   callee=IdentifierNode(
                     token=IDENTIFIER(println)
                   ),

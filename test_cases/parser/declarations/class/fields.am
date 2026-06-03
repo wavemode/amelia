@@ -8,7 +8,7 @@ class A {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ClassDeclarationNode(
+    ClassDeclNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),
@@ -30,7 +30,7 @@ ModuleNode(
               token=IDENTIFIER(String)
             )
           ),
-          ClassStaticDeclarationNode(
+          ClassStaticDeclNode(
             decl=ClassFieldNode(
               name=IdentifierNode(
                 token=IDENTIFIER(c)
@@ -40,7 +40,7 @@ ModuleNode(
               )
             )
           ),
-          ClassConstDeclarationNode(
+          ClassConstDeclNode(
             decl=ClassFieldNode(
               name=IdentifierNode(
                 token=IDENTIFIER(d)

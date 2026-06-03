@@ -3,12 +3,12 @@ let w = x(y=5)(z)
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(w)
       ),
-      expr=FunctionCallExpressionNode(
-        callee=FunctionCallExpressionNode(
+      expr=FunctionCallExprNode(
+        callee=FunctionCallExprNode(
           callee=IdentifierNode(
             token=IDENTIFIER(x)
           ),

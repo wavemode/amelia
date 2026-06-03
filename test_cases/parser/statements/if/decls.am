@@ -14,15 +14,15 @@ let a = {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(a)
       ),
-      expr=BlockExpressionNode(
+      expr=BlockExprNode(
         stmts=[
-          IfStatementNode(
+          IfStmtNode(
             introductory_decls=[
-              TypeDeclarationNode(
+              TypeDeclNode(
                 name=IdentifierNode(
                   token=IDENTIFIER(T)
                 ),
@@ -30,7 +30,7 @@ ModuleNode(
                   token=KEYWORD_INT(int)
                 )
               ),
-              LetDeclarationNode(
+              LetDeclNode(
                 target=IdentifierNode(
                   token=IDENTIFIER(w)
                 ),
@@ -41,11 +41,11 @@ ModuleNode(
                   lit=NUMBER(10)
                 )
               ),
-              ConstDeclarationNode(
+              ConstDeclNode(
                 target=IdentifierNode(
                   token=IDENTIFIER(x)
                 ),
-                expr=AddExpressionNode(
+                expr=AddExprNode(
                   left=IdentifierNode(
                     token=IDENTIFIER(w)
                   ),
@@ -55,7 +55,7 @@ ModuleNode(
                 )
               )
             ],
-            condition=GreaterExpressionNode(
+            condition=GreaterExprNode(
               left=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -63,18 +63,18 @@ ModuleNode(
                 lit=NUMBER(10)
               )
             ),
-            then_branch=BlockStatementNode(
+            then_branch=BlockStmtNode(
               stmts=[
-                PreIncrementStatementNode(
+                PreIncrementStmtNode(
                   target=IdentifierNode(
                     token=IDENTIFIER_NO_W(y)
                   )
                 )
               ]
             ),
-            else_branch=BlockStatementNode(
+            else_branch=BlockStmtNode(
               stmts=[
-                PreIncrementStatementNode(
+                PreIncrementStmtNode(
                   target=IdentifierNode(
                     token=IDENTIFIER_NO_W(z)
                   )

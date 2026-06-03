@@ -3,7 +3,7 @@ fun f[T : !Movable]() {}
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    FunctionDeclarationNode(
+    FunctionDeclNode(
       name=IdentifierNode(
         token=IDENTIFIER(f)
       ),
@@ -15,7 +15,7 @@ ModuleNode(
               name=IdentifierNode(
                 token=IDENTIFIER_NO_W(T)
               ),
-              constraint=NotExpressionNode(
+              constraint=NotExprNode(
                 expr=IdentifierNode(
                   token=IDENTIFIER_NO_W(Movable)
                 )

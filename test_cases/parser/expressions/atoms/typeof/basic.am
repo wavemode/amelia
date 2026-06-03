@@ -3,12 +3,12 @@ let y : typeof(5 + 5) = 10
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(y)
       ),
-      type=TypeOfExpressionNode(
-        expr=AddExpressionNode(
+      type=TypeOfExprNode(
+        expr=AddExprNode(
           left=NumberLiteralNode(
             lit=NUMBER(5)
           ),

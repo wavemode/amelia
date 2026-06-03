@@ -3,7 +3,7 @@ type A[B = int] = C
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    TypeDeclarationNode(
+    TypeDeclNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),

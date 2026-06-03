@@ -3,11 +3,11 @@ let x = await y
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expr=AwaitExpressionNode(
+      expr=AwaitExprNode(
         expr=IdentifierNode(
           token=IDENTIFIER(y)
         )

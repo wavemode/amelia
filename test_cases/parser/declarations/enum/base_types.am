@@ -3,7 +3,7 @@ enum A : B, C {}
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    EnumDeclarationNode(
+    EnumDeclNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),

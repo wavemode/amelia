@@ -7,15 +7,15 @@ sealed class A {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    SealedDeclarationNode(
-      decl=ClassDeclarationNode(
+    SealedDeclNode(
+      decl=ClassDeclNode(
         name=IdentifierNode(
           token=IDENTIFIER(A)
         ),
         body=ClassBodyNode(
           decls=[
-            RecordDeclarationNode(
-              decl=ClassDeclarationNode(
+            RecordDeclNode(
+              decl=ClassDeclNode(
                 name=IdentifierNode(
                   token=IDENTIFIER(B)
                 ),
@@ -28,7 +28,7 @@ ModuleNode(
                 ),
                 header_decls=ClassHeaderDeclsNode(
                   decls=[
-                    ClassFieldNode(
+                    ClassHeaderFieldDeclNode(
                       name=IdentifierNode(
                         token=IDENTIFIER_NO_W(b)
                       ),
@@ -40,8 +40,8 @@ ModuleNode(
                 )
               )
             ),
-            RecordDeclarationNode(
-              decl=ClassDeclarationNode(
+            RecordDeclNode(
+              decl=ClassDeclNode(
                 name=IdentifierNode(
                   token=IDENTIFIER(C)
                 ),
@@ -54,7 +54,7 @@ ModuleNode(
                 ),
                 header_decls=ClassHeaderDeclsNode(
                   decls=[
-                    ClassFieldNode(
+                    ClassHeaderFieldDeclNode(
                       name=IdentifierNode(
                         token=IDENTIFIER_NO_W(c)
                       ),
@@ -66,8 +66,8 @@ ModuleNode(
                 )
               )
             ),
-            RecordDeclarationNode(
-              decl=ClassDeclarationNode(
+            RecordDeclNode(
+              decl=ClassDeclNode(
                 name=IdentifierNode(
                   token=IDENTIFIER(D)
                 ),
@@ -80,7 +80,7 @@ ModuleNode(
                 ),
                 header_decls=ClassHeaderDeclsNode(
                   decls=[
-                    ClassFieldNode(
+                    ClassHeaderFieldDeclNode(
                       name=IdentifierNode(
                         token=IDENTIFIER_NO_W(d)
                       ),

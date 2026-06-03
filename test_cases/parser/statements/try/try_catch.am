@@ -5,14 +5,14 @@ let example = {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(example)
       ),
-      expr=BlockExpressionNode(
+      expr=BlockExprNode(
         stmts=[
-          TryStatementNode(
-            try_block=PreIncrementStatementNode(
+          TryStmtNode(
+            try_block=PreIncrementStmtNode(
               target=IdentifierNode(
                 token=IDENTIFIER_NO_W(x)
               )
@@ -25,7 +25,7 @@ ModuleNode(
                 var=IdentifierNode(
                   token=IDENTIFIER_NO_W(y)
                 ),
-                body=PreIncrementStatementNode(
+                body=PreIncrementStmtNode(
                   target=IdentifierNode(
                     token=IDENTIFIER_NO_W(t)
                   )

@@ -5,18 +5,18 @@ let a = {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(a)
       ),
-      expr=BlockExpressionNode(
+      expr=BlockExprNode(
         stmts=[
-          IfStatementNode(
+          IfStmtNode(
             condition=IdentifierNode(
               token=IDENTIFIER_NO_W(x)
             ),
-            then_branch=EmptyStatementNode(),
-            else_branch=EmptyStatementNode()
+            then_branch=EmptyStmtNode(),
+            else_branch=EmptyStmtNode()
           )
         ]
       )

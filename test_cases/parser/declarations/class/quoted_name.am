@@ -3,7 +3,7 @@ class `A` {}
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ClassDeclarationNode(
+    ClassDeclNode(
       name=IdentifierNode(
         token=QUOTED_IDENTIFIER(`A`)
       ),

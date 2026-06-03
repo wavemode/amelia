@@ -8,13 +8,13 @@ let z = {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(z)
       ),
-      expr=BlockExpressionNode(
+      expr=BlockExprNode(
         stmts=[
-          ForInStatementNode(
+          ForInStmtNode(
             vars=[
               ForInVariableNode(
                 name=IdentifierNode(
@@ -25,17 +25,17 @@ ModuleNode(
             iterable=IdentifierNode(
               token=IDENTIFIER(y)
             ),
-            body=BlockStatementNode(
+            body=BlockStmtNode(
               stmts=[
-                ExpressionStatementNode(
-                  expr=FunctionCallExpressionNode(
+                ExprStmtNode(
+                  expr=FunctionCallExprNode(
                     callee=IdentifierNode(
                       token=IDENTIFIER(z)
                     )
                   )
                 ),
-                ExpressionStatementNode(
-                  expr=FunctionCallExpressionNode(
+                ExprStmtNode(
+                  expr=FunctionCallExprNode(
                     callee=IdentifierNode(
                       token=IDENTIFIER(t)
                     )

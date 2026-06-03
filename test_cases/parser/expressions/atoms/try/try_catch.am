@@ -3,11 +3,11 @@ let w = try x catch (y : z) t
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(w)
       ),
-      expr=TryExpressionNode(
+      expr=TryExprNode(
         try_block=IdentifierNode(
           token=IDENTIFIER(x)
         ),

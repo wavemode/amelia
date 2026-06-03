@@ -54,7 +54,7 @@ public:
   struct ModuleDecl {};
 
 #define X(TYPE_KIND)                                                                               \
-  Type(DeclarationVisibility vis, TYPE_KIND type)                                                  \
+  Type(DeclVisibility vis, TYPE_KIND type)                                                  \
       : visibility(vis), m_kind(TypeKind::TYPE_KIND), m_data(std::move(type)) {}                   \
                                                                                                    \
   TYPE_KIND &as_##TYPE_KIND() {                                                                    \
@@ -119,7 +119,7 @@ public:
     return *this;
   }
 
-  DeclarationVisibility visibility;
+  DeclVisibility visibility;
   Option<String> memo_name;
 
 private:

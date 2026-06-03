@@ -7,7 +7,7 @@ class A {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ClassDeclarationNode(
+    ClassDeclNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),
@@ -20,8 +20,8 @@ ModuleNode(
             signature=FunctionSignatureNode(),
             body=FunctionBodyNode(
               stmts=[
-                ExpressionStatementNode(
-                  expr=FunctionCallExpressionNode(
+                ExprStmtNode(
+                  expr=FunctionCallExprNode(
                     callee=IdentifierNode(
                       token=IDENTIFIER(println)
                     ),

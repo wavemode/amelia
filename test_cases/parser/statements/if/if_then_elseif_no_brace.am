@@ -9,26 +9,26 @@ let example = {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(example)
       ),
-      expr=BlockExpressionNode(
+      expr=BlockExprNode(
         stmts=[
-          IfStatementNode(
+          IfStmtNode(
             condition=IdentifierNode(
               token=IDENTIFIER_NO_W(x)
             ),
-            then_branch=ExpressionStatementNode(
+            then_branch=ExprStmtNode(
               expr=IdentifierNode(
                 token=IDENTIFIER(y)
               )
             ),
-            else_branch=IfStatementNode(
+            else_branch=IfStmtNode(
               condition=IdentifierNode(
                 token=IDENTIFIER_NO_W(z)
               ),
-              then_branch=ExpressionStatementNode(
+              then_branch=ExprStmtNode(
                 expr=IdentifierNode(
                   token=IDENTIFIER(t)
                 )

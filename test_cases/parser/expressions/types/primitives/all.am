@@ -19,7 +19,7 @@ let x_null : null
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x_bool)
       ),
@@ -27,7 +27,7 @@ ModuleNode(
         token=KEYWORD_BOOL(bool)
       )
     ),
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x_byte)
       ),
@@ -35,7 +35,7 @@ ModuleNode(
         token=KEYWORD_BYTE(byte)
       )
     ),
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x_short)
       ),
@@ -43,7 +43,7 @@ ModuleNode(
         token=KEYWORD_SHORT(short)
       )
     ),
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x_int)
       ),
@@ -51,7 +51,7 @@ ModuleNode(
         token=KEYWORD_INT(int)
       )
     ),
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x_long)
       ),
@@ -59,7 +59,7 @@ ModuleNode(
         token=KEYWORD_LONG(long)
       )
     ),
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x_ubyte)
       ),
@@ -67,7 +67,7 @@ ModuleNode(
         token=KEYWORD_UBYTE(ubyte)
       )
     ),
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x_ushort)
       ),
@@ -75,7 +75,7 @@ ModuleNode(
         token=KEYWORD_USHORT(ushort)
       )
     ),
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x_uint)
       ),
@@ -83,7 +83,7 @@ ModuleNode(
         token=KEYWORD_UINT(uint)
       )
     ),
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x_ulong)
       ),
@@ -91,7 +91,7 @@ ModuleNode(
         token=KEYWORD_ULONG(ulong)
       )
     ),
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x_usize)
       ),
@@ -99,7 +99,7 @@ ModuleNode(
         token=KEYWORD_USIZE(usize)
       )
     ),
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x_float)
       ),
@@ -107,7 +107,7 @@ ModuleNode(
         token=KEYWORD_FLOAT(float)
       )
     ),
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x_double)
       ),
@@ -115,7 +115,7 @@ ModuleNode(
         token=KEYWORD_DOUBLE(double)
       )
     ),
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x_bitint)
       ),
@@ -123,7 +123,7 @@ ModuleNode(
         token=KEYWORD_BITINT(bitint)
       )
     ),
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x_ubitint)
       ),
@@ -131,7 +131,7 @@ ModuleNode(
         token=KEYWORD_UBITINT(ubitint)
       )
     ),
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x_char)
       ),
@@ -139,7 +139,7 @@ ModuleNode(
         token=KEYWORD_CHAR(char)
       )
     ),
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x_str)
       ),
@@ -147,7 +147,7 @@ ModuleNode(
         token=KEYWORD_STR(str)
       )
     ),
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x_null)
       ),

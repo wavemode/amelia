@@ -81,14 +81,14 @@ let y = {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(y)
       ),
-      expr=BlockExpressionNode(
+      expr=BlockExprNode(
         stmts=[
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -97,8 +97,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -107,8 +107,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -117,8 +117,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -127,8 +127,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -137,8 +137,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -147,8 +147,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -157,8 +157,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -167,8 +167,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -177,8 +177,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -187,8 +187,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -197,8 +197,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -207,8 +207,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -217,8 +217,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -227,8 +227,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -237,8 +237,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -247,8 +247,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -257,8 +257,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -267,8 +267,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -277,8 +277,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -287,8 +287,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -297,8 +297,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -307,8 +307,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -317,8 +317,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -327,8 +327,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -337,8 +337,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -347,8 +347,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -357,8 +357,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -367,8 +367,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -377,8 +377,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -387,8 +387,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -397,8 +397,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -407,8 +407,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -417,8 +417,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -427,8 +427,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -437,8 +437,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -447,8 +447,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -457,8 +457,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -467,8 +467,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),
@@ -481,8 +481,8 @@ ModuleNode(
               )
             )
           ),
-          ExpressionStatementNode(
-            expr=FieldAccessExpressionNode(
+          ExprStmtNode(
+            expr=FieldAccessExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER(x)
               ),

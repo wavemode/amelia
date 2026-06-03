@@ -6,13 +6,13 @@ let example = {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(example)
       ),
-      expr=BlockExpressionNode(
+      expr=BlockExprNode(
         stmts=[
-          MulAssignStatementNode(
+          MulAssignStmtNode(
             target=IdentifierNode(
               token=IDENTIFIER(x)
             ),
@@ -20,7 +20,7 @@ ModuleNode(
               lit=NUMBER(5)
             )
           ),
-          MulAssignStatementNode(
+          MulAssignStmtNode(
             target=IdentifierNode(
               token=IDENTIFIER(y)
             ),

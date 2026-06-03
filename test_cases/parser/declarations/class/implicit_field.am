@@ -5,13 +5,13 @@ class A {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ClassDeclarationNode(
+    ClassDeclNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),
       body=ClassBodyNode(
         decls=[
-          ImplicitDeclarationNode(
+          ImplicitDeclNode(
             decl=ClassFieldNode(
               name=IdentifierNode(
                 token=IDENTIFIER(a)

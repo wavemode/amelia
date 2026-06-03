@@ -3,11 +3,11 @@ let x = y > z
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expr=GreaterExpressionNode(
+      expr=GreaterExprNode(
         left=IdentifierNode(
           token=IDENTIFIER(y)
         ),

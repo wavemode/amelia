@@ -3,16 +3,16 @@ let x : fun(List[int], List[int]) -> List[int]
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      type=FunctionExpressionNode(
+      type=FunctionExprNode(
         signature=FunctionSignatureNode(
           parameters=[
             FunctionParameterNode(
               variadic=false,
-              name=IndexingExpressionNode(
+              name=IndexingExprNode(
                 object=IdentifierNode(
                   token=IDENTIFIER_NO_W(List)
                 ),
@@ -27,7 +27,7 @@ ModuleNode(
             ),
             FunctionParameterNode(
               variadic=false,
-              name=IndexingExpressionNode(
+              name=IndexingExprNode(
                 object=IdentifierNode(
                   token=IDENTIFIER(List)
                 ),
@@ -41,7 +41,7 @@ ModuleNode(
               )
             )
           ],
-          return_type=IndexingExpressionNode(
+          return_type=IndexingExprNode(
             object=IdentifierNode(
               token=IDENTIFIER(List)
             ),

@@ -6,14 +6,14 @@ let z = {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(z)
       ),
-      expr=BlockExpressionNode(
+      expr=BlockExprNode(
         stmts=[
-          ContinueStatementNode(),
-          ContinueStatementNode()
+          ContinueStmtNode(),
+          ContinueStmtNode()
         ]
       )
     )

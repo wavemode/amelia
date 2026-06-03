@@ -3,11 +3,11 @@ let x : *const T
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      type=DerefExpressionNode(
+      type=DerefExprNode(
         is_const=true,
         expr=IdentifierNode(
           token=IDENTIFIER(T)

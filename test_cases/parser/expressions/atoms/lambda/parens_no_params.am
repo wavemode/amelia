@@ -3,11 +3,11 @@ let x = () -> 10
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expr=LambdaExpressionNode(
+      expr=LambdaExprNode(
         body=NumberLiteralNode(
           lit=NUMBER(10)
         )

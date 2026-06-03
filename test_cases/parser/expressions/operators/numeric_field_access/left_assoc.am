@@ -3,12 +3,12 @@ let w = x.0.1
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(w)
       ),
-      expr=NumericFieldAccessExpressionNode(
-        object=NumericFieldAccessExpressionNode(
+      expr=NumericFieldAccessExprNode(
+        object=NumericFieldAccessExprNode(
           object=IdentifierNode(
             token=IDENTIFIER(x)
           ),

@@ -3,13 +3,13 @@ let x : *T[U]
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      type=DerefExpressionNode(
+      type=DerefExprNode(
         is_const=false,
-        expr=IndexingExpressionNode(
+        expr=IndexingExprNode(
           object=IdentifierNode(
             token=IDENTIFIER_NO_W(T)
           ),

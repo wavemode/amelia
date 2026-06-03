@@ -7,7 +7,7 @@ union A {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    UnionDeclarationNode(
+    UnionDeclNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),

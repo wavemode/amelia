@@ -6,17 +6,17 @@ let x = {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expr=BlockExpressionNode(
+      expr=BlockExprNode(
         stmts=[
           AnnotationNode(
             name=IdentifierNode(
               token=IDENTIFIER_NO_W(anno)
             ),
-            stmt=PreIncrementStatementNode(
+            stmt=PreIncrementStmtNode(
               target=IdentifierNode(
                 token=IDENTIFIER_NO_W(y)
               )

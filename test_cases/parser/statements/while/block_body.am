@@ -8,27 +8,27 @@ let example = {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(example)
       ),
-      expr=BlockExpressionNode(
+      expr=BlockExprNode(
         stmts=[
-          WhileStatementNode(
+          WhileStmtNode(
             condition=IdentifierNode(
               token=IDENTIFIER_NO_W(x)
             ),
-            body=BlockStatementNode(
+            body=BlockStmtNode(
               stmts=[
-                ExpressionStatementNode(
-                  expr=FunctionCallExpressionNode(
+                ExprStmtNode(
+                  expr=FunctionCallExprNode(
                     callee=IdentifierNode(
                       token=IDENTIFIER(z)
                     )
                   )
                 ),
-                ExpressionStatementNode(
-                  expr=FunctionCallExpressionNode(
+                ExprStmtNode(
+                  expr=FunctionCallExprNode(
                     callee=IdentifierNode(
                       token=IDENTIFIER(t)
                     )

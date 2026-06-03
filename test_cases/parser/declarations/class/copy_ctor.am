@@ -11,13 +11,13 @@ class A {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ClassDeclarationNode(
+    ClassDeclNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),
       body=ClassBodyNode(
         decls=[
-          ClassCopyDeclarationNode(
+          ClassCopyDeclNode(
             decl=ClassConstructorNode(
               name=IdentifierNode(
                 token=IDENTIFIER(A)
@@ -34,15 +34,15 @@ ModuleNode(
               ),
               body=FunctionBodyNode(
                 stmts=[
-                  AssignmentStatementNode(
-                    target=FieldAccessExpressionNode(
+                  AssignmentStmtNode(
+                    target=FieldAccessExprNode(
                       object=ThisLiteralNode(),
                       field=IdentifierNode(
                         token=IDENTIFIER_NO_W(a)
                       )
                     ),
-                    expr=CopyExpressionNode(
-                      expr=FieldAccessExpressionNode(
+                    expr=CopyExprNode(
+                      expr=FieldAccessExprNode(
                         object=IdentifierNode(
                           token=IDENTIFIER(o)
                         ),
@@ -52,15 +52,15 @@ ModuleNode(
                       )
                     )
                   ),
-                  AssignmentStatementNode(
-                    target=FieldAccessExpressionNode(
+                  AssignmentStmtNode(
+                    target=FieldAccessExprNode(
                       object=ThisLiteralNode(),
                       field=IdentifierNode(
                         token=IDENTIFIER_NO_W(b)
                       )
                     ),
-                    expr=CopyExpressionNode(
-                      expr=FieldAccessExpressionNode(
+                    expr=CopyExprNode(
+                      expr=FieldAccessExprNode(
                         object=IdentifierNode(
                           token=IDENTIFIER(o)
                         ),

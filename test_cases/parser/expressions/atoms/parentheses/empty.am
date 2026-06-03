@@ -3,11 +3,11 @@ let x = ()
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expr=ParenthesizedExpressionNode()
+      expr=ParenthesizedExprNode()
     )
   ]
 )

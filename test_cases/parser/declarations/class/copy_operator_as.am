@@ -7,14 +7,14 @@ class A {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ClassDeclarationNode(
+    ClassDeclNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),
       body=ClassBodyNode(
         decls=[
-          ClassCopyDeclarationNode(
-            decl=OperatorFunctionDeclarationNode(
+          ClassCopyDeclNode(
+            decl=OperatorFunctionDeclNode(
               operator_ident=OperatorIdentifierNode(
                 op=OperatorIdentAsNode(
                   type=PrimitiveTypeNode(
@@ -24,8 +24,8 @@ ModuleNode(
               ),
               signature=FunctionSignatureNode(),
               body=FunctionBodyNode(
-                expr=CopyExpressionNode(
-                  expr=FieldAccessExpressionNode(
+                expr=CopyExprNode(
+                  expr=FieldAccessExprNode(
                     object=ThisLiteralNode(),
                     field=IdentifierNode(
                       token=IDENTIFIER_NO_W(a)

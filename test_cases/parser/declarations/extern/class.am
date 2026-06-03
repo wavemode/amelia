@@ -3,8 +3,8 @@ extern class A {}
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ExternDeclarationNode(
-      decl=ClassDeclarationNode(
+    ExternDeclNode(
+      decl=ClassDeclNode(
         name=IdentifierNode(
           token=IDENTIFIER(A)
         ),

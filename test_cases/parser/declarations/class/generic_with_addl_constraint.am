@@ -3,7 +3,7 @@ class A[T] when (Move[T], A : T) {}
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ClassDeclarationNode(
+    ClassDeclNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),
@@ -18,7 +18,7 @@ ModuleNode(
         ],
         additional_constraints=[
           TypeConstraintNode(
-            type=IndexingExpressionNode(
+            type=IndexingExprNode(
               object=IdentifierNode(
                 token=IDENTIFIER_NO_W(Move)
               ),

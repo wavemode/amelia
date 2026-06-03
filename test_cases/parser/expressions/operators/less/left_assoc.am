@@ -3,12 +3,12 @@ let w = x < y < z
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(w)
       ),
-      expr=LessExpressionNode(
-        left=LessExpressionNode(
+      expr=LessExprNode(
+        left=LessExprNode(
           left=IdentifierNode(
             token=IDENTIFIER(x)
           ),

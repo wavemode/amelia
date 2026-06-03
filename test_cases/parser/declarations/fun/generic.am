@@ -3,7 +3,7 @@ fun f [T] (x : T) -> T {}
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    FunctionDeclarationNode(
+    FunctionDeclNode(
       name=IdentifierNode(
         token=IDENTIFIER(f)
       ),

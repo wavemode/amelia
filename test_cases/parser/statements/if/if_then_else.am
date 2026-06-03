@@ -9,28 +9,28 @@ let a = {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(a)
       ),
-      expr=BlockExpressionNode(
+      expr=BlockExprNode(
         stmts=[
-          IfStatementNode(
+          IfStmtNode(
             condition=IdentifierNode(
               token=IDENTIFIER_NO_W(x)
             ),
-            then_branch=BlockStatementNode(
+            then_branch=BlockStmtNode(
               stmts=[
-                ExpressionStatementNode(
+                ExprStmtNode(
                   expr=IdentifierNode(
                     token=IDENTIFIER(y)
                   )
                 )
               ]
             ),
-            else_branch=BlockStatementNode(
+            else_branch=BlockStmtNode(
               stmts=[
-                ExpressionStatementNode(
+                ExprStmtNode(
                   expr=IdentifierNode(
                     token=IDENTIFIER(z)
                   )

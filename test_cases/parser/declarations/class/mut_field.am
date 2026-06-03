@@ -6,13 +6,13 @@ class A {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ClassDeclarationNode(
+    ClassDeclNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),
       body=ClassBodyNode(
         decls=[
-          MutDeclarationNode(
+          MutDeclNode(
             decl=ClassFieldNode(
               name=IdentifierNode(
                 token=IDENTIFIER(a)

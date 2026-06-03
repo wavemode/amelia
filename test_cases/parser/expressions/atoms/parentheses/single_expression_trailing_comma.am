@@ -4,11 +4,11 @@ let x =(5,
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expr=ParenthesizedExpressionNode(
+      expr=ParenthesizedExprNode(
         exprs=[
           NumberLiteralNode(
             lit=NUMBER(5)

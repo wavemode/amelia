@@ -5,7 +5,7 @@ fun f(x : int, y : float) -> double {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    FunctionDeclarationNode(
+    FunctionDeclNode(
       name=IdentifierNode(
         token=IDENTIFIER(f)
       ),
@@ -36,8 +36,8 @@ ModuleNode(
       ),
       body=FunctionBodyNode(
         stmts=[
-          ExpressionStatementNode(
-            expr=FunctionCallExpressionNode(
+          ExprStmtNode(
+            expr=FunctionCallExprNode(
               callee=IdentifierNode(
                 token=IDENTIFIER(print)
               ),

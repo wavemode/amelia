@@ -3,8 +3,8 @@ import a::b (c as d, e,)
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ImportDeclarationNode(
-      path=ScopeResolutionExpressionNode(
+    ImportDeclNode(
+      path=ScopeResolutionExprNode(
         scope=IdentifierNode(
           token=IDENTIFIER(a)
         ),

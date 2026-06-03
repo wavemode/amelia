@@ -3,9 +3,9 @@ class A::B::C
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ClassDeclarationNode(
-      name=ScopeResolutionExpressionNode(
-        scope=ScopeResolutionExpressionNode(
+    ClassDeclNode(
+      name=ScopeResolutionExprNode(
+        scope=ScopeResolutionExprNode(
           scope=IdentifierNode(
             token=IDENTIFIER(A)
           ),

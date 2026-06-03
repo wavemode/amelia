@@ -3,7 +3,7 @@ module a {}
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ModuleDeclarationNode(
+    ModuleDeclNode(
       name=IdentifierNode(
         token=IDENTIFIER(a)
       )

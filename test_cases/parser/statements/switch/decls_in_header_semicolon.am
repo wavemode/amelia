@@ -8,15 +8,15 @@ let example = {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(example)
       ),
-      expr=BlockExpressionNode(
+      expr=BlockExprNode(
         stmts=[
-          SwitchStatementNode(
+          SwitchStmtNode(
             introductory_decls=[
-              LetDeclarationNode(
+              LetDeclNode(
                 target=IdentifierNode(
                   token=IDENTIFIER(z)
                 ),
@@ -24,12 +24,12 @@ ModuleNode(
                   lit=NUMBER(20)
                 )
               ),
-              EmptyStatementNode(),
-              ConstDeclarationNode(
+              EmptyStmtNode(),
+              ConstDeclNode(
                 target=IdentifierNode(
                   token=IDENTIFIER(y)
                 ),
-                expr=AddExpressionNode(
+                expr=AddExprNode(
                   left=IdentifierNode(
                     token=IDENTIFIER(x)
                   ),
@@ -38,7 +38,7 @@ ModuleNode(
                   )
                 )
               ),
-              EmptyStatementNode()
+              EmptyStmtNode()
             ],
             expr=IdentifierNode(
               token=IDENTIFIER(y)
@@ -52,7 +52,7 @@ ModuleNode(
                     )
                   ]
                 ),
-                body=PreIncrementStatementNode(
+                body=PreIncrementStmtNode(
                   target=IdentifierNode(
                     token=IDENTIFIER_NO_W(x)
                   )
@@ -66,7 +66,7 @@ ModuleNode(
                     )
                   ]
                 ),
-                body=PreIncrementStatementNode(
+                body=PreIncrementStmtNode(
                   target=IdentifierNode(
                     token=IDENTIFIER_NO_W(y)
                   )

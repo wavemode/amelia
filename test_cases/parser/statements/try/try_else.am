@@ -11,16 +11,16 @@ let example = {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(example)
       ),
-      expr=BlockExpressionNode(
+      expr=BlockExprNode(
         stmts=[
-          TryStatementNode(
-            try_block=BlockStatementNode(
+          TryStmtNode(
+            try_block=BlockStmtNode(
               stmts=[
-                LetDeclarationNode(
+                LetDeclNode(
                   target=IdentifierNode(
                     token=IDENTIFIER(x)
                   ),
@@ -35,10 +35,10 @@ ModuleNode(
                 exc_type=IdentifierNode(
                   token=IDENTIFIER_NO_W(e)
                 ),
-                body=BlockStatementNode(
+                body=BlockStmtNode(
                   stmts=[
-                    ExpressionStatementNode(
-                      expr=FunctionCallExpressionNode(
+                    ExprStmtNode(
+                      expr=FunctionCallExprNode(
                         callee=IdentifierNode(
                           token=IDENTIFIER(println)
                         ),
@@ -55,10 +55,10 @@ ModuleNode(
                 )
               )
             ],
-            else_branch=BlockStatementNode(
+            else_branch=BlockStmtNode(
               stmts=[
-                ExpressionStatementNode(
-                  expr=FunctionCallExpressionNode(
+                ExprStmtNode(
+                  expr=FunctionCallExprNode(
                     callee=IdentifierNode(
                       token=IDENTIFIER(println)
                     ),

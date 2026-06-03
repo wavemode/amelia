@@ -5,14 +5,14 @@ let example = {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(example)
       ),
-      expr=BlockExpressionNode(
+      expr=BlockExprNode(
         stmts=[
-          ReturnStatementNode(
-            expr=FunctionCallExpressionNode(
+          ReturnStmtNode(
+            expr=FunctionCallExprNode(
               callee=IdentifierNode(
                 token=IDENTIFIER(x)
               )

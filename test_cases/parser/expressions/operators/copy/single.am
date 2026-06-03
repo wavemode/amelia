@@ -3,11 +3,11 @@ let x = copy y
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expr=CopyExpressionNode(
+      expr=CopyExprNode(
         expr=IdentifierNode(
           token=IDENTIFIER(y)
         )

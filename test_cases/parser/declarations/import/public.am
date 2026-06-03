@@ -5,8 +5,8 @@ ModuleNode(
   decls=[
     VisibilityNode(
       visibility=public,
-      decl=ImportDeclarationNode(
-        path=ScopeResolutionExpressionNode(
+      decl=ImportDeclNode(
+        path=ScopeResolutionExprNode(
           scope=IdentifierNode(
             token=IDENTIFIER(a)
           ),

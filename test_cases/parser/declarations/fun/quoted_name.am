@@ -3,7 +3,7 @@ fun `f`() {}
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    FunctionDeclarationNode(
+    FunctionDeclNode(
       name=IdentifierNode(
         token=QUOTED_IDENTIFIER(`f`)
       ),

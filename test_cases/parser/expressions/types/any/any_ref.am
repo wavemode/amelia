@@ -3,7 +3,7 @@ fun f(x: &any X) {}
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    FunctionDeclarationNode(
+    FunctionDeclNode(
       name=IdentifierNode(
         token=IDENTIFIER(f)
       ),
@@ -14,10 +14,10 @@ ModuleNode(
             name=IdentifierNode(
               token=IDENTIFIER_NO_W(x)
             ),
-            type=RefExpressionNode(
+            type=RefExprNode(
               is_const=false,
               is_move=false,
-              expr=AnyTypeExpressionNode(
+              expr=AnyTypeExprNode(
                 type=IdentifierNode(
                   token=IDENTIFIER(X)
                 )

@@ -3,11 +3,11 @@ let x = [1, 2, 3]
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expr=BracketExpressionNode(
+      expr=BracketExprNode(
         exprs=[
           NumberLiteralNode(
             lit=NUMBER(1)

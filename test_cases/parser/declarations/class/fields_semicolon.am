@@ -3,7 +3,7 @@ class A {  a: int; b: String }
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ClassDeclarationNode(
+    ClassDeclNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),
@@ -17,7 +17,7 @@ ModuleNode(
               token=KEYWORD_INT(int)
             )
           ),
-          EmptyStatementNode(),
+          EmptyStmtNode(),
           ClassFieldNode(
             name=IdentifierNode(
               token=IDENTIFIER(b)

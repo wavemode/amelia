@@ -11,11 +11,11 @@ let f = fun(
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(f)
       ),
-      expr=FunctionExpressionNode(
+      expr=FunctionExprNode(
         signature=FunctionSignatureNode(
           parameters=[
             FunctionParameterNode(

@@ -3,8 +3,8 @@ extern fun f() {}
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ExternDeclarationNode(
-      decl=FunctionDeclarationNode(
+    ExternDeclNode(
+      decl=FunctionDeclNode(
         name=IdentifierNode(
           token=IDENTIFIER(f)
         ),

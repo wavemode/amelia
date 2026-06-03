@@ -5,13 +5,13 @@ let example = {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(example)
       ),
-      expr=BlockExpressionNode(
+      expr=BlockExprNode(
         stmts=[
-          PreIncrementStatementNode(
+          PreIncrementStmtNode(
             target=IdentifierNode(
               token=IDENTIFIER_NO_W(x)
             )

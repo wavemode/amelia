@@ -11,7 +11,7 @@ class A {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ClassDeclarationNode(
+    ClassDeclNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),
@@ -24,8 +24,8 @@ ModuleNode(
             signature=FunctionSignatureNode(),
             body=FunctionBodyNode(
               stmts=[
-                AssignmentStatementNode(
-                  target=FieldAccessExpressionNode(
+                AssignmentStmtNode(
+                  target=FieldAccessExprNode(
                     object=ThisLiteralNode(),
                     field=IdentifierNode(
                       token=IDENTIFIER_NO_W(a)
@@ -35,8 +35,8 @@ ModuleNode(
                     lit=NUMBER(0)
                   )
                 ),
-                AssignmentStatementNode(
-                  target=FieldAccessExpressionNode(
+                AssignmentStmtNode(
+                  target=FieldAccessExprNode(
                     object=ThisLiteralNode(),
                     field=IdentifierNode(
                       token=IDENTIFIER_NO_W(b)

@@ -3,13 +3,13 @@ let x = [1, 2, 3].map(x -> x + 1)
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      expr=FunctionCallExpressionNode(
-        callee=FieldAccessExpressionNode(
-          object=BracketExpressionNode(
+      expr=FunctionCallExprNode(
+        callee=FieldAccessExprNode(
+          object=BracketExprNode(
             exprs=[
               NumberLiteralNode(
                 lit=NUMBER(1)
@@ -28,13 +28,13 @@ ModuleNode(
         ),
         args=[
           FunctionArgumentNode(
-            expr=LambdaExpressionNode(
+            expr=LambdaExprNode(
               parameters=[
                 IdentifierNode(
                   token=IDENTIFIER_NO_W(x)
                 )
               ],
-              body=AddExpressionNode(
+              body=AddExprNode(
                 left=IdentifierNode(
                   token=IDENTIFIER(x)
                 ),

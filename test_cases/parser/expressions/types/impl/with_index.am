@@ -3,12 +3,12 @@ let x : impl T[U]
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(x)
       ),
-      type=ImplTypeExpressionNode(
-        type=IndexingExpressionNode(
+      type=ImplTypeExprNode(
+        type=IndexingExprNode(
           object=IdentifierNode(
             token=IDENTIFIER(T)
           ),

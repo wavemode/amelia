@@ -3,11 +3,11 @@ let z = (x, y) -> x + y
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(z)
       ),
-      expr=LambdaExpressionNode(
+      expr=LambdaExprNode(
         parameters=[
           FunctionParameterNode(
             variadic=false,
@@ -22,7 +22,7 @@ ModuleNode(
             )
           )
         ],
-        body=AddExpressionNode(
+        body=AddExprNode(
           left=IdentifierNode(
             token=IDENTIFIER(x)
           ),

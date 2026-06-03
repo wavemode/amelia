@@ -3,12 +3,12 @@ let w = x | y | z
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    LetDeclarationNode(
+    LetDeclNode(
       target=IdentifierNode(
         token=IDENTIFIER(w)
       ),
-      expr=BitwiseOrExpressionNode(
-        left=BitwiseOrExpressionNode(
+      expr=BitwiseOrExprNode(
+        left=BitwiseOrExprNode(
           left=IdentifierNode(
             token=IDENTIFIER(x)
           ),

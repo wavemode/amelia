@@ -6,14 +6,14 @@ class A {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ClassDeclarationNode(
+    ClassDeclNode(
       name=IdentifierNode(
         token=IDENTIFIER(A)
       ),
       body=ClassBodyNode(
         decls=[
-          OpenDeclarationNode(
-            decl=FunctionDeclarationNode(
+          OpenDeclNode(
+            decl=FunctionDeclNode(
               name=IdentifierNode(
                 token=IDENTIFIER(say_age)
               ),
