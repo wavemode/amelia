@@ -47,9 +47,11 @@ using TokenId = int32_t;
   X(KEYWORD_USHORT)                                                                                \
   X(KEYWORD_UINT)                                                                                  \
   X(KEYWORD_ULONG)                                                                                 \
+  X(KEYWORD_USIZE)                                                                                 \
   X(KEYWORD_FLOAT)                                                                                 \
   X(KEYWORD_DOUBLE)                                                                                \
   X(KEYWORD_CHAR)                                                                                  \
+  X(KEYWORD_STR)                                                                                   \
   X(KEYWORD_BITINT)                                                                                \
   X(KEYWORD_UBITINT)                                                                               \
   X(KEYWORD_NULL)                                                                                  \

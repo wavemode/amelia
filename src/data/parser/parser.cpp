@@ -1710,11 +1710,13 @@ public:
     case TokenType::KEYWORD_USHORT:
     case TokenType::KEYWORD_UINT:
     case TokenType::KEYWORD_ULONG:
+    case TokenType::KEYWORD_USIZE:
     case TokenType::KEYWORD_FLOAT:
     case TokenType::KEYWORD_DOUBLE:
     case TokenType::KEYWORD_BITINT:
     case TokenType::KEYWORD_UBITINT:
     case TokenType::KEYWORD_CHAR:
+    case TokenType::KEYWORD_STR:
     case TokenType::KEYWORD_NULL:
       return parse_primitive_type();
     case TokenType::KEYWORD_AUTO:

@@ -7,11 +7,13 @@ let x_ubyte : ubyte
 let x_ushort : ushort
 let x_uint : uint
 let x_ulong : ulong
+let x_usize : usize
 let x_float : float
 let x_double : double
 let x_bitint : bitint
 let x_ubitint : ubitint
 let x_char : char
+let x_str : str
 let x_null : null
 
 /* EXPECTED_OUTPUT:
@@ -91,6 +93,14 @@ ModuleNode(
     ),
     LetDeclarationNode(
       target=IdentifierNode(
+        token=IDENTIFIER(x_usize)
+      ),
+      type=PrimitiveTypeNode(
+        token=KEYWORD_USIZE(usize)
+      )
+    ),
+    LetDeclarationNode(
+      target=IdentifierNode(
         token=IDENTIFIER(x_float)
       ),
       type=PrimitiveTypeNode(
@@ -127,6 +137,14 @@ ModuleNode(
       ),
       type=PrimitiveTypeNode(
         token=KEYWORD_CHAR(char)
+      )
+    ),
+    LetDeclarationNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x_str)
+      ),
+      type=PrimitiveTypeNode(
+        token=KEYWORD_STR(str)
       )
     ),
     LetDeclarationNode(

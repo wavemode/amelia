@@ -16,11 +16,13 @@ ubyte
 ushort
 uint
 ulong
+usize
 float
 double
 bitint
 ubitint
 char
+str
 null
 throw
 import
@@ -90,11 +92,13 @@ KEYWORD_UBYTE(ubyte)
 KEYWORD_USHORT(ushort)
 KEYWORD_UINT(uint)
 KEYWORD_ULONG(ulong)
+KEYWORD_USIZE(usize)
 KEYWORD_FLOAT(float)
 KEYWORD_DOUBLE(double)
 KEYWORD_BITINT(bitint)
 KEYWORD_UBITINT(ubitint)
 KEYWORD_CHAR(char)
+KEYWORD_STR(str)
 KEYWORD_NULL(null)
 KEYWORD_THROW(throw)
 KEYWORD_IMPORT(import)
