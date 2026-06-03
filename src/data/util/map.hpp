@@ -33,7 +33,7 @@ public:
   }
 
   void set(const K &key, V value) override {
-    m_map.insert_or_assign(key, std::move(value));
+    m_map.insert_or_assign(key, move(value));
   }
 
   V &get(const K &key) override {
@@ -73,7 +73,7 @@ public:
     if (it == m_map.end()) {
       throw RuntimeError("Key not found in map");
     }
-    V value = std::move(it->second);
+    V value = move(it->second);
     m_map.erase(it);
     return value;
   }

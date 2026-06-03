@@ -35,7 +35,7 @@ public:
     List<NodeId> decls;
     auto start_token = peek();
     parse_top_level_decls(decls, TokenType::END_OF_FILE);
-    return m_output.add_node(start_token.loc, ModuleNode{std::move(decls)});
+    return m_output.add_node(start_token.loc, ModuleNode{move(decls)});
   }
 
   void parse_top_level_decls(List<NodeId> &decls, TokenType terminator) {
@@ -142,7 +142,7 @@ public:
     auto path = parse_scoped_name();
     auto items = try_parse_import_items();
     auto alias = try_parse_import_alias();
-    return m_output.add_node(import_token.loc, ImportDeclNode{path, std::move(items), alias});
+    return m_output.add_node(import_token.loc, ImportDeclNode{path, move(items), alias});
   }
 
   Option<NodeId> try_parse_import_alias() {
@@ -172,7 +172,7 @@ public:
         }
       }
       read_token_type(TokenType::RIGHT_PAREN, "Expected ')' to end import item list");
-      result = std::move(items);
+      result = move(items);
     }
     return result;
   }
@@ -186,7 +186,7 @@ public:
       auto name = expect_identifier("Expected identifier or '...' in import item list");
       auto sub_items = try_parse_import_items();
       auto alias = try_parse_import_alias();
-      return m_output.add_node(item_token.loc, ImportItemNode{name, std::move(sub_items), alias});
+      return m_output.add_node(item_token.loc, ImportItemNode{name, move(sub_items), alias});
     }
   }
 
@@ -277,7 +277,7 @@ public:
     }
     read_token_type(TokenType::RIGHT_BRACE, "Expected '}' to end enum declaration");
     return m_output.add_node(
-        enum_token.loc, EnumDeclNode{name, repr_type, base_types, std::move(variants)}
+        enum_token.loc, EnumDeclNode{name, repr_type, base_types, move(variants)}
     );
   }
 
@@ -326,7 +326,7 @@ public:
       ++m_token_index; // consume the '{' token
       List<NodeId> decls_list;
       parse_top_level_decls(decls_list, TokenType::RIGHT_BRACE);
-      decls = std::move(decls_list);
+      decls = move(decls_list);
       read_token_type(TokenType::RIGHT_BRACE, "Expected '}' to end module declaration");
     }
     return m_output.add_node(module_token.loc, ModuleDeclNode{name, decls});
@@ -422,7 +422,7 @@ public:
         }
       }
       read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after annotation arguments");
-      return Some(std::move(args_list));
+      return Some(move(args_list));
     }
     return None();
   }
@@ -538,7 +538,7 @@ public:
         }
       }
       read_token_type(TokenType::RIGHT_PAREN, "Expected ')' to end class header decls");
-      result = m_output.add_node(start_token.loc, ClassHeaderDeclsNode{std::move(decls)});
+      result = m_output.add_node(start_token.loc, ClassHeaderDeclsNode{move(decls)});
     }
     return result;
   }
@@ -591,7 +591,7 @@ public:
         }
       }
       read_token_type(TokenType::RIGHT_BRACE, "Expected '}' to end class body");
-      result = m_output.add_node(peek(-1).loc, ClassBodyNode{std::move(decls)});
+      result = m_output.add_node(peek(-1).loc, ClassBodyNode{move(decls)});
     }
     return result;
   }
@@ -605,7 +605,7 @@ public:
         ++m_token_index; // consume the ',' token
         base_types.push_back(parse_type_expr());
       }
-      return Some(m_output.add_node(peek(-1).loc, BaseTypeListNode{std::move(base_types)}));
+      return Some(m_output.add_node(peek(-1).loc, BaseTypeListNode{move(base_types)}));
     }
     return None();
   }
@@ -817,12 +817,11 @@ public:
             TokenType::RIGHT_PAREN,
             "Expected ')' to end additional constraints in generic parameter list"
         );
-        additional_constraints = std::move(constraints);
+        additional_constraints = move(constraints);
       }
 
       return Some(m_output.add_node(
-          start_token.loc,
-          GenericParameterListNode{std::move(parameters), std::move(additional_constraints)}
+          start_token.loc, GenericParameterListNode{move(parameters), move(additional_constraints)}
       ));
     }
     return None();
@@ -876,7 +875,7 @@ public:
       else_branch = parse_statement();
     }
     return m_output.add_node(
-        try_token.loc, TryStmtNode{try_block, std::move(catch_clauses), else_branch}
+        try_token.loc, TryStmtNode{try_block, move(catch_clauses), else_branch}
     );
   }
 
@@ -918,7 +917,7 @@ public:
     read_token_type(TokenType::RIGHT_BRACE, "Expected '}' to end switch statement body");
     return m_output.add_node(
         switch_token.loc,
-        SwitchStmtNode{std::move(introductory_decls), expr, std::move(clauses), default_body}
+        SwitchStmtNode{move(introductory_decls), expr, move(clauses), default_body}
     );
   }
 
@@ -1003,7 +1002,7 @@ public:
     }
 
     return m_output.add_node(
-        start_token.loc, FunctionBodyNode{expr, std::move(stmts), is_default, is_deleted}
+        start_token.loc, FunctionBodyNode{expr, move(stmts), is_default, is_deleted}
     );
   }
 
@@ -1020,7 +1019,7 @@ public:
         start_position,
         FunctionSignatureNode{
             generic_parameter_list,
-            std::move(parameters),
+            move(parameters),
             implicit_parameter_list,
             capture_list,
             return_type
@@ -1079,9 +1078,9 @@ public:
         }
       }
       ++m_token_index; // consume the ')' token
-      return Some(m_output.add_node(
-          next_token.loc, ImplicitParameterListNode{std::move(implicit_parameters)}
-      ));
+      return Some(
+          m_output.add_node(next_token.loc, ImplicitParameterListNode{move(implicit_parameters)})
+      );
     }
     return None();
   }
@@ -1100,7 +1099,7 @@ public:
       }
       ++m_token_index; // consume the ']' token
       return Some(m_output.add_node(
-          next_token.loc, FunctionSignatureCaptureAnnotationListNode{std::move(capture_annotations)}
+          next_token.loc, FunctionSignatureCaptureAnnotationListNode{move(capture_annotations)}
       ));
     }
     return None();
@@ -1161,7 +1160,7 @@ public:
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after condition in while statement");
     NodeId body = parse_statement();
     return m_output.add_node(
-        while_token.loc, WhileStmtNode{std::move(introductory_decls), condition, body}
+        while_token.loc, WhileStmtNode{move(introductory_decls), condition, body}
     );
   }
 
@@ -1181,7 +1180,7 @@ public:
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after iterable in for-in statement");
     NodeId body = parse_statement();
     return m_output.add_node(
-        for_token.loc, ForInStmtNode{std::move(introductory_decls), std::move(vars), iterable, body}
+        for_token.loc, ForInStmtNode{move(introductory_decls), move(vars), iterable, body}
     );
   }
 
@@ -1224,7 +1223,7 @@ public:
       else_branch = parse_statement();
     }
     return m_output.add_node(
-        if_token.loc, IfStmtNode{std::move(introductory_decls), condition, then_branch, else_branch}
+        if_token.loc, IfStmtNode{move(introductory_decls), condition, then_branch, else_branch}
     );
   }
 
@@ -1235,7 +1234,7 @@ public:
     List<NodeId> stmts;
     parse_statements(stmts, TokenType::RIGHT_BRACE);
     read_token_type(TokenType::RIGHT_BRACE, "Expected '}' at the end of block statement");
-    return m_output.add_node(left_brace_token.loc, BlockStmtNode{std::move(stmts)});
+    return m_output.add_node(left_brace_token.loc, BlockStmtNode{move(stmts)});
   }
 
   NodeId parse_pre_increment_statement() {
@@ -1626,7 +1625,7 @@ public:
           indices.push_back(m_output.add_node(index_start_location, IndexNode{name, value}));
         }
         ++m_token_index; // consume the ']' token
-        left = m_output.add_node(start_location, IndexingExprNode{left, std::move(indices)});
+        left = m_output.add_node(start_location, IndexingExprNode{left, move(indices)});
       } else if (next_token.type == TokenType::LEFT_PAREN_NO_W) {
         ++m_token_index; // consume the '(' operator
         List<NodeId> args;
@@ -1637,7 +1636,7 @@ public:
           }
         }
         ++m_token_index; // consume the ')' operator
-        left = m_output.add_node(start_location, FunctionCallExprNode{left, std::move(args)});
+        left = m_output.add_node(start_location, FunctionCallExprNode{left, move(args)});
       } else if (next_token.type == TokenType::DOUBLE_COLON_NO_W) {
         ++m_token_index; // consume the '::' operator
         auto next_type = peek().type;
@@ -1736,7 +1735,7 @@ public:
     default:
       String err("Expected expression, got token ");
       m_token_formatter.format_token(err, m_token_index);
-      throw_parser_error_at_current_location(std::move(err));
+      throw_parser_error_at_current_location(move(err));
     }
   }
 
@@ -1760,7 +1759,7 @@ public:
     }
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after arguments in with expression");
     NodeId body = parse_expr();
-    return m_output.add_node(with_token.loc, WithExprNode{std::move(args), body});
+    return m_output.add_node(with_token.loc, WithExprNode{move(args), body});
   }
 
   NodeId parse_auto_type() {
@@ -1962,7 +1961,7 @@ public:
     read_token_type(TokenType::RIGHT_BRACE, "Expected '}' to end switch expr body");
     return m_output.add_node(
         switch_token.loc,
-        SwitchExprNode{std::move(introductory_decls), expr, std::move(clauses), default_body}
+        SwitchExprNode{move(introductory_decls), expr, move(clauses), default_body}
     );
   }
 
@@ -2000,8 +1999,7 @@ public:
     }
 
     return m_output.add_node(
-        start_token.loc,
-        CaseClauseHeaderNode{std::move(introductory_decls), std::move(exprs), when_clause}
+        start_token.loc, CaseClauseHeaderNode{move(introductory_decls), move(exprs), when_clause}
     );
   }
 
@@ -2015,7 +2013,7 @@ public:
       NodeId condition = parse_expr();
       enforce_separator_after_introductory_decls(introductory_decls, condition);
       when_clause = m_output.add_node(
-          start_token.loc, WhenClauseNode{std::move(introductory_decls), condition}
+          start_token.loc, WhenClauseNode{move(introductory_decls), condition}
       );
       read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after condition in 'when' clause");
     }
@@ -2035,7 +2033,7 @@ public:
       else_branch = parse_expr();
     }
     return m_output.add_node(
-        try_token.loc, TryExprNode{try_block, std::move(catch_clauses), else_branch}
+        try_token.loc, TryExprNode{try_block, move(catch_clauses), else_branch}
     );
   }
 
@@ -2066,7 +2064,7 @@ public:
     );
     NodeId else_branch = parse_expr();
     return m_output.add_node(
-        if_token.loc, IfExprNode{std::move(introductory_decls), condition, then_branch, else_branch}
+        if_token.loc, IfExprNode{move(introductory_decls), condition, then_branch, else_branch}
     );
   }
 
@@ -2075,7 +2073,7 @@ public:
     List<NodeId> exprs;
     parse_comma_separated_expr_list(exprs, TokenType::RIGHT_BRACKET);
     ++m_token_index; // consume the right bracket
-    return m_output.add_node(open_bracket.loc, BracketExprNode{std::move(exprs)});
+    return m_output.add_node(open_bracket.loc, BracketExprNode{move(exprs)});
   }
 
   NodeId parse_parenthesized_expr() {
@@ -2083,7 +2081,7 @@ public:
     List<NodeId> exprs;
     parse_comma_separated_expr_list(exprs, TokenType::RIGHT_PAREN);
     ++m_token_index; // consume the right paren
-    return m_output.add_node(open_paren.loc, ParenthesizedExprNode{std::move(exprs)});
+    return m_output.add_node(open_paren.loc, ParenthesizedExprNode{move(exprs)});
   }
 
   NodeId parse_brace_expr() {
@@ -2105,7 +2103,7 @@ public:
     List<NodeId> stmts;
     parse_statements(stmts, TokenType::RIGHT_BRACE);
     ++m_token_index; // consume the right brace
-    return m_output.add_node(open_brace.loc, BlockExprNode{std::move(stmts)});
+    return m_output.add_node(open_brace.loc, BlockExprNode{move(stmts)});
   }
 
   NodeId parse_object_literal() {
@@ -2123,7 +2121,7 @@ public:
       }
     }
     ++m_token_index; // consume the right brace
-    return m_output.add_node(open_brace.loc, AnonymousStructLiteralNode{std::move(entries)});
+    return m_output.add_node(open_brace.loc, AnonymousStructLiteralNode{move(entries)});
   }
 
   NodeId parse_object_type() {
@@ -2140,7 +2138,7 @@ public:
       }
     }
     ++m_token_index; // consume the right brace
-    return m_output.add_node(open_brace.loc, AnonymousStructTypeNode{std::move(entries)});
+    return m_output.add_node(open_brace.loc, AnonymousStructTypeNode{move(entries)});
   }
 
   void parse_comma_separated_expr_list(List<NodeId> &exprs, TokenType terminator) {
@@ -2220,7 +2218,7 @@ public:
       List<NodeId> params = parse_function_parameter_list();
       read_token_type(TokenType::ARROW, "Expected '->' after lambda parameter");
       NodeId body = parse_expr();
-      return m_output.add_node(start_token.loc, LambdaExprNode{std::move(params), body});
+      return m_output.add_node(start_token.loc, LambdaExprNode{move(params), body});
     }
 
     auto single_param = expect_identifier(
@@ -2228,7 +2226,7 @@ public:
     );
     read_token_type(TokenType::ARROW, "Expected '->' after lambda parameter");
     NodeId body = parse_expr();
-    return m_output.add_node(start_token.loc, LambdaExprNode{{single_param}, body});
+    return m_output.add_node(start_token.loc, LambdaExprNode{List({single_param}), body});
   }
 
   NodeId parse_single_identifier() {
@@ -2303,16 +2301,16 @@ private:
   }
 
   [[noreturn]] void throw_parser_error_at_current_location(String message) const {
-    throw_parser_error(m_token_index, std::move(message));
+    throw_parser_error(m_token_index, move(message));
   }
 
   [[noreturn]] void throw_parser_error_at_location(Location location, String message) const {
-    throw ParserError(location, std::move(message));
+    throw ParserError(location, move(message));
   }
 
   [[noreturn]] void throw_parser_error(TokenId token_id, String message) const {
     auto token = m_input.get_token(token_id);
-    throw ParserError(token.location, std::move(message));
+    throw ParserError(token.location, move(message));
   }
 
   ParserResult &m_output;

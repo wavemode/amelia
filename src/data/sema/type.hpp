@@ -55,7 +55,7 @@ public:
 
 #define X(TYPE_KIND)                                                                               \
   Type(DeclVisibility vis, TYPE_KIND type)                                                  \
-      : visibility(vis), m_kind(TypeKind::TYPE_KIND), m_data(std::move(type)) {}                   \
+      : visibility(vis), m_kind(TypeKind::TYPE_KIND), m_data(move(type)) {}                   \
                                                                                                    \
   TYPE_KIND &as_##TYPE_KIND() {                                                                    \
     if (m_kind != TypeKind::TYPE_KIND) {                                                           \
@@ -83,7 +83,7 @@ public:
 
   Type(Type &&other) noexcept
       : visibility(other.visibility), m_kind(other.m_kind),
-        m_data(other.m_kind, std::move(other.m_data)), memo_name(std::move(other.memo_name)) {}
+        m_data(other.m_kind, move(other.m_data)), memo_name(move(other.memo_name)) {}
 
   TypeKind kind() const {
     return m_kind;
@@ -107,13 +107,13 @@ public:
   Type &operator=(Type &&other) {
     if (this != &other) {
       visibility = other.visibility;
-      memo_name = std::move(other.memo_name);
+      memo_name = move(other.memo_name);
       if (m_kind == other.m_kind) {
-        m_data.assign(m_kind, std::move(other.m_data));
+        m_data.assign(m_kind, move(other.m_data));
       } else {
         m_data.destroy(m_kind);
         m_kind = other.m_kind;
-        new (&m_data) TypeData(m_kind, std::move(other.m_data));
+        new (&m_data) TypeData(m_kind, move(other.m_data));
       }
     }
     return *this;
@@ -127,7 +127,7 @@ private:
 #define X(TYPE_KIND)                                                                               \
   TYPE_KIND data_##TYPE_KIND;                                                                      \
                                                                                                    \
-  explicit TypeData(TYPE_KIND type) : data_##TYPE_KIND(std::move(type)) {}
+  explicit TypeData(TYPE_KIND type) : data_##TYPE_KIND(move(type)) {}
     TYPE_KIND_LIST
 #undef X
 
@@ -146,7 +146,7 @@ private:
       switch (kind) {
 #define X(TYPE_KIND)                                                                               \
   case TypeKind::TYPE_KIND:                                                                        \
-    new (&data_##TYPE_KIND) TYPE_KIND(std::move(other.data_##TYPE_KIND));                          \
+    new (&data_##TYPE_KIND) TYPE_KIND(move(other.data_##TYPE_KIND));                          \
     break;
         TYPE_KIND_LIST
 #undef X
@@ -168,7 +168,7 @@ private:
       switch (kind) {
 #define X(TYPE_KIND)                                                                               \
   case TypeKind::TYPE_KIND:                                                                        \
-    data_##TYPE_KIND = std::move(other.data_##TYPE_KIND);                                          \
+    data_##TYPE_KIND = move(other.data_##TYPE_KIND);                                          \
     break;
         TYPE_KIND_LIST
 #undef X

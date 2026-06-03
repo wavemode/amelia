@@ -1,4 +1,5 @@
 #include <doctest.h>
+#include <initializer_list>
 
 #include "prelude.hpp"
 
@@ -7,7 +8,7 @@ TEST_SUITE_BEGIN("List");
 using namespace amelia;
 
 TEST_CASE("indexing") {
-  List<int> list = {5, 2, 9, 1, 5, 6};
+  List<int> list({5, 2, 9, 1, 5, 6});
   CHECK(list[0] == 5);
   CHECK(list[1] == 2);
   CHECK(list[2] == 9);

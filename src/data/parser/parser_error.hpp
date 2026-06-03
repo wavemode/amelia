@@ -12,7 +12,7 @@ namespace amelia {
  */
 struct ParserError : public SourceLocationError {
   ParserError(Location loc, String message) noexcept
-      : SourceLocationError(loc, std::move(message)) {}
+      : SourceLocationError(loc, move(message)) {}
 };
 
 } // namespace amelia

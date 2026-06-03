@@ -12,7 +12,7 @@ namespace amelia {
  */
 struct LexerError : public SourceLocationError {
   LexerError(Location loc, String message) noexcept
-      : SourceLocationError(loc, std::move(message)) {}
+      : SourceLocationError(loc, move(message)) {}
 };
 
 } // namespace amelia

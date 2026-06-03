@@ -192,7 +192,7 @@ public:
       String msg = "Unexpected character: '";
       msg.append(cp);
       msg.append('\'');
-      throw_lexer_error(start_location, std::move(msg));
+      throw_lexer_error(start_location, move(msg));
     }
   }
 
@@ -288,7 +288,7 @@ public:
           String msg = "Invalid escape sequence in quoted identifier: '\\";
           msg.append(peek());
           msg.append('\'');
-          throw_lexer_error_at_current_location(std::move(msg));
+          throw_lexer_error_at_current_location(move(msg));
         }
         }
       } break;
@@ -394,7 +394,7 @@ public:
             String msg = "Expected \\x in char literal, got: '\\";
             msg.append(following_char);
             msg.append('\'');
-            throw_lexer_error_at_current_location(std::move(msg));
+            throw_lexer_error_at_current_location(move(msg));
           }
           m_scratch_buffer.push_back(static_cast<char>(read_hex_chars(2)));
         }
@@ -413,7 +413,7 @@ public:
         String msg = "Invalid escape sequence in char literal: '\\";
         msg.append(ch);
         msg.append('\'');
-        throw_lexer_error_at_current_location(std::move(msg));
+        throw_lexer_error_at_current_location(move(msg));
       }
       break;
     }
@@ -446,7 +446,7 @@ public:
         String err;
         err.append("Invalid character literal: ");
         err.append(Text::from(e.what()));
-        throw_lexer_error(start_location, std::move(err));
+        throw_lexer_error(start_location, move(err));
       }
     }
     emit_token(TokenType::CHAR_LITERAL, start_location);
@@ -468,7 +468,7 @@ public:
       String err;
       err.append("Invalid string literal: ");
       err.append(Text::from(e.what()));
-      throw_lexer_error(start_location, std::move(err));
+      throw_lexer_error(start_location, move(err));
     }
   }
 
@@ -579,7 +579,7 @@ public:
           String msg = "Invalid escape sequence in string literal: '\\";
           msg.append(ch);
           msg.append('\'');
-          throw_lexer_error_at_current_location(std::move(msg));
+          throw_lexer_error_at_current_location(move(msg));
         }
       } else if (ch == '\r') {
         // skip
@@ -954,7 +954,7 @@ public:
           String err("Invalid character '");
           err.append(ch);
           err.append("' in number literal");
-          throw_lexer_error_at_current_location(std::move(err));
+          throw_lexer_error_at_current_location(move(err));
         }
       }
 
@@ -964,7 +964,7 @@ public:
           err.append(ch);
           err.append("' for base ");
           TextUtils::to_string(err, int64_t(base));
-          throw_lexer_error_at_current_location(std::move(err));
+          throw_lexer_error_at_current_location(move(err));
         }
         previous_char_was_underscore = false;
         next();
@@ -1029,7 +1029,7 @@ public:
             String err("Invalid character '");
             err.append(ch);
             err.append("' in number literal");
-            throw_lexer_error_at_current_location(std::move(err));
+            throw_lexer_error_at_current_location(move(err));
           }
         }
 
@@ -1039,7 +1039,7 @@ public:
             err.append(ch);
             err.append("' for base ");
             TextUtils::to_string(err, int64_t(base));
-            throw_lexer_error_at_current_location(std::move(err));
+            throw_lexer_error_at_current_location(move(err));
           }
           previous_char_was_underscore = false;
           next();
@@ -1123,7 +1123,7 @@ public:
           String err("Invalid character '");
           err.append(ch);
           err.append("' in exponent");
-          throw_lexer_error_at_current_location(std::move(err));
+          throw_lexer_error_at_current_location(move(err));
         } else if (ch != '_') {
           break;
         }
@@ -1285,11 +1285,11 @@ public:
   }
 
   [[noreturn]] void throw_lexer_error_at_current_location(String message) {
-    throw_lexer_error(current_location(), std::move(message));
+    throw_lexer_error(current_location(), move(message));
   }
 
   [[noreturn]] void throw_lexer_error(Location loc, String message) {
-    throw LexerError(loc, std::move(message));
+    throw LexerError(loc, move(message));
   }
 
 private:
@@ -1300,7 +1300,7 @@ private:
       String err;
       err.append("Invalid UTF-8 code point: ");
       err.append(Text::from(e.what()));
-      throw_lexer_error_at_current_location(std::move(err));
+      throw_lexer_error_at_current_location(move(err));
     }
   }
 

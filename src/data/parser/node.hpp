@@ -11,7 +11,7 @@ class Node {
 public:
 #define X(NODE_TYPE)                                                                               \
   Node(Location loc, NODE_TYPE node)                                                               \
-      : m_loc(loc), m_type(NodeType::NODE_TYPE), m_data(std::move(node)) {}                        \
+      : m_loc(loc), m_type(NodeType::NODE_TYPE), m_data(move(node)) {}                        \
                                                                                                    \
   NODE_TYPE &as_##NODE_TYPE() {                                                                    \
     if (m_type != NodeType::NODE_TYPE) {                                                           \
@@ -37,8 +37,8 @@ public:
       : m_loc(other.m_loc), m_type(other.m_type), m_data(other.m_type, other.m_data) {}
 
   Node(Node &&other) noexcept
-      : m_loc(std::move(other.m_loc)), m_type(other.m_type),
-        m_data(other.m_type, std::move(other.m_data)) {}
+      : m_loc(move(other.m_loc)), m_type(other.m_type),
+        m_data(other.m_type, move(other.m_data)) {}
 
   NodeType type() const {
     return m_type;
@@ -64,13 +64,13 @@ public:
 
   Node &operator=(Node &&other) {
     if (this != &other) {
-      m_loc = std::move(other.m_loc);
+      m_loc = move(other.m_loc);
       if (m_type == other.m_type) {
-        m_data.assign(m_type, std::move(other.m_data));
+        m_data.assign(m_type, move(other.m_data));
       } else {
         m_data.destroy(m_type);
         m_type = other.m_type;
-        new (&m_data) NodeData(m_type, std::move(other.m_data));
+        new (&m_data) NodeData(m_type, move(other.m_data));
       }
     }
     return *this;
@@ -81,7 +81,7 @@ private:
 #define X(NODE_TYPE)                                                                               \
   NODE_TYPE data_##NODE_TYPE;                                                                      \
                                                                                                    \
-  explicit NodeData(NODE_TYPE node) : data_##NODE_TYPE(std::move(node)) {}
+  explicit NodeData(NODE_TYPE node) : data_##NODE_TYPE(move(node)) {}
     NODE_TYPE_LIST
 #undef X
 
@@ -100,7 +100,7 @@ private:
       switch (type) {
 #define X(NODE_TYPE)                                                                               \
   case NodeType::NODE_TYPE:                                                                        \
-    new (&data_##NODE_TYPE) NODE_TYPE(std::move(other.data_##NODE_TYPE));                          \
+    new (&data_##NODE_TYPE) NODE_TYPE(move(other.data_##NODE_TYPE));                          \
     break;
         NODE_TYPE_LIST
 #undef X
@@ -122,7 +122,7 @@ private:
       switch (type) {
 #define X(NODE_TYPE)                                                                               \
   case NodeType::NODE_TYPE:                                                                        \
-    data_##NODE_TYPE = std::move(other.data_##NODE_TYPE);                                          \
+    data_##NODE_TYPE = move(other.data_##NODE_TYPE);                                          \
     break;
         NODE_TYPE_LIST
 #undef X

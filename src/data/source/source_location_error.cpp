@@ -19,7 +19,7 @@ String make_message(Location loc, String message) {
 } // namespace
 
 SourceLocationError::SourceLocationError(Location loc, String message)
-    : message(make_message(loc, std::move(message))) {}
+    : message(make_message(loc, move(message))) {}
 
 const char *SourceLocationError::what() const noexcept {
   return message.c_str();

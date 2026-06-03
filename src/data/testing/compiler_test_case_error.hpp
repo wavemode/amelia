@@ -14,7 +14,7 @@ struct CompilerTestCaseError : public std::exception {
   const String message;
 
   CompilerTestCaseError() noexcept = default;
-  CompilerTestCaseError(String message) noexcept : message(std::move(message)) {}
+  CompilerTestCaseError(String message) noexcept : message(move(message)) {}
   const char *what() const noexcept override {
     return message.c_str();
   }

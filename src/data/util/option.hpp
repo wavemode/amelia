@@ -10,7 +10,7 @@ struct None {};
 
 template <typename T> struct Some {
   T value;
-  Some(T value) : value(std::move(value)) {}
+  Some(T value) : value(move(value)) {}
 };
 
 template <typename T> class Option {
@@ -18,11 +18,11 @@ public:
   Option() {}
 
   Option(T value) {
-    initialize(std::move(value));
+    initialize(move(value));
   }
 
   Option(Some<T> some) {
-    initialize(std::move(some.value));
+    initialize(move(some.value));
   }
 
   Option(None) {}
@@ -45,7 +45,7 @@ public:
 
   Option(Option<T> &&other) {
     if (other.m_has_value) {
-      initialize(std::move(*other.get()));
+      initialize(move(*other.get()));
     }
     other.m_has_value = false;
   }
@@ -64,7 +64,7 @@ public:
   Option<T> &operator=(Option<T> &&other) {
     if (this != &other) {
       if (other.m_has_value) {
-        assign(std::move(*other.get()));
+        assign(move(*other.get()));
       } else {
         destroy();
       }
@@ -163,15 +163,15 @@ private:
   };
 
   void initialize(T value) {
-    new (get()) T(std::move(value));
+    new (get()) T(move(value));
     m_has_value = true;
   }
 
   void assign(T value) {
     if (m_has_value) {
-      *get() = std::move(value);
+      *get() = move(value);
     } else {
-      initialize(std::move(value));
+      initialize(move(value));
     }
   }
 

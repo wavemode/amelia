@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cstddef>
-#include <vector>
 
 #include "data/parser/abstract_node_repository.hpp"
 #include "data/parser/node.hpp"
@@ -20,7 +19,7 @@ public:
 
   template <typename NT> NodeId add_node(Location loc, NT node) {
     NodeId id = m_nodes.size();
-    m_nodes.emplace_back(loc, std::move(node));
+    m_nodes.emplace_back(loc, move(node));
     return id;
   }
 

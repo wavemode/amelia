@@ -25,7 +25,7 @@ public:
   }
 
   void add(T value) override {
-    m_set.insert(std::move(value));
+    m_set.insert(move(value));
   }
 
   template <typename... Args> void emplace(Args &&...args) {

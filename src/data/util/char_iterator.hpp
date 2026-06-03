@@ -2,7 +2,6 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <vector>
 
 #include "data/util/abstract_iterator.hpp"
 #include "data/util/slice.hpp"

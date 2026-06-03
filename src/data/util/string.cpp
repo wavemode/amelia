@@ -143,7 +143,7 @@ String String::from(List<char> str) {
   CharIterator::validate(str.data());
   str.push_back('\0');
   String result;
-  result.m_str = std::move(str);
+  result.m_str = move(str);
   return result;
 }
 

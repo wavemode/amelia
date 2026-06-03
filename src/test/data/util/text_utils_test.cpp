@@ -106,13 +106,13 @@ TEST_CASE("join_into") {
   String output;
 
   SUBCASE("basic join") {
-    List<Text> parts = {"a", "b", "c"};
+    List<Text> parts({"a", "b", "c"});
     TextUtils::join_into(output, parts.data(), ",");
     CHECK(output == "a,b,c");
   }
 
   SUBCASE("single part") {
-    List<Text> parts = {"abc"};
+    List<Text> parts({"abc"});
     TextUtils::join_into(output, parts.data(), ",");
     CHECK(output == "abc");
   }
@@ -124,7 +124,7 @@ TEST_CASE("join_into") {
   }
 
   SUBCASE("empty delimiter") {
-    List<Text> parts = {"a", "b", "c"};
+    List<Text> parts({"a", "b", "c"});
     TextUtils::join_into(output, parts.data(), "");
     CHECK(output == "abc");
   }
