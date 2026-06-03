@@ -23,6 +23,7 @@ file(GLOB_RECURSE SOURCES_EFFECT "${CMAKE_CURRENT_SOURCE_DIR}/src/effect/*.cpp")
 file(GLOB_RECURSE SOURCES_TEST "${CMAKE_CURRENT_SOURCE_DIR}/src/test/*.cpp")
 set(SOURCES_VENDOR
     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/sha2.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/vendor/xxhash.c"
 )
 
 add_library(amelia_warnings INTERFACE)

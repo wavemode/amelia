@@ -1,8 +1,11 @@
 #pragma once
 
+#include <cstdint>
 #include <cstddef>
 
 namespace amelia {
+
+uint64_t hash_str(const char *str, size_t len);
 
 template <typename T>
 struct remove_reference { using type = T; };

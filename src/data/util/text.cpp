@@ -1,6 +1,4 @@
 #include <cstring>
-#include <string>
-#include <string_view>
 
 #include "prelude.hpp"
 #include "text.hpp"
@@ -75,7 +73,7 @@ Text Text::from(const char *c_str) {
 namespace std {
 
 size_t hash<amelia::Text>::operator()(const amelia::Text &obj) const {
-  return std::hash<std::string_view>{}(std::string_view(obj.data().ptr(), obj.size()));
+  return amelia::hash_str(obj.data().ptr(), obj.data().size());
 }
 
 } // namespace std
