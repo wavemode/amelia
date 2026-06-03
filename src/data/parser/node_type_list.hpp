@@ -788,6 +788,10 @@ struct MutDeclarationNode {
   NodeId decl;
 };
 
+struct InlineDeclarationNode {
+  NodeId decl;
+};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
@@ -973,6 +977,7 @@ struct MutDeclarationNode {
   X(QuestionMarkExpressionNode)                                                                    \
   X(ExclamationMarkExpressionNode)                                                                 \
   X(SealedDeclarationNode)                                                                         \
-  X(MutDeclarationNode)
+  X(MutDeclarationNode) \
+  X(InlineDeclarationNode)
 
 } // namespace amelia

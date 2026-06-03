@@ -230,12 +230,20 @@ public:
       return parse_union_declaration();
     case TokenType::KEYWORD_ENUM:
       return parse_enum_declaration();
+    case TokenType::KEYWORD_INLINE:
+      return parse_inline_declaration();
     case TokenType::AT:
       return parse_annotated_declaration();
     default:
       break;
     }
     return None();
+  }
+
+  NodeId parse_inline_declaration() {
+    auto inline_token = next();
+    auto decl = expect_declaration("Expected declaration after 'inline' keyword");
+    return m_output.add_node(inline_token.loc, InlineDeclarationNode{decl});
   }
 
   NodeId parse_sealed_declaration() {
