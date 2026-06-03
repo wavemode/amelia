@@ -756,10 +756,6 @@ struct EnumVariantNode {
   Option<NodeId> value;
 };
 
-struct InlineExpressionNode {
-  NodeId expr;
-};
-
 struct AnnotationNode {
   NodeId name;
   Option<List<NodeId>> args;
@@ -970,7 +966,6 @@ struct InlineDeclarationNode {
   X(UnionDeclarationNode)                                                                          \
   X(EnumDeclarationNode)                                                                           \
   X(EnumVariantNode)                                                                               \
-  X(InlineExpressionNode)                                                                          \
   X(BreakStatementNode)                                                                            \
   X(AnnotationNode)                                                                                \
   X(TypeOfExpressionNode)                                                                          \

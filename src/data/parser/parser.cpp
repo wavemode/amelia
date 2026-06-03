@@ -1507,10 +1507,6 @@ public:
       }
       NodeId expr = parse_descend_expr_await_ref_copy_move_inline(allow_funcall);
       return m_output.add_node(start_location, RefExpressionNode{is_const, is_move, expr});
-    } else if (next_token.type == TokenType::KEYWORD_INLINE) {
-      ++m_token_index; // consume the 'inline' keyword
-      NodeId expr = parse_descend_expr_await_ref_copy_move_inline(allow_funcall);
-      return m_output.add_node(start_location, InlineExpressionNode{expr});
     }
     return parse_descend_expr_pos_neg_deref_not_bitnot_ell(allow_funcall);
   }
