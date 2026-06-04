@@ -225,4 +225,36 @@ TEST_CASE("value iterator - manual") {
   CHECK_THROWS_AS(*end, RuntimeError);
 }
 
+TEST_CASE("stress") {
+  Map<int, int> map;
+  const int num_elements = 10000;
+  for (int i = 0; i < num_elements; i++) {
+    map.set(i, i * 10);
+    REQUIRE(map.get(i) == i * 10);
+    REQUIRE(map.has(i));
+    REQUIRE(map.size() == static_cast<size_t>(i + 1));
+  }
+  for (int i = 0; i < num_elements; i++) {
+    REQUIRE(map.has(i));
+    REQUIRE(map.get(i) == i * 10);
+  }
+  for (int i = num_elements - 1; i >= 0; i--) {
+    map.remove(i);
+    REQUIRE(!map.has(i));
+    REQUIRE(map.size() == static_cast<size_t>(i));
+  }
+  REQUIRE(map.size() == 0);
+  for (int i = 0; i < num_elements; i++) {
+    REQUIRE(!map.has(i));
+  }
+  for (int i = num_elements + 1; i <= num_elements * 2; i++) {
+    REQUIRE(!map.has(i));
+    map.set(i, i * 10);
+    REQUIRE(map.get(i) == i * 10);
+    REQUIRE(map.has(i));
+    REQUIRE(map.size() == static_cast<size_t>(i - num_elements));
+  }
+  REQUIRE(map.size() == static_cast<size_t>(num_elements));
+}
+
 TEST_SUITE_END();

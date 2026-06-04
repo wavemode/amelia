@@ -99,3 +99,32 @@ TEST_CASE("iterator - manual") {
   CHECK_THROWS_AS(*it, RuntimeError);
   CHECK_THROWS_AS(*end, RuntimeError);
 }
+
+TEST_CASE("stress") {
+  Set<int> set;
+  const int num_elements = 10000;
+  for (int i = 0; i < num_elements; i++) {
+    set.add(i);
+    REQUIRE(set.has(i));
+    REQUIRE(set.size() == static_cast<size_t>(i + 1));
+  }
+  for (int i = 0; i < num_elements; i++) {
+    REQUIRE(set.has(i));
+  }
+  for (int i = num_elements - 1; i >= 0; i--) {
+    set.remove(i);
+    REQUIRE(!set.has(i));
+    REQUIRE(set.size() == static_cast<size_t>(i));
+  }
+  REQUIRE(set.size() == 0);
+  for (int i = 0; i < num_elements; i++) {
+    REQUIRE(!set.has(i));
+  }
+  for (int i = num_elements + 1; i <= num_elements * 2; i++) {
+    REQUIRE(!set.has(i));
+    set.add(i);
+    REQUIRE(set.has(i));
+    REQUIRE(set.size() == static_cast<size_t>(i - num_elements));
+  }
+  REQUIRE(set.size() == static_cast<size_t>(num_elements));
+}

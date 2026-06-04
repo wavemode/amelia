@@ -2,9 +2,9 @@
 
 #include "prelude.hpp"
 
-#include "data/util/flex_shared.hpp"
-#include "data/source/declaration_visibility.hpp"
 #include "data/sema/type.hpp"
+#include "data/source/declaration_visibility.hpp"
+#include "data/util/flex_shared.hpp"
 
 namespace amelia {
 

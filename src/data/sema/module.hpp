@@ -2,8 +2,8 @@
 
 #include "prelude.hpp"
 
-#include "data/util/map.hpp"
 #include "data/sema/scope.hpp"
+#include "data/util/map.hpp"
 
 namespace amelia {
 
