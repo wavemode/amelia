@@ -1,7 +1,7 @@
 #define TYPE_KIND_LIST                                                                             \
   X(Alias)                                                                                         \
   X(Apply)                                                                                         \
-  X(Primitive)                                                                                       \
+  X(Primitive)                                                                                     \
   X(Bitint)                                                                                        \
   X(Tuple)                                                                                         \
   X(Struct)                                                                                        \
@@ -16,8 +16,8 @@
   X(Concept)                                                                                       \
   X(Function)                                                                                      \
   X(FunctionPointer)                                                                               \
-  X(Variable) \
-  X(TypeDecl) \
+  X(Variable)                                                                                      \
+  X(TypeDecl)                                                                                      \
   X(ModuleDecl)
 
 namespace amelia {

@@ -3,9 +3,9 @@
 #include <cstddef>
 #include <cstdlib>
 
-#include "data/util/utility.hpp"
-#include "data/util/runtime_error.hpp"
 #include "data/util/abstract_list.hpp"
+#include "data/util/runtime_error.hpp"
+#include "data/util/utility.hpp"
 
 namespace amelia {
 
@@ -28,7 +28,8 @@ public:
 
   List(const List<T> &other) noexcept : List(other.data()) {}
 
-  List(List<T> &&other) noexcept : m_buffer(other.m_buffer), m_size(other.m_size), m_capacity(other.m_capacity) {
+  List(List<T> &&other) noexcept
+      : m_buffer(other.m_buffer), m_size(other.m_size), m_capacity(other.m_capacity) {
     other.m_buffer = nullptr;
     other.m_size = 0;
     other.m_capacity = 0;

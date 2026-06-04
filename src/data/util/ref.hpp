@@ -37,28 +37,4 @@ private:
   T *m_ref;
 };
 
-template <typename T> class ConstRef {
-public:
-  ConstRef(const T &value) : m_ref(&value) {}
-
-  const T &get() const {
-    return *m_ref;
-  }
-
-  const T &operator*() const {
-    return get();
-  }
-
-  const T *operator->() const {
-    return m_ref;
-  }
-
-  operator const T &() const {
-    return get();
-  }
-
-private:
-  const T *m_ref;
-};
-
 } // namespace amelia

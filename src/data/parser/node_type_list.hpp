@@ -801,69 +801,69 @@ struct InlineDeclNode {
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
-  X(EmptyStmtNode)                                                                            \
-  X(LetDeclNode)                                                                            \
-  X(ConstDeclNode)                                                                          \
+  X(EmptyStmtNode)                                                                                 \
+  X(LetDeclNode)                                                                                   \
+  X(ConstDeclNode)                                                                                 \
   X(StringLiteralNode)                                                                             \
   X(CharLiteralNode)                                                                               \
   X(NumberLiteralNode)                                                                             \
-  X(ParenthesizedExprNode)                                                                   \
-  X(BracketExprNode)                                                                         \
-  X(BlockExprNode)                                                                           \
-  X(WithExprNode)                                                                            \
+  X(ParenthesizedExprNode)                                                                         \
+  X(BracketExprNode)                                                                               \
+  X(BlockExprNode)                                                                                 \
+  X(WithExprNode)                                                                                  \
   X(KeyValueEntryNode)                                                                             \
   X(AnonymousStructLiteralNode)                                                                    \
   X(AnonymousStructTypeNode)                                                                       \
-  X(ExprStmtNode)                                                                       \
-  X(IfStmtNode)                                                                               \
-  X(IfExprNode)                                                                              \
+  X(ExprStmtNode)                                                                                  \
+  X(IfStmtNode)                                                                                    \
+  X(IfExprNode)                                                                                    \
   X(CatchClauseNode)                                                                               \
-  X(TryExprNode)                                                                             \
-  X(TryStmtNode)                                                                              \
+  X(TryExprNode)                                                                                   \
+  X(TryStmtNode)                                                                                   \
   X(CaseClauseNode)                                                                                \
   X(CaseClauseHeaderNode)                                                                          \
   X(WhenClauseNode)                                                                                \
-  X(SwitchExprNode)                                                                          \
-  X(SwitchStmtNode)                                                                           \
-  X(OrExprNode)                                                                              \
-  X(AndExprNode)                                                                             \
-  X(BitwiseOrExprNode)                                                                       \
-  X(BitwiseAndExprNode)                                                                      \
-  X(BitwiseXorExprNode)                                                                      \
-  X(EqualsExprNode)                                                                          \
-  X(NotEqualsExprNode)                                                                       \
-  X(GreaterEqualsExprNode)                                                                   \
-  X(LessEqualsExprNode)                                                                      \
-  X(GreaterExprNode)                                                                         \
-  X(LessExprNode)                                                                            \
-  X(LeftShiftExprNode)                                                                       \
-  X(RightShiftExprNode)                                                                      \
-  X(AddExprNode)                                                                             \
-  X(SubtractExprNode)                                                                        \
-  X(MultiplyExprNode)                                                                        \
-  X(DivideExprNode)                                                                          \
-  X(ModuloExprNode)                                                                          \
-  X(RefExprNode)                                                                             \
-  X(AwaitExprNode)                                                                           \
-  X(NotExprNode)                                                                             \
-  X(BitwiseNotExprNode)                                                                      \
-  X(DerefExprNode)                                                                           \
-  X(PositiveExprNode)                                                                        \
-  X(NegativeExprNode)                                                                        \
-  X(EllipsisExprNode)                                                                        \
-  X(FieldAccessExprNode)                                                                     \
-  X(NumericFieldAccessExprNode)                                                              \
-  X(IndexingExprNode)                                                                        \
+  X(SwitchExprNode)                                                                                \
+  X(SwitchStmtNode)                                                                                \
+  X(OrExprNode)                                                                                    \
+  X(AndExprNode)                                                                                   \
+  X(BitwiseOrExprNode)                                                                             \
+  X(BitwiseAndExprNode)                                                                            \
+  X(BitwiseXorExprNode)                                                                            \
+  X(EqualsExprNode)                                                                                \
+  X(NotEqualsExprNode)                                                                             \
+  X(GreaterEqualsExprNode)                                                                         \
+  X(LessEqualsExprNode)                                                                            \
+  X(GreaterExprNode)                                                                               \
+  X(LessExprNode)                                                                                  \
+  X(LeftShiftExprNode)                                                                             \
+  X(RightShiftExprNode)                                                                            \
+  X(AddExprNode)                                                                                   \
+  X(SubtractExprNode)                                                                              \
+  X(MultiplyExprNode)                                                                              \
+  X(DivideExprNode)                                                                                \
+  X(ModuloExprNode)                                                                                \
+  X(RefExprNode)                                                                                   \
+  X(AwaitExprNode)                                                                                 \
+  X(NotExprNode)                                                                                   \
+  X(BitwiseNotExprNode)                                                                            \
+  X(DerefExprNode)                                                                                 \
+  X(PositiveExprNode)                                                                              \
+  X(NegativeExprNode)                                                                              \
+  X(EllipsisExprNode)                                                                              \
+  X(FieldAccessExprNode)                                                                           \
+  X(NumericFieldAccessExprNode)                                                                    \
+  X(IndexingExprNode)                                                                              \
   X(IndexNode)                                                                                     \
   X(FunctionArgumentNode)                                                                          \
-  X(FunctionCallExprNode)                                                                    \
-  X(ScopeResolutionExprNode)                                                                 \
-  X(PreIncrementStmtNode)                                                                     \
-  X(PostIncrementStmtNode)                                                                    \
-  X(PreDecrementStmtNode)                                                                     \
-  X(PostDecrementStmtNode)                                                                    \
-  X(BlockStmtNode)                                                                            \
-  X(ThrowStmtNode)                                                                            \
+  X(FunctionCallExprNode)                                                                          \
+  X(ScopeResolutionExprNode)                                                                       \
+  X(PreIncrementStmtNode)                                                                          \
+  X(PostIncrementStmtNode)                                                                         \
+  X(PreDecrementStmtNode)                                                                          \
+  X(PostDecrementStmtNode)                                                                         \
+  X(BlockStmtNode)                                                                                 \
+  X(ThrowStmtNode)                                                                                 \
   X(OperatorIdentAddNode)                                                                          \
   X(OperatorIdentSubNode)                                                                          \
   X(OperatorIdentStarNode)                                                                         \
@@ -901,47 +901,47 @@ struct InlineDeclNode {
   X(OperatorIdentFuncallNode)                                                                      \
   X(OperatorIdentIxAssignNode)                                                                     \
   X(OperatorIdentAsNode)                                                                           \
-  X(OperatorFunctionDeclNode)                                                               \
+  X(OperatorFunctionDeclNode)                                                                      \
   X(OperatorIdentifierNode)                                                                        \
-  X(AssignmentStmtNode)                                                                       \
-  X(AddAssignStmtNode)                                                                        \
-  X(SubAssignStmtNode)                                                                        \
-  X(MulAssignStmtNode)                                                                        \
-  X(DivAssignStmtNode)                                                                        \
-  X(ModAssignStmtNode)                                                                        \
-  X(LeftShiftAssignStmtNode)                                                                  \
-  X(RightShiftAssignStmtNode)                                                                 \
-  X(BitwiseAndAssignStmtNode)                                                                 \
-  X(BitwiseOrAssignStmtNode)                                                                  \
-  X(BitwiseXorAssignStmtNode)                                                                 \
-  X(ForInStmtNode)                                                                            \
+  X(AssignmentStmtNode)                                                                            \
+  X(AddAssignStmtNode)                                                                             \
+  X(SubAssignStmtNode)                                                                             \
+  X(MulAssignStmtNode)                                                                             \
+  X(DivAssignStmtNode)                                                                             \
+  X(ModAssignStmtNode)                                                                             \
+  X(LeftShiftAssignStmtNode)                                                                       \
+  X(RightShiftAssignStmtNode)                                                                      \
+  X(BitwiseAndAssignStmtNode)                                                                      \
+  X(BitwiseOrAssignStmtNode)                                                                       \
+  X(BitwiseXorAssignStmtNode)                                                                      \
+  X(ForInStmtNode)                                                                                 \
   X(ForInVariableNode)                                                                             \
-  X(WhileStmtNode)                                                                            \
-  X(LabelStmtNode)                                                                            \
-  X(GotoStmtNode)                                                                             \
-  X(ContinueStmtNode)                                                                         \
-  X(ReturnStmtNode)                                                                           \
+  X(WhileStmtNode)                                                                                 \
+  X(LabelStmtNode)                                                                                 \
+  X(GotoStmtNode)                                                                                  \
+  X(ContinueStmtNode)                                                                              \
+  X(ReturnStmtNode)                                                                                \
   X(FunctionParameterNode)                                                                         \
   X(ImplicitParameterListNode)                                                                     \
   X(FunctionSignatureCaptureAnnotationNode)                                                        \
   X(FunctionSignatureCaptureAnnotationListNode)                                                    \
   X(FunctionSignatureNode)                                                                         \
   X(FunctionBodyNode)                                                                              \
-  X(FunctionDeclNode)                                                                       \
-  X(FunctionExprNode)                                                                        \
-  X(LambdaExprNode)                                                                          \
-  X(TypeDeclNode)                                                                           \
-  X(ClassStaticDeclNode)                                                                    \
-  X(ClassConstDeclNode)                                                                     \
-  X(ClassCopyDeclNode)                                                                      \
-  X(ClassMoveDeclNode)                                                                      \
+  X(FunctionDeclNode)                                                                              \
+  X(FunctionExprNode)                                                                              \
+  X(LambdaExprNode)                                                                                \
+  X(TypeDeclNode)                                                                                  \
+  X(ClassStaticDeclNode)                                                                           \
+  X(ClassConstDeclNode)                                                                            \
+  X(ClassCopyDeclNode)                                                                             \
+  X(ClassMoveDeclNode)                                                                             \
   X(ClassFieldNode)                                                                                \
-  X(ClassDeclNode)                                                                          \
-  X(ConceptDeclNode)                                                                        \
+  X(ClassDeclNode)                                                                                 \
+  X(ConceptDeclNode)                                                                               \
   X(ClassHeaderDeclsNode)                                                                          \
   X(ClassBodyNode)                                                                                 \
-  X(ClassHeaderFieldDeclNode) \
-  X(ClassHeaderConstDeclNode) \
+  X(ClassHeaderFieldDeclNode)                                                                      \
+  X(ClassHeaderConstDeclNode)                                                                      \
   X(BooleanLiteralNode)                                                                            \
   X(ThisLiteralNode)                                                                               \
   X(SuperLiteralNode)                                                                              \
@@ -953,38 +953,38 @@ struct InlineDeclNode {
   X(GenericParameterNode)                                                                          \
   X(GenericParameterListNode)                                                                      \
   X(TypeConstraintNode)                                                                            \
-  X(ImplTypeExprNode)                                                                        \
-  X(AnyTypeExprNode)                                                                         \
-  X(AsyncExprNode)                                                                           \
-  X(CopyExprNode)                                                                            \
-  X(MoveExprNode)                                                                            \
+  X(ImplTypeExprNode)                                                                              \
+  X(AnyTypeExprNode)                                                                               \
+  X(AsyncExprNode)                                                                                 \
+  X(CopyExprNode)                                                                                  \
+  X(MoveExprNode)                                                                                  \
   X(CopyCtorNameNode)                                                                              \
   X(MoveCtorNameNode)                                                                              \
-  X(ImplicitDeclNode)                                                                       \
-  X(OpenDeclNode)                                                                           \
-  X(OverrideDeclNode)                                                                       \
-  X(DefaultDeclNode)                                                                        \
+  X(ImplicitDeclNode)                                                                              \
+  X(OpenDeclNode)                                                                                  \
+  X(OverrideDeclNode)                                                                              \
+  X(DefaultDeclNode)                                                                               \
   X(DefaultLiteralNode)                                                                            \
   X(PrimitiveTypeNode)                                                                             \
   X(AutoTypeNode)                                                                                  \
-  X(ImportDeclNode)                                                                         \
+  X(ImportDeclNode)                                                                                \
   X(ImportItemNode)                                                                                \
   X(ImportItemWildcardNode)                                                                        \
-  X(ModuleDeclNode)                                                                         \
-  X(AsyncDeclNode)                                                                          \
-  X(ExternDeclNode)                                                                         \
-  X(ExportDeclNode)                                                                         \
-  X(RecordDeclNode)                                                                         \
-  X(UnionDeclNode)                                                                          \
-  X(EnumDeclNode)                                                                           \
+  X(ModuleDeclNode)                                                                                \
+  X(AsyncDeclNode)                                                                                 \
+  X(ExternDeclNode)                                                                                \
+  X(ExportDeclNode)                                                                                \
+  X(RecordDeclNode)                                                                                \
+  X(UnionDeclNode)                                                                                 \
+  X(EnumDeclNode)                                                                                  \
   X(EnumVariantNode)                                                                               \
-  X(BreakStmtNode)                                                                            \
+  X(BreakStmtNode)                                                                                 \
   X(AnnotationNode)                                                                                \
-  X(TypeOfExprNode)                                                                          \
-  X(QuestionMarkExprNode)                                                                    \
-  X(ExclamationMarkExprNode)                                                                 \
-  X(SealedDeclNode)                                                                         \
-  X(MutDeclNode) \
+  X(TypeOfExprNode)                                                                                \
+  X(QuestionMarkExprNode)                                                                          \
+  X(ExclamationMarkExprNode)                                                                       \
+  X(SealedDeclNode)                                                                                \
+  X(MutDeclNode)                                                                                   \
   X(InlineDeclNode)
 
 } // namespace amelia

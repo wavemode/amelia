@@ -1,8 +1,5 @@
 #include <cstdint>
 #include <cstring>
-#include <string>
-#include <string_view>
-#include <utility>
 
 #include "prelude.hpp"
 #include "string.hpp"
@@ -77,6 +74,10 @@ Text String::text() const noexcept {
   return result;
 }
 
+uint64_t String::hash_code() const noexcept {
+  return amelia::hash(text());
+}
+
 CharIterator String::begin() const {
   return CharIterator(data());
 }
@@ -148,9 +149,3 @@ String String::from(List<char> str) {
 }
 
 } // namespace amelia
-
-namespace std {
-size_t hash<amelia::String>::operator()(const amelia::String &obj) const {
-  return std::hash<std::string_view>{}(std::string_view(obj.data().ptr(), obj.size()));
-}
-} // namespace std

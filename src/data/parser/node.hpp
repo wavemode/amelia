@@ -11,18 +11,18 @@ class Node {
 public:
 #define X(NODE_TYPE)                                                                               \
   Node(Location loc, NODE_TYPE node)                                                               \
-      : m_loc(loc), m_type(NodeType::NODE_TYPE), m_data(move(node)) {}                        \
+      : m_loc(loc), m_type(NodeType::NODE_TYPE), m_data(move(node)) {}                             \
                                                                                                    \
   NODE_TYPE &as_##NODE_TYPE() {                                                                    \
     if (m_type != NodeType::NODE_TYPE) {                                                           \
-      throw RuntimeError("Node type mismatch");                                              \
+      throw RuntimeError("Node type mismatch");                                                    \
     }                                                                                              \
     return m_data.data_##NODE_TYPE;                                                                \
   }                                                                                                \
                                                                                                    \
   const NODE_TYPE &as_##NODE_TYPE() const {                                                        \
     if (m_type != NodeType::NODE_TYPE) {                                                           \
-      throw RuntimeError("Node type mismatch");                                              \
+      throw RuntimeError("Node type mismatch");                                                    \
     }                                                                                              \
     return m_data.data_##NODE_TYPE;                                                                \
   }
@@ -37,8 +37,7 @@ public:
       : m_loc(other.m_loc), m_type(other.m_type), m_data(other.m_type, other.m_data) {}
 
   Node(Node &&other) noexcept
-      : m_loc(move(other.m_loc)), m_type(other.m_type),
-        m_data(other.m_type, move(other.m_data)) {}
+      : m_loc(move(other.m_loc)), m_type(other.m_type), m_data(other.m_type, move(other.m_data)) {}
 
   NodeType type() const {
     return m_type;
@@ -100,7 +99,7 @@ private:
       switch (type) {
 #define X(NODE_TYPE)                                                                               \
   case NodeType::NODE_TYPE:                                                                        \
-    new (&data_##NODE_TYPE) NODE_TYPE(move(other.data_##NODE_TYPE));                          \
+    new (&data_##NODE_TYPE) NODE_TYPE(move(other.data_##NODE_TYPE));                               \
     break;
         NODE_TYPE_LIST
 #undef X
@@ -122,7 +121,7 @@ private:
       switch (type) {
 #define X(NODE_TYPE)                                                                               \
   case NodeType::NODE_TYPE:                                                                        \
-    data_##NODE_TYPE = move(other.data_##NODE_TYPE);                                          \
+    data_##NODE_TYPE = move(other.data_##NODE_TYPE);                                               \
     break;
         NODE_TYPE_LIST
 #undef X

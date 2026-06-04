@@ -1,80 +1,316 @@
 #pragma once
 
 #include <cstddef>
-#include <initializer_list>
-#include <unordered_map>
-#include <utility>
+#include <cstdlib>
 
-#include "data/util/runtime_error.hpp"
-#include "data/util/abstract_iterator.hpp"
 #include "data/util/abstract_map.hpp"
 #include "data/util/option.hpp"
+#include "data/util/pair.hpp"
 #include "data/util/ref.hpp"
+#include "data/util/runtime_error.hpp"
+#include "data/util/utility.hpp"
 
 namespace amelia {
 
-template <typename K, typename V> class MapValueIterator;
-template <typename K, typename V> class ConstMapValueIterator;
+namespace util_internal {
+
+template <typename K, typename V> struct hash_map_table_element {
+  uint64_t hash;
+  Pair<K, V> pair;
+};
+
+template <typename K, typename V> struct hash_map_table {
+  hash_map_table_element<K, V> *elems = nullptr;
+  size_t table_size = 0;
+  size_t remaining_elems = 0;
+  size_t live_elems = 0;
+
+  hash_map_table() = default;
+
+  hash_map_table(const hash_map_table &other) {
+    for (size_t i = 0; i < other.table_size; ++i) {
+      const hash_map_table_element<K, V> &other_elem = other.elems[i];
+      if (is_first_bit_set_to_1(other_elem.hash)) {
+        put(K(other_elem.pair.first), V(other_elem.pair.second));
+      }
+    }
+  }
+
+  hash_map_table(hash_map_table &&other) noexcept
+      : elems(other.elems), table_size(other.table_size), remaining_elems(other.remaining_elems),
+        live_elems(other.live_elems) {
+    other.elems = nullptr;
+    other.table_size = 0;
+    other.remaining_elems = 0;
+    other.live_elems = 0;
+  }
+
+  ~hash_map_table() {
+    clear();
+    std::free(elems);
+  }
+
+  hash_map_table &operator=(const hash_map_table &other) {
+    if (this != &other) {
+      clear();
+      for (size_t i = 0; i < other.table_size; ++i) {
+        const hash_map_table_element<K, V> &other_elem = other.elems[i];
+        if (is_first_bit_set_to_1(other_elem.hash)) {
+          put(K(other_elem.pair.first), V(other_elem.pair.second));
+        }
+      }
+    }
+    return *this;
+  }
+
+  hash_map_table &operator=(hash_map_table &&other) noexcept {
+    if (this != &other) {
+      clear();
+      std::free(elems);
+      elems = other.elems;
+      table_size = other.table_size;
+      remaining_elems = other.remaining_elems;
+      live_elems = other.live_elems;
+      other.elems = nullptr;
+      other.table_size = 0;
+      other.remaining_elems = 0;
+      other.live_elems = 0;
+    }
+    return *this;
+  }
+
+  void clear() noexcept {
+    for (size_t i = 0; i < table_size; ++i) {
+      hash_map_table_element<K, V> &table_elem = elems[i];
+      if (is_first_bit_set_to_1(table_elem.hash)) {
+        table_elem.pair.first.~K();
+        table_elem.pair.second.~V();
+        table_elem.hash = set_2_highest_bits_to_01(table_elem.hash);
+        --live_elems;
+      }
+    }
+  }
+
+  void grow() {
+    hash_map_table<K, V> new_table;
+    new_table.table_size = table_size == 0 ? 16 : table_size * 2;
+    new_table.elems = static_cast<hash_map_table_element<K, V> *>(
+        std::calloc(new_table.table_size, sizeof(hash_map_table_element<K, V>))
+    );
+    if (!new_table.elems) {
+      std::abort();
+    }
+    new_table.remaining_elems = (new_table.table_size * 3) / 4;
+
+    for (size_t i = 0; i < table_size; ++i) {
+      hash_map_table_element<K, V> &table_elem = elems[i];
+      if (is_first_bit_set_to_1(table_elem.hash)) {
+        // this slot is in use, so we need to insert this element into the new table
+        new_table.put_with_hash(
+            set_2_highest_bits_to_00(table_elem.hash),
+            move(table_elem.pair.first),
+            move(table_elem.pair.second)
+        );
+      }
+    }
+
+    *this = move(new_table);
+  }
+
+  void put(K &&key, V &&value) {
+    uint64_t hash = set_2_highest_bits_to_00(amelia::hash(key));
+    put_with_hash(hash, move(key), move(value));
+  }
+
+  void put_with_hash(uint64_t hash, K &&key, V &&value) {
+    if (remaining_elems == 0) {
+      grow();
+    }
+    size_t index = hash % table_size;
+    size_t probe_length = 0;
+    while (true) {
+      hash_map_table_element<K, V> &table_elem = elems[index];
+      if (!is_first_bit_set_to_1(table_elem.hash)) {
+        // this slot is empty, so we can insert a new element here
+        break;
+      }
+
+      // this table element is in use
+
+      // check if the key of the table element matches the key we're inserting
+      uint64_t table_elem_hash = set_2_highest_bits_to_00(table_elem.hash);
+      if (table_elem_hash == hash && table_elem.pair.first == key) {
+        // the keys match, so we can simply update the value and return
+        table_elem.pair.second = move(value);
+        return;
+      }
+
+      // the keys don't match
+
+      // first, let's check the distance of the table element from its ideal position
+      size_t table_elem_ideal_position = table_elem_hash % table_size;
+      size_t table_elem_distance_from_ideal = (table_size - (table_elem_ideal_position - index)) %
+                                              table_size;
+
+      // if we have probed farther from our ideal position than the table element did from its ideal
+      // position, let's just store the new element here, and find a new place for the table element
+      if (probe_length > table_elem_distance_from_ideal) {
+        table_elem.hash = get_two_highest_bits(table_elem.hash) | hash;
+        hash = table_elem_hash;
+        swap(key, table_elem.pair.first);
+        swap(value, table_elem.pair.second);
+        probe_length = table_elem_distance_from_ideal;
+      }
+
+      index = (index + 1) % table_size;
+      ++probe_length;
+    }
+
+    // we found an empty slot, so we can insert the new element here
+    if (is_second_bit_set_to_1(elems[index].hash)) {
+      // we are reusing a tombstone, so the second bit needs to be 1 and we need to not decrement
+      // the remaining_elems count (since we are not actually using up a new slot in the table)
+      elems[index].hash = set_2_highest_bits_to_11(hash);
+    } else {
+      elems[index].hash = set_2_highest_bits_to_10(hash);
+      --remaining_elems;
+    }
+    new (&elems[index].pair.first) K(move(key));
+    new (&elems[index].pair.second) V(move(value));
+    ++live_elems;
+  }
+
+  int64_t index_of(const K &key) const {
+    if (table_size == 0) {
+      return -1;
+    }
+    uint64_t hash = set_2_highest_bits_to_00(amelia::hash(key));
+    size_t index = hash % table_size;
+    size_t probe_length = 0;
+    while (true) {
+      hash_map_table_element<K, V> &table_elem = elems[index];
+      uint64_t table_elem_hash = set_2_highest_bits_to_00(table_elem.hash);
+
+      if (is_first_bit_set_to_1(table_elem.hash)) {
+        if (table_elem_hash == hash && table_elem.pair.first == key) {
+          return index;
+        }
+
+        if (!is_second_bit_set_to_1(table_elem.hash)) {
+          // This is not a reused tombstone, so (due to the fairness created in put() via swapping)
+          // this element's distance-from-ideal must be less than or equal to the
+          // distance-from-ideal of every other element in the table. If we've currently searched
+          // farther than that, then our key is not in the table.
+          size_t table_elem_ideal_position = table_elem_hash % table_size;
+          size_t table_elem_distance_from_ideal = (table_size - (table_elem_ideal_position - index)
+                                                  ) %
+                                                  table_size;
+          if (probe_length > table_elem_distance_from_ideal) {
+            return -1;
+          }
+        }
+      } else if (!is_second_bit_set_to_1(table_elem.hash)) {
+        // we've reached an empty, never-used slot, so the key isn't in the table
+        return -1;
+      }
+      index = (index + 1) % table_size;
+      ++probe_length;
+    }
+  }
+
+  void remove(const K &key) {
+    int64_t index = index_of(key);
+    if (index == -1) {
+      return;
+    }
+    hash_map_table_element<K, V> &table_elem = elems[index];
+    --live_elems;
+    table_elem.pair.first.~K();
+    table_elem.pair.second.~V();
+    // leave behind a tombstone (first bit means unused, second bit means it was previously used)
+    table_elem.hash = set_2_highest_bits_to_01(table_elem.hash);
+  }
+
+  bool has(const K &key) const {
+    return index_of(key) != -1;
+  }
+};
+
+} // namespace util_internal
+
 template <typename K, typename V> class MapKeyIterator;
-template <typename K, typename V> class ConstMapKeyIterator;
+template <typename K, typename V> class MapValueIterator;
 template <typename K, typename V> class MapPairIterator;
-template <typename K, typename V> class ConstMapPairIterator;
+
+template <typename K, typename V> struct MapPair {
+  const K &first;
+  V &second;
+};
 
 template <typename K, typename V> class Map : public AbstractMap<K, V> {
 public:
   Map() = default;
-  Map(std::initializer_list<std::pair<const K, V>> init) : m_map(init) {}
+
+  template <size_t N> explicit Map(const Pair<K, V> (&array)[N]) {
+    for (size_t i = 0; i < N; ++i) {
+      set(array[i].first, array[i].second);
+    }
+  }
 
   bool has(const K &key) const override {
-    return m_map.find(key) != m_map.end();
+    return m_map.has(key);
   }
   size_t size() const noexcept override {
-    return m_map.size();
+    return m_map.live_elems;
   }
 
   void set(const K &key, V value) override {
-    m_map.insert_or_assign(key, move(value));
+    m_map.put(K(key), move(value));
   }
 
   V &get(const K &key) override {
-    if (!has(key)) {
-      throw RuntimeError("Key not found in map");
+    int64_t index = m_map.index_of(key);
+    if (index == -1) {
+      throw RuntimeError("Attempted to get a key that doesn't exist in the Map");
     }
-    return m_map.at(key);
+    return m_map.elems[index].pair.second;
   }
+
   const V &get(const K &key) const override {
-    if (!has(key)) {
-      throw RuntimeError("Key not found in map");
+    int64_t index = m_map.index_of(key);
+    if (index == -1) {
+      throw RuntimeError("Attempted to get a key that doesn't exist in the Map");
     }
-    return m_map.at(key);
+    return m_map.elems[index].pair.second;
   }
 
   Option<Ref<V>> find(const K &key) {
-    auto it = m_map.find(key);
-    if (it == m_map.end()) {
+    int64_t index = m_map.index_of(key);
+    if (index == -1) {
       return None();
     }
-    return Some(Ref(it->second));
+    return Some(Ref(m_map.elems[index].pair.second));
   }
 
-  Option<ConstRef<V>> find(const K &key) const {
-    auto it = m_map.find(key);
-    if (it == m_map.end()) {
+  Option<Ref<const V>> find(const K &key) const {
+    int64_t index = m_map.index_of(key);
+    if (index == -1) {
       return None();
     }
-    return Some(ConstRef(it->second));
+    return Some(Ref(static_cast<const V &>(m_map.elems[index].pair.second)));
   }
 
   void remove(const K &key) override {
-    m_map.erase(key);
+    m_map.remove(key);
   }
+
   V remove_and_get(const K &key) {
-    auto it = m_map.find(key);
-    if (it == m_map.end()) {
-      throw RuntimeError("Key not found in map");
+    int64_t index = m_map.index_of(key);
+    if (index == -1) {
+      throw RuntimeError("Attempted to remove_and_get a key that doesn't exist in the Map");
     }
-    V value = move(it->second);
-    m_map.erase(it);
+    V value = move(m_map.elems[index].pair.second);
+    m_map.remove(key);
     return value;
   }
 
@@ -83,449 +319,278 @@ public:
   }
 
   MapPairIterator<K, V> begin() {
-    return MapPairIterator(*this);
+    return MapPairIterator<K, V>(*this);
   }
-  ConstMapPairIterator<K, V> begin() const {
-    return ConstMapPairIterator(*this);
+
+  MapPairIterator<K, const V> begin() const {
+    return MapPairIterator<K, const V>(*this);
   }
+
   MapPairIterator<K, V> end() {
-    return MapPairIterator(*this).end();
+    return MapPairIterator<K, V>(*this).end();
   }
-  ConstMapPairIterator<K, V> end() const {
-    return ConstMapPairIterator(*this).end();
+
+  MapPairIterator<K, const V> end() const {
+    return MapPairIterator<K, const V>(*this).end();
   }
 
   MapPairIterator<K, V> pairs() {
-    return MapPairIterator(*this);
+    return begin();
   }
-  ConstMapPairIterator<K, V> pairs() const {
-    return ConstMapPairIterator(*this);
+
+  MapPairIterator<K, const V> pairs() const {
+    return begin();
   }
+
   MapKeyIterator<K, V> keys() {
-    return MapKeyIterator(MapPairIterator(*this));
+    return MapKeyIterator(begin());
   }
-  ConstMapKeyIterator<K, V> keys() const {
-    return ConstMapKeyIterator(ConstMapPairIterator(*this));
+
+  MapKeyIterator<K, const V> keys() const {
+    return MapKeyIterator(begin());
   }
+
   MapValueIterator<K, V> values() {
-    return MapValueIterator(MapPairIterator(*this));
+    return MapValueIterator(begin());
   }
-  ConstMapValueIterator<K, V> values() const {
-    return ConstMapValueIterator(ConstMapPairIterator(*this));
+
+  MapValueIterator<K, const V> values() const {
+    return MapValueIterator(begin());
   }
 
   V &operator[](const K &key) {
     return get(key);
   }
+
   const V &operator[](const K &key) const {
     return get(key);
   }
 
   bool operator==(const Map<K, V> &other) const {
-    return m_map == other.m_map;
+    if (size() != other.size()) {
+      return false;
+    }
+    for (const auto &pair : *this) {
+      const K &key = pair.first;
+      const V &value = pair.second;
+      size_t other_index = other.m_map.index_of(key);
+      if (other_index == -1 || other.m_map.elems[other_index].pair.second != value) {
+        return false;
+      }
+    }
+    return true;
   }
   bool operator!=(const Map<K, V> &other) const {
-    return m_map != other.m_map;
+    return !(*this == other);
   }
 
   friend class MapPairIterator<K, V>;
-  friend class ConstMapPairIterator<K, V>;
+  friend class MapPairIterator<K, const V>;
+  friend class MapPairIterator<const K, V>;
+  friend class MapPairIterator<const K, const V>;
 
 private:
-  std::unordered_map<K, V> m_map;
+  util_internal::hash_map_table<K, V> m_map;
 };
 
-template <typename K, typename V> class MapValueIterator : public AbstractIterator<V &> {
+template <typename K, typename V> class MapPairIterator {
 public:
-  explicit MapValueIterator(MapPairIterator<K, V> it) : m_it(it) {}
+  template <typename M>
+  explicit MapPairIterator(const M &map)
+      : MapPairIterator(map.m_map.elems, map.m_map.elems + map.m_map.table_size) {}
 
-  V &peek() override {
-    return **this;
-  }
-
-  V &next() override {
-    V &value = peek();
-    ++(*this);
-    return value;
-  }
-  bool at_end() const noexcept override {
-    return m_it.at_end();
+  bool at_end() const noexcept {
+    return m_it == m_end;
   }
 
-  MapValueIterator<K, V> begin() {
-    return *this;
-  }
-  ConstMapValueIterator<K, V> begin() const {
-    return ConstMapValueIterator(ConstMapPairIterator(m_it));
-  }
-  MapValueIterator<K, V> end() {
-    return MapValueIterator(m_it.end());
-  }
-  ConstMapValueIterator<K, V> end() const {
-    return ConstMapValueIterator(ConstMapPairIterator(m_it.end()));
+  MapPair<K, V> peek() const {
+    if (at_end()) {
+      throw RuntimeError("Attempted to peek past end of iterator");
+    }
+    return MapPair<K, V>{it()->pair.first, it()->pair.second};
   }
 
-  V &operator*() {
-    return m_it->second;
-  }
-  V *operator->() {
-    return &(m_it->second);
-  }
-
-  MapValueIterator<K, V> &operator++() {
-    ++m_it;
-    return *this;
-  }
-
-  MapValueIterator<K, V> operator++(int) {
-    auto &tmp = *this;
-    ++(*this);
-    return tmp;
-  }
-
-  bool operator==(const MapValueIterator &other) const {
-    return m_it == other.m_it;
-  }
-  bool operator!=(const MapValueIterator &other) const {
-    return m_it != other.m_it;
-  }
-
-private:
-  MapPairIterator<K, V> m_it;
-};
-
-template <typename K, typename V> class MapKeyIterator : public AbstractIterator<const K &> {
-public:
-  explicit MapKeyIterator(MapPairIterator<K, V> it) : m_it(it) {}
-
-  const K &peek() override {
-    return **this;
-  }
-
-  const K &next() override {
-    const K &key = peek();
-    ++(*this);
-    return key;
-  }
-
-  bool at_end() const noexcept override {
-    return m_it.at_end();
-  }
-
-  MapKeyIterator<K, V> begin() {
-    return *this;
-  }
-  ConstMapKeyIterator<K, V> begin() const {
-    return ConstMapKeyIterator(ConstMapPairIterator(m_it));
-  }
-  MapKeyIterator<K, V> end() {
-    return MapKeyIterator(m_it.end());
-  }
-  ConstMapKeyIterator<K, V> end() const {
-    return ConstMapKeyIterator(ConstMapPairIterator(m_it.end()));
-  }
-
-  const K &operator*() {
-    return m_it->first;
-  }
-  const K *operator->() {
-    return &(m_it->first);
-  }
-
-  MapKeyIterator<K, V> &operator++() {
-    ++m_it;
-    return *this;
-  }
-
-  MapKeyIterator<K, V> operator++(int) {
-    auto &tmp = *this;
-    ++(*this);
-    return tmp;
-  }
-  bool operator==(const MapKeyIterator &other) const {
-    return m_it == other.m_it;
-  }
-  bool operator!=(const MapKeyIterator &other) const {
-    return m_it != other.m_it;
-  }
-
-private:
-  MapPairIterator<K, V> m_it;
-};
-
-template <typename K, typename V>
-class MapPairIterator : public AbstractIterator<std::pair<const K, V> &> {
-public:
-  using value_type = std::pair<const K, V>;
-
-  explicit MapPairIterator(Map<K, V> &map) : m_begin(map.m_map.begin()), m_end(map.m_map.end()) {}
-
-  value_type &peek() override {
-    return **this;
-  }
-
-  value_type &next() override {
-    value_type &pair = peek();
-    ++(*this);
+  MapPair<K, V> next() {
+    if (at_end()) {
+      throw RuntimeError("Attempted to next past end of iterator");
+    }
+    MapPair<K, V> pair = peek();
+    do {
+      m_it = it() + 1;
+    } while (m_it != m_end && !util_internal::is_first_bit_set_to_1(it()->hash));
     return pair;
-  }
-
-  bool at_end() const noexcept override {
-    return m_begin == m_end;
   }
 
   MapPairIterator<K, V> begin() {
     return *this;
   }
-  ConstMapPairIterator<K, V> begin() const {
-    return ConstMapPairIterator(*this);
+
+  MapPairIterator<K, const V> begin() const {
+    return *this;
   }
+
   MapPairIterator<K, V> end() {
-    return MapPairIterator(m_end, m_end);
-  }
-  ConstMapPairIterator<K, V> end() const {
-    return ConstMapPairIterator(m_end, m_end);
+    return MapPairIterator<K, V>(m_end, m_end);
   }
 
-  value_type &operator*() {
-    if (at_end()) {
-      throw RuntimeError("Attempted to dereference end iterator");
-    }
-    return *m_begin;
-  }
-
-  value_type *operator->() {
-    if (at_end()) {
-      throw RuntimeError("Attempted to dereference end iterator");
-    }
-    return &(*m_begin);
+  MapPairIterator<K, const V> end() const {
+    return MapPairIterator<K, V>(m_end, m_end);
   }
 
   MapPairIterator<K, V> &operator++() {
-    if (at_end()) {
-      throw RuntimeError("Attempted to advance past the end of the map");
-    }
-    ++m_begin;
+    next();
     return *this;
   }
 
   MapPairIterator<K, V> operator++(int) {
-    if (at_end()) {
-      throw RuntimeError("Attempted to advance past the end of the map");
-    }
     auto &tmp = *this;
-    ++(*this);
+    next();
     return tmp;
+  }
+
+  MapPair<K, V> operator*() {
+    return peek();
   }
 
   bool operator==(const MapPairIterator &other) const {
-    return m_begin == other.m_begin;
+    return m_it == other.m_it;
   }
+
   bool operator!=(const MapPairIterator &other) const {
-    return m_begin != other.m_begin;
-  }
-
-  friend class ConstMapPairIterator<K, V>;
-
-private:
-  MapPairIterator(
-      typename std::unordered_map<K, V>::iterator begin,
-      typename std::unordered_map<K, V>::iterator end
-  )
-      : m_begin(begin), m_end(end) {}
-
-  typename std::unordered_map<K, V>::iterator m_begin;
-  typename std::unordered_map<K, V>::iterator m_end;
-};
-
-template <typename K, typename V> class ConstMapValueIterator : public AbstractIterator<const V &> {
-public:
-  explicit ConstMapValueIterator(ConstMapPairIterator<K, V> it) : m_it(it) {}
-
-  const V &peek() override {
-    return **this;
-  }
-
-  const V &next() override {
-    const V &value = peek();
-    ++(*this);
-    return value;
-  }
-
-  bool at_end() const noexcept override {
-    return m_it.at_end();
-  }
-
-  ConstMapValueIterator<K, V> begin() const {
-    return *this;
-  }
-  ConstMapValueIterator<K, V> end() const {
-    return ConstMapValueIterator(m_it.end());
-  }
-
-  const V &operator*() {
-    return m_it->second;
-  }
-  const V *operator->() {
-    return &(m_it->second);
-  }
-
-  ConstMapValueIterator<K, V> &operator++() {
-    ++m_it;
-    return *this;
-  }
-
-  ConstMapValueIterator<K, V> operator++(int) {
-    auto &tmp = *this;
-    ++(*this);
-    return tmp;
-  }
-
-  bool operator==(const ConstMapValueIterator &other) const {
-    return m_it == other.m_it;
-  }
-  bool operator!=(const ConstMapValueIterator &other) const {
     return m_it != other.m_it;
   }
 
 private:
-  ConstMapPairIterator<K, V> m_it;
+  MapPairIterator(void *begin, void *end) : m_it(begin), m_end(end) {
+    while (m_it != m_end && !util_internal::is_first_bit_set_to_1(it()->hash)) {
+      m_it = it() + 1;
+    }
+  }
+
+  void *m_it;
+  void *m_end;
+
+  util_internal::hash_map_table_element<K, V> *it() const {
+    return static_cast<util_internal::hash_map_table_element<K, V> *>(m_it);
+  }
 };
 
-template <typename K, typename V> class ConstMapKeyIterator : public AbstractIterator<const K &> {
+template <typename K, typename V> class MapValueIterator {
 public:
-  explicit ConstMapKeyIterator(ConstMapPairIterator<K, V> it) : m_it(it) {}
+  MapValueIterator(MapPairIterator<K, V> pair_it) : m_pair_it(pair_it) {}
 
-  const K &peek() override {
-    return **this;
-  }
-
-  const K &next() override {
-    const K &key = peek();
-    ++(*this);
-    return key;
+  bool at_end() const noexcept {
+    return m_pair_it.at_end();
   }
 
-  bool at_end() const noexcept override {
-    return m_it.at_end();
+  V &peek() const {
+    return m_pair_it.peek().second;
   }
 
-  ConstMapKeyIterator<K, V> begin() const {
-    return *this;
-  }
-  ConstMapKeyIterator<K, V> end() const {
-    return ConstMapKeyIterator(m_it.end());
+  V &next() {
+    return m_pair_it.next().second;
   }
 
-  const K &operator*() {
-    return m_it->first;
-  }
-  const K *operator->() {
-    return &(m_it->first);
-  }
-
-  ConstMapKeyIterator<K, V> &operator++() {
-    ++m_it;
+  MapValueIterator<K, V> begin() {
     return *this;
   }
 
-  ConstMapKeyIterator<K, V> operator++(int) {
+  MapValueIterator<K, const V> begin() const {
+    return *this;
+  }
+
+  MapValueIterator<K, V> end() {
+    return MapValueIterator(m_pair_it.end());
+  }
+
+  MapValueIterator<K, const V> end() const {
+    return MapValueIterator(m_pair_it.end());
+  }
+
+  MapValueIterator<K, V> &operator++() {
+    next();
+    return *this;
+  }
+
+  MapValueIterator<K, V> operator++(int) {
     auto &tmp = *this;
-    ++(*this);
+    next();
     return tmp;
   }
 
-  bool operator==(const ConstMapKeyIterator &other) const {
-    return m_it == other.m_it;
+  V &operator*() {
+    return peek();
   }
-  bool operator!=(const ConstMapKeyIterator &other) const {
-    return m_it != other.m_it;
+
+  bool operator==(const MapValueIterator &other) const {
+    return m_pair_it == other.m_pair_it;
+  }
+
+  bool operator!=(const MapValueIterator &other) const {
+    return m_pair_it != other.m_pair_it;
   }
 
 private:
-  ConstMapPairIterator<K, V> m_it;
+  MapPairIterator<K, V> m_pair_it;
 };
 
-template <typename K, typename V>
-class ConstMapPairIterator : public AbstractIterator<const std::pair<const K, V> &> {
+template <typename K, typename V> class MapKeyIterator {
 public:
-  using value_type = const std::pair<const K, V>;
+  MapKeyIterator(MapPairIterator<K, V> pair_it) : m_pair_it(pair_it) {}
 
-  explicit ConstMapPairIterator(const Map<K, V> &map)
-      : m_begin(map.m_map.begin()), m_end(map.m_map.end()) {}
-
-  ConstMapPairIterator(MapPairIterator<K, V> it) : m_begin(it.m_begin), m_end(it.m_end) {}
-
-  value_type &operator*() {
-    if (at_end()) {
-      throw RuntimeError("Attempted to dereference end iterator");
-    }
-    return *m_begin;
+  bool at_end() const noexcept {
+    return m_pair_it.at_end();
   }
 
-  value_type &peek() override {
-    return **this;
+  const K &peek() const {
+    return m_pair_it.peek().first;
   }
 
-  const value_type &next() override {
-    const value_type &pair = peek();
-    ++(*this);
-    return pair;
+  const K &next() {
+    return m_pair_it.next().first;
   }
 
-  bool at_end() const noexcept override {
-    return m_begin == m_end;
-  }
-
-  ConstMapPairIterator<K, V> begin() const {
-    return *this;
-  }
-  ConstMapPairIterator<K, V> end() const {
-    return ConstMapPairIterator(m_end, m_end);
-  }
-
-  value_type *operator->() {
-    if (at_end()) {
-      throw RuntimeError("Attempted to dereference end iterator");
-    }
-    return &(*m_begin);
-  }
-
-  ConstMapPairIterator<K, V> &operator++() {
-    if (at_end()) {
-      throw RuntimeError("Attempted to advance past the end of the map");
-    }
-    ++m_begin;
+  MapKeyIterator<K, V> begin() {
     return *this;
   }
 
-  ConstMapPairIterator<K, V> operator++(int) {
-    if (at_end()) {
-      throw RuntimeError("Attempted to advance past the end of the map");
-    }
+  MapKeyIterator<K, const V> begin() const {
+    return *this;
+  }
+
+  MapKeyIterator<K, V> end() {
+    return MapKeyIterator(m_pair_it.end());
+  }
+
+  MapKeyIterator<K, const V> end() const {
+    return MapKeyIterator(m_pair_it.end());
+  }
+
+  MapKeyIterator<K, V> &operator++() {
+    next();
+    return *this;
+  }
+
+  MapKeyIterator<K, V> operator++(int) {
     auto &tmp = *this;
-    ++(*this);
+    next();
     return tmp;
   }
 
-  bool operator==(const ConstMapPairIterator &other) const {
-    return m_begin == other.m_begin;
-  }
-  bool operator!=(const ConstMapPairIterator &other) const {
-    return m_begin != other.m_begin;
+  const K &operator*() const {
+    return peek();
   }
 
-  friend class MapPairIterator<K, V>;
+  bool operator==(const MapKeyIterator &other) const {
+    return m_pair_it == other.m_pair_it;
+  }
+
+  bool operator!=(const MapKeyIterator &other) const {
+    return m_pair_it != other.m_pair_it;
+  }
 
 private:
-  ConstMapPairIterator(
-      typename std::unordered_map<K, V>::const_iterator begin,
-      typename std::unordered_map<K, V>::const_iterator end
-  )
-      : m_begin(begin), m_end(end) {}
-
-  typename std::unordered_map<K, V>::const_iterator m_begin;
-  typename std::unordered_map<K, V>::const_iterator m_end;
+  MapPairIterator<K, V> m_pair_it;
 };
 
 } // namespace amelia

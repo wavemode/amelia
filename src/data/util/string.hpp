@@ -91,6 +91,13 @@ public:
   void clear() noexcept;
 
   /**
+   * @brief Compute a hash code for this String. The hash code is based on the sequence of Unicode
+   * code points in the String, so two String instances that are equal (i.e. contain the same
+   * sequence of Unicode code points) will have the same hash code.
+   */
+  uint64_t hash_code() const noexcept;
+
+  /**
    * @return An iterator pointing to the first Unicode code point in the string.
    */
   CharIterator begin() const;
@@ -182,9 +189,3 @@ private:
 };
 
 } // namespace amelia
-
-namespace std {
-template <> struct hash<amelia::String> {
-  size_t operator()(const amelia::String &obj) const;
-};
-} // namespace std

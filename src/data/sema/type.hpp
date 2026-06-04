@@ -2,8 +2,8 @@
 
 #include "prelude.hpp"
 
-#include "data/source/declaration_visibility.hpp"
 #include "data/sema/type_kind.hpp"
+#include "data/source/declaration_visibility.hpp"
 
 namespace amelia {
 
@@ -52,19 +52,19 @@ public:
   struct ModuleDecl {};
 
 #define X(TYPE_KIND)                                                                               \
-  Type(DeclVisibility vis, TYPE_KIND type)                                                  \
-      : visibility(vis), m_kind(TypeKind::TYPE_KIND), m_data(move(type)) {}                   \
+  Type(DeclVisibility vis, TYPE_KIND type)                                                         \
+      : visibility(vis), m_kind(TypeKind::TYPE_KIND), m_data(move(type)) {}                        \
                                                                                                    \
   TYPE_KIND &as_##TYPE_KIND() {                                                                    \
     if (m_kind != TypeKind::TYPE_KIND) {                                                           \
-      throw RuntimeError("Type kind mismatch");                                              \
+      throw RuntimeError("Type kind mismatch");                                                    \
     }                                                                                              \
     return m_data.data_##TYPE_KIND;                                                                \
   }                                                                                                \
                                                                                                    \
   const TYPE_KIND &as_##TYPE_KIND() const {                                                        \
     if (m_kind != TypeKind::TYPE_KIND) {                                                           \
-      throw RuntimeError("Type kind mismatch");                                              \
+      throw RuntimeError("Type kind mismatch");                                                    \
     }                                                                                              \
     return m_data.data_##TYPE_KIND;                                                                \
   }
@@ -144,7 +144,7 @@ private:
       switch (kind) {
 #define X(TYPE_KIND)                                                                               \
   case TypeKind::TYPE_KIND:                                                                        \
-    new (&data_##TYPE_KIND) TYPE_KIND(move(other.data_##TYPE_KIND));                          \
+    new (&data_##TYPE_KIND) TYPE_KIND(move(other.data_##TYPE_KIND));                               \
     break;
         TYPE_KIND_LIST
 #undef X
@@ -166,7 +166,7 @@ private:
       switch (kind) {
 #define X(TYPE_KIND)                                                                               \
   case TypeKind::TYPE_KIND:                                                                        \
-    data_##TYPE_KIND = move(other.data_##TYPE_KIND);                                          \
+    data_##TYPE_KIND = move(other.data_##TYPE_KIND);                                               \
     break;
         TYPE_KIND_LIST
 #undef X

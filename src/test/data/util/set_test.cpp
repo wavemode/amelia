@@ -22,7 +22,7 @@ TEST_CASE("add, has") {
 }
 
 TEST_CASE("clear") {
-  Set<String> set = {"a", "b", "c"};
+  auto set = Set<String>({"a", "b", "c"});
   CHECK(set.has("a"));
   CHECK(set.has("b"));
   CHECK(set.has("c"));
@@ -48,10 +48,10 @@ TEST_CASE("remove") {
 }
 
 TEST_CASE("equals") {
-  Set<String> set1 = {"a", "b", "c"};
-  Set<String> set2 = {"a", "b", "c"};
-  Set<String> set3 = {"a", "b"};
-  Set<String> set4 = {"a", "b", "c"};
+  auto set1 = Set<String>({"a", "b", "c"});
+  auto set2 = Set<String>({"a", "b", "c"});
+  auto set3 = Set<String>({"a", "b"});
+  auto set4 = Set<String>({"a", "b", "c"});
 
   CHECK(set1 == set2);
   CHECK(set1 != set3);
@@ -71,9 +71,9 @@ TEST_CASE("equals") {
 }
 
 TEST_CASE("iterator") {
-  Set<String> set = {"a", "b", "c"};
+  auto set = Set<String>({"a", "b", "c"});
   Set<String> seen;
-  for (auto &value : set) {
+  for (const String &value : set) {
     seen.add(value);
   }
   CHECK(seen.has("a"));
@@ -82,7 +82,7 @@ TEST_CASE("iterator") {
 }
 
 TEST_CASE("iterator - manual") {
-  Set<String> set = {"a", "b", "c"};
+  auto set = Set<String>({"a", "b", "c"});
   auto it = set.begin();
   auto end = set.end();
   Set<String> seen;

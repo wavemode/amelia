@@ -22,7 +22,7 @@ TEST_CASE("get, set") {
 }
 
 TEST_CASE("has and clear") {
-  Map<String, int> map = {{"a", 1}, {"b", 2}, {"c", 3}};
+  auto map = Map<String, int>({{"a", 1}, {"b", 2}, {"c", 3}});
   CHECK(map.has("a"));
   CHECK(map.has("b"));
   CHECK(map.has("c"));
@@ -87,10 +87,10 @@ TEST_CASE("remove and remove_and_get") {
 }
 
 TEST_CASE("equals") {
-  Map<String, int> map1 = {{"a", 1}, {"b", 2}, {"c", 3}};
-  Map<String, int> map2 = {{"a", 1}, {"b", 2}, {"c", 3}};
-  Map<String, int> map3 = {{"a", 1}, {"b", 2}};
-  Map<String, int> map4 = {{"a", 1}, {"b", 2}, {"c", 4}};
+  auto map1 = Map<String, int>({{"a", 1}, {"b", 2}, {"c", 3}});
+  auto map2 = Map<String, int>({{"a", 1}, {"b", 2}, {"c", 3}});
+  auto map3 = Map<String, int>({{"a", 1}, {"b", 2}});
+  auto map4 = Map<String, int>({{"a", 1}, {"b", 2}, {"c", 4}});
 
   CHECK(map1 == map2);
   CHECK(map1 != map3);
@@ -113,9 +113,9 @@ TEST_CASE("equals") {
 }
 
 TEST_CASE("pair iterator") {
-  Map<String, int> map = {{"a", 1}, {"b", 2}, {"c", 3}};
+  auto map = Map<String, int>({{"a", 1}, {"b", 2}, {"c", 3}});
   Map<String, int> seen;
-  for (auto &[key, value] : map) {
+  for (auto [key, value] : map) {
     seen.set(key, value);
   }
   CHECK(seen.get("a") == 1);
@@ -133,12 +133,12 @@ TEST_CASE("pair iterator") {
 }
 
 TEST_CASE("pair iterator - manual") {
-  Map<String, int> map = {{"a", 1}, {"b", 2}, {"c", 3}};
+  auto map = Map<String, int>({{"a", 1}, {"b", 2}, {"c", 3}});
   auto it = map.begin();
   auto end = map.end();
   Map<String, int> seen;
   for (; it != end; ++it) {
-    auto &[key, value] = *it;
+    const auto &[key, value] = *it;
     seen.set(key, value);
   }
   CHECK(seen.get("a") == 1);
@@ -150,7 +150,7 @@ TEST_CASE("pair iterator - manual") {
 }
 
 TEST_CASE("key iterator") {
-  Map<String, int> map = {{"a", 1}, {"b", 2}, {"c", 3}};
+  auto map = Map<String, int>({{"a", 1}, {"b", 2}, {"c", 3}});
   List<String> seen;
   for (const String &key : map.keys()) {
     seen.push_back(key);
@@ -170,7 +170,7 @@ TEST_CASE("key iterator") {
 }
 
 TEST_CASE("key iterator - manual") {
-  Map<String, int> map = {{"a", 1}, {"b", 2}, {"c", 3}};
+  auto map = Map<String, int>({{"a", 1}, {"b", 2}, {"c", 3}});
   auto it = map.keys().begin();
   auto end = map.keys().end();
   List<String> seen;
@@ -187,7 +187,7 @@ TEST_CASE("key iterator - manual") {
 }
 
 TEST_CASE("value iterator") {
-  Map<String, int> map = {{"a", 1}, {"b", 2}, {"c", 3}};
+  auto map = Map<String, int>({{"a", 1}, {"b", 2}, {"c", 3}});
   List<int> seen;
   for (int &value : map.values()) {
     seen.push_back(value);
@@ -207,7 +207,7 @@ TEST_CASE("value iterator") {
 }
 
 TEST_CASE("value iterator - manual") {
-  Map<String, int> map = {{"a", 1}, {"b", 2}, {"c", 3}};
+  auto map = Map<String, int>({{"a", 1}, {"b", 2}, {"c", 3}});
   auto it = map.values().begin();
   auto end = map.values().end();
   List<int> seen;

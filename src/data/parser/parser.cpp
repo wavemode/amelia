@@ -54,9 +54,7 @@ public:
 
   void parse_statements(List<NodeId> &stmts, TokenType terminator) {
     while (peek().type != terminator) {
-      auto stmt_token = peek();
       stmts.push_back(parse_statement());
-
       if (stmts.size() > 1) {
         enforce_statement_separator(stmts[stmts.size() - 2], stmts[stmts.size() - 1]);
       }
@@ -64,7 +62,6 @@ public:
   }
 
   List<NodeId> parse_introductory_decls() {
-    auto start_token = peek();
     List<NodeId> decls;
     while (true) {
       auto decl = try_parse_decl();

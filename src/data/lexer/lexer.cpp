@@ -15,7 +15,7 @@ namespace amelia {
 
 namespace {
 
-const Map<Text, TokenType> keywords = {
+const auto keywords = Map<Text, TokenType>({
     {"fun", TokenType::KEYWORD_FUN},
     {"if", TokenType::KEYWORD_IF},
     {"else", TokenType::KEYWORD_ELSE},
@@ -91,7 +91,7 @@ const Map<Text, TokenType> keywords = {
     {"in", TokenType::KEYWORD_IN},
     {"label", TokenType::KEYWORD_LABEL},
     {"super", TokenType::KEYWORD_SUPER},
-};
+});
 
 bool is_whitespace(uint32_t cp) noexcept {
   return cp == ' ' || cp == '\t' || cp == '\n' || cp == '\r';

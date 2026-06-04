@@ -68,12 +68,12 @@ Text Text::from(const char *c_str) {
   return Text(ConstSlice(c_str, std::strlen(c_str)));
 }
 
-} // namespace amelia
-
-namespace std {
-
-size_t hash<amelia::Text>::operator()(const amelia::Text &obj) const {
-  return amelia::hash_str(obj.data().ptr(), obj.data().size());
+uint64_t Text::hash_code() const noexcept {
+  uint64_t hash = 0xcbf29ce484222325;
+  for (uint32_t cp : *this) {
+    hash ^= amelia::hash(cp);
+  }
+  return hash;
 }
 
-} // namespace std
+} // namespace amelia

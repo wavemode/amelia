@@ -11,8 +11,7 @@ namespace amelia {
  * @brief Exception thrown by the lexer when it encounters an error.
  */
 struct LexerError : public SourceLocationError {
-  LexerError(Location loc, String message) noexcept
-      : SourceLocationError(loc, move(message)) {}
+  LexerError(Location loc, String message) noexcept : SourceLocationError(loc, move(message)) {}
 };
 
 } // namespace amelia

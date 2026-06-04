@@ -29,12 +29,12 @@ TEST_CASE("push_back and size") {
 }
 
 TEST_CASE("emplace_back") {
-  List<std::pair<int, int>> list;
+  List<Pair<int, int>> list;
   list.emplace_back(1, 2);
   CHECK(list[0].first == 1);
   CHECK(list[0].second == 2);
 
-  std::pair<int, int> &elem2 = list.emplace_back(3, 4);
+  Pair<int, int> &elem2 = list.emplace_back(3, 4);
   CHECK(list[1].first == 3);
   CHECK(list[1].second == 4);
   elem2.first = 5;

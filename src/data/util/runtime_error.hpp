@@ -10,6 +10,7 @@ public:
   const char *what() const noexcept override;
 
   ~RuntimeError() noexcept override;
+
 private:
   const char *m_message;
 };

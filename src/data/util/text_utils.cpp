@@ -1,6 +1,7 @@
-#include "text_utils.hpp"
+#include <cstdio>
 
 #include "prelude.hpp"
+#include "text_utils.hpp"
 
 namespace amelia {
 
@@ -558,18 +559,30 @@ Text TextUtils::tail_bytes(Text input, size_t index_start) {
 }
 
 void TextUtils::to_string(AbstractString &output, int64_t value) {
-  std::string s1 = std::to_string(value);
-  output.append(Text::from(s1.c_str()));
+  char buffer[21];
+  int64_t chars_written = sprintf(buffer, "%lld", static_cast<long long>(value));
+  if (chars_written < 0) {
+    throw RuntimeError("Failed to convert integer to string");
+  }
+  output.append(Text(Slice(buffer, static_cast<size_t>(chars_written))));
 }
 
 void TextUtils::to_string(AbstractString &output, size_t value) {
-  std::string s1 = std::to_string(value);
-  output.append(Text::from(s1.c_str()));
+  char buffer[21];
+  int64_t chars_written = sprintf(buffer, "%zu", value);
+  if (chars_written < 0) {
+    throw RuntimeError("Failed to convert size_t to string");
+  }
+  output.append(Text(Slice(buffer, static_cast<size_t>(chars_written))));
 }
 
 void TextUtils::to_string(AbstractString &output, double value) {
-  std::string s1 = std::to_string(value);
-  output.append(Text::from(s1.c_str()));
+  char buffer[32];
+  int64_t chars_written = sprintf(buffer, "%g", value);
+  if (chars_written < 0) {
+    throw RuntimeError("Failed to convert double to string");
+  }
+  output.append(Text(Slice(buffer, static_cast<size_t>(chars_written))));
 }
 
 void TextUtils::to_string(AbstractString &output, bool value) {

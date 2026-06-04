@@ -3,7 +3,6 @@
 #include <cstddef>
 
 #include "data/util/runtime_error.hpp"
-#include "data/util/abstract_iterator.hpp"
 
 namespace amelia {
 
@@ -89,7 +88,7 @@ private:
   size_t m_len;
 };
 
-template <typename T> class SliceIterator : public AbstractIterator<T &> {
+template <typename T> class SliceIterator {
 public:
   SliceIterator() noexcept : m_ptr(nullptr), m_len(0) {}
 
@@ -119,17 +118,17 @@ public:
     return ConstSliceIterator(m_ptr + m_len, 0);
   }
 
-  T &peek() override {
+  T &peek() {
     return **this;
   }
 
-  T &next() override {
+  T &next() {
     T &value = peek();
     ++(*this);
     return value;
   }
 
-  bool at_end() const noexcept override {
+  bool at_end() const noexcept {
     return m_len == 0;
   }
 
@@ -264,7 +263,7 @@ private:
   size_t m_len;
 };
 
-template <typename T> class ConstSliceIterator : public AbstractIterator<const T &> {
+template <typename T> class ConstSliceIterator {
 public:
   ConstSliceIterator() noexcept : m_ptr(nullptr), m_len(0) {}
 
@@ -315,17 +314,17 @@ public:
     return *m_ptr;
   }
 
-  const T &peek() override {
+  const T &peek() {
     return **this;
   }
 
-  const T &next() override {
+  const T &next() {
     const T &value = peek();
     ++(*this);
     return value;
   }
 
-  bool at_end() const noexcept override {
+  bool at_end() const noexcept {
     return m_len == 0;
   }
 
