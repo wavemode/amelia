@@ -950,11 +950,6 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "decl", n.decl);
     break;
   }
-  case NodeType::ExportDeclNode: {
-    const auto &n = node.as_ExportDeclNode();
-    print_node_field(out, "decl", n.decl);
-    break;
-  }
   case NodeType::RecordDeclNode: {
     const auto &n = node.as_RecordDeclNode();
     print_node_field(out, "decl", n.decl);

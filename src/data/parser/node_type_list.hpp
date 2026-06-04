@@ -699,10 +699,6 @@ struct AsyncDeclNode {
   NodeId decl;
 };
 
-struct ExportDeclNode {
-  NodeId decl;
-};
-
 struct ImplTypeExprNode {
   NodeId type;
 };
@@ -973,7 +969,6 @@ struct InlineDeclNode {
   X(ModuleDeclNode)                                                                                \
   X(AsyncDeclNode)                                                                                 \
   X(ExternDeclNode)                                                                                \
-  X(ExportDeclNode)                                                                                \
   X(RecordDeclNode)                                                                                \
   X(UnionDeclNode)                                                                                 \
   X(EnumDeclNode)                                                                                  \
