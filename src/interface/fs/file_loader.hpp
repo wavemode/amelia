@@ -1,5 +1,7 @@
 #pragma once
 
+#include "prelude.hpp"
+
 namespace amelia {
 
 struct AbstractString;

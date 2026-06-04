@@ -6,7 +6,7 @@
 
 namespace amelia {
 
-namespace util_internal {
+namespace internal {
 
 template <typename T> struct hash_set_table_element {
   uint64_t hash;
@@ -217,7 +217,7 @@ template <typename T> struct hash_set_table {
   }
 };
 
-} // namespace util_internal
+} // namespace internal
 
 template <typename T> class SetIterator;
 
@@ -277,7 +277,7 @@ public:
   friend class SetIterator<T>;
 
 private:
-  util_internal::hash_set_table<T> m_set;
+  internal::hash_set_table<T> m_set;
 };
 
 template <typename T> class SetIterator {
@@ -299,7 +299,7 @@ public:
     const T &value = peek();
     do {
       m_it = it() + 1;
-    } while (m_it != m_end && !util_internal::is_first_bit_set_to_1(it()->hash));
+    } while (m_it != m_end && !internal::is_first_bit_set_to_1(it()->hash));
     return value;
   }
 
@@ -348,7 +348,7 @@ public:
 
 private:
   SetIterator(void *begin, void *end) : m_it(begin), m_end(end) {
-    while (m_it != m_end && !util_internal::is_first_bit_set_to_1(it()->hash)) {
+    while (m_it != m_end && !internal::is_first_bit_set_to_1(it()->hash)) {
       m_it = it() + 1;
     }
   }
@@ -356,8 +356,8 @@ private:
   void *m_it;
   void *m_end;
 
-  util_internal::hash_set_table_element<T> *it() const {
-    return static_cast<util_internal::hash_set_table_element<T> *>(m_it);
+  internal::hash_set_table_element<T> *it() const {
+    return static_cast<internal::hash_set_table_element<T> *>(m_it);
   }
 };
 

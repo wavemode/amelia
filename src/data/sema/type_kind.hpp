@@ -1,3 +1,5 @@
+#pragma once
+
 #define TYPE_KIND_LIST                                                                             \
   X(Alias)                                                                                         \
   X(Apply)                                                                                         \

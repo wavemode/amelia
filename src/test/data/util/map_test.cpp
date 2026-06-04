@@ -2,6 +2,8 @@
 
 #include "prelude.hpp"
 
+#include "data/util/map.hpp"
+
 TEST_SUITE_BEGIN("Map");
 
 using namespace amelia;

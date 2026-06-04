@@ -3,7 +3,6 @@
 #include <string>
 
 #include "file_loader.hpp"
-#include "prelude.hpp"
 
 namespace amelia {
 
@@ -17,6 +16,17 @@ void FileLoader::load_file(AbstractString &output, const AbstractString &file_pa
   std::ostringstream ss;
   ss << file.rdbuf();
   output.assign(Text::from(ss.str().c_str()));
+}
+
+Option<RuntimeError> FileLoader::try_load_file(
+    AbstractString &output, const AbstractString &file_path
+) {
+  try {
+    load_file(output, file_path);
+    return None();
+  } catch (const RuntimeError &e) {
+    return Some(RuntimeError(e.what()));
+  }
 }
 
 } // namespace amelia

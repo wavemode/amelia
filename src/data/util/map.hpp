@@ -12,7 +12,7 @@
 
 namespace amelia {
 
-namespace util_internal {
+namespace internal {
 
 template <typename K, typename V> struct hash_map_table_element {
   uint64_t hash;
@@ -236,7 +236,7 @@ template <typename K, typename V> struct hash_map_table {
   }
 };
 
-} // namespace util_internal
+} // namespace internal
 
 template <typename K, typename V> class MapKeyIterator;
 template <typename K, typename V> class MapValueIterator;
@@ -390,7 +390,7 @@ public:
   friend class MapPairIterator<const K, const V>;
 
 private:
-  util_internal::hash_map_table<K, V> m_map;
+  internal::hash_map_table<K, V> m_map;
 };
 
 template <typename K, typename V> class MapPairIterator {
@@ -417,7 +417,7 @@ public:
     MapPair<K, V> pair = peek();
     do {
       m_it = it() + 1;
-    } while (m_it != m_end && !util_internal::is_first_bit_set_to_1(it()->hash));
+    } while (m_it != m_end && !internal::is_first_bit_set_to_1(it()->hash));
     return pair;
   }
 
@@ -462,7 +462,7 @@ public:
 
 private:
   MapPairIterator(void *begin, void *end) : m_it(begin), m_end(end) {
-    while (m_it != m_end && !util_internal::is_first_bit_set_to_1(it()->hash)) {
+    while (m_it != m_end && !internal::is_first_bit_set_to_1(it()->hash)) {
       m_it = it() + 1;
     }
   }
@@ -470,8 +470,8 @@ private:
   void *m_it;
   void *m_end;
 
-  util_internal::hash_map_table_element<K, V> *it() const {
-    return static_cast<util_internal::hash_map_table_element<K, V> *>(m_it);
+  internal::hash_map_table_element<K, V> *it() const {
+    return static_cast<internal::hash_map_table_element<K, V> *>(m_it);
   }
 };
 

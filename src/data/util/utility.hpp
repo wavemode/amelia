@@ -15,7 +15,7 @@ template <typename T> inline void swap(T &a, T &b) noexcept {
   b = move(temp);
 }
 
-namespace util_internal {
+namespace internal {
 template <typename T> inline size_t partition(T *slice, size_t start, size_t end) {
   T &pivot = slice[end - 1];
   size_t i = start;
@@ -71,7 +71,7 @@ inline bool is_second_bit_set_to_1(uint64_t hash) {
   return (hash & 0x4000000000000000ULL) != 0;
 }
 
-} // namespace util_internal
+} // namespace internal
 
 uint64_t hash_str_64(const char *str, size_t len);
 uint32_t hash_str_32(const char *str, size_t len);
@@ -144,7 +144,7 @@ template <typename T> inline void sort(T *slice, size_t start, size_t end) {
   if (start >= end) {
     return;
   }
-  size_t pivot_index = util_internal::partition(slice, start, end);
+  size_t pivot_index = internal::partition(slice, start, end);
   sort(slice, start, pivot_index);
   sort(slice, pivot_index + 1, end);
 }
@@ -154,7 +154,7 @@ inline void sort(T *slice, size_t start, size_t end, Comp comp) {
   if (start >= end) {
     return;
   }
-  size_t pivot_index = util_internal::partition(slice, start, end, comp);
+  size_t pivot_index = internal::partition(slice, start, end, comp);
   sort(slice, start, pivot_index, comp);
   sort(slice, pivot_index + 1, end, comp);
 }

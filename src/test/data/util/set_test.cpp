@@ -2,6 +2,8 @@
 
 #include "prelude.hpp"
 
+#include "data/util/set.hpp"
+
 TEST_SUITE_BEGIN("Set");
 
 using namespace amelia;

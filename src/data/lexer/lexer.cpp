@@ -9,6 +9,7 @@
 #include "data/lexer/token.hpp"
 #include "data/source/location.hpp"
 #include "data/source/number_literal.hpp"
+#include "data/util/map.hpp"
 #include "data/util/text_utils.hpp"
 
 namespace amelia {
