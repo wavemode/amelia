@@ -109,7 +109,7 @@ String &String::operator+=(Text other) {
 }
 
 bool String::operator==(const String &other) const {
-  return size() == other.size() && std::memcmp(c_str(), other.c_str(), size()) == 0;
+  return CharIterator::compare(data(), other.data()) == 0;
 }
 
 bool String::operator!=(const String &other) const {

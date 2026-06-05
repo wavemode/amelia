@@ -1,3 +1,5 @@
+#include <cstring>
+
 #include <utfcpp/utf8.h>
 
 #include "prelude.hpp"
@@ -107,27 +109,25 @@ void CharIterator::append(List<char> &str, uint32_t code_point) {
 }
 
 signed char CharIterator::compare(ConstSlice<char> a, ConstSlice<char> b) {
-  if (a.ptr() == b.ptr() && a.size() == b.size()) {
-    return 0;
+  if (a.ptr() == nullptr) {
+    return b.size() == 0 ? 0 : -1;
+  } else if (b.ptr() == nullptr) {
+    return a.size() == 0 ? 0 : 1;
   }
-
-  auto self_iter = CharIterator(a);
-  auto other_iter = CharIterator(b);
-
-  while (!self_iter.at_end() && !other_iter.at_end()) {
-    uint32_t self_cp = self_iter.next();
-    uint32_t other_cp = other_iter.next();
-    if (self_cp < other_cp) {
+  int cmp = std::memcmp(a.ptr(), b.ptr(), amelia::min(a.size(), b.size()));
+  if (cmp == 0) {
+    if (a.size() < b.size()) {
       return -1;
-    } else if (self_cp > other_cp) {
+    } else if (a.size() > b.size()) {
       return 1;
+    } else {
+      return 0;
     }
+  } else if (cmp < 0) {
+    return -1;
+  } else {
+    return 1;
   }
-
-  if (self_iter.at_end() && other_iter.at_end()) {
-    return 0;
-  }
-  return self_iter.at_end() ? -1 : 1;
 }
 
 } // namespace amelia

@@ -56,8 +56,7 @@ public:
   Text text() const noexcept override;
 
   /**
-   * @return The length of the string in bytes, not including the null
-   * terminator.
+   * @return The size of the string in bytes, not including the null terminator.
    */
   size_t size() const noexcept;
 
@@ -91,9 +90,7 @@ public:
   void clear() noexcept;
 
   /**
-   * @brief Compute a hash code for this String. The hash code is based on the sequence of Unicode
-   * code points in the String, so two String instances that are equal (i.e. contain the same
-   * sequence of Unicode code points) will have the same hash code.
+   * @brief Compute a hash code for this String.
    */
   uint64_t hash_code() const noexcept;
 
@@ -128,38 +125,32 @@ public:
   String &operator+=(Text other);
 
   /**
-   * @brief Compares this String with another String for equality. Two Strings are equal if they
-   * contain the same sequence of Unicode code points.
+   * @brief Compares this String with another String for equality.
    */
   bool operator==(const String &other) const;
 
   /**
-   * @brief Compares this String with another String for inequality. Two Strings are not equal if
-   * they do not contain the same sequence of Unicode code points.
+   * @brief Compares this String with another String for inequality.
    */
   bool operator!=(const String &other) const;
 
   /**
-   * @brief Compares this String with another String for lexicographical order. The comparison is
-   * based on the sequence of Unicode code points in the strings.
+   * @brief Compares this String with another String for lexicographical order.
    */
   bool operator<(const String &other) const;
 
   /**
-   * @brief Compares this String with another String for lexicographical order. The comparison is
-   * based on the sequence of Unicode code points in the strings.
+   * @brief Compares this String with another String for lexicographical order.
    */
   bool operator<=(const String &other) const;
 
   /**
-   * @brief Compares this String with another String for lexicographical order. The comparison is
-   * based on the sequence of Unicode code points in the strings.
+   * @brief Compares this String with another String for lexicographical order.
    */
   bool operator>(const String &other) const;
 
   /**
-   * @brief Compares this String with another String for lexicographical order. The comparison is
-   * based on the sequence of Unicode code points in the strings.
+   * @brief Compares this String with another String for lexicographical order.
    */
   bool operator>=(const String &other) const;
 

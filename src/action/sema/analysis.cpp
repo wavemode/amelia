@@ -1,10 +1,6 @@
-#pragma once
+#include "analysis.hpp"
 
-#include "prelude.hpp"
-
-#include "data/sema/module_loader_context.hpp"
-#include "data/sema/sema_result.hpp"
-#include "interface/fs/file_loader.hpp"
+#include "data/util/text_utils.hpp"
 
 namespace amelia {
 
@@ -13,6 +9,8 @@ void load_module(
     SemaResult &sema_result,
     const Text &module_name,
     const ModuleLoaderContext &ctx
-);
+) {
+  List<String> module_parts;
+}
 
 } // namespace amelia

@@ -21,12 +21,16 @@ void FileLoader::load_file(AbstractString &output, const AbstractString &file_pa
 Option<RuntimeError> FileLoader::try_load_file(
     AbstractString &output, const AbstractString &file_path
 ) {
-  try {
-    load_file(output, file_path);
-    return None();
-  } catch (const RuntimeError &e) {
-    return Some(RuntimeError(e.what()));
+  std::ifstream file(file_path.c_str());
+  if (!file) {
+    String err("Failed to open file: ");
+    err.append(file_path.text());
+    return Some(RuntimeError(err.c_str()));
   }
+  std::ostringstream ss;
+  ss << file.rdbuf();
+  output.assign(Text::from(ss.str().c_str()));
+  return None();
 }
 
 } // namespace amelia

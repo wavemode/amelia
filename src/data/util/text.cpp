@@ -28,20 +28,7 @@ CharIterator Text::end() const noexcept {
 }
 
 bool Text::operator==(const Text &other) const noexcept {
-  if (m_slice.size() != other.m_slice.size()) {
-    return false;
-  }
-
-  if (m_slice.ptr() == other.m_slice.ptr()) {
-    return true;
-  }
-
-  if (m_slice.ptr() == nullptr || other.m_slice.ptr() == nullptr) {
-    // we already checked that both have the same size, so if one is null then both must be size 0
-    return true;
-  }
-
-  return std::memcmp(m_slice.ptr(), other.m_slice.ptr(), m_slice.size()) == 0;
+  return CharIterator::compare(m_slice, other.m_slice) == 0;
 }
 
 bool Text::operator!=(const Text &other) const noexcept {
@@ -69,11 +56,7 @@ Text Text::from(const char *c_str) {
 }
 
 uint64_t Text::hash_code() const noexcept {
-  uint64_t hash = 0xcbf29ce484222325;
-  for (uint32_t cp : *this) {
-    hash ^= amelia::hash(cp);
-  }
-  return hash;
+  return amelia::hash_str_64(m_slice.ptr(), m_slice.size());
 }
 
 } // namespace amelia
