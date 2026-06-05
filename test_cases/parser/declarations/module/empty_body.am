@@ -10,8 +10,10 @@ ModuleNode(
     )
   ],
   submodules=[
-    IdentifierNode(
-      token=IDENTIFIER(a)
+    ModuleDeclNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(a)
+      )
     )
   ]
 )

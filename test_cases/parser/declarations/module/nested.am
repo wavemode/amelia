@@ -29,15 +29,63 @@ ModuleNode(
         )
       ],
       submodules=[
-        IdentifierNode(
-          token=IDENTIFIER(b)
+        ModuleDeclNode(
+          name=IdentifierNode(
+            token=IDENTIFIER(b)
+          ),
+          decls=[
+            LetDeclNode(
+              target=IdentifierNode(
+                token=IDENTIFIER(c)
+              ),
+              expr=IdentifierNode(
+                token=IDENTIFIER(d)
+              )
+            )
+          ]
         )
       ]
     )
   ],
   submodules=[
-    IdentifierNode(
-      token=IDENTIFIER(a)
+    ModuleDeclNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(a)
+      ),
+      decls=[
+        ModuleDeclNode(
+          name=IdentifierNode(
+            token=IDENTIFIER(b)
+          ),
+          decls=[
+            LetDeclNode(
+              target=IdentifierNode(
+                token=IDENTIFIER(c)
+              ),
+              expr=IdentifierNode(
+                token=IDENTIFIER(d)
+              )
+            )
+          ]
+        )
+      ],
+      submodules=[
+        ModuleDeclNode(
+          name=IdentifierNode(
+            token=IDENTIFIER(b)
+          ),
+          decls=[
+            LetDeclNode(
+              target=IdentifierNode(
+                token=IDENTIFIER(c)
+              ),
+              expr=IdentifierNode(
+                token=IDENTIFIER(d)
+              )
+            )
+          ]
+        )
+      ]
     )
   ]
 )

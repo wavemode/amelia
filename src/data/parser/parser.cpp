@@ -150,7 +150,7 @@ public:
     auto result = m_output.add_node(
         import_token.id, m_token_index, ImportDeclNode{path, move(items), alias}
     );
-    m_imports.push_back(path);
+    m_imports.push_back(result);
     return result;
   }
 
@@ -345,7 +345,7 @@ public:
           module_token.id, m_token_index, ModuleDeclNode{name, move(decls), move(m_submodules)}
       );
       m_submodules = move(old_submodules);
-      m_submodules.push_back(name);
+      m_submodules.push_back(result);
       return result;
     } else {
       return m_output.add_node(

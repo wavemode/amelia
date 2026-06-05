@@ -18,12 +18,14 @@ ModuleNode(
     )
   ],
   imports=[
-    ScopeResolutionExprNode(
-      scope=IdentifierNode(
-        token=IDENTIFIER(a)
-      ),
-      name=IdentifierNode(
-        token=IDENTIFIER_NO_W(b)
+    ImportDeclNode(
+      path=ScopeResolutionExprNode(
+        scope=IdentifierNode(
+          token=IDENTIFIER(a)
+        ),
+        name=IdentifierNode(
+          token=IDENTIFIER_NO_W(b)
+        )
       )
     )
   ]
