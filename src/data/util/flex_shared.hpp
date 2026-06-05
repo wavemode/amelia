@@ -36,9 +36,7 @@ public:
   }
 
   FlexShared(const FlexShared<T> &other) : m_obj(other.m_obj), m_strong(other.m_strong) {
-    if (m_strong) {
-      m_obj->ref_count++;
-    }
+    acquire();
   }
 
   FlexShared(FlexShared<T> &&other) noexcept : m_obj(other.m_obj), m_strong(other.m_strong) {
@@ -55,9 +53,7 @@ public:
       release();
       m_obj = other.m_obj;
       m_strong = other.m_strong;
-      if (m_strong) {
-        m_obj->ref_count++;
-      }
+      acquire();
     }
     return *this;
   }
@@ -91,15 +87,19 @@ public:
 
 private:
   FlexShared(internal::SharedObject<T> *obj, bool strong) : m_obj(obj), m_strong(strong) {
-    if (m_strong) {
-      m_obj->ref_count++;
+    acquire();
+  }
+
+  void acquire() {
+    if (m_strong && m_obj) {
+      __atomic_fetch_add(&m_obj->ref_count, 1, __ATOMIC_ACQUIRE);
     }
   }
 
   void release() {
     if (m_strong && m_obj) {
-      m_obj->ref_count--;
-      if (m_obj->ref_count == 0) {
+      if (__atomic_sub_fetch(&m_obj->ref_count, 1, __ATOMIC_RELEASE) == 0) {
+        __atomic_thread_fence(__ATOMIC_ACQUIRE);
         delete m_obj;
       }
     }
