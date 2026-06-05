@@ -11,6 +11,8 @@ namespace amelia {
 
 struct ModuleNode {
   List<NodeId> decls;
+  List<NodeId> imports;
+  List<NodeId> submodules;
 };
 
 struct EmptyStmtNode {};
@@ -734,6 +736,7 @@ struct ImportItemWildcardNode {};
 struct ModuleDeclNode {
   NodeId name;
   Option<List<NodeId>> decls;
+  Option<List<NodeId>> submodules;
 };
 
 struct ExternDeclNode {

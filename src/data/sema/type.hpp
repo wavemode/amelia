@@ -76,12 +76,11 @@ public:
   }
 
   Type(const Type &other)
-      : visibility(other.visibility), m_kind(other.m_kind), m_data(other.m_kind, other.m_data),
-        memo_name(other.memo_name) {}
+      : visibility(other.visibility), m_kind(other.m_kind), m_data(other.m_kind, other.m_data) {}
 
   Type(Type &&other) noexcept
       : visibility(other.visibility), m_kind(other.m_kind),
-        m_data(other.m_kind, move(other.m_data)), memo_name(move(other.memo_name)) {}
+        m_data(other.m_kind, move(other.m_data)) {}
 
   TypeKind kind() const {
     return m_kind;
@@ -90,7 +89,6 @@ public:
   Type &operator=(const Type &other) {
     if (this != &other) {
       visibility = other.visibility;
-      memo_name = other.memo_name;
       if (m_kind == other.m_kind) {
         m_data.assign(m_kind, other.m_data);
       } else {
@@ -105,7 +103,6 @@ public:
   Type &operator=(Type &&other) {
     if (this != &other) {
       visibility = other.visibility;
-      memo_name = move(other.memo_name);
       if (m_kind == other.m_kind) {
         m_data.assign(m_kind, move(other.m_data));
       } else {
@@ -118,7 +115,6 @@ public:
   }
 
   DeclVisibility visibility;
-  Option<String> memo_name;
 
 private:
   union TypeData {

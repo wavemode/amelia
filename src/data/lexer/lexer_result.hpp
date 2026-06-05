@@ -26,6 +26,8 @@ struct LexerResult : public AbstractTokenRepository {
     return token_id;
   }
 
+  Text token_text_slice(TokenId start, TokenId end) const;
+
 private:
   List<Token> m_tokens;
 };

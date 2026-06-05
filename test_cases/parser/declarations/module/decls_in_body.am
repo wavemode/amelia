@@ -25,6 +25,11 @@ ModuleNode(
         )
       ]
     )
+  ],
+  submodules=[
+    IdentifierNode(
+      token=IDENTIFIER(a)
+    )
   ]
 )
 */

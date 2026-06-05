@@ -10,8 +10,8 @@ namespace amelia {
 class Node {
 public:
 #define X(NODE_TYPE)                                                                               \
-  Node(Location loc, NODE_TYPE node)                                                               \
-      : m_loc(loc), m_type(NodeType::NODE_TYPE), m_data(move(node)) {}                             \
+  Node(TokenId start, TokenId end, NODE_TYPE node)                                                 \
+      : m_start(start), m_end(end), m_type(NodeType::NODE_TYPE), m_data(move(node)) {}             \
                                                                                                    \
   NODE_TYPE &as_##NODE_TYPE() {                                                                    \
     if (m_type != NodeType::NODE_TYPE) {                                                           \
@@ -34,22 +34,29 @@ public:
   }
 
   Node(const Node &other)
-      : m_loc(other.m_loc), m_type(other.m_type), m_data(other.m_type, other.m_data) {}
+      : m_start(other.m_start), m_end(other.m_end), m_type(other.m_type),
+        m_data(other.m_type, other.m_data) {}
 
   Node(Node &&other) noexcept
-      : m_loc(move(other.m_loc)), m_type(other.m_type), m_data(other.m_type, move(other.m_data)) {}
+      : m_start(other.m_start), m_end(other.m_end), m_type(other.m_type),
+        m_data(other.m_type, move(other.m_data)) {}
 
   NodeType type() const {
     return m_type;
   }
 
-  Location location() const {
-    return m_loc;
+  TokenId start_token() const {
+    return m_start;
+  }
+
+  TokenId end_token() const {
+    return m_end;
   }
 
   Node &operator=(const Node &other) {
     if (this != &other) {
-      m_loc = other.m_loc;
+      m_start = other.m_start;
+      m_end = other.m_end;
       if (m_type == other.m_type) {
         m_data.assign(m_type, other.m_data);
       } else {
@@ -63,7 +70,8 @@ public:
 
   Node &operator=(Node &&other) {
     if (this != &other) {
-      m_loc = move(other.m_loc);
+      m_start = other.m_start;
+      m_end = other.m_end;
       if (m_type == other.m_type) {
         m_data.assign(m_type, move(other.m_data));
       } else {
@@ -142,7 +150,8 @@ private:
     ~NodeData() {}
   };
 
-  Location m_loc;
+  TokenId m_start;
+  TokenId m_end;
   NodeType m_type;
   NodeData m_data;
 };

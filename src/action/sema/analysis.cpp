@@ -10,7 +10,8 @@ void load_module(
     const Text &module_name,
     const ModuleLoaderContext &ctx
 ) {
-  List<String> module_parts;
+  List<String> module_name_parts;
+  TextUtils::split(module_name_parts, module_name, "::");
 }
 
 } // namespace amelia

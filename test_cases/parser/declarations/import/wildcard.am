@@ -16,6 +16,16 @@ ModuleNode(
         ImportItemWildcardNode()
       ]
     )
+  ],
+  imports=[
+    ScopeResolutionExprNode(
+      scope=IdentifierNode(
+        token=IDENTIFIER(a)
+      ),
+      name=IdentifierNode(
+        token=IDENTIFIER_NO_W(b)
+      )
+    )
   ]
 )
 */

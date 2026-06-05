@@ -1,0 +1,44 @@
+module a {
+  module b {
+    let c = d
+  }
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ModuleDeclNode(
+      name=IdentifierNode(
+        token=IDENTIFIER(a)
+      ),
+      decls=[
+        ModuleDeclNode(
+          name=IdentifierNode(
+            token=IDENTIFIER(b)
+          ),
+          decls=[
+            LetDeclNode(
+              target=IdentifierNode(
+                token=IDENTIFIER(c)
+              ),
+              expr=IdentifierNode(
+                token=IDENTIFIER(d)
+              )
+            )
+          ]
+        )
+      ],
+      submodules=[
+        IdentifierNode(
+          token=IDENTIFIER(b)
+        )
+      ]
+    )
+  ],
+  submodules=[
+    IdentifierNode(
+      token=IDENTIFIER(a)
+    )
+  ]
+)
+*/
