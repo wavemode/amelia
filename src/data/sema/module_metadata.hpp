@@ -12,6 +12,7 @@ namespace amelia {
 using BindingId = int32_t;
 
 struct ModuleMetadata {
+  String source_path;
   String source;
   LexerResult tokens;
   ParserResult ast;

@@ -116,7 +116,7 @@ void collect_submodules(List<String> &output, const ModuleMetadata &module_meta,
 }
 
 Option<ModuleId> try_load_and_parse(
-    IFileLoader &file_loader, SemaResult &sema_result, const String &path
+    IFileLoader &file_loader, SemaResult &sema_result, const String &path, const String &module_name
 ) {
   String source;
   auto err = file_loader.try_load_file(source, path);
@@ -125,19 +125,22 @@ Option<ModuleId> try_load_and_parse(
   }
   ModuleId module_id = sema_result.module_meta.size();
   ModuleMetadata &module_meta = sema_result.module_meta.emplace_back();
+  module_meta.source_path = path;
   module_meta.source = move(source);
   Lexer::tokenize(module_meta.tokens, {path}, module_meta.source);
   module_meta.ast_root = Parser::parse_module(module_meta.ast, module_meta.tokens);
+  sema_result.modules.push_back(FlexShared<Module>::strong(Module{module_name, Scope{}}));
   return Some(module_id);
 }
 
-Option<ModuleId> load_module(
+ModuleId load_module(
     IFileLoader &file_loader,
     SemaResult &sema_result,
     const String &module_name,
     const ModuleLoaderContext &ctx,
     Set<Text> &import_set,
-    List<Text> &import_chain
+    List<Text> &import_chain,
+    Option<Location> import_location = None()
 ) {
   // check if this module is involved in a chain of circular imports
   if (import_set.has(module_name)) {
@@ -167,6 +170,7 @@ Option<ModuleId> load_module(
   }
 
   // load the module
+  Option<ModuleId> target_module_id;
   String loaded_module_name;
   for (const String &base_path : ctx.module_path) {
     List<Text> module_name_parts;
@@ -179,16 +183,16 @@ Option<ModuleId> load_module(
       TextUtils::join_into(loaded_module_name, module_name_parts.data(), "::");
 
       Option<ModuleId> try_loaded_module_id = try_load_and_parse(
-          file_loader, sema_result, module_path
+          file_loader, sema_result, module_path, loaded_module_name
       );
       if (try_loaded_module_id.has_value()) {
         ModuleId loaded_module_id = try_loaded_module_id.value();
-        bool found_target_module = loaded_module_name == module_name;
+        if (loaded_module_name == module_name) {
+          target_module_id = loaded_module_id;
+        }
 
         // mark this module as loaded
         sema_result.module_ids.set(loaded_module_name, loaded_module_id);
-        sema_result.modules.push_back(FlexShared<Module>::strong(Module{loaded_module_name, Scope{}}
-        ));
 
         // mark all of this module's submodules as loaded
         ModuleMetadata &loaded_module_meta = sema_result.module_meta[loaded_module_id];
@@ -196,8 +200,8 @@ Option<ModuleId> load_module(
         collect_submodules(loaded_submodule_list, loaded_module_meta, loaded_module_name);
         for (const String &loaded_submodule_name : loaded_submodule_list) {
           sema_result.module_ids.set(loaded_submodule_name, loaded_module_id);
-          if (!found_target_module && loaded_submodule_name == module_name) {
-            found_target_module = true;
+          if (loaded_submodule_name == module_name) {
+            target_module_id = loaded_module_id;
           }
         }
 
@@ -208,16 +212,16 @@ Option<ModuleId> load_module(
         import_set.add(loaded_module_name.text());
         import_chain.push_back(loaded_module_name.text());
         for (const ModuleImport &loaded_module_import : loaded_module_imports) {
-          Option<ModuleId> try_imported_module_id = load_module(
-              file_loader, sema_result, loaded_module_import.name, ctx, import_set, import_chain
+
+          ModuleId imported_module_id = load_module(
+              file_loader,
+              sema_result,
+              loaded_module_import.name,
+              ctx,
+              import_set,
+              import_chain,
+              loaded_module_import.location
           );
-          if (!try_imported_module_id.has_value()) {
-            String error_message = "Could not find module '";
-            error_message.append(loaded_module_import.name);
-            error_message.append("' in module path");
-            throw SourceLocationError(loaded_module_import.location, move(error_message));
-          }
-          ModuleId imported_module_id = try_imported_module_id.value();
           ModuleMetadata &imported_module_meta = sema_result.module_meta[imported_module_id];
           imported_module_meta.imported_by.add(loaded_module_id);
           loaded_module_meta.imports.add(imported_module_id);
@@ -234,15 +238,22 @@ Option<ModuleId> load_module(
             }
           }
         }
-
-        if (found_target_module) {
-          return loaded_module_id;
-        }
       }
       module_name_parts.pop_back();
     }
   }
-  return None();
+
+  if (target_module_id.has_value()) {
+    return target_module_id.value();
+  }
+
+  String error_message = "Could not find module '";
+  error_message.append(module_name);
+  error_message.append("' in module path");
+  if (import_location.has_value()) {
+    throw SourceLocationError(import_location.value(), move(error_message));
+  }
+  throw RuntimeError(error_message.c_str());
 }
 
 } // namespace
@@ -255,13 +266,7 @@ void load_module(
 ) {
   Set<Text> import_set;
   List<Text> import_chain;
-  if (!load_module(file_loader, sema_result, module_name, ctx, import_set, import_chain)
-           .has_value()) {
-    String error_message = "Could not find module '";
-    error_message.append(module_name);
-    error_message.append("' in module path");
-    throw RuntimeError(error_message.c_str());
-  };
+  load_module(file_loader, sema_result, module_name, ctx, import_set, import_chain);
 }
 
 } // namespace amelia
