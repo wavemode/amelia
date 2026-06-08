@@ -3,6 +3,8 @@
 #include <cstddef>
 
 #include "data/util/abstract_set.hpp"
+#include "data/util/list.hpp"
+#include "data/util/slice.hpp"
 
 namespace amelia {
 
@@ -240,6 +242,19 @@ public:
 
   void add(T value) override {
     m_set.put(move(value));
+  }
+
+  void add_all(Slice<T> values) {
+    for (const T &value : values) {
+      m_set.put(T(value));
+    }
+  }
+
+  void add_all(List<T> &&values) {
+    for (T &value : values) {
+      m_set.put(move(value));
+    }
+    values.clear();
   }
 
   void remove(const T &key) override {

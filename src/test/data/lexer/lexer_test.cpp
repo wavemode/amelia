@@ -44,7 +44,7 @@ TEST_CASE("test suite") {
   console_printer.print(s);
   console_printer.println(" updates.");
 
-  CHECK(outcome.count_failed == 0);
+  REQUIRE(outcome.count_failed == 0);
 }
 
 TEST_SUITE_END();

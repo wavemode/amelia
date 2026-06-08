@@ -31,7 +31,11 @@ public:
     return FlexShared<T>(shared_obj, true);
   }
 
-  FlexShared<T> weak() const {
+  FlexShared<T> strong_ref() const {
+    return FlexShared<T>(m_obj, true);
+  }
+
+  FlexShared<T> weak_ref() const {
     return FlexShared<T>(m_obj, false);
   }
 

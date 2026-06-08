@@ -10,43 +10,43 @@ using namespace amelia;
 
 TEST_CASE("add, has") {
   Set<String> set;
-  CHECK(set.size() == 0);
+  REQUIRE(set.size() == 0);
   set.add("a");
-  CHECK(set.size() == 1);
+  REQUIRE(set.size() == 1);
   set.add("b");
-  CHECK(set.size() == 2);
-  CHECK(set.has("a"));
-  CHECK(set.has("b"));
+  REQUIRE(set.size() == 2);
+  REQUIRE(set.has("a"));
+  REQUIRE(set.has("b"));
 
   const Set<String> &const_set = set;
-  CHECK(const_set.has("a"));
-  CHECK(const_set.has("b"));
+  REQUIRE(const_set.has("a"));
+  REQUIRE(const_set.has("b"));
 }
 
 TEST_CASE("clear") {
   auto set = Set<String>({"a", "b", "c"});
-  CHECK(set.has("a"));
-  CHECK(set.has("b"));
-  CHECK(set.has("c"));
+  REQUIRE(set.has("a"));
+  REQUIRE(set.has("b"));
+  REQUIRE(set.has("c"));
   set.clear();
-  CHECK(!set.has("a"));
-  CHECK(!set.has("b"));
-  CHECK(!set.has("c"));
+  REQUIRE(!set.has("a"));
+  REQUIRE(!set.has("b"));
+  REQUIRE(!set.has("c"));
 }
 
 TEST_CASE("remove") {
   Set<String> set;
   set.add("a");
   set.add("b");
-  CHECK(set.size() == 2);
+  REQUIRE(set.size() == 2);
   set.remove("a");
-  CHECK(set.size() == 1);
-  CHECK(!set.has("a"));
-  CHECK(set.has("b"));
+  REQUIRE(set.size() == 1);
+  REQUIRE(!set.has("a"));
+  REQUIRE(set.has("b"));
 
   set.remove("c"); // Removing a non-existent key should do nothing
-  CHECK(!set.has("a"));
-  CHECK(set.has("b"));
+  REQUIRE(!set.has("a"));
+  REQUIRE(set.has("b"));
 }
 
 TEST_CASE("equals") {
@@ -55,21 +55,21 @@ TEST_CASE("equals") {
   auto set3 = Set<String>({"a", "b"});
   auto set4 = Set<String>({"a", "b", "c"});
 
-  CHECK(set1 == set2);
-  CHECK(set1 != set3);
-  CHECK(set1 == set4);
-  CHECK(set2 != set3);
-  CHECK(set2 == set4);
-  CHECK(set3 != set4);
+  REQUIRE(set1 == set2);
+  REQUIRE(set1 != set3);
+  REQUIRE(set1 == set4);
+  REQUIRE(set2 != set3);
+  REQUIRE(set2 == set4);
+  REQUIRE(set3 != set4);
 
   set4.remove("c");
-  CHECK(set3 == set4);
+  REQUIRE(set3 == set4);
 
   set3.add("c");
-  CHECK(set3 != set4);
+  REQUIRE(set3 != set4);
 
   set3.remove("c");
-  CHECK(set3 == set4);
+  REQUIRE(set3 == set4);
 }
 
 TEST_CASE("iterator") {
@@ -78,9 +78,9 @@ TEST_CASE("iterator") {
   for (const String &value : set) {
     seen.add(value);
   }
-  CHECK(seen.has("a"));
-  CHECK(seen.has("b"));
-  CHECK(seen.has("c"));
+  REQUIRE(seen.has("a"));
+  REQUIRE(seen.has("b"));
+  REQUIRE(seen.has("c"));
 }
 
 TEST_CASE("iterator - manual") {
@@ -92,9 +92,9 @@ TEST_CASE("iterator - manual") {
     const auto &value = *it;
     seen.add(value);
   }
-  CHECK(seen.has("a"));
-  CHECK(seen.has("b"));
-  CHECK(seen.has("c"));
+  REQUIRE(seen.has("a"));
+  REQUIRE(seen.has("b"));
+  REQUIRE(seen.has("c"));
 
   CHECK_THROWS_AS(*it, RuntimeError);
   CHECK_THROWS_AS(*end, RuntimeError);

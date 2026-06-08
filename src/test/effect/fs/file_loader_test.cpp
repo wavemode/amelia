@@ -15,7 +15,7 @@ TEST_CASE("can read empty file") {
 
   String result;
   loader.load_file(result, filename);
-  CHECK(expected_contents == result);
+  REQUIRE(expected_contents == result);
 }
 
 TEST_CASE("can read ASCII") {
@@ -25,7 +25,7 @@ TEST_CASE("can read ASCII") {
 
   String result;
   loader.load_file(result, filename);
-  CHECK(expected_contents == result);
+  REQUIRE(expected_contents == result);
 }
 
 TEST_CASE("can read UTF-8") {
@@ -35,7 +35,7 @@ TEST_CASE("can read UTF-8") {
 
   String result;
   loader.load_file(result, filename);
-  CHECK(expected_contents == result);
+  REQUIRE(expected_contents == result);
 }
 
 TEST_SUITE_END();

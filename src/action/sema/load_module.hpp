@@ -11,7 +11,7 @@ namespace amelia {
 void load_module(
     IFileLoader &file_loader,
     SemaResult &sema_result,
-    const Text &module_name,
+    const String &module_name,
     const ModuleLoaderContext &ctx
 );
 

@@ -114,7 +114,8 @@ signed char CharIterator::compare(ConstSlice<char> a, ConstSlice<char> b) {
   } else if (b.ptr() == nullptr) {
     return a.size() == 0 ? 0 : 1;
   }
-  int cmp = std::memcmp(a.ptr(), b.ptr(), amelia::min(a.size(), b.size()));
+  int cmp = (a.ptr() == b.ptr()) ? 0
+                                 : std::memcmp(a.ptr(), b.ptr(), amelia::min(a.size(), b.size()));
   if (cmp == 0) {
     if (a.size() < b.size()) {
       return -1;

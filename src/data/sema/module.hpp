@@ -10,7 +10,6 @@ namespace amelia {
 struct Module {
   String name;
   Scope scope;
-  NodeId ast;
 };
 
 } // namespace amelia

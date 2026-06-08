@@ -1,12 +1,12 @@
 #pragma once
 
-namespace amelia {
+#include "prelude.hpp"
 
-class Text;
-struct LexerContext;
-struct LexerResult;
-struct AbstractString;
-struct NumberLiteral;
+#include "data/lexer/lexer_context.hpp"
+#include "data/lexer/lexer_result.hpp"
+#include "data/source/number_literal.hpp"
+
+namespace amelia {
 
 struct Lexer {
   static void tokenize(LexerResult &output, LexerContext ctx, Text input);

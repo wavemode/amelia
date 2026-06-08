@@ -10,47 +10,47 @@ using namespace amelia;
 
 TEST_CASE("can be constructed from a string literal") {
   Text text = "Hello, world!";
-  CHECK(text.size() == 13);
-  CHECK(std::memcmp(text.data().ptr(), "Hello, world!", 13) == 0);
+  REQUIRE(text.size() == 13);
+  REQUIRE(std::memcmp(text.data().ptr(), "Hello, world!", 13) == 0);
 }
 
 TEST_CASE("can be constructed from an empty string literal") {
   Text text("");
-  CHECK(text.size() == 0);
-  CHECK(text.data().ptr() != nullptr);
+  REQUIRE(text.size() == 0);
+  REQUIRE(text.data().ptr() != nullptr);
 }
 
 TEST_CASE("default construction") {
   Text text;
-  CHECK(text == Text(""));
+  REQUIRE(text == Text(""));
 }
 
 TEST_CASE("can be constructed from an array of characters") {
   char arr[] = {'H', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l', 'd', '!'};
   Text text = arr;
-  CHECK(text.size() == 13);
-  CHECK(std::memcmp(text.data().ptr(), arr, 13) == 0);
+  REQUIRE(text.size() == 13);
+  REQUIRE(std::memcmp(text.data().ptr(), arr, 13) == 0);
 }
 
 TEST_CASE("can be constructed from a null-terminated array of characters") {
   char arr[] = {'H', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l', 'd', '!', '\0'};
   Text text = arr;
-  CHECK(text.size() == 13);
-  CHECK(std::memcmp(text.data().ptr(), arr, 13) == 0);
+  REQUIRE(text.size() == 13);
+  REQUIRE(std::memcmp(text.data().ptr(), arr, 13) == 0);
 }
 
 TEST_CASE("can be constructed from a String") {
   String str("Hello, world!");
   Text text = str;
-  CHECK(text.size() == 13);
-  CHECK(std::memcmp(text.data().ptr(), "Hello, world!", 13) == 0);
+  REQUIRE(text.size() == 13);
+  REQUIRE(std::memcmp(text.data().ptr(), "Hello, world!", 13) == 0);
 }
 
 TEST_CASE("can be constructed from a ConstSlice<char>") {
   const char arr[] = "Hello, world!";
   Text text(ConstSlice(arr, 13));
-  CHECK(text.size() == 13);
-  CHECK(std::memcmp(text.data().ptr(), arr, 13) == 0);
+  REQUIRE(text.size() == 13);
+  REQUIRE(std::memcmp(text.data().ptr(), arr, 13) == 0);
 }
 
 TEST_CASE("raises InvalidUTF8Error when constructed from invalid UTF-8 data") {
@@ -68,10 +68,10 @@ TEST_CASE("can iterate over the characters in the text") {
   const char expected[] = "Hello, world!";
   size_t i = 0;
   for (char c : text) {
-    CHECK(c == expected[i]);
+    REQUIRE(c == expected[i]);
     ++i;
   }
-  CHECK(i == text.size());
+  REQUIRE(i == text.size());
 }
 
 TEST_CASE("equality") {
@@ -82,9 +82,9 @@ TEST_CASE("equality") {
   Text text2(str2);
   Text text3(str3);
 
-  CHECK(text1 == text2);
-  CHECK(text1 != text3);
-  CHECK(text2 != text3);
+  REQUIRE(text1 == text2);
+  REQUIRE(text1 != text3);
+  REQUIRE(text2 != text3);
 }
 
 TEST_CASE("lexicographical comparison - ASCII") {
@@ -97,35 +97,35 @@ TEST_CASE("lexicographical comparison - ASCII") {
   Text text3(str3);
   Text text4(str4);
 
-  CHECK(text1 < text2);
-  CHECK(text1 <= text2);
-  CHECK(text1 == text3);
-  CHECK(text1 >= text3);
-  CHECK(text1 <= text3);
-  CHECK(text1 < text4);
-  CHECK(text1 <= text4);
+  REQUIRE(text1 < text2);
+  REQUIRE(text1 <= text2);
+  REQUIRE(text1 == text3);
+  REQUIRE(text1 >= text3);
+  REQUIRE(text1 <= text3);
+  REQUIRE(text1 < text4);
+  REQUIRE(text1 <= text4);
 
-  CHECK(text2 > text1);
-  CHECK(text2 >= text1);
-  CHECK(text2 > text3);
-  CHECK(text2 >= text3);
-  CHECK(text2 > text4);
-  CHECK(text2 >= text4);
+  REQUIRE(text2 > text1);
+  REQUIRE(text2 >= text1);
+  REQUIRE(text2 > text3);
+  REQUIRE(text2 >= text3);
+  REQUIRE(text2 > text4);
+  REQUIRE(text2 >= text4);
 
-  CHECK(text3 == text1);
-  CHECK(text3 >= text1);
-  CHECK(text3 <= text1);
-  CHECK(text3 < text2);
-  CHECK(text3 <= text2);
-  CHECK(text3 < text4);
-  CHECK(text3 <= text4);
+  REQUIRE(text3 == text1);
+  REQUIRE(text3 >= text1);
+  REQUIRE(text3 <= text1);
+  REQUIRE(text3 < text2);
+  REQUIRE(text3 <= text2);
+  REQUIRE(text3 < text4);
+  REQUIRE(text3 <= text4);
 
-  CHECK(text4 > text1);
-  CHECK(text4 >= text1);
-  CHECK(text4 < text2);
-  CHECK(text4 <= text2);
-  CHECK(text4 > text3);
-  CHECK(text4 >= text3);
+  REQUIRE(text4 > text1);
+  REQUIRE(text4 >= text1);
+  REQUIRE(text4 < text2);
+  REQUIRE(text4 <= text2);
+  REQUIRE(text4 > text3);
+  REQUIRE(text4 >= text3);
 }
 
 TEST_CASE("lexicographical comparison - Unicode") {
@@ -149,20 +149,20 @@ TEST_CASE("lexicographical comparison - Unicode") {
   Text text2(str2);
   Text text3(str3);
 
-  CHECK(text1 < text2);
-  CHECK(text1 <= text2);
-  CHECK(text1 > text3);
-  CHECK(text1 >= text3);
+  REQUIRE(text1 < text2);
+  REQUIRE(text1 <= text2);
+  REQUIRE(text1 > text3);
+  REQUIRE(text1 >= text3);
 
-  CHECK(text2 > text1);
-  CHECK(text2 >= text1);
-  CHECK(text2 > text3);
-  CHECK(text2 >= text3);
+  REQUIRE(text2 > text1);
+  REQUIRE(text2 >= text1);
+  REQUIRE(text2 > text3);
+  REQUIRE(text2 >= text3);
 
-  CHECK(text3 < text1);
-  CHECK(text3 <= text1);
-  CHECK(text3 < text2);
-  CHECK(text3 <= text2);
+  REQUIRE(text3 < text1);
+  REQUIRE(text3 <= text1);
+  REQUIRE(text3 < text2);
+  REQUIRE(text3 <= text2);
 }
 
 TEST_SUITE_END();
