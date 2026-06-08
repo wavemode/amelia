@@ -683,6 +683,9 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     case FunctionCaptureKind::Ref:
       kind = "ref";
       break;
+    case FunctionCaptureKind::ConstRef:
+      kind = "const_ref";
+      break;
     }
     print_field(out, "kind", kind);
     print_node_field(out, "var", n.var);

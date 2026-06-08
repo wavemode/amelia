@@ -4,7 +4,7 @@ fun f(
 ) with (
   a : long,
   b : short,
-) [move x, copy y, &z] -> int {
+) [move x, copy y, &z, &const t] -> int {
 
 }
 
@@ -76,6 +76,12 @@ ModuleNode(
               kind=ref,
               var=IdentifierNode(
                 token=IDENTIFIER_NO_W(z)
+              )
+            ),
+            FunctionSignatureCaptureAnnotationNode(
+              kind=const_ref,
+              var=IdentifierNode(
+                token=IDENTIFIER(t)
               )
             )
           ]

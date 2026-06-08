@@ -513,6 +513,7 @@ enum class FunctionCaptureKind {
   Move,
   Copy,
   Ref,
+  ConstRef,
 };
 
 struct FunctionSignatureCaptureAnnotationNode {

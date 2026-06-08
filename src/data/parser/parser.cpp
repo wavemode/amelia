@@ -1157,7 +1157,12 @@ public:
     FunctionCaptureKind kind;
     auto token = next();
     if (token.type == TokenType::AMPERSAND) {
-      kind = FunctionCaptureKind::Ref;
+      if (peek().type == TokenType::KEYWORD_CONST) {
+        ++m_token_index; // consume the 'const' keyword
+        kind = FunctionCaptureKind::ConstRef;
+      } else {
+        kind = FunctionCaptureKind::Ref;
+      }
     } else if (token.type == TokenType::KEYWORD_MOVE) {
       kind = FunctionCaptureKind::Move;
     } else if (token.type == TokenType::KEYWORD_COPY) {
