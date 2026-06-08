@@ -225,6 +225,16 @@ Option<ModuleId> load_module(
         import_set.remove(loaded_module_name);
         import_chain.pop_back();
 
+        // make sure all of our group modules are also in a group with each other
+        for (ModuleId group_module_id : loaded_module_meta.group_module_ids) {
+          ModuleMetadata &group_module_meta = sema_result.module_meta[group_module_id];
+          for (ModuleId other_group_module_id : loaded_module_meta.group_module_ids) {
+            if (group_module_id != other_group_module_id) {
+              group_module_meta.group_module_ids.add(other_group_module_id);
+            }
+          }
+        }
+
         if (found_target_module) {
           return loaded_module_id;
         }

@@ -409,4 +409,55 @@ TEST_CASE("a -> (b <-> c <-> d) -> e") {
   REQUIRE(sema_result.module_meta[module_e_id].group_module_ids.size() == 0);
 }
 
+TEST_CASE("(a <-> b) + (a <-> c)") {
+  ModuleLoaderContext ctx{Set<String>({"src/test/action/sema/overlapping"})};
+  FileLoader file_loader;
+  SemaResult sema_result;
+  load_module(file_loader, sema_result, "c", ctx);
+
+  REQUIRE(sema_result.module_ids.size() == 3);
+  REQUIRE(sema_result.module_meta.size() == 3);
+  REQUIRE(sema_result.module_ids.has("a"));
+  REQUIRE(sema_result.module_ids.has("b"));
+  REQUIRE(sema_result.module_ids.has("c"));
+
+  ModuleId module_a_id = sema_result.module_ids.get("a");
+  ModuleId module_b_id = sema_result.module_ids.get("b");
+  ModuleId module_c_id = sema_result.module_ids.get("c");
+
+  REQUIRE(sema_result.module_meta[module_a_id].imports.size() == 2);
+  REQUIRE(sema_result.module_meta[module_a_id].imports.has(module_b_id));
+  REQUIRE(sema_result.module_meta[module_a_id].imports.has(module_c_id));
+
+  REQUIRE(sema_result.module_meta[module_a_id].imported_by.size() == 2);
+  REQUIRE(sema_result.module_meta[module_a_id].imported_by.has(module_b_id));
+  REQUIRE(sema_result.module_meta[module_a_id].imported_by.has(module_c_id));
+
+  REQUIRE(sema_result.module_meta[module_a_id].group_module_ids.size() == 2);
+  REQUIRE(sema_result.module_meta[module_a_id].group_module_ids.has(module_b_id));
+  REQUIRE(sema_result.module_meta[module_a_id].group_module_ids.has(module_c_id));
+
+  REQUIRE(sema_result.module_meta[module_b_id].imports.size() == 1);
+  REQUIRE(sema_result.module_meta[module_b_id].imports.has(module_a_id));
+
+  REQUIRE(sema_result.module_meta[module_b_id].imported_by.size() == 1);
+  REQUIRE(sema_result.module_meta[module_b_id].imported_by.has(module_a_id));
+
+  // group should transitively include c despite only directly importing a
+  REQUIRE(sema_result.module_meta[module_b_id].group_module_ids.size() == 2);
+  REQUIRE(sema_result.module_meta[module_b_id].group_module_ids.has(module_a_id));
+  REQUIRE(sema_result.module_meta[module_b_id].group_module_ids.has(module_c_id));
+
+  REQUIRE(sema_result.module_meta[module_c_id].imports.size() == 1);
+  REQUIRE(sema_result.module_meta[module_c_id].imports.has(module_a_id));
+
+  REQUIRE(sema_result.module_meta[module_c_id].imported_by.size() == 1);
+  REQUIRE(sema_result.module_meta[module_c_id].imported_by.has(module_a_id));
+
+  // group should transitively include b despite only directly importing a
+  REQUIRE(sema_result.module_meta[module_c_id].group_module_ids.size() == 2);
+  REQUIRE(sema_result.module_meta[module_c_id].group_module_ids.has(module_a_id));
+  REQUIRE(sema_result.module_meta[module_c_id].group_module_ids.has(module_b_id));
+}
+
 TEST_SUITE_END();
