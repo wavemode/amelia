@@ -302,32 +302,38 @@ TEST_CASE("a -> (b <-> c <-> d) -> e") {
 
   REQUIRE(sema_result.module_meta[module_a_id].group_module_ids.size() == 0);
 
-  REQUIRE(sema_result.module_meta[module_b_id].imports.size() == 1);
+  REQUIRE(sema_result.module_meta[module_b_id].imports.size() == 2);
   REQUIRE(sema_result.module_meta[module_b_id].imports.has(module_c_id));
+  REQUIRE(sema_result.module_meta[module_b_id].imports.has(module_d_id));
 
-  REQUIRE(sema_result.module_meta[module_b_id].imported_by.size() == 2);
+  REQUIRE(sema_result.module_meta[module_b_id].imported_by.size() == 3);
   REQUIRE(sema_result.module_meta[module_b_id].imported_by.has(module_a_id));
+  REQUIRE(sema_result.module_meta[module_b_id].imported_by.has(module_c_id));
   REQUIRE(sema_result.module_meta[module_b_id].imported_by.has(module_d_id));
 
   REQUIRE(sema_result.module_meta[module_b_id].group_module_ids.size() == 2);
   REQUIRE(sema_result.module_meta[module_b_id].group_module_ids.has(module_c_id));
   REQUIRE(sema_result.module_meta[module_b_id].group_module_ids.has(module_d_id));
 
-  REQUIRE(sema_result.module_meta[module_c_id].imports.size() == 1);
+  REQUIRE(sema_result.module_meta[module_c_id].imports.size() == 2);
   REQUIRE(sema_result.module_meta[module_c_id].imports.has(module_d_id));
+  REQUIRE(sema_result.module_meta[module_c_id].imports.has(module_b_id));
 
-  REQUIRE(sema_result.module_meta[module_c_id].imported_by.size() == 1);
+  REQUIRE(sema_result.module_meta[module_c_id].imported_by.size() == 2);
   REQUIRE(sema_result.module_meta[module_c_id].imported_by.has(module_b_id));
+  REQUIRE(sema_result.module_meta[module_c_id].imported_by.has(module_d_id));
 
   REQUIRE(sema_result.module_meta[module_c_id].group_module_ids.size() == 2);
   REQUIRE(sema_result.module_meta[module_c_id].group_module_ids.has(module_b_id));
   REQUIRE(sema_result.module_meta[module_c_id].group_module_ids.has(module_d_id));
 
-  REQUIRE(sema_result.module_meta[module_d_id].imports.size() == 2);
+  REQUIRE(sema_result.module_meta[module_d_id].imports.size() == 3);
   REQUIRE(sema_result.module_meta[module_d_id].imports.has(module_b_id));
+  REQUIRE(sema_result.module_meta[module_d_id].imports.has(module_c_id));
   REQUIRE(sema_result.module_meta[module_d_id].imports.has(module_e_id));
 
-  REQUIRE(sema_result.module_meta[module_d_id].imported_by.size() == 1);
+  REQUIRE(sema_result.module_meta[module_d_id].imported_by.size() == 2);
+  REQUIRE(sema_result.module_meta[module_d_id].imported_by.has(module_b_id));
   REQUIRE(sema_result.module_meta[module_d_id].imported_by.has(module_c_id));
 
   REQUIRE(sema_result.module_meta[module_d_id].group_module_ids.size() == 2);
