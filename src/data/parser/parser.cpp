@@ -1669,7 +1669,7 @@ public:
         ++m_token_index; // consume the '.' operator
         auto next_type = peek().type;
         if (!is_identifier_no_w(next_type) && next_type != TokenType::KEYWORD_OPERATOR &&
-            next_type != TokenType::KEYWORD_TYPE) {
+            next_type != TokenType::KEYWORD_TYPE && next_type != TokenType::KEYWORD_SUPER) {
           throw_parser_error_at_current_location(
               "Expected identifier immediately after '.' in field access expression"
           );

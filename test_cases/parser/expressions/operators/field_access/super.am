@@ -1,0 +1,21 @@
+let x = y.super
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x)
+      ),
+      expr=FieldAccessExprNode(
+        object=IdentifierNode(
+          token=IDENTIFIER(y)
+        ),
+        field=IdentifierNode(
+          token=KEYWORD_SUPER(super)
+        )
+      )
+    )
+  ]
+)
+*/
