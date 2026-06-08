@@ -10,6 +10,42 @@ TEST_SUITE_BEGIN("load_module");
 
 using namespace amelia;
 
+TEST_CASE("target module is in second directory in path") {
+  ModuleLoaderContext ctx{Set<String>({"src/test/action/sema/empty", "src/test/action/sema/basic"})
+  };
+  FileLoader file_loader;
+  SemaResult sema_result;
+  load_module(file_loader, sema_result, "a", ctx);
+  REQUIRE(sema_result.module_ids.size() == 2);
+  REQUIRE(sema_result.module_ids.has("a"));
+  REQUIRE(sema_result.module_ids.has("b"));
+}
+
+TEST_CASE("imported module is in second directory in path") {
+  ModuleLoaderContext ctx{Set<String>({"src/test/action/sema/a_alone", "src/test/action/sema/basic"}
+  )};
+  FileLoader file_loader;
+  SemaResult sema_result;
+  load_module(file_loader, sema_result, "a", ctx);
+  REQUIRE(sema_result.module_ids.size() == 2);
+  REQUIRE(sema_result.module_ids.has("a"));
+  REQUIRE(sema_result.module_ids.has("b"));
+}
+
+TEST_CASE("target module does not exist") {
+  ModuleLoaderContext ctx{Set<String>({"src/test/action/sema/empty"})};
+  FileLoader file_loader;
+  SemaResult sema_result;
+  CHECK_THROWS_AS(load_module(file_loader, sema_result, "a", ctx), RuntimeError);
+}
+
+TEST_CASE("imported module does not exist") {
+  ModuleLoaderContext ctx{Set<String>({"src/test/action/sema/a_alone"})};
+  FileLoader file_loader;
+  SemaResult sema_result;
+  CHECK_THROWS_AS(load_module(file_loader, sema_result, "a", ctx), SourceLocationError);
+}
+
 TEST_CASE("a -> b") {
   ModuleLoaderContext ctx{Set<String>({"src/test/action/sema/basic"})};
   FileLoader file_loader;
@@ -54,40 +90,35 @@ TEST_CASE("a -> b/c") {
   REQUIRE(sema_result.module_meta[module_b_c_id].group_module_ids.size() == 0);
 }
 
-TEST_CASE("target module is in second directory in path") {
-  ModuleLoaderContext ctx{Set<String>({"src/test/action/sema/empty", "src/test/action/sema/basic"})
-  };
+TEST_CASE("b/c -> a") {
+  ModuleLoaderContext ctx{Set<String>({"src/test/action/sema/subdir_rev"})};
   FileLoader file_loader;
   SemaResult sema_result;
-  load_module(file_loader, sema_result, "a", ctx);
+  load_module(file_loader, sema_result, "b::c", ctx);
   REQUIRE(sema_result.module_ids.size() == 2);
+
   REQUIRE(sema_result.module_ids.has("a"));
-  REQUIRE(sema_result.module_ids.has("b"));
-}
+  REQUIRE(sema_result.module_ids.has("b::c"));
 
-TEST_CASE("imported module is in second directory in path") {
-  ModuleLoaderContext ctx{Set<String>({"src/test/action/sema/a_alone", "src/test/action/sema/basic"}
-  )};
-  FileLoader file_loader;
-  SemaResult sema_result;
-  load_module(file_loader, sema_result, "a", ctx);
-  REQUIRE(sema_result.module_ids.size() == 2);
-  REQUIRE(sema_result.module_ids.has("a"));
-  REQUIRE(sema_result.module_ids.has("b"));
-}
+  // b::c is its own file within a subdirectory (b/c.am) rather than a submodule within b.am
+  REQUIRE(!sema_result.module_ids.has("b"));
 
-TEST_CASE("target module does not exist") {
-  ModuleLoaderContext ctx{Set<String>({"src/test/action/sema/empty"})};
-  FileLoader file_loader;
-  SemaResult sema_result;
-  CHECK_THROWS_AS(load_module(file_loader, sema_result, "a", ctx), RuntimeError);
-}
+  ModuleId module_a_id = sema_result.module_ids.get("a");
+  ModuleId module_b_c_id = sema_result.module_ids.get("b::c");
 
-TEST_CASE("imported module does not exist") {
-  ModuleLoaderContext ctx{Set<String>({"src/test/action/sema/a_alone"})};
-  FileLoader file_loader;
-  SemaResult sema_result;
-  CHECK_THROWS_AS(load_module(file_loader, sema_result, "a", ctx), SourceLocationError);
+  REQUIRE(sema_result.module_meta[module_a_id].imports.size() == 0);
+
+  REQUIRE(sema_result.module_meta[module_a_id].imported_by.size() == 1);
+  REQUIRE(sema_result.module_meta[module_a_id].imported_by.has(module_b_c_id));
+
+  REQUIRE(sema_result.module_meta[module_a_id].group_module_ids.size() == 0);
+
+  REQUIRE(sema_result.module_meta[module_b_c_id].imports.size() == 1);
+  REQUIRE(sema_result.module_meta[module_b_c_id].imports.has(module_a_id));
+
+  REQUIRE(sema_result.module_meta[module_b_c_id].imported_by.size() == 0);
+
+  REQUIRE(sema_result.module_meta[module_b_c_id].group_module_ids.size() == 0);
 }
 
 TEST_CASE("a -> b::c") {
@@ -113,6 +144,36 @@ TEST_CASE("a -> b::c") {
   REQUIRE(module_b_id == module_b_c_id);
   REQUIRE(sema_result.module_meta[module_b_c_id].imported_by.size() == 1);
   REQUIRE(sema_result.module_meta[module_b_c_id].imported_by.has(module_a_id));
+}
+
+TEST_CASE("b::c -> a") {
+  ModuleLoaderContext ctx{Set<String>({"src/test/action/sema/sub_rev"})};
+  FileLoader file_loader;
+  SemaResult sema_result;
+  load_module(file_loader, sema_result, "b::c", ctx);
+
+  REQUIRE(sema_result.module_ids.size() == 3);
+  REQUIRE(sema_result.module_ids.has("a"));
+  REQUIRE(sema_result.module_ids.has("b"));
+  REQUIRE(sema_result.module_ids.has("b::c"));
+
+  ModuleId module_a_id = sema_result.module_ids.get("a");
+  ModuleId module_b_id = sema_result.module_ids.get("b");
+  ModuleId module_b_c_id = sema_result.module_ids.get("b::c");
+
+  REQUIRE(sema_result.module_meta[module_a_id].imports.size() == 0);
+
+  REQUIRE(sema_result.module_meta[module_a_id].imported_by.size() == 1);
+  REQUIRE(sema_result.module_meta[module_a_id].imported_by.has(module_b_c_id));
+
+  REQUIRE(sema_result.module_meta[module_a_id].group_module_ids.size() == 0);
+
+  REQUIRE(sema_result.module_meta[module_b_c_id].imports.size() == 1);
+  REQUIRE(sema_result.module_meta[module_b_c_id].imports.has(module_a_id));
+
+  REQUIRE(sema_result.module_meta[module_b_c_id].imported_by.size() == 0);
+
+  REQUIRE(sema_result.module_meta[module_b_c_id].group_module_ids.size() == 0);
 }
 
 TEST_CASE("2 circular imports") {
