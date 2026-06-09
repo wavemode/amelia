@@ -183,7 +183,6 @@ Option<ModuleId> try_load_and_parse(
   }
   ModuleId module_id = sema_result.module_meta.size();
   ModuleMetadata &module_meta = sema_result.module_meta.emplace_back();
-  module_meta.id = module_id;
   module_meta.name = module_name;
   module_meta.source_path = path;
   module_meta.source = move(source);
@@ -191,7 +190,6 @@ Option<ModuleId> try_load_and_parse(
   module_meta.ast_root = Parser::parse_module(module_meta.ast, module_meta.tokens);
   collect_imports(module_meta);
   collect_submodules(module_meta, module_name);
-  sema_result.module_scopes.push_back(FlexShared<Scope>::strong(Scope{}));
   mark_as_loaded(
       sema_result,
       module_name,
@@ -212,6 +210,7 @@ Option<ModuleId> try_load_and_parse(
         import_location
     );
   }
+  sema_result.module_scopes.push_back(FlexShared<Scope>::strong(Scope{}));
   return Some(module_id);
 }
 

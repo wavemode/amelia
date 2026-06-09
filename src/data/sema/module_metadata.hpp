@@ -15,7 +15,6 @@ struct ModuleImport {
 };
 
 struct ModuleMetadata {
-  ModuleId id;
   String name;
   String source_path;
   String source;

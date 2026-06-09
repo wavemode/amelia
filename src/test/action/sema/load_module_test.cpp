@@ -133,12 +133,20 @@ TEST_CASE("single file declares two submodules with the same name") {
   CHECK_THROWS_AS(load_module(file_loader, sema_result, "a", ctx), SourceLocationError);
 }
 
-TEST_CASE("target module is both a submodule b::c within a.am and c with a/b.am") {
+TEST_CASE("target module is both a submodule 'b::c' within a.am and 'c' within a/b.am") {
   ModuleLoaderContext ctx{Set<String>({"src/test/action/sema/duplicate_submodule_different_paths"})
   };
   FileLoader file_loader;
   SemaResult sema_result;
   CHECK_THROWS_AS(load_module(file_loader, sema_result, "a::b::c", ctx), RuntimeError);
+}
+
+TEST_CASE("imported module is both a submodule 'b::c' within a.am and 'c' within a/b.am") {
+  ModuleLoaderContext ctx{Set<String>({"src/test/action/sema/duplicate_submodule_different_paths"})
+  };
+  FileLoader file_loader;
+  SemaResult sema_result;
+  CHECK_THROWS_AS(load_module(file_loader, sema_result, "d", ctx), SourceLocationError);
 }
 
 TEST_CASE("a -> b") {
