@@ -9,16 +9,23 @@
 
 namespace amelia {
 
-using BindingId = int32_t;
+struct ModuleImport {
+  String name;
+  Location location;
+};
 
 struct ModuleMetadata {
+  ModuleId id;
+  String name;
   String source_path;
   String source;
   LexerResult tokens;
   ParserResult ast;
   NodeId ast_root;
-  Set<ModuleId> imports;
-  Set<ModuleId> imported_by;
+  List<ModuleImport> imports;
+  Map<String, Location> submodules;
+  Set<ModuleId> imported_ids;
+  Set<ModuleId> imported_by_ids;
   Set<ModuleId> group_module_ids;
   List<Set<BindingId>> binding_deps;
 };

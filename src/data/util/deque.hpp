@@ -209,6 +209,22 @@ public:
     return get(index);
   }
 
+  bool operator==(const Deque &other) const {
+    if (m_size != other.m_size) {
+      return false;
+    }
+    for (size_t i = 0; i < m_size; ++i) {
+      if (get(i) != other.get(i)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  bool operator!=(const Deque &other) const {
+    return !(*this == other);
+  }
+
 private:
   T *get_item(int64_t global_index) const {
     if (global_index >= 0) {

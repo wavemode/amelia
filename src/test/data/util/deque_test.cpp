@@ -133,6 +133,14 @@ TEST_CASE("move assignment operator") {
   REQUIRE(deque1.size() == 0);
 }
 
+TEST_CASE("equality operator") {
+  Deque<int> deque1({5, 2, 9});
+  Deque<int> deque2({5, 2, 9});
+  Deque<int> deque3({5, 2});
+  REQUIRE(deque1 == deque2);
+  REQUIRE(deque1 != deque3);
+}
+
 TEST_CASE("iterator") {
   Deque<int> deque({5, 2, 9});
   auto it = deque.begin();

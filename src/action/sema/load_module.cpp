@@ -40,12 +40,7 @@ Text identifier_name(const Token &name) {
   }
 }
 
-struct ModuleImport {
-  String name;
-  Location location;
-};
-
-void collect_imports(List<ModuleImport> &imports, const ModuleMetadata &module_meta) {
+void collect_imports(ModuleMetadata &module_meta) {
   const auto &module_node = module_meta.ast.get_node(module_meta.ast_root).as_ModuleNode();
   for (NodeId import_node_id : module_node.imports) {
     const Node &import_node = module_meta.ast.get_node(import_node_id);
@@ -83,17 +78,14 @@ void collect_imports(List<ModuleImport> &imports, const ModuleMetadata &module_m
     for (int i = result.size() - 1; i >= 0; --i) {
       output.append(result[i]);
     }
-    imports.push_back(
+    module_meta.imports.push_back(
         ModuleImport{move(output), module_meta.tokens.get_token(import_node.start_token()).location}
     );
   }
 }
 
 void collect_submodules(
-    List<String> &output,
-    const ModuleMetadata &module_meta,
-    Text base_module,
-    const List<NodeId> &submodules
+    ModuleMetadata &module_meta, Text base_module, const List<NodeId> &submodules
 ) {
   for (NodeId submodule_node_id : submodules) {
     const auto &module_decl = module_meta.ast.get_node(submodule_node_id).as_ModuleDeclNode();
@@ -101,22 +93,88 @@ void collect_submodules(
     const Token &module_name_token = module_meta.tokens.get_token(module_name.token);
     Text module_name_text = identifier_name(module_name_token);
 
-    String &result = output.emplace_back();
+    String result;
     result.append(base_module);
     result.append("::");
     result.append(module_name_text);
+    if (module_meta.submodules.has(result)) {
+      String error_message = "Duplicate submodule name '";
+      error_message.append(result);
+      error_message.append("'");
+      throw SourceLocationError(module_name_token.location, move(error_message));
+    }
+    module_meta.submodules.set(result, module_name_token.location);
 
-    collect_submodules(output, module_meta, result, module_decl.submodules.value());
+    collect_submodules(module_meta, result, module_decl.submodules.value());
   }
 }
 
-void collect_submodules(List<String> &output, const ModuleMetadata &module_meta, Text base_module) {
+void collect_submodules(ModuleMetadata &module_meta, Text base_module) {
   const auto &module_node = module_meta.ast.get_node(module_meta.ast_root).as_ModuleNode();
-  collect_submodules(output, module_meta, base_module, module_node.submodules);
+  collect_submodules(module_meta, base_module, module_node.submodules);
+}
+
+void mark_as_loaded(
+    SemaResult &sema_result,
+    const String &module_name,
+    const String &module_contents,
+    const String &module_path,
+    ModuleId module_id,
+    Option<Location> submodule_location,
+    Option<Location> import_location
+) {
+  Option<ModuleId> maybe_existing_module_id = sema_result.module_ids.find(module_name);
+  if (maybe_existing_module_id.has_value()) {
+    ModuleId existing_module_id = maybe_existing_module_id.value();
+    ModuleMetadata &existing_module_meta = sema_result.module_meta[existing_module_id];
+    Option<Location> existing_submodule_location;
+    if (existing_module_meta.name != module_name) {
+      existing_submodule_location = existing_module_meta.submodules.get(module_name);
+    }
+
+    if (existing_module_meta.source != module_contents) {
+      // If modules with the name name were defined in two different files with different
+      // contents, then this module name is ambiguous and we must raise an error.
+      String error_message = "Module '";
+      error_message.append(module_name);
+      error_message.append("' defined in multiple locations (");
+      error_message.append(existing_module_meta.source_path);
+      if (existing_submodule_location.has_value()) {
+        // existing_module is not the conflicting module - it contains it.
+        // so, we'll print the line and column where the conflicting submodule is declared
+        const Location &loc = existing_submodule_location.value();
+        error_message.append(":");
+        TextUtils::to_string(error_message, loc.line);
+        error_message.append(":");
+        TextUtils::to_string(error_message, loc.column);
+      }
+      error_message.append(", ");
+      error_message.append(module_path);
+      if (submodule_location.has_value()) {
+        // the new module is not the conflicting module - it contains it.
+        // so, we'll print the line and column where the conflicting submodule is declared
+        const Location &loc = submodule_location.value();
+        error_message.append(":");
+        TextUtils::to_string(error_message, loc.line);
+        error_message.append(":");
+        TextUtils::to_string(error_message, loc.column);
+      }
+      error_message.append(")");
+      if (import_location.has_value()) {
+        throw SourceLocationError(import_location.value(), move(error_message));
+      }
+      throw RuntimeError(error_message.c_str());
+    }
+  }
+  sema_result.module_ids.set(module_name, module_id);
 }
 
 Option<ModuleId> try_load_and_parse(
-    IFileLoader &file_loader, SemaResult &sema_result, const String &path, const String &module_name
+    IFileLoader &file_loader,
+    SemaResult &sema_result,
+    const String &path,
+    const String &module_name,
+    Option<Location> import_location
 ) {
   String source;
   auto err = file_loader.try_load_file(source, path);
@@ -125,11 +183,35 @@ Option<ModuleId> try_load_and_parse(
   }
   ModuleId module_id = sema_result.module_meta.size();
   ModuleMetadata &module_meta = sema_result.module_meta.emplace_back();
+  module_meta.id = module_id;
+  module_meta.name = module_name;
   module_meta.source_path = path;
   module_meta.source = move(source);
-  Lexer::tokenize(module_meta.tokens, {path}, module_meta.source);
+  Lexer::tokenize(module_meta.tokens, {module_meta.source_path}, module_meta.source);
   module_meta.ast_root = Parser::parse_module(module_meta.ast, module_meta.tokens);
-  sema_result.modules.push_back(FlexShared<Module>::strong(Module{module_name, Scope{}}));
+  collect_imports(module_meta);
+  collect_submodules(module_meta, module_name);
+  sema_result.module_scopes.push_back(FlexShared<Scope>::strong(Scope{}));
+  mark_as_loaded(
+      sema_result,
+      module_name,
+      module_meta.source,
+      module_meta.source_path,
+      module_id,
+      None(),
+      import_location
+  );
+  for (const auto &[submodule_name, submodule_location] : module_meta.submodules) {
+    mark_as_loaded(
+        sema_result,
+        submodule_name,
+        module_meta.source,
+        module_meta.source_path,
+        module_id,
+        submodule_location,
+        import_location
+    );
+  }
   return Some(module_id);
 }
 
@@ -183,35 +265,31 @@ ModuleId load_module(
       TextUtils::join_into(loaded_module_name, module_name_parts.data(), "::");
 
       Option<ModuleId> try_loaded_module_id = try_load_and_parse(
-          file_loader, sema_result, module_path, loaded_module_name
+          file_loader, sema_result, module_path, loaded_module_name, import_location
       );
       if (try_loaded_module_id.has_value()) {
         ModuleId loaded_module_id = try_loaded_module_id.value();
+        ModuleMetadata &loaded_module_meta = sema_result.module_meta[loaded_module_id];
+
+        // check whether this is the module we were originally looking for
         if (loaded_module_name == module_name) {
           target_module_id = loaded_module_id;
         }
 
-        // mark this module as loaded
-        sema_result.module_ids.set(loaded_module_name, loaded_module_id);
-
-        // mark all of this module's submodules as loaded
-        ModuleMetadata &loaded_module_meta = sema_result.module_meta[loaded_module_id];
-        List<String> loaded_submodule_list;
-        collect_submodules(loaded_submodule_list, loaded_module_meta, loaded_module_name);
-        for (const String &loaded_submodule_name : loaded_submodule_list) {
-          sema_result.module_ids.set(loaded_submodule_name, loaded_module_id);
-          if (loaded_submodule_name == module_name) {
-            target_module_id = loaded_module_id;
+        if (!target_module_id.has_value()) {
+          // check whether any submodule is the module we were originally looking for
+          for (const auto &[loaded_submodule_name, loaded_module_location] :
+               loaded_module_meta.submodules) {
+            if (loaded_submodule_name == module_name) {
+              target_module_id = loaded_module_id;
+            }
           }
         }
 
         // load all of this module's imports
-        List<ModuleImport> loaded_module_imports;
-        collect_imports(loaded_module_imports, loaded_module_meta);
-
         import_set.add(loaded_module_name.text());
         import_chain.push_back(loaded_module_name.text());
-        for (const ModuleImport &loaded_module_import : loaded_module_imports) {
+        for (const ModuleImport &loaded_module_import : loaded_module_meta.imports) {
 
           ModuleId imported_module_id = load_module(
               file_loader,
@@ -223,8 +301,8 @@ ModuleId load_module(
               loaded_module_import.location
           );
           ModuleMetadata &imported_module_meta = sema_result.module_meta[imported_module_id];
-          imported_module_meta.imported_by.add(loaded_module_id);
-          loaded_module_meta.imports.add(imported_module_id);
+          imported_module_meta.imported_by_ids.add(loaded_module_id);
+          loaded_module_meta.imported_ids.add(imported_module_id);
         }
         import_set.remove(loaded_module_name);
         import_chain.pop_back();

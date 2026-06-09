@@ -12,7 +12,7 @@ using BindingId = int32_t;
 
 struct Scope {
   Map<Text, BindingId> binding_ids;
-  List<FlexShared<Binding>> bindings;
+  Deque<Binding> bindings; // this is a Deque so that the contents never move
   Option<Ref<Scope>> parent;
 };
 
