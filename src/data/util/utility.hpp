@@ -80,7 +80,7 @@ template <typename T> inline uint64_t bit_hash(const T &value) {
   return hash_str_64(reinterpret_cast<const char *>(&value), sizeof(T));
 }
 
-template <typename T> inline uint64_t hash(T &&value) {
+template <typename T> inline uint64_t hash(const T &value) {
   return value.hash_code();
 }
 inline uint64_t hash(char value) {

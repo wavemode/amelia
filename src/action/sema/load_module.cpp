@@ -239,6 +239,9 @@ ModuleId load_module(
       for (ModuleId g : group_ids) {
         if (m != g) {
           sema_result.module_meta[m].group_module_ids.add(g);
+          // modules that import circularly are not considered dependencies of each other
+          sema_result.module_meta[m].imported_ids.remove(g);
+          sema_result.module_meta[m].imported_by_ids.remove(g);
         }
       }
     }
@@ -285,6 +288,8 @@ ModuleId load_module(
           }
         }
 
+        size_t prior_group_id_count = loaded_module_meta.group_module_ids.size();
+
         // load all of this module's imports
         import_set.add(loaded_module_name.text());
         import_chain.push_back(loaded_module_name.text());
@@ -300,18 +305,25 @@ ModuleId load_module(
               loaded_module_import.location
           );
           ModuleMetadata &imported_module_meta = sema_result.module_meta[imported_module_id];
-          imported_module_meta.imported_by_ids.add(loaded_module_id);
-          loaded_module_meta.imported_ids.add(imported_module_id);
+          if (!loaded_module_meta.group_module_ids.has(imported_module_id)) {
+            imported_module_meta.imported_by_ids.add(loaded_module_id);
+            loaded_module_meta.imported_ids.add(imported_module_id);
+          }
         }
         import_set.remove(loaded_module_name);
         import_chain.pop_back();
 
         // make sure all of our group modules are also in a group with each other
-        for (ModuleId group_module_id : loaded_module_meta.group_module_ids) {
-          ModuleMetadata &group_module_meta = sema_result.module_meta[group_module_id];
-          for (ModuleId other_group_module_id : loaded_module_meta.group_module_ids) {
-            if (group_module_id != other_group_module_id) {
-              group_module_meta.group_module_ids.add(other_group_module_id);
+        if (loaded_module_meta.group_module_ids.size() > prior_group_id_count) {
+          for (ModuleId group_module_id : loaded_module_meta.group_module_ids) {
+            ModuleMetadata &group_module_meta = sema_result.module_meta[group_module_id];
+            for (ModuleId other_group_module_id : loaded_module_meta.group_module_ids) {
+              if (group_module_id != other_group_module_id) {
+                group_module_meta.group_module_ids.add(other_group_module_id);
+                // modules that import circularly are not considered dependencies of each other
+                group_module_meta.imported_ids.remove(other_group_module_id);
+                group_module_meta.imported_by_ids.remove(other_group_module_id);
+              }
             }
           }
         }

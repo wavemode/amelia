@@ -13,7 +13,7 @@ namespace amelia {
 struct SemaResult {
   Map<String, ModuleId> module_ids;
   List<FlexShared<Scope>> module_scopes;
-  Deque<ModuleMetadata> module_meta; // this is a Deque so that the contents never move
+  Deque<ModuleMetadata> module_meta;
 };
 
 } // namespace amelia
