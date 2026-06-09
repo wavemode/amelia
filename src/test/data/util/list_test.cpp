@@ -1,5 +1,4 @@
 #include <doctest.h>
-#include <initializer_list>
 
 #include "prelude.hpp"
 
