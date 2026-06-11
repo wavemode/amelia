@@ -21,7 +21,6 @@
 namespace amelia {
 using ModuleId = int32_t;
 using BindingId = int32_t;
-using TypeId = int32_t;
 using NodeId = int32_t;
 using TokenId = int32_t;
 } // namespace amelia

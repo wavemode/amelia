@@ -1,0 +1,21 @@
+let x : const 5 = 5
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclNode(
+      target=IdentifierNode(
+        token=IDENTIFIER(x)
+      ),
+      type=ConstTypeExprNode(
+        expr=NumberLiteralNode(
+          lit=NUMBER(5)
+        )
+      ),
+      expr=NumberLiteralNode(
+        lit=NUMBER(5)
+      )
+    )
+  ]
+)
+*/

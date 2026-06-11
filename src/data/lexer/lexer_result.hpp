@@ -13,7 +13,7 @@ struct LexerResult : public AbstractTokenRepository {
     return m_tokens.data();
   }
 
-  Token get_token(TokenId token_id) const override {
+  const Token &get_token(TokenId token_id) const override {
     if (token_id >= static_cast<TokenId>(m_tokens.size())) {
       throw RuntimeError("Invalid token ID");
     }

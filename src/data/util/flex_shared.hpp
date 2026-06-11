@@ -4,17 +4,11 @@
 
 namespace amelia {
 
-namespace internal {
-template <typename T> struct SharedObject {
-  T obj;
-  uint32_t ref_count;
-};
-} // namespace internal
-
 /*
   Reference-counted pointer that can be either strong or weak. There is no separate control block,
   so the weak pointers are not safe to use except in the internals of the typechecker, where we
-  occasionally create weak pointers when both of the following are true:
+  sometimes create weak pointers to global constants, to save allocations/refcounting for common
+  builtin types. We also occasionally create weak pointers when both of the following are true:
 
   1) Due to the structure of the data, the object we're pointing to is guaranteed to have some
      strong pointer pointing to it at all times.
@@ -27,38 +21,64 @@ template <typename T> struct SharedObject {
 template <typename T> class FlexShared {
 public:
   static FlexShared<T> strong(T &&obj) {
-    auto *shared_obj = new internal::SharedObject<T>{move(obj), 0};
-    return FlexShared<T>(shared_obj, true);
+    return FlexShared<T>(new T(move(obj)), new volatile uint32_t(1));
   }
 
-  FlexShared<T> strong_ref() const {
-    return FlexShared<T>(m_obj, true);
+  static FlexShared<T> weak(T *obj) {
+    return FlexShared<T>(obj, nullptr);
   }
 
-  FlexShared<T> weak_ref() const {
-    return FlexShared<T>(m_obj, false);
+  template <typename... Args> static FlexShared<T> emplace(Args &&...args) {
+    return FlexShared<T>(new T(amelia::forward<Args>(args)...), new volatile uint32_t(1));
   }
 
-  FlexShared(const FlexShared<T> &other) : m_obj(other.m_obj), m_strong(other.m_strong) {
+  FlexShared() noexcept : m_obj(nullptr), m_ref_count(nullptr) {}
+
+  FlexShared(const FlexShared<T> &other) noexcept
+      : m_obj(other.m_obj), m_ref_count(other.m_ref_count) {
     acquire();
   }
 
-  FlexShared(FlexShared<T> &&other) noexcept : m_obj(other.m_obj), m_strong(other.m_strong) {
+  template <typename U>
+  FlexShared(const FlexShared<U> &other) noexcept
+      : m_obj(other.m_obj), m_ref_count(other.m_ref_count) {
+    acquire();
+  }
+
+  FlexShared(FlexShared<T> &&other) noexcept : m_obj(other.m_obj), m_ref_count(other.m_ref_count) {
     other.m_obj = nullptr;
-    other.m_strong = false;
+    other.m_ref_count = nullptr;
+  }
+
+  template <typename U>
+  FlexShared(FlexShared<U> &&other) noexcept : m_obj(other.m_obj), m_ref_count(other.m_ref_count) {
+    other.m_obj = nullptr;
+    other.m_ref_count = nullptr;
   }
 
   ~FlexShared() {
     release();
   }
 
-  FlexShared<T> &operator=(const FlexShared<T> &other) {
+  FlexShared<T> weak() const noexcept {
+    return FlexShared<T>(m_obj, nullptr);
+  }
+
+  FlexShared<T> &operator=(const FlexShared<T> &other) noexcept {
     if (this != &other) {
       release();
       m_obj = other.m_obj;
-      m_strong = other.m_strong;
+      m_ref_count = other.m_ref_count;
       acquire();
     }
+    return *this;
+  }
+
+  template <typename U> FlexShared<T> &operator=(const FlexShared<U> &other) noexcept {
+    release();
+    m_obj = other.m_obj;
+    m_ref_count = other.m_ref_count;
+    acquire();
     return *this;
   }
 
@@ -66,53 +86,67 @@ public:
     if (this != &other) {
       release();
       m_obj = other.m_obj;
-      m_strong = other.m_strong;
+      m_ref_count = other.m_ref_count;
       other.m_obj = nullptr;
-      other.m_strong = false;
+      other.m_ref_count = nullptr;
     }
     return *this;
   }
 
-  T &operator*() {
-    return m_obj->obj;
+  template <typename U> FlexShared<T> &operator=(FlexShared<U> &&other) noexcept {
+    release();
+    m_obj = other.m_obj;
+    m_ref_count = other.m_ref_count;
+    other.m_obj = nullptr;
+    other.m_ref_count = nullptr;
+    return *this;
   }
 
-  const T &operator*() const {
-    return m_obj->obj;
+  T &operator*() noexcept {
+    return *m_obj;
   }
 
-  T *operator->() {
-    return &m_obj->obj;
+  const T &operator*() const noexcept {
+    return *m_obj;
   }
 
-  const T *operator->() const {
-    return &m_obj->obj;
+  T *operator->() noexcept {
+    return m_obj;
   }
+
+  const T *operator->() const noexcept {
+    return m_obj;
+  }
+
+  template <typename U> friend class FlexShared;
 
 private:
-  FlexShared(internal::SharedObject<T> *obj, bool strong) : m_obj(obj), m_strong(strong) {
-    acquire();
-  }
+  FlexShared(T *obj, volatile uint32_t *ref_count) noexcept : m_obj(obj), m_ref_count(ref_count) {}
 
-  void acquire() {
-    if (m_strong && m_obj) {
-      __atomic_fetch_add(&m_obj->ref_count, 1, __ATOMIC_ACQUIRE);
+  void acquire() noexcept {
+    if (m_ref_count) {
+      __atomic_fetch_add(m_ref_count, 1, __ATOMIC_ACQUIRE);
     }
   }
 
-  void release() {
-    if (m_strong && m_obj) {
-      if (__atomic_sub_fetch(&m_obj->ref_count, 1, __ATOMIC_RELEASE) == 0) {
+  void release() noexcept {
+    if (m_ref_count) {
+      if (__atomic_sub_fetch(m_ref_count, 1, __ATOMIC_RELEASE) == 0) {
         __atomic_thread_fence(__ATOMIC_ACQUIRE);
         delete m_obj;
+        delete m_ref_count;
       }
     }
     m_obj = nullptr;
-    m_strong = false;
+    m_ref_count = nullptr;
   }
 
-  internal::SharedObject<T> *m_obj;
-  bool m_strong;
+  T *m_obj;
+  volatile uint32_t *m_ref_count;
 };
+
+template <typename T> FlexShared<T> make_flex(T &&obj) {
+  return FlexShared<T>::strong(move(obj));
+}
 
 } // namespace amelia

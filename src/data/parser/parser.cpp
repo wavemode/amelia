@@ -1653,6 +1653,10 @@ public:
       ++m_token_index; // consume the 'async' keyword
       NodeId type_expr = parse_descend_expr_impl_any_async(allow_funcall);
       return m_output.add_node(start_token.id, m_token_index, AsyncExprNode{type_expr});
+    } else if (start_token.type == TokenType::KEYWORD_CONST) {
+      ++m_token_index; // consume the 'const' keyword
+      NodeId type_expr = parse_descend_expr_impl_any_async(allow_funcall);
+      return m_output.add_node(start_token.id, m_token_index, ConstTypeExprNode{type_expr});
     }
     return parse_descend_expr_field_ix_funcall_scope_question_exclam(allow_funcall);
   }

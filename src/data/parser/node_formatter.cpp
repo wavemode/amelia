@@ -814,6 +814,11 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "type", n.type);
     break;
   }
+  case NodeType::ConstTypeExprNode: {
+    const auto &n = node.as_ConstTypeExprNode();
+    print_node_field(out, "expr", n.expr);
+    break;
+  }
   case NodeType::AsyncExprNode: {
     const auto &n = node.as_AsyncExprNode();
     print_node_field(out, "expr", n.expr);

@@ -110,7 +110,14 @@ struct TextUtils {
   static Text tail_bytes(Text input, size_t index_start);
 
   static void to_string(AbstractString &output, int64_t value);
-  static void to_string(AbstractString &output, size_t value);
+  static void to_string(AbstractString &output, uint64_t value);
+  static void to_string(AbstractString &output, int32_t value);
+  static void to_string(AbstractString &output, uint32_t value);
+  static void to_string(AbstractString &output, int16_t value);
+  static void to_string(AbstractString &output, uint16_t value);
+  static void to_string(AbstractString &output, int8_t value);
+  static void to_string(AbstractString &output, uint8_t value);
+  static void to_string(AbstractString &output, float value);
   static void to_string(AbstractString &output, double value);
   static void to_string(AbstractString &output, bool value);
 

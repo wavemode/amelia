@@ -2,12 +2,11 @@
 
 #include "prelude.hpp"
 
-#include "data/sema/type_kind.hpp"
-#include "data/source/declaration_visibility.hpp"
+#include "data/util/flex_shared.hpp"
 
 namespace amelia {
 
-enum class PrimitiveKind {
+enum class PrimitiveKind : unsigned char {
   Byte,
   UByte,
   Short,
@@ -26,155 +25,35 @@ enum class PrimitiveKind {
   Unknown,
 };
 
-class Type {
-public:
-  struct Alias {};
-  struct Apply {};
-  struct Primitive {
-    PrimitiveKind primitive_kind;
-  };
-  struct Bitint {};
-  struct Tuple {};
-  struct Struct {};
-  struct Reference {};
-  struct Pointer {};
-  struct Array {};
-  struct Slice {};
-  struct Impl {};
-  struct Const {};
-  struct Class {};
-  struct Union {};
-  struct Function {};
-  struct FunctionPointer {};
-  struct Concept {};
-  struct Variable {};
-
-#define X(TYPE_KIND)                                                                               \
-  Type(TYPE_KIND type) : m_kind(TypeKind::TYPE_KIND), m_data(move(type)) {}                        \
-                                                                                                   \
-  TYPE_KIND &as_##TYPE_KIND() {                                                                    \
-    if (m_kind != TypeKind::TYPE_KIND) {                                                           \
-      throw RuntimeError("Type kind mismatch");                                                    \
-    }                                                                                              \
-    return m_data.data_##TYPE_KIND;                                                                \
-  }                                                                                                \
-                                                                                                   \
-  const TYPE_KIND &as_##TYPE_KIND() const {                                                        \
-    if (m_kind != TypeKind::TYPE_KIND) {                                                           \
-      throw RuntimeError("Type kind mismatch");                                                    \
-    }                                                                                              \
-    return m_data.data_##TYPE_KIND;                                                                \
-  }
-  TYPE_KIND_LIST
-#undef X
-
-  ~Type() {
-    m_data.destroy(m_kind);
-  }
-
-  Type(const Type &other) : m_kind(other.m_kind), m_data(other.m_kind, other.m_data) {}
-
-  Type(Type &&other) noexcept : m_kind(other.m_kind), m_data(other.m_kind, move(other.m_data)) {}
-
-  TypeKind kind() const {
-    return m_kind;
-  }
-
-  Type &operator=(const Type &other) {
-    if (this != &other) {
-      if (m_kind == other.m_kind) {
-        m_data.assign(m_kind, other.m_data);
-      } else {
-        m_data.destroy(m_kind);
-        m_kind = other.m_kind;
-        new (&m_data) TypeData(m_kind, other.m_data);
-      }
-    }
-    return *this;
-  }
-
-  Type &operator=(Type &&other) {
-    if (this != &other) {
-      if (m_kind == other.m_kind) {
-        m_data.assign(m_kind, move(other.m_data));
-      } else {
-        m_data.destroy(m_kind);
-        m_kind = other.m_kind;
-        new (&m_data) TypeData(m_kind, move(other.m_data));
-      }
-    }
-    return *this;
-  }
-
-private:
-  union TypeData {
-#define X(TYPE_KIND)                                                                               \
-  TYPE_KIND data_##TYPE_KIND;                                                                      \
-                                                                                                   \
-  explicit TypeData(TYPE_KIND type) : data_##TYPE_KIND(move(type)) {}
-    TYPE_KIND_LIST
-#undef X
-
-    TypeData(TypeKind kind, const TypeData &other) {
-      switch (kind) {
-#define X(TYPE_KIND)                                                                               \
-  case TypeKind::TYPE_KIND:                                                                        \
-    new (&data_##TYPE_KIND) TYPE_KIND(other.data_##TYPE_KIND);                                     \
-    break;
-        TYPE_KIND_LIST
-#undef X
-      }
-    }
-
-    TypeData(TypeKind kind, TypeData &&other) {
-      switch (kind) {
-#define X(TYPE_KIND)                                                                               \
-  case TypeKind::TYPE_KIND:                                                                        \
-    new (&data_##TYPE_KIND) TYPE_KIND(move(other.data_##TYPE_KIND));                               \
-    break;
-        TYPE_KIND_LIST
-#undef X
-      }
-    }
-
-    void assign(TypeKind kind, const TypeData &other) {
-      switch (kind) {
-#define X(TYPE_KIND)                                                                               \
-  case TypeKind::TYPE_KIND:                                                                        \
-    data_##TYPE_KIND = other.data_##TYPE_KIND;                                                     \
-    break;
-        TYPE_KIND_LIST
-#undef X
-      }
-    }
-
-    void assign(TypeKind kind, TypeData &&other) {
-      switch (kind) {
-#define X(TYPE_KIND)                                                                               \
-  case TypeKind::TYPE_KIND:                                                                        \
-    data_##TYPE_KIND = move(other.data_##TYPE_KIND);                                               \
-    break;
-        TYPE_KIND_LIST
-#undef X
-      }
-    }
-
-    void destroy(TypeKind kind) noexcept {
-      switch (kind) {
-#define X(TYPE_KIND)                                                                               \
-  case TypeKind::TYPE_KIND:                                                                        \
-    data_##TYPE_KIND.~TYPE_KIND();                                                                 \
-    break;
-        TYPE_KIND_LIST
-#undef X
-      }
-    }
-
-    ~TypeData() {}
-  };
-
-  TypeKind m_kind;
-  TypeData m_data;
+enum class TypeKind : unsigned char {
+  Alias,
+  Apply,
+  Primitive,
+  Bitint,
+  Tuple,
+  Struct,
+  Reference,
+  Pointer,
+  Array,
+  Slice,
+  Impl,
+  Const,
+  Class,
+  Union,
+  Concept,
+  Function,
+  FunctionPointer,
+  Variable,
 };
+
+struct Type {
+  TypeKind kind;
+};
+
+struct PrimitiveType : Type {
+  PrimitiveKind primitive_kind;
+};
+
+void format_type(AbstractString &out, const Type &type);
 
 } // namespace amelia

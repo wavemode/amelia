@@ -567,13 +567,41 @@ void TextUtils::to_string(AbstractString &output, int64_t value) {
   output.append(Text(Slice(buffer, static_cast<size_t>(chars_written))));
 }
 
-void TextUtils::to_string(AbstractString &output, size_t value) {
+void TextUtils::to_string(AbstractString &output, uint64_t value) {
   char buffer[21];
-  int64_t chars_written = sprintf(buffer, "%zu", value);
+  int64_t chars_written = sprintf(buffer, "%llu", static_cast<unsigned long long>(value));
   if (chars_written < 0) {
-    throw RuntimeError("Failed to convert size_t to string");
+    throw RuntimeError("Failed to convert unsigned integer to string");
   }
   output.append(Text(Slice(buffer, static_cast<size_t>(chars_written))));
+}
+
+void TextUtils::to_string(AbstractString &output, int32_t value) {
+  to_string(output, static_cast<int64_t>(value));
+}
+
+void TextUtils::to_string(AbstractString &output, uint32_t value) {
+  to_string(output, static_cast<uint64_t>(value));
+}
+
+void TextUtils::to_string(AbstractString &output, int16_t value) {
+  to_string(output, static_cast<int64_t>(value));
+}
+
+void TextUtils::to_string(AbstractString &output, uint16_t value) {
+  to_string(output, static_cast<uint64_t>(value));
+}
+
+void TextUtils::to_string(AbstractString &output, int8_t value) {
+  to_string(output, static_cast<int64_t>(value));
+}
+
+void TextUtils::to_string(AbstractString &output, uint8_t value) {
+  to_string(output, static_cast<uint64_t>(value));
+}
+
+void TextUtils::to_string(AbstractString &output, float value) {
+  to_string(output, static_cast<double>(value));
 }
 
 void TextUtils::to_string(AbstractString &output, double value) {

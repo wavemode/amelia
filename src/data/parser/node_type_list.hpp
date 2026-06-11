@@ -710,6 +710,10 @@ struct AnyTypeExprNode {
   NodeId type;
 };
 
+struct ConstTypeExprNode {
+  NodeId expr;
+};
+
 struct AsyncExprNode {
   NodeId expr;
 };
@@ -959,6 +963,7 @@ struct AbstractDeclNode {
   X(TypeConstraintNode)                                                                            \
   X(ImplTypeExprNode)                                                                              \
   X(AnyTypeExprNode)                                                                               \
+  X(ConstTypeExprNode)                                                                             \
   X(AsyncExprNode)                                                                                 \
   X(CopyExprNode)                                                                                  \
   X(MoveExprNode)                                                                                  \

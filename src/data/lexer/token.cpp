@@ -6,7 +6,7 @@
 
 namespace amelia {
 
-Text identifier_name(const Token &name) {
+Text identifier_text(const Token &name) {
   switch (name.type) {
   case TokenType::IDENTIFIER:
   case TokenType::IDENTIFIER_NO_W:
@@ -15,7 +15,7 @@ Text identifier_name(const Token &name) {
   case TokenType::QUOTED_IDENTIFIER_NO_W:
     return TextUtils::substr_bytes(name.contents, 1, name.contents.size() - 1);
   default:
-    throw SourceLocationError(name.location, "Expected identifier in import statement");
+    throw SourceLocationError(name.location, "Expected identifier");
   }
 }
 

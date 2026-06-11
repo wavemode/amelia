@@ -38,7 +38,7 @@ void collect_imports(Module &module_obj) {
       if (import_path_node.type() == NodeType::IdentifierNode) {
         auto token_id = import_path_node.as_IdentifierNode().token;
         const auto &token = module_obj.tokens.get_token(token_id);
-        Text name_part = identifier_name(token);
+        Text name_part = identifier_text(token);
         result.push_back(name_part);
         break;
       }
@@ -55,7 +55,7 @@ void collect_imports(Module &module_obj) {
 
       auto token_id = scope_resolution_name.as_IdentifierNode().token;
       const auto &token = module_obj.tokens.get_token(token_id);
-      Text name_part = identifier_name(token);
+      Text name_part = identifier_text(token);
       result.push_back(name_part);
       result.push_back("::");
       import_path_node_id = scope_resolution.scope;
@@ -76,7 +76,7 @@ void collect_submodules(Module &module_obj, Text base_module, const List<NodeId>
     const auto &module_decl = module_obj.ast.get_node(submodule_node_id).as_ModuleDeclNode();
     const auto &module_name = module_obj.ast.get_node(module_decl.name).as_IdentifierNode();
     const Token &module_name_token = module_obj.tokens.get_token(module_name.token);
-    Text module_name_text = identifier_name(module_name_token);
+    Text module_name_text = identifier_text(module_name_token);
 
     String result;
     result.append(base_module);
@@ -169,6 +169,7 @@ Option<ModuleId> try_load_and_parse(
   ModuleId module_id = sema_result.modules.size();
   Module &module_obj = sema_result.modules.emplace_back();
   module_obj.name = module_name;
+  module_obj.scope = FlexShared<Scope>::emplace();
   module_obj.source_path = path;
   module_obj.source = move(source);
   Lexer::tokenize(module_obj.tokens, {module_obj.source_path}, module_obj.source);

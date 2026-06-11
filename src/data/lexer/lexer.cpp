@@ -1307,8 +1307,8 @@ private:
   }
 
   LexerContext m_ctx;
-  size_t m_line;
-  size_t m_column;
+  uint32_t m_line;
+  uint32_t m_column;
   Text m_file_contents;
   CharIterator m_input_iter;
   bool m_previous_char_was_whitespace;

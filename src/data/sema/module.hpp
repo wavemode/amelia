@@ -17,8 +17,6 @@ struct ModuleImport {
 };
 
 struct Module {
-  Module() : scope(FlexShared<Scope>::strong(Scope())) {}
-
   String name;
   String source_path;
   String source;
@@ -33,5 +31,7 @@ struct Module {
   Set<ModuleId> group_module_ids;
   List<Set<BindingId>> binding_deps;
 };
+
+void format_module(AbstractString &out, const Module &module);
 
 } // namespace amelia

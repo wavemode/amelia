@@ -15,4 +15,6 @@ struct SemaResult {
   Deque<Module> modules;
 };
 
+void format_sema_result(AbstractString &out, const SemaResult &sema_result);
+
 } // namespace amelia

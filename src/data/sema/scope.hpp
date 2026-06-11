@@ -12,7 +12,7 @@ using BindingId = int32_t;
 
 struct Scope {
   Map<Text, BindingId> binding_ids;
-  List<Binding> bindings;
+  List<FlexShared<Binding>> bindings;
   Option<Ref<Scope>> parent;
 };
 
