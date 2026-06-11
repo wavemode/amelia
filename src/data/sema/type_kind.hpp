@@ -18,9 +18,7 @@
   X(Concept)                                                                                       \
   X(Function)                                                                                      \
   X(FunctionPointer)                                                                               \
-  X(Variable)                                                                                      \
-  X(TypeDecl)                                                                                      \
-  X(ModuleDecl)
+  X(Variable)
 
 namespace amelia {
 

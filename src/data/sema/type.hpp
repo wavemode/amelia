@@ -48,12 +48,9 @@ public:
   struct FunctionPointer {};
   struct Concept {};
   struct Variable {};
-  struct TypeDecl {};
-  struct ModuleDecl {};
 
 #define X(TYPE_KIND)                                                                               \
-  Type(DeclVisibility vis, TYPE_KIND type)                                                         \
-      : visibility(vis), m_kind(TypeKind::TYPE_KIND), m_data(move(type)) {}                        \
+  Type(TYPE_KIND type) : m_kind(TypeKind::TYPE_KIND), m_data(move(type)) {}                        \
                                                                                                    \
   TYPE_KIND &as_##TYPE_KIND() {                                                                    \
     if (m_kind != TypeKind::TYPE_KIND) {                                                           \
@@ -75,12 +72,9 @@ public:
     m_data.destroy(m_kind);
   }
 
-  Type(const Type &other)
-      : visibility(other.visibility), m_kind(other.m_kind), m_data(other.m_kind, other.m_data) {}
+  Type(const Type &other) : m_kind(other.m_kind), m_data(other.m_kind, other.m_data) {}
 
-  Type(Type &&other) noexcept
-      : visibility(other.visibility), m_kind(other.m_kind),
-        m_data(other.m_kind, move(other.m_data)) {}
+  Type(Type &&other) noexcept : m_kind(other.m_kind), m_data(other.m_kind, move(other.m_data)) {}
 
   TypeKind kind() const {
     return m_kind;
@@ -88,7 +82,6 @@ public:
 
   Type &operator=(const Type &other) {
     if (this != &other) {
-      visibility = other.visibility;
       if (m_kind == other.m_kind) {
         m_data.assign(m_kind, other.m_data);
       } else {
@@ -102,7 +95,6 @@ public:
 
   Type &operator=(Type &&other) {
     if (this != &other) {
-      visibility = other.visibility;
       if (m_kind == other.m_kind) {
         m_data.assign(m_kind, move(other.m_data));
       } else {
@@ -113,8 +105,6 @@ public:
     }
     return *this;
   }
-
-  DeclVisibility visibility;
 
 private:
   union TypeData {

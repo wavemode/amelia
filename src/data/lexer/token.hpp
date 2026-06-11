@@ -12,4 +12,6 @@ struct Token {
   Text contents;
 };
 
+Text identifier_name(const Token &name);
+
 } // namespace amelia

@@ -857,17 +857,20 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     const auto &n = node.as_VisibilityNode();
     Text visibility;
     switch (n.visibility) {
-    case DeclVisibility::Public:
+    case DeclarationVisibility::Public:
       visibility = "public";
       break;
-    case DeclVisibility::Private:
+    case DeclarationVisibility::Private:
       visibility = "private";
       break;
-    case DeclVisibility::Protected:
+    case DeclarationVisibility::Protected:
       visibility = "protected";
       break;
-    case DeclVisibility::Local:
+    case DeclarationVisibility::Local:
       visibility = "local";
+      break;
+    case DeclarationVisibility::Default:
+      visibility = "default";
       break;
     }
     print_field(out, "visibility", visibility);
@@ -1019,6 +1022,11 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   }
   case NodeType::InlineDeclNode: {
     const auto &n = node.as_InlineDeclNode();
+    print_node_field(out, "decl", n.decl);
+    break;
+  }
+  case NodeType::AbstractDeclNode: {
+    const auto &n = node.as_AbstractDeclNode();
     print_node_field(out, "decl", n.decl);
     break;
   }

@@ -8,10 +8,13 @@
 
 namespace amelia {
 
+enum class BindingKind { Variable, Constant, Function, Type, Class, Concept, Module };
+
 struct Binding {
   String name;
-  DeclVisibility visibility;
+  DeclarationVisibility visibility;
   NodeId decl;
+  BindingKind kind;
   FlexShared<Type> type;
 };
 

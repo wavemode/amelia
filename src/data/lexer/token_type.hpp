@@ -82,6 +82,7 @@ using TokenId = int32_t;
   X(KEYWORD_IN)                                                                                    \
   X(KEYWORD_LABEL)                                                                                 \
   X(KEYWORD_SUPER)                                                                                 \
+  X(KEYWORD_ABSTRACT)                                                                              \
   X(ELLIPSIS)                                                                                      \
   X(ASSIGN)                                                                                        \
   X(PLUS_EQUAL)                                                                                    \

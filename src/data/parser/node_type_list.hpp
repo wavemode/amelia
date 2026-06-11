@@ -667,7 +667,7 @@ struct ClassDestructorNode {
 };
 
 struct VisibilityNode {
-  DeclVisibility visibility;
+  DeclarationVisibility visibility;
   Option<NodeId> scope;
   NodeId decl;
 };
@@ -795,6 +795,10 @@ struct MutDeclNode {
 };
 
 struct InlineDeclNode {
+  NodeId decl;
+};
+
+struct AbstractDeclNode {
   NodeId decl;
 };
 
@@ -984,6 +988,7 @@ struct InlineDeclNode {
   X(ExclamationMarkExprNode)                                                                       \
   X(SealedDeclNode)                                                                                \
   X(MutDeclNode)                                                                                   \
-  X(InlineDeclNode)
+  X(InlineDeclNode)                                                                                \
+  X(AbstractDeclNode)
 
 } // namespace amelia

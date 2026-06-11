@@ -72,6 +72,7 @@ for
 in
 label
 super
+abstract
 
 /* EXPECTED_OUTPUT:
 KEYWORD_FUN(fun)
@@ -148,5 +149,6 @@ KEYWORD_FOR(for)
 KEYWORD_IN(in)
 KEYWORD_LABEL(label)
 KEYWORD_SUPER(super)
+KEYWORD_ABSTRACT(abstract)
 END_OF_FILE()
 */

@@ -2,10 +2,12 @@
 
 #include "prelude.hpp"
 
+#include "data/util/map.hpp"
 #include "data/util/set.hpp"
 
 #include "data/lexer/lexer_result.hpp"
 #include "data/parser/parser_result.hpp"
+#include "data/sema/scope.hpp"
 
 namespace amelia {
 
@@ -14,13 +16,16 @@ struct ModuleImport {
   Location location;
 };
 
-struct ModuleMetadata {
+struct Module {
+  Module() : scope(FlexShared<Scope>::strong(Scope())) {}
+
   String name;
   String source_path;
   String source;
   LexerResult tokens;
   ParserResult ast;
   NodeId ast_root;
+  FlexShared<Scope> scope;
   List<ModuleImport> imports;
   Map<String, Location> submodules;
   Set<ModuleId> imported_ids;

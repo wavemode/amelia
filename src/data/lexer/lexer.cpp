@@ -92,6 +92,7 @@ const auto keywords = Map<Text, TokenType>({
     {"in", TokenType::KEYWORD_IN},
     {"label", TokenType::KEYWORD_LABEL},
     {"super", TokenType::KEYWORD_SUPER},
+    {"abstract", TokenType::KEYWORD_ABSTRACT},
 });
 
 bool is_whitespace(uint32_t cp) noexcept {

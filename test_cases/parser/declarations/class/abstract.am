@@ -1,0 +1,41 @@
+abstract class A {
+  open A(a: int)
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    AbstractDeclNode(
+      decl=ClassDeclNode(
+        name=IdentifierNode(
+          token=IDENTIFIER(A)
+        ),
+        body=ClassBodyNode(
+          decls=[
+            OpenDeclNode(
+              decl=ClassConstructorNode(
+                name=IdentifierNode(
+                  token=IDENTIFIER(A)
+                ),
+                signature=FunctionSignatureNode(
+                  parameters=[
+                    FunctionParameterNode(
+                      variadic=false,
+                      name=IdentifierNode(
+                        token=IDENTIFIER_NO_W(a)
+                      ),
+                      type=PrimitiveTypeNode(
+                        token=KEYWORD_INT(int)
+                      )
+                    )
+                  ]
+                )
+              )
+            )
+          ]
+        )
+      )
+    )
+  ]
+)
+*/

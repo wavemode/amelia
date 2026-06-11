@@ -231,6 +231,8 @@ public:
       return parse_async_decl();
     case TokenType::KEYWORD_RECORD:
       return parse_record_decl();
+    case TokenType::KEYWORD_ABSTRACT:
+      return parse_abstract_decl();
     case TokenType::KEYWORD_SEALED:
       return parse_sealed_decl();
     case TokenType::KEYWORD_UNION:
@@ -245,6 +247,12 @@ public:
       break;
     }
     return None();
+  }
+
+  NodeId parse_abstract_decl() {
+    auto abstract_token = next();
+    auto decl = expect_decl("Expected declaration after 'abstract' keyword");
+    return m_output.add_node(abstract_token.id, m_token_index, AbstractDeclNode{decl});
   }
 
   NodeId parse_inline_decl() {
@@ -466,19 +474,19 @@ public:
 
   NodeId parse_top_level_visibility_decl() {
     auto visibility_token = next();
-    DeclVisibility visibility;
+    DeclarationVisibility visibility;
     switch (visibility_token.type) {
     case TokenType::KEYWORD_PUBLIC:
-      visibility = DeclVisibility::Public;
+      visibility = DeclarationVisibility::Public;
       break;
     case TokenType::KEYWORD_PRIVATE:
-      visibility = DeclVisibility::Private;
+      visibility = DeclarationVisibility::Private;
       break;
     case TokenType::KEYWORD_PROTECTED:
-      visibility = DeclVisibility::Protected;
+      visibility = DeclarationVisibility::Protected;
       break;
     case TokenType::KEYWORD_LOCAL:
-      visibility = DeclVisibility::Local;
+      visibility = DeclarationVisibility::Local;
       break;
     default:
       throw_parser_error_at_current_location("Invalid visibility keyword");
@@ -741,19 +749,19 @@ public:
 
   NodeId parse_class_body_visibility_decl() {
     auto visibility_token = next();
-    DeclVisibility visibility;
+    DeclarationVisibility visibility;
     switch (visibility_token.type) {
     case TokenType::KEYWORD_PUBLIC:
-      visibility = DeclVisibility::Public;
+      visibility = DeclarationVisibility::Public;
       break;
     case TokenType::KEYWORD_PRIVATE:
-      visibility = DeclVisibility::Private;
+      visibility = DeclarationVisibility::Private;
       break;
     case TokenType::KEYWORD_PROTECTED:
-      visibility = DeclVisibility::Protected;
+      visibility = DeclarationVisibility::Protected;
       break;
     case TokenType::KEYWORD_LOCAL:
-      visibility = DeclVisibility::Local;
+      visibility = DeclarationVisibility::Local;
       break;
     default:
       throw RuntimeError("Invalid visibility modifier");

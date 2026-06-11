@@ -2,11 +2,12 @@
 
 namespace amelia {
 
-enum class DeclVisibility {
+enum class DeclarationVisibility {
   Public,
   Private,
   Protected,
   Local,
+  Default,
 };
 
 }
