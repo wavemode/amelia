@@ -695,6 +695,14 @@ size_t TextUtils::count_chars(Text input) {
   }
   return char_count;
 }
+
+Text TextUtils::determine_path_separator(Text path) {
+  if (TextUtils::find(path, "\\").at_end()) {
+    return "/";
+  }
+  return "\\";
+}
+
 size_t TextUtils::count(Text input, Text substring) {
   if (substring.size() == 0) {
     return count_chars(input) + 1;

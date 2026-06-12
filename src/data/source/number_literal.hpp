@@ -1,6 +1,6 @@
 #pragma once
 
-#include "data/util/text.hpp"
+#include "data/testing/pretty_print.hpp"
 
 namespace amelia {
 
@@ -13,5 +13,7 @@ struct NumberLiteral {
   Text exponent_sign;
   Text exponent_digits;
 };
+
+PrettyPrint pretty_print_number_literal(const NumberLiteral &number_literal);
 
 } // namespace amelia

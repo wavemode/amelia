@@ -119,6 +119,7 @@ public:
     switch (expr_node.type()) {
     case NodeType::NumberLiteralNode:
       result = typecheck_expr_number_literal(expected_type, scope, expr_node_id);
+      break;
     default:
       throw RuntimeError("not implemented");
     }
@@ -126,9 +127,9 @@ public:
       const Location &expr_location = m_module_obj.tokens.get_token(expr_node.start_token())
                                           .location;
       String error_message = "Type error: expected type '";
-      format_type(error_message, *expected_type);
+      expected_type->pretty_print().to_string(error_message);
       error_message.append("' got expression of type '");
-      format_type(error_message, *result->type);
+      result->type->pretty_print().to_string(error_message);
       error_message.append("'");
       throw SourceLocationError(expr_location, move(error_message));
     }
@@ -165,6 +166,7 @@ public:
   void collect_bindings() {
     Text current_binding_name;
     Binding current_binding_details{};
+    current_binding_details.visibility = DeclarationVisibility::Default;
     const ModuleNode &module_node = m_module_obj.ast.get_node(m_module_obj.ast_root)
                                         .as_ModuleNode();
     for (NodeId decl_node_id : module_node.decls) {
@@ -239,6 +241,7 @@ public:
   SemaState(SemaResult &sema_result) : m_sema_result(sema_result) {}
 
   void typecheck() {
+    set_up_dep_counts();
     Option<ModuleId> module_id;
     while ((module_id = select_module_to_typecheck()).has_value()) {
       SemaWorkerState(m_sema_result, m_sema_result.modules[module_id.value()]).typecheck_module();
@@ -285,6 +288,8 @@ private:
 
 } // namespace
 
-void Analyzer::typecheck(SemaResult &sema_result) {}
+void Analyzer::typecheck(SemaResult &sema_result) {
+  SemaState(sema_result).typecheck();
+}
 
 } // namespace amelia

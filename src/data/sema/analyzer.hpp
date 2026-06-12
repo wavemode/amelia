@@ -4,7 +4,7 @@
 
 namespace amelia {
 
-class Analyzer {
+struct Analyzer {
 
   static void typecheck(SemaResult &sema_result);
 };

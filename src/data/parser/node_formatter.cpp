@@ -1092,8 +1092,9 @@ void NodeFormatter::print_node_field(
 }
 
 void NodeFormatter::print_node_field(AbstractString &out, Text name, Option<NodeId> node_id) {
-  if (!node_id.has_value())
+  if (!node_id.has_value()) {
     return;
+  }
   open_line(out);
   out.append(name);
   out.append('=');

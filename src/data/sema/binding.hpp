@@ -2,6 +2,7 @@
 
 #include "prelude.hpp"
 
+#include "data/testing/pretty_print.hpp"
 #include "data/util/flex_shared.hpp"
 
 #include "data/sema/expression.hpp"
@@ -22,12 +23,15 @@ enum class BindingKind : unsigned char {
   Module
 };
 
+PrettyPrint pretty_print_binding_kind(BindingKind kind);
+
 struct Binding {
   NodeId decl;
   BindingKind kind;
   DeclarationVisibility visibility;
   Option<FlexShared<Binding>> shadowed_binding;
 
+  PrettyPrint pretty_print(String name) const;
   virtual ~Binding() = default;
 };
 
@@ -43,7 +47,5 @@ struct TypeBinding : Binding {
 struct ModuleBinding : Binding {
   Option<FlexShared<Scope>> scope;
 };
-
-void format_binding(AbstractString &out, const Binding &binding);
 
 } // namespace amelia

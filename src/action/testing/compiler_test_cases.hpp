@@ -34,4 +34,8 @@ void run_lexer_test_case(AbstractString &output, CompilerTestCase test_case);
 
 void run_parser_test_case(AbstractString &output, CompilerTestCase test_case);
 
+void run_sema_test_case(
+    IFileLoader &file_loader, AbstractString &output, CompilerTestCase test_case
+);
+
 } // namespace amelia

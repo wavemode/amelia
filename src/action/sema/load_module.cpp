@@ -10,15 +10,8 @@ namespace amelia {
 
 namespace {
 
-Text determine_path_separator(Text path) {
-  if (TextUtils::find(path, "\\").at_end()) {
-    return "/";
-  }
-  return "\\";
-}
-
 void build_module_path(String &output, Text base_path, Slice<Text> module_parts) {
-  Text path_separator = determine_path_separator(base_path);
+  Text path_separator = TextUtils::determine_path_separator(base_path);
   output.append(base_path);
   if (!TextUtils::ends_with(base_path, path_separator)) {
     output.append(path_separator);

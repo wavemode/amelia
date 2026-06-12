@@ -136,6 +136,8 @@ struct TextUtils {
   static size_t count(Text input, Text substring);
   static size_t count_chars(Text input);
 
+  static Text determine_path_separator(Text path);
+
 private:
   static Text text_from_subslice(ConstSlice<char> slice);
 };

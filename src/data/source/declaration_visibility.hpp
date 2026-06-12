@@ -1,5 +1,7 @@
 #pragma once
 
+#include "data/testing/pretty_print.hpp"
+
 namespace amelia {
 
 enum class DeclarationVisibility {
@@ -10,4 +12,6 @@ enum class DeclarationVisibility {
   Default,
 };
 
-}
+PrettyPrint pretty_print_declaration_visibility(DeclarationVisibility visibility);
+
+} // namespace amelia

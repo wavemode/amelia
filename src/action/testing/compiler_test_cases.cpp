@@ -1,5 +1,8 @@
 #include <cstddef>
 
+#include "data/util/slice_utils.hpp"
+#include "data/util/text_utils.hpp"
+
 #include "compiler_test_cases.hpp"
 
 #include "interface/fs/file_loader.hpp"
@@ -9,6 +12,7 @@
 #include "interface/sys/printer.hpp"
 #include "interface/testing/test_case_runner.hpp"
 
+#include "action/sema/load_module.hpp"
 #include "data/lexer/lexer.hpp"
 #include "data/lexer/lexer_context.hpp"
 #include "data/lexer/lexer_result.hpp"
@@ -17,12 +21,12 @@
 #include "data/parser/node_formatter.hpp"
 #include "data/parser/parser.hpp"
 #include "data/parser/parser_result.hpp"
+#include "data/sema/analyzer.hpp"
+#include "data/sema/sema_result.hpp"
 #include "data/source/source_location_error.hpp"
 #include "data/testing/compiler_test_case.hpp"
 #include "data/testing/compiler_test_case_collection.hpp"
 #include "data/testing/compiler_test_case_outcome.hpp"
-
-#include "data/util/text_utils.hpp"
 
 namespace amelia {
 
@@ -208,6 +212,32 @@ void run_parser_test_case(AbstractString &output, CompilerTestCase test_case) {
   NodeId root_node_id = Parser::parse_module(parser_result, lexer_result);
   NodeFormatter node_formatter(parser_result, lexer_result);
   node_formatter.format_node(output, root_node_id);
+  output.append("\n");
+}
+
+void run_sema_test_case(
+    IFileLoader &file_loader, AbstractString &output, CompilerTestCase test_case
+) {
+  List<Text> filename_parts;
+  Text path_separator = TextUtils::determine_path_separator(test_case.filename);
+  TextUtils::split(filename_parts, test_case.filename, path_separator);
+  String module_path;
+  TextUtils::join_into(
+      module_path,
+      SliceUtils::head(filename_parts.data(), filename_parts.size() - 1),
+      path_separator
+  );
+  Text filename = filename_parts[filename_parts.size() - 1];
+  filename_parts.clear();
+  TextUtils::split(filename_parts, filename, ".");
+  String module_name(filename_parts[0]);
+
+  SemaResult sema_result;
+  ModuleLoaderContext ctx{Set({module_path})};
+  load_module(file_loader, sema_result, module_name, ctx);
+  Analyzer::typecheck(sema_result);
+
+  sema_result.pretty_print().to_string(output);
   output.append("\n");
 }
 

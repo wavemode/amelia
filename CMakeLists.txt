@@ -29,7 +29,7 @@ set(SOURCES_VENDOR
 add_library(amelia_warnings INTERFACE)
 target_compile_options(
     amelia_warnings INTERFACE
-    -Wall -Wextra -Wpedantic -Werror
+    -Wall -Wextra -Wpedantic -Werror -Wimplicit-fallthrough
     -Wno-error=unused-parameter
     -Wno-error=unused-variable
     -Wno-error=unused-function

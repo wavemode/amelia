@@ -5,6 +5,7 @@
 
 #include "data/util/abstract_list.hpp"
 #include "data/util/abstract_string.hpp"
+#include "data/util/box.hpp"
 #include "data/util/char_iterator.hpp"
 #include "data/util/deque.hpp"
 #include "data/util/invalid_utf8_error.hpp"

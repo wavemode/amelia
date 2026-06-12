@@ -1769,7 +1769,7 @@ public:
       if (is_start_of_lambda_expr()) {
         return parse_lambda_expr();
       }
-    // fallthrough...
+      [[fallthrough]];
     case TokenType::KEYWORD_OPERATOR:
       return parse_identifier();
     case TokenType::STRING_LITERAL:
