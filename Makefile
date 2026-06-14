@@ -1,5 +1,5 @@
-build:
-	NINJA_STATUS="[%f/%t | %r processes | %e s] " cmake --build build/debug --target amelia --parallel
+build: format
+	NINJA_STATUS="[%f/%t | %r processes | %e s] " CMAKE_BUILD_PARALLEL_LEVEL=$(shell nproc) cmake --build build/debug --target amelia --parallel
 
 configure:
 	cmake -B build/debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug -G "Ninja"
@@ -10,8 +10,8 @@ release:
 configure-release:
 	cmake -B build/release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Release -G "Ninja"
 
-build-test:
-	NINJA_STATUS="[%f/%t | %r processes | %e s] " cmake --build build/debug --target amelia_test --parallel
+build-test: format
+	NINJA_STATUS="[%f/%t | %r processes | %e s] " CMAKE_BUILD_PARALLEL_LEVEL=$(shell nproc) cmake --build build/debug --target amelia_test --parallel
 
 test: build-test
 	UBSAN_OPTIONS=halt_on_error=1:print_stacktrace=1 ./build/debug/amelia_test $$AMELIA_TEST_ARGS

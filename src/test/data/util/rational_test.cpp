@@ -1,0 +1,285 @@
+#include <cstdint>
+#include <cstring>
+
+#include <doctest.h>
+
+#include "data/util/rational.hpp"
+#include "prelude.hpp"
+
+TEST_SUITE_BEGIN("Rational");
+
+using namespace amelia;
+
+void CHECK_REPR(const Rational &rational, Text expected) {
+  String s;
+  rational.to_fraction_string(s);
+  CHECK(s.text() == expected);
+}
+
+TEST_CASE("from uint8_t") {
+  uint8_t value = 123;
+  Rational rational(value);
+  CHECK(rational.to_uint8() == value);
+  CHECK_REPR(rational, "123/1");
+}
+
+TEST_CASE("from int8_t") {
+  int8_t value = -123;
+  Rational rational(value);
+  CHECK(rational.to_int8() == value);
+  CHECK_REPR(rational, "-123/1");
+}
+
+TEST_CASE("from uint16_t") {
+  uint16_t value = 12345;
+  Rational rational(value);
+  CHECK(rational.to_uint16() == value);
+  CHECK_REPR(rational, "12345/1");
+}
+
+TEST_CASE("from int16_t") {
+  int16_t value = -12345;
+  Rational rational(value);
+  CHECK(rational.to_int16() == value);
+  CHECK_REPR(rational, "-12345/1");
+}
+
+TEST_CASE("from uint32_t") {
+  uint32_t value = 123456789;
+  Rational rational(value);
+  CHECK(rational.to_uint32() == value);
+  CHECK_REPR(rational, "123456789/1");
+}
+
+TEST_CASE("from int32_t") {
+  int32_t value = -123456789;
+  Rational rational(value);
+  CHECK(rational.to_int32() == value);
+  CHECK_REPR(rational, "-123456789/1");
+}
+
+TEST_CASE("from uint64_t") {
+  uint64_t value = 12345678901234567890ULL;
+  Rational rational(value);
+  CHECK(rational.to_uint64() == value);
+  CHECK_REPR(rational, "12345678901234567890/1");
+}
+
+TEST_CASE("from int64_t") {
+  int64_t value = -1234567890123456789LL;
+  Rational rational(value);
+  CHECK(rational.to_int64() == value);
+  CHECK_REPR(rational, "-1234567890123456789/1");
+}
+
+TEST_CASE("from float") {
+  float value = 12345.677734375f;
+  Rational rational(value);
+  CHECK(rational.to_float() == 12345.677734375f);
+  CHECK_REPR(rational, "6320987/512");
+}
+
+TEST_CASE("from double") {
+  double value = 1234567890.123456716537476;
+  Rational rational(value);
+  CHECK(rational.to_double() == 1234567890.123456716537476);
+  CHECK_REPR(rational, "308641972530864179134369/250000000000000");
+}
+
+TEST_CASE("from decimal String") {
+  String value = "123456789012345678901234567890.123456789012345678901234567890";
+  Rational rational(value);
+  CHECK_REPR(
+      rational,
+      "12345678901234567890123456789012345678901234567890123456789/100000000000000000000000000000"
+  );
+}
+
+TEST_CASE("negate and abs") {
+  Rational rational(-12345);
+  rational.negate();
+  CHECK(rational.to_int32() == 12345);
+  CHECK_REPR(rational, "12345/1");
+  rational.abs();
+  CHECK(rational.to_int32() == 12345);
+  CHECK_REPR(rational, "12345/1");
+
+  Rational rational2(12345);
+  rational2.negate();
+  CHECK(rational2.to_int32() == -12345);
+  CHECK_REPR(rational2, "-12345/1");
+  Rational rational3 = rational2.abs();
+  CHECK(rational3.to_int32() == 12345);
+  CHECK_REPR(rational3, "12345/1");
+}
+
+TEST_CASE("addition") {
+  auto lhs = List<String>({
+      "123/45",
+      "-123/45",
+      "98765432101/234567890",
+      "-98765/432101234567890",
+      "1234567890123456789012345678901234567890123456/78901234567890",
+      "-1234567890/12345678901234567890123456789012345678901234567890",
+  });
+  auto rhs = List<String>({
+      "543/21",
+      "-5/4321",
+      "123456789012345678/90",
+      "-123456/78901234567890",
+      "987654321098765432109876543210/987654321098765432109876543210",
+      "-987654321098765432/109876543210987654321098765432109876543210",
+  });
+  auto expected = List<String>({
+      "3002/105",
+      "-177236/64815",
+      "321766650053444428088539/234567890",
+      "-2037939014897036123/1136444028857198262500635070",
+      "29394473574368018786008230450031273074397413/1878600823045",
+      "-705467372283950625076719576793386243393624338625069664903/"
+      "78483245158553791888068783068885361552038536155203068783068799823633157848324515",
+  });
+  for (size_t i = 0; i < lhs.size(); ++i) {
+    Rational left(lhs[i]);
+    Rational right(rhs[i]);
+    Rational result = left + right;
+    CHECK_REPR(result, expected[i]);
+  }
+}
+
+TEST_CASE("subtraction") {
+  auto lhs = List<String>({
+      "123/45",
+      "-123/45",
+      "98765432101/234567890",
+      "-98765/432101234567890",
+      "1234567890123456789012345678901234567890123456/78901234567890",
+      "-1234567890/12345678901234567890123456789012345678901234567890",
+  });
+  auto rhs = List<String>({
+      "543/21",
+      "-5/4321",
+      "123456789012345678/90",
+      "-123456/78901234567890",
+      "987654321098765432109876543210/987654321098765432109876543210",
+      "-987654321098765432/109876543210987654321098765432109876543210",
+  });
+  auto expected = List<String>({
+      "-2428/105",
+      "-177086/64815",
+      "-321766650053246897224337/234567890",
+      "1518426986090525733/1136444028857198262500635070",
+      "29394473574368018786008230450027515872751323/1878600823045",
+      "705467372283950609380070546652292768950943562609373015873/"
+      "78483245158553791888068783068885361552038536155203068783068799823633157848324515",
+  });
+  for (size_t i = 0; i < lhs.size(); ++i) {
+    Rational left(lhs[i]);
+    Rational right(rhs[i]);
+    Rational result = left - right;
+    CHECK_REPR(result, expected[i]);
+  }
+}
+
+TEST_CASE("multiplication") {
+  auto lhs = List<String>({
+      "123/45",
+      "-123/45",
+      "98765432101/234567890",
+      "-98765/432101234567890",
+      "1234567890123456789012345678901234567890123456/78901234567890",
+      "-1234567890/12345678901234567890123456789012345678901234567890",
+  });
+  auto rhs = List<String>({
+      "543/21",
+      "-5/4321",
+      "123456789012345678/90",
+      "-123456/78901234567890",
+      "987654321098765432109876543210/987654321098765432109876543210",
+      "-987654321098765432/109876543210987654321098765432109876543210",
+  });
+  auto expected = List<String>({
+      "7421/105",
+      "41/12963",
+      "677403506255906106180544971/1172839450",
+      "203218864/568222014428599131250317535",
+      "29394473574368018786008230450029394473574368/1878600823045",
+      "70546737221340388/"
+      "78483245158553791888068783068885361552038536155203068783068799823633157848324515",
+  });
+  for (size_t i = 0; i < lhs.size(); ++i) {
+    Rational left(lhs[i]);
+    Rational right(rhs[i]);
+    Rational result = left * right;
+    CHECK_REPR(result, expected[i]);
+  }
+}
+
+TEST_CASE("division") {
+  auto lhs = List<String>({
+      "123/45",
+      "-123/45",
+      "98765432101/234567890",
+      "-98765/432101234567890",
+      "1234567890123456789012345678901234567890123456/78901234567890",
+      "-1234567890/12345678901234567890123456789012345678901234567890",
+  });
+  auto rhs = List<String>({
+      "543/21",
+      "-5/4321",
+      "123456789012345678/90",
+      "-123456/78901234567890",
+      "987654321098765432109876543210/987654321098765432109876543210",
+      "-987654321098765432/109876543210987654321098765432109876543210",
+  });
+  auto expected = List<String>({
+      "287/2715",
+      "177161/75",
+      "98765432101/321766650053345662656438",
+      "259756014403255195/1778183000493780928",
+      "29394473574368018786008230450029394473574368/1878600823045",
+      "7848324515070546737221340388007848324515/"
+      "705467372283950617228395061722839506172283950617221340388",
+  });
+  for (size_t i = 0; i < lhs.size(); ++i) {
+    Rational left(lhs[i]);
+    Rational right(rhs[i]);
+    Rational result = left / right;
+    CHECK_REPR(result, expected[i]);
+  }
+}
+
+TEST_CASE("modulo") {
+  auto lhs = List<String>({
+      "123/45",
+      "-123/45",
+      "98765432101/234567890",
+      "-98765/432101234567890",
+      "1234567890123456789012345678901234567890123456/78901234567890",
+      "-1234567890/12345678901234567890123456789012345678901234567890",
+  });
+  auto rhs = List<String>({
+      "543/21",
+      "-5/4321",
+      "123456789012345678/90",
+      "-123456/78901234567890",
+      "987654321098765432109876543210/987654321098765432109876543210",
+      "-987654321098765432/109876543210987654321098765432109876543210",
+  });
+  auto expected = List<String>({
+      "41/15",
+      "-11/64815",
+      "98765432101/234567890",
+      "-19753/86420246913578",
+      "636145156828/1878600823045",
+      "-1/10000000001000000000100000000010000000001",
+  });
+  for (size_t i = 0; i < lhs.size(); ++i) {
+    Rational left(lhs[i]);
+    Rational right(rhs[i]);
+    Rational result = left % right;
+    CHECK_REPR(result, expected[i]);
+  }
+}
+
+TEST_SUITE_END();

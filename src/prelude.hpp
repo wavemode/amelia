@@ -19,6 +19,8 @@
 #include "data/util/text.hpp"
 #include "data/util/utility.hpp"
 
+#include "effect/sys/console_printer.hpp"
+
 namespace amelia {
 using ModuleId = int32_t;
 using BindingId = int32_t;

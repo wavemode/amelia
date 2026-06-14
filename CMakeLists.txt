@@ -33,6 +33,7 @@ target_compile_options(
     -Wno-error=unused-parameter
     -Wno-error=unused-variable
     -Wno-error=unused-function
+    -Wno-error=unused-but-set-variable
 )
 
 add_library(amelia_core

@@ -44,8 +44,14 @@ public:
   const char *c_str() const noexcept override;
 
   /**
-   * @return A Slice representing the underlying UTF-8 data of this String.
-   * The slice is valid until the next non-const method call on this String instance.
+   * @return A Slice representing the underlying UTF-8 data of this String, not including a null
+   * terminator. The slice is valid until the next non-const method call on this String instance.
+   */
+  Slice<char> data() noexcept;
+
+  /**
+   * @return A Slice representing the underlying UTF-8 data of this String, not including a null
+   * terminator. The slice is valid until the next non-const method call on this String instance.
    */
   ConstSlice<char> data() const noexcept;
 
@@ -59,6 +65,25 @@ public:
    * @return The size of the string in bytes, not including the null terminator.
    */
   size_t size() const noexcept;
+
+  /**
+   * @return The capacity of the string in bytes, not including the null terminator. The capacity is
+   * the maximum size that the string can grow to without needing to reallocate its underlying
+   * storage. The capacity is always greater than or equal to the size.
+   */
+  size_t capacity() const noexcept {
+    return m_str.capacity() - 1;
+  }
+
+  /**
+   * @brief Reserves capacity for at least new_capacity bytes in this String. If new_capacity is
+   * less than or equal to the current capacity, this method does nothing. Otherwise, it increases
+   * the capacity to at least new_capacity, potentially reallocating the underlying storage.
+   *
+   * After calling this method, the String can hold at least new_capacity bytes without needing to
+   * reallocate.
+   */
+  void reserve(size_t new_capacity);
 
   /**
    * @brief Appends a string to this String. The input string must be valid UTF-8.
@@ -167,6 +192,15 @@ public:
    * @throws InvalidUTF8Error if the input string is not valid UTF-8.
    */
   static String from(const char *c_str);
+
+  /**
+   * @brief Constructs a String from a null-terminated C-style string, taking ownership of the input
+   * string. The input string must be valid UTF-8 and must have been allocated with malloc.
+   * After calling this method, the String instance is responsible for freeing the input string with
+   * free when it is no longer needed.
+   * @throws InvalidUTF8Error if the input string is not valid UTF-8.
+   */
+  static String from_owned(char *c_str);
 
   /**
    * @brief Constructs a String from a vector of chars. The input vector must contain valid UTF-8

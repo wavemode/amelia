@@ -83,6 +83,10 @@ public:
     ensure_capacity(new_capacity);
   }
 
+  size_t capacity() const {
+    return m_capacity;
+  }
+
   void clear() noexcept {
     while (m_size > 0) {
       pop_back();
@@ -219,6 +223,14 @@ public:
   }
   bool operator!=(ConstSlice<T> other) const {
     return !(*this == other);
+  }
+
+  static List<T> from_owned(T *data, size_t size) {
+    List<T> result;
+    result.m_buffer = data;
+    result.m_size = size;
+    result.m_capacity = size;
+    return result;
   }
 
 private:

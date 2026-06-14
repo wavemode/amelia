@@ -1,4 +1,6 @@
+#include <cfloat>
 #include <cstdio>
+#include <cstring>
 
 #include "prelude.hpp"
 #include "text_utils.hpp"
@@ -605,8 +607,8 @@ void TextUtils::to_string(AbstractString &output, float value) {
 }
 
 void TextUtils::to_string(AbstractString &output, double value) {
-  char buffer[32];
-  int64_t chars_written = sprintf(buffer, "%g", value);
+  char buffer[400];
+  int64_t chars_written = snprintf(buffer, 400, "%.*f", DBL_DIG, value);
   if (chars_written < 0) {
     throw RuntimeError("Failed to convert double to string");
   }
@@ -619,6 +621,87 @@ void TextUtils::to_string(AbstractString &output, bool value) {
   } else {
     output.append("false");
   }
+}
+
+int64_t TextUtils::read_int(Text input) {
+  int64_t result = 0;
+  bool negative = false;
+  size_t index = 0;
+  if (index < input.size() && input.data()[index] == '-') {
+    negative = true;
+    ++index;
+  }
+  if (index >= input.size() || !is_digit(input.data()[index])) {
+    String error_message = "Invalid integer: ";
+    error_message.append(input);
+    throw RuntimeError(error_message.c_str());
+  }
+  while (index < input.size() && is_digit(input.data()[index])) {
+    uint8_t digit = input.data()[index] - '0';
+    if (result > (INT64_MAX - digit) / 10) {
+      String error_message = "Integer value out of range: ";
+      error_message.append(input);
+      throw RuntimeError(error_message.c_str());
+    }
+    result = result * 10 + digit;
+    ++index;
+  }
+  if (index < input.size()) {
+    String error_message = "Invalid integer: ";
+    error_message.append(input);
+    throw RuntimeError(error_message.c_str());
+  }
+  return negative ? -result : result;
+}
+
+uint64_t TextUtils::read_uint(Text input) {
+  uint64_t result = 0;
+  size_t index = 0;
+  if (index < input.size() && input.data()[index] == '-') {
+    String error_message = "Invalid unsigned integer: ";
+    error_message.append(input);
+    throw RuntimeError(error_message.c_str());
+  }
+  if (input.size() == 0 || !is_digit(input.data()[index])) {
+    String error_message = "Invalid unsigned integer: ";
+    error_message.append(input);
+    throw RuntimeError(error_message.c_str());
+  }
+  while (index < input.size() && is_digit(input.data()[index])) {
+    uint8_t digit = input.data()[index] - '0';
+    if (result > (UINT64_MAX - digit) / 10) {
+      String error_message = "Unsigned integer value out of range: ";
+      error_message.append(input);
+      throw RuntimeError(error_message.c_str());
+    }
+    result = result * 10 + digit;
+    ++index;
+  }
+  if (index < input.size()) {
+    String error_message = "Invalid unsigned integer: ";
+    error_message.append(input);
+    throw RuntimeError(error_message.c_str());
+  }
+  return result;
+}
+
+double TextUtils::read_double(Text input) {
+  char buffer[400];
+  if (input.size() >= 400) {
+    String error_message = "Input too long to convert to double: ";
+    error_message.append(input);
+    throw RuntimeError(error_message.c_str());
+  }
+  std::memcpy(buffer, input.data().ptr(), input.size());
+  buffer[input.size()] = '\0';
+  char *end_ptr;
+  double result = std::strtod(buffer, &end_ptr);
+  if (end_ptr != buffer + input.size()) {
+    String error_message = "Invalid double: ";
+    error_message.append(input);
+    throw RuntimeError(error_message.c_str());
+  }
+  return result;
 }
 
 bool TextUtils::is_digit(uint32_t ch) {
