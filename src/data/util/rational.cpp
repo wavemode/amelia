@@ -147,8 +147,7 @@ void Rational::to_fraction_string(AbstractString &output) const {
   m_denominator.to_string(output);
 }
 
-void Rational::to_decimal_string(AbstractString &output, size_t digits_after_decimal_point)
-    const {
+void Rational::to_decimal_string(AbstractString &output, size_t digits_after_decimal_point) const {
   Rational abs_value = abs();
   Integer num = abs_value.numerator();
   Integer den = abs_value.denominator();

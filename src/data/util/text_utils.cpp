@@ -686,14 +686,8 @@ uint64_t TextUtils::read_uint(Text input) {
 }
 
 double TextUtils::read_double(Text input) {
-  char buffer[400];
-  if (input.size() >= 400) {
-    String error_message = "Input too long to convert to double: ";
-    error_message.append(input);
-    throw RuntimeError(error_message.c_str());
-  }
-  std::memcpy(buffer, input.data().ptr(), input.size());
-  buffer[input.size()] = '\0';
+  String buf_str(input);
+  const char *buffer = buf_str.c_str();
   char *end_ptr;
   double result = std::strtod(buffer, &end_ptr);
   if (end_ptr != buffer + input.size()) {
