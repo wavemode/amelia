@@ -607,8 +607,8 @@ void TextUtils::to_string(AbstractString &output, float value) {
 }
 
 void TextUtils::to_string(AbstractString &output, double value) {
-  char buffer[400];
-  int64_t chars_written = snprintf(buffer, 400, "%.*f", DBL_DIG, value);
+  char buffer[512];
+  int64_t chars_written = snprintf(buffer, 512, "%.*f", DBL_DIG, value);
   if (chars_written < 0) {
     throw RuntimeError("Failed to convert double to string");
   }

@@ -3,13 +3,12 @@
 #include <cstddef>
 #include <cstdint>
 
-#include "data/util/text.hpp"
-
 namespace amelia {
 
 template <typename T> struct AbstractList;
 template <typename T> class Slice;
 class String;
+class Text;
 struct AbstractString;
 class CharIterator;
 

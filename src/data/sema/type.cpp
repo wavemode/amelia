@@ -73,7 +73,7 @@ PrettyPrint pretty_print_primitive_kind(PrimitiveKind kind) {
     result.append("unknown");
     break;
   }
-  return PrettyPrintString(move(result));
+  return PrettyPrint::literal(move(result));
 }
 
 PrettyPrint pretty_print_type_kind(TypeKind kind) {
@@ -134,7 +134,7 @@ PrettyPrint pretty_print_type_kind(TypeKind kind) {
     result.append("Variable");
     break;
   }
-  return PrettyPrintString(move(result));
+  return PrettyPrint::literal(move(result));
 }
 
 } // namespace amelia

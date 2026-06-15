@@ -20,6 +20,6 @@ PrettyPrint pretty_print_declaration_visibility(DeclarationVisibility visibility
     result.append("Default");
     break;
   }
-  return PrettyPrintString(move(result));
+  return PrettyPrint::literal(move(result));
 }
 } // namespace amelia

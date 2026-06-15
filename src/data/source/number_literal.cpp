@@ -12,6 +12,6 @@ PrettyPrint pretty_print_number_literal(const NumberLiteral &number_literal) {
   result.append(number_literal.exponent_prefix);
   result.append(number_literal.exponent_sign);
   result.append(number_literal.exponent_digits);
-  return PrettyPrintString(move(result));
+  return PrettyPrint::literal(move(result));
 }
 } // namespace amelia

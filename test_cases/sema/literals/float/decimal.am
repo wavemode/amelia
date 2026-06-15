@@ -12,7 +12,9 @@ SemaResult(
             kind=Variable,
             visibility=Default,
             type=double,
-            value=NumberLiteralExpression(5.6)
+            value=NumberLiteralExpression(
+              5.6
+            )
           )
         ]
       )

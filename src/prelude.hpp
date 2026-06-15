@@ -19,6 +19,8 @@
 #include "data/util/text.hpp"
 #include "data/util/utility.hpp"
 
+#include "data/testing/pretty_print.hpp"
+
 #include "effect/sys/console_printer.hpp"
 
 namespace amelia {

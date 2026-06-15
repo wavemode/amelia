@@ -3,11 +3,10 @@
 namespace amelia {
 
 PrettyPrint NumberLiteralExpression::pretty_print() const {
-  String result;
-  result.append("NumberLiteralExpression(");
-  pretty_print_number_literal(value).to_string(result);
-  result.append(")");
-  return PrettyPrintString(move(result));
+  PrettyPrint result;
+  result.set_tuple_name("NumberLiteralExpression");
+  result.add_tuple_item(pretty_print_number_literal(value));
+  return result;
 }
 
 } // namespace amelia
