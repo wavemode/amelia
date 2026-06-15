@@ -147,24 +147,38 @@ void Rational::to_fraction_string(AbstractString &output) const {
   m_denominator.to_string(output);
 }
 
-void Rational::to_decimal_string(AbstractString &output, size_t max_digits_after_decimal_point)
+void Rational::to_decimal_string(AbstractString &output, size_t digits_after_decimal_point)
     const {
-  (m_numerator / m_denominator).to_string(output);
-  if (max_digits_after_decimal_point == 0) {
+  Rational abs_value = abs();
+  Integer num = abs_value.numerator();
+  Integer den = abs_value.denominator();
+  Integer scaled_num = num * Integer(10).pow(digits_after_decimal_point);
+  Integer rounded = (scaled_num * 2 + den) / (den * 2);
+
+  if (*this < 0 && rounded != 0) {
+    output.append("-");
+  }
+
+  if (digits_after_decimal_point == 0) {
+    rounded.to_string(output);
     return;
   }
 
-  output.append(".");
-  Integer remainder = m_numerator % m_denominator;
-  while (max_digits_after_decimal_point) {
-    remainder *= 10;
-    (remainder / m_denominator).to_string(output);
-    remainder %= m_denominator;
-    if (remainder == 0) {
-      break;
-    }
-    --max_digits_after_decimal_point;
+  String rounded_str;
+  rounded.to_string(rounded_str);
+
+  String padded_str;
+  for (size_t i = rounded_str.size(); i < digits_after_decimal_point + 1; ++i) {
+    padded_str.append('0');
   }
+  padded_str.append(rounded_str);
+  output.append(
+      TextUtils::head_bytes(padded_str.text(), padded_str.size() - digits_after_decimal_point)
+  );
+  output.append(".");
+  output.append(
+      TextUtils::tail_bytes(padded_str.text(), padded_str.size() - digits_after_decimal_point)
+  );
 }
 
 void Rational::negate() {

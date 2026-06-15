@@ -37,7 +37,7 @@ public:
   double to_double() const;
 
   void to_fraction_string(AbstractString &output) const;
-  void to_decimal_string(AbstractString &output, size_t max_digits_after_decimal_point = 24) const;
+  void to_decimal_string(AbstractString &output, size_t digits_after_decimal_point = 24) const;
 
   void negate();
   Rational abs() const;
