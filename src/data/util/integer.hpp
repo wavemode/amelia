@@ -84,10 +84,6 @@ public:
   bool operator>=(const Integer &other) const;
 
 private:
-  static Integer bitwise_op(
-      const Integer &lhs, const Integer &rhs, uint64_t (*op)(uint64_t, uint64_t)
-  );
-  uint64_t extract_low_bits();
   void *m_value;
 };
 
