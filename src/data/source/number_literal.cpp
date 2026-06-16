@@ -1,7 +1,7 @@
 #include "number_literal.hpp"
 
 namespace amelia {
-PrettyPrint pretty_print_number_literal(const NumberLiteral &number_literal) {
+Serialize serialize_number_literal(const NumberLiteral &number_literal) {
   String result;
   result.append(number_literal.base_prefix);
   result.append(number_literal.integer_digits);
@@ -12,6 +12,6 @@ PrettyPrint pretty_print_number_literal(const NumberLiteral &number_literal) {
   result.append(number_literal.exponent_prefix);
   result.append(number_literal.exponent_sign);
   result.append(number_literal.exponent_digits);
-  return PrettyPrint::literal(move(result));
+  return Serialize::literal(move(result));
 }
 } // namespace amelia

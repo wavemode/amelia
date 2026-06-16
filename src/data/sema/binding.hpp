@@ -2,7 +2,7 @@
 
 #include "prelude.hpp"
 
-#include "data/testing/pretty_print.hpp"
+#include "data/testing/serialize.hpp"
 #include "data/util/flex_shared.hpp"
 
 #include "data/sema/expression.hpp"
@@ -13,17 +13,9 @@ namespace amelia {
 
 struct Scope;
 
-enum class BindingKind : unsigned char {
-  Variable,
-  Constant,
-  Function,
-  Type,
-  Class,
-  Concept,
-  Module
-};
+enum class BindingKind : uint8_t { Variable, Constant, Function, Type, Class, Concept, Module };
 
-PrettyPrint pretty_print_binding_kind(BindingKind kind);
+Serialize serialize_binding_kind(BindingKind kind);
 
 struct Binding {
   NodeId decl;
@@ -31,7 +23,7 @@ struct Binding {
   DeclarationVisibility visibility;
   Option<FlexShared<Binding>> shadowed_binding;
 
-  PrettyPrint pretty_print(String name) const;
+  Serialize serialize(String name) const;
   virtual ~Binding() = default;
 };
 

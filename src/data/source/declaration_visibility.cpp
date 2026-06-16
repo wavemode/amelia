@@ -1,7 +1,7 @@
 #include "declaration_visibility.hpp"
 
 namespace amelia {
-PrettyPrint pretty_print_declaration_visibility(DeclarationVisibility visibility) {
+Serialize serialize_declaration_visibility(DeclarationVisibility visibility) {
   String result;
   switch (visibility) {
   case DeclarationVisibility::Public:
@@ -20,6 +20,6 @@ PrettyPrint pretty_print_declaration_visibility(DeclarationVisibility visibility
     result.append("Default");
     break;
   }
-  return PrettyPrint::literal(move(result));
+  return Serialize::literal(move(result));
 }
 } // namespace amelia

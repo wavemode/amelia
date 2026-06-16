@@ -237,7 +237,7 @@ void run_sema_test_case(
   load_module(file_loader, sema_result, module_name, ctx);
   Analyzer::typecheck(sema_result);
 
-  sema_result.pretty_print().to_string(output);
+  sema_result.serialize().to_string(output);
   output.append("\n");
 }
 

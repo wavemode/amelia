@@ -12,6 +12,6 @@ enum class DeclarationVisibility {
   Default,
 };
 
-PrettyPrint pretty_print_declaration_visibility(DeclarationVisibility visibility);
+Serialize serialize_declaration_visibility(DeclarationVisibility visibility);
 
 } // namespace amelia

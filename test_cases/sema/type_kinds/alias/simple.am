@@ -1,0 +1,13 @@
+// let x: A = 42
+// type A = int
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="simple",
+      scope=Scope()
+    )
+  ]
+)
+*/

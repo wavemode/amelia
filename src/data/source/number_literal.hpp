@@ -14,6 +14,6 @@ struct NumberLiteral {
   Text exponent_digits;
 };
 
-PrettyPrint pretty_print_number_literal(const NumberLiteral &number_literal);
+Serialize serialize_number_literal(const NumberLiteral &number_literal);
 
 } // namespace amelia

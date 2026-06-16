@@ -17,6 +17,7 @@ public:
   Integer(int32_t value);
   Integer(uint64_t value);
   Integer(int64_t value);
+  explicit Integer(Text value);
   explicit Integer(const String &value);
   explicit Integer(float value);
   explicit Integer(double value);
@@ -45,7 +46,7 @@ public:
   Integer abs() const;
   Integer gcd(const Integer &other) const;
   Integer lcm(const Integer &other) const;
-  Integer pow(const Integer &exponent) const;
+  Integer pow(uint32_t exponent) const;
 
   Integer operator+(const Integer &other) const;
   Integer operator-(const Integer &other) const;

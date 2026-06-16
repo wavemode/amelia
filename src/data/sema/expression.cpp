@@ -2,10 +2,10 @@
 
 namespace amelia {
 
-PrettyPrint NumberLiteralExpression::pretty_print() const {
-  PrettyPrint result;
-  result.set_tuple_name("NumberLiteralExpression");
-  result.add_tuple_item(pretty_print_number_literal(value));
+Serialize NumberLiteralExpression::serialize() const {
+  Serialize result;
+  result.set_object_name("NumberLiteralExpression");
+  result.add_object_field("lit", serialize_number_literal(value));
   return result;
 }
 

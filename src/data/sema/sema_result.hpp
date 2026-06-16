@@ -7,7 +7,7 @@
 
 #include "data/sema/module.hpp"
 #include "data/sema/scope.hpp"
-#include "data/testing/pretty_print.hpp"
+#include "data/testing/serialize.hpp"
 
 namespace amelia {
 
@@ -15,7 +15,7 @@ struct SemaResult {
   Map<String, ModuleId> module_ids;
   Deque<Module> modules;
 
-  PrettyPrint pretty_print();
+  Serialize serialize();
 };
 
 } // namespace amelia

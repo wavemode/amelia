@@ -39,11 +39,22 @@ public:
     return m_ptr;
   }
 
+  const T *ptr() const noexcept {
+    return m_ptr;
+  }
+
   size_t size() const noexcept {
     return m_len;
   }
 
   T &operator[](size_t index) {
+    if (index >= m_len) {
+      throw RuntimeError("Slice index out of range");
+    }
+    return m_ptr[index];
+  }
+
+  const T &operator[](size_t index) const {
     if (index >= m_len) {
       throw RuntimeError("Slice index out of range");
     }
@@ -81,6 +92,22 @@ public:
       throw RuntimeError("Slice offset out of range");
     }
     return ConstSlice(m_ptr + offset, m_len - offset);
+  }
+
+  Slice<T> &operator+=(size_t offset) {
+    *this = *this + offset;
+    return *this;
+  }
+
+  Slice<T> &operator++() {
+    *this += 1;
+    return *this;
+  }
+
+  Slice<T> operator++(int) {
+    Slice<T> temp = *this;
+    ++(*this);
+    return temp;
   }
 
 private:
@@ -252,6 +279,22 @@ public:
       throw RuntimeError("Slice offset out of range");
     }
     return ConstSlice(m_ptr + offset, m_len - offset);
+  }
+
+  ConstSlice<T> &operator+=(size_t offset) {
+    *this = *this + offset;
+    return *this;
+  }
+
+  ConstSlice<T> &operator++() {
+    *this += 1;
+    return *this;
+  }
+
+  ConstSlice<T> operator++(int) {
+    ConstSlice<T> temp = *this;
+    ++(*this);
+    return temp;
   }
 
   operator Slice<const T>() const {

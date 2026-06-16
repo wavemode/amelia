@@ -2,7 +2,7 @@
 
 #include "prelude.hpp"
 
-#include "data/testing/pretty_print.hpp"
+#include "data/testing/serialize.hpp"
 
 #include "data/sema/binding.hpp"
 #include "data/util/flex_shared.hpp"
@@ -17,7 +17,7 @@ struct Scope {
   List<FlexShared<Binding>> bindings;
   Option<Ref<Scope>> parent;
 
-  PrettyPrint pretty_print() const;
+  Serialize serialize() const;
 };
 
 } // namespace amelia

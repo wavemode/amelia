@@ -41,6 +41,8 @@ public:
 
   void negate();
   Rational abs() const;
+  Rational pow(uint32_t exponent) const;
+
   Integer floor() const;
   Integer numerator() const;
   Integer denominator() const;

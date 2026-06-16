@@ -885,7 +885,7 @@ public:
   NumberLiteral read_number(Location start_location) {
     NumberLiteral result;
     result.has_decimal_point = false;
-    unsigned char base = 10;
+    uint8_t base = 10;
     bool at_boundary = true;
     bool assumed_octal = false;
     bool previous_char_was_underscore = false;

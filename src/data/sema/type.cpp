@@ -4,24 +4,50 @@ namespace amelia {
 
 namespace {
 
-PrettyPrint pretty_print_primitive(const PrimitiveType &type) {
-  return pretty_print_primitive_kind(type.primitive_kind);
+Serialize serialize_primitive(const PrimitiveType &type) {
+  return serialize_primitive_kind(type.primitive_kind);
 }
 
 } // namespace
 
-PrettyPrint Type::pretty_print() const {
+Serialize Type::serialize() const {
   switch (kind) {
   case TypeKind::Primitive: {
     const PrimitiveType &primitive_type = static_cast<const PrimitiveType &>(*this);
-    return pretty_print_primitive(primitive_type);
+    return serialize_primitive(primitive_type);
+  }
+  case TypeKind::Alias: {
+    const AliasType &alias = static_cast<const AliasType &>(*this);
+    Serialize result;
+    result.set_object_name("Alias");
+    result.add_object_field("name", Serialize::literal(alias.name));
+    result.add_object_field("target", alias.target->serialize());
+    return result;
+  }
+  case TypeKind::ConstInteger: {
+    const ConstIntegerType &const_integer = static_cast<const ConstIntegerType &>(*this);
+    String value;
+    const_integer.value.to_string(value);
+    Serialize result;
+    result.set_object_name("ConstInteger");
+    result.add_object_field("value", Serialize::literal(move(value)));
+    return result;
+  }
+  case TypeKind::ConstRational: {
+    const ConstRationalType &const_rational = static_cast<const ConstRationalType &>(*this);
+    String value;
+    const_rational.value.to_fraction_string(value);
+    Serialize result;
+    result.set_object_name("ConstRational");
+    result.add_object_field("value", Serialize::literal(move(value)));
+    return result;
   }
   default:
     throw RuntimeError("not implemented");
   }
 }
 
-PrettyPrint pretty_print_primitive_kind(PrimitiveKind kind) {
+Serialize serialize_primitive_kind(PrimitiveKind kind) {
   String result;
   switch (kind) {
   case PrimitiveKind::Byte:
@@ -73,14 +99,17 @@ PrettyPrint pretty_print_primitive_kind(PrimitiveKind kind) {
     result.append("unknown");
     break;
   }
-  return PrettyPrint::literal(move(result));
+  return Serialize::literal(move(result));
 }
 
-PrettyPrint pretty_print_type_kind(TypeKind kind) {
+Serialize serialize_type_kind(TypeKind kind) {
   String result;
   switch (kind) {
   case TypeKind::Alias:
     result.append("Alias");
+    break;
+  case TypeKind::TypeFn:
+    result.append("TypeFn");
     break;
   case TypeKind::Apply:
     result.append("Apply");
@@ -112,8 +141,11 @@ PrettyPrint pretty_print_type_kind(TypeKind kind) {
   case TypeKind::Impl:
     result.append("Impl");
     break;
-  case TypeKind::Const:
-    result.append("Const");
+  case TypeKind::ConstInteger:
+    result.append("ConstInteger");
+    break;
+  case TypeKind::ConstRational:
+    result.append("ConstRational");
     break;
   case TypeKind::Class:
     result.append("Class");
@@ -134,7 +166,7 @@ PrettyPrint pretty_print_type_kind(TypeKind kind) {
     result.append("Variable");
     break;
   }
-  return PrettyPrint::literal(move(result));
+  return Serialize::literal(move(result));
 }
 
 } // namespace amelia

@@ -1,32 +1,36 @@
+#include <climits>
+
 #include "analyzer.hpp"
 
 #include "data/lexer/lexer.hpp"
 #include "data/source/source_location_error.hpp"
+#include "data/util/integer.hpp"
+#include "data/util/rational.hpp"
+#include "data/util/text_utils.hpp"
 
 namespace amelia {
 
 namespace {
 
-PrimitiveType UNKOWN_TYPE{{TypeKind::Primitive}, PrimitiveKind::Unknown};
+PrimitiveType UNKOWN_TYPE(PrimitiveKind::Unknown);
 
 FlexShared<Type> unknown_type() {
   return FlexShared<Type>::weak(&UNKOWN_TYPE);
 }
 
-PrimitiveType DOUBLE_TYPE{{TypeKind::Primitive}, PrimitiveKind::Double};
+PrimitiveType DOUBLE_TYPE(PrimitiveKind::Double);
 FlexShared<Type> double_type() {
   return FlexShared<Type>::weak(&DOUBLE_TYPE);
 }
 
-bool unify(FlexShared<Type> &target, FlexShared<Type> &assignment) {
-  if (target->kind == TypeKind::Primitive) {
-    PrimitiveType &target_type = static_cast<PrimitiveType &>(*target);
-    if (target_type.primitive_kind == PrimitiveKind::Unknown) {
-      target = assignment;
-      return true;
-    }
-  }
-  return false;
+PrimitiveType FLOAT_TYPE(PrimitiveKind::Float);
+FlexShared<Type> float_type() {
+  return FlexShared<Type>::weak(&FLOAT_TYPE);
+}
+
+PrimitiveType INT_TYPE(PrimitiveKind::Int);
+FlexShared<Type> int_type() {
+  return FlexShared<Type>::weak(&INT_TYPE);
 }
 
 bool is_primitive(const Type &type) {
@@ -72,12 +76,52 @@ bool is_integral_primitive_type(const Type &type) {
   }
 }
 
+bool unify(FlexShared<Type> &target, FlexShared<Type> &assignment) {
+  if (target == assignment) {
+    return true;
+  }
+
+  if (target->kind == TypeKind::Primitive) {
+    auto &target_type = static_cast<PrimitiveType &>(*target);
+    if (target_type.primitive_kind == PrimitiveKind::Unknown) {
+      target = assignment;
+      return true;
+    }
+  }
+
+  if (assignment->kind == TypeKind::ConstInteger) {
+    if (target->kind == TypeKind::ConstInteger) {
+      auto &target_type = static_cast<ConstIntegerType &>(*target);
+      auto &assignment_type = static_cast<ConstIntegerType &>(*assignment);
+      return target_type.value == assignment_type.value;
+    }
+    if (target->kind == TypeKind::ConstRational) {
+      auto &target_type = static_cast<ConstRationalType &>(*target);
+      auto &assignment_type = static_cast<ConstIntegerType &>(*assignment);
+      return target_type.value == Rational(assignment_type.value);
+    }
+    return is_integral_primitive_type(target) || is_floating_point_primitive_type(target);
+  }
+
+  if (assignment->kind == TypeKind::ConstRational) {
+    if (target->kind == TypeKind::ConstRational) {
+      auto &target_type = static_cast<ConstRationalType &>(*target);
+      auto &assignment_type = static_cast<ConstRationalType &>(*assignment);
+      return target_type.value == assignment_type.value;
+    }
+    return is_floating_point_primitive_type(target);
+  }
+
+  return false;
+}
+
 class SemaWorkerState {
 public:
   SemaWorkerState(SemaResult &sema_result, Module &module_obj)
       : m_sema_result(sema_result), m_module_obj(module_obj) {}
 
   void typecheck_module() {
+    m_module_obj.analyzed = true;
     collect_bindings();
     typecheck_scope(*m_module_obj.scope);
   }
@@ -118,7 +162,7 @@ public:
     FlexShared<Expression> result;
     switch (expr_node.type()) {
     case NodeType::NumberLiteralNode:
-      result = typecheck_expr_number_literal(expected_type, scope, expr_node_id);
+      result = typecheck_expr_number_literal(expr_node_id);
       break;
     default:
       throw RuntimeError("not implemented");
@@ -127,49 +171,67 @@ public:
       const Location &expr_location = m_module_obj.tokens.get_token(expr_node.start_token())
                                           .location;
       String error_message = "Type error: expected type '";
-      expected_type->pretty_print().to_string(error_message);
-      error_message.append("' got expression of type '");
-      result->type->pretty_print().to_string(error_message);
+      expected_type->serialize().to_string(error_message);
+      error_message.append("', got expression of type '");
+      result->type->serialize().to_string(error_message);
       error_message.append("'");
       throw SourceLocationError(expr_location, move(error_message));
     }
     return result;
   }
 
-  FlexShared<Expression> typecheck_expr_number_literal(
-      FlexShared<Type> &expected_type, Scope &scope, NodeId expr_node_id
-  ) {
+  FlexShared<Expression> typecheck_expr_number_literal(NodeId expr_node_id) {
     auto expr = FlexShared<NumberLiteralExpression>::emplace();
     const auto &expr_node = m_module_obj.ast.get_node(expr_node_id).as_NumberLiteralNode();
     expr->node_id = expr_node_id;
     const Token &literal_token = m_module_obj.tokens.get_token(expr_node.lit);
     expr->value = Lexer::read_number_literal(literal_token.contents);
     const NumberLiteral &value = expr->value;
-    const Type &expected_type_ref = *expected_type;
-    if (value.has_decimal_point) {
-      if (is_floating_point_primitive_type(expected_type_ref)) {
-        expr->type = expected_type;
-      } else {
-        expr->type = double_type();
+    if (value.has_decimal_point || value.exponent_sign == "-") {
+      String num_str;
+      num_str.append(value.base_prefix);
+      num_str.append(value.integer_digits);
+      num_str.append(".");
+      num_str.append(value.fractional_digits);
+      Rational result(num_str);
+      if (value.exponent_digits.size() > 0) {
+        uint8_t exponent_base = 10;
+        if (value.exponent_prefix == "p" || value.exponent_prefix == "P") {
+          exponent_base = 2;
+        }
+        auto factor = Integer(exponent_base).pow(Integer(value.exponent_digits).to_uint32());
+        if (value.exponent_sign == "-") {
+          result = Rational(result.numerator(), result.denominator() * factor);
+        } else {
+          result = Rational(result.numerator() * factor, result.denominator());
+        }
       }
+      expr->type = make_flex(ConstRationalType(move(result)));
     } else {
-      if (is_integral_primitive_type(expected_type_ref) ||
-          is_floating_point_primitive_type(expected_type_ref)) {
-        expr->type = expected_type;
-      } else {
-        expr->type = double_type();
+      String num_str;
+      num_str.append(value.base_prefix);
+      num_str.append(value.integer_digits);
+      Integer result(num_str);
+      if (value.exponent_digits.size() > 0) {
+        uint8_t exponent_base = 10;
+        if (value.exponent_prefix == "p" || value.exponent_prefix == "P") {
+          exponent_base = 2;
+        }
+        auto factor = Integer(exponent_base).pow(Integer(value.exponent_digits).to_uint32());
+        result *= factor;
       }
+      expr->type = make_flex(ConstIntegerType(move(result)));
     }
     return expr;
   }
 
   void collect_bindings() {
-    Text current_binding_name;
-    Binding current_binding_details{};
-    current_binding_details.visibility = DeclarationVisibility::Default;
     const ModuleNode &module_node = m_module_obj.ast.get_node(m_module_obj.ast_root)
                                         .as_ModuleNode();
     for (NodeId decl_node_id : module_node.decls) {
+      Text current_binding_name;
+      Binding current_binding_details{};
+      current_binding_details.visibility = DeclarationVisibility::Default;
       get_binding_details(current_binding_name, current_binding_details, decl_node_id);
       const Option<BindingId> existing_binding_id = m_module_obj.scope->binding_ids.find(
           current_binding_name
@@ -261,8 +323,7 @@ private:
   Option<ModuleId> select_module_to_typecheck() {
     for (size_t i = 0; i < m_sema_result.modules.size(); ++i) {
       Module &module_obj = m_sema_result.modules[i];
-      if (module_obj.scope->bindings.size() != 0) {
-        // already analyzed
+      if (module_obj.analyzed) {
         continue;
       }
       if (m_module_dep_counts[i] == 0) {

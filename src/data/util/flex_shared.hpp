@@ -120,6 +120,18 @@ public:
 
   template <typename U> friend class FlexShared;
 
+  bool operator==(const FlexShared<T> &other) const noexcept {
+    return m_obj == other.m_obj;
+  }
+
+  operator T &() noexcept {
+    return *m_obj;
+  }
+
+  operator const T &() const noexcept {
+    return *m_obj;
+  }
+
 private:
   FlexShared(T *obj, volatile uint32_t *ref_count) noexcept : m_obj(obj), m_ref_count(ref_count) {}
 

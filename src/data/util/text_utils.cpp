@@ -41,7 +41,7 @@ void TextUtils::split(
   }
 }
 
-void TextUtils::join_into(AbstractString &output, Slice<Text> parts, Text delimiter) {
+void TextUtils::join_into(AbstractString &output, ConstSlice<Text> parts, Text delimiter) {
   for (size_t i = 0; i < parts.size(); ++i) {
     output.append(parts[i]);
     if (i < parts.size() - 1) {

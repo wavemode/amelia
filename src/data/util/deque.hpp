@@ -23,8 +23,8 @@ inline unsigned long long chunk_offset(
 struct chunk_manager {
   void **chunk_ptr = nullptr;
   int32_t elem_size;
-  unsigned char chunk_count = 0;
-  unsigned char chunk_capacity = 0;
+  uint8_t chunk_count = 0;
+  uint8_t chunk_capacity = 0;
 
   chunk_manager(int32_t elem_size) : elem_size(elem_size) {}
   chunk_manager(const chunk_manager &) = delete;
@@ -47,7 +47,7 @@ struct chunk_manager {
   }
 
   void grow_chunk_capacity() {
-    unsigned char new_capacity = chunk_capacity == 0 ? 4 : chunk_capacity * 2;
+    uint8_t new_capacity = chunk_capacity == 0 ? 4 : chunk_capacity * 2;
     void **new_chunks = static_cast<void **>(std::malloc(sizeof(void *) * new_capacity));
     for (size_t i = 0; i < chunk_count; ++i) {
       new_chunks[i] = chunk_ptr[i];

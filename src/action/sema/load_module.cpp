@@ -161,6 +161,7 @@ Option<ModuleId> try_load_and_parse(
   }
   ModuleId module_id = sema_result.modules.size();
   Module &module_obj = sema_result.modules.emplace_back();
+  module_obj.analyzed = false;
   module_obj.name = module_name;
   module_obj.scope = FlexShared<Scope>::emplace();
   module_obj.source_path = path;

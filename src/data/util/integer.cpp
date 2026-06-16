@@ -10,6 +10,62 @@ using boost::multiprecision::cpp_int;
 
 namespace amelia {
 
+Integer binary_string_to_integer(Text binary_string) {
+  Integer result;
+  for (char c : binary_string) {
+    if (c == '0') {
+      result <<= 1;
+    } else if (c == '1') {
+      result <<= 1;
+      result += 1;
+    } else {
+      String error_message = "Invalid binary literal: '";
+      error_message.append(binary_string);
+      error_message.append("'");
+      throw RuntimeError(error_message.c_str());
+    }
+  }
+  return result;
+}
+
+Integer octal_string_to_integer(Text octal_string) {
+  Integer result;
+  for (char c : octal_string) {
+    if (c >= '0' && c <= '7') {
+      result <<= 3;
+      result += (c - '0');
+    } else {
+      String error_message = "Invalid octal literal: '";
+      error_message.append(octal_string);
+      error_message.append("'");
+      throw RuntimeError(error_message.c_str());
+    }
+  }
+  return result;
+}
+
+Integer hexadecimal_string_to_integer(Text hexadecimal_string) {
+  Integer result;
+  for (char c : hexadecimal_string) {
+    if (c >= '0' && c <= '9') {
+      result <<= 4;
+      result += (c - '0');
+    } else if (c >= 'a' && c <= 'f') {
+      result <<= 4;
+      result += (c - 'a' + 10);
+    } else if (c >= 'A' && c <= 'F') {
+      result <<= 4;
+      result += (c - 'A' + 10);
+    } else {
+      String error_message = "Invalid hexadecimal literal: '";
+      error_message.append(hexadecimal_string);
+      error_message.append("'");
+      throw RuntimeError(error_message.c_str());
+    }
+  }
+  return result;
+}
+
 Integer::Integer() : m_value(new cpp_int()) {}
 
 Integer::Integer(uint8_t value) : m_value(new cpp_int(value)) {}
@@ -28,10 +84,35 @@ Integer::Integer(uint64_t value) : m_value(new cpp_int(value)) {}
 
 Integer::Integer(int64_t value) : m_value(new cpp_int(value)) {}
 
-Integer::Integer(const String &value) : m_value(new cpp_int()) {
-  if (value.size() > 0) {
-    static_cast<cpp_int *>(m_value)->operator=(cpp_int(value.c_str()));
+Integer::Integer(const String &value) : Integer(value.text()) {}
+
+Integer::Integer(Text text_value) : m_value(nullptr) {
+  Integer result;
+  if (text_value.size() > 0) {
+    if (TextUtils::starts_with(text_value, "0b") || TextUtils::starts_with(text_value, "0B")) {
+      result = binary_string_to_integer(TextUtils::tail_bytes(text_value, 2));
+    } else if (TextUtils::starts_with(text_value, "0o") ||
+               TextUtils::starts_with(text_value, "0O")) {
+      result = octal_string_to_integer(TextUtils::tail_bytes(text_value, 2));
+    } else if (TextUtils::starts_with(text_value, "0x") ||
+               TextUtils::starts_with(text_value, "0X")) {
+      result = hexadecimal_string_to_integer(TextUtils::tail_bytes(text_value, 2));
+    } else if (TextUtils::starts_with(text_value, "0") && text_value.size() > 1) {
+      result = octal_string_to_integer(TextUtils::tail_bytes(text_value, 1));
+    } else {
+      String str_value(text_value);
+      try {
+        static_cast<cpp_int *>(result.m_value)->operator=(cpp_int(str_value.c_str()));
+      } catch (...) {
+        String error_message = "Invalid integer literal: '";
+        error_message.append(str_value);
+        error_message.append("'");
+        throw RuntimeError(error_message.c_str());
+      }
+    }
   }
+  m_value = result.m_value;
+  result.m_value = nullptr;
 }
 
 Integer::Integer(float value) : m_value(new cpp_int(value)) {}
@@ -196,13 +277,10 @@ Integer Integer::lcm(const Integer &other) const {
   return (abs() * other.abs()) / gcd(other);
 }
 
-Integer Integer::pow(const Integer &exponent) const {
-  Integer result(1);
-  Integer exp(exponent);
-  while (exp > 0) {
-    result *= *this;
-    exp -= 1;
-  }
+Integer Integer::pow(uint32_t exponent) const {
+  Integer result;
+  static_cast<cpp_int *>(result.m_value)
+      ->operator=(boost::multiprecision::pow(*static_cast<cpp_int *>(m_value), exponent));
   return result;
 }
 

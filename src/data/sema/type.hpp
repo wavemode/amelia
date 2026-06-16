@@ -2,12 +2,14 @@
 
 #include "prelude.hpp"
 
-#include "data/testing/pretty_print.hpp"
+#include "data/testing/serialize.hpp"
 #include "data/util/flex_shared.hpp"
+#include "data/util/integer.hpp"
+#include "data/util/rational.hpp"
 
 namespace amelia {
 
-enum class PrimitiveKind : unsigned char {
+enum class PrimitiveKind : uint8_t {
   Byte,
   UByte,
   Short,
@@ -26,10 +28,11 @@ enum class PrimitiveKind : unsigned char {
   Unknown,
 };
 
-PrettyPrint pretty_print_primitive_kind(PrimitiveKind kind);
+Serialize serialize_primitive_kind(PrimitiveKind kind);
 
-enum class TypeKind : unsigned char {
+enum class TypeKind : uint8_t {
   Alias,
+  TypeFn,
   Apply,
   Primitive,
   Bitint,
@@ -40,7 +43,8 @@ enum class TypeKind : unsigned char {
   Array,
   Slice,
   Impl,
-  Const,
+  ConstInteger,
+  ConstRational,
   Class,
   Union,
   Concept,
@@ -49,16 +53,44 @@ enum class TypeKind : unsigned char {
   Variable,
 };
 
-PrettyPrint pretty_print_type_kind(TypeKind kind);
+Serialize serialize_type_kind(TypeKind kind);
 
 struct Type {
   TypeKind kind;
 
-  PrettyPrint pretty_print() const;
+  Serialize serialize() const;
+
+  virtual ~Type() = default;
+
+protected:
+  Type(TypeKind kind) : kind(kind) {}
 };
 
 struct PrimitiveType : Type {
+  PrimitiveType(PrimitiveKind primitive_kind)
+      : Type(TypeKind::Primitive), primitive_kind(primitive_kind) {}
+
   PrimitiveKind primitive_kind;
+};
+
+struct AliasType : Type {
+  AliasType(String name, FlexShared<Type> target)
+      : Type(TypeKind::Alias), name(move(name)), target(move(target)) {}
+
+  String name;
+  FlexShared<Type> target;
+};
+
+struct ConstIntegerType : Type {
+  ConstIntegerType(Integer value) : Type(TypeKind::ConstInteger), value(move(value)) {}
+
+  Integer value;
+};
+
+struct ConstRationalType : Type {
+  ConstRationalType(Rational value) : Type(TypeKind::ConstRational), value(move(value)) {}
+
+  Rational value;
 };
 
 } // namespace amelia

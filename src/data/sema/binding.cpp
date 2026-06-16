@@ -2,22 +2,22 @@
 
 namespace amelia {
 
-PrettyPrint Binding::pretty_print(String name) const {
-  auto result = PrettyPrint();
+Serialize Binding::serialize(String name) const {
+  auto result = Serialize();
   result.set_object_name("Binding");
-  result.add_object_field("name", PrettyPrint::quoted(move(name)));
-  result.add_object_field("kind", pretty_print_binding_kind(kind));
-  result.add_object_field("visibility", pretty_print_declaration_visibility(visibility));
+  result.add_object_field("name", Serialize::quoted(move(name)));
+  result.add_object_field("kind", serialize_binding_kind(kind));
+  result.add_object_field("visibility", serialize_declaration_visibility(visibility));
   switch (kind) {
   case BindingKind::Variable:
   case BindingKind::Constant:
   case BindingKind::Function: {
     const ValueBinding &value_binding = static_cast<const ValueBinding &>(*this);
     if (value_binding.type.has_value()) {
-      result.add_object_field("type", value_binding.type.value()->pretty_print());
+      result.add_object_field("type", value_binding.type.value()->serialize());
     }
     if (value_binding.value.has_value()) {
-      result.add_object_field("value", value_binding.value.value()->pretty_print());
+      result.add_object_field("value", value_binding.value.value()->serialize());
     }
     break;
   }
@@ -27,7 +27,7 @@ PrettyPrint Binding::pretty_print(String name) const {
   return result;
 }
 
-PrettyPrint pretty_print_binding_kind(BindingKind kind) {
+Serialize serialize_binding_kind(BindingKind kind) {
   String result;
   switch (kind) {
   case BindingKind::Variable:
@@ -52,7 +52,7 @@ PrettyPrint pretty_print_binding_kind(BindingKind kind) {
     result.append("Module");
     break;
   }
-  return PrettyPrint::literal(move(result));
+  return Serialize::literal(move(result));
 }
 
 } // namespace amelia

@@ -50,7 +50,16 @@ Rational::Rational(Text value) {
     }
     m_numerator = Integer(digits);
     if (parts.size() == 2) {
-      m_denominator = Integer(10).pow(parts[1].size());
+      uint8_t base = 10;
+      if (TextUtils::starts_with(digits, "0b") || TextUtils::starts_with(digits, "0B")) {
+        base = 2;
+      } else if (TextUtils::starts_with(digits, "0x") || TextUtils::starts_with(digits, "0X")) {
+        base = 16;
+      } else if (TextUtils::starts_with(digits, "0o") || TextUtils::starts_with(digits, "0O") ||
+                 (TextUtils::starts_with(digits, "0") && parts[0].size() > 1)) {
+        base = 8;
+      }
+      m_denominator = Integer(base).pow(parts[1].size());
     } else {
       m_denominator = Integer(1);
     }
@@ -190,6 +199,10 @@ Rational Rational::abs() const {
   } else {
     return *this;
   }
+}
+
+Rational Rational::pow(uint32_t exponent) const {
+  return Rational(m_numerator.pow(exponent), m_denominator.pow(exponent));
 }
 
 Integer Rational::floor() const {

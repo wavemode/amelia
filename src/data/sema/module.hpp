@@ -2,7 +2,7 @@
 
 #include "prelude.hpp"
 
-#include "data/testing/pretty_print.hpp"
+#include "data/testing/serialize.hpp"
 #include "data/util/map.hpp"
 #include "data/util/set.hpp"
 
@@ -31,8 +31,9 @@ struct Module {
   Set<ModuleId> imported_by_ids;
   Set<ModuleId> group_module_ids;
   List<Set<BindingId>> binding_deps;
+  bool analyzed;
 
-  PrettyPrint pretty_print() const;
+  Serialize serialize() const;
 };
 
 } // namespace amelia

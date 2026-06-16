@@ -22,7 +22,7 @@ struct TextUtils {
       AbstractList<String> &output, Text input, Text delimiter, int64_t max_splits = -1
   );
 
-  static void join_into(AbstractString &output, Slice<Text> parts, Text delimiter);
+  static void join_into(AbstractString &output, ConstSlice<Text> parts, Text delimiter);
 
   static Text trim(Text input, Text chars = WHITESPACE_CHARS);
   static void trim_into(AbstractString &output, Text input, Text chars = WHITESPACE_CHARS);

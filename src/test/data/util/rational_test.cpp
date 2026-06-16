@@ -86,13 +86,19 @@ TEST_CASE("from double") {
   CHECK_REPR(rational, "308641972530864179134369/250000000000000");
 }
 
-TEST_CASE("from decimal String") {
-  String value = "123456789012345678901234567890.123456789012345678901234567890";
-  Rational rational(value);
-  CHECK_REPR(
-      rational,
-      "12345678901234567890123456789012345678901234567890123456789/100000000000000000000000000000"
-  );
+TEST_CASE("from String") {
+  auto input = List<String>({
+      "123456789012345678901234567890.123456789012345678901234567890",
+      "0x1.F",
+  });
+  auto output = List<String>({
+      "12345678901234567890123456789012345678901234567890123456789/100000000000000000000000000000",
+      "31/16",
+  });
+  for (size_t i = 0; i < input.size(); ++i) {
+    CHECK_REPR(Rational(input[i]), output[i]);
+    CHECK_REPR(Rational(output[i]), output[i]); // sanity check
+  }
 }
 
 TEST_CASE("negate and abs") {

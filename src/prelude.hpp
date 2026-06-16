@@ -19,7 +19,7 @@
 #include "data/util/text.hpp"
 #include "data/util/utility.hpp"
 
-#include "data/testing/pretty_print.hpp"
+#include "data/testing/serialize.hpp"
 
 #include "effect/sys/console_printer.hpp"
 
