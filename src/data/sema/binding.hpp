@@ -19,12 +19,13 @@ Serialize serialize_binding_kind(BindingKind kind);
 
 struct Binding {
   NodeId decl;
+  String name;
   BindingKind kind;
   DeclarationVisibility visibility;
   Option<FlexShared<Binding>> shadowed_binding;
   bool analyzed;
 
-  Serialize serialize(String name) const;
+  Serialize serialize() const;
   virtual ~Binding() = default;
 };
 

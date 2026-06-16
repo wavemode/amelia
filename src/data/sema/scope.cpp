@@ -7,9 +7,8 @@ Serialize Scope::serialize() const {
   result.set_object_name("Scope");
   if (bindings.size() > 0) {
     auto bindings_list = Serialize();
-    for (const auto &[binding_name, binding_id] : binding_ids) {
-      const Binding &binding = *bindings[binding_id];
-      bindings_list.add_list_item(binding.serialize(String(binding_name)));
+    for (const auto &binding : bindings) {
+      bindings_list.add_list_item(binding->serialize());
     }
     result.add_object_field("bindings", move(bindings_list));
   }

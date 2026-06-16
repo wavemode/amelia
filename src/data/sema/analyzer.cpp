@@ -82,11 +82,12 @@ public:
     m_module_obj.analyzed = true;
     collect_bindings();
     for (const auto [binding_name, binding_id] : m_module_obj.scope->binding_ids) {
-      analyze_binding(*m_module_obj.scope->bindings[binding_id]);
+      ;
+      analyze_binding(*m_module_obj.scope->bindings[binding_id], true);
     }
   }
 
-  void analyze_binding(Binding &binding) {
+  void analyze_binding(Binding &binding, bool top_level) {
     if (binding.analyzed) {
       return;
     }
@@ -95,13 +96,31 @@ public:
 
     switch (binding.kind) {
     case BindingKind::Variable:
+      if (top_level) {
+        disallow_top_level_shadowing(static_cast<ValueBinding &>(binding));
+      }
       analyze_let_binding(static_cast<ValueBinding &>(binding));
       break;
     case BindingKind::Constant:
+      if (top_level) {
+        disallow_top_level_shadowing(static_cast<ValueBinding &>(binding));
+      }
       analyze_const_binding(static_cast<ValueBinding &>(binding));
       break;
     default:
       throw RuntimeError("not implemented");
+    }
+  }
+
+  void disallow_top_level_shadowing(const ValueBinding &binding) {
+    if (binding.shadowed_binding.has_value()) {
+      String error_message = "Duplicate declaration of '";
+      error_message.append(binding.name);
+      error_message.append("' at top level");
+      const Node &decl_node = m_module_obj.ast.get_node(binding.decl);
+      throw SourceLocationError(
+          m_module_obj.tokens.get_token(decl_node.start_token()).location, move(error_message)
+      );
     }
   }
 
@@ -324,13 +343,11 @@ public:
     const ModuleNode &module_node = m_module_obj.ast.get_node(m_module_obj.ast_root)
                                         .as_ModuleNode();
     for (NodeId decl_node_id : module_node.decls) {
-      Text current_binding_name;
       Binding current_binding_details{};
       current_binding_details.visibility = DeclarationVisibility::Default;
-      current_binding_details.analyzed = false;
-      get_binding_details(current_binding_name, current_binding_details, decl_node_id);
+      get_binding_details(current_binding_details, decl_node_id);
       const Option<BindingId> existing_binding_id = m_module_obj.scope->binding_ids.find(
-          current_binding_name
+          current_binding_details.name
       );
       Option<FlexShared<Binding>> existing_binding;
       if (existing_binding_id.has_value()) {
@@ -363,30 +380,30 @@ public:
       binding->kind = current_binding_details.kind;
       binding->visibility = current_binding_details.visibility;
       binding->shadowed_binding = existing_binding;
-      m_module_obj.scope->binding_ids.set(current_binding_name, new_binding_id);
+      binding->name = move(current_binding_details.name);
+      binding->analyzed = false;
+      m_module_obj.scope->binding_ids.set(binding->name, new_binding_id);
     }
   }
 
-  void get_binding_details(
-      Text &current_binding_name, Binding &current_binding_details, NodeId decl_node_id
-  ) {
+  void get_binding_details(Binding &current_binding_details, NodeId decl_node_id) {
     const Node &decl_node = m_sema_result.modules[0].ast.get_node(decl_node_id);
     switch (decl_node.type()) {
     case NodeType::LetDeclNode: {
       const auto &n = decl_node.as_LetDeclNode();
       current_binding_details.kind = BindingKind::Variable;
-      get_binding_details(current_binding_name, current_binding_details, n.target);
+      get_binding_details(current_binding_details, n.target);
       break;
     }
     case NodeType::ConstDeclNode: {
       const auto &n = decl_node.as_ConstDeclNode();
       current_binding_details.kind = BindingKind::Constant;
-      get_binding_details(current_binding_name, current_binding_details, n.target);
+      get_binding_details(current_binding_details, n.target);
       break;
     }
     case NodeType::IdentifierNode: {
       const auto &n = decl_node.as_IdentifierNode();
-      current_binding_name = n.name;
+      current_binding_details.name = n.name;
       break;
     }
     default:

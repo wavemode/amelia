@@ -1,0 +1,6 @@
+const x = 4
+const x = 5
+
+/* EXPECTED_OUTPUT:
+ERROR("Duplicate declaration of 'x' at top level (at test_cases/sema/top_level/error_duplicate_const_binding.am:2:1)")
+*/

@@ -2,10 +2,10 @@
 
 namespace amelia {
 
-Serialize Binding::serialize(String name) const {
+Serialize Binding::serialize() const {
   auto result = Serialize();
   result.set_object_name("Binding");
-  result.add_object_field("name", Serialize::quoted(move(name)));
+  result.add_object_field("name", Serialize::quoted(name));
   result.add_object_field("kind", serialize_binding_kind(kind));
   result.add_object_field("visibility", serialize_declaration_visibility(visibility));
   switch (kind) {
