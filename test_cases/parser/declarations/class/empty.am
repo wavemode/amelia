@@ -5,7 +5,7 @@ ModuleNode(
   decls=[
     ClassDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(A)
+        name="A"
       ),
       body=ClassBodyNode()
     )

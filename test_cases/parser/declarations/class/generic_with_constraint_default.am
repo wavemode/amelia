@@ -5,21 +5,19 @@ ModuleNode(
   decls=[
     ClassDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(A)
+        name="A"
       ),
       generic_parameter_list=GenericParameterListNode(
         parameters=[
           GenericParameterNode(
             is_const=true,
             name=IdentifierNode(
-              token=IDENTIFIER(T)
+              name="T"
             ),
             constraint=PrimitiveTypeNode(
-              token=KEYWORD_INT(int)
+              name="int"
             ),
-            default_value=NumberLiteralNode(
-              lit=NUMBER(10)
-            )
+            default_value=NumberLiteralNode(value=10)
           )
         ]
       ),

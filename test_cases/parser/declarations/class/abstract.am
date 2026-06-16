@@ -8,24 +8,24 @@ ModuleNode(
     AbstractDeclNode(
       decl=ClassDeclNode(
         name=IdentifierNode(
-          token=IDENTIFIER(A)
+          name="A"
         ),
         body=ClassBodyNode(
           decls=[
             OpenDeclNode(
               decl=ClassConstructorNode(
                 name=IdentifierNode(
-                  token=IDENTIFIER(A)
+                  name="A"
                 ),
                 signature=FunctionSignatureNode(
                   parameters=[
                     FunctionParameterNode(
                       variadic=false,
                       name=IdentifierNode(
-                        token=IDENTIFIER_NO_W(a)
+                        name="a"
                       ),
                       type=PrimitiveTypeNode(
-                        token=KEYWORD_INT(int)
+                        name="int"
                       )
                     )
                   ]

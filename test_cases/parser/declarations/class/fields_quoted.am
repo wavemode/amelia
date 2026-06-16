@@ -10,43 +10,43 @@ ModuleNode(
   decls=[
     ClassDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(A)
+        name="A"
       ),
       body=ClassBodyNode(
         decls=[
           ClassFieldNode(
             name=IdentifierNode(
-              token=QUOTED_IDENTIFIER(`a`)
+              name="a"
             ),
             type=PrimitiveTypeNode(
-              token=KEYWORD_INT(int)
+              name="int"
             )
           ),
           ClassFieldNode(
             name=IdentifierNode(
-              token=QUOTED_IDENTIFIER(`b`)
+              name="b"
             ),
             type=IdentifierNode(
-              token=IDENTIFIER(String)
+              name="String"
             )
           ),
           ClassStaticDeclNode(
             decl=ClassFieldNode(
               name=IdentifierNode(
-                token=QUOTED_IDENTIFIER(`c`)
+                name="c"
               ),
               type=PrimitiveTypeNode(
-                token=KEYWORD_FLOAT(float)
+                name="float"
               )
             )
           ),
           ClassConstDeclNode(
             decl=ClassFieldNode(
               name=IdentifierNode(
-                token=QUOTED_IDENTIFIER(`d`)
+                name="d"
               ),
               type=PrimitiveTypeNode(
-                token=KEYWORD_BOOL(bool)
+                name="bool"
               ),
               initializer=BooleanLiteralNode(
                 value=true

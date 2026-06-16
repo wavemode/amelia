@@ -8,25 +8,21 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(z)
+        name="z"
       ),
       expr=BlockExprNode(
         stmts=[
           BitwiseXorAssignStmtNode(
             target=IdentifierNode(
-              token=IDENTIFIER(x)
+              name="x"
             ),
-            expr=NumberLiteralNode(
-              lit=NUMBER(5)
-            )
+            expr=NumberLiteralNode(value=5)
           ),
           BitwiseXorAssignStmtNode(
             target=IdentifierNode(
-              token=IDENTIFIER(y)
+              name="y"
             ),
-            expr=NumberLiteralNode(
-              lit=NUMBER(6)
-            )
+            expr=NumberLiteralNode(value=6)
           )
         ]
       )

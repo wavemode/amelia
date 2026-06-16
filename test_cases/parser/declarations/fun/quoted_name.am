@@ -5,7 +5,7 @@ ModuleNode(
   decls=[
     FunctionDeclNode(
       name=IdentifierNode(
-        token=QUOTED_IDENTIFIER(`f`)
+        name="f"
       ),
       signature=FunctionSignatureNode(),
       body=FunctionBodyNode(

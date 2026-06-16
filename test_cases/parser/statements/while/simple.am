@@ -7,17 +7,17 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(example)
+        name="example"
       ),
       expr=BlockExprNode(
         stmts=[
           WhileStmtNode(
             condition=IdentifierNode(
-              token=IDENTIFIER_NO_W(x)
+              name="x"
             ),
             body=ExprStmtNode(
               expr=IdentifierNode(
-                token=IDENTIFIER(z)
+                name="z"
               )
             )
           )

@@ -7,14 +7,14 @@ ModuleNode(
       name=ScopeResolutionExprNode(
         scope=ScopeResolutionExprNode(
           scope=IdentifierNode(
-            token=IDENTIFIER(A)
+            name="A"
           ),
           name=IdentifierNode(
-            token=IDENTIFIER_NO_W(B)
+            name="B"
           )
         ),
         name=IdentifierNode(
-          token=IDENTIFIER_NO_W(C)
+          name="C"
         )
       )
     )

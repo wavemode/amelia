@@ -7,14 +7,12 @@ ModuleNode(
       visibility=local,
       decl=ConstDeclNode(
         target=IdentifierNode(
-          token=IDENTIFIER(x)
+          name="x"
         ),
         type=PrimitiveTypeNode(
-          token=KEYWORD_INT(int)
+          name="int"
         ),
-        expr=NumberLiteralNode(
-          lit=NUMBER(40)
-        )
+        expr=NumberLiteralNode(value=40)
       )
     )
   ]

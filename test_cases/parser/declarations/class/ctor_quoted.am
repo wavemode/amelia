@@ -13,13 +13,13 @@ ModuleNode(
   decls=[
     ClassDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(A)
+        name="A"
       ),
       body=ClassBodyNode(
         decls=[
           ClassConstructorNode(
             name=IdentifierNode(
-              token=QUOTED_IDENTIFIER(`A`)
+              name="A"
             ),
             signature=FunctionSignatureNode(),
             body=FunctionBodyNode(
@@ -28,18 +28,16 @@ ModuleNode(
                   target=FieldAccessExprNode(
                     object=ThisLiteralNode(),
                     field=IdentifierNode(
-                      token=IDENTIFIER_NO_W(a)
+                      name="a"
                     )
                   ),
-                  expr=NumberLiteralNode(
-                    lit=NUMBER(0)
-                  )
+                  expr=NumberLiteralNode(value=0)
                 ),
                 AssignmentStmtNode(
                   target=FieldAccessExprNode(
                     object=ThisLiteralNode(),
                     field=IdentifierNode(
-                      token=IDENTIFIER_NO_W(b)
+                      name="b"
                     )
                   ),
                   expr=StringLiteralNode(
@@ -53,18 +51,18 @@ ModuleNode(
           ),
           ClassFieldNode(
             name=IdentifierNode(
-              token=IDENTIFIER(a)
+              name="a"
             ),
             type=PrimitiveTypeNode(
-              token=KEYWORD_INT(int)
+              name="int"
             )
           ),
           ClassFieldNode(
             name=IdentifierNode(
-              token=IDENTIFIER(b)
+              name="b"
             ),
             type=IdentifierNode(
-              token=IDENTIFIER(String)
+              name="String"
             )
           )
         ]

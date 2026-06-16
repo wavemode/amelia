@@ -5,21 +5,21 @@ ModuleNode(
   decls=[
     ClassDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(A)
+        name="A"
       ),
       base_class_list=BaseTypeListNode(
         base_classes=[
           IdentifierNode(
-            token=IDENTIFIER(B)
+            name="B"
           ),
           IndexingExprNode(
             object=IdentifierNode(
-              token=IDENTIFIER(C)
+              name="C"
             ),
             indices=[
               IndexNode(
                 value=IdentifierNode(
-                  token=IDENTIFIER_NO_W(D)
+                  name="D"
                 )
               )
             ]

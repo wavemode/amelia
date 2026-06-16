@@ -11,19 +11,19 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(a)
+        name="a"
       ),
       expr=BlockExprNode(
         stmts=[
           IfStmtNode(
             condition=IdentifierNode(
-              token=IDENTIFIER_NO_W(x)
+              name="x"
             ),
             then_branch=BlockStmtNode(
               stmts=[
                 ExprStmtNode(
                   expr=IdentifierNode(
-                    token=IDENTIFIER(y)
+                    name="y"
                   )
                 )
               ]
@@ -32,7 +32,7 @@ ModuleNode(
               stmts=[
                 ExprStmtNode(
                   expr=IdentifierNode(
-                    token=IDENTIFIER(z)
+                    name="z"
                   )
                 )
               ]

@@ -6,33 +6,27 @@ ModuleNode(
   decls=[
     AnnotationNode(
       name=IdentifierNode(
-        token=IDENTIFIER_NO_W(anno)
+        name="anno"
       ),
       args=[
         FunctionArgumentNode(
           name=IdentifierNode(
-            token=IDENTIFIER_NO_W(a)
+            name="a"
           ),
-          expr=NumberLiteralNode(
-            lit=NUMBER(1)
-          )
+          expr=NumberLiteralNode(value=1)
         ),
         FunctionArgumentNode(
           name=IdentifierNode(
-            token=IDENTIFIER(b)
+            name="b"
           ),
-          expr=NumberLiteralNode(
-            lit=NUMBER(2)
-          )
+          expr=NumberLiteralNode(value=2)
         )
       ],
       stmt=LetDeclNode(
         target=IdentifierNode(
-          token=IDENTIFIER(x)
+          name="x"
         ),
-        expr=NumberLiteralNode(
-          lit=NUMBER(4)
-        )
+        expr=NumberLiteralNode(value=4)
       )
     )
   ]

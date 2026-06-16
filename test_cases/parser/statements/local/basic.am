@@ -7,11 +7,9 @@ ModuleNode(
       visibility=local,
       decl=ConstDeclNode(
         target=IdentifierNode(
-          token=IDENTIFIER(x)
+          name="x"
         ),
-        expr=NumberLiteralNode(
-          lit=NUMBER(10)
-        )
+        expr=NumberLiteralNode(value=10)
       )
     )
   ]

@@ -10,7 +10,7 @@ ModuleNode(
   decls=[
     ClassDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(A)
+        name="A"
       ),
       body=ClassBodyNode(
         decls=[
@@ -18,7 +18,7 @@ ModuleNode(
             visibility=public,
             decl=ClassConstructorNode(
               name=IdentifierNode(
-                token=IDENTIFIER(A)
+                name="A"
               ),
               signature=FunctionSignatureNode(),
               body=FunctionBodyNode(
@@ -31,10 +31,10 @@ ModuleNode(
             visibility=private,
             decl=ClassFieldNode(
               name=IdentifierNode(
-                token=IDENTIFIER(a)
+                name="a"
               ),
               type=PrimitiveTypeNode(
-                token=KEYWORD_INT(int)
+                name="int"
               )
             )
           ),
@@ -42,10 +42,10 @@ ModuleNode(
             visibility=protected,
             decl=ClassFieldNode(
               name=IdentifierNode(
-                token=IDENTIFIER(b)
+                name="b"
               ),
               type=IdentifierNode(
-                token=IDENTIFIER(String)
+                name="String"
               )
             )
           ),
@@ -53,10 +53,10 @@ ModuleNode(
             visibility=local,
             decl=ClassFieldNode(
               name=IdentifierNode(
-                token=IDENTIFIER(c)
+                name="c"
               ),
               type=PrimitiveTypeNode(
-                token=KEYWORD_FLOAT(float)
+                name="float"
               )
             )
           )

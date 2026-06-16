@@ -5,21 +5,21 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x)
+        name="x"
       ),
       expr=IndexingExprNode(
         object=IdentifierNode(
-          token=IDENTIFIER(y)
+          name="y"
         ),
         indices=[
           IndexNode(
             value=IdentifierNode(
-              token=IDENTIFIER_NO_W(z)
+              name="z"
             )
           ),
           IndexNode(
             value=IdentifierNode(
-              token=IDENTIFIER(w)
+              name="w"
             )
           )
         ]

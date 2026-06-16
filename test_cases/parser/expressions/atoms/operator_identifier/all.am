@@ -83,14 +83,14 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(y)
+        name="y"
       ),
       expr=BlockExprNode(
         stmts=[
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentAddNode()
@@ -100,7 +100,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentSubNode()
@@ -110,7 +110,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentStarNode()
@@ -120,7 +120,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentDivNode()
@@ -130,7 +130,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentModNode()
@@ -140,7 +140,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentIncNode()
@@ -150,7 +150,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentIncNode()
@@ -160,7 +160,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentDecNode()
@@ -170,7 +170,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentDecNode()
@@ -180,7 +180,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentEqNode()
@@ -190,7 +190,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentNeqNode()
@@ -200,7 +200,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentGtNode()
@@ -210,7 +210,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentLtNode()
@@ -220,7 +220,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentGteNode()
@@ -230,7 +230,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentLteNode()
@@ -240,7 +240,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentNotNode()
@@ -250,7 +250,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentNotNode()
@@ -260,7 +260,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentAndNode()
@@ -270,7 +270,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentOrNode()
@@ -280,7 +280,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentBitwiseNotNode()
@@ -290,7 +290,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentAmpersandNode()
@@ -300,7 +300,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentBitwiseOrNode()
@@ -310,7 +310,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentBitwiseXorNode()
@@ -320,7 +320,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentLeftShiftNode()
@@ -330,7 +330,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentRightShiftNode()
@@ -340,7 +340,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentAssignNode()
@@ -350,7 +350,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentAddAssignNode()
@@ -360,7 +360,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentSubAssignNode()
@@ -370,7 +370,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentMulAssignNode()
@@ -380,7 +380,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentDivAssignNode()
@@ -390,7 +390,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentModAssignNode()
@@ -400,7 +400,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentBitwiseAndAssignNode()
@@ -410,7 +410,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentBitwiseOrAssignNode()
@@ -420,7 +420,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentBitwiseXorAssignNode()
@@ -430,7 +430,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentLeftShiftAssignNode()
@@ -440,7 +440,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentRightShiftAssignNode()
@@ -450,7 +450,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentIxNode()
@@ -460,7 +460,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentFuncallNode()
@@ -470,12 +470,12 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentAsNode(
                   type=PrimitiveTypeNode(
-                    token=KEYWORD_INT(int)
+                    name="int"
                   )
                 )
               )
@@ -484,7 +484,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FieldAccessExprNode(
               object=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               field=OperatorIdentifierNode(
                 op=OperatorIdentIxAssignNode()

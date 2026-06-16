@@ -8,17 +8,17 @@ ModuleNode(
   decls=[
     EnumDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(A)
+        name="A"
       ),
       variants=[
         EnumVariantNode(
           name=IdentifierNode(
-            token=IDENTIFIER(FirstOption)
+            name="FirstOption"
           )
         ),
         EnumVariantNode(
           name=IdentifierNode(
-            token=IDENTIFIER(SecondOption)
+            name="SecondOption"
           )
         )
       ]

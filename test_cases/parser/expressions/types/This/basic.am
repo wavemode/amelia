@@ -5,10 +5,10 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x)
+        name="x"
       ),
       type=IdentifierNode(
-        token=KEYWORD_THIS_TYPE(This)
+        name="This"
       )
     )
   ]

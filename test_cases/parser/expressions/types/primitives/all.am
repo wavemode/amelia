@@ -21,138 +21,138 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x_bool)
+        name="x_bool"
       ),
       type=PrimitiveTypeNode(
-        token=KEYWORD_BOOL(bool)
+        name="bool"
       )
     ),
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x_byte)
+        name="x_byte"
       ),
       type=PrimitiveTypeNode(
-        token=KEYWORD_BYTE(byte)
+        name="byte"
       )
     ),
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x_short)
+        name="x_short"
       ),
       type=PrimitiveTypeNode(
-        token=KEYWORD_SHORT(short)
+        name="short"
       )
     ),
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x_int)
+        name="x_int"
       ),
       type=PrimitiveTypeNode(
-        token=KEYWORD_INT(int)
+        name="int"
       )
     ),
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x_long)
+        name="x_long"
       ),
       type=PrimitiveTypeNode(
-        token=KEYWORD_LONG(long)
+        name="long"
       )
     ),
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x_ubyte)
+        name="x_ubyte"
       ),
       type=PrimitiveTypeNode(
-        token=KEYWORD_UBYTE(ubyte)
+        name="ubyte"
       )
     ),
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x_ushort)
+        name="x_ushort"
       ),
       type=PrimitiveTypeNode(
-        token=KEYWORD_USHORT(ushort)
+        name="ushort"
       )
     ),
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x_uint)
+        name="x_uint"
       ),
       type=PrimitiveTypeNode(
-        token=KEYWORD_UINT(uint)
+        name="uint"
       )
     ),
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x_ulong)
+        name="x_ulong"
       ),
       type=PrimitiveTypeNode(
-        token=KEYWORD_ULONG(ulong)
+        name="ulong"
       )
     ),
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x_usize)
+        name="x_usize"
       ),
       type=PrimitiveTypeNode(
-        token=KEYWORD_USIZE(usize)
+        name="usize"
       )
     ),
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x_float)
+        name="x_float"
       ),
       type=PrimitiveTypeNode(
-        token=KEYWORD_FLOAT(float)
+        name="float"
       )
     ),
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x_double)
+        name="x_double"
       ),
       type=PrimitiveTypeNode(
-        token=KEYWORD_DOUBLE(double)
+        name="double"
       )
     ),
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x_bitint)
+        name="x_bitint"
       ),
       type=PrimitiveTypeNode(
-        token=KEYWORD_BITINT(bitint)
+        name="bitint"
       )
     ),
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x_ubitint)
+        name="x_ubitint"
       ),
       type=PrimitiveTypeNode(
-        token=KEYWORD_UBITINT(ubitint)
+        name="ubitint"
       )
     ),
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x_char)
+        name="x_char"
       ),
       type=PrimitiveTypeNode(
-        token=KEYWORD_CHAR(char)
+        name="char"
       )
     ),
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x_str)
+        name="x_str"
       ),
       type=PrimitiveTypeNode(
-        token=KEYWORD_STR(str)
+        name="str"
       )
     ),
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x_null)
+        name="x_null"
       ),
       type=PrimitiveTypeNode(
-        token=KEYWORD_NULL(null)
+        name="null"
       )
     )
   ]

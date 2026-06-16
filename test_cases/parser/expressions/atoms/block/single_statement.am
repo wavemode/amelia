@@ -7,17 +7,15 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x)
+        name="x"
       ),
       expr=BlockExprNode(
         stmts=[
           LetDeclNode(
             target=IdentifierNode(
-              token=IDENTIFIER(y)
+              name="y"
             ),
-            expr=NumberLiteralNode(
-              lit=NUMBER(1)
-            )
+            expr=NumberLiteralNode(value=1)
           )
         ]
       )

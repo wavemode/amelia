@@ -5,14 +5,14 @@ ModuleNode(
   decls=[
     ModuleDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(a)
+        name="a"
       )
     )
   ],
   submodules=[
     ModuleDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(a)
+        name="a"
       )
     )
   ]

@@ -26,21 +26,17 @@ Serialize Type::serialize() const {
   }
   case TypeKind::ConstInteger: {
     const ConstIntegerType &const_integer = static_cast<const ConstIntegerType &>(*this);
-    String value;
+    String value("Const[");
     const_integer.value.to_string(value);
-    Serialize result;
-    result.set_object_name("ConstInteger");
-    result.add_object_field("value", Serialize::literal(move(value)));
-    return result;
+    value.append("]");
+    return Serialize::literal(move(value));
   }
   case TypeKind::ConstRational: {
     const ConstRationalType &const_rational = static_cast<const ConstRationalType &>(*this);
-    String value;
+    String value("Const[");
     const_rational.value.to_fraction_string(value);
-    Serialize result;
-    result.set_object_name("ConstRational");
-    result.add_object_field("value", Serialize::literal(move(value)));
-    return result;
+    value.append("]");
+    return Serialize::literal(move(value));
   }
   default:
     throw RuntimeError("not implemented");

@@ -3,10 +3,10 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(c)
+        name="c"
       ),
       expr=CharLiteralNode(
-        lit='4'
+        lit='\U00000034'
       )
     )
   ]

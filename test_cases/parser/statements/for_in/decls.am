@@ -11,7 +11,7 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(z)
+        name="z"
       ),
       expr=BlockExprNode(
         stmts=[
@@ -19,36 +19,28 @@ ModuleNode(
             introductory_decls=[
               LetDeclNode(
                 target=IdentifierNode(
-                  token=IDENTIFIER(w)
+                  name="w"
                 ),
                 expr=BracketExprNode(
                   exprs=[
-                    NumberLiteralNode(
-                      lit=NUMBER(1)
-                    ),
-                    NumberLiteralNode(
-                      lit=NUMBER(2)
-                    ),
-                    NumberLiteralNode(
-                      lit=NUMBER(3)
-                    ),
-                    NumberLiteralNode(
-                      lit=NUMBER(4)
-                    )
+                    NumberLiteralNode(value=1),
+                    NumberLiteralNode(value=2),
+                    NumberLiteralNode(value=3),
+                    NumberLiteralNode(value=4)
                   ]
                 )
               ),
               ConstDeclNode(
                 target=IdentifierNode(
-                  token=IDENTIFIER(y)
+                  name="y"
                 ),
                 expr=FunctionCallExprNode(
                   callee=FieldAccessExprNode(
                     object=IdentifierNode(
-                      token=IDENTIFIER(w)
+                      name="w"
                     ),
                     field=IdentifierNode(
-                      token=IDENTIFIER_NO_W(map)
+                      name="map"
                     )
                   ),
                   args=[
@@ -56,16 +48,14 @@ ModuleNode(
                       expr=LambdaExprNode(
                         parameters=[
                           IdentifierNode(
-                            token=IDENTIFIER_NO_W(x)
+                            name="x"
                           )
                         ],
                         body=MultiplyExprNode(
                           left=IdentifierNode(
-                            token=IDENTIFIER(x)
+                            name="x"
                           ),
-                          right=NumberLiteralNode(
-                            lit=NUMBER(2)
-                          )
+                          right=NumberLiteralNode(value=2)
                         )
                       )
                     )
@@ -76,17 +66,17 @@ ModuleNode(
             vars=[
               ForInVariableNode(
                 name=IdentifierNode(
-                  token=IDENTIFIER(x)
+                  name="x"
                 )
               )
             ],
             iterable=IdentifierNode(
-              token=IDENTIFIER(y)
+              name="y"
             ),
             body=ExprStmtNode(
               expr=FunctionCallExprNode(
                 callee=IdentifierNode(
-                  token=IDENTIFIER(a)
+                  name="a"
                 )
               )
             )

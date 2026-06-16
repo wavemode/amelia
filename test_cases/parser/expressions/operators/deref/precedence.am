@@ -5,17 +5,17 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x)
+        name="x"
       ),
       expr=MultiplyExprNode(
         left=DerefExprNode(
           is_const=false,
           expr=IdentifierNode(
-            token=IDENTIFIER_NO_W(y)
+            name="y"
           )
         ),
         right=IdentifierNode(
-          token=IDENTIFIER_NO_W(z)
+          name="z"
         )
       )
     )

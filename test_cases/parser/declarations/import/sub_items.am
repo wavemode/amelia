@@ -6,47 +6,47 @@ ModuleNode(
     ImportDeclNode(
       path=ScopeResolutionExprNode(
         scope=IdentifierNode(
-          token=IDENTIFIER(a)
+          name="a"
         ),
         name=IdentifierNode(
-          token=IDENTIFIER_NO_W(b)
+          name="b"
         )
       ),
       items=[
         ImportItemNode(
           name=IdentifierNode(
-            token=IDENTIFIER(c)
+            name="c"
           ),
           sub_items=[
             ImportItemNode(
               name=IdentifierNode(
-                token=IDENTIFIER(d)
+                name="d"
               ),
               sub_items=[
                 ImportItemNode(
                   name=IdentifierNode(
-                    token=IDENTIFIER(e)
+                    name="e"
                   ),
                   sub_items=[
                     ImportItemWildcardNode()
                   ],
                   alias=IdentifierNode(
-                    token=IDENTIFIER(f)
+                    name="f"
                   )
                 )
               ],
               alias=IdentifierNode(
-                token=IDENTIFIER(g)
+                name="g"
               )
             )
           ],
           alias=IdentifierNode(
-            token=IDENTIFIER(h)
+            name="h"
           )
         )
       ],
       alias=IdentifierNode(
-        token=IDENTIFIER(i)
+        name="i"
       )
     )
   ],
@@ -54,47 +54,47 @@ ModuleNode(
     ImportDeclNode(
       path=ScopeResolutionExprNode(
         scope=IdentifierNode(
-          token=IDENTIFIER(a)
+          name="a"
         ),
         name=IdentifierNode(
-          token=IDENTIFIER_NO_W(b)
+          name="b"
         )
       ),
       items=[
         ImportItemNode(
           name=IdentifierNode(
-            token=IDENTIFIER(c)
+            name="c"
           ),
           sub_items=[
             ImportItemNode(
               name=IdentifierNode(
-                token=IDENTIFIER(d)
+                name="d"
               ),
               sub_items=[
                 ImportItemNode(
                   name=IdentifierNode(
-                    token=IDENTIFIER(e)
+                    name="e"
                   ),
                   sub_items=[
                     ImportItemWildcardNode()
                   ],
                   alias=IdentifierNode(
-                    token=IDENTIFIER(f)
+                    name="f"
                   )
                 )
               ],
               alias=IdentifierNode(
-                token=IDENTIFIER(g)
+                name="g"
               )
             )
           ],
           alias=IdentifierNode(
-            token=IDENTIFIER(h)
+            name="h"
           )
         )
       ],
       alias=IdentifierNode(
-        token=IDENTIFIER(i)
+        name="i"
       )
     )
   ]

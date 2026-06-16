@@ -5,10 +5,10 @@ ModuleNode(
   decls=[
     TypeDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(A)
+        name="A"
       ),
       type_expr=PrimitiveTypeNode(
-        token=KEYWORD_INT(int)
+        name="int"
       )
     )
   ]

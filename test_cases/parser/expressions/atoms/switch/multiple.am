@@ -8,39 +8,29 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x)
+        name="x"
       ),
       expr=SwitchExprNode(
         expr=IdentifierNode(
-          token=IDENTIFIER_NO_W(y)
+          name="y"
         ),
         clauses=[
           CaseClauseNode(
             header=CaseClauseHeaderNode(
               exprs=[
-                NumberLiteralNode(
-                  lit=NUMBER(1)
-                )
+                NumberLiteralNode(value=1)
               ]
             ),
-            body=NumberLiteralNode(
-              lit=NUMBER(2)
-            )
+            body=NumberLiteralNode(value=2)
           ),
           CaseClauseNode(
             header=CaseClauseHeaderNode(
               exprs=[
-                NumberLiteralNode(
-                  lit=NUMBER(3)
-                ),
-                NumberLiteralNode(
-                  lit=NUMBER(4)
-                )
+                NumberLiteralNode(value=3),
+                NumberLiteralNode(value=4)
               ]
             ),
-            body=NumberLiteralNode(
-              lit=NUMBER(5)
-            )
+            body=NumberLiteralNode(value=5)
           )
         ]
       )

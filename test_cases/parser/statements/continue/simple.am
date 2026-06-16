@@ -7,7 +7,7 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(z)
+        name="z"
       ),
       expr=BlockExprNode(
         stmts=[

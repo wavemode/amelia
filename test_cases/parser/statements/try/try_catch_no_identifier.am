@@ -7,24 +7,24 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(example)
+        name="example"
       ),
       expr=BlockExprNode(
         stmts=[
           TryStmtNode(
             try_block=PreIncrementStmtNode(
               target=IdentifierNode(
-                token=IDENTIFIER_NO_W(x)
+                name="x"
               )
             ),
             catch_clauses=[
               CatchClauseNode(
                 exc_type=IdentifierNode(
-                  token=IDENTIFIER_NO_W(z)
+                  name="z"
                 ),
                 body=PreIncrementStmtNode(
                   target=IdentifierNode(
-                    token=IDENTIFIER_NO_W(t)
+                    name="t"
                   )
                 )
               )

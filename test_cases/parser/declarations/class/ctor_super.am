@@ -13,12 +13,12 @@ ModuleNode(
   decls=[
     ClassDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(A)
+        name="A"
       ),
       base_class_list=BaseTypeListNode(
         base_classes=[
           IdentifierNode(
-            token=IDENTIFIER(B)
+            name="B"
           )
         ]
       ),
@@ -26,7 +26,7 @@ ModuleNode(
         decls=[
           ClassConstructorNode(
             name=IdentifierNode(
-              token=IDENTIFIER(A)
+              name="A"
             ),
             signature=FunctionSignatureNode(),
             body=FunctionBodyNode(
@@ -43,17 +43,17 @@ ModuleNode(
           ),
           ClassConstructorNode(
             name=IdentifierNode(
-              token=IDENTIFIER(A)
+              name="A"
             ),
             signature=FunctionSignatureNode(
               parameters=[
                 FunctionParameterNode(
                   variadic=false,
                   name=IdentifierNode(
-                    token=IDENTIFIER_NO_W(a)
+                    name="a"
                   ),
                   type=PrimitiveTypeNode(
-                    token=KEYWORD_INT(int)
+                    name="int"
                   )
                 )
               ]
@@ -67,7 +67,7 @@ ModuleNode(
                       indices=[
                         IndexNode(
                           value=IdentifierNode(
-                            token=IDENTIFIER_NO_W(B)
+                            name="B"
                           )
                         )
                       ]
@@ -75,7 +75,7 @@ ModuleNode(
                     args=[
                       FunctionArgumentNode(
                         expr=IdentifierNode(
-                          token=IDENTIFIER_NO_W(a)
+                          name="a"
                         )
                       )
                     ]

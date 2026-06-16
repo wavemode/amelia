@@ -6,14 +6,14 @@ ModuleNode(
     ImportDeclNode(
       path=ScopeResolutionExprNode(
         scope=IdentifierNode(
-          token=IDENTIFIER(a)
+          name="a"
         ),
         name=IdentifierNode(
-          token=IDENTIFIER_NO_W(b)
+          name="b"
         )
       ),
       alias=IdentifierNode(
-        token=IDENTIFIER(c)
+        name="c"
       )
     )
   ],
@@ -21,14 +21,14 @@ ModuleNode(
     ImportDeclNode(
       path=ScopeResolutionExprNode(
         scope=IdentifierNode(
-          token=IDENTIFIER(a)
+          name="a"
         ),
         name=IdentifierNode(
-          token=IDENTIFIER_NO_W(b)
+          name="b"
         )
       ),
       alias=IdentifierNode(
-        token=IDENTIFIER(c)
+        name="c"
       )
     )
   ]

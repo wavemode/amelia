@@ -5,19 +5,19 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x)
+        name="x"
       ),
       expr=FunctionCallExprNode(
         callee=IdentifierNode(
-          token=IDENTIFIER(y)
+          name="y"
         ),
         args=[
           FunctionArgumentNode(
             name=IdentifierNode(
-              token=QUOTED_IDENTIFIER_NO_W(`a`)
+              name="a"
             ),
             expr=IdentifierNode(
-              token=IDENTIFIER_NO_W(z)
+              name="z"
             )
           )
         ]

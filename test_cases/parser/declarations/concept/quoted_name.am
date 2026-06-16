@@ -5,7 +5,7 @@ ModuleNode(
   decls=[
     ConceptDeclNode(
       name=IdentifierNode(
-        token=QUOTED_IDENTIFIER(`A`)
+        name="A"
       ),
       body=ClassBodyNode()
     )

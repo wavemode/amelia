@@ -5,12 +5,12 @@ ModuleNode(
   decls=[
     ConceptDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(A)
+        name="A"
       ),
       base_concept_list=BaseTypeListNode(
         base_classes=[
           IdentifierNode(
-            token=IDENTIFIER(B)
+            name="B"
           )
         ]
       ),

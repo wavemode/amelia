@@ -5,12 +5,12 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(w)
+        name="w"
       ),
       expr=CopyExprNode(
         expr=CopyExprNode(
           expr=IdentifierNode(
-            token=IDENTIFIER(x)
+            name="x"
           )
         )
       )

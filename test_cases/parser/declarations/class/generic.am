@@ -5,14 +5,14 @@ ModuleNode(
   decls=[
     ClassDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(A)
+        name="A"
       ),
       generic_parameter_list=GenericParameterListNode(
         parameters=[
           GenericParameterNode(
             is_const=false,
             name=IdentifierNode(
-              token=IDENTIFIER_NO_W(T)
+              name="T"
             )
           )
         ]

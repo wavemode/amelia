@@ -5,7 +5,7 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(f)
+        name="f"
       ),
       expr=FunctionExprNode(
         signature=FunctionSignatureNode(
@@ -13,26 +13,22 @@ ModuleNode(
             FunctionParameterNode(
               variadic=false,
               name=IdentifierNode(
-                token=IDENTIFIER_NO_W(x)
+                name="x"
               ),
               type=PrimitiveTypeNode(
-                token=KEYWORD_INT(int)
+                name="int"
               ),
-              default_value=NumberLiteralNode(
-                lit=NUMBER(4)
-              )
+              default_value=NumberLiteralNode(value=4)
             ),
             FunctionParameterNode(
               variadic=false,
               name=IdentifierNode(
-                token=IDENTIFIER(y)
+                name="y"
               ),
               type=PrimitiveTypeNode(
-                token=KEYWORD_FLOAT(float)
+                name="float"
               ),
-              default_value=NumberLiteralNode(
-                lit=NUMBER(10.0)
-              )
+              default_value=NumberLiteralNode(value=10.0)
             )
           ]
         ),

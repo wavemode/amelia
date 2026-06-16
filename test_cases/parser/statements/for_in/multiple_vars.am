@@ -7,7 +7,7 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(z)
+        name="z"
       ),
       expr=BlockExprNode(
         stmts=[
@@ -15,22 +15,22 @@ ModuleNode(
             vars=[
               ForInVariableNode(
                 name=IdentifierNode(
-                  token=IDENTIFIER_NO_W(x)
+                  name="x"
                 )
               ),
               ForInVariableNode(
                 name=IdentifierNode(
-                  token=IDENTIFIER(y)
+                  name="y"
                 )
               )
             ],
             iterable=IdentifierNode(
-              token=IDENTIFIER(z)
+              name="z"
             ),
             body=ExprStmtNode(
               expr=FunctionCallExprNode(
                 callee=IdentifierNode(
-                  token=IDENTIFIER(w)
+                  name="w"
                 )
               )
             )

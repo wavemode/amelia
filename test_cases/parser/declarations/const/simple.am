@@ -5,7 +5,7 @@ ModuleNode(
   decls=[
     ConstDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x)
+        name="x"
       )
     )
   ]

@@ -5,21 +5,15 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(y)
+        name="y"
       ),
       type=TypeOfExprNode(
         expr=AddExprNode(
-          left=NumberLiteralNode(
-            lit=NUMBER(5)
-          ),
-          right=NumberLiteralNode(
-            lit=NUMBER(5)
-          )
+          left=NumberLiteralNode(value=5),
+          right=NumberLiteralNode(value=5)
         )
       ),
-      expr=NumberLiteralNode(
-        lit=NUMBER(10)
-      )
+      expr=NumberLiteralNode(value=10)
     )
   ]
 )

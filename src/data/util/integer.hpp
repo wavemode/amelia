@@ -40,6 +40,9 @@ public:
   double to_double() const;
 
   void to_string(AbstractString &output) const;
+  void to_binary_string(AbstractString &output) const;
+  void to_octal_string(AbstractString &output) const;
+  void to_hex_string(AbstractString &output) const;
 
   void negate();
 

@@ -7,7 +7,7 @@ ModuleNode(
   decls=[
     ConceptDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(A)
+        name="A"
       ),
       body=ClassBodyNode(
         decls=[
@@ -16,7 +16,7 @@ ModuleNode(
               operator_ident=OperatorIdentifierNode(
                 op=OperatorIdentAsNode(
                   type=PrimitiveTypeNode(
-                    token=KEYWORD_INT(int)
+                    name="int"
                   )
                 )
               ),

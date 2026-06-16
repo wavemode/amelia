@@ -7,18 +7,16 @@ ModuleNode(
   decls=[
     ModuleDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(a)
+        name="a"
       ),
       decls=[
         FunctionDeclNode(
           name=IdentifierNode(
-            token=IDENTIFIER(f)
+            name="f"
           ),
           signature=FunctionSignatureNode(),
           body=FunctionBodyNode(
-            expr=NumberLiteralNode(
-              lit=NUMBER(10)
-            ),
+            expr=NumberLiteralNode(value=10),
             is_default=false,
             is_deleted=false
           )
@@ -29,18 +27,16 @@ ModuleNode(
   submodules=[
     ModuleDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(a)
+        name="a"
       ),
       decls=[
         FunctionDeclNode(
           name=IdentifierNode(
-            token=IDENTIFIER(f)
+            name="f"
           ),
           signature=FunctionSignatureNode(),
           body=FunctionBodyNode(
-            expr=NumberLiteralNode(
-              lit=NUMBER(10)
-            ),
+            expr=NumberLiteralNode(value=10),
             is_default=false,
             is_deleted=false
           )

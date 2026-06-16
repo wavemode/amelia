@@ -10,61 +10,55 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(example)
+        name="example"
       ),
       expr=BlockExprNode(
         stmts=[
           SwitchStmtNode(
             expr=IdentifierNode(
-              token=IDENTIFIER_NO_W(y)
+              name="y"
             ),
             clauses=[
               CaseClauseNode(
                 header=CaseClauseHeaderNode(
                   exprs=[
-                    NumberLiteralNode(
-                      lit=NUMBER(1)
-                    )
+                    NumberLiteralNode(value=1)
                   ]
                 ),
                 body=PreIncrementStmtNode(
                   target=IdentifierNode(
-                    token=IDENTIFIER_NO_W(x)
+                    name="x"
                   )
                 )
               ),
               CaseClauseNode(
                 header=CaseClauseHeaderNode(
                   exprs=[
-                    NumberLiteralNode(
-                      lit=NUMBER(3)
-                    )
+                    NumberLiteralNode(value=3)
                   ],
                   when_clause=WhenClauseNode(
                     introductory_decls=[
                       LetDeclNode(
                         target=IdentifierNode(
-                          token=IDENTIFIER(z)
+                          name="z"
                         ),
-                        expr=NumberLiteralNode(
-                          lit=NUMBER(5)
-                        )
+                        expr=NumberLiteralNode(value=5)
                       ),
                       EmptyStmtNode()
                     ],
                     condition=EqualsExprNode(
                       left=IdentifierNode(
-                        token=IDENTIFIER(z)
+                        name="z"
                       ),
                       right=IdentifierNode(
-                        token=IDENTIFIER(y)
+                        name="y"
                       )
                     )
                   )
                 ),
                 body=PreIncrementStmtNode(
                   target=IdentifierNode(
-                    token=IDENTIFIER_NO_W(y)
+                    name="y"
                   )
                 )
               )

@@ -11,9 +11,7 @@ SemaResult(
             name="x",
             kind=Variable,
             visibility=Default,
-            type=ConstRational(
-              value=28/5
-            ),
+            type=Const[28/5],
             value=NumberLiteralExpression(
               lit=5.6
             )

@@ -11,7 +11,7 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(example)
+        name="example"
       ),
       expr=BlockExprNode(
         stmts=[
@@ -19,37 +19,31 @@ ModuleNode(
             introductory_decls=[
               LetDeclNode(
                 target=IdentifierNode(
-                  token=IDENTIFIER(w)
+                  name="w"
                 ),
-                expr=NumberLiteralNode(
-                  lit=NUMBER(10)
-                )
+                expr=NumberLiteralNode(value=10)
               ),
               ConstDeclNode(
                 target=IdentifierNode(
-                  token=IDENTIFIER(x)
+                  name="x"
                 ),
                 expr=AddExprNode(
                   left=IdentifierNode(
-                    token=IDENTIFIER(w)
+                    name="w"
                   ),
-                  right=NumberLiteralNode(
-                    lit=NUMBER(5)
-                  )
+                  right=NumberLiteralNode(value=5)
                 )
               )
             ],
             condition=GreaterExprNode(
               left=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
-              right=NumberLiteralNode(
-                lit=NUMBER(20)
-              )
+              right=NumberLiteralNode(value=20)
             ),
             body=ExprStmtNode(
               expr=IdentifierNode(
-                token=IDENTIFIER(z)
+                name="z"
               )
             )
           )

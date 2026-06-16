@@ -5,11 +5,11 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x)
+        name="x"
       ),
       expr=PositiveExprNode(
         expr=IdentifierNode(
-          token=IDENTIFIER_NO_W(y)
+          name="y"
         )
       )
     )

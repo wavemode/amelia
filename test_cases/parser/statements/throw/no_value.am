@@ -8,14 +8,14 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(example)
+        name="example"
       ),
       expr=BlockExprNode(
         stmts=[
           ThrowStmtNode(),
           ExprStmtNode(
             expr=IdentifierNode(
-              token=IDENTIFIER(x)
+              name="x"
             )
           )
         ]

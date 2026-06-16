@@ -9,31 +9,31 @@ ModuleNode(
   decls=[
     FunctionDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(f)
+        name="f"
       ),
       signature=FunctionSignatureNode(
         parameters=[
           FunctionParameterNode(
             variadic=false,
             name=IdentifierNode(
-              token=IDENTIFIER_NO_W(x)
+              name="x"
             ),
             type=PrimitiveTypeNode(
-              token=KEYWORD_INT(int)
+              name="int"
             )
           ),
           FunctionParameterNode(
             variadic=false,
             name=IdentifierNode(
-              token=IDENTIFIER(y)
+              name="y"
             ),
             type=PrimitiveTypeNode(
-              token=KEYWORD_FLOAT(float)
+              name="float"
             )
           )
         ],
         return_type=PrimitiveTypeNode(
-          token=KEYWORD_DOUBLE(double)
+          name="double"
         )
       ),
       body=FunctionBodyNode(
@@ -41,7 +41,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FunctionCallExprNode(
               callee=IdentifierNode(
-                token=IDENTIFIER(print)
+                name="print"
               ),
               args=[
                 FunctionArgumentNode(
@@ -55,7 +55,7 @@ ModuleNode(
           ExprStmtNode(
             expr=FunctionCallExprNode(
               callee=IdentifierNode(
-                token=IDENTIFIER(print)
+                name="print"
               ),
               args=[
                 FunctionArgumentNode(
@@ -67,9 +67,7 @@ ModuleNode(
             )
           ),
           ReturnStmtNode(
-            expr=NumberLiteralNode(
-              lit=NUMBER(10.0)
-            )
+            expr=NumberLiteralNode(value=10.0)
           )
         ],
         is_default=false,

@@ -29,10 +29,7 @@ void collect_imports(Module &module_obj) {
     while (true) {
       const Node &import_path_node = module_obj.ast.get_node(import_path_node_id);
       if (import_path_node.type() == NodeType::IdentifierNode) {
-        auto token_id = import_path_node.as_IdentifierNode().token;
-        const auto &token = module_obj.tokens.get_token(token_id);
-        Text name_part = identifier_text(token);
-        result.push_back(name_part);
+        result.push_back(import_path_node.as_IdentifierNode().name);
         break;
       }
 
@@ -46,10 +43,7 @@ void collect_imports(Module &module_obj) {
         );
       }
 
-      auto token_id = scope_resolution_name.as_IdentifierNode().token;
-      const auto &token = module_obj.tokens.get_token(token_id);
-      Text name_part = identifier_text(token);
-      result.push_back(name_part);
+      result.push_back(scope_resolution_name.as_IdentifierNode().name);
       result.push_back("::");
       import_path_node_id = scope_resolution.scope;
     }
@@ -67,9 +61,9 @@ void collect_imports(Module &module_obj) {
 void collect_submodules(Module &module_obj, Text base_module, const List<NodeId> &submodules) {
   for (NodeId submodule_node_id : submodules) {
     const auto &module_decl = module_obj.ast.get_node(submodule_node_id).as_ModuleDeclNode();
-    const auto &module_name = module_obj.ast.get_node(module_decl.name).as_IdentifierNode();
-    const Token &module_name_token = module_obj.tokens.get_token(module_name.token);
-    Text module_name_text = identifier_text(module_name_token);
+    const auto &module_name = module_obj.ast.get_node(module_decl.name);
+    const Token &module_name_token = module_obj.tokens.get_token(module_name.start_token());
+    Text module_name_text = module_name.as_IdentifierNode().name;
 
     String result;
     result.append(base_module);

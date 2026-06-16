@@ -13,7 +13,7 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(example)
+        name="example"
       ),
       expr=BlockExprNode(
         stmts=[
@@ -22,25 +22,23 @@ ModuleNode(
               stmts=[
                 LetDeclNode(
                   target=IdentifierNode(
-                    token=IDENTIFIER(x)
+                    name="x"
                   ),
-                  expr=NumberLiteralNode(
-                    lit=NUMBER(10)
-                  )
+                  expr=NumberLiteralNode(value=10)
                 )
               ]
             ),
             catch_clauses=[
               CatchClauseNode(
                 exc_type=IdentifierNode(
-                  token=IDENTIFIER_NO_W(e)
+                  name="e"
                 ),
                 body=BlockStmtNode(
                   stmts=[
                     ExprStmtNode(
                       expr=FunctionCallExprNode(
                         callee=IdentifierNode(
-                          token=IDENTIFIER(println)
+                          name="println"
                         ),
                         args=[
                           FunctionArgumentNode(
@@ -60,12 +58,12 @@ ModuleNode(
                 ExprStmtNode(
                   expr=FunctionCallExprNode(
                     callee=IdentifierNode(
-                      token=IDENTIFIER(println)
+                      name="println"
                     ),
                     args=[
                       FunctionArgumentNode(
                         expr=IdentifierNode(
-                          token=IDENTIFIER_NO_W(x)
+                          name="x"
                         )
                       )
                     ]

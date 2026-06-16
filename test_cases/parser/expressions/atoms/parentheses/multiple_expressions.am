@@ -9,19 +9,15 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x)
+        name="x"
       ),
       expr=ParenthesizedExprNode(
         exprs=[
-          NumberLiteralNode(
-            lit=NUMBER(5)
-          ),
+          NumberLiteralNode(value=5),
           StringLiteralNode(
             lit="hello"
           ),
-          NumberLiteralNode(
-            lit=NUMBER(6.7)
-          )
+          NumberLiteralNode(value=6.7)
         ]
       )
     )

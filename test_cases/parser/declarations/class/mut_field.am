@@ -8,26 +8,26 @@ ModuleNode(
   decls=[
     ClassDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(A)
+        name="A"
       ),
       body=ClassBodyNode(
         decls=[
           MutDeclNode(
             decl=ClassFieldNode(
               name=IdentifierNode(
-                token=IDENTIFIER(a)
+                name="a"
               ),
               type=PrimitiveTypeNode(
-                token=KEYWORD_INT(int)
+                name="int"
               )
             )
           ),
           ClassFieldNode(
             name=IdentifierNode(
-              token=IDENTIFIER(b)
+              name="b"
             ),
             type=IdentifierNode(
-              token=IDENTIFIER(String)
+              name="String"
             )
           )
         ]

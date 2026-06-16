@@ -8,18 +8,18 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(example)
+        name="example"
       ),
       expr=BlockExprNode(
         stmts=[
           PostIncrementStmtNode(
             target=IdentifierNode(
-              token=IDENTIFIER(x)
+              name="x"
             )
           ),
           PostIncrementStmtNode(
             target=IdentifierNode(
-              token=IDENTIFIER(y)
+              name="y"
             )
           )
         ]

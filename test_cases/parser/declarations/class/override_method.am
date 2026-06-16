@@ -10,14 +10,14 @@ ModuleNode(
   decls=[
     ClassDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(A)
+        name="A"
       ),
       body=ClassBodyNode(
         decls=[
           OverrideDeclNode(
             decl=FunctionDeclNode(
               name=IdentifierNode(
-                token=IDENTIFIER(say_age)
+                name="say_age"
               ),
               signature=FunctionSignatureNode(),
               body=FunctionBodyNode(
@@ -25,14 +25,14 @@ ModuleNode(
                   ExprStmtNode(
                     expr=FunctionCallExprNode(
                       callee=IdentifierNode(
-                        token=IDENTIFIER(println)
+                        name="println"
                       ),
                       args=[
                         FunctionArgumentNode(
                           expr=FieldAccessExprNode(
                             object=ThisLiteralNode(),
                             field=IdentifierNode(
-                              token=IDENTIFIER_NO_W(age)
+                              name="age"
                             )
                           )
                         )
@@ -47,10 +47,10 @@ ModuleNode(
           ),
           ClassFieldNode(
             name=IdentifierNode(
-              token=IDENTIFIER(age)
+              name="age"
             ),
             type=PrimitiveTypeNode(
-              token=KEYWORD_INT(int)
+              name="int"
             )
           )
         ]

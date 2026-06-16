@@ -5,12 +5,10 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x)
+        name="x"
       ),
       type=AutoTypeNode(),
-      expr=NumberLiteralNode(
-        lit=NUMBER(10)
-      )
+      expr=NumberLiteralNode(value=10)
     )
   ]
 )

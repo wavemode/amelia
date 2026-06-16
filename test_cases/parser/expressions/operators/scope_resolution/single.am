@@ -5,14 +5,14 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x)
+        name="x"
       ),
       expr=ScopeResolutionExprNode(
         scope=IdentifierNode(
-          token=IDENTIFIER(y)
+          name="y"
         ),
         name=IdentifierNode(
-          token=IDENTIFIER_NO_W(z)
+          name="z"
         )
       )
     )

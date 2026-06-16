@@ -10,26 +10,24 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(example)
+        name="example"
       ),
       expr=BlockExprNode(
         stmts=[
           SwitchStmtNode(
             expr=IdentifierNode(
-              token=IDENTIFIER_NO_W(y)
+              name="y"
             ),
             clauses=[
               CaseClauseNode(
                 header=CaseClauseHeaderNode(
                   exprs=[
-                    NumberLiteralNode(
-                      lit=NUMBER(1)
-                    )
+                    NumberLiteralNode(value=1)
                   ]
                 ),
                 body=PreIncrementStmtNode(
                   target=IdentifierNode(
-                    token=IDENTIFIER_NO_W(y)
+                    name="y"
                   )
                 )
               ),
@@ -39,26 +37,22 @@ ModuleNode(
                     condition=AndExprNode(
                       left=LessExprNode(
                         left=IdentifierNode(
-                          token=IDENTIFIER_NO_W(y)
+                          name="y"
                         ),
-                        right=NumberLiteralNode(
-                          lit=NUMBER(10)
-                        )
+                        right=NumberLiteralNode(value=10)
                       ),
                       right=GreaterExprNode(
                         left=IdentifierNode(
-                          token=IDENTIFIER(y)
+                          name="y"
                         ),
-                        right=NumberLiteralNode(
-                          lit=NUMBER(3)
-                        )
+                        right=NumberLiteralNode(value=3)
                       )
                     )
                   )
                 ),
                 body=PreDecrementStmtNode(
                   target=IdentifierNode(
-                    token=IDENTIFIER_NO_W(y)
+                    name="y"
                   )
                 )
               )

@@ -210,7 +210,7 @@ void run_parser_test_case(AbstractString &output, CompilerTestCase test_case) {
   Lexer::tokenize(lexer_result, LexerContext{test_case.filename}, test_case.input);
   ParserResult parser_result;
   NodeId root_node_id = Parser::parse_module(parser_result, lexer_result);
-  NodeFormatter node_formatter(parser_result, lexer_result);
+  NodeFormatter node_formatter(parser_result);
   node_formatter.format_node(output, root_node_id);
   output.append("\n");
 }
@@ -235,7 +235,7 @@ void run_sema_test_case(
   SemaResult sema_result;
   ModuleLoaderContext ctx{Set({module_path})};
   load_module(file_loader, sema_result, module_name, ctx);
-  Analyzer::typecheck(sema_result);
+  Analyzer::analyze(sema_result);
 
   sema_result.serialize().to_string(output);
   output.append("\n");

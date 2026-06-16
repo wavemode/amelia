@@ -6,6 +6,8 @@
 
 #include "data/lexer/token_type.hpp"
 #include "data/source/declaration_visibility.hpp"
+#include "data/source/number_literal.hpp"
+#include "data/util/integer.hpp"
 
 namespace amelia {
 
@@ -18,19 +20,19 @@ struct ModuleNode {
 struct EmptyStmtNode {};
 
 struct IdentifierNode {
-  TokenId token;
+  String name;
 };
 
 struct StringLiteralNode {
-  TokenId lit;
+  String contents;
 };
 
 struct CharLiteralNode {
-  TokenId lit;
+  uint32_t code_point;
 };
 
 struct NumberLiteralNode {
-  TokenId lit;
+  NumberLiteral value;
 };
 
 struct OperatorIdentAddNode {};
@@ -430,7 +432,7 @@ struct FieldAccessExprNode {
 
 struct NumericFieldAccessExprNode {
   NodeId object;
-  TokenId lit;
+  Integer field;
 };
 
 struct IndexingExprNode {
@@ -719,7 +721,7 @@ struct AsyncExprNode {
 };
 
 struct PrimitiveTypeNode {
-  TokenId token;
+  String name;
 };
 
 struct AutoTypeNode {};

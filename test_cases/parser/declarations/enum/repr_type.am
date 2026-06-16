@@ -7,28 +7,26 @@ ModuleNode(
   decls=[
     EnumDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(A)
+        name="A"
       ),
       repr_type=PrimitiveTypeNode(
-        token=KEYWORD_UINT(uint)
+        name="uint"
       ),
       variants=[
         EnumVariantNode(
           name=IdentifierNode(
-            token=IDENTIFIER(X)
+            name="X"
           ),
-          value=NumberLiteralNode(
-            lit=NUMBER(0)
+          value=NumberLiteralNode(value=0)
+        ),
+        EnumVariantNode(
+          name=IdentifierNode(
+            name="Y"
           )
         ),
         EnumVariantNode(
           name=IdentifierNode(
-            token=IDENTIFIER(Y)
-          )
-        ),
-        EnumVariantNode(
-          name=IdentifierNode(
-            token=IDENTIFIER(Z)
+            name="Z"
           )
         )
       ]

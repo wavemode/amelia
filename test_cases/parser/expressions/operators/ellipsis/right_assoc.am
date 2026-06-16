@@ -5,12 +5,12 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x)
+        name="x"
       ),
       expr=EllipsisExprNode(
         expr=EllipsisExprNode(
           expr=IdentifierNode(
-            token=IDENTIFIER_NO_W(y)
+            name="y"
           )
         )
       )

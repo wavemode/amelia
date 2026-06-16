@@ -5,7 +5,7 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x)
+        name="x"
       ),
       expr=StringLiteralNode(
         lit="hello, world!"

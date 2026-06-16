@@ -6,10 +6,10 @@ ModuleNode(
     ImportDeclNode(
       path=ScopeResolutionExprNode(
         scope=IdentifierNode(
-          token=IDENTIFIER(a)
+          name="a"
         ),
         name=IdentifierNode(
-          token=IDENTIFIER_NO_W(b)
+          name="b"
         )
       ),
       items=[
@@ -21,10 +21,10 @@ ModuleNode(
     ImportDeclNode(
       path=ScopeResolutionExprNode(
         scope=IdentifierNode(
-          token=IDENTIFIER(a)
+          name="a"
         ),
         name=IdentifierNode(
-          token=IDENTIFIER_NO_W(b)
+          name="b"
         )
       ),
       items=[

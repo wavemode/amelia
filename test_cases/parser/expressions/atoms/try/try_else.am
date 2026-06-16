@@ -5,27 +5,27 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(w)
+        name="w"
       ),
       expr=TryExprNode(
         try_block=IdentifierNode(
-          token=IDENTIFIER(x)
+          name="x"
         ),
         catch_clauses=[
           CatchClauseNode(
             exc_type=IdentifierNode(
-              token=IDENTIFIER(z)
+              name="z"
             ),
             var=IdentifierNode(
-              token=IDENTIFIER_NO_W(y)
+              name="y"
             ),
             body=IdentifierNode(
-              token=IDENTIFIER(t)
+              name="t"
             )
           )
         ],
         else_branch=IdentifierNode(
-          token=IDENTIFIER(v)
+          name="v"
         )
       )
     )

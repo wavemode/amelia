@@ -5,16 +5,16 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(w)
+        name="w"
       ),
       expr=NumericFieldAccessExprNode(
         object=NumericFieldAccessExprNode(
           object=IdentifierNode(
-            token=IDENTIFIER(x)
+            name="x"
           ),
-          lit=NUMBER_FIELD(.0)
+          field=4
         ),
-        lit=NUMBER_FIELD(.1)
+        field=5
       )
     )
   ]

@@ -9,19 +9,19 @@ ModuleNode(
     SealedDeclNode(
       decl=ClassDeclNode(
         name=IdentifierNode(
-          token=IDENTIFIER(A)
+          name="A"
         )
       )
     ),
     RecordDeclNode(
       decl=ClassDeclNode(
         name=IdentifierNode(
-          token=IDENTIFIER(B)
+          name="B"
         ),
         base_class_list=BaseTypeListNode(
           base_classes=[
             IdentifierNode(
-              token=IDENTIFIER(A)
+              name="A"
             )
           ]
         ),
@@ -29,10 +29,10 @@ ModuleNode(
           decls=[
             ClassHeaderFieldDeclNode(
               name=IdentifierNode(
-                token=IDENTIFIER_NO_W(b)
+                name="b"
               ),
               type=PrimitiveTypeNode(
-                token=KEYWORD_INT(int)
+                name="int"
               )
             )
           ]
@@ -42,12 +42,12 @@ ModuleNode(
     RecordDeclNode(
       decl=ClassDeclNode(
         name=IdentifierNode(
-          token=IDENTIFIER(C)
+          name="C"
         ),
         base_class_list=BaseTypeListNode(
           base_classes=[
             IdentifierNode(
-              token=IDENTIFIER(A)
+              name="A"
             )
           ]
         ),
@@ -55,10 +55,10 @@ ModuleNode(
           decls=[
             ClassHeaderFieldDeclNode(
               name=IdentifierNode(
-                token=IDENTIFIER_NO_W(c)
+                name="c"
               ),
               type=PrimitiveTypeNode(
-                token=KEYWORD_FLOAT(float)
+                name="float"
               )
             )
           ]
@@ -68,12 +68,12 @@ ModuleNode(
     RecordDeclNode(
       decl=ClassDeclNode(
         name=IdentifierNode(
-          token=IDENTIFIER(D)
+          name="D"
         ),
         base_class_list=BaseTypeListNode(
           base_classes=[
             IdentifierNode(
-              token=IDENTIFIER(A)
+              name="A"
             )
           ]
         ),
@@ -81,10 +81,10 @@ ModuleNode(
           decls=[
             ClassHeaderFieldDeclNode(
               name=IdentifierNode(
-                token=IDENTIFIER_NO_W(d)
+                name="d"
               ),
               type=PrimitiveTypeNode(
-                token=KEYWORD_DOUBLE(double)
+                name="double"
               )
             )
           ]

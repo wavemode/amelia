@@ -7,14 +7,14 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(example)
+        name="example"
       ),
       expr=BlockExprNode(
         stmts=[
           ReturnStmtNode(
             expr=FunctionCallExprNode(
               callee=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               )
             )
           )

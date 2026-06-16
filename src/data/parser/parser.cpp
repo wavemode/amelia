@@ -1,6 +1,7 @@
 #include "parser.hpp"
 #include "prelude.hpp"
 
+#include "data/lexer/lexer.hpp"
 #include "data/lexer/lexer_result.hpp"
 #include "data/lexer/token_formatter.hpp"
 #include "data/parser/parser_error.hpp"
@@ -24,6 +25,7 @@ struct TokenWithId {
   TokenId id;
   TokenType type;
   Location loc;
+  Text contents;
 };
 
 class ParserState {
@@ -1868,7 +1870,9 @@ public:
 
   NodeId parse_primitive_type() {
     auto type_token = next();
-    return m_output.add_node(type_token.id, m_token_index, PrimitiveTypeNode{type_token.id});
+    return m_output.add_node(
+        type_token.id, m_token_index, PrimitiveTypeNode{String(type_token.contents)}
+    );
   }
 
   NodeId parse_default_literal() {
@@ -2296,17 +2300,23 @@ public:
 
   NodeId parse_string_literal() {
     auto token = next();
-    return m_output.add_node(token.id, m_token_index, StringLiteralNode{token.id});
+    String contents;
+    Lexer::read_string_literal(contents, token.contents);
+    return m_output.add_node(token.id, m_token_index, StringLiteralNode{move(contents)});
   }
 
   NodeId parse_char_literal() {
     auto token = next();
-    return m_output.add_node(token.id, m_token_index, CharLiteralNode{token.id});
+    return m_output.add_node(
+        token.id, m_token_index, CharLiteralNode{Lexer::read_char_literal(token.contents)}
+    );
   }
 
   NodeId parse_number_literal() {
     auto token = next();
-    return m_output.add_node(token.id, m_token_index, NumberLiteralNode{token.id});
+    return m_output.add_node(
+        token.id, m_token_index, NumberLiteralNode{Lexer::read_number_literal(token.contents)}
+    );
   }
 
   NodeId expect_identifier(Text error_message) {
@@ -2377,7 +2387,11 @@ public:
 
   NodeId parse_single_identifier() {
     auto ident = next();
-    return m_output.add_node(ident.id, m_token_index, IdentifierNode{ident.id});
+    return m_output.add_node(
+        ident.id,
+        m_token_index,
+        IdentifierNode{String(identifier_text(m_input.get_token(ident.id)))}
+    );
   }
 
   NodeId parse_function_call_argument() {
@@ -2433,7 +2447,7 @@ private:
       throw RuntimeError("Attempting to read past end of token stream");
     }
     auto token = m_input.get_token(m_token_index);
-    TokenWithId result{m_token_index, token.type, token.location};
+    TokenWithId result{m_token_index, token.type, token.location, token.contents};
     ++m_token_index;
     return result;
   }
@@ -2443,7 +2457,7 @@ private:
       throw RuntimeError("Attempting to peek past end of token stream");
     }
     auto token = m_input.get_token(m_token_index + n);
-    return TokenWithId{m_token_index + n, token.type, token.location};
+    return TokenWithId{m_token_index + n, token.type, token.location, token.contents};
   }
 
   [[noreturn]] void throw_parser_error_at_current_location(String message) const {

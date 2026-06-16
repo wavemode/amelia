@@ -5,26 +5,26 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x)
+        name="x"
       ),
       expr=WithExprNode(
         args=[
           FunctionArgumentNode(
             name=IdentifierNode(
-              token=IDENTIFIER_NO_W(a)
+              name="a"
             ),
             expr=IdentifierNode(
-              token=IDENTIFIER(b)
+              name="b"
             )
           ),
           FunctionArgumentNode(
             expr=IdentifierNode(
-              token=IDENTIFIER(c)
+              name="c"
             )
           )
         ],
         body=IdentifierNode(
-          token=IDENTIFIER(d)
+          name="d"
         )
       )
     )

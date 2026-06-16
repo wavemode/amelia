@@ -9,36 +9,34 @@ ModuleNode(
   decls=[
     UnionDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(A)
+        name="A"
       ),
       body=ClassBodyNode(
         decls=[
           ClassFieldNode(
             name=IdentifierNode(
-              token=IDENTIFIER(a)
+              name="a"
             ),
             type=PrimitiveTypeNode(
-              token=KEYWORD_INT(int)
+              name="int"
             )
           ),
           ClassFieldNode(
             name=IdentifierNode(
-              token=IDENTIFIER(b)
+              name="b"
             ),
             type=PrimitiveTypeNode(
-              token=KEYWORD_FLOAT(float)
+              name="float"
             )
           ),
           ClassFieldNode(
             name=IdentifierNode(
-              token=IDENTIFIER(c)
+              name="c"
             ),
             type=PrimitiveTypeNode(
-              token=KEYWORD_DOUBLE(double)
+              name="double"
             ),
-            initializer=NumberLiteralNode(
-              lit=NUMBER(5.4)
-            )
+            initializer=NumberLiteralNode(value=5.4)
           )
         ]
       )

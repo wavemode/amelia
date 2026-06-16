@@ -244,6 +244,59 @@ void Integer::to_string(AbstractString &output) const {
   output.append(Text::from(static_cast<cpp_int *>(m_value)->str().c_str()));
 }
 
+void Integer::to_binary_string(AbstractString &output) const {
+  Integer value = *this;
+  if (value < 0) {
+    value.negate();
+    output.append('-');
+  }
+  List<char> digits;
+  do {
+    digits.push_back((value % 2).to_int8() + '0');
+    value /= 2;
+  } while (value > 0);
+  for (size_t i = digits.size(); i > 0; --i) {
+    output.append(digits[i - 1]);
+  }
+}
+
+void Integer::to_octal_string(AbstractString &output) const {
+  Integer value = *this;
+  if (value < 0) {
+    value.negate();
+    output.append('-');
+  }
+  List<char> digits;
+  do {
+    digits.push_back((value % 8).to_int8() + '0');
+    value /= 8;
+  } while (value > 0);
+  for (size_t i = digits.size(); i > 0; --i) {
+    output.append(digits[i - 1]);
+  }
+}
+
+void Integer::to_hex_string(AbstractString &output) const {
+  Integer value = *this;
+  if (value < 0) {
+    value.negate();
+    output.append('-');
+  }
+  List<char> digits;
+  do {
+    int8_t digit = (value % 16).to_int8();
+    if (digit < 10) {
+      digits.push_back(digit + '0');
+    } else {
+      digits.push_back(digit - 10 + 'A');
+    }
+    value /= 16;
+  } while (value > 0);
+  for (size_t i = digits.size(); i > 0; --i) {
+    output.append(digits[i - 1]);
+  }
+}
+
 void Integer::negate() {
   *this = -*this;
 }

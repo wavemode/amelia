@@ -5,7 +5,7 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(f)
+        name="f"
       ),
       expr=FunctionExprNode(
         signature=FunctionSignatureNode(),

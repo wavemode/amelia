@@ -5,19 +5,19 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(w)
+        name="w"
       ),
       expr=FieldAccessExprNode(
         object=FieldAccessExprNode(
           object=IdentifierNode(
-            token=IDENTIFIER(x)
+            name="x"
           ),
           field=IdentifierNode(
-            token=IDENTIFIER_NO_W(y)
+            name="y"
           )
         ),
         field=IdentifierNode(
-          token=IDENTIFIER_NO_W(z)
+          name="z"
         )
       )
     )

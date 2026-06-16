@@ -6,18 +6,18 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x)
+        name="x"
       ),
       expr=IdentifierNode(
-        token=IDENTIFIER(y)
+        name="y"
       )
     ),
     ConstDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(a)
+        name="a"
       ),
       expr=IdentifierNode(
-        token=IDENTIFIER(b)
+        name="b"
       )
     )
   ]

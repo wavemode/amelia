@@ -7,14 +7,14 @@ ModuleNode(
   decls=[
     ConceptDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(A)
+        name="A"
       ),
       body=ClassBodyNode(
         decls=[
           ClassMoveDeclNode(
             decl=FunctionDeclNode(
               name=IdentifierNode(
-                token=IDENTIFIER(say_age)
+                name="say_age"
               ),
               signature=FunctionSignatureNode()
             )

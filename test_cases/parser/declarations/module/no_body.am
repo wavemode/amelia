@@ -5,7 +5,7 @@ ModuleNode(
   decls=[
     ModuleDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(a)
+        name="a"
       )
     )
   ]

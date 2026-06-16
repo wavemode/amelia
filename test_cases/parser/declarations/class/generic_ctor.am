@@ -7,13 +7,13 @@ ModuleNode(
   decls=[
     ClassDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(A)
+        name="A"
       ),
       body=ClassBodyNode(
         decls=[
           ClassConstructorNode(
             name=IdentifierNode(
-              token=IDENTIFIER(A)
+              name="A"
             ),
             signature=FunctionSignatureNode(
               generic_parameter_list=GenericParameterListNode(
@@ -21,7 +21,7 @@ ModuleNode(
                   GenericParameterNode(
                     is_const=false,
                     name=IdentifierNode(
-                      token=IDENTIFIER_NO_W(T)
+                      name="T"
                     )
                   )
                 ]
@@ -30,10 +30,10 @@ ModuleNode(
                 FunctionParameterNode(
                   variadic=false,
                   name=IdentifierNode(
-                    token=IDENTIFIER_NO_W(o)
+                    name="o"
                   ),
                   type=IdentifierNode(
-                    token=IDENTIFIER(T)
+                    name="T"
                   )
                 )
               ]

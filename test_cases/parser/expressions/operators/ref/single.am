@@ -5,13 +5,13 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x)
+        name="x"
       ),
       expr=RefExprNode(
         is_const=false,
         is_move=false,
         expr=IdentifierNode(
-          token=IDENTIFIER(y)
+          name="y"
         )
       )
     )

@@ -1,5 +1,3 @@
-#include <cstdint>
-
 #include "lexer.hpp"
 #include "prelude.hpp"
 
@@ -1395,64 +1393,6 @@ void Lexer::read_string_literal(AbstractString &out, Text input, bool escape) {
   }
 }
 
-void Lexer::read_char_literal(AbstractString &out, Text input, bool escape) {
-  LexerResult result;
-  LexerState state(result, LexerContext{"(anon)"}, input);
-  auto start_location = state.current_location();
-  if (input.size() == 0) {
-    throw RuntimeError("Expected character literal, but got empty input");
-  }
-  if (input.begin().peek() != '\'') {
-    throw RuntimeError("Expected character literal to start with single quote");
-  }
-  uint32_t cp = state.read_char_literal(start_location);
-  if (escape) {
-    switch (cp) {
-    case '\a':
-      out.append('\\');
-      out.append('a');
-      break;
-    case '\b':
-      out.append('\\');
-      out.append('b');
-      break;
-    case '\f':
-      out.append('\\');
-      out.append('f');
-      break;
-    case '\n':
-      out.append('\\');
-      out.append('n');
-      break;
-    case '\r':
-      out.append('\\');
-      out.append('r');
-      break;
-    case '\t':
-      out.append('\\');
-      out.append('t');
-      break;
-    case '\v':
-      out.append('\\');
-      out.append('v');
-      break;
-    case '\'':
-      out.append('\\');
-      out.append('\'');
-      break;
-    case '\\':
-      out.append('\\');
-      out.append('\\');
-      break;
-    default:
-      out.append(cp);
-      break;
-    }
-  } else {
-    out.append(cp);
-  }
-}
-
 void Lexer::read_quoted_ident(AbstractString &out, Text input, bool escape) {
   LexerResult result;
   LexerState state(result, LexerContext{"(anon)"}, input);
@@ -1511,6 +1451,19 @@ void Lexer::read_quoted_ident(AbstractString &out, Text input, bool escape) {
   } else {
     out.append(text);
   }
+}
+
+uint32_t Lexer::read_char_literal(Text input) {
+  LexerResult result;
+  LexerState state(result, LexerContext{"(anon)"}, input);
+  auto start_location = state.current_location();
+  if (input.size() == 0) {
+    throw RuntimeError("Expected character literal, but got empty input");
+  }
+  if (input.begin().peek() != '\'') {
+    throw RuntimeError("Expected character literal to start with single quote");
+  }
+  return state.read_char_literal(start_location);
 }
 
 NumberLiteral Lexer::read_number_literal(Text input) {

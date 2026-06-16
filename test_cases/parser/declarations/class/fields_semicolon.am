@@ -5,25 +5,25 @@ ModuleNode(
   decls=[
     ClassDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(A)
+        name="A"
       ),
       body=ClassBodyNode(
         decls=[
           ClassFieldNode(
             name=IdentifierNode(
-              token=IDENTIFIER(a)
+              name="a"
             ),
             type=PrimitiveTypeNode(
-              token=KEYWORD_INT(int)
+              name="int"
             )
           ),
           EmptyStmtNode(),
           ClassFieldNode(
             name=IdentifierNode(
-              token=IDENTIFIER(b)
+              name="b"
             ),
             type=IdentifierNode(
-              token=IDENTIFIER(String)
+              name="String"
             )
           )
         ]

@@ -5,10 +5,10 @@ ModuleNode(
   decls=[
     ConstDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x)
+        name="x"
       ),
       type=PrimitiveTypeNode(
-        token=KEYWORD_INT(int)
+        name="int"
       )
     )
   ]

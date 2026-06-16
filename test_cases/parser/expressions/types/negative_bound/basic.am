@@ -5,7 +5,7 @@ ModuleNode(
   decls=[
     FunctionDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(f)
+        name="f"
       ),
       signature=FunctionSignatureNode(
         generic_parameter_list=GenericParameterListNode(
@@ -13,11 +13,11 @@ ModuleNode(
             GenericParameterNode(
               is_const=false,
               name=IdentifierNode(
-                token=IDENTIFIER_NO_W(T)
+                name="T"
               ),
               constraint=NotExprNode(
                 expr=IdentifierNode(
-                  token=IDENTIFIER_NO_W(Movable)
+                  name="Movable"
                 )
               )
             )

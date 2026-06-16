@@ -13,7 +13,7 @@ ModuleNode(
   decls=[
     ClassDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(A)
+        name="A"
       ),
       body=ClassBodyNode(
         decls=[
@@ -27,7 +27,7 @@ ModuleNode(
                   FunctionParameterNode(
                     variadic=false,
                     name=IdentifierNode(
-                      token=IDENTIFIER_NO_W(o)
+                      name="o"
                     )
                   )
                 ]
@@ -38,16 +38,16 @@ ModuleNode(
                     target=FieldAccessExprNode(
                       object=ThisLiteralNode(),
                       field=IdentifierNode(
-                        token=IDENTIFIER_NO_W(a)
+                        name="a"
                       )
                     ),
                     expr=MoveExprNode(
                       expr=FieldAccessExprNode(
                         object=IdentifierNode(
-                          token=IDENTIFIER(o)
+                          name="o"
                         ),
                         field=IdentifierNode(
-                          token=IDENTIFIER_NO_W(a)
+                          name="a"
                         )
                       )
                     )
@@ -56,16 +56,16 @@ ModuleNode(
                     target=FieldAccessExprNode(
                       object=ThisLiteralNode(),
                       field=IdentifierNode(
-                        token=IDENTIFIER_NO_W(b)
+                        name="b"
                       )
                     ),
                     expr=MoveExprNode(
                       expr=FieldAccessExprNode(
                         object=IdentifierNode(
-                          token=IDENTIFIER(o)
+                          name="o"
                         ),
                         field=IdentifierNode(
-                          token=IDENTIFIER_NO_W(b)
+                          name="b"
                         )
                       )
                     )
@@ -78,18 +78,18 @@ ModuleNode(
           ),
           ClassFieldNode(
             name=IdentifierNode(
-              token=IDENTIFIER(a)
+              name="a"
             ),
             type=PrimitiveTypeNode(
-              token=KEYWORD_INT(int)
+              name="int"
             )
           ),
           ClassFieldNode(
             name=IdentifierNode(
-              token=IDENTIFIER(b)
+              name="b"
             ),
             type=IdentifierNode(
-              token=IDENTIFIER(String)
+              name="String"
             )
           )
         ]

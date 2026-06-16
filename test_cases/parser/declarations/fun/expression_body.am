@@ -5,13 +5,11 @@ ModuleNode(
   decls=[
     FunctionDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(f)
+        name="f"
       ),
       signature=FunctionSignatureNode(),
       body=FunctionBodyNode(
-        expr=NumberLiteralNode(
-          lit=NUMBER(10)
-        ),
+        expr=NumberLiteralNode(value=10),
         is_default=false,
         is_deleted=false
       )

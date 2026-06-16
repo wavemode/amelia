@@ -12,11 +12,11 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x)
+        name="x"
       ),
       expr=SwitchExprNode(
         expr=IdentifierNode(
-          token=IDENTIFIER_NO_W(w)
+          name="w"
         ),
         clauses=[
           CaseClauseNode(
@@ -24,47 +24,39 @@ ModuleNode(
               introductory_decls=[
                 LetDeclNode(
                   target=IdentifierNode(
-                    token=IDENTIFIER(z)
+                    name="z"
                   ),
-                  expr=NumberLiteralNode(
-                    lit=NUMBER(10)
-                  )
+                  expr=NumberLiteralNode(value=10)
                 ),
                 ConstDeclNode(
                   target=IdentifierNode(
-                    token=IDENTIFIER(y)
+                    name="y"
                   ),
                   expr=AddExprNode(
                     left=IdentifierNode(
-                      token=IDENTIFIER(x)
+                      name="x"
                     ),
                     right=IdentifierNode(
-                      token=IDENTIFIER(z)
+                      name="z"
                     )
                   )
                 )
               ],
               exprs=[
                 IdentifierNode(
-                  token=IDENTIFIER(y)
+                  name="y"
                 )
               ]
             ),
-            body=NumberLiteralNode(
-              lit=NUMBER(2)
-            )
+            body=NumberLiteralNode(value=2)
           ),
           CaseClauseNode(
             header=CaseClauseHeaderNode(
               exprs=[
-                NumberLiteralNode(
-                  lit=NUMBER(3)
-                )
+                NumberLiteralNode(value=3)
               ]
             ),
-            body=NumberLiteralNode(
-              lit=NUMBER(4)
-            )
+            body=NumberLiteralNode(value=4)
           )
         ]
       )

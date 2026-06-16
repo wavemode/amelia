@@ -5,25 +5,19 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x)
+        name="x"
       ),
       expr=FunctionCallExprNode(
         callee=FieldAccessExprNode(
           object=BracketExprNode(
             exprs=[
-              NumberLiteralNode(
-                lit=NUMBER(1)
-              ),
-              NumberLiteralNode(
-                lit=NUMBER(2)
-              ),
-              NumberLiteralNode(
-                lit=NUMBER(3)
-              )
+              NumberLiteralNode(value=1),
+              NumberLiteralNode(value=2),
+              NumberLiteralNode(value=3)
             ]
           ),
           field=IdentifierNode(
-            token=IDENTIFIER_NO_W(map)
+            name="map"
           )
         ),
         args=[
@@ -31,16 +25,14 @@ ModuleNode(
             expr=LambdaExprNode(
               parameters=[
                 IdentifierNode(
-                  token=IDENTIFIER_NO_W(x)
+                  name="x"
                 )
               ],
               body=AddExprNode(
                 left=IdentifierNode(
-                  token=IDENTIFIER(x)
+                  name="x"
                 ),
-                right=NumberLiteralNode(
-                  lit=NUMBER(1)
-                )
+                right=NumberLiteralNode(value=1)
               )
             )
           )

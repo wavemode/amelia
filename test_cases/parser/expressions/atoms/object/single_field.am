@@ -5,16 +5,16 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x)
+        name="x"
       ),
       expr=AnonymousStructLiteralNode(
         entries=[
           KeyValueEntryNode(
             key=IdentifierNode(
-              token=IDENTIFIER_NO_W(y)
+              name="y"
             ),
             value=IdentifierNode(
-              token=IDENTIFIER(z)
+              name="z"
             )
           )
         ]

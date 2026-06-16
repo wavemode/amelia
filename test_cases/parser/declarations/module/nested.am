@@ -9,20 +9,20 @@ ModuleNode(
   decls=[
     ModuleDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(a)
+        name="a"
       ),
       decls=[
         ModuleDeclNode(
           name=IdentifierNode(
-            token=IDENTIFIER(b)
+            name="b"
           ),
           decls=[
             LetDeclNode(
               target=IdentifierNode(
-                token=IDENTIFIER(c)
+                name="c"
               ),
               expr=IdentifierNode(
-                token=IDENTIFIER(d)
+                name="d"
               )
             )
           ]
@@ -31,15 +31,15 @@ ModuleNode(
       submodules=[
         ModuleDeclNode(
           name=IdentifierNode(
-            token=IDENTIFIER(b)
+            name="b"
           ),
           decls=[
             LetDeclNode(
               target=IdentifierNode(
-                token=IDENTIFIER(c)
+                name="c"
               ),
               expr=IdentifierNode(
-                token=IDENTIFIER(d)
+                name="d"
               )
             )
           ]
@@ -50,20 +50,20 @@ ModuleNode(
   submodules=[
     ModuleDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(a)
+        name="a"
       ),
       decls=[
         ModuleDeclNode(
           name=IdentifierNode(
-            token=IDENTIFIER(b)
+            name="b"
           ),
           decls=[
             LetDeclNode(
               target=IdentifierNode(
-                token=IDENTIFIER(c)
+                name="c"
               ),
               expr=IdentifierNode(
-                token=IDENTIFIER(d)
+                name="d"
               )
             )
           ]
@@ -72,15 +72,15 @@ ModuleNode(
       submodules=[
         ModuleDeclNode(
           name=IdentifierNode(
-            token=IDENTIFIER(b)
+            name="b"
           ),
           decls=[
             LetDeclNode(
               target=IdentifierNode(
-                token=IDENTIFIER(c)
+                name="c"
               ),
               expr=IdentifierNode(
-                token=IDENTIFIER(d)
+                name="d"
               )
             )
           ]

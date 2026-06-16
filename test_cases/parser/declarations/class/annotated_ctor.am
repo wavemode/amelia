@@ -8,17 +8,17 @@ ModuleNode(
   decls=[
     ClassDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(A)
+        name="A"
       ),
       body=ClassBodyNode(
         decls=[
           AnnotationNode(
             name=IdentifierNode(
-              token=IDENTIFIER_NO_W(anno)
+              name="anno"
             ),
             stmt=ClassConstructorNode(
               name=IdentifierNode(
-                token=IDENTIFIER(A)
+                name="A"
               ),
               signature=FunctionSignatureNode(),
               body=FunctionBodyNode(

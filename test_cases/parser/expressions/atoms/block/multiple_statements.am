@@ -9,29 +9,25 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x)
+        name="x"
       ),
       expr=BlockExprNode(
         stmts=[
           LetDeclNode(
             target=IdentifierNode(
-              token=IDENTIFIER(y)
+              name="y"
             ),
-            expr=NumberLiteralNode(
-              lit=NUMBER(1)
-            )
+            expr=NumberLiteralNode(value=1)
           ),
           LetDeclNode(
             target=IdentifierNode(
-              token=IDENTIFIER(a)
+              name="a"
             ),
-            expr=NumberLiteralNode(
-              lit=NUMBER(2)
-            )
+            expr=NumberLiteralNode(value=2)
           ),
           ExprStmtNode(
             expr=IdentifierNode(
-              token=IDENTIFIER(a)
+              name="a"
             )
           )
         ]

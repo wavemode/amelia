@@ -5,17 +5,17 @@ ModuleNode(
   decls=[
     ConceptDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(A)
+        name="A"
       ),
       implicit_parameter_list=ImplicitParameterListNode(
         parameters=[
           FunctionParameterNode(
             variadic=false,
             name=IdentifierNode(
-              token=IDENTIFIER_NO_W(x)
+              name="x"
             ),
             type=PrimitiveTypeNode(
-              token=KEYWORD_INT(int)
+              name="int"
             )
           )
         ]

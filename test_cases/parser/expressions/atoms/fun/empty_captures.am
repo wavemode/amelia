@@ -13,7 +13,7 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(f)
+        name="f"
       ),
       expr=FunctionExprNode(
         signature=FunctionSignatureNode(
@@ -21,19 +21,19 @@ ModuleNode(
             FunctionParameterNode(
               variadic=false,
               name=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
               type=PrimitiveTypeNode(
-                token=KEYWORD_INT(int)
+                name="int"
               )
             ),
             FunctionParameterNode(
               variadic=false,
               name=IdentifierNode(
-                token=IDENTIFIER(y)
+                name="y"
               ),
               type=PrimitiveTypeNode(
-                token=KEYWORD_FLOAT(float)
+                name="float"
               )
             )
           ],
@@ -42,26 +42,26 @@ ModuleNode(
               FunctionParameterNode(
                 variadic=false,
                 name=IdentifierNode(
-                  token=IDENTIFIER(a)
+                  name="a"
                 ),
                 type=PrimitiveTypeNode(
-                  token=KEYWORD_LONG(long)
+                  name="long"
                 )
               ),
               FunctionParameterNode(
                 variadic=false,
                 name=IdentifierNode(
-                  token=IDENTIFIER(b)
+                  name="b"
                 ),
                 type=PrimitiveTypeNode(
-                  token=KEYWORD_SHORT(short)
+                  name="short"
                 )
               )
             ]
           ),
           capture_list=FunctionSignatureCaptureAnnotationListNode(),
           return_type=PrimitiveTypeNode(
-            token=KEYWORD_INT(int)
+            name="int"
           )
         ),
         body=FunctionBodyNode(

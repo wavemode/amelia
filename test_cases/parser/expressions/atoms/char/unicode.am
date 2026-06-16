@@ -5,13 +5,13 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(c)
+        name="c"
       ),
       type=PrimitiveTypeNode(
-        token=KEYWORD_CHAR(char)
+        name="char"
       ),
       expr=CharLiteralNode(
-        lit='日'
+        lit='\U000065E5'
       )
     )
   ]

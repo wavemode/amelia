@@ -7,13 +7,13 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(example)
+        name="example"
       ),
       expr=BlockExprNode(
         stmts=[
           PreDecrementStmtNode(
             target=IdentifierNode(
-              token=IDENTIFIER_NO_W(x)
+              name="x"
             )
           )
         ]

@@ -10,50 +10,44 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(example)
+        name="example"
       ),
       expr=BlockExprNode(
         stmts=[
           SwitchStmtNode(
             expr=IdentifierNode(
-              token=IDENTIFIER_NO_W(y)
+              name="y"
             ),
             clauses=[
               CaseClauseNode(
                 header=CaseClauseHeaderNode(
                   exprs=[
-                    NumberLiteralNode(
-                      lit=NUMBER(1)
-                    )
+                    NumberLiteralNode(value=1)
                   ]
                 ),
                 body=PreIncrementStmtNode(
                   target=IdentifierNode(
-                    token=IDENTIFIER_NO_W(x)
+                    name="x"
                   )
                 )
               ),
               CaseClauseNode(
                 header=CaseClauseHeaderNode(
                   exprs=[
-                    NumberLiteralNode(
-                      lit=NUMBER(3)
-                    )
+                    NumberLiteralNode(value=3)
                   ],
                   when_clause=WhenClauseNode(
                     condition=EqualsExprNode(
                       left=IdentifierNode(
-                        token=IDENTIFIER_NO_W(z)
+                        name="z"
                       ),
-                      right=NumberLiteralNode(
-                        lit=NUMBER(2)
-                      )
+                      right=NumberLiteralNode(value=2)
                     )
                   )
                 ),
                 body=PreIncrementStmtNode(
                   target=IdentifierNode(
-                    token=IDENTIFIER_NO_W(y)
+                    name="y"
                   )
                 )
               )

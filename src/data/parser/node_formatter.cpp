@@ -4,11 +4,8 @@
 
 namespace amelia {
 
-NodeFormatter::NodeFormatter(
-    const AbstractNodeRepository &node_repo, const AbstractTokenRepository &token_repo
-)
-    : m_token_repo(token_repo), m_token_formatter(TokenFormatter(token_repo)),
-      m_node_repo(node_repo), m_fields_printed(0), m_current_indent(0) {}
+NodeFormatter::NodeFormatter(const AbstractNodeRepository &node_repo)
+    : m_node_repo(node_repo), m_fields_printed(0), m_current_indent(0) {}
 
 void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   const Node &node = m_node_repo.get_node(node_id);
@@ -20,7 +17,9 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   switch (node.type()) {
   case NodeType::IdentifierNode: {
     const auto &n = node.as_IdentifierNode();
-    print_token_field(out, "token", n.token);
+    String name;
+    Serialize::quoted(n.name).to_string(name);
+    print_field(out, "name", name);
     break;
   }
   case NodeType::EmptyStmtNode: {
@@ -44,7 +43,7 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     const auto &n = node.as_StringLiteralNode();
     open_line(out);
     out.append("lit=\"");
-    Lexer::read_string_literal(out, m_token_repo.get_token(n.lit).contents, true);
+    out.append(n.contents);
     out.append('"');
     break;
   }
@@ -52,13 +51,17 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     const auto &n = node.as_CharLiteralNode();
     open_line(out);
     out.append("lit='");
-    Lexer::read_char_literal(out, m_token_repo.get_token(n.lit).contents, true);
+    out.append("\\U");
+    String hex_code_point;
+    Integer(n.code_point).to_hex_string(hex_code_point);
+    TextUtils::pad_left_into(out, hex_code_point, 8, "0");
     out.append('\'');
     break;
   }
   case NodeType::NumberLiteralNode: {
     const auto &n = node.as_NumberLiteralNode();
-    print_token_field(out, "lit", n.lit);
+    out.append("value=");
+    serialize_number_literal(n.value).to_string(out);
     break;
   }
   case NodeType::ParenthesizedExprNode: {
@@ -342,7 +345,9 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   case NodeType::NumericFieldAccessExprNode: {
     const auto &n = node.as_NumericFieldAccessExprNode();
     print_node_field(out, "object", n.object);
-    print_token_field(out, "lit", n.lit);
+    open_line(out);
+    out.append("field=");
+    n.field.to_string(out);
     break;
   }
   case NodeType::IndexingExprNode: {
@@ -924,7 +929,10 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   }
   case NodeType::PrimitiveTypeNode: {
     const auto &n = node.as_PrimitiveTypeNode();
-    print_token_field(out, "token", n.token);
+    open_line(out);
+    out.append("name=\"");
+    out.append(n.name);
+    out.append('"');
     break;
   }
   case NodeType::AutoTypeNode: {
@@ -1100,14 +1108,6 @@ void NodeFormatter::print_node_field(AbstractString &out, Text name, Option<Node
   out.append('=');
   format_node(out, node_id.value());
 }
-
-void NodeFormatter::print_token_field(AbstractString &out, Text name, TokenId token_id) {
-  open_line(out);
-  out.append(name);
-  out.append('=');
-  m_token_formatter.format_token(out, token_id);
-}
-
 void NodeFormatter::print_field(AbstractString &out, Text name, Text value) {
   open_line(out);
   out.append(name);
@@ -1132,7 +1132,7 @@ void NodeFormatter::open_line(AbstractString &out, bool with_comma) {
 }
 
 void NodeFormatter::print_indent(AbstractString &out) const {
-  for (int i = 0; i < m_current_indent; ++i) {
+  for (uint32_t i = 0; i < m_current_indent; ++i) {
     out.append(' ');
   }
 }

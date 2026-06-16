@@ -5,19 +5,13 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x)
+        name="x"
       ),
       expr=BracketExprNode(
         exprs=[
-          NumberLiteralNode(
-            lit=NUMBER(1)
-          ),
-          NumberLiteralNode(
-            lit=NUMBER(2)
-          ),
-          NumberLiteralNode(
-            lit=NUMBER(3)
-          )
+          NumberLiteralNode(value=1),
+          NumberLiteralNode(value=2),
+          NumberLiteralNode(value=3)
         ]
       )
     )

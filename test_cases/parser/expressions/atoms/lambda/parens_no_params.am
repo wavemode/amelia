@@ -5,12 +5,10 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x)
+        name="x"
       ),
       expr=LambdaExprNode(
-        body=NumberLiteralNode(
-          lit=NUMBER(10)
-        )
+        body=NumberLiteralNode(value=10)
       )
     )
   ]

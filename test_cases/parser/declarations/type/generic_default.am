@@ -5,23 +5,23 @@ ModuleNode(
   decls=[
     TypeDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(A)
+        name="A"
       ),
       generic_parameter_list=GenericParameterListNode(
         parameters=[
           GenericParameterNode(
             is_const=false,
             name=IdentifierNode(
-              token=IDENTIFIER_NO_W(B)
+              name="B"
             ),
             default_value=PrimitiveTypeNode(
-              token=KEYWORD_INT(int)
+              name="int"
             )
           )
         ]
       ),
       type_expr=IdentifierNode(
-        token=IDENTIFIER(C)
+        name="C"
       )
     )
   ]

@@ -16,7 +16,7 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(a)
+        name="a"
       ),
       expr=BlockExprNode(
         stmts=[
@@ -24,50 +24,44 @@ ModuleNode(
             introductory_decls=[
               TypeDeclNode(
                 name=IdentifierNode(
-                  token=IDENTIFIER(T)
+                  name="T"
                 ),
                 type_expr=PrimitiveTypeNode(
-                  token=KEYWORD_INT(int)
+                  name="int"
                 )
               ),
               LetDeclNode(
                 target=IdentifierNode(
-                  token=IDENTIFIER(w)
+                  name="w"
                 ),
                 type=IdentifierNode(
-                  token=IDENTIFIER(T)
+                  name="T"
                 ),
-                expr=NumberLiteralNode(
-                  lit=NUMBER(10)
-                )
+                expr=NumberLiteralNode(value=10)
               ),
               ConstDeclNode(
                 target=IdentifierNode(
-                  token=IDENTIFIER(x)
+                  name="x"
                 ),
                 expr=AddExprNode(
                   left=IdentifierNode(
-                    token=IDENTIFIER(w)
+                    name="w"
                   ),
-                  right=NumberLiteralNode(
-                    lit=NUMBER(5)
-                  )
+                  right=NumberLiteralNode(value=5)
                 )
               )
             ],
             condition=GreaterExprNode(
               left=IdentifierNode(
-                token=IDENTIFIER(x)
+                name="x"
               ),
-              right=NumberLiteralNode(
-                lit=NUMBER(10)
-              )
+              right=NumberLiteralNode(value=10)
             ),
             then_branch=BlockStmtNode(
               stmts=[
                 PreIncrementStmtNode(
                   target=IdentifierNode(
-                    token=IDENTIFIER_NO_W(y)
+                    name="y"
                   )
                 )
               ]
@@ -76,7 +70,7 @@ ModuleNode(
               stmts=[
                 PreIncrementStmtNode(
                   target=IdentifierNode(
-                    token=IDENTIFIER_NO_W(z)
+                    name="z"
                   )
                 )
               ]

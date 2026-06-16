@@ -7,7 +7,7 @@ ModuleNode(
   decls=[
     ConceptDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(A)
+        name="A"
       ),
       body=ClassBodyNode(
         decls=[
@@ -21,7 +21,7 @@ ModuleNode(
                   FunctionParameterNode(
                     variadic=false,
                     name=IdentifierNode(
-                      token=IDENTIFIER_NO_W(o)
+                      name="o"
                     )
                   )
                 ],
@@ -29,7 +29,7 @@ ModuleNode(
                   is_const=false,
                   is_move=false,
                   expr=IdentifierNode(
-                    token=KEYWORD_THIS_TYPE(This)
+                    name="This"
                   )
                 )
               )

@@ -8,17 +8,17 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x)
+        name="x"
       ),
       expr=BlockExprNode(
         stmts=[
           AnnotationNode(
             name=IdentifierNode(
-              token=IDENTIFIER_NO_W(anno)
+              name="anno"
             ),
             stmt=PreIncrementStmtNode(
               target=IdentifierNode(
-                token=IDENTIFIER_NO_W(y)
+                name="y"
               )
             )
           )

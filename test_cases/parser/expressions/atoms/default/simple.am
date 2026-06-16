@@ -5,10 +5,10 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(a)
+        name="a"
       ),
       type=PrimitiveTypeNode(
-        token=KEYWORD_INT(int)
+        name="int"
       ),
       expr=DefaultLiteralNode()
     )

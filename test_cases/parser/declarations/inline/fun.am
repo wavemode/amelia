@@ -6,7 +6,7 @@ ModuleNode(
     InlineDeclNode(
       decl=FunctionDeclNode(
         name=IdentifierNode(
-          token=IDENTIFIER(f)
+          name="f"
         ),
         signature=FunctionSignatureNode(),
         body=FunctionBodyNode(

@@ -9,13 +9,13 @@ ModuleNode(
   decls=[
     ClassDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(A)
+        name="A"
       ),
       body=ClassBodyNode(
         decls=[
           ClassDestructorNode(
             name=IdentifierNode(
-              token=IDENTIFIER_NO_W(A)
+              name="A"
             ),
             signature=FunctionSignatureNode(),
             body=FunctionBodyNode(
@@ -23,7 +23,7 @@ ModuleNode(
                 ExprStmtNode(
                   expr=FunctionCallExprNode(
                     callee=IdentifierNode(
-                      token=IDENTIFIER(println)
+                      name="println"
                     ),
                     args=[
                       FunctionArgumentNode(

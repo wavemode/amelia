@@ -5,13 +5,13 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x)
+        name="x"
       ),
       type=RefExprNode(
         is_const=false,
         is_move=false,
         expr=PrimitiveTypeNode(
-          token=KEYWORD_INT(int)
+          name="int"
         )
       )
     )

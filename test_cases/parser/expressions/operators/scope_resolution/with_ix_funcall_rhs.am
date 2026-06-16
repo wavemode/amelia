@@ -5,22 +5,22 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(x)
+        name="x"
       ),
       expr=FunctionCallExprNode(
         callee=IndexingExprNode(
           object=ScopeResolutionExprNode(
             scope=IdentifierNode(
-              token=IDENTIFIER(T)
+              name="T"
             ),
             name=IdentifierNode(
-              token=IDENTIFIER_NO_W(U)
+              name="U"
             )
           ),
           indices=[
             IndexNode(
               value=IdentifierNode(
-                token=IDENTIFIER_NO_W(V)
+                name="V"
               )
             )
           ]

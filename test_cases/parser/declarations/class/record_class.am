@@ -12,35 +12,33 @@ ModuleNode(
     RecordDeclNode(
       decl=ClassDeclNode(
         name=IdentifierNode(
-          token=IDENTIFIER(A)
+          name="A"
         ),
         header_decls=ClassHeaderDeclsNode(
           decls=[
             ClassHeaderFieldDeclNode(
               name=IdentifierNode(
-                token=IDENTIFIER(a)
+                name="a"
               ),
               type=PrimitiveTypeNode(
-                token=KEYWORD_INT(int)
+                name="int"
               ),
-              default_value=NumberLiteralNode(
-                lit=NUMBER(5)
+              default_value=NumberLiteralNode(value=5)
+            ),
+            ClassHeaderFieldDeclNode(
+              name=IdentifierNode(
+                name="b"
+              ),
+              type=PrimitiveTypeNode(
+                name="float"
               )
             ),
             ClassHeaderFieldDeclNode(
               name=IdentifierNode(
-                token=IDENTIFIER(b)
+                name="c"
               ),
               type=PrimitiveTypeNode(
-                token=KEYWORD_FLOAT(float)
-              )
-            ),
-            ClassHeaderFieldDeclNode(
-              name=IdentifierNode(
-                token=IDENTIFIER(c)
-              ),
-              type=PrimitiveTypeNode(
-                token=KEYWORD_DOUBLE(double)
+                name="double"
               )
             )
           ]
@@ -49,13 +47,13 @@ ModuleNode(
           decls=[
             FunctionDeclNode(
               name=IdentifierNode(
-                token=IDENTIFIER(d)
+                name="d"
               ),
               signature=FunctionSignatureNode(),
               body=FunctionBodyNode(
                 expr=FunctionCallExprNode(
                   callee=IdentifierNode(
-                    token=IDENTIFIER(println)
+                    name="println"
                   ),
                   args=[
                     FunctionArgumentNode(

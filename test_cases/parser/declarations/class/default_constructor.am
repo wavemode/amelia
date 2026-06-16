@@ -10,14 +10,14 @@ ModuleNode(
   decls=[
     ClassDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(A)
+        name="A"
       ),
       body=ClassBodyNode(
         decls=[
           DefaultDeclNode(
             decl=ClassConstructorNode(
               name=IdentifierNode(
-                token=IDENTIFIER(A)
+                name="A"
               ),
               signature=FunctionSignatureNode(),
               body=FunctionBodyNode(
@@ -26,12 +26,10 @@ ModuleNode(
                     target=FieldAccessExprNode(
                       object=ThisLiteralNode(),
                       field=IdentifierNode(
-                        token=IDENTIFIER_NO_W(a)
+                        name="a"
                       )
                     ),
-                    expr=NumberLiteralNode(
-                      lit=NUMBER(10)
-                    )
+                    expr=NumberLiteralNode(value=10)
                   )
                 ],
                 is_default=false,
@@ -41,10 +39,10 @@ ModuleNode(
           ),
           ClassFieldNode(
             name=IdentifierNode(
-              token=IDENTIFIER(a)
+              name="a"
             ),
             type=PrimitiveTypeNode(
-              token=KEYWORD_INT(int)
+              name="int"
             )
           )
         ]

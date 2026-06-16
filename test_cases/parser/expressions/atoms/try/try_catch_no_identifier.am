@@ -5,19 +5,19 @@ ModuleNode(
   decls=[
     LetDeclNode(
       target=IdentifierNode(
-        token=IDENTIFIER(w)
+        name="w"
       ),
       expr=TryExprNode(
         try_block=IdentifierNode(
-          token=IDENTIFIER(x)
+          name="x"
         ),
         catch_clauses=[
           CatchClauseNode(
             exc_type=IdentifierNode(
-              token=IDENTIFIER_NO_W(z)
+              name="z"
             ),
             body=IdentifierNode(
-              token=IDENTIFIER(t)
+              name="t"
             )
           )
         ]

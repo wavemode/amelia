@@ -6,24 +6,24 @@ ModuleNode(
     RecordDeclNode(
       decl=ClassDeclNode(
         name=IdentifierNode(
-          token=IDENTIFIER(A)
+          name="A"
         ),
         header_decls=ClassHeaderDeclsNode(
           decls=[
             ClassHeaderFieldDeclNode(
               type=PrimitiveTypeNode(
-                token=KEYWORD_INT(int)
+                name="int"
               )
             ),
             ClassHeaderFieldDeclNode(
               type=IndexingExprNode(
                 object=IdentifierNode(
-                  token=IDENTIFIER(list)
+                  name="list"
                 ),
                 indices=[
                   IndexNode(
                     value=PrimitiveTypeNode(
-                      token=KEYWORD_FLOAT(float)
+                      name="float"
                     )
                   )
                 ]

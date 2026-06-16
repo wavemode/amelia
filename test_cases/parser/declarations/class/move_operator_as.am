@@ -9,7 +9,7 @@ ModuleNode(
   decls=[
     ClassDeclNode(
       name=IdentifierNode(
-        token=IDENTIFIER(A)
+        name="A"
       ),
       body=ClassBodyNode(
         decls=[
@@ -18,7 +18,7 @@ ModuleNode(
               operator_ident=OperatorIdentifierNode(
                 op=OperatorIdentAsNode(
                   type=PrimitiveTypeNode(
-                    token=KEYWORD_INT(int)
+                    name="int"
                   )
                 )
               ),
@@ -33,7 +33,7 @@ ModuleNode(
                     ]
                   ),
                   field=IdentifierNode(
-                    token=IDENTIFIER_NO_W(a)
+                    name="a"
                   )
                 ),
                 is_default=false,
@@ -43,10 +43,10 @@ ModuleNode(
           ),
           ClassFieldNode(
             name=IdentifierNode(
-              token=IDENTIFIER(a)
+              name="a"
             ),
             type=PrimitiveTypeNode(
-              token=KEYWORD_INT(int)
+              name="int"
             )
           )
         ]

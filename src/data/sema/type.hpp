@@ -74,10 +74,12 @@ struct PrimitiveType : Type {
 };
 
 struct AliasType : Type {
-  AliasType(String name, FlexShared<Type> target)
-      : Type(TypeKind::Alias), name(move(name)), target(move(target)) {}
+  AliasType(String name_param, String module_name_param, FlexShared<Type> target_param)
+      : Type(TypeKind::Alias), name(move(name_param)), module_name(move(module_name_param)),
+        target(move(target_param)) {}
 
   String name;
+  String module_name;
   FlexShared<Type> target;
 };
 

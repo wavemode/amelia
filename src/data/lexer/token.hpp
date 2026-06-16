@@ -1,8 +1,9 @@
 #pragma once
 
+#include "prelude.hpp"
+
 #include "data/lexer/token_type.hpp"
 #include "data/source/location.hpp"
-#include "data/util/text.hpp"
 
 namespace amelia {
 
@@ -12,6 +13,6 @@ struct Token {
   Text contents;
 };
 
-Text identifier_text(const Token &name);
+String identifier_text(const Token &name, bool escaped = false);
 
 } // namespace amelia
