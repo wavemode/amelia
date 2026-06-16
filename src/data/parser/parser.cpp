@@ -1821,12 +1821,14 @@ public:
     case TokenType::KEYWORD_USIZE:
     case TokenType::KEYWORD_FLOAT:
     case TokenType::KEYWORD_DOUBLE:
-    case TokenType::KEYWORD_BITINT:
-    case TokenType::KEYWORD_UBITINT:
     case TokenType::KEYWORD_CHAR:
     case TokenType::KEYWORD_STR:
     case TokenType::KEYWORD_NULL:
-      return parse_primitive_type();
+    case TokenType::KEYWORD_NEVER:
+      return parse_builtin_type();
+    case TokenType::KEYWORD_BITINT:
+    case TokenType::KEYWORD_UBITINT:
+      return parse_bitint_type();
     case TokenType::KEYWORD_AUTO:
       return parse_auto_type();
     case TokenType::KEYWORD_WITH:
@@ -1838,6 +1840,12 @@ public:
       m_token_formatter.format_token(err, m_token_index);
       throw_parser_error_at_current_location(move(err));
     }
+  }
+
+  NodeId parse_bitint_type() {
+    auto type_token = next();
+    bool is_signed = type_token.type == TokenType::KEYWORD_BITINT;
+    return m_output.add_node(type_token.id, m_token_index, BitIntTypeNode{is_signed});
   }
 
   NodeId parse_typeof_expr() {
@@ -1868,11 +1876,62 @@ public:
     return m_output.add_node(auto_token.id, m_token_index, AutoTypeNode{});
   }
 
-  NodeId parse_primitive_type() {
+  NodeId parse_builtin_type() {
     auto type_token = next();
-    return m_output.add_node(
-        type_token.id, m_token_index, PrimitiveTypeNode{String(type_token.contents)}
-    );
+    BuiltinKind kind;
+    switch (type_token.type) {
+    case TokenType::KEYWORD_BOOL:
+      kind = BuiltinKind::Bool;
+      break;
+    case TokenType::KEYWORD_BYTE:
+      kind = BuiltinKind::Byte;
+      break;
+    case TokenType::KEYWORD_SHORT:
+      kind = BuiltinKind::Short;
+      break;
+    case TokenType::KEYWORD_INT:
+      kind = BuiltinKind::Int;
+      break;
+    case TokenType::KEYWORD_LONG:
+      kind = BuiltinKind::Long;
+      break;
+    case TokenType::KEYWORD_UBYTE:
+      kind = BuiltinKind::UByte;
+      break;
+    case TokenType::KEYWORD_USHORT:
+      kind = BuiltinKind::UShort;
+      break;
+    case TokenType::KEYWORD_UINT:
+      kind = BuiltinKind::UInt;
+      break;
+    case TokenType::KEYWORD_ULONG:
+      kind = BuiltinKind::ULong;
+      break;
+    case TokenType::KEYWORD_USIZE:
+      kind = BuiltinKind::USize;
+      break;
+    case TokenType::KEYWORD_FLOAT:
+      kind = BuiltinKind::Float;
+      break;
+    case TokenType::KEYWORD_DOUBLE:
+      kind = BuiltinKind::Double;
+      break;
+    case TokenType::KEYWORD_CHAR:
+      kind = BuiltinKind::Char;
+      break;
+    case TokenType::KEYWORD_STR:
+      kind = BuiltinKind::Str;
+      break;
+    case TokenType::KEYWORD_NULL:
+      kind = BuiltinKind::Null;
+      break;
+    case TokenType::KEYWORD_NEVER:
+      kind = BuiltinKind::Never;
+      break;
+    default:
+      throw RuntimeError("unreachable");
+    }
+    return m_output.add_node(type_token.id, m_token_index, BuiltinTypeNode{kind});
   }
 
   NodeId parse_default_literal() {

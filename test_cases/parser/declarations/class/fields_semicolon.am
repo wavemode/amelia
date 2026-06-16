@@ -13,8 +13,8 @@ ModuleNode(
             name=IdentifierNode(
               name="a"
             ),
-            type=PrimitiveTypeNode(
-              name="int"
+            type=BuiltinTypeNode(
+              kind=int
             )
           ),
           EmptyStmtNode(),

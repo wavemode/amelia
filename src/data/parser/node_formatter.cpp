@@ -927,12 +927,16 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   case NodeType::DefaultLiteralNode: {
     break;
   }
-  case NodeType::PrimitiveTypeNode: {
-    const auto &n = node.as_PrimitiveTypeNode();
+  case NodeType::BuiltinTypeNode: {
+    const auto &n = node.as_BuiltinTypeNode();
     open_line(out);
-    out.append("name=\"");
-    out.append(n.name);
-    out.append('"');
+    out.append("kind=");
+    serialize_builtin_kind(n.kind).to_string(out);
+    break;
+  }
+  case NodeType::BitIntTypeNode: {
+    const auto &n = node.as_BitIntTypeNode();
+    print_field(out, "is_signed", n.is_signed);
     break;
   }
   case NodeType::AutoTypeNode: {

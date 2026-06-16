@@ -14,8 +14,8 @@ ModuleNode(
             name=IdentifierNode(
               name="x"
             ),
-            type=PrimitiveTypeNode(
-              name="int"
+            type=BuiltinTypeNode(
+              kind=int
             ),
             default_value=NumberLiteralNode(value=4)
           ),
@@ -24,8 +24,8 @@ ModuleNode(
             name=IdentifierNode(
               name="y"
             ),
-            type=PrimitiveTypeNode(
-              name="float"
+            type=BuiltinTypeNode(
+              kind=float
             ),
             default_value=NumberLiteralNode(value=10.0)
           )

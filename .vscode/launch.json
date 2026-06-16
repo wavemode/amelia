@@ -16,7 +16,7 @@
             "request": "launch",
             "program": "${workspaceRoot}/build/debug/amelia_test",
             "args": [
-                "-ts=Rational", "-tc=from String"
+                "-ts=Analyzer"
             ],
             "cwd": "${workspaceRoot}",
             "preLaunchTask": "make build-test",

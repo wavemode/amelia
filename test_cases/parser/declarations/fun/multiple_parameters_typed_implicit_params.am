@@ -14,8 +14,8 @@ ModuleNode(
             name=IdentifierNode(
               name="x"
             ),
-            type=PrimitiveTypeNode(
-              name="int"
+            type=BuiltinTypeNode(
+              kind=int
             )
           ),
           FunctionParameterNode(
@@ -23,8 +23,8 @@ ModuleNode(
             name=IdentifierNode(
               name="y"
             ),
-            type=PrimitiveTypeNode(
-              name="float"
+            type=BuiltinTypeNode(
+              kind=float
             )
           )
         ],
@@ -35,8 +35,8 @@ ModuleNode(
               name=IdentifierNode(
                 name="a"
               ),
-              type=PrimitiveTypeNode(
-                name="long"
+              type=BuiltinTypeNode(
+                kind=long
               )
             ),
             FunctionParameterNode(
@@ -44,8 +44,8 @@ ModuleNode(
               name=IdentifierNode(
                 name="b"
               ),
-              type=PrimitiveTypeNode(
-                name="short"
+              type=BuiltinTypeNode(
+                kind=short
               )
             )
           ]

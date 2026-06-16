@@ -18,8 +18,8 @@ ModuleNode(
             name=IdentifierNode(
               name="a"
             ),
-            type=PrimitiveTypeNode(
-              name="int"
+            type=BuiltinTypeNode(
+              kind=int
             )
           ),
           ClassFieldNode(
@@ -35,8 +35,8 @@ ModuleNode(
               name=IdentifierNode(
                 name="c"
               ),
-              type=PrimitiveTypeNode(
-                name="float"
+              type=BuiltinTypeNode(
+                kind=float
               )
             )
           ),
@@ -45,8 +45,8 @@ ModuleNode(
               name=IdentifierNode(
                 name="d"
               ),
-              type=PrimitiveTypeNode(
-                name="bool"
+              type=BuiltinTypeNode(
+                kind=bool
               ),
               initializer=BooleanLiteralNode(
                 value=true

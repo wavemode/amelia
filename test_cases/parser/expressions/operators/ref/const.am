@@ -10,8 +10,8 @@ ModuleNode(
       type=RefExprNode(
         is_const=true,
         is_move=false,
-        expr=PrimitiveTypeNode(
-          name="int"
+        expr=BuiltinTypeNode(
+          kind=int
         )
       )
     )

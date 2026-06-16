@@ -66,8 +66,8 @@ ModuleNode(
             name=IdentifierNode(
               name="age"
             ),
-            type=PrimitiveTypeNode(
-              name="int"
+            type=BuiltinTypeNode(
+              kind=int
             )
           )
         ]

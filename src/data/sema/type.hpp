@@ -9,7 +9,7 @@
 
 namespace amelia {
 
-enum class PrimitiveKind : uint8_t {
+enum class BuiltinKind : uint8_t {
   Byte,
   UByte,
   Short,
@@ -18,6 +18,7 @@ enum class PrimitiveKind : uint8_t {
   UInt,
   Long,
   ULong,
+  USize,
   Float,
   Double,
   Bool,
@@ -28,14 +29,14 @@ enum class PrimitiveKind : uint8_t {
   Unknown,
 };
 
-Serialize serialize_primitive_kind(PrimitiveKind kind);
+Serialize serialize_builtin_kind(BuiltinKind kind);
 
 enum class TypeKind : uint8_t {
   Alias,
   TypeFn,
   Apply,
-  Primitive,
-  Bitint,
+  Builtin,
+  BitInt,
   Tuple,
   Struct,
   Reference,
@@ -66,11 +67,10 @@ protected:
   Type(TypeKind kind) : kind(kind) {}
 };
 
-struct PrimitiveType : Type {
-  PrimitiveType(PrimitiveKind primitive_kind)
-      : Type(TypeKind::Primitive), primitive_kind(primitive_kind) {}
+struct BuiltinType : Type {
+  BuiltinType(BuiltinKind builtin_kind) : Type(TypeKind::Builtin), builtin_kind(builtin_kind) {}
 
-  PrimitiveKind primitive_kind;
+  BuiltinKind builtin_kind;
 };
 
 struct AliasType : Type {

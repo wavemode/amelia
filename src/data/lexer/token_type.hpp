@@ -55,6 +55,7 @@ using TokenId = int32_t;
   X(KEYWORD_BITINT)                                                                                \
   X(KEYWORD_UBITINT)                                                                               \
   X(KEYWORD_NULL)                                                                                  \
+  X(KEYWORD_NEVER)                                                                                 \
   X(KEYWORD_DEFAULT)                                                                               \
   X(KEYWORD_OPEN)                                                                                  \
   X(KEYWORD_OVERRIDE)                                                                              \

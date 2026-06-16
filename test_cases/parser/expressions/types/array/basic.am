@@ -9,8 +9,8 @@ ModuleNode(
       ),
       type=BracketExprNode(
         exprs=[
-          PrimitiveTypeNode(
-            name="int"
+          BuiltinTypeNode(
+            kind=int
           ),
           NumberLiteralNode(value=4)
         ]

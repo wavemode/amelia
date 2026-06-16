@@ -9,8 +9,8 @@ ModuleNode(
         target=IdentifierNode(
           name="x"
         ),
-        type=PrimitiveTypeNode(
-          name="int"
+        type=BuiltinTypeNode(
+          kind=int
         ),
         expr=NumberLiteralNode(value=40)
       )

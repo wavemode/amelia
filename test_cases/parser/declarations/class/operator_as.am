@@ -16,8 +16,8 @@ ModuleNode(
           OperatorFunctionDeclNode(
             operator_ident=OperatorIdentifierNode(
               op=OperatorIdentAsNode(
-                type=PrimitiveTypeNode(
-                  name="int"
+                type=BuiltinTypeNode(
+                  kind=int
                 )
               )
             ),
@@ -37,8 +37,8 @@ ModuleNode(
             name=IdentifierNode(
               name="a"
             ),
-            type=PrimitiveTypeNode(
-              name="int"
+            type=BuiltinTypeNode(
+              kind=int
             )
           )
         ]

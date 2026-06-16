@@ -7,8 +7,8 @@ ModuleNode(
       target=IdentifierNode(
         name="a"
       ),
-      type=PrimitiveTypeNode(
-        name="int"
+      type=BuiltinTypeNode(
+        kind=int
       ),
       expr=DefaultLiteralNode()
     )

@@ -12,64 +12,61 @@ namespace amelia {
 
 namespace {
 
-PrimitiveType UNKOWN_TYPE(PrimitiveKind::Unknown);
+BuiltinType BYTE_TYPE(BuiltinKind::Byte);
+BuiltinType UBYTE_TYPE(BuiltinKind::UByte);
+BuiltinType SHORT_TYPE(BuiltinKind::Short);
+BuiltinType USHORT_TYPE(BuiltinKind::UShort);
+BuiltinType INT_TYPE(BuiltinKind::Int);
+BuiltinType UINT_TYPE(BuiltinKind::UInt);
+BuiltinType LONG_TYPE(BuiltinKind::Long);
+BuiltinType ULONG_TYPE(BuiltinKind::ULong);
+BuiltinType USIZE_TYPE(BuiltinKind::USize);
+BuiltinType FLOAT_TYPE(BuiltinKind::Float);
+BuiltinType DOUBLE_TYPE(BuiltinKind::Double);
+BuiltinType BOOL_TYPE(BuiltinKind::Bool);
+BuiltinType CHAR_TYPE(BuiltinKind::Char);
+BuiltinType STR_TYPE(BuiltinKind::Str);
+BuiltinType NULL_TYPE(BuiltinKind::Null);
+BuiltinType NEVER_TYPE(BuiltinKind::Never);
+BuiltinType UNKNOWN_TYPE(BuiltinKind::Unknown);
 
-FlexShared<Type> unknown_type() {
-  return FlexShared<Type>::weak(&UNKOWN_TYPE);
+bool is_builtin(const Type &type) {
+  return type.kind == TypeKind::Builtin;
 }
 
-PrimitiveType DOUBLE_TYPE(PrimitiveKind::Double);
-FlexShared<Type> double_type() {
-  return FlexShared<Type>::weak(&DOUBLE_TYPE);
-}
-
-PrimitiveType FLOAT_TYPE(PrimitiveKind::Float);
-FlexShared<Type> float_type() {
-  return FlexShared<Type>::weak(&FLOAT_TYPE);
-}
-
-PrimitiveType INT_TYPE(PrimitiveKind::Int);
-FlexShared<Type> int_type() {
-  return FlexShared<Type>::weak(&INT_TYPE);
-}
-
-bool is_primitive(const Type &type) {
-  return type.kind == TypeKind::Primitive;
-}
-
-PrimitiveKind primitive_kind(const Type &type) {
-  if (!is_primitive(type)) {
-    throw RuntimeError("Type is not a primitive");
+BuiltinKind builtin_kind(const Type &type) {
+  if (!is_builtin(type)) {
+    throw RuntimeError("Type is not a builtin");
   }
-  return static_cast<const PrimitiveType &>(type).primitive_kind;
+  return static_cast<const BuiltinType &>(type).builtin_kind;
 }
 
-bool is_floating_point_primitive_type(const Type &type) {
-  if (!is_primitive(type)) {
+bool is_floating_point_builtin_type(const Type &type) {
+  if (!is_builtin(type)) {
     return false;
   }
-  switch (primitive_kind(type)) {
-  case PrimitiveKind::Float:
-  case PrimitiveKind::Double:
+  switch (builtin_kind(type)) {
+  case BuiltinKind::Float:
+  case BuiltinKind::Double:
     return true;
   default:
     return false;
   }
 }
 
-bool is_integral_primitive_type(const Type &type) {
-  if (!is_primitive(type)) {
+bool is_integral_builtin_type(const Type &type) {
+  if (!is_builtin(type)) {
     return false;
   }
-  switch (primitive_kind(type)) {
-  case PrimitiveKind::Byte:
-  case PrimitiveKind::UByte:
-  case PrimitiveKind::Short:
-  case PrimitiveKind::UShort:
-  case PrimitiveKind::Int:
-  case PrimitiveKind::UInt:
-  case PrimitiveKind::Long:
-  case PrimitiveKind::ULong:
+  switch (builtin_kind(type)) {
+  case BuiltinKind::Byte:
+  case BuiltinKind::UByte:
+  case BuiltinKind::Short:
+  case BuiltinKind::UShort:
+  case BuiltinKind::Int:
+  case BuiltinKind::UInt:
+  case BuiltinKind::Long:
+  case BuiltinKind::ULong:
     return true;
   default:
     return false;
@@ -90,26 +87,46 @@ public:
   }
 
   void analyze_binding(Binding &binding) {
+    if (binding.analyzed) {
+      return;
+    }
+
+    binding.analyzed = true;
+
     switch (binding.kind) {
     case BindingKind::Variable:
+      analyze_let_binding(static_cast<ValueBinding &>(binding));
+      break;
     case BindingKind::Constant:
-      analyze_value_binding(static_cast<ValueBinding &>(binding));
+      analyze_const_binding(static_cast<ValueBinding &>(binding));
       break;
     default:
       throw RuntimeError("not implemented");
     }
   }
 
-  void analyze_value_binding(ValueBinding &binding) {
-    if (binding.type.has_value()) {
-      return;
-    }
-
+  void analyze_let_binding(ValueBinding &binding) {
     const auto &decl_node = m_module_obj.ast.get_node(binding.decl).as_LetDeclNode();
 
-    binding.type = unknown_type(); // TODO: handle type annotations
+    if (decl_node.type.has_value()) {
+      binding.type = evaluate_type_expr(decl_node.type.value());
+    } else {
+      binding.type = FlexShared<Type>::weak(&UNKNOWN_TYPE);
+    }
     binding.value = build_expression(binding.type.value(), decl_node.expr.value());
   }
+
+  void analyze_const_binding(ValueBinding &binding) {
+    const auto &decl_node = m_module_obj.ast.get_node(binding.decl).as_ConstDeclNode();
+
+    if (decl_node.type.has_value()) {
+      binding.type = evaluate_type_expr(decl_node.type.value());
+    } else {
+      binding.type = FlexShared<Type>::weak(&UNKNOWN_TYPE);
+    }
+    binding.value = build_expression(binding.type.value(), decl_node.expr.value());
+  }
+
   FlexShared<Expression> build_expression(FlexShared<Type> &expected_type, NodeId expr_node_id) {
     const auto &expr_node = m_module_obj.ast.get_node(expr_node_id);
     FlexShared<Expression> result;
@@ -124,6 +141,82 @@ public:
     return unify(expected_type, result);
   }
 
+  FlexShared<Type> evaluate_type_expr(NodeId type_expr_node_id) {
+    const auto &type_expr_node = m_module_obj.ast.get_node(type_expr_node_id);
+    const Location &start_location = m_module_obj.tokens.get_token(type_expr_node.start_token())
+                                         .location;
+    switch (type_expr_node.type()) {
+    case NodeType::IdentifierNode: {
+      return evaluate_type_name_expr(start_location, type_expr_node.as_IdentifierNode());
+    }
+    case NodeType::BuiltinTypeNode: {
+      return evaluate_builtin_type_expr(type_expr_node.as_BuiltinTypeNode());
+    }
+    default:
+      throw RuntimeError("not implemented");
+    }
+  }
+
+  FlexShared<Type> evaluate_builtin_type_expr(const BuiltinTypeNode &builtin_type_node) {
+    switch (builtin_type_node.kind) {
+    case BuiltinKind::Bool:
+      return FlexShared<Type>::weak(&BOOL_TYPE);
+    case BuiltinKind::Byte:
+      return FlexShared<Type>::weak(&BYTE_TYPE);
+    case BuiltinKind::Short:
+      return FlexShared<Type>::weak(&SHORT_TYPE);
+    case BuiltinKind::Int:
+      return FlexShared<Type>::weak(&INT_TYPE);
+    case BuiltinKind::Long:
+      return FlexShared<Type>::weak(&LONG_TYPE);
+    case BuiltinKind::UByte:
+      return FlexShared<Type>::weak(&UBYTE_TYPE);
+    case BuiltinKind::UShort:
+      return FlexShared<Type>::weak(&USHORT_TYPE);
+    case BuiltinKind::UInt:
+      return FlexShared<Type>::weak(&UINT_TYPE);
+    case BuiltinKind::ULong:
+      return FlexShared<Type>::weak(&ULONG_TYPE);
+    case BuiltinKind::USize:
+      return FlexShared<Type>::weak(&USIZE_TYPE);
+    case BuiltinKind::Float:
+      return FlexShared<Type>::weak(&FLOAT_TYPE);
+    case BuiltinKind::Double:
+      return FlexShared<Type>::weak(&DOUBLE_TYPE);
+    case BuiltinKind::Char:
+      return FlexShared<Type>::weak(&CHAR_TYPE);
+    case BuiltinKind::Str:
+      return FlexShared<Type>::weak(&STR_TYPE);
+    case BuiltinKind::Null:
+      return FlexShared<Type>::weak(&NULL_TYPE);
+    case BuiltinKind::Never:
+      return FlexShared<Type>::weak(&NEVER_TYPE);
+    default:
+      throw RuntimeError("unreachable");
+    }
+  }
+
+  FlexShared<Type> evaluate_type_name_expr(
+      const Location &start_location, const IdentifierNode &type_name_node
+  ) {
+    const Option<BindingId> binding_id = m_module_obj.scope->binding_ids.find(type_name_node.name);
+    if (!binding_id.has_value()) {
+      String error_message = "Unknown type name '";
+      error_message.append(type_name_node.name);
+      error_message.append("'");
+      throw SourceLocationError(start_location, move(error_message));
+    }
+    const Binding &binding = *m_module_obj.scope->bindings[binding_id.value()];
+    if (binding.kind != BindingKind::Type && binding.kind != BindingKind::Class &&
+        binding.kind != BindingKind::Concept) {
+      String error_message = "Expected a type name, but '";
+      error_message.append(type_name_node.name);
+      error_message.append("' is not a type");
+      throw SourceLocationError(start_location, move(error_message));
+    }
+    return static_cast<const TypeBinding &>(binding).type.value();
+  }
+
   FlexShared<Expression> unify(FlexShared<Type> &target_type, const FlexShared<Expression> &expr) {
     const FlexShared<Type> &assignment_type = expr->type;
 
@@ -131,9 +224,9 @@ public:
       return expr;
     }
 
-    if (target_type->kind == TypeKind::Primitive) {
-      auto &detail = static_cast<PrimitiveType &>(*target_type);
-      if (detail.primitive_kind == PrimitiveKind::Unknown) {
+    if (target_type->kind == TypeKind::Builtin) {
+      auto &detail = static_cast<BuiltinType &>(*target_type);
+      if (detail.builtin_kind == BuiltinKind::Unknown) {
         target_type = assignment_type;
         return expr;
       }
@@ -154,8 +247,7 @@ public:
           return expr;
         }
       }
-      if (is_integral_primitive_type(target_type) ||
-          is_floating_point_primitive_type(target_type)) {
+      if (is_integral_builtin_type(target_type) || is_floating_point_builtin_type(target_type)) {
         return expr;
       }
     }
@@ -168,7 +260,7 @@ public:
           return expr;
         }
       }
-      if (is_floating_point_primitive_type(target_type)) {
+      if (is_floating_point_builtin_type(target_type)) {
         return expr;
       }
     }
@@ -235,6 +327,7 @@ public:
       Text current_binding_name;
       Binding current_binding_details{};
       current_binding_details.visibility = DeclarationVisibility::Default;
+      current_binding_details.analyzed = false;
       get_binding_details(current_binding_name, current_binding_details, decl_node_id);
       const Option<BindingId> existing_binding_id = m_module_obj.scope->binding_ids.find(
           current_binding_name
@@ -282,6 +375,12 @@ public:
     case NodeType::LetDeclNode: {
       const auto &n = decl_node.as_LetDeclNode();
       current_binding_details.kind = BindingKind::Variable;
+      get_binding_details(current_binding_name, current_binding_details, n.target);
+      break;
+    }
+    case NodeType::ConstDeclNode: {
+      const auto &n = decl_node.as_ConstDeclNode();
+      current_binding_details.kind = BindingKind::Constant;
       get_binding_details(current_binding_name, current_binding_details, n.target);
       break;
     }

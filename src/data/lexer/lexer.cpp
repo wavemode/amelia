@@ -41,6 +41,7 @@ const auto keywords = Map<Text, TokenType>({
     {"char", TokenType::KEYWORD_CHAR},
     {"str", TokenType::KEYWORD_STR},
     {"null", TokenType::KEYWORD_NULL},
+    {"never", TokenType::KEYWORD_NEVER},
     {"throw", TokenType::KEYWORD_THROW},
     {"import", TokenType::KEYWORD_IMPORT},
     {"as", TokenType::KEYWORD_AS},

@@ -14,8 +14,8 @@ ModuleNode(
             name=IdentifierNode(
               name="T"
             ),
-            constraint=PrimitiveTypeNode(
-              name="int"
+            constraint=BuiltinTypeNode(
+              kind=int
             )
           )
         ]

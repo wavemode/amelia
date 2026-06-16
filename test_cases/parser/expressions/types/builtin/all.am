@@ -15,6 +15,7 @@ let x_ubitint : ubitint
 let x_char : char
 let x_str : str
 let x_null : null
+let x_never : never
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
@@ -23,136 +24,144 @@ ModuleNode(
       target=IdentifierNode(
         name="x_bool"
       ),
-      type=PrimitiveTypeNode(
-        name="bool"
+      type=BuiltinTypeNode(
+        kind=bool
       )
     ),
     LetDeclNode(
       target=IdentifierNode(
         name="x_byte"
       ),
-      type=PrimitiveTypeNode(
-        name="byte"
+      type=BuiltinTypeNode(
+        kind=byte
       )
     ),
     LetDeclNode(
       target=IdentifierNode(
         name="x_short"
       ),
-      type=PrimitiveTypeNode(
-        name="short"
+      type=BuiltinTypeNode(
+        kind=short
       )
     ),
     LetDeclNode(
       target=IdentifierNode(
         name="x_int"
       ),
-      type=PrimitiveTypeNode(
-        name="int"
+      type=BuiltinTypeNode(
+        kind=int
       )
     ),
     LetDeclNode(
       target=IdentifierNode(
         name="x_long"
       ),
-      type=PrimitiveTypeNode(
-        name="long"
+      type=BuiltinTypeNode(
+        kind=long
       )
     ),
     LetDeclNode(
       target=IdentifierNode(
         name="x_ubyte"
       ),
-      type=PrimitiveTypeNode(
-        name="ubyte"
+      type=BuiltinTypeNode(
+        kind=ubyte
       )
     ),
     LetDeclNode(
       target=IdentifierNode(
         name="x_ushort"
       ),
-      type=PrimitiveTypeNode(
-        name="ushort"
+      type=BuiltinTypeNode(
+        kind=ushort
       )
     ),
     LetDeclNode(
       target=IdentifierNode(
         name="x_uint"
       ),
-      type=PrimitiveTypeNode(
-        name="uint"
+      type=BuiltinTypeNode(
+        kind=uint
       )
     ),
     LetDeclNode(
       target=IdentifierNode(
         name="x_ulong"
       ),
-      type=PrimitiveTypeNode(
-        name="ulong"
+      type=BuiltinTypeNode(
+        kind=ulong
       )
     ),
     LetDeclNode(
       target=IdentifierNode(
         name="x_usize"
       ),
-      type=PrimitiveTypeNode(
-        name="usize"
+      type=BuiltinTypeNode(
+        kind=usize
       )
     ),
     LetDeclNode(
       target=IdentifierNode(
         name="x_float"
       ),
-      type=PrimitiveTypeNode(
-        name="float"
+      type=BuiltinTypeNode(
+        kind=float
       )
     ),
     LetDeclNode(
       target=IdentifierNode(
         name="x_double"
       ),
-      type=PrimitiveTypeNode(
-        name="double"
+      type=BuiltinTypeNode(
+        kind=double
       )
     ),
     LetDeclNode(
       target=IdentifierNode(
         name="x_bitint"
       ),
-      type=PrimitiveTypeNode(
-        name="bitint"
+      type=BitIntTypeNode(
+        is_signed=true
       )
     ),
     LetDeclNode(
       target=IdentifierNode(
         name="x_ubitint"
       ),
-      type=PrimitiveTypeNode(
-        name="ubitint"
+      type=BitIntTypeNode(
+        is_signed=false
       )
     ),
     LetDeclNode(
       target=IdentifierNode(
         name="x_char"
       ),
-      type=PrimitiveTypeNode(
-        name="char"
+      type=BuiltinTypeNode(
+        kind=char
       )
     ),
     LetDeclNode(
       target=IdentifierNode(
         name="x_str"
       ),
-      type=PrimitiveTypeNode(
-        name="str"
+      type=BuiltinTypeNode(
+        kind=str
       )
     ),
     LetDeclNode(
       target=IdentifierNode(
         name="x_null"
       ),
-      type=PrimitiveTypeNode(
-        name="null"
+      type=BuiltinTypeNode(
+        kind=null
+      )
+    ),
+    LetDeclNode(
+      target=IdentifierNode(
+        name="x_never"
+      ),
+      type=BuiltinTypeNode(
+        kind=never
       )
     )
   ]

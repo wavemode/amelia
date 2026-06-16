@@ -24,6 +24,7 @@ ubitint
 char
 str
 null
+never
 throw
 import
 as
@@ -101,6 +102,7 @@ KEYWORD_UBITINT(ubitint)
 KEYWORD_CHAR(char)
 KEYWORD_STR(str)
 KEYWORD_NULL(null)
+KEYWORD_NEVER(never)
 KEYWORD_THROW(throw)
 KEYWORD_IMPORT(import)
 KEYWORD_AS(as)

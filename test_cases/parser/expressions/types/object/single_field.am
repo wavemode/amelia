@@ -13,8 +13,8 @@ ModuleNode(
             key=IdentifierNode(
               name="a"
             ),
-            value=PrimitiveTypeNode(
-              name="int"
+            value=BuiltinTypeNode(
+              kind=int
             )
           )
         ]

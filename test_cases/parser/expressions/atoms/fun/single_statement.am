@@ -17,8 +17,8 @@ ModuleNode(
               name=IdentifierNode(
                 name="x"
               ),
-              type=PrimitiveTypeNode(
-                name="int"
+              type=BuiltinTypeNode(
+                kind=int
               )
             ),
             FunctionParameterNode(
@@ -26,13 +26,13 @@ ModuleNode(
               name=IdentifierNode(
                 name="y"
               ),
-              type=PrimitiveTypeNode(
-                name="float"
+              type=BuiltinTypeNode(
+                kind=float
               )
             )
           ],
-          return_type=PrimitiveTypeNode(
-            name="double"
+          return_type=BuiltinTypeNode(
+            kind=double
           )
         ),
         body=FunctionBodyNode(

@@ -11,8 +11,8 @@ ModuleNode(
         header_decls=ClassHeaderDeclsNode(
           decls=[
             ClassHeaderFieldDeclNode(
-              type=PrimitiveTypeNode(
-                name="int"
+              type=BuiltinTypeNode(
+                kind=int
               )
             ),
             ClassHeaderFieldDeclNode(
@@ -22,8 +22,8 @@ ModuleNode(
                 ),
                 indices=[
                   IndexNode(
-                    value=PrimitiveTypeNode(
-                      name="float"
+                    value=BuiltinTypeNode(
+                      kind=float
                     )
                   )
                 ]

@@ -17,24 +17,24 @@ ModuleNode(
             name=IdentifierNode(
               name="a"
             ),
-            type=PrimitiveTypeNode(
-              name="int"
+            type=BuiltinTypeNode(
+              kind=int
             )
           ),
           ClassFieldNode(
             name=IdentifierNode(
               name="b"
             ),
-            type=PrimitiveTypeNode(
-              name="float"
+            type=BuiltinTypeNode(
+              kind=float
             )
           ),
           ClassFieldNode(
             name=IdentifierNode(
               name="c"
             ),
-            type=PrimitiveTypeNode(
-              name="double"
+            type=BuiltinTypeNode(
+              kind=double
             ),
             initializer=NumberLiteralNode(value=5.4)
           )

@@ -5,6 +5,7 @@
 #include "prelude.hpp"
 
 #include "data/lexer/token_type.hpp"
+#include "data/sema/type.hpp"
 #include "data/source/declaration_visibility.hpp"
 #include "data/source/number_literal.hpp"
 #include "data/util/integer.hpp"
@@ -720,8 +721,12 @@ struct AsyncExprNode {
   NodeId expr;
 };
 
-struct PrimitiveTypeNode {
-  String name;
+struct BuiltinTypeNode {
+  BuiltinKind kind;
+};
+
+struct BitIntTypeNode {
+  bool is_signed;
 };
 
 struct AutoTypeNode {};
@@ -976,7 +981,8 @@ struct AbstractDeclNode {
   X(OverrideDeclNode)                                                                              \
   X(DefaultDeclNode)                                                                               \
   X(DefaultLiteralNode)                                                                            \
-  X(PrimitiveTypeNode)                                                                             \
+  X(BuiltinTypeNode)                                                                               \
+  X(BitIntTypeNode)                                                                                \
   X(AutoTypeNode)                                                                                  \
   X(ImportDeclNode)                                                                                \
   X(ImportItemNode)                                                                                \

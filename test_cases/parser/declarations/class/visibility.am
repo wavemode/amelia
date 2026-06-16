@@ -33,8 +33,8 @@ ModuleNode(
               name=IdentifierNode(
                 name="a"
               ),
-              type=PrimitiveTypeNode(
-                name="int"
+              type=BuiltinTypeNode(
+                kind=int
               )
             )
           ),
@@ -55,8 +55,8 @@ ModuleNode(
               name=IdentifierNode(
                 name="c"
               ),
-              type=PrimitiveTypeNode(
-                name="float"
+              type=BuiltinTypeNode(
+                kind=float
               )
             )
           )

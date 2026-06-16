@@ -26,8 +26,8 @@ ModuleNode(
                 name=IdentifierNode(
                   name="T"
                 ),
-                type_expr=PrimitiveTypeNode(
-                  name="int"
+                type_expr=BuiltinTypeNode(
+                  kind=int
                 )
               ),
               LetDeclNode(

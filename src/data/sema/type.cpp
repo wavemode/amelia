@@ -4,17 +4,17 @@ namespace amelia {
 
 namespace {
 
-Serialize serialize_primitive(const PrimitiveType &type) {
-  return serialize_primitive_kind(type.primitive_kind);
+Serialize serialize_builtin(const BuiltinType &type) {
+  return serialize_builtin_kind(type.builtin_kind);
 }
 
 } // namespace
 
 Serialize Type::serialize() const {
   switch (kind) {
-  case TypeKind::Primitive: {
-    const PrimitiveType &primitive_type = static_cast<const PrimitiveType &>(*this);
-    return serialize_primitive(primitive_type);
+  case TypeKind::Builtin: {
+    const BuiltinType &builtin_type = static_cast<const BuiltinType &>(*this);
+    return serialize_builtin(builtin_type);
   }
   case TypeKind::Alias: {
     const AliasType &alias = static_cast<const AliasType &>(*this);
@@ -43,55 +43,58 @@ Serialize Type::serialize() const {
   }
 }
 
-Serialize serialize_primitive_kind(PrimitiveKind kind) {
+Serialize serialize_builtin_kind(BuiltinKind kind) {
   String result;
   switch (kind) {
-  case PrimitiveKind::Byte:
+  case BuiltinKind::Byte:
     result.append("byte");
     break;
-  case PrimitiveKind::UByte:
+  case BuiltinKind::UByte:
     result.append("ubyte");
     break;
-  case PrimitiveKind::Short:
+  case BuiltinKind::Short:
     result.append("short");
     break;
-  case PrimitiveKind::UShort:
+  case BuiltinKind::UShort:
     result.append("ushort");
     break;
-  case PrimitiveKind::Int:
+  case BuiltinKind::Int:
     result.append("int");
     break;
-  case PrimitiveKind::UInt:
+  case BuiltinKind::UInt:
     result.append("uint");
     break;
-  case PrimitiveKind::Long:
+  case BuiltinKind::Long:
     result.append("long");
     break;
-  case PrimitiveKind::ULong:
+  case BuiltinKind::ULong:
     result.append("ulong");
     break;
-  case PrimitiveKind::Float:
+  case BuiltinKind::USize:
+    result.append("usize");
+    break;
+  case BuiltinKind::Float:
     result.append("float");
     break;
-  case PrimitiveKind::Double:
+  case BuiltinKind::Double:
     result.append("double");
     break;
-  case PrimitiveKind::Bool:
+  case BuiltinKind::Bool:
     result.append("bool");
     break;
-  case PrimitiveKind::Char:
+  case BuiltinKind::Char:
     result.append("char");
     break;
-  case PrimitiveKind::Str:
+  case BuiltinKind::Str:
     result.append("str");
     break;
-  case PrimitiveKind::Null:
+  case BuiltinKind::Null:
     result.append("null");
     break;
-  case PrimitiveKind::Never:
+  case BuiltinKind::Never:
     result.append("never");
     break;
-  case PrimitiveKind::Unknown:
+  case BuiltinKind::Unknown:
     result.append("unknown");
     break;
   }
@@ -110,11 +113,11 @@ Serialize serialize_type_kind(TypeKind kind) {
   case TypeKind::Apply:
     result.append("Apply");
     break;
-  case TypeKind::Primitive:
-    result.append("Primitive");
+  case TypeKind::Builtin:
+    result.append("Builtin");
     break;
-  case TypeKind::Bitint:
-    result.append("Bitint");
+  case TypeKind::BitInt:
+    result.append("BitInt");
     break;
   case TypeKind::Tuple:
     result.append("Tuple");

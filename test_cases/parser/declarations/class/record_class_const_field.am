@@ -18,15 +18,15 @@ ModuleNode(
                 name=IdentifierNode(
                   name="a"
                 ),
-                type=PrimitiveTypeNode(
-                  name="int"
+                type=BuiltinTypeNode(
+                  kind=int
                 )
               )
             ),
             ClassHeaderConstDeclNode(
               decl=ClassHeaderFieldDeclNode(
-                type=PrimitiveTypeNode(
-                  name="float"
+                type=BuiltinTypeNode(
+                  kind=float
                 )
               )
             )

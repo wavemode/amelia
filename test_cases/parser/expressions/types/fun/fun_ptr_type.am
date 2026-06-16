@@ -18,8 +18,8 @@ ModuleNode(
                 ),
                 indices=[
                   IndexNode(
-                    value=PrimitiveTypeNode(
-                      name="int"
+                    value=BuiltinTypeNode(
+                      kind=int
                     )
                   )
                 ]
@@ -33,8 +33,8 @@ ModuleNode(
                 ),
                 indices=[
                   IndexNode(
-                    value=PrimitiveTypeNode(
-                      name="int"
+                    value=BuiltinTypeNode(
+                      kind=int
                     )
                   )
                 ]
@@ -47,8 +47,8 @@ ModuleNode(
             ),
             indices=[
               IndexNode(
-                value=PrimitiveTypeNode(
-                  name="int"
+                value=BuiltinTypeNode(
+                  kind=int
                 )
               )
             ]

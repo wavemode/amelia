@@ -14,8 +14,8 @@ ModuleNode(
             name=IdentifierNode(
               name="B"
             ),
-            default_value=PrimitiveTypeNode(
-              name="int"
+            default_value=BuiltinTypeNode(
+              kind=int
             )
           )
         ]

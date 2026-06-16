@@ -9,8 +9,8 @@ ModuleNode(
       name=IdentifierNode(
         name="A"
       ),
-      repr_type=PrimitiveTypeNode(
-        name="uint"
+      repr_type=BuiltinTypeNode(
+        kind=uint
       ),
       variants=[
         EnumVariantNode(

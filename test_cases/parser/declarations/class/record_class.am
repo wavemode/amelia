@@ -20,8 +20,8 @@ ModuleNode(
               name=IdentifierNode(
                 name="a"
               ),
-              type=PrimitiveTypeNode(
-                name="int"
+              type=BuiltinTypeNode(
+                kind=int
               ),
               default_value=NumberLiteralNode(value=5)
             ),
@@ -29,16 +29,16 @@ ModuleNode(
               name=IdentifierNode(
                 name="b"
               ),
-              type=PrimitiveTypeNode(
-                name="float"
+              type=BuiltinTypeNode(
+                kind=float
               )
             ),
             ClassHeaderFieldDeclNode(
               name=IdentifierNode(
                 name="c"
               ),
-              type=PrimitiveTypeNode(
-                name="double"
+              type=BuiltinTypeNode(
+                kind=double
               )
             )
           ]

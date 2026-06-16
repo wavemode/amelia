@@ -7,8 +7,8 @@ ModuleNode(
       target=IdentifierNode(
         name="c"
       ),
-      type=PrimitiveTypeNode(
-        name="char"
+      type=BuiltinTypeNode(
+        kind=char
       ),
       expr=CharLiteralNode(
         lit='\U000065E5'
