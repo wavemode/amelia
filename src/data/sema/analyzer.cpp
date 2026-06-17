@@ -12,23 +12,44 @@ namespace amelia {
 
 namespace {
 
-BuiltinType BYTE_TYPE(BuiltinKind::Byte);
-BuiltinType UBYTE_TYPE(BuiltinKind::UByte);
-BuiltinType SHORT_TYPE(BuiltinKind::Short);
-BuiltinType USHORT_TYPE(BuiltinKind::UShort);
-BuiltinType INT_TYPE(BuiltinKind::Int);
-BuiltinType UINT_TYPE(BuiltinKind::UInt);
-BuiltinType LONG_TYPE(BuiltinKind::Long);
-BuiltinType ULONG_TYPE(BuiltinKind::ULong);
-BuiltinType USIZE_TYPE(BuiltinKind::USize);
-BuiltinType FLOAT_TYPE(BuiltinKind::Float);
-BuiltinType DOUBLE_TYPE(BuiltinKind::Double);
-BuiltinType BOOL_TYPE(BuiltinKind::Bool);
-BuiltinType CHAR_TYPE(BuiltinKind::Char);
-BuiltinType STR_TYPE(BuiltinKind::Str);
-BuiltinType NULL_TYPE(BuiltinKind::Null);
-BuiltinType NEVER_TYPE(BuiltinKind::Never);
-BuiltinType UNKNOWN_TYPE(BuiltinKind::Unknown);
+BuiltinType BYTE_TYPE;
+BuiltinType UBYTE_TYPE;
+BuiltinType SHORT_TYPE;
+BuiltinType USHORT_TYPE;
+BuiltinType INT_TYPE;
+BuiltinType UINT_TYPE;
+BuiltinType LONG_TYPE;
+BuiltinType ULONG_TYPE;
+BuiltinType USIZE_TYPE;
+BuiltinType FLOAT_TYPE;
+BuiltinType DOUBLE_TYPE;
+BuiltinType BOOL_TYPE;
+BuiltinType CHAR_TYPE;
+BuiltinType STR_TYPE;
+BuiltinType NULL_TYPE;
+BuiltinType NEVER_TYPE;
+BuiltinType UNKNOWN_TYPE;
+
+bool init = []() {
+  BYTE_TYPE.builtin_kind = BuiltinKind::Byte;
+  UBYTE_TYPE.builtin_kind = BuiltinKind::UByte;
+  SHORT_TYPE.builtin_kind = BuiltinKind::Short;
+  USHORT_TYPE.builtin_kind = BuiltinKind::UShort;
+  INT_TYPE.builtin_kind = BuiltinKind::Int;
+  UINT_TYPE.builtin_kind = BuiltinKind::UInt;
+  LONG_TYPE.builtin_kind = BuiltinKind::Long;
+  ULONG_TYPE.builtin_kind = BuiltinKind::ULong;
+  USIZE_TYPE.builtin_kind = BuiltinKind::USize;
+  FLOAT_TYPE.builtin_kind = BuiltinKind::Float;
+  DOUBLE_TYPE.builtin_kind = BuiltinKind::Double;
+  BOOL_TYPE.builtin_kind = BuiltinKind::Bool;
+  CHAR_TYPE.builtin_kind = BuiltinKind::Char;
+  STR_TYPE.builtin_kind = BuiltinKind::Str;
+  NULL_TYPE.builtin_kind = BuiltinKind::Null;
+  NEVER_TYPE.builtin_kind = BuiltinKind::Never;
+  UNKNOWN_TYPE.builtin_kind = BuiltinKind::Unknown;
+  return true;
+}();
 
 bool can_builtin_type_represent_range(const Type &type, const Integer &min, const Integer &max) {
   if (type.kind == TypeKind::Builtin) {
@@ -245,8 +266,11 @@ public:
     case NodeType::IdentifierNode:
       result = build_expr_identifier(expr_node_id);
       break;
-    case NodeType::NegativeExprNode:
-      result = build_expr_negative(expr_node_id);
+    case NodeType::NegateExprNode:
+      result = build_expr_negate(expr_node_id);
+      break;
+    case NodeType::BooleanLiteralNode:
+      result = build_expr_boolean_literal(expr_node_id);
       break;
     default:
       throw RuntimeError("not implemented");
@@ -255,10 +279,20 @@ public:
     return result;
   }
 
-  FlexShared<Expression> build_expr_negative(NodeId expr_node_id) {
+  FlexShared<Expression> build_expr_boolean_literal(NodeId expr_node_id) {
     const Node &node = m_module_obj.ast.get_node(expr_node_id);
-    const NegativeExprNode &expr_node = node.as_NegativeExprNode();
-    auto result = FlexShared<UnaryOperationExpression>::emplace();
+    const BooleanLiteralNode &expr_node = node.as_BooleanLiteralNode();
+    auto result = emplace_flex<BooleanLiteralExpression>();
+    result->node_id = expr_node_id;
+    result->value = expr_node.value;
+    result->type = make_flex(ConstBooleanType(expr_node.value));
+    return result;
+  }
+
+  FlexShared<Expression> build_expr_negate(NodeId expr_node_id) {
+    const Node &node = m_module_obj.ast.get_node(expr_node_id);
+    const NegateExprNode &expr_node = node.as_NegateExprNode();
+    auto result = emplace_flex<UnaryOperationExpression>();
     result->node_id = expr_node_id;
     result->op_kind = UnaryOperatorKind::Negate;
     result->operand = build_expression(expr_node.expr);
@@ -453,6 +487,13 @@ public:
               return expr;
             }
           }
+        }
+      }
+
+      // bool implicitly converts from Const[true] and Const[false]
+      if (target_builtin_kind == BuiltinKind::Bool) {
+        if (assignment_type->kind == TypeKind::ConstBoolean) {
+          return expr;
         }
       }
 

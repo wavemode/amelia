@@ -161,4 +161,8 @@ template <typename T> FlexShared<T> make_flex(T &&obj) {
   return FlexShared<T>::strong(move(obj));
 }
 
+template <typename T, typename... Args> FlexShared<T> emplace_flex(Args &&...args) {
+  return FlexShared<T>::emplace(amelia::forward<Args>(args)...);
+}
+
 } // namespace amelia

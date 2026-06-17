@@ -326,8 +326,8 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "expr", n.expr);
     break;
   }
-  case NodeType::NegativeExprNode: {
-    const auto &n = node.as_NegativeExprNode();
+  case NodeType::NegateExprNode: {
+    const auto &n = node.as_NegateExprNode();
     print_node_field(out, "expr", n.expr);
     break;
   }

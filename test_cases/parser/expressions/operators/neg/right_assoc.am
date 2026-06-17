@@ -7,8 +7,8 @@ ModuleNode(
       target=IdentifierNode(
         name="x"
       ),
-      expr=NegativeExprNode(
-        expr=NegativeExprNode(
+      expr=NegateExprNode(
+        expr=NegateExprNode(
           expr=IdentifierNode(
             name="y"
           )

@@ -1614,7 +1614,7 @@ public:
     } else if (start_token.type == TokenType::MINUS) {
       ++m_token_index; // consume the '-' operator
       NodeId expr = parse_descend_expr_pos_neg_deref_not_bitnot_ell(allow_funcall);
-      return m_output.add_node(start_token.id, m_token_index, NegativeExprNode{expr});
+      return m_output.add_node(start_token.id, m_token_index, NegateExprNode{expr});
     } else if (start_token.type == TokenType::TILDE) {
       ++m_token_index; // consume the '~' operator
       NodeId expr = parse_descend_expr_pos_neg_deref_not_bitnot_ell(allow_funcall);

@@ -46,6 +46,7 @@ enum class TypeKind : uint8_t {
   Impl,
   ConstInteger,
   ConstRational,
+  ConstBoolean,
   Class,
   Union,
   Concept,
@@ -58,9 +59,7 @@ Serialize serialize_type_kind(TypeKind kind);
 
 struct Type {
   TypeKind kind;
-
   Serialize serialize() const;
-
   virtual ~Type() = default;
 
 protected:
@@ -68,31 +67,33 @@ protected:
 };
 
 struct BuiltinType : Type {
-  BuiltinType(BuiltinKind builtin_kind) : Type(TypeKind::Builtin), builtin_kind(builtin_kind) {}
-
+  BuiltinType() : Type(TypeKind::Builtin) {}
   BuiltinKind builtin_kind;
 };
 
 struct AliasType : Type {
-  AliasType(String name_param, String module_name_param, FlexShared<Type> target_param)
-      : Type(TypeKind::Alias), name(move(name_param)), module_name(move(module_name_param)),
-        target(move(target_param)) {}
-
+  AliasType() : Type(TypeKind::Alias) {}
   String name;
   String module_name;
   FlexShared<Type> target;
 };
 
 struct ConstIntegerType : Type {
+  ConstIntegerType() : Type(TypeKind::ConstInteger) {}
   ConstIntegerType(Integer value) : Type(TypeKind::ConstInteger), value(move(value)) {}
-
   Integer value;
 };
 
 struct ConstRationalType : Type {
+  ConstRationalType() : Type(TypeKind::ConstRational) {}
   ConstRationalType(Rational value) : Type(TypeKind::ConstRational), value(move(value)) {}
-
   Rational value;
+};
+
+struct ConstBooleanType : Type {
+  ConstBooleanType() : Type(TypeKind::ConstBoolean) {}
+  ConstBooleanType(bool value) : Type(TypeKind::ConstBoolean), value(value) {}
+  bool value;
 };
 
 } // namespace amelia

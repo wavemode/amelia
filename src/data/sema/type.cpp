@@ -38,6 +38,13 @@ Serialize Type::serialize() const {
     value.append("]");
     return Serialize::literal(move(value));
   }
+  case TypeKind::ConstBoolean: {
+    const ConstBooleanType &const_boolean = static_cast<const ConstBooleanType &>(*this);
+    String value("Const[");
+    value.append(const_boolean.value ? Text("true") : Text("false"));
+    value.append("]");
+    return Serialize::literal(move(value));
+  }
   default:
     throw RuntimeError("not implemented");
   }
@@ -145,6 +152,9 @@ Serialize serialize_type_kind(TypeKind kind) {
     break;
   case TypeKind::ConstRational:
     result.append("ConstRational");
+    break;
+  case TypeKind::ConstBoolean:
+    result.append("ConstBoolean");
     break;
   case TypeKind::Class:
     result.append("Class");

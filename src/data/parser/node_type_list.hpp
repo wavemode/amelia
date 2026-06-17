@@ -418,7 +418,7 @@ struct PositiveExprNode {
   NodeId expr;
 };
 
-struct NegativeExprNode {
+struct NegateExprNode {
   NodeId expr;
 };
 
@@ -864,7 +864,7 @@ struct AbstractDeclNode {
   X(BitwiseNotExprNode)                                                                            \
   X(DerefExprNode)                                                                                 \
   X(PositiveExprNode)                                                                              \
-  X(NegativeExprNode)                                                                              \
+  X(NegateExprNode)                                                                                \
   X(EllipsisExprNode)                                                                              \
   X(FieldAccessExprNode)                                                                           \
   X(NumericFieldAccessExprNode)                                                                    \

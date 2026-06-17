@@ -33,4 +33,11 @@ Serialize UnaryOperationExpression::serialize() const {
   return result;
 }
 
+Serialize BooleanLiteralExpression::serialize() const {
+  Serialize result;
+  result.set_object_name("BooleanLiteralExpression");
+  result.add_object_field("value", Serialize::of(value));
+  return result;
+}
+
 } // namespace amelia
