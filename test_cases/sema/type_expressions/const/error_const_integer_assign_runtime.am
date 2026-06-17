@@ -1,0 +1,6 @@
+let x : const 5 = y
+let y : int = 5
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot convert expression of type 'int' to expected type 'Const[5]' (at test_cases/sema/type_expressions/const/error_const_integer_assign_runtime.am:1:19)")
+*/

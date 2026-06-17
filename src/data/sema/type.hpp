@@ -51,7 +51,6 @@ enum class TypeKind : uint8_t {
   Union,
   Concept,
   Function,
-  FunctionPointer,
   Variable,
 };
 
@@ -94,6 +93,23 @@ struct ConstBooleanType : Type {
   ConstBooleanType() : Type(TypeKind::ConstBoolean) {}
   ConstBooleanType(bool value) : Type(TypeKind::ConstBoolean), value(value) {}
   bool value;
+};
+
+struct FunctionType : Type {
+  struct FunctionParameter {
+    String name;
+    FlexShared<Type> type;
+  };
+
+  FunctionType() : Type(TypeKind::Function) {}
+
+  List<FunctionParameter> parameters;
+  FlexShared<Type> return_type;
+
+  // TODO: default values
+  // TODO: implicit params
+  // TODO: variadic
+  // TODO: generic
 };
 
 } // namespace amelia

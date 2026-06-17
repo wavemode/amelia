@@ -84,70 +84,6 @@ bool can_builtin_type_represent_range(const Type &type, const Integer &min, cons
   return false;
 }
 
-bool is_numeric_type_representable(const Type &target_type, const Type &assignment_type) {
-  if (target_type.kind == TypeKind::ConstInteger) {
-    return assignment_type.kind == TypeKind::ConstInteger &&
-           static_cast<const ConstIntegerType &>(target_type).value ==
-               static_cast<const ConstIntegerType &>(assignment_type).value;
-  }
-
-  if (target_type.kind == TypeKind::ConstRational) {
-    return (assignment_type.kind == TypeKind::ConstRational &&
-            static_cast<const ConstRationalType &>(target_type).value ==
-                static_cast<const ConstRationalType &>(assignment_type).value) ||
-           (assignment_type.kind == TypeKind::ConstInteger &&
-            static_cast<const ConstRationalType &>(target_type).value ==
-                Rational(static_cast<const ConstIntegerType &>(assignment_type).value));
-  }
-
-  if (target_type.kind == TypeKind::Builtin) {
-    BuiltinKind target_builtin_kind = static_cast<const BuiltinType &>(target_type).builtin_kind;
-    if (assignment_type.kind == TypeKind::Builtin) {
-      switch (static_cast<const BuiltinType &>(assignment_type).builtin_kind) {
-      case BuiltinKind::Byte:
-        return can_builtin_type_represent_range(target_type, INT8_MIN, INT8_MAX);
-      case BuiltinKind::UByte:
-        return can_builtin_type_represent_range(target_type, 0, UINT8_MAX);
-      case BuiltinKind::Short:
-        return can_builtin_type_represent_range(target_type, INT16_MIN, INT16_MAX);
-      case BuiltinKind::UShort:
-        return can_builtin_type_represent_range(target_type, 0, UINT16_MAX);
-      case BuiltinKind::Int:
-        return can_builtin_type_represent_range(target_type, INT32_MIN, INT32_MAX);
-      case BuiltinKind::UInt:
-        return can_builtin_type_represent_range(target_type, 0, UINT32_MAX);
-      case BuiltinKind::Float:
-        return target_builtin_kind == BuiltinKind::Float ||
-               target_builtin_kind == BuiltinKind::Double;
-      case BuiltinKind::Double:
-        return target_builtin_kind == BuiltinKind::Double;
-      case BuiltinKind::Char:
-        return can_builtin_type_represent_range(target_type, 0, UINT32_MAX);
-      case BuiltinKind::Long:
-        return can_builtin_type_represent_range(target_type, INT64_MIN, INT64_MAX);
-      case BuiltinKind::ULong:
-        return can_builtin_type_represent_range(target_type, 0, UINT64_MAX);
-      case BuiltinKind::USize:
-        return target_builtin_kind == BuiltinKind::Float ||
-               target_builtin_kind == BuiltinKind::Double;
-      default:
-        break;
-      }
-    } else if (assignment_type.kind == TypeKind::ConstInteger) {
-      const Integer &value = static_cast<const ConstIntegerType &>(assignment_type).value;
-      return can_builtin_type_represent_range(target_type, value, value);
-    } else if (assignment_type.kind == TypeKind::ConstRational) {
-      const Rational &value = static_cast<const ConstRationalType &>(assignment_type).value;
-      return target_builtin_kind == BuiltinKind::Float ||
-             target_builtin_kind == BuiltinKind::Double ||
-             (value.denominator() == 1 &&
-              can_builtin_type_represent_range(target_type, value.numerator(), value.numerator()));
-    }
-  }
-
-  return false;
-}
-
 class SemaWorkerState {
 public:
   SemaWorkerState(SemaResult &sema_result, Module &module_obj)
@@ -388,8 +324,26 @@ public:
     case NodeType::BuiltinTypeNode: {
       return evaluate_builtin_type_expr(type_expr_node.as_BuiltinTypeNode());
     }
+    case NodeType::ConstTypeExprNode: {
+      return evaluate_const_type_expr(type_expr_node.as_ConstTypeExprNode());
+    }
     default:
       throw RuntimeError("not implemented");
+    }
+  }
+
+  FlexShared<Type> evaluate_const_type_expr(const ConstTypeExprNode &const_type_expr_node) {
+    auto expr = build_expression(const_type_expr_node.expr);
+    switch (expr->type->kind) {
+    case TypeKind::ConstInteger:
+    case TypeKind::ConstRational:
+    case TypeKind::ConstBoolean:
+      return expr->type;
+    default:
+      String error_message = "Expected a constant, but got an expression of type '";
+      expr->type->serialize().to_string(error_message);
+      error_message.append('\'');
+      raise_error_at_node_id(expr->node_id, move(error_message));
     }
   }
 
@@ -474,9 +428,122 @@ public:
       return expr;
     }
 
-    // builtin numeric type conversions
-    if (is_numeric_type_representable(target_type, assignment_type)) {
-      return expr;
+    // const integers and const rationals with compatible values implicitly convert to each other
+    if (target_type->kind == TypeKind::ConstInteger) {
+      if ((assignment_type->kind == TypeKind::ConstInteger &&
+           static_cast<const ConstIntegerType &>(*target_type).value ==
+               static_cast<const ConstIntegerType &>(*assignment_type).value) ||
+          (assignment_type->kind == TypeKind::ConstRational &&
+           static_cast<const ConstIntegerType &>(*target_type).value ==
+               static_cast<const ConstRationalType &>(*assignment_type).value.numerator() &&
+           static_cast<const ConstRationalType &>(*assignment_type).value.denominator() == 1)) {
+        return expr;
+      }
+    } else if (target_type->kind == TypeKind::ConstRational) {
+      if ((assignment_type->kind == TypeKind::ConstRational &&
+           static_cast<const ConstRationalType &>(*target_type).value ==
+               static_cast<const ConstRationalType &>(*assignment_type).value) ||
+          (assignment_type->kind == TypeKind::ConstInteger &&
+           static_cast<const ConstRationalType &>(*target_type).value ==
+               Rational(static_cast<const ConstIntegerType &>(*assignment_type).value))) {
+        return expr;
+      }
+    }
+
+    // const and builtin types implicitly convert to types that can represent their range of values
+    if (target_type->kind == TypeKind::Builtin) {
+      BuiltinKind target_builtin_kind = static_cast<const BuiltinType &>(*target_type).builtin_kind;
+      if (assignment_type->kind == TypeKind::Builtin) {
+        switch (static_cast<const BuiltinType &>(*assignment_type).builtin_kind) {
+        case BuiltinKind::Byte:
+          if (can_builtin_type_represent_range(*target_type, INT8_MIN, INT8_MAX)) {
+            return expr;
+          }
+          break;
+        case BuiltinKind::UByte:
+          if (can_builtin_type_represent_range(*target_type, 0, UINT8_MAX)) {
+            return expr;
+          }
+          break;
+        case BuiltinKind::Short:
+          if (can_builtin_type_represent_range(*target_type, INT16_MIN, INT16_MAX)) {
+            return expr;
+          }
+          break;
+        case BuiltinKind::UShort:
+          if (can_builtin_type_represent_range(*target_type, 0, UINT16_MAX)) {
+            return expr;
+          }
+          break;
+        case BuiltinKind::Int:
+          if (can_builtin_type_represent_range(*target_type, INT32_MIN, INT32_MAX)) {
+            return expr;
+          }
+          break;
+        case BuiltinKind::UInt:
+          if (can_builtin_type_represent_range(*target_type, 0, UINT32_MAX)) {
+            return expr;
+          }
+          break;
+        case BuiltinKind::Float:
+          if (target_builtin_kind == BuiltinKind::Float ||
+              target_builtin_kind == BuiltinKind::Double) {
+            return expr;
+          }
+          break;
+        case BuiltinKind::Double:
+          if (target_builtin_kind == BuiltinKind::Double) {
+            return expr;
+          }
+          break;
+        case BuiltinKind::Char:
+          if (can_builtin_type_represent_range(*target_type, 0, UINT32_MAX)) {
+            return expr;
+          }
+          break;
+        case BuiltinKind::Long:
+          if (can_builtin_type_represent_range(*target_type, INT64_MIN, INT64_MAX)) {
+            return expr;
+          }
+          break;
+        case BuiltinKind::ULong:
+          if (can_builtin_type_represent_range(*target_type, 0, UINT64_MAX)) {
+            return expr;
+          }
+          break;
+        case BuiltinKind::USize:
+          if (target_builtin_kind == BuiltinKind::Float ||
+              target_builtin_kind == BuiltinKind::Double) {
+            return expr;
+          }
+          break;
+        default:
+          break;
+        }
+      } else if (assignment_type->kind == TypeKind::ConstInteger) {
+        const Integer &value = static_cast<const ConstIntegerType &>(*assignment_type).value;
+        if (can_builtin_type_represent_range(target_type, value, value)) {
+          return expr;
+        }
+      } else if (assignment_type->kind == TypeKind::ConstRational) {
+        const Rational &value = static_cast<const ConstRationalType &>(*assignment_type).value;
+        if (target_builtin_kind == BuiltinKind::Float ||
+            target_builtin_kind == BuiltinKind::Double ||
+            (value.denominator() == 1 &&
+             can_builtin_type_represent_range(target_type, value.numerator(), value.numerator()))) {
+          return expr;
+        }
+      }
+    }
+
+    // Const[true] and Const[false] implicitly convert to themselves
+    if (target_type->kind == TypeKind::ConstBoolean) {
+      if (assignment_type->kind == TypeKind::ConstBoolean) {
+        if (static_cast<const ConstBooleanType &>(*target_type).value ==
+            static_cast<const ConstBooleanType &>(*assignment_type).value) {
+          return expr;
+        }
+      }
     }
 
     if (target_type->kind == TypeKind::Builtin) {

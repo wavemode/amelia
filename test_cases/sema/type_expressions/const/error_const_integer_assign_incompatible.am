@@ -1,0 +1,6 @@
+let x : const 5 = y
+let y = 5.1
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot convert expression of type 'Const[51/10]' to expected type 'Const[5]' (at test_cases/sema/type_expressions/const/error_const_integer_assign_incompatible.am:1:19)")
+*/
