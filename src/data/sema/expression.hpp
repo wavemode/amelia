@@ -24,4 +24,21 @@ struct NumberLiteralExpression : Expression {
   Serialize serialize() const override;
 };
 
+struct IdentifierExpression : Expression {
+  String name;
+
+  Serialize serialize() const override;
+};
+
+enum class UnaryOperatorKind : uint8_t { Negate };
+
+Serialize serialize_unary_operator_kind(UnaryOperatorKind kind);
+
+struct UnaryOperationExpression : Expression {
+  UnaryOperatorKind op_kind;
+  FlexShared<Expression> operand;
+
+  Serialize serialize() const override;
+};
+
 } // namespace amelia

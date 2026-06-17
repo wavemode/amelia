@@ -136,6 +136,11 @@ public:
    */
   static signed char compare(ConstSlice<char> a, ConstSlice<char> b);
 
+  /**
+   * @return True if the given integer value is a valid unicode code point, false otherwise.
+   */
+  static bool is_valid_code_point(uint32_t cp);
+
 private:
   ConstSliceIterator<char> m_slice_iter;
 };

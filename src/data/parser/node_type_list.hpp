@@ -433,7 +433,7 @@ struct FieldAccessExprNode {
 
 struct NumericFieldAccessExprNode {
   NodeId object;
-  Integer field;
+  NumberLiteral field;
 };
 
 struct IndexingExprNode {

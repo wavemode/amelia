@@ -347,7 +347,7 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "object", n.object);
     open_line(out);
     out.append("field=");
-    n.field.to_string(out);
+    serialize_number_literal(n.field).to_string(out);
     break;
   }
   case NodeType::IndexingExprNode: {

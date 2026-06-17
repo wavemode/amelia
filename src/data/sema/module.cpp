@@ -4,8 +4,6 @@
 
 namespace amelia {
 
-void format_module(AbstractString &out, const Module &module) {}
-
 Serialize Module::serialize() const {
   auto result = Serialize();
   result.set_object_name("Module");

@@ -2,8 +2,6 @@
 
 namespace amelia {
 
-void format_sema_result(AbstractString &out, const SemaResult &sema_result) {}
-
 Serialize SemaResult::serialize() {
   auto result = Serialize();
   result.set_object_name("SemaResult");

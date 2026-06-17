@@ -44,8 +44,8 @@ public:
   Rational pow(uint32_t exponent) const;
 
   Integer floor() const;
-  Integer numerator() const;
-  Integer denominator() const;
+  const Integer &numerator() const;
+  const Integer &denominator() const;
 
   Rational operator+(const Rational &other) const;
   Rational operator-(const Rational &other) const;

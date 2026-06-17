@@ -1,0 +1,6 @@
+let x : byte = y
+let y : ushort = 42
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot convert expression of type 'ushort' to expected type 'byte' (at test_cases/sema/builtin_types/byte/error_assign_from_ushort.am:1:16)")
+*/

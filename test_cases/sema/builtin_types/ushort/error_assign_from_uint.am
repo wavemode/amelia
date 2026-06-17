@@ -1,0 +1,6 @@
+let x : ushort = y
+let y : uint = 42
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot convert expression of type 'uint' to expected type 'ushort' (at test_cases/sema/builtin_types/ushort/error_assign_from_uint.am:1:18)")
+*/

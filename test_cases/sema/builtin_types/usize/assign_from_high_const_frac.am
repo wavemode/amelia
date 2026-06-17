@@ -1,0 +1,34 @@
+let x : usize = y
+let y = 18446744073709551615184467440737095516151844674407370955161518446744073709551615.0
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="assign_from_high_const_frac",
+      scope=Scope(
+        bindings=[
+          Binding(
+            name="x",
+            kind=Variable,
+            visibility=Default,
+            type=usize,
+            value=IdentifierExpression(
+              name="y"
+            )
+          ),
+          Binding(
+            name="y",
+            kind=Variable,
+            visibility=Default,
+            type=Const[18446744073709551615184467440737095516151844674407370955161518446744073709551615/1],
+            value=NumberLiteralExpression(
+              lit=18446744073709551615184467440737095516151844674407370955161518446744073709551615.0
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

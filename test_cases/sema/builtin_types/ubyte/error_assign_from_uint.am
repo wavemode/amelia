@@ -1,0 +1,6 @@
+let x : ubyte = y
+let y : uint = 42
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot convert expression of type 'uint' to expected type 'ubyte' (at test_cases/sema/builtin_types/ubyte/error_assign_from_uint.am:1:17)")
+*/

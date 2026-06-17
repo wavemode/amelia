@@ -1,0 +1,34 @@
+let x : uint = y
+let y = 4294967295
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="assign_from_max_const",
+      scope=Scope(
+        bindings=[
+          Binding(
+            name="x",
+            kind=Variable,
+            visibility=Default,
+            type=uint,
+            value=IdentifierExpression(
+              name="y"
+            )
+          ),
+          Binding(
+            name="y",
+            kind=Variable,
+            visibility=Default,
+            type=Const[4294967295],
+            value=NumberLiteralExpression(
+              lit=4294967295
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

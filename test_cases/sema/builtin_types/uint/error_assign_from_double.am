@@ -1,0 +1,6 @@
+let x : uint = y
+let y : double = 42
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot convert expression of type 'double' to expected type 'uint' (at test_cases/sema/builtin_types/uint/error_assign_from_double.am:1:16)")
+*/

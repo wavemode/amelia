@@ -2,6 +2,7 @@
 
 #include <utfcpp/utf8.h>
 
+#include "char_iterator.hpp"
 #include "prelude.hpp"
 
 namespace amelia {
@@ -131,4 +132,7 @@ signed char CharIterator::compare(ConstSlice<char> a, ConstSlice<char> b) {
   }
 }
 
+bool CharIterator::is_valid_code_point(uint32_t cp) {
+  return utf8::internal::is_code_point_valid(cp);
+}
 } // namespace amelia

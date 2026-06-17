@@ -1,0 +1,6 @@
+let x : short = y
+let y : float = 42
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot convert expression of type 'float' to expected type 'short' (at test_cases/sema/builtin_types/short/error_assign_from_float.am:1:17)")
+*/

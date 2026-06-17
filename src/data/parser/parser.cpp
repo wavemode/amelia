@@ -1699,7 +1699,9 @@ public:
       } else if (next_token.type == TokenType::NUMBER_FIELD) {
         m_token_index++; // consume the numeric field token
         left = m_output.add_node(
-            start_token.id, m_token_index, NumericFieldAccessExprNode{left, next_token.id}
+            start_token.id,
+            m_token_index,
+            NumericFieldAccessExprNode{left, Lexer::read_number_literal(next_token.contents)}
         );
       } else if (next_token.type == TokenType::LEFT_BRACKET_NO_W) {
         ++m_token_index; // consume the '[' operator

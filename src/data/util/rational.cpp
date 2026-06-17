@@ -209,11 +209,11 @@ Integer Rational::floor() const {
   return m_numerator / m_denominator;
 }
 
-Integer Rational::numerator() const {
+const Integer &Rational::numerator() const {
   return m_numerator;
 }
 
-Integer Rational::denominator() const {
+const Integer &Rational::denominator() const {
   return m_denominator;
 }
 

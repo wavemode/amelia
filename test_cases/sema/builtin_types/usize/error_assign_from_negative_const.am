@@ -1,0 +1,6 @@
+let x : usize = y
+let y = -1
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot convert expression of type 'Const[-1]' to expected type 'usize' (at test_cases/sema/builtin_types/usize/error_assign_from_negative_const.am:1:17)")
+*/

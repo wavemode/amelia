@@ -1,0 +1,34 @@
+let x : usize = y
+let y : ulong = 42
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="assign_from_ulong",
+      scope=Scope(
+        bindings=[
+          Binding(
+            name="x",
+            kind=Variable,
+            visibility=Default,
+            type=usize,
+            value=IdentifierExpression(
+              name="y"
+            )
+          ),
+          Binding(
+            name="y",
+            kind=Variable,
+            visibility=Default,
+            type=ulong,
+            value=NumberLiteralExpression(
+              lit=42
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

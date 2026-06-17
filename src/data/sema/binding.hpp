@@ -24,6 +24,7 @@ struct Binding {
   DeclarationVisibility visibility;
   Option<FlexShared<Binding>> shadowed_binding;
   bool analyzed;
+  bool top_level;
 
   Serialize serialize() const;
   virtual ~Binding() = default;
