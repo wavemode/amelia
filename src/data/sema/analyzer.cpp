@@ -189,7 +189,17 @@ public:
   FlexShared<Expression> expect_expression_of_type(
       FlexShared<Type> &expected_type, NodeId expr_node_id
   ) {
-    return unify(expected_type, build_expression(expr_node_id));
+    auto expr = build_expression(expr_node_id);
+    auto unified_expr = unify(expected_type, expr);
+    if (!unified_expr.has_value()) {
+      String error_message = "Cannot convert expression of type '";
+      expr->type->serialize().to_string(error_message);
+      error_message.append("' to expected type '");
+      expected_type->serialize().to_string(error_message);
+      error_message.append("'");
+      raise_error_at_node_id(expr->node_id, move(error_message));
+    }
+    return unified_expr.value();
   }
 
   FlexShared<Expression> build_expression(NodeId expr_node_id) {
@@ -410,7 +420,9 @@ public:
     return static_cast<const TypeBinding &>(binding).type.value();
   }
 
-  FlexShared<Expression> unify(FlexShared<Type> &target_type, const FlexShared<Expression> &expr) {
+  Option<FlexShared<Expression>> unify(
+      FlexShared<Type> &target_type, const FlexShared<Expression> &expr
+  ) {
     const FlexShared<Type> &assignment_type = expr->type;
 
     if (assignment_type->kind == TypeKind::Builtin) {
@@ -608,12 +620,7 @@ public:
       }
     }
 
-    String error_message = "Cannot convert expression of type '";
-    assignment_type->serialize().to_string(error_message);
-    error_message.append("' to expected type '");
-    target_type->serialize().to_string(error_message);
-    error_message.append("'");
-    raise_error_at_node_id(expr->node_id, move(error_message));
+    return None();
   }
 
   FlexShared<Expression> build_expr_number_literal(NodeId expr_node_id) {
