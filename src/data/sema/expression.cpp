@@ -46,4 +46,12 @@ Serialize NullLiteralExpression::serialize() const {
   return result;
 }
 
+Serialize BuiltinTypeCastExpression::serialize() const {
+  Serialize result;
+  result.set_object_name("BuiltinTypeCastExpression");
+  result.add_object_field("type", type->serialize());
+  result.add_object_field("expr", expr->serialize());
+  return result;
+}
+
 } // namespace amelia

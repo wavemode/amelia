@@ -168,6 +168,9 @@ Serialize serialize_type_kind(TypeKind kind) {
   case TypeKind::Function:
     result.append("Function");
     break;
+  case TypeKind::FunctionPointer:
+    result.append("FunctionPointer");
+    break;
   case TypeKind::Variable:
     result.append("Variable");
     break;

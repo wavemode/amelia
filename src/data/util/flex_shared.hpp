@@ -124,6 +124,10 @@ public:
     return m_obj == other.m_obj;
   }
 
+  bool operator!=(const FlexShared<T> &other) const noexcept {
+    return m_obj != other.m_obj;
+  }
+
   operator T &() noexcept {
     return *m_obj;
   }

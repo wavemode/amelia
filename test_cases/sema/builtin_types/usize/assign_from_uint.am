@@ -13,8 +13,11 @@ SemaResult(
             kind=Variable,
             visibility=Default,
             type=usize,
-            value=IdentifierExpression(
-              name="y"
+            value=BuiltinTypeCastExpression(
+              type=usize,
+              expr=IdentifierExpression(
+                name="y"
+              )
             )
           ),
           Binding(
@@ -22,8 +25,11 @@ SemaResult(
             kind=Variable,
             visibility=Default,
             type=uint,
-            value=NumberLiteralExpression(
-              lit=42
+            value=BuiltinTypeCastExpression(
+              type=uint,
+              expr=NumberLiteralExpression(
+                lit=42
+              )
             )
           )
         ]

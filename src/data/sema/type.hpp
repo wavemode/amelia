@@ -51,6 +51,7 @@ enum class TypeKind : uint8_t {
   Union,
   Concept,
   Function,
+  FunctionPointer,
   Variable,
 };
 

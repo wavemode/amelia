@@ -13,8 +13,11 @@ SemaResult(
             kind=Variable,
             visibility=Default,
             type=Const[5],
-            value=IdentifierExpression(
-              name="y"
+            value=BuiltinTypeCastExpression(
+              type=Const[5],
+              expr=IdentifierExpression(
+                name="y"
+              )
             )
           ),
           Binding(

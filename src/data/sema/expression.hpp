@@ -64,4 +64,10 @@ struct UnaryOperationExpression : Expression {
   Serialize serialize() const override;
 };
 
+struct BuiltinTypeCastExpression : Expression {
+  BuiltinTypeCastExpression() : Expression(ExpressionKind::Identifier) {}
+  FlexShared<Expression> expr;
+  Serialize serialize() const override;
+};
+
 } // namespace amelia
