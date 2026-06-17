@@ -13,6 +13,7 @@ namespace amelia {
 enum class ExpressionKind : uint8_t {
   NumberLiteral,
   BooleanLiteral,
+  NullLiteral,
   Identifier,
   UnaryOperation,
 };
@@ -38,6 +39,11 @@ struct NumberLiteralExpression : Expression {
 struct BooleanLiteralExpression : Expression {
   BooleanLiteralExpression() : Expression(ExpressionKind::BooleanLiteral) {}
   bool value;
+  Serialize serialize() const override;
+};
+
+struct NullLiteralExpression : Expression {
+  NullLiteralExpression() : Expression(ExpressionKind::NullLiteral) {}
   Serialize serialize() const override;
 };
 

@@ -1,0 +1,32 @@
+let x : null = y
+let y = null
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="assign_from_null",
+      scope=Scope(
+        bindings=[
+          Binding(
+            name="x",
+            kind=Variable,
+            visibility=Default,
+            type=null,
+            value=IdentifierExpression(
+              name="y"
+            )
+          ),
+          Binding(
+            name="y",
+            kind=Variable,
+            visibility=Default,
+            type=null,
+            value=NullLiteralExpression()
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

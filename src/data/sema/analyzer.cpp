@@ -272,11 +272,29 @@ public:
     case NodeType::BooleanLiteralNode:
       result = build_expr_boolean_literal(expr_node_id);
       break;
+    case NodeType::BuiltinTypeNode:
+      result = build_expr_builtin_type(expr_node_id);
+      break;
     default:
       throw RuntimeError("not implemented");
     }
 
     return result;
+  }
+
+  FlexShared<Expression> build_expr_builtin_type(NodeId expr_node_id) {
+    const Node &node = m_module_obj.ast.get_node(expr_node_id);
+    const BuiltinTypeNode &expr_node = node.as_BuiltinTypeNode();
+    switch (expr_node.kind) {
+    case BuiltinKind::Null: {
+      auto result = emplace_flex<NullLiteralExpression>();
+      result->node_id = expr_node_id;
+      result->type = FlexShared<Type>::weak(&NULL_TYPE);
+      return result;
+    }
+    default:
+      throw RuntimeError("not implemented");
+    }
   }
 
   FlexShared<Expression> build_expr_boolean_literal(NodeId expr_node_id) {

@@ -40,4 +40,10 @@ Serialize BooleanLiteralExpression::serialize() const {
   return result;
 }
 
+Serialize NullLiteralExpression::serialize() const {
+  Serialize result;
+  result.set_object_name("NullLiteralExpression");
+  return result;
+}
+
 } // namespace amelia
