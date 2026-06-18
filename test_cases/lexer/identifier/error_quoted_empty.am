@@ -1,0 +1,5 @@
+``
+
+/* EXPECTED_OUTPUT:
+ERROR("Quoted identifier cannot be empty (at test_cases/lexer/identifier/error_quoted_empty.am:1:1)")
+*/

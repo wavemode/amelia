@@ -304,6 +304,9 @@ public:
       }
     }
   done:
+    if (m_scratch_buffer.size() == 0) {
+      throw_lexer_error(start_location, "Quoted identifier cannot be empty");
+    }
     if (previous_char_was_whitespace()) {
       emit_token(TokenType::QUOTED_IDENTIFIER, start_location);
     } else {

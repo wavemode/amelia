@@ -10,13 +10,25 @@ namespace amelia {
 
 namespace {
 
+Text unquote_identifier(Text ident) {
+  if (TextUtils::starts_with(ident, "`")) {
+    return TextUtils::slice_bytes(ident, 1, ident.size() - 1);
+  }
+  return ident;
+}
+
 void build_module_path(String &output, Text base_path, Slice<Text> module_parts) {
   Text path_separator = TextUtils::determine_path_separator(base_path);
   output.append(base_path);
   if (!TextUtils::ends_with(base_path, path_separator)) {
     output.append(path_separator);
   }
-  TextUtils::join_into(output, module_parts, path_separator);
+  for (size_t index = 0; index < module_parts.size(); ++index) {
+    output.append(unquote_identifier(module_parts[index]));
+    if (index < module_parts.size() - 1) {
+      output.append(path_separator);
+    }
+  }
   output.append(".am");
 }
 
