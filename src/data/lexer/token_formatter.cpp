@@ -1,6 +1,7 @@
 #include "token_formatter.hpp"
 
 #include "data/lexer/lexer.hpp"
+#include "data/source/identifier.hpp"
 #include "data/util/integer.hpp"
 
 namespace amelia {
@@ -27,11 +28,13 @@ void TokenFormatter::format_token(AbstractString &out, size_t token_id) const {
     out.append('\'');
     break;
   }
+  case TokenType::IDENTIFIER:
+  case TokenType::IDENTIFIER_NO_W:
+    Identifier(token.contents).pretty_print(out);
+    break;
   case TokenType::QUOTED_IDENTIFIER:
   case TokenType::QUOTED_IDENTIFIER_NO_W:
-    out.append('`');
-    out.append(identifier_text(token, true));
-    out.append('`');
+    Lexer::read_quoted_ident(token.contents).pretty_print(out);
     break;
   default:
     out.append(token.contents);

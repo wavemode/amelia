@@ -12,9 +12,7 @@
 
 namespace amelia {
 
-namespace {
-
-const auto keywords = Map<Text, TokenType>({
+const Map<Text, TokenType> RESERVED_WORDS = Map<Text, TokenType>({
     {"fun", TokenType::KEYWORD_FUN},
     {"if", TokenType::KEYWORD_IF},
     {"else", TokenType::KEYWORD_ELSE},
@@ -93,6 +91,8 @@ const auto keywords = Map<Text, TokenType>({
     {"super", TokenType::KEYWORD_SUPER},
     {"abstract", TokenType::KEYWORD_ABSTRACT},
 });
+
+namespace {
 
 bool is_whitespace(uint32_t cp) noexcept {
   return cp == ' ' || cp == '\t' || cp == '\n' || cp == '\r';
@@ -1208,7 +1208,7 @@ public:
     skip_word_chars();
 
     Text word = substr_after(start_location);
-    auto keyword_tt = keywords.find(word);
+    auto keyword_tt = RESERVED_WORDS.find(word);
 
     if (keyword_tt.has_value()) {
       emit_token(*keyword_tt, start_location);
@@ -1394,64 +1394,17 @@ void Lexer::read_string_literal(AbstractString &out, Text input, bool escape) {
   }
 }
 
-void Lexer::read_quoted_ident(AbstractString &out, Text input, bool escape) {
+Identifier Lexer::read_quoted_ident(Text input) {
   LexerResult result;
   LexerState state(result, LexerContext{"(anon)"}, input);
   auto start_location = state.current_location();
   if (input.size() == 0) {
     throw RuntimeError("Expected quoted identifier, but got empty input");
   }
-  if (input.begin().peek() != '`') {
+  if (input.data()[0] != '`') {
     throw RuntimeError("Expected quoted identifier to start with backtick");
   }
-  auto text = Text(state.read_quoted_ident(start_location).data());
-  if (escape) {
-    for (uint32_t cp : text) {
-      switch (cp) {
-      case '\a':
-        out.append('\\');
-        out.append('a');
-        break;
-      case '\b':
-        out.append('\\');
-        out.append('b');
-        break;
-      case '\f':
-        out.append('\\');
-        out.append('f');
-        break;
-      case '\n':
-        out.append('\\');
-        out.append('n');
-        break;
-      case '\r':
-        out.append('\\');
-        out.append('r');
-        break;
-      case '\t':
-        out.append('\\');
-        out.append('t');
-        break;
-      case '\v':
-        out.append('\\');
-        out.append('v');
-        break;
-      case '`':
-        out.append('\\');
-        out.append('`');
-        break;
-      case '\\':
-        out.append('\\');
-        out.append('\\');
-        break;
-      default:
-        out.append(cp);
-        break;
-      }
-    }
-  } else {
-    out.append(text);
-  }
+  return Identifier(Text(state.read_quoted_ident(start_location).data()));
 }
 
 uint32_t Lexer::read_char_literal(Text input) {

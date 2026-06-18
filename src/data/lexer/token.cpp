@@ -8,21 +8,20 @@
 namespace amelia {
 
 String identifier_text(const Token &token, bool escaped) {
+  String result;
   switch (token.type) {
   case TokenType::IDENTIFIER:
   case TokenType::IDENTIFIER_NO_W:
-  case TokenType::KEYWORD_THIS_TYPE:
-  case TokenType::KEYWORD_SUPER:
-    return String(token.contents);
+    Identifier(token.contents).pretty_print(result, true, escaped);
+    break;
   case TokenType::QUOTED_IDENTIFIER:
-  case TokenType::QUOTED_IDENTIFIER_NO_W: {
-    String result;
-    Lexer::read_quoted_ident(result, token.contents, escaped);
-    return result;
-  }
+  case TokenType::QUOTED_IDENTIFIER_NO_W:
+    Lexer::read_quoted_ident(token.contents).pretty_print(result, true, escaped);
+    break;
   default:
     throw SourceLocationError(token.location, "Expected identifier");
   }
+  return result;
 }
 
 } // namespace amelia

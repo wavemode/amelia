@@ -24,9 +24,7 @@ ModuleNode(
                   )
                 )
               ],
-              return_type=IdentifierNode(
-                name="This"
-              )
+              return_type=ThisTypeNode()
             )
           )
         ]

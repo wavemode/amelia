@@ -7,9 +7,7 @@ ModuleNode(
       target=IdentifierNode(
         name="x"
       ),
-      type=IdentifierNode(
-        name="This"
-      )
+      type=ThisTypeNode()
     )
   ]
 )

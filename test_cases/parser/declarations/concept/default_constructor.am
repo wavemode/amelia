@@ -13,9 +13,7 @@ ModuleNode(
         decls=[
           DefaultDeclNode(
             decl=ClassConstructorNode(
-              name=IdentifierNode(
-                name="This"
-              ),
+              name=ThisTypeNode(),
               signature=FunctionSignatureNode()
             )
           )

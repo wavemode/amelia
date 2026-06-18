@@ -776,16 +776,7 @@ public:
 
   NodeId parse_constructor_decl() {
     auto name_token = peek();
-    NodeId name;
-    if (name_token.type == TokenType::KEYWORD_COPY) {
-      name = m_output.add_node(name_token.id, m_token_index, CopyCtorNameNode{});
-      ++m_token_index; // consume the 'copy' keyword
-    } else if (name_token.type == TokenType::KEYWORD_MOVE) {
-      name = m_output.add_node(name_token.id, m_token_index, MoveCtorNameNode{});
-      ++m_token_index; // consume the 'move' keyword
-    } else {
-      name = expect_identifier("Expected constructor name");
-    }
+    NodeId name = expect_identifier("Expected constructor name");
     NodeId signature = parse_function_signature();
     Option<NodeId> body = try_parse_function_body();
     return m_output.add_node(
@@ -1693,8 +1684,17 @@ public:
               "Expected identifier immediately after '.' in field access expression"
           );
         }
+        NodeId ident_id;
+        if (next_type == TokenType::KEYWORD_TYPE) {
+          ident_id = m_output.add_node(m_token_index, m_token_index + 1, TypeFieldNode{});
+          ++m_token_index;
+        } else if (next_type == TokenType::KEYWORD_SUPER) {
+          ident_id = parse_super_literal();
+        } else {
+          ident_id = parse_identifier();
+        }
         left = m_output.add_node(
-            start_token.id, m_token_index, FieldAccessExprNode{left, parse_identifier()}
+            start_token.id, m_token_index, FieldAccessExprNode{left, ident_id}
         );
       } else if (next_token.type == TokenType::NUMBER_FIELD) {
         m_token_index++; // consume the numeric field token
@@ -1769,11 +1769,11 @@ public:
     case TokenType::IDENTIFIER_NO_W:
     case TokenType::QUOTED_IDENTIFIER:
     case TokenType::QUOTED_IDENTIFIER_NO_W:
-    case TokenType::KEYWORD_THIS_TYPE:
       if (is_start_of_lambda_expr()) {
         return parse_lambda_expr();
       }
       [[fallthrough]];
+    case TokenType::KEYWORD_THIS_TYPE:
     case TokenType::KEYWORD_OPERATOR:
       return parse_identifier();
     case TokenType::STRING_LITERAL:
@@ -2389,8 +2389,11 @@ public:
   }
 
   NodeId parse_identifier() {
-    if (peek().type == TokenType::KEYWORD_OPERATOR) {
+    auto next_token = peek();
+    if (next_token.type == TokenType::KEYWORD_OPERATOR) {
       return parse_operator_ident();
+    } else if (next_token.type == TokenType::KEYWORD_THIS_TYPE) {
+      return parse_this_type();
     }
     return parse_single_identifier();
   }

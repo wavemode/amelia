@@ -12,9 +12,7 @@ ModuleNode(
       body=ClassBodyNode(
         decls=[
           ClassConstructorNode(
-            name=IdentifierNode(
-              name="This"
-            ),
+            name=ThisTypeNode(),
             signature=FunctionSignatureNode()
           )
         ]

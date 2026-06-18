@@ -11,9 +11,7 @@ ModuleNode(
         object=IdentifierNode(
           name="y"
         ),
-        field=IdentifierNode(
-          name="super"
-        )
+        field=SuperLiteralNode()
       )
     )
   ]

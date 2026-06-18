@@ -13,9 +13,7 @@ ModuleNode(
         decls=[
           ClassCopyDeclNode(
             decl=ClassConstructorNode(
-              name=IdentifierNode(
-                name="This"
-              ),
+              name=ThisTypeNode(),
               signature=FunctionSignatureNode(
                 parameters=[
                   FunctionParameterNode(

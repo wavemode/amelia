@@ -28,9 +28,7 @@ ModuleNode(
                 return_type=RefExprNode(
                   is_const=false,
                   is_move=false,
-                  expr=IdentifierNode(
-                    name="This"
-                  )
+                  expr=ThisTypeNode()
                 )
               )
             )

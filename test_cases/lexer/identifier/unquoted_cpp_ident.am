@@ -1,0 +1,6 @@
+template
+
+/* EXPECTED_OUTPUT:
+IDENTIFIER(`template`)
+END_OF_FILE()
+*/

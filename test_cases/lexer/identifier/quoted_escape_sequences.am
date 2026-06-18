@@ -2,6 +2,6 @@
 `
 
 /* EXPECTED_OUTPUT:
-QUOTED_IDENTIFIER(`\a\b\f\n\r\t\v\\'"\``)
+QUOTED_IDENTIFIER(`\a\b\f\n\r\t\v\\'"``)
 END_OF_FILE()
 */

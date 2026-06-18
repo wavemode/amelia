@@ -1,0 +1,6 @@
+restrict
+
+/* EXPECTED_OUTPUT:
+IDENTIFIER(`restrict`)
+END_OF_FILE()
+*/

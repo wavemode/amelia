@@ -813,6 +813,8 @@ struct AbstractDeclNode {
   NodeId decl;
 };
 
+struct TypeFieldNode {};
+
 #define NODE_TYPE_LIST                                                                             \
   X(ModuleNode)                                                                                    \
   X(IdentifierNode)                                                                                \
@@ -1002,6 +1004,7 @@ struct AbstractDeclNode {
   X(SealedDeclNode)                                                                                \
   X(MutDeclNode)                                                                                   \
   X(InlineDeclNode)                                                                                \
-  X(AbstractDeclNode)
+  X(AbstractDeclNode)                                                                              \
+  X(TypeFieldNode)
 
 } // namespace amelia
