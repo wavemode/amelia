@@ -16,6 +16,10 @@ enum class ExpressionKind : uint8_t {
   NullLiteral,
   Identifier,
   UnaryOperation,
+  BuiltinTypeCast,
+  Sequence,
+  ValueBinding,
+  Empty,
 };
 
 struct Expression {
@@ -65,8 +69,27 @@ struct UnaryOperationExpression : Expression {
 };
 
 struct BuiltinTypeCastExpression : Expression {
-  BuiltinTypeCastExpression() : Expression(ExpressionKind::Identifier) {}
+  BuiltinTypeCastExpression() : Expression(ExpressionKind::BuiltinTypeCast) {}
   FlexShared<Expression> expr;
+  Serialize serialize() const override;
+};
+
+struct SequenceExpression : Expression {
+  SequenceExpression() : Expression(ExpressionKind::Sequence) {}
+  Serialize serialize() const override;
+  List<FlexShared<Expression>> exprs;
+};
+
+struct ValueBindingExpression : Expression {
+  ValueBindingExpression() : Expression(ExpressionKind::ValueBinding) {}
+  Serialize serialize() const override;
+  String name;
+  Option<FlexShared<Expression>> value;
+  Option<FlexShared<Expression>> body;
+};
+
+struct EmptyExpression : Expression {
+  EmptyExpression() : Expression(ExpressionKind::Empty) {}
   Serialize serialize() const override;
 };
 

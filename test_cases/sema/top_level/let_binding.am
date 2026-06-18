@@ -9,12 +9,12 @@ SemaResult(
         bindings=[
           Binding(
             name="x",
-            kind=Variable,
-            visibility=Default,
             type=Const[5],
             value=NumberLiteralExpression(
               lit=5
-            )
+            ),
+            kind=Variable,
+            visibility=Default
           )
         ]
       )

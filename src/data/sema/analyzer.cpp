@@ -6,6 +6,7 @@
 #include "data/source/source_location_error.hpp"
 #include "data/util/integer.hpp"
 #include "data/util/rational.hpp"
+#include "data/util/slice_utils.hpp"
 #include "data/util/text_utils.hpp"
 
 namespace amelia {
@@ -50,6 +51,10 @@ bool init = []() {
   UNKNOWN_TYPE.builtin_kind = BuiltinKind::Unknown;
   return true;
 }();
+
+bool is_value_binding_node_type(NodeType node_type) {
+  return node_type == NodeType::LetDeclNode || node_type == NodeType::ConstDeclNode;
+}
 
 bool can_builtin_type_represent_range(const Type &type, const Integer &min, const Integer &max) {
   if (type.kind == TypeKind::Builtin) {
@@ -96,6 +101,30 @@ public:
   SemaWorkerState(SemaResult &sema_result, Module &module_obj)
       : m_sema_result(sema_result), m_module_obj(module_obj) {}
 
+  void push_binding(FlexShared<Binding> binding) {
+    Scope &scope = *m_module_obj.scope;
+    Text name = binding->name;
+    const Option<BindingId> existing_binding_id = scope.binding_ids.find(name);
+    BindingId new_binding_id = scope.bindings.size();
+    binding->shadowed_binding = existing_binding_id;
+    scope.bindings.push_back(move(binding));
+    scope.binding_ids.set(name, new_binding_id);
+  }
+
+  void pop_binding() {
+    Scope &scope = *m_module_obj.scope;
+    if (scope.bindings.size() == 0) {
+      throw RuntimeError("Attempted to pop binding from empty scope");
+    }
+    const Binding &binding = scope.bindings[scope.bindings.size() - 1];
+    if (!binding.shadowed_binding.has_value()) {
+      scope.binding_ids.remove(binding.name);
+    } else {
+      scope.binding_ids.set(binding.name, binding.shadowed_binding.value());
+    }
+    scope.bindings.pop_back();
+  }
+
   void analyze_module() {
     m_module_obj.analyzed = true;
     collect_top_level_bindings();
@@ -128,7 +157,7 @@ public:
       }
       break;
     default:
-      throw RuntimeError("not implemented");
+      raise_error_at_node_id(binding.decl, "not implemented");
     }
   }
 
@@ -228,10 +257,115 @@ public:
     case NodeType::BuiltinTypeNode:
       result = build_expr_builtin_type(expr_node_id);
       break;
+    case NodeType::BlockExprNode:
+      result = build_expr_block(expr_node_id);
+      break;
+    case NodeType::ExprStmtNode:
+      result = build_expr_expression_statement(expr_node_id);
+      break;
+    case NodeType::EmptyStmtNode:
+      result = FlexShared<EmptyExpression>::emplace();
+      result->node_id = expr_node_id;
+      result->type = FlexShared<Type>::weak(&NULL_TYPE);
+      break;
+    case NodeType::LetDeclNode:
+    case NodeType::ConstDeclNode:
+      result = build_expr_value_binding(expr_node_id, ConstSlice<NodeId>());
+      break;
     default:
-      throw RuntimeError("not implemented");
+      raise_error_at_node_id(expr_node_id, "not implemented");
     }
 
+    return result;
+  }
+
+  FlexShared<Expression> build_expr_expression_statement(NodeId expr_node_id) {
+    const auto &expr_stmt_node = m_module_obj.ast.get_node(expr_node_id).as_ExprStmtNode();
+    return build_expression(expr_stmt_node.expr);
+  }
+
+  FlexShared<Expression> build_expr_block(NodeId expr_node_id) {
+    const BlockExprNode &block_expr_node = m_module_obj.ast.get_node(expr_node_id)
+                                               .as_BlockExprNode();
+    if (block_expr_node.stmts.size() == 0) {
+      auto result = FlexShared<EmptyExpression>::emplace();
+      result->node_id = expr_node_id;
+      result->type = FlexShared<Type>::weak(&NULL_TYPE);
+      return result;
+    } else if (block_expr_node.stmts.size() == 1) {
+      return build_expression(block_expr_node.stmts[0]);
+    }
+    return build_expr_seq(expr_node_id, block_expr_node.stmts.data());
+  }
+
+  FlexShared<Expression> build_expr_seq(NodeId expr_node_id, ConstSlice<NodeId> stmts) {
+    auto result = FlexShared<SequenceExpression>::emplace();
+    result->node_id = expr_node_id;
+    for (size_t expr_index = 0; expr_index < stmts.size(); ++expr_index) {
+      const auto &expr_node = m_module_obj.ast.get_node(stmts[expr_index]);
+      if (is_value_binding_node_type(expr_node.type())) {
+        auto expr = build_expr_value_binding(
+            stmts[expr_index], SliceUtils::tail(stmts, expr_index + 1)
+        );
+        result->type = expr->type;
+        result->exprs.push_back(expr);
+        break;
+      }
+
+      auto expr = build_expression(stmts[expr_index]);
+      result->exprs.push_back(expr);
+      if (expr_index == stmts.size() - 1) {
+        result->type = expr->type;
+      }
+    }
+    return result;
+  }
+
+  FlexShared<Expression> build_expr_value_binding(NodeId expr_node_id, ConstSlice<NodeId> stmts) {
+    const Node &node = m_module_obj.ast.get_node(expr_node_id);
+    NodeId target;
+    Option<NodeId> type;
+    Option<NodeId> expr;
+    bool is_const;
+    if (node.type() == NodeType::LetDeclNode) {
+      const LetDeclNode &let_decl_node = node.as_LetDeclNode();
+      target = let_decl_node.target;
+      type = let_decl_node.type;
+      expr = let_decl_node.expr;
+      is_const = false;
+    } else {
+      const ConstDeclNode &const_decl_node = node.as_ConstDeclNode();
+      target = const_decl_node.target;
+      type = const_decl_node.type;
+      expr = const_decl_node.expr;
+      is_const = true;
+    }
+    auto binding = emplace_flex<ValueBinding>();
+    binding->decl = expr_node_id;
+    binding->name = m_module_obj.ast.get_node(target).as_IdentifierNode().name;
+    binding->kind = is_const ? BindingKind::Constant : BindingKind::Variable;
+    binding->visibility = DeclarationVisibility::Default;
+    binding->top_level = false;
+    binding->analyzed = true;
+    binding->type = type.has_value() ? evaluate_type_expr(type.value())
+                                     : FlexShared<Type>::weak(&UNKNOWN_TYPE);
+    binding->value = expr.has_value()
+                         ? expect_expression_of_type(binding->type.value(), expr.value())
+                         : Option<FlexShared<Expression>>();
+
+    auto result = emplace_flex<ValueBindingExpression>();
+    result->name = binding->name;
+    result->value = binding->value;
+    result->type = FlexShared<Type>::weak(&NULL_TYPE);
+    push_binding(move(binding));
+    if (stmts.size() == 1) {
+      result->body = build_expression(stmts[0]);
+      result->type = result->body.value()->type;
+    } else if (stmts.size() > 1) {
+      result->body = build_expr_seq(stmts[0], stmts);
+      result->type = result->body.value()->type;
+    }
+    pop_binding();
     return result;
   }
 
@@ -246,7 +380,7 @@ public:
       return result;
     }
     default:
-      throw RuntimeError("not implemented");
+      raise_error_at_node_id(expr_node_id, "not implemented");
     }
   }
 
@@ -328,7 +462,7 @@ public:
       return expr;
     }
     default:
-      throw RuntimeError("not implemented");
+      raise_error_at_node_id(node_id, "not implemented");
     }
   }
 
@@ -345,7 +479,7 @@ public:
       return evaluate_const_type_expr(type_expr_node.as_ConstTypeExprNode());
     }
     default:
-      throw RuntimeError("not implemented");
+      raise_error_at_node_id(type_expr_node_id, "not implemented");
     }
   }
 
@@ -683,18 +817,7 @@ public:
       const Option<BindingId> existing_binding_id = m_module_obj.scope->binding_ids.find(
           current_binding_details.name
       );
-      Option<FlexShared<Binding>> existing_binding;
-      if (existing_binding_id.has_value()) {
-        existing_binding = m_module_obj.scope->bindings[existing_binding_id.value()];
-      }
-      BindingId new_binding_id;
-      if (existing_binding_id.has_value()) {
-        new_binding_id = existing_binding_id.value();
-      } else {
-        new_binding_id = m_module_obj.scope->bindings.size();
-        m_module_obj.scope->bindings.emplace_back();
-      }
-      FlexShared<Binding> &binding = m_module_obj.scope->bindings[new_binding_id];
+      auto binding = FlexShared<Binding>::emplace();
       switch (current_binding_details.kind) {
       case BindingKind::Variable:
       case BindingKind::Constant:
@@ -713,11 +836,11 @@ public:
       binding->decl = decl_node_id;
       binding->kind = current_binding_details.kind;
       binding->visibility = current_binding_details.visibility;
-      binding->shadowed_binding = existing_binding;
+      binding->shadowed_binding = existing_binding_id;
       binding->name = move(current_binding_details.name);
       binding->analyzed = false;
       binding->top_level = true;
-      m_module_obj.scope->binding_ids.set(binding->name, new_binding_id);
+      push_binding(move(binding));
     }
   }
 
@@ -742,7 +865,7 @@ public:
       break;
     }
     default:
-      throw RuntimeError("not implemented");
+      raise_error_at_node_id(decl_node_id, "not implemented");
     }
   }
 

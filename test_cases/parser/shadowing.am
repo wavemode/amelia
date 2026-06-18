@@ -1,0 +1,52 @@
+let y = 5
+let x = {
+  let y = 4;;;;;
+  y
+}
+let z = y
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclNode(
+      target=IdentifierNode(
+        name="y"
+      ),
+      expr=NumberLiteralNode(value=5)
+    ),
+    LetDeclNode(
+      target=IdentifierNode(
+        name="x"
+      ),
+      expr=BlockExprNode(
+        stmts=[
+          LetDeclNode(
+            target=IdentifierNode(
+              name="y"
+            ),
+            expr=NumberLiteralNode(value=4)
+          ),
+          EmptyStmtNode(),
+          EmptyStmtNode(),
+          EmptyStmtNode(),
+          EmptyStmtNode(),
+          EmptyStmtNode(),
+          ExprStmtNode(
+            expr=IdentifierNode(
+              name="y"
+            )
+          )
+        ]
+      )
+    ),
+    LetDeclNode(
+      target=IdentifierNode(
+        name="z"
+      ),
+      expr=IdentifierNode(
+        name="y"
+      )
+    )
+  ]
+)
+*/

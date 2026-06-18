@@ -1,0 +1,43 @@
+let x = {
+  let y = 4
+  y;
+}
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="ending_in_semicolon",
+      scope=Scope(
+        bindings=[
+          Binding(
+            name="x",
+            type=null,
+            value=SequenceExpression(
+              exprs=[
+                ValueBindingExpression(
+                  name="y",
+                  type=null,
+                  value=NumberLiteralExpression(
+                    lit=4
+                  ),
+                  body=SequenceExpression(
+                    exprs=[
+                      IdentifierExpression(
+                        name="y"
+                      ),
+                      EmptyExpression()
+                    ]
+                  )
+                )
+              ]
+            ),
+            kind=Variable,
+            visibility=Default
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

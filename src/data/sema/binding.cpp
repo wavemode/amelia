@@ -6,8 +6,6 @@ Serialize Binding::serialize() const {
   auto result = Serialize();
   result.set_object_name("Binding");
   result.add_object_field("name", Serialize::quoted(name));
-  result.add_object_field("kind", serialize_binding_kind(kind));
-  result.add_object_field("visibility", serialize_declaration_visibility(visibility));
   switch (kind) {
   case BindingKind::Variable:
   case BindingKind::Constant:
@@ -24,6 +22,8 @@ Serialize Binding::serialize() const {
   default:
     throw RuntimeError("not implemented");
   }
+  result.add_object_field("kind", serialize_binding_kind(kind));
+  result.add_object_field("visibility", serialize_declaration_visibility(visibility));
   return result;
 }
 

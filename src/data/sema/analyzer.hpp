@@ -5,7 +5,6 @@
 namespace amelia {
 
 struct Analyzer {
-
   static void analyze(SemaResult &sema_result);
 };
 

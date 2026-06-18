@@ -45,6 +45,26 @@ Serialize Type::serialize() const {
     value.append("]");
     return Serialize::literal(move(value));
   }
+  case TypeKind::Function: {
+    const FunctionType &function_type = static_cast<const FunctionType &>(*this);
+    Serialize result;
+    result.set_object_name("FunctionType");
+    result.add_object_field("name", Serialize::quoted(function_type.name));
+    if (function_type.self_type.has_value()) {
+      result.add_object_field("self_type", function_type.self_type.value()->serialize());
+    }
+    Serialize parameters;
+    for (const auto &param : function_type.parameters) {
+      Serialize param_ser;
+      param_ser.set_object_name("FunctionParameter");
+      param_ser.add_object_field("name", Serialize::quoted(param.name));
+      param_ser.add_object_field("type", param.type->serialize());
+      parameters.add_list_item(move(param_ser));
+    }
+    result.add_object_field("parameters", move(parameters));
+    result.add_object_field("return_type", function_type.return_type->serialize());
+    return result;
+  }
   default:
     throw RuntimeError("not implemented");
   }

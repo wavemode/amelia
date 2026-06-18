@@ -10,19 +10,19 @@ SemaResult(
         bindings=[
           Binding(
             name="x",
-            kind=Variable,
-            visibility=Default,
             type=null,
             value=IdentifierExpression(
               name="y"
-            )
+            ),
+            kind=Variable,
+            visibility=Default
           ),
           Binding(
             name="y",
-            kind=Variable,
-            visibility=Default,
             type=null,
-            value=NullLiteralExpression()
+            value=NullLiteralExpression(),
+            kind=Variable,
+            visibility=Default
           )
         ]
       )

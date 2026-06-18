@@ -22,7 +22,7 @@ struct Binding {
   String name;
   BindingKind kind;
   DeclarationVisibility visibility;
-  Option<FlexShared<Binding>> shadowed_binding;
+  Option<BindingId> shadowed_binding;
   bool analyzed;
   bool top_level;
 

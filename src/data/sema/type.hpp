@@ -102,10 +102,12 @@ struct FunctionType : Type {
     FlexShared<Type> type;
   };
 
-  FunctionType() : Type(TypeKind::Function) {}
-
+  String name;
+  Option<FlexShared<Type>> self_type;
   List<FunctionParameter> parameters;
   FlexShared<Type> return_type;
+
+  FunctionType() : Type(TypeKind::Function) {}
 
   // TODO: default values
   // TODO: implicit params

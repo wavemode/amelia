@@ -10,24 +10,23 @@ SemaResult(
         bindings=[
           Binding(
             name="x",
-            kind=Variable,
-            visibility=Default,
             type=byte,
             value=BuiltinTypeCastExpression(
-              type=byte,
               expr=IdentifierExpression(
                 name="y"
               )
-            )
+            ),
+            kind=Variable,
+            visibility=Default
           ),
           Binding(
             name="y",
-            kind=Variable,
-            visibility=Default,
             type=Const[127],
             value=NumberLiteralExpression(
               lit=127
-            )
+            ),
+            kind=Variable,
+            visibility=Default
           )
         ]
       )

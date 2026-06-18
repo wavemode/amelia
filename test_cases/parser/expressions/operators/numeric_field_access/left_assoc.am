@@ -12,9 +12,9 @@ ModuleNode(
           object=IdentifierNode(
             name="x"
           ),
-          field=4
+          field=.0
         ),
-        field=5
+        field=.1
       )
     )
   ]

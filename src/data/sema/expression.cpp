@@ -49,9 +49,37 @@ Serialize NullLiteralExpression::serialize() const {
 Serialize BuiltinTypeCastExpression::serialize() const {
   Serialize result;
   result.set_object_name("BuiltinTypeCastExpression");
-  result.add_object_field("type", type->serialize());
   result.add_object_field("expr", expr->serialize());
   return result;
+}
+
+Serialize SequenceExpression::serialize() const {
+  Serialize result;
+  result.set_object_name("SequenceExpression");
+  Serialize exprs_ser;
+  for (const auto &expr : exprs) {
+    exprs_ser.add_list_item(expr->serialize());
+  }
+  result.add_object_field("exprs", move(exprs_ser));
+  return result;
+}
+
+Serialize ValueBindingExpression::serialize() const {
+  Serialize result;
+  result.set_object_name("ValueBindingExpression");
+  result.add_object_field("name", Serialize::quoted(name));
+  result.add_object_field("type", type->serialize());
+  if (value.has_value()) {
+    result.add_object_field("value", value.value()->serialize());
+  }
+  if (body.has_value()) {
+    result.add_object_field("body", body.value()->serialize());
+  }
+  return result;
+}
+
+Serialize EmptyExpression::serialize() const {
+  return Serialize::literal("EmptyExpression()");
 }
 
 } // namespace amelia

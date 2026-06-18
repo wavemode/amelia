@@ -1,0 +1,67 @@
+let y = 5
+let x = {
+  let y = 4;;;;;
+  y
+}
+let z = y
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="shadowing",
+      scope=Scope(
+        bindings=[
+          Binding(
+            name="y",
+            type=Const[5],
+            value=NumberLiteralExpression(
+              lit=5
+            ),
+            kind=Variable,
+            visibility=Default
+          ),
+          Binding(
+            name="x",
+            type=Const[4],
+            value=SequenceExpression(
+              exprs=[
+                ValueBindingExpression(
+                  name="y",
+                  type=Const[4],
+                  value=NumberLiteralExpression(
+                    lit=4
+                  ),
+                  body=SequenceExpression(
+                    exprs=[
+                      EmptyExpression(),
+                      EmptyExpression(),
+                      EmptyExpression(),
+                      EmptyExpression(),
+                      EmptyExpression(),
+                      IdentifierExpression(
+                        name="y"
+                      )
+                    ]
+                  )
+                )
+              ]
+            ),
+            kind=Variable,
+            visibility=Default
+          ),
+          Binding(
+            name="z",
+            type=Const[5],
+            value=IdentifierExpression(
+              name="y"
+            ),
+            kind=Variable,
+            visibility=Default
+          )
+        ]
+      )
+    )
+  ]
+)
+*/
