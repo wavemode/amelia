@@ -128,56 +128,89 @@ public:
   void analyze_module() {
     m_module_obj.analyzed = true;
     collect_top_level_bindings();
-    for (const auto [binding_name, binding_id] : m_module_obj.scope->binding_ids) {
-      ;
-      analyze_binding(*m_module_obj.scope->bindings[binding_id]);
+    for (Binding &binding : m_module_obj.scope->bindings) {
+      analyze_top_level_binding(binding);
     }
   }
 
-  void analyze_binding(Binding &binding) {
-    if (binding.analyzed) {
-      return;
-    }
-
-    binding.analyzed = true;
-
+  void analyze_top_level_binding(Binding &binding) {
     switch (binding.kind) {
     case BindingKind::Variable:
       analyze_let_binding(static_cast<ValueBinding &>(binding));
-      if (binding.top_level) {
-        disallow_top_level_shadowing(static_cast<ValueBinding &>(binding));
-        require_top_level_binding_initializer(static_cast<ValueBinding &>(binding));
-      }
+      disallow_shadowing(static_cast<ValueBinding &>(binding));
+      require_initializer(static_cast<ValueBinding &>(binding));
       break;
     case BindingKind::Constant:
       analyze_const_binding(static_cast<ValueBinding &>(binding));
-      if (binding.top_level) {
-        disallow_top_level_shadowing(static_cast<ValueBinding &>(binding));
-        require_top_level_binding_initializer(static_cast<ValueBinding &>(binding));
-      }
+      disallow_shadowing(static_cast<ValueBinding &>(binding));
+      require_initializer(static_cast<ValueBinding &>(binding));
       break;
     default:
       raise_error_at_node_id(binding.decl, "not implemented");
     }
   }
 
-  const Binding &resolve_binding(NodeId node_id) {
-    const auto &identifier_node = m_module_obj.ast.get_node(node_id).as_IdentifierNode();
-    const Option<BindingId> binding_id = m_module_obj.scope->binding_ids.find(identifier_node.name);
+  void analyze_binding(Binding &binding) {
+    switch (binding.kind) {
+    case BindingKind::Variable:
+      analyze_let_binding(static_cast<ValueBinding &>(binding));
+      break;
+    case BindingKind::Constant:
+      analyze_const_binding(static_cast<ValueBinding &>(binding));
+      break;
+    default:
+      raise_error_at_node_id(binding.decl, "not implemented");
+    }
+  }
+
+  FlexShared<Type> resolve_type_binding(NodeId node_id, Text name) {
+    const Option<BindingId> binding_id = m_module_obj.scope->binding_ids.find(name);
     if (!binding_id.has_value()) {
-      String error_message = "Unknown identifier '";
-      error_message.append(identifier_node.name);
+      String error_message = "Unknown type name '";
+      error_message.append(name);
       error_message.append("'");
       raise_error_at_node_id(node_id, move(error_message));
     }
     Binding &binding = *m_module_obj.scope->bindings[binding_id.value()];
-    if (!binding.analyzed) {
-      analyze_binding(binding);
+    switch (binding.kind) {
+    case BindingKind::Type: {
+      if (!static_cast<TypeBinding &>(binding).type.has_value()) {
+        analyze_binding(binding);
+      }
+      return static_cast<TypeBinding &>(binding).type.value();
     }
-    return binding;
+    default: {
+      String error_message = "Identifier '";
+      error_message.append(name);
+      error_message.append("' is not a type name");
+      raise_error_at_node_id(node_id, move(error_message));
+    }
+    }
   }
 
-  void require_top_level_binding_initializer(const ValueBinding &binding) {
+  FlexShared<Type> resolve_value_binding(NodeId node_id, Text name) {
+    const Option<BindingId> binding_id = m_module_obj.scope->binding_ids.find(name);
+    if (!binding_id.has_value()) {
+      String error_message = "Unknown identifier '";
+      error_message.append(name);
+      error_message.append("'");
+      raise_error_at_node_id(node_id, move(error_message));
+    }
+    Binding &binding = *m_module_obj.scope->bindings[binding_id.value()];
+    switch (binding.kind) {
+    case BindingKind::Constant:
+    case BindingKind::Variable: {
+      if (!static_cast<ValueBinding &>(binding).type.has_value()) {
+        analyze_binding(binding);
+      }
+      return static_cast<ValueBinding &>(binding).type.value();
+    }
+    default:
+      raise_error_at_node_id(node_id, "not implemented");
+    }
+  }
+
+  void require_initializer(const ValueBinding &binding) {
     if (!binding.value.has_value()) {
       String error_message = "Missing initializer for '";
       error_message.append(binding.name);
@@ -186,16 +219,20 @@ public:
     }
   }
 
-  void disallow_top_level_shadowing(const ValueBinding &binding) {
+  void disallow_shadowing(const ValueBinding &binding) {
     if (binding.shadowed_binding.has_value()) {
       String error_message = "Duplicate declaration of '";
       error_message.append(binding.name);
-      error_message.append("' at top level");
+      error_message.append("'");
       raise_error_at_node_id(binding.decl, move(error_message));
     }
   }
 
   void analyze_let_binding(ValueBinding &binding) {
+    if (binding.type.has_value()) {
+      return;
+    }
+
     const auto &decl_node = m_module_obj.ast.get_node(binding.decl).as_LetDeclNode();
 
     if (decl_node.type.has_value()) {
@@ -209,6 +246,10 @@ public:
   }
 
   void analyze_const_binding(ValueBinding &binding) {
+    if (binding.type.has_value()) {
+      return;
+    }
+
     const auto &decl_node = m_module_obj.ast.get_node(binding.decl).as_ConstDeclNode();
 
     if (decl_node.type.has_value()) {
@@ -345,8 +386,6 @@ public:
     binding->name = m_module_obj.ast.get_node(target).as_IdentifierNode().name;
     binding->kind = is_const ? BindingKind::Constant : BindingKind::Variable;
     binding->visibility = DeclarationVisibility::Default;
-    binding->top_level = false;
-    binding->analyzed = true;
     binding->type = type.has_value() ? evaluate_type_expr(type.value())
                                      : FlexShared<Type>::weak(&UNKNOWN_TYPE);
     binding->value = expr.has_value()
@@ -451,33 +490,23 @@ public:
   }
 
   FlexShared<Expression> build_expr_identifier(NodeId node_id) {
-    const Binding &binding = resolve_binding(node_id);
-    switch (binding.kind) {
-    case BindingKind::Variable:
-    case BindingKind::Constant: {
-      auto expr = FlexShared<IdentifierExpression>::emplace();
-      expr->name = binding.name;
-      expr->type = static_cast<const ValueBinding &>(binding).type.value().weak();
-      expr->node_id = node_id;
-      return expr;
-    }
-    default:
-      raise_error_at_node_id(node_id, "not implemented");
-    }
+    const auto &identifier_node = m_module_obj.ast.get_node(node_id).as_IdentifierNode();
+    auto expr = FlexShared<IdentifierExpression>::emplace();
+    expr->name = identifier_node.name;
+    expr->type = resolve_value_binding(node_id, identifier_node.name).weak();
+    expr->node_id = node_id;
+    return expr;
   }
 
   FlexShared<Type> evaluate_type_expr(NodeId type_expr_node_id) {
     const auto &type_expr_node = m_module_obj.ast.get_node(type_expr_node_id);
     switch (type_expr_node.type()) {
-    case NodeType::IdentifierNode: {
-      return evaluate_type_name_expr(type_expr_node);
-    }
-    case NodeType::BuiltinTypeNode: {
+    case NodeType::IdentifierNode:
+      return resolve_type_binding(type_expr_node_id, type_expr_node.as_IdentifierNode().name);
+    case NodeType::BuiltinTypeNode:
       return evaluate_builtin_type_expr(type_expr_node.as_BuiltinTypeNode());
-    }
-    case NodeType::ConstTypeExprNode: {
+    case NodeType::ConstTypeExprNode:
       return evaluate_const_type_expr(type_expr_node.as_ConstTypeExprNode());
-    }
     default:
       raise_error_at_node_id(type_expr_node_id, "not implemented");
     }
@@ -535,30 +564,6 @@ public:
     default:
       throw RuntimeError("unreachable");
     }
-  }
-
-  FlexShared<Type> evaluate_type_name_expr(const Node &type_name_node) {
-    const Option<BindingId> binding_id = m_module_obj.scope->binding_ids.find(
-        type_name_node.as_IdentifierNode().name
-    );
-    if (!binding_id.has_value()) {
-      String error_message = "Unknown type name '";
-      error_message.append(type_name_node.as_IdentifierNode().name);
-      error_message.append("'");
-      raise_error_at_node(type_name_node, move(error_message));
-    }
-    Binding &binding = *m_module_obj.scope->bindings[binding_id.value()];
-    if (!binding.analyzed) {
-      analyze_binding(binding);
-    }
-    if (binding.kind != BindingKind::Type && binding.kind != BindingKind::Class &&
-        binding.kind != BindingKind::Concept) {
-      String error_message = "Expected a type name, but '";
-      error_message.append(type_name_node.as_IdentifierNode().name);
-      error_message.append("' is not a type");
-      raise_error_at_node(type_name_node, move(error_message));
-    }
-    return static_cast<const TypeBinding &>(binding).type.value();
   }
 
   Option<FlexShared<Expression>> unify(
@@ -838,8 +843,6 @@ public:
       binding->visibility = current_binding_details.visibility;
       binding->shadowed_binding = existing_binding_id;
       binding->name = move(current_binding_details.name);
-      binding->analyzed = false;
-      binding->top_level = true;
       push_binding(move(binding));
     }
   }

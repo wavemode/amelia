@@ -23,8 +23,6 @@ struct Binding {
   BindingKind kind;
   DeclarationVisibility visibility;
   Option<BindingId> shadowed_binding;
-  bool analyzed;
-  bool top_level;
 
   Serialize serialize() const;
   virtual ~Binding() = default;

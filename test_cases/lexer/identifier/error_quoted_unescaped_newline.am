@@ -1,0 +1,6 @@
+`
+`
+
+/* EXPECTED_OUTPUT:
+ERROR("Unterminated quoted identifier - unexpected newline (at test_cases/lexer/identifier/error_quoted_unescaped_newline.am:1:2)")
+*/
