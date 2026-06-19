@@ -145,6 +145,9 @@ public:
       disallow_shadowing(static_cast<ValueBinding &>(binding));
       require_initializer(static_cast<ValueBinding &>(binding));
       break;
+    case BindingKind::Function:
+      analyze_function_binding(static_cast<ValueBinding &>(binding));
+      break;
     default:
       raise_error_at_node_id(binding.decl, "not implemented");
     }
@@ -157,6 +160,9 @@ public:
       break;
     case BindingKind::Constant:
       analyze_const_binding(static_cast<ValueBinding &>(binding));
+      break;
+    case BindingKind::Function:
+      analyze_function_binding(static_cast<ValueBinding &>(binding));
       break;
     default:
       raise_error_at_node_id(binding.decl, "not implemented");
@@ -198,10 +204,21 @@ public:
     }
     Binding &binding = *m_module_obj.scope->bindings[binding_id.value()];
     switch (binding.kind) {
-    case BindingKind::Constant:
+    case BindingKind::Constant: {
+      if (!static_cast<ValueBinding &>(binding).type.has_value()) {
+        analyze_const_binding(static_cast<ValueBinding &>(binding));
+      }
+      return static_cast<ValueBinding &>(binding).type.value();
+    }
     case BindingKind::Variable: {
       if (!static_cast<ValueBinding &>(binding).type.has_value()) {
-        analyze_binding(binding);
+        analyze_let_binding(static_cast<ValueBinding &>(binding));
+      }
+      return static_cast<ValueBinding &>(binding).type.value();
+    }
+    case BindingKind::Function: {
+      if (!static_cast<ValueBinding &>(binding).type.has_value()) {
+        analyze_function_binding(static_cast<ValueBinding &>(binding));
       }
       return static_cast<ValueBinding &>(binding).type.value();
     }
@@ -261,6 +278,77 @@ public:
     if (decl_node.expr.has_value()) {
       binding.value = expect_expression_of_type(binding.type.value(), decl_node.expr.value());
     }
+  }
+
+  void analyze_function_binding(ValueBinding &binding) {
+    if (binding.type.has_value()) {
+      return;
+    }
+
+    binding.type = FlexShared<Type>::weak(&UNKNOWN_TYPE);
+
+    auto function_type = FlexShared<FunctionType>::emplace();
+    auto *current_binding = &binding;
+    while (true) {
+      const auto &decl_node = m_module_obj.ast.get_node(current_binding->decl)
+                                  .as_FunctionDeclNode();
+      function_type->signatures.push_back(analyze_function_signature(decl_node.signature));
+      if (current_binding->shadowed_binding.has_value()) {
+        auto &shadowed_binding = *m_module_obj.scope
+                                      ->bindings[current_binding->shadowed_binding.value()];
+        if (shadowed_binding.kind != BindingKind::Function) {
+          String error_message = "Function declaration '";
+          error_message.append(binding.name);
+          error_message.append("' conflicts with previous declaration'");
+          raise_error_at_node_id(binding.decl, move(error_message));
+        }
+        current_binding = static_cast<ValueBinding *>(&shadowed_binding);
+      } else {
+        break;
+      }
+    }
+
+    binding.type = function_type;
+  }
+
+  FunctionType::Signature analyze_function_signature(NodeId signature_node_id) {
+    const auto &signature_node = m_module_obj.ast.get_node(signature_node_id)
+                                     .as_FunctionSignatureNode();
+    FunctionType::Signature result;
+    for (NodeId parameter_node_id : signature_node.parameters) {
+      result.parameters.push_back(analyze_function_parameter(parameter_node_id));
+    }
+    if (!signature_node.return_type.has_value()) {
+      raise_error_at_node_id(
+          signature_node_id, "not implemented (missing function return type annotation)"
+      );
+    }
+    result.return_type = evaluate_type_expr(signature_node.return_type.value());
+    return result;
+  }
+
+  FunctionType::Parameter analyze_function_parameter(NodeId parameter_node_id) {
+    const auto &parameter_node = m_module_obj.ast.get_node(parameter_node_id)
+                                     .as_FunctionParameterNode();
+    const auto &parameter_name_node = m_module_obj.ast.get_node(parameter_node.name);
+    if (parameter_name_node.type() != NodeType::IdentifierNode) {
+      raise_error_at_node_id(parameter_node.name, "not implemented (function param not Ident)");
+    }
+
+    FunctionType::Parameter result;
+    result.name = parameter_name_node.as_IdentifierNode().name;
+    if (!parameter_node.type.has_value()) {
+      raise_error_at_node_id(
+          parameter_node.type.value(), "not implemented (missing function param type annotation)"
+      );
+    }
+    result.type = evaluate_type_expr(parameter_node.type.value());
+    if (parameter_node.default_value.has_value()) {
+      result.default_value = expect_expression_of_type(
+          result.type, parameter_node.default_value.value()
+      );
+    }
+    return result;
   }
 
   FlexShared<Expression> expect_expression_of_type(
@@ -865,6 +953,12 @@ public:
     case NodeType::IdentifierNode: {
       const auto &n = decl_node.as_IdentifierNode();
       current_binding_details.name = n.name;
+      break;
+    }
+    case NodeType::FunctionDeclNode: {
+      const FunctionDeclNode &n = decl_node.as_FunctionDeclNode();
+      current_binding_details.kind = BindingKind::Function;
+      get_binding_details(current_binding_details, n.name);
       break;
     }
     default:

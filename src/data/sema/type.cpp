@@ -48,21 +48,29 @@ Serialize Type::serialize() const {
   case TypeKind::Function: {
     const FunctionType &function_type = static_cast<const FunctionType &>(*this);
     Serialize result;
+    Serialize signatures_list;
+    for (const auto &signature : function_type.signatures) {
+      Serialize signature_ser;
+      Serialize parameters_list;
+      for (const auto &parameter : signature.parameters) {
+        Serialize parameter_ser;
+        parameter_ser.set_object_name("Parameter");
+        parameter_ser.add_object_field("name", Serialize::quoted(parameter.name));
+        parameter_ser.add_object_field("type", parameter.type->serialize());
+        if (parameter.default_value.has_value()) {
+          parameter_ser.add_object_field(
+              "default_value", parameter.default_value.value()->serialize()
+          );
+        }
+        parameters_list.add_list_item(move(parameter_ser));
+      }
+      signature_ser.set_object_name("Signature");
+      signature_ser.add_object_field("parameters", move(parameters_list));
+      signature_ser.add_object_field("return_type", signature.return_type->serialize());
+      signatures_list.add_list_item(move(signature_ser));
+    }
     result.set_object_name("FunctionType");
-    result.add_object_field("name", Serialize::quoted(function_type.name));
-    if (function_type.self_type.has_value()) {
-      result.add_object_field("self_type", function_type.self_type.value()->serialize());
-    }
-    Serialize parameters;
-    for (const auto &param : function_type.parameters) {
-      Serialize param_ser;
-      param_ser.set_object_name("FunctionParameter");
-      param_ser.add_object_field("name", Serialize::quoted(param.name));
-      param_ser.add_object_field("type", param.type->serialize());
-      parameters.add_list_item(move(param_ser));
-    }
-    result.add_object_field("parameters", move(parameters));
-    result.add_object_field("return_type", function_type.return_type->serialize());
+    result.add_object_field("signatures", move(signatures_list));
     return result;
   }
   default:
@@ -190,6 +198,9 @@ Serialize serialize_type_kind(TypeKind kind) {
     break;
   case TypeKind::FunctionPointer:
     result.append("FunctionPointer");
+    break;
+  case TypeKind::Closure:
+    result.append("Closure");
     break;
   case TypeKind::Variable:
     result.append("Variable");

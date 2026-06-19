@@ -43,7 +43,6 @@ public:
   void serialize(const Serialize &obj) {
     switch (obj.m_kind) {
     case SerializeKind::Null:
-      serialize_null();
       break;
     case SerializeKind::Object:
       serialize_object(*static_cast<const SerializeObject *>(obj.m_data));
@@ -121,10 +120,6 @@ public:
     m_out.append(']');
 
     m_items_printed = old_items_printed;
-  }
-
-  void serialize_null() {
-    m_out.append("null");
   }
 
   void serialize_string(const SerializeString &detail) {

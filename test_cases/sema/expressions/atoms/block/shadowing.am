@@ -13,15 +13,6 @@ SemaResult(
       scope=Scope(
         bindings=[
           Binding(
-            name="y",
-            type=Const[5],
-            value=NumberLiteralExpression(
-              lit=5
-            ),
-            kind=Variable,
-            visibility=Default
-          ),
-          Binding(
             name="x",
             type=Const[4],
             value=SequenceExpression(
@@ -46,6 +37,15 @@ SemaResult(
                   )
                 )
               ]
+            ),
+            kind=Variable,
+            visibility=Default
+          ),
+          Binding(
+            name="y",
+            type=Const[5],
+            value=NumberLiteralExpression(
+              lit=5
             ),
             kind=Variable,
             visibility=Default

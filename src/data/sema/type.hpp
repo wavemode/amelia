@@ -2,6 +2,7 @@
 
 #include "prelude.hpp"
 
+#include "data/sema/expression.hpp"
 #include "data/testing/serialize.hpp"
 #include "data/util/flex_shared.hpp"
 #include "data/util/integer.hpp"
@@ -52,6 +53,7 @@ enum class TypeKind : uint8_t {
   Concept,
   Function,
   FunctionPointer,
+  Closure,
   Variable,
 };
 
@@ -97,19 +99,21 @@ struct ConstBooleanType : Type {
 };
 
 struct FunctionType : Type {
-  struct FunctionParameter {
+  struct Parameter {
     String name;
     FlexShared<Type> type;
+    Option<FlexShared<Expression>> default_value;
   };
 
-  String name;
-  Option<FlexShared<Type>> self_type;
-  List<FunctionParameter> parameters;
-  FlexShared<Type> return_type;
+  struct Signature {
+    List<Parameter> parameters;
+    FlexShared<Type> return_type;
+  };
 
   FunctionType() : Type(TypeKind::Function) {}
 
-  // TODO: default values
+  List<Signature> signatures;
+
   // TODO: implicit params
   // TODO: variadic
   // TODO: generic

@@ -5,10 +5,11 @@
 #include "data/testing/serialize.hpp"
 #include "data/util/flex_shared.hpp"
 
-#include "data/sema/type.hpp"
 #include "data/source/number_literal.hpp"
 
 namespace amelia {
+
+struct Type;
 
 enum class ExpressionKind : uint8_t {
   NumberLiteral,
@@ -28,7 +29,7 @@ struct Expression {
   NodeId node_id;
 
   virtual Serialize serialize() const = 0;
-  virtual ~Expression() = default;
+  virtual ~Expression();
 
 protected:
   Expression(ExpressionKind kind) : kind(kind) {}

@@ -1,5 +1,7 @@
 #include "expression.hpp"
 
+#include "data/sema/type.hpp"
+
 namespace amelia {
 
 Serialize NumberLiteralExpression::serialize() const {
@@ -81,5 +83,7 @@ Serialize ValueBindingExpression::serialize() const {
 Serialize EmptyExpression::serialize() const {
   return Serialize::literal("EmptyExpression()");
 }
+
+Expression::~Expression() = default;
 
 } // namespace amelia
