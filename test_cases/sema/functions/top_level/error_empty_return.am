@@ -1,0 +1,7 @@
+fun f(x : int) -> int {
+  return
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("Empty return statement in function returning 'int' (at test_cases/sema/functions/top_level/error_empty_return.am:2:3)")
+*/

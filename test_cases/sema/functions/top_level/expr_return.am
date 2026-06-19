@@ -1,12 +1,10 @@
-fun f(x : int) -> int {
-  return x
-}
+fun f(x : int) -> int = { return x }
 
 /* EXPECTED_OUTPUT:
 SemaResult(
   modules=[
     Module(
-      name="identity",
+      name="expr_return",
       scope=Scope(
         bindings=[
           Binding(
@@ -24,14 +22,10 @@ SemaResult(
                 )
               ]
             ),
-            value=SequenceExpression(
-              exprs=[
-                ReturnExpression(
-                  value=IdentifierExpression(
-                    name="x"
-                  )
-                )
-              ]
+            value=ReturnExpression(
+              value=IdentifierExpression(
+                name="x"
+              )
             ),
             kind=Function,
             visibility=Default

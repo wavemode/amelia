@@ -4,6 +4,8 @@
 
 namespace amelia {
 
+Expression::~Expression() = default;
+
 Serialize NumberLiteralExpression::serialize() const {
   Serialize result;
   result.set_object_name("NumberLiteralExpression");
@@ -84,6 +86,13 @@ Serialize EmptyExpression::serialize() const {
   return Serialize::literal("EmptyExpression()");
 }
 
-Expression::~Expression() = default;
+Serialize ReturnExpression::serialize() const {
+  Serialize result;
+  result.set_object_name("ReturnExpression");
+  if (value.has_value()) {
+    result.add_object_field("value", value.value()->serialize());
+  }
+  return result;
+}
 
 } // namespace amelia

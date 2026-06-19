@@ -1,0 +1,9 @@
+fun f() -> int {
+  x
+}
+
+let x : int = 10
+
+/* EXPECTED_OUTPUT:
+ERROR("Non-null function does not return a value on all code paths (at test_cases/sema/functions/top_level/error_null_inferred.am:1:16)")
+*/

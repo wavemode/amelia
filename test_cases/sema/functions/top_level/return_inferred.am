@@ -1,12 +1,14 @@
-fun f(x : int) -> int {
+fun f() {
   return x
 }
+
+let x = 10
 
 /* EXPECTED_OUTPUT:
 SemaResult(
   modules=[
     Module(
-      name="identity",
+      name="return_inferred",
       scope=Scope(
         bindings=[
           Binding(
@@ -14,13 +16,8 @@ SemaResult(
             type=FunctionType(
               signatures=[
                 Signature(
-                  parameters=[
-                    Parameter(
-                      name="x",
-                      type=int
-                    )
-                  ],
-                  return_type=int
+                  parameters=,
+                  return_type=Const[10]
                 )
               ]
             ),
@@ -34,6 +31,15 @@ SemaResult(
               ]
             ),
             kind=Function,
+            visibility=Default
+          ),
+          Binding(
+            name="x",
+            type=Const[10],
+            value=NumberLiteralExpression(
+              lit=10
+            ),
+            kind=Variable,
             visibility=Default
           )
         ]

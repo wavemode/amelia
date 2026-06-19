@@ -1,0 +1,31 @@
+fun f() {}
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="empty_inferred",
+      scope=Scope(
+        bindings=[
+          Binding(
+            name="f",
+            type=FunctionType(
+              signatures=[
+                Signature(
+                  parameters=,
+                  return_type=null
+                )
+              ]
+            ),
+            value=SequenceExpression(
+              exprs=
+            ),
+            kind=Function,
+            visibility=Default
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

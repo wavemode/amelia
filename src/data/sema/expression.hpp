@@ -94,4 +94,10 @@ struct EmptyExpression : Expression {
   Serialize serialize() const override;
 };
 
+struct ReturnExpression : Expression {
+  ReturnExpression() : Expression(ExpressionKind::Empty) {}
+  Option<FlexShared<Expression>> value;
+  Serialize serialize() const override;
+};
+
 } // namespace amelia
