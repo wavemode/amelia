@@ -13,8 +13,8 @@ namespace amelia {
 using BindingId = int32_t;
 
 struct Scope {
-  Map<Text, BindingId> binding_ids;
-  List<Flex<Binding>> bindings;
+  Map<Text, BindingId> active_binding_ids;
+  List<Flex<Binding>> active_bindings;
   Option<Ref<Scope>> parent;
 
   Serialize serialize() const;

@@ -22,8 +22,7 @@
             "preLaunchTask": "make build-test",
             "env": {
                 // "AMELIA_UPDATE_TEST_CASES": "1",
-                "AMELIA_TEST_CASE_FILTER": "test_cases/sema/expressions/atoms/block/shadowing.am"
-            }
+                "AMELIA_TEST_CASE_FILTER": "test_cases/sema/declarations/fun/local/local_fun_shadows_global.am"            }
         }
     ]
 }

@@ -22,7 +22,9 @@ struct Binding {
   String name;
   BindingKind kind;
   DeclarationVisibility visibility;
-  Option<BindingId> shadowed_binding;
+  Option<BindingId> id;
+  Option<BindingId> shadowed_binding_id;
+  List<Flex<Binding>> child_bindings;
 
   Serialize serialize() const;
   virtual ~Binding() = default;

@@ -76,7 +76,8 @@ bool is_null_type(const Type &type) {
 }
 
 bool is_value_binding_node_type(NodeType node_type) {
-  return node_type == NodeType::LetDeclNode || node_type == NodeType::ConstDeclNode;
+  return node_type == NodeType::LetDeclNode || node_type == NodeType::ConstDeclNode ||
+         node_type == NodeType::FunctionDeclNode;
 }
 
 bool can_builtin_type_represent_range(const Type &type, const Integer &min, const Integer &max) {
@@ -127,25 +128,29 @@ public:
   void push_binding(Flex<Binding> binding) {
     Scope &scope = *m_module_obj.scope;
     Text name = binding->name;
-    const Option<BindingId> existing_binding_id = scope.binding_ids.find(name);
-    BindingId new_binding_id = scope.bindings.size();
-    binding->shadowed_binding = existing_binding_id;
-    scope.bindings.push_back(move(binding));
-    scope.binding_ids.set(name, new_binding_id);
+    const Option<BindingId> existing_binding_id = scope.active_binding_ids.find(name);
+    BindingId new_binding_id = scope.active_bindings.size();
+    binding->shadowed_binding_id = existing_binding_id;
+    binding->id = new_binding_id;
+    scope.active_bindings.push_back(binding);
+    scope.active_binding_ids.set(name, new_binding_id);
+    if (m_binding_currently_analyzing.has_value()) {
+      m_binding_currently_analyzing.value()->child_bindings.push_back(binding);
+    }
   }
 
   void pop_binding() {
     Scope &scope = *m_module_obj.scope;
-    if (scope.bindings.size() == 0) {
+    if (scope.active_bindings.size() == 0) {
       throw RuntimeError("Attempted to pop binding from empty scope");
     }
-    const Binding &binding = scope.bindings[scope.bindings.size() - 1];
-    if (!binding.shadowed_binding.has_value()) {
-      scope.binding_ids.remove(binding.name);
+    const Binding &binding = scope.active_bindings[scope.active_bindings.size() - 1];
+    if (!binding.shadowed_binding_id.has_value()) {
+      scope.active_binding_ids.remove(binding.name);
     } else {
-      scope.binding_ids.set(binding.name, binding.shadowed_binding.value());
+      scope.active_binding_ids.set(binding.name, binding.shadowed_binding_id.value());
     }
-    scope.bindings.pop_back();
+    scope.active_bindings.pop_back();
   }
 
   Flex<Expression> require_unify(Flex<Type> &target_type, const Flex<Expression> &expr) {
@@ -421,32 +426,42 @@ public:
   void analyze_module() {
     m_module_obj.analyzed = true;
     collect_top_level_bindings();
-    for (Binding &binding : m_module_obj.scope->bindings) {
+    List<Text> binding_names;
+    for (const auto &[binding_name, binding_id] : m_module_obj.scope->active_binding_ids) {
+      binding_names.push_back(binding_name);
+    }
+    binding_names.sort();
+    for (Text binding_name : binding_names) {
+      Binding
+          &binding = *m_module_obj.scope
+                          ->active_bindings[m_module_obj.scope->active_binding_ids[binding_name]];
       analyze_top_level_binding(binding);
     }
   }
 
   void analyze_top_level_binding(Binding &binding) {
+    analyze_binding(binding);
     switch (binding.kind) {
     case BindingKind::Variable:
-      analyze_let_binding(static_cast<ValueBinding &>(binding));
-      disallow_shadowing(static_cast<ValueBinding &>(binding));  // TODO: factor out
-      require_initializer(static_cast<ValueBinding &>(binding)); // TODO: factor out
+      disallow_shadowing(static_cast<ValueBinding &>(binding));
+      require_initializer(static_cast<ValueBinding &>(binding));
       break;
     case BindingKind::Constant:
-      analyze_const_binding(static_cast<ValueBinding &>(binding));
-      disallow_shadowing(static_cast<ValueBinding &>(binding));  // TODO: factor out
-      require_initializer(static_cast<ValueBinding &>(binding)); // TODO: factor out
+      disallow_shadowing(static_cast<ValueBinding &>(binding));
+      require_initializer(static_cast<ValueBinding &>(binding));
       break;
     case BindingKind::Function:
-      analyze_function_binding(static_cast<ValueBinding &>(binding));
+      disallow_function_from_shadowing_non_function(static_cast<ValueBinding &>(binding));
       break;
     default:
-      raise_error_at_node_id(binding.decl, "not implemented");
+      break;
     }
   }
 
   void analyze_binding(Binding &binding) {
+    auto old_binding_currently_analyzing = m_binding_currently_analyzing;
+    m_binding_currently_analyzing = &binding;
+
     switch (binding.kind) {
     case BindingKind::Variable:
       analyze_let_binding(static_cast<ValueBinding &>(binding));
@@ -460,17 +475,19 @@ public:
     default:
       raise_error_at_node_id(binding.decl, "not implemented");
     }
+
+    m_binding_currently_analyzing = old_binding_currently_analyzing;
   }
 
   Flex<Type> resolve_type_binding(NodeId node_id, Text name) {
-    const Option<BindingId> binding_id = m_module_obj.scope->binding_ids.find(name);
+    const Option<BindingId> binding_id = m_module_obj.scope->active_binding_ids.find(name);
     if (!binding_id.has_value()) {
       String error_message = "Unknown type name '";
       error_message.append(name);
       error_message.append("'");
       raise_error_at_node_id(node_id, move(error_message));
     }
-    Binding &binding = *m_module_obj.scope->bindings[binding_id.value()];
+    Binding &binding = *m_module_obj.scope->active_bindings[binding_id.value()];
     switch (binding.kind) {
     case BindingKind::Type: {
       if (!static_cast<TypeBinding &>(binding).type.has_value()) {
@@ -488,33 +505,20 @@ public:
   }
 
   Flex<Type> resolve_value_binding(NodeId node_id, Text name) {
-    const Option<BindingId> binding_id = m_module_obj.scope->binding_ids.find(name);
+    const Option<BindingId> binding_id = m_module_obj.scope->active_binding_ids.find(name);
     if (!binding_id.has_value()) {
       String error_message = "Unknown identifier '";
       error_message.append(name);
       error_message.append("'");
       raise_error_at_node_id(node_id, move(error_message));
     }
-    Binding &binding = *m_module_obj.scope->bindings[binding_id.value()];
+    Binding &binding = *m_module_obj.scope->active_bindings[binding_id.value()];
+    analyze_binding(binding);
     switch (binding.kind) {
-    case BindingKind::Constant: {
-      if (!static_cast<ValueBinding &>(binding).type.has_value()) {
-        analyze_const_binding(static_cast<ValueBinding &>(binding));
-      }
-      return static_cast<ValueBinding &>(binding).type.value();
-    }
-    case BindingKind::Variable: {
-      if (!static_cast<ValueBinding &>(binding).type.has_value()) {
-        analyze_let_binding(static_cast<ValueBinding &>(binding));
-      }
-      return static_cast<ValueBinding &>(binding).type.value();
-    }
-    case BindingKind::Function: {
-      if (!static_cast<ValueBinding &>(binding).type.has_value()) {
-        analyze_function_binding(static_cast<ValueBinding &>(binding));
-      }
-      return static_cast<ValueBinding &>(binding).type.value();
-    }
+    case BindingKind::Constant:
+    case BindingKind::Variable:
+    case BindingKind::Function:
+      return static_cast<ValueBinding &>(binding).type.value().weak();
     default:
       raise_error_at_node_id(node_id, "not implemented");
     }
@@ -530,11 +534,26 @@ public:
   }
 
   void disallow_shadowing(const ValueBinding &binding) {
-    if (binding.shadowed_binding.has_value()) {
+    if (binding.shadowed_binding_id.has_value()) {
       String error_message = "Duplicate declaration of '";
       error_message.append(binding.name);
       error_message.append("'");
       raise_error_at_node_id(binding.decl, move(error_message));
+    }
+  }
+
+  void disallow_function_from_shadowing_non_function(const ValueBinding &binding) {
+    auto *current_binding = &binding;
+    while (current_binding->shadowed_binding_id.has_value()) {
+      auto &shadowed_binding = *m_module_obj.scope
+                                    ->active_bindings[current_binding->shadowed_binding_id.value()];
+      if (shadowed_binding.kind != BindingKind::Function) {
+        String error_message = "Function declaration '";
+        error_message.append(binding.name);
+        error_message.append("' conflicts with previous declaration of the same name");
+        raise_error_at_node_id(binding.decl, move(error_message));
+      }
+      current_binding = static_cast<ValueBinding *>(&shadowed_binding);
     }
   }
 
@@ -588,26 +607,38 @@ public:
       const auto &decl_node = m_module_obj.ast.get_node(current_binding->decl)
                                   .as_FunctionDeclNode();
       function_type->signatures.push_back(analyze_function_signature(decl_node.signature));
-      if (current_binding->shadowed_binding.has_value()) {
-        auto &shadowed_binding = *m_module_obj.scope
-                                      ->bindings[current_binding->shadowed_binding.value()];
-        if (shadowed_binding.kind != BindingKind::Function) {
-          String error_message = "Function declaration '";
-          error_message.append(binding.name);
-          error_message.append("' conflicts with previous declaration of the same name");
-          raise_error_at_node_id(binding.decl, move(error_message));
-        }
-        current_binding = static_cast<ValueBinding *>(&shadowed_binding);
-      } else {
+
+      if (!current_binding->shadowed_binding_id.has_value()) {
         break;
       }
+
+      auto &shadowed_binding = *m_module_obj.scope
+                                    ->active_bindings[current_binding->shadowed_binding_id.value()];
+      if (shadowed_binding.kind != BindingKind::Function ||
+          static_cast<const ValueBinding &>(shadowed_binding).type.has_value()) {
+        // The function declaration we're currently analyzing is shadowing a previous declaration
+        // that either isn't a function, or was already analyzed. This generally happens when a
+        // local declaration shadows a local or global one.
+
+        // Either way, it should not be part of this overload set.
+        break;
+      }
+
+      if (shadowed_binding.id.value() != current_binding->id.value() - 1) {
+        String error_message = "Overload of function '";
+        error_message.append(binding.name);
+        error_message.append("' must be declared adjacent to its other overloads");
+        raise_error_at_node_id(binding.decl, move(error_message));
+      }
+
+      current_binding = static_cast<ValueBinding *>(&shadowed_binding);
     }
     function_type->signatures.reverse();
 
     binding.type = function_type;
 
     current_binding = &binding;
-    size_t signature_index = function_type->signatures.size() - 1;
+    size_t signature_index = function_type->signatures.size();
     while (true) {
       const auto &decl_node = m_module_obj.ast.get_node(current_binding->decl)
                                   .as_FunctionDeclNode();
@@ -617,12 +648,13 @@ public:
         );
       }
       current_binding->value = analyze_function_body(
-          function_type->signatures[signature_index], decl_node.body.value()
+          function_type->signatures[signature_index - 1], decl_node.body.value()
       );
       --signature_index;
-      if (current_binding->shadowed_binding.has_value()) {
-        auto &shadowed_binding = *m_module_obj.scope
-                                      ->bindings[current_binding->shadowed_binding.value()];
+      if (signature_index > 0) {
+        auto &
+            shadowed_binding = *m_module_obj.scope
+                                    ->active_bindings[current_binding->shadowed_binding_id.value()];
         current_binding = static_cast<ValueBinding *>(&shadowed_binding);
       } else {
         break;
@@ -901,7 +933,7 @@ public:
       {
         auto result = emplace_flex<FunctionCallExpression>();
         result->node_id = expr_node_id;
-        result->type = signature.return_type;
+        result->type = signature.return_type.weak();
         result->callee = callee;
         result->arguments = move(arguments);
         result->signature = &signature;
@@ -958,20 +990,12 @@ public:
   Flex<Expression> build_expr_block(NodeId expr_node_id) {
     const BlockExprNode &block_expr_node = m_module_obj.ast.get_node(expr_node_id)
                                                .as_BlockExprNode();
-    if (block_expr_node.stmts.size() == 0) {
-      auto result = Flex<EmptyExpression>::emplace();
-      result->node_id = expr_node_id;
-      result->type = Flex<Type>::weak(&NULL_TYPE);
-      return result;
-    } else if (block_expr_node.stmts.size() == 1) {
-      return build_expression(block_expr_node.stmts[0]);
-    }
     return build_expr_seq(expr_node_id, block_expr_node.stmts.data());
   }
 
   Flex<Expression> build_expr_seq(NodeId expr_node_id, ConstSlice<NodeId> stmts) {
     auto result = Flex<SequenceExpression>::emplace();
-    result->type = Flex<Type>::weak(&UNKNOWN_TYPE);
+    result->type = Flex<Type>::weak(&NULL_TYPE);
     result->node_id = expr_node_id;
     for (size_t expr_index = 0; expr_index < stmts.size(); ++expr_index) {
       const auto &expr_node = m_module_obj.ast.get_node(stmts[expr_index]);
@@ -994,6 +1018,73 @@ public:
   }
 
   Flex<Expression> build_expr_value_binding(NodeId expr_node_id, ConstSlice<NodeId> stmts) {
+    const Node &node = m_module_obj.ast.get_node(expr_node_id);
+    if (node.type() == NodeType::LetDeclNode || node.type() == NodeType::ConstDeclNode) {
+      return build_expr_var_decl(expr_node_id, stmts);
+    } else if (node.type() == NodeType::FunctionDeclNode) {
+      return build_expr_fun_decl(expr_node_id, stmts);
+    } else {
+      raise_error_at_node_id(expr_node_id, "not implemented");
+    }
+  }
+
+  Flex<Expression> build_expr_fun_decl(NodeId expr_node_id, ConstSlice<NodeId> stmts) {
+    const auto &fun_decl_node = m_module_obj.ast.get_node(expr_node_id).as_FunctionDeclNode();
+    const auto &fun_name_node = m_module_obj.ast.get_node(fun_decl_node.name).as_IdentifierNode();
+
+    size_t prior_bindings_size = m_module_obj.scope->active_bindings.size();
+
+    auto binding = emplace_flex<ValueBinding>();
+    binding->decl = expr_node_id;
+    binding->name = fun_name_node.name;
+    binding->kind = BindingKind::Function;
+    binding->visibility = DeclarationVisibility::Default;
+    push_binding(binding);
+
+    // Swallow any subsequent function declarations with the same name into the same overload set
+    while (true) {
+      if (stmts.size() == 0) {
+        break;
+      }
+
+      const auto &next_stmt_node = m_module_obj.ast.get_node(stmts[0]);
+      if (next_stmt_node.type() != NodeType::FunctionDeclNode) {
+        break;
+      }
+
+      const auto &next_fun_decl_node = next_stmt_node.as_FunctionDeclNode();
+      const auto &next_fun_name_node = m_module_obj.ast.get_node(next_fun_decl_node.name)
+                                           .as_IdentifierNode();
+      if (next_fun_name_node.name != binding->name) {
+        break;
+      }
+
+      auto next_fun_binding = emplace_flex<ValueBinding>();
+      next_fun_binding->decl = stmts[0];
+      next_fun_binding->name = next_fun_name_node.name;
+      next_fun_binding->kind = BindingKind::Function;
+      next_fun_binding->visibility = DeclarationVisibility::Default;
+      push_binding(next_fun_binding);
+      binding = next_fun_binding;
+      stmts = ConstSlice<NodeId>(stmts.ptr() + 1, stmts.size() - 1);
+    }
+
+    analyze_binding(binding);
+
+    auto result = emplace_flex<ValueBindingExpression>();
+    result->name = binding->name;
+    result->value = binding->value;
+    result->body = build_expr_seq(expr_node_id, stmts);
+    result->type = result->body.value()->type;
+
+    while (m_module_obj.scope->active_bindings.size() > prior_bindings_size) {
+      pop_binding();
+    }
+
+    return result;
+  }
+
+  Flex<Expression> build_expr_var_decl(NodeId expr_node_id, ConstSlice<NodeId> stmts) {
     const Node &node = m_module_obj.ast.get_node(expr_node_id);
     NodeId target;
     Option<NodeId> type;
@@ -1026,15 +1117,9 @@ public:
     auto result = emplace_flex<ValueBindingExpression>();
     result->name = binding->name;
     result->value = binding->value;
-    result->type = Flex<Type>::weak(&NULL_TYPE);
     push_binding(move(binding));
-    if (stmts.size() == 1) {
-      result->body = build_expression(stmts[0]);
-      result->type = result->body.value()->type;
-    } else if (stmts.size() > 1) {
-      result->body = build_expr_seq(stmts[0], stmts);
-      result->type = result->body.value()->type;
-    }
+    result->body = build_expr_seq(expr_node_id, stmts);
+    result->type = result->body.value()->type;
     pop_binding();
     return result;
   }
@@ -1124,7 +1209,7 @@ public:
     const auto &identifier_node = m_module_obj.ast.get_node(node_id).as_IdentifierNode();
     auto expr = Flex<IdentifierExpression>::emplace();
     expr->name = identifier_node.name;
-    expr->type = resolve_value_binding(node_id, identifier_node.name).weak();
+    expr->type = resolve_value_binding(node_id, identifier_node.name);
     expr->node_id = node_id;
     return expr;
   }
@@ -1133,7 +1218,8 @@ public:
     const auto &type_expr_node = m_module_obj.ast.get_node(type_expr_node_id);
     switch (type_expr_node.type()) {
     case NodeType::IdentifierNode:
-      return resolve_type_binding(type_expr_node_id, type_expr_node.as_IdentifierNode().name);
+      return resolve_type_binding(type_expr_node_id, type_expr_node.as_IdentifierNode().name)
+          .weak();
     case NodeType::BuiltinTypeNode:
       return evaluate_builtin_type_expr(type_expr_node.as_BuiltinTypeNode());
     case NodeType::ConstTypeExprNode:
@@ -1249,7 +1335,7 @@ public:
       Binding current_binding_details{};
       current_binding_details.visibility = DeclarationVisibility::Default;
       get_binding_details(current_binding_details, decl_node_id);
-      const Option<BindingId> existing_binding_id = m_module_obj.scope->binding_ids.find(
+      const Option<BindingId> existing_binding_id = m_module_obj.scope->active_binding_ids.find(
           current_binding_details.name
       );
       auto binding = Flex<Binding>::emplace();
@@ -1271,7 +1357,7 @@ public:
       binding->decl = decl_node_id;
       binding->kind = current_binding_details.kind;
       binding->visibility = current_binding_details.visibility;
-      binding->shadowed_binding = existing_binding_id;
+      binding->shadowed_binding_id = existing_binding_id;
       binding->name = move(current_binding_details.name);
       push_binding(move(binding));
     }
@@ -1322,6 +1408,7 @@ private:
   SemaResult &m_sema_result;
   Module &m_module_obj;
   Option<FunctionType::Signature *> m_current_function_signature;
+  Option<Binding *> m_binding_currently_analyzing;
 };
 
 class SemaState {

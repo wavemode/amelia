@@ -1,0 +1,84 @@
+let x = y(z)
+let z : int = 10
+fun y(t: float) = t
+fun y(y: int) = y
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="two_signatures_exact_match",
+      scope=Scope(
+        bindings=[
+          Binding(
+            name="x",
+            type=int,
+            value=FunctionCallExpression(
+              callee=IdentifierExpression(
+                name="y"
+              ),
+              signature=Signature(
+                parameters=[
+                  Parameter(
+                    name="y",
+                    type=int
+                  )
+                ],
+                return_type=int
+              ),
+              arguments=[
+                IdentifierExpression(
+                  name="z"
+                )
+              ]
+            ),
+            kind=Variable,
+            visibility=Default
+          ),
+          Binding(
+            name="y",
+            type=FunctionType(
+              signatures=[
+                Signature(
+                  parameters=[
+                    Parameter(
+                      name="t",
+                      type=float
+                    )
+                  ],
+                  return_type=float
+                ),
+                Signature(
+                  parameters=[
+                    Parameter(
+                      name="y",
+                      type=int
+                    )
+                  ],
+                  return_type=int
+                )
+              ]
+            ),
+            value=IdentifierExpression(
+              name="y"
+            ),
+            kind=Function,
+            visibility=Default
+          ),
+          Binding(
+            name="z",
+            type=int,
+            value=BuiltinTypeCastExpression(
+              expr=NumberLiteralExpression(
+                lit=10
+              )
+            ),
+            kind=Variable,
+            visibility=Default
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

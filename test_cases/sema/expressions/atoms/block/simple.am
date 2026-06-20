@@ -21,8 +21,12 @@ SemaResult(
                   value=NumberLiteralExpression(
                     lit=4
                   ),
-                  body=IdentifierExpression(
-                    name="y"
+                  body=SequenceExpression(
+                    exprs=[
+                      IdentifierExpression(
+                        name="y"
+                      )
+                    ]
                   )
                 )
               ]

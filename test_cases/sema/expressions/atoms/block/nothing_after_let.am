@@ -12,12 +12,19 @@ SemaResult(
           Binding(
             name="x",
             type=null,
-            value=ValueBindingExpression(
-              name="y",
-              type=null,
-              value=NumberLiteralExpression(
-                lit=4
-              )
+            value=SequenceExpression(
+              exprs=[
+                ValueBindingExpression(
+                  name="y",
+                  type=null,
+                  value=NumberLiteralExpression(
+                    lit=4
+                  ),
+                  body=SequenceExpression(
+                    exprs=
+                  )
+                )
+              ]
             ),
             kind=Variable,
             visibility=Default

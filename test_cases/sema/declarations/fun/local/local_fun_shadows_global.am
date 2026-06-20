@@ -1,0 +1,75 @@
+fun f() = 5
+
+let x = {
+  fun f() -> int = f()
+  f()
+}
+
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="local_fun_shadows_global",
+      scope=Scope(
+        bindings=[
+          Binding(
+            name="f",
+            type=FunctionType(
+              signatures=[
+                Signature(
+                  parameters=,
+                  return_type=Const[5]
+                )
+              ]
+            ),
+            value=NumberLiteralExpression(
+              lit=5
+            ),
+            kind=Function,
+            visibility=Default
+          ),
+          Binding(
+            name="x",
+            type=int,
+            value=SequenceExpression(
+              exprs=[
+                ValueBindingExpression(
+                  name="f",
+                  type=int,
+                  value=FunctionCallExpression(
+                    callee=IdentifierExpression(
+                      name="f"
+                    ),
+                    signature=Signature(
+                      parameters=,
+                      return_type=int
+                    ),
+                    arguments=
+                  ),
+                  body=SequenceExpression(
+                    exprs=[
+                      FunctionCallExpression(
+                        callee=IdentifierExpression(
+                          name="f"
+                        ),
+                        signature=Signature(
+                          parameters=,
+                          return_type=int
+                        ),
+                        arguments=
+                      )
+                    ]
+                  )
+                )
+              ]
+            ),
+            kind=Variable,
+            visibility=Default
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

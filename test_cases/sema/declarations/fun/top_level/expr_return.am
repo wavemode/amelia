@@ -22,10 +22,14 @@ SemaResult(
                 )
               ]
             ),
-            value=ReturnExpression(
-              value=IdentifierExpression(
-                name="x"
-              )
+            value=SequenceExpression(
+              exprs=[
+                ReturnExpression(
+                  value=IdentifierExpression(
+                    name="x"
+                  )
+                )
+              ]
             ),
             kind=Function,
             visibility=Default
