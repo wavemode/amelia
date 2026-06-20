@@ -1073,7 +1073,8 @@ public:
 
     auto result = emplace_flex<ValueBindingExpression>();
     result->name = binding->name;
-    result->value = binding->value;
+    result->binding_value = binding->value;
+    result->binding_type = binding->type;
     result->body = build_expr_seq(expr_node_id, stmts);
     result->type = result->body.value()->type;
 
@@ -1116,7 +1117,8 @@ public:
 
     auto result = emplace_flex<ValueBindingExpression>();
     result->name = binding->name;
-    result->value = binding->value;
+    result->binding_value = binding->value;
+    result->binding_type = binding->type;
     push_binding(move(binding));
     result->body = build_expr_seq(expr_node_id, stmts);
     result->type = result->body.value()->type;

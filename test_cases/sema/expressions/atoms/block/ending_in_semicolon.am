@@ -17,8 +17,8 @@ SemaResult(
               exprs=[
                 ValueBindingExpression(
                   name="y",
-                  type=null,
-                  value=NumberLiteralExpression(
+                  binding_type=Const[4],
+                  binding_value=NumberLiteralExpression(
                     lit=4
                   ),
                   body=SequenceExpression(

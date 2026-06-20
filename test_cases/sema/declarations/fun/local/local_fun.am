@@ -1,5 +1,3 @@
-fun f() = 5
-
 let x = {
   fun f() = 10
   f()
@@ -10,24 +8,9 @@ let x = {
 SemaResult(
   modules=[
     Module(
-      name="local_fun_shadows_global",
+      name="local_fun",
       scope=Scope(
         bindings=[
-          Binding(
-            name="f",
-            type=FunctionType(
-              signatures=[
-                Signature(
-                  return_type=Const[5]
-                )
-              ]
-            ),
-            value=NumberLiteralExpression(
-              lit=5
-            ),
-            kind=Function,
-            visibility=Default
-          ),
           Binding(
             name="x",
             type=Const[10],

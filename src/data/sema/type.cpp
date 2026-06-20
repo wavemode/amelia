@@ -66,18 +66,22 @@ Serialize Type::serialize() const {
 Serialize FunctionType::Signature::serialize() const {
   Serialize result;
   result.set_object_name("Signature");
-  Serialize parameters_list;
-  for (const auto &parameter : parameters) {
-    Serialize parameter_ser;
-    parameter_ser.set_object_name("Parameter");
-    parameter_ser.add_object_field("name", Serialize::quoted(parameter.name));
-    parameter_ser.add_object_field("type", parameter.type->serialize());
-    if (parameter.default_value.has_value()) {
-      parameter_ser.add_object_field("default_value", parameter.default_value.value()->serialize());
+  if (parameters.size() > 0) {
+    Serialize parameters_list;
+    for (const auto &parameter : parameters) {
+      Serialize parameter_ser;
+      parameter_ser.set_object_name("Parameter");
+      parameter_ser.add_object_field("name", Serialize::quoted(parameter.name));
+      parameter_ser.add_object_field("type", parameter.type->serialize());
+      if (parameter.default_value.has_value()) {
+        parameter_ser.add_object_field(
+            "default_value", parameter.default_value.value()->serialize()
+        );
+      }
+      parameters_list.add_list_item(move(parameter_ser));
     }
-    parameters_list.add_list_item(move(parameter_ser));
+    result.add_object_field("parameters", move(parameters_list));
   }
-  result.add_object_field("parameters", move(parameters_list));
   result.add_object_field("return_type", return_type->serialize());
   return result;
 }

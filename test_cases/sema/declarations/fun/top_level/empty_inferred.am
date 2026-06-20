@@ -12,14 +12,11 @@ SemaResult(
             type=FunctionType(
               signatures=[
                 Signature(
-                  parameters=,
                   return_type=null
                 )
               ]
             ),
-            value=SequenceExpression(
-              exprs=
-            ),
+            value=SequenceExpression(),
             kind=Function,
             visibility=Default
           )

@@ -1,8 +1,10 @@
 fun f() = 5
+fun f(x: float) = x
 
 let x = {
   fun f() = 10
-  f()
+  fun f(x : int) = x
+  f(5)
 }
 
 
@@ -10,7 +12,7 @@ let x = {
 SemaResult(
   modules=[
     Module(
-      name="local_fun_shadows_global",
+      name="local_overload_shadows_global",
       scope=Scope(
         bindings=[
           Binding(
@@ -19,18 +21,27 @@ SemaResult(
               signatures=[
                 Signature(
                   return_type=Const[5]
+                ),
+                Signature(
+                  parameters=[
+                    Parameter(
+                      name="x",
+                      type=float
+                    )
+                  ],
+                  return_type=float
                 )
               ]
             ),
-            value=NumberLiteralExpression(
-              lit=5
+            value=IdentifierExpression(
+              name="x"
             ),
             kind=Function,
             visibility=Default
           ),
           Binding(
             name="x",
-            type=Const[10],
+            type=int,
             value=SequenceExpression(
               exprs=[
                 ValueBindingExpression(
@@ -39,11 +50,20 @@ SemaResult(
                     signatures=[
                       Signature(
                         return_type=Const[10]
+                      ),
+                      Signature(
+                        parameters=[
+                          Parameter(
+                            name="x",
+                            type=int
+                          )
+                        ],
+                        return_type=int
                       )
                     ]
                   ),
-                  binding_value=NumberLiteralExpression(
-                    lit=10
+                  binding_value=IdentifierExpression(
+                    name="x"
                   ),
                   body=SequenceExpression(
                     exprs=[
@@ -52,9 +72,21 @@ SemaResult(
                           name="f"
                         ),
                         signature=Signature(
-                          return_type=Const[10]
+                          parameters=[
+                            Parameter(
+                              name="x",
+                              type=int
+                            )
+                          ],
+                          return_type=int
                         ),
-                        arguments=
+                        arguments=[
+                          BuiltinTypeCastExpression(
+                            expr=NumberLiteralExpression(
+                              lit=5
+                            )
+                          )
+                        ]
                       )
                     ]
                   )

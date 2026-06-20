@@ -63,7 +63,8 @@ struct ValueBindingExpression : Expression {
   ValueBindingExpression() : Expression(ExpressionKind::ValueBinding) {}
   Serialize serialize() const override;
   String name;
-  Option<Flex<Expression>> value;
+  Option<Flex<Type>> binding_type;
+  Option<Flex<Expression>> binding_value;
   Option<Flex<Expression>> body;
 };
 

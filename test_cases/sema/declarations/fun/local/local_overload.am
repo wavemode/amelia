@@ -1,7 +1,6 @@
-fun f() = 5
-
 let x = {
   fun f() = 10
+  fun f(x : int) = x
   f()
 }
 
@@ -10,24 +9,9 @@ let x = {
 SemaResult(
   modules=[
     Module(
-      name="local_fun_shadows_global",
+      name="local_overload",
       scope=Scope(
         bindings=[
-          Binding(
-            name="f",
-            type=FunctionType(
-              signatures=[
-                Signature(
-                  return_type=Const[5]
-                )
-              ]
-            ),
-            value=NumberLiteralExpression(
-              lit=5
-            ),
-            kind=Function,
-            visibility=Default
-          ),
           Binding(
             name="x",
             type=Const[10],
@@ -39,11 +23,20 @@ SemaResult(
                     signatures=[
                       Signature(
                         return_type=Const[10]
+                      ),
+                      Signature(
+                        parameters=[
+                          Parameter(
+                            name="x",
+                            type=int
+                          )
+                        ],
+                        return_type=int
                       )
                     ]
                   ),
-                  binding_value=NumberLiteralExpression(
-                    lit=10
+                  binding_value=IdentifierExpression(
+                    name="x"
                   ),
                   body=SequenceExpression(
                     exprs=[

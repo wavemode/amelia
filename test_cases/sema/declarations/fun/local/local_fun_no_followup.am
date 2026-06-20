@@ -1,12 +1,13 @@
 let x = {
-  let y = 4
+  fun f() {}
 }
+
 
 /* EXPECTED_OUTPUT:
 SemaResult(
   modules=[
     Module(
-      name="nothing_after_let",
+      name="local_fun_no_followup",
       scope=Scope(
         bindings=[
           Binding(
@@ -15,11 +16,15 @@ SemaResult(
             value=SequenceExpression(
               exprs=[
                 ValueBindingExpression(
-                  name="y",
-                  binding_type=Const[4],
-                  binding_value=NumberLiteralExpression(
-                    lit=4
+                  name="f",
+                  binding_type=FunctionType(
+                    signatures=[
+                      Signature(
+                        return_type=null
+                      )
+                    ]
                   ),
+                  binding_value=SequenceExpression(),
                   body=SequenceExpression()
                 )
               ]
