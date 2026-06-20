@@ -1,0 +1,5 @@
+let x : ulong = 18446744073709551616
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot convert expression of type 'Const[18446744073709551616]' to expected type 'ulong' (at test_cases/sema/type_expressions/builtin/ulong/error_assign_from_const_too_high.am:1:17)")
+*/

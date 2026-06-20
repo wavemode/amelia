@@ -1,6 +1,0 @@
-let x : short = y
-let y : ushort = 42
-
-/* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'ushort' to expected type 'short' (at test_cases/sema/builtin_types/short/error_assign_from_ushort.am:1:17)")
-*/

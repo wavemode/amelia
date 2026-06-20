@@ -1,0 +1,7 @@
+let x = y(z)
+let z = 10.5
+fun y(y: int) = y
+
+/* EXPECTED_OUTPUT:
+ERROR("No function for call to 'y' matches the given arguments (Const[21/2]) (at test_cases/sema/expressions/operators/funcall/error_no_matching_signature.am:1:9)")
+*/

@@ -1,6 +1,0 @@
-let x : ulong = y
-let y : long = 42
-
-/* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'long' to expected type 'ulong' (at test_cases/sema/builtin_types/ulong/error_assign_from_long.am:1:17)")
-*/

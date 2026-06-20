@@ -1,0 +1,6 @@
+let x : uint = y
+let y : long = 42
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot convert expression of type 'long' to expected type 'uint' (at test_cases/sema/type_expressions/builtin/uint/error_assign_from_long.am:1:16)")
+*/

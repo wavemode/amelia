@@ -1,5 +1,7 @@
 #include "expression.hpp"
 
+#include "expression_variants.hpp"
+
 #include "data/sema/type.hpp"
 
 namespace amelia {
@@ -92,6 +94,23 @@ Serialize ReturnExpression::serialize() const {
   if (value.has_value()) {
     result.add_object_field("value", value.value()->serialize());
   }
+  return result;
+}
+
+Serialize FunctionCallExpression::serialize() const {
+  Serialize result;
+  result.set_object_name("FunctionCallExpression");
+  result.add_object_field("callee", callee->serialize());
+  result.add_object_field("signature", signature->serialize());
+  Serialize args_ser;
+  for (const auto &arg : arguments) {
+    if (arg.has_value()) {
+      args_ser.add_list_item(arg.value()->serialize());
+    } else {
+      args_ser.add_list_item(Serialize::literal("(default)"));
+    }
+  }
+  result.add_object_field("arguments", move(args_ser));
   return result;
 }
 

@@ -1,0 +1,5 @@
+let x : long = -9223372036854775809
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot convert expression of type 'Const[-9223372036854775809]' to expected type 'long' (at test_cases/sema/type_expressions/builtin/long/error_assign_from_const_too_low.am:1:16)")
+*/

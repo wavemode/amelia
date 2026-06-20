@@ -1,0 +1,6 @@
+let x : usize = y
+let y : double = 42
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot convert expression of type 'double' to expected type 'usize' (at test_cases/sema/type_expressions/builtin/usize/error_assign_from_double.am:1:17)")
+*/

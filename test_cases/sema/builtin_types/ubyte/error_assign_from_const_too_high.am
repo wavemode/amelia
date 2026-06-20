@@ -1,5 +1,0 @@
-let x : ubyte = 256
-
-/* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'Const[256]' to expected type 'ubyte' (at test_cases/sema/builtin_types/ubyte/error_assign_from_const_too_high.am:1:17)")
-*/

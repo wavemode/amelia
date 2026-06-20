@@ -1,0 +1,7 @@
+let x = y(y1=z, 10)
+let z = 10
+fun y(y1: int, y2: float) = y1
+
+/* EXPECTED_OUTPUT:
+ERROR("Positional arguments must appear before named arguments (at test_cases/sema/expressions/operators/funcall/error_position_after_named.am:1:17)")
+*/

@@ -1,0 +1,6 @@
+let x : ubyte = y
+let y : ulong = 42
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot convert expression of type 'ulong' to expected type 'ubyte' (at test_cases/sema/type_expressions/builtin/ubyte/error_assign_from_ulong.am:1:17)")
+*/

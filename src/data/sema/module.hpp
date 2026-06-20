@@ -24,7 +24,7 @@ struct Module {
   LexerResult tokens;
   ParserResult ast;
   NodeId ast_root;
-  FlexShared<Scope> scope;
+  Flex<Scope> scope;
   List<ModuleImport> imports;
   Map<String, Location> submodules;
   Set<ModuleId> imported_ids;

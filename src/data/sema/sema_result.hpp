@@ -2,7 +2,7 @@
 
 #include "prelude.hpp"
 
-#include "data/util/flex_shared.hpp"
+#include "data/util/flex.hpp"
 #include "data/util/map.hpp"
 
 #include "data/sema/module.hpp"

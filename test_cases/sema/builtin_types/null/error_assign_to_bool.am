@@ -1,6 +1,0 @@
-let x : bool = y
-let y = null
-
-/* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'null' to expected type 'bool' (at test_cases/sema/builtin_types/null/error_assign_to_bool.am:1:16)")
-*/

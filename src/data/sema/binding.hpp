@@ -3,7 +3,7 @@
 #include "prelude.hpp"
 
 #include "data/testing/serialize.hpp"
-#include "data/util/flex_shared.hpp"
+#include "data/util/flex.hpp"
 
 #include "data/sema/expression.hpp"
 #include "data/sema/type.hpp"
@@ -29,16 +29,16 @@ struct Binding {
 };
 
 struct ValueBinding : Binding {
-  Option<FlexShared<Type>> type;
-  Option<FlexShared<Expression>> value;
+  Option<Flex<Type>> type;
+  Option<Flex<Expression>> value;
 };
 
 struct TypeBinding : Binding {
-  Option<FlexShared<Type>> type;
+  Option<Flex<Type>> type;
 };
 
 struct ModuleBinding : Binding {
-  Option<FlexShared<Scope>> scope;
+  Option<Flex<Scope>> scope;
 };
 
 } // namespace amelia

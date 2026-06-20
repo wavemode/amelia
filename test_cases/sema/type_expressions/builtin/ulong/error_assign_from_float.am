@@ -1,0 +1,6 @@
+let x : ulong = y
+let y : float = 42
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot convert expression of type 'float' to expected type 'ulong' (at test_cases/sema/type_expressions/builtin/ulong/error_assign_from_float.am:1:17)")
+*/

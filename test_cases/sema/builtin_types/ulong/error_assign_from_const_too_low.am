@@ -1,5 +1,0 @@
-let x : ulong = -18446744073709551617
-
-/* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'Const[-18446744073709551617]' to expected type 'ulong' (at test_cases/sema/builtin_types/ulong/error_assign_from_const_too_low.am:1:17)")
-*/

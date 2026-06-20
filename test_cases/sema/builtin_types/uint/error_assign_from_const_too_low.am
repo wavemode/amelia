@@ -1,5 +1,0 @@
-let x : uint = -1
-
-/* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'Const[-1]' to expected type 'uint' (at test_cases/sema/builtin_types/uint/error_assign_from_const_too_low.am:1:16)")
-*/

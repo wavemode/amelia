@@ -1,6 +1,0 @@
-let x : int = y
-let y : long = 42
-
-/* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'long' to expected type 'int' (at test_cases/sema/builtin_types/int/error_assign_from_long.am:1:15)")
-*/

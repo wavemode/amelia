@@ -1,5 +1,0 @@
-let x : short = -32769
-
-/* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'Const[-32769]' to expected type 'short' (at test_cases/sema/builtin_types/short/error_assign_from_const_too_low.am:1:17)")
-*/

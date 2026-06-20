@@ -1,0 +1,5 @@
+let x : ushort = -1
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot convert expression of type 'Const[-1]' to expected type 'ushort' (at test_cases/sema/type_expressions/builtin/ushort/error_assign_from_const_too_low.am:1:18)")
+*/

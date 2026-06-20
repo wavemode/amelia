@@ -1,0 +1,6 @@
+let x : short = y
+let y : long = 42
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot convert expression of type 'long' to expected type 'short' (at test_cases/sema/type_expressions/builtin/short/error_assign_from_long.am:1:17)")
+*/

@@ -2,6 +2,14 @@
 
 #include "analyzer.hpp"
 
+#include "data/sema/expression.hpp"
+
+#include "data/sema/expression_variants.hpp"
+
+#include "data/sema/type.hpp"
+
+#include "data/sema/type_variants.hpp"
+
 #include "data/lexer/lexer.hpp"
 #include "data/source/source_location_error.hpp"
 #include "data/util/integer.hpp"
@@ -104,9 +112,9 @@ bool can_builtin_type_represent_range(const Type &type, const Integer &min, cons
   return false;
 }
 
-FlexShared<Expression> builtin_type_cast(Type &target_type, FlexShared<Expression> expr) {
+Flex<Expression> builtin_type_cast(Type &target_type, Flex<Expression> expr) {
   auto cast_expr = emplace_flex<BuiltinTypeCastExpression>();
-  cast_expr->type = FlexShared<Type>::weak(&target_type);
+  cast_expr->type = Flex<Type>::weak(&target_type);
   cast_expr->expr = move(expr);
   return cast_expr;
 }
@@ -116,7 +124,7 @@ public:
   SemaWorkerState(SemaResult &sema_result, Module &module_obj)
       : m_sema_result(sema_result), m_module_obj(module_obj) {}
 
-  void push_binding(FlexShared<Binding> binding) {
+  void push_binding(Flex<Binding> binding) {
     Scope &scope = *m_module_obj.scope;
     Text name = binding->name;
     const Option<BindingId> existing_binding_id = scope.binding_ids.find(name);
@@ -140,9 +148,7 @@ public:
     scope.bindings.pop_back();
   }
 
-  FlexShared<Expression> require_unify(
-      FlexShared<Type> &target_type, const FlexShared<Expression> &expr
-  ) {
+  Flex<Expression> require_unify(Flex<Type> &target_type, const Flex<Expression> &expr) {
     auto unified_expr = unify(target_type, expr);
     if (!unified_expr.has_value()) {
       String error_message = "Cannot convert expression of type '";
@@ -155,10 +161,61 @@ public:
     return unified_expr.value();
   }
 
-  Option<FlexShared<Expression>> unify(
-      FlexShared<Type> &target_type, const FlexShared<Expression> &expr
+  Option<Flex<Expression>> unify_exact(
+      const Flex<Type> &target_type, const Flex<Expression> &expr
   ) {
-    const FlexShared<Type> &assignment_type = expr->type;
+    const Flex<Type> &assignment_type = expr->type;
+
+    if (is_unknown_type(assignment_type)) {
+      raise_error_at_node_id(expr->node_id, "Cannot infer type of expression");
+    }
+
+    if (is_unknown_type(target_type)) {
+      return None();
+    }
+
+    if (target_type == assignment_type) {
+      return expr;
+    }
+
+    if (assignment_type->kind == TypeKind::Builtin && target_type->kind != TypeKind::Builtin) {
+      BuiltinKind assignment_builtin_kind = static_cast<const BuiltinType &>(*assignment_type)
+                                                .builtin_kind;
+      BuiltinKind target_builtin_kind = static_cast<const BuiltinType &>(*target_type).builtin_kind;
+      if (assignment_builtin_kind == target_builtin_kind) {
+        return expr;
+      }
+      return None();
+    }
+
+    if (target_type->kind == TypeKind::ConstBoolean &&
+        assignment_type->kind == TypeKind::ConstBoolean &&
+        static_cast<const ConstBooleanType &>(*target_type).value ==
+            static_cast<const ConstBooleanType &>(*assignment_type).value) {
+      return expr;
+    }
+
+    if (target_type->kind == TypeKind::ConstInteger &&
+        assignment_type->kind == TypeKind::ConstInteger &&
+        static_cast<const ConstIntegerType &>(*target_type).value ==
+            static_cast<const ConstIntegerType &>(*assignment_type).value) {
+      return expr;
+    }
+
+    if (target_type->kind == TypeKind::ConstRational &&
+        assignment_type->kind == TypeKind::ConstRational &&
+        static_cast<const ConstRationalType &>(*target_type).value ==
+            static_cast<const ConstRationalType &>(*assignment_type).value) {
+      return expr;
+    }
+
+    // TODO: handle aliases
+
+    return None();
+  }
+
+  Option<Flex<Expression>> unify(Flex<Type> &target_type, const Flex<Expression> &expr) {
+    const Flex<Type> &assignment_type = expr->type;
 
     if (assignment_type->kind == TypeKind::Builtin) {
       BuiltinKind assignment_builtin_kind = static_cast<const BuiltinType &>(*assignment_type)
@@ -405,7 +462,7 @@ public:
     }
   }
 
-  FlexShared<Type> resolve_type_binding(NodeId node_id, Text name) {
+  Flex<Type> resolve_type_binding(NodeId node_id, Text name) {
     const Option<BindingId> binding_id = m_module_obj.scope->binding_ids.find(name);
     if (!binding_id.has_value()) {
       String error_message = "Unknown type name '";
@@ -430,7 +487,7 @@ public:
     }
   }
 
-  FlexShared<Type> resolve_value_binding(NodeId node_id, Text name) {
+  Flex<Type> resolve_value_binding(NodeId node_id, Text name) {
     const Option<BindingId> binding_id = m_module_obj.scope->binding_ids.find(name);
     if (!binding_id.has_value()) {
       String error_message = "Unknown identifier '";
@@ -491,7 +548,7 @@ public:
     if (decl_node.type.has_value()) {
       binding.type = evaluate_type_expr(decl_node.type.value());
     } else {
-      binding.type = FlexShared<Type>::weak(&UNKNOWN_TYPE);
+      binding.type = Flex<Type>::weak(&UNKNOWN_TYPE);
     }
     if (decl_node.expr.has_value()) {
       binding.value = expect_expression_of_type(binding.type.value(), decl_node.expr.value());
@@ -508,7 +565,7 @@ public:
     if (decl_node.type.has_value()) {
       binding.type = evaluate_type_expr(decl_node.type.value());
     } else {
-      binding.type = FlexShared<Type>::weak(&UNKNOWN_TYPE);
+      binding.type = Flex<Type>::weak(&UNKNOWN_TYPE);
     }
 
     if (decl_node.expr.has_value()) {
@@ -521,9 +578,11 @@ public:
       return;
     }
 
-    binding.type = FlexShared<Type>::weak(&UNKNOWN_TYPE);
+    binding.type = Flex<Type>::weak(&UNKNOWN_TYPE);
 
-    auto function_type = FlexShared<FunctionType>::emplace();
+    auto function_type = Flex<FunctionType>::emplace();
+    function_type->name = binding.name;
+
     auto *current_binding = &binding;
     while (true) {
       const auto &decl_node = m_module_obj.ast.get_node(current_binding->decl)
@@ -571,7 +630,7 @@ public:
     }
   }
 
-  FlexShared<Expression> analyze_function_body(
+  Flex<Expression> analyze_function_body(
       FunctionType::Signature &signature, NodeId function_body_node_id
   ) {
     Option<FunctionType::Signature *> old_signature = m_current_function_signature;
@@ -592,7 +651,7 @@ public:
       );
     }
 
-    FlexShared<Expression> result;
+    Flex<Expression> result;
     if (function_body_node.expr.has_value()) {
       auto expr = build_expression(function_body_node.expr.value());
       auto unified_expr = unify(signature.return_type, expr);
@@ -610,9 +669,9 @@ public:
 
       if (is_unknown_type(signature.return_type)) {
         // function had no declared return type, and also contained no return statements
-        signature.return_type = FlexShared<Type>::weak(&NULL_TYPE);
+        signature.return_type = Flex<Type>::weak(&NULL_TYPE);
       } else if (!is_never_type(result->type) && !is_null_type(signature.return_type)) {
-        // function does not return a value on all code paths
+        // function body does not return a value on all code paths, and we can't default to null
         raise_error_at_node_id(
             function_body_node_id, "Non-null function does not return a value on all code paths"
         );
@@ -646,7 +705,7 @@ public:
     if (signature_node.return_type.has_value()) {
       result.return_type = evaluate_type_expr(signature_node.return_type.value());
     } else {
-      result.return_type = FlexShared<Type>::weak(&UNKNOWN_TYPE);
+      result.return_type = Flex<Type>::weak(&UNKNOWN_TYPE);
     }
     return result;
   }
@@ -675,15 +734,13 @@ public:
     return result;
   }
 
-  FlexShared<Expression> expect_expression_of_type(
-      FlexShared<Type> &expected_type, NodeId expr_node_id
-  ) {
+  Flex<Expression> expect_expression_of_type(Flex<Type> &expected_type, NodeId expr_node_id) {
     return require_unify(expected_type, build_expression(expr_node_id));
   }
 
-  FlexShared<Expression> build_expression(NodeId expr_node_id) {
+  Flex<Expression> build_expression(NodeId expr_node_id) {
     const auto &expr_node = m_module_obj.ast.get_node(expr_node_id);
-    FlexShared<Expression> result;
+    Flex<Expression> result;
     switch (expr_node.type()) {
     case NodeType::NumberLiteralNode:
       result = build_expr_number_literal(expr_node_id);
@@ -707,9 +764,9 @@ public:
       result = build_expr_expression_statement(expr_node_id);
       break;
     case NodeType::EmptyStmtNode:
-      result = FlexShared<EmptyExpression>::emplace();
+      result = Flex<EmptyExpression>::emplace();
       result->node_id = expr_node_id;
-      result->type = FlexShared<Type>::weak(&NULL_TYPE);
+      result->type = Flex<Type>::weak(&NULL_TYPE);
       break;
     case NodeType::LetDeclNode:
     case NodeType::ConstDeclNode:
@@ -718,6 +775,9 @@ public:
     case NodeType::ReturnStmtNode:
       result = build_expr_return(expr_node_id);
       break;
+    case NodeType::FunctionCallExprNode:
+      result = build_expr_function_call(expr_node_id);
+      break;
     default:
       raise_error_at_node_id(expr_node_id, "not implemented");
     }
@@ -725,7 +785,141 @@ public:
     return result;
   }
 
-  FlexShared<Expression> build_expr_return(NodeId expr_node_id) {
+  Flex<Expression> build_expr_function_call(NodeId expr_node_id) {
+    const auto &call_node = m_module_obj.ast.get_node(expr_node_id).as_FunctionCallExprNode();
+    auto callee_expr = build_expression(call_node.callee);
+    List<Flex<Expression>> pos_args;
+    Map<Text, Flex<Expression>> named_args;
+    for (const auto &arg_node_id : call_node.args) {
+      const auto &arg_node = m_module_obj.ast.get_node(arg_node_id).as_FunctionArgumentNode();
+      auto expr = build_expression(arg_node.expr);
+      if (arg_node.name.has_value()) {
+        const auto &name_node = m_module_obj.ast.get_node(arg_node.name.value())
+                                    .as_IdentifierNode();
+        if (named_args.has(name_node.name)) {
+          String error_message = "Duplicate argument name '";
+          error_message.append(name_node.name);
+          error_message.append("' in function call");
+          raise_error_at_node_id(arg_node.name.value(), move(error_message));
+        }
+        named_args.set(name_node.name, move(expr));
+      } else {
+        if (named_args.size() > 0) {
+          raise_error_at_node_id(
+              arg_node_id, "Positional arguments must appear before named arguments"
+          );
+        }
+        pos_args.push_back(expr);
+      }
+    }
+    auto result = resolve_function_call(expr_node_id, callee_expr, pos_args.data(), named_args);
+    if (!result.has_value()) {
+      String error_message = "No function for call to '";
+      error_message.append(static_cast<const FunctionType &>(*callee_expr->type).name);
+      error_message.append("' matches the given arguments (");
+      for (size_t i = 0; i < pos_args.size(); ++i) {
+        if (i > 0) {
+          error_message.append(", ");
+        }
+        pos_args[i]->type->serialize().to_string(error_message);
+      }
+      size_t named_arg_count = 0;
+      for (const auto &named_arg : named_args) {
+        if (named_arg_count > 0 || pos_args.size() > 0) {
+          error_message.append(", ");
+        }
+        error_message.append(named_arg.first);
+        error_message.append(": ");
+        named_arg.second->type->serialize().to_string(error_message);
+        ++named_arg_count;
+      }
+      error_message.append(")");
+      raise_error_at_node_id(expr_node_id, move(error_message));
+    }
+    return result.value();
+  }
+
+  Option<Flex<FunctionCallExpression>> resolve_function_call(
+      NodeId expr_node_id,
+      Flex<Expression> callee,
+      ConstSlice<Flex<Expression>> pos_args,
+      const Map<Text, Flex<Expression>> &named_args
+  ) {
+    if (callee->type->kind != TypeKind::Function) {
+      raise_error_at_node_id(expr_node_id, "not implemented (called expression is not a function)");
+    }
+
+    // First, we try to find a signature that exactly matches the types we passed. Then, we jump
+    // back to start and look for the first signature (in source declaration order) that is callable
+    // via implicit conversion of the passed args.
+    bool exact_match_only = true;
+  start:
+
+    List<Option<Flex<Expression>>> arguments;
+    for (FunctionType::Signature &signature :
+         static_cast<FunctionType &>(*callee->type).signatures) {
+      arguments.clear();
+
+      size_t pos_arg_index = 0;
+      size_t used_named_args = 0;
+      for (FunctionType::Parameter &param : signature.parameters) {
+        if (pos_arg_index < pos_args.size()) {
+          Option<Flex<Expression>> expr;
+          if (exact_match_only) {
+            expr = unify_exact(param.type, pos_args[pos_arg_index]);
+          } else {
+            expr = unify(param.type, pos_args[pos_arg_index]);
+          }
+          if (!expr.has_value()) {
+            goto fail;
+          }
+          arguments.push_back(expr);
+          ++pos_arg_index;
+        } else if (named_args.has(param.name)) {
+          Option<Flex<Expression>> expr;
+          if (exact_match_only) {
+            expr = unify_exact(param.type, named_args[param.name]);
+          } else {
+            expr = unify(param.type, named_args[param.name]);
+          }
+          if (!expr.has_value()) {
+            goto fail;
+          }
+          arguments.push_back(expr);
+          ++used_named_args;
+        } else if (param.default_value.has_value()) {
+          arguments.push_back(None());
+        } else {
+          goto fail;
+        }
+      }
+
+      if (pos_arg_index < pos_args.size() || used_named_args < named_args.size()) {
+        goto fail;
+      }
+
+      {
+        auto result = emplace_flex<FunctionCallExpression>();
+        result->node_id = expr_node_id;
+        result->type = signature.return_type;
+        result->callee = callee;
+        result->arguments = move(arguments);
+        result->signature = &signature;
+        return result;
+      }
+
+    fail:;
+    }
+
+    if (exact_match_only) {
+      exact_match_only = false;
+      goto start;
+    }
+
+    return None();
+  }
+
+  Flex<Expression> build_expr_return(NodeId expr_node_id) {
     if (!m_current_function_signature.has_value()) {
       raise_error_at_node_id(expr_node_id, "Return statement not within function");
     }
@@ -738,9 +932,9 @@ public:
           m_current_function_signature.value()->return_type, return_node.expr.value()
       );
     } else {
-      auto implied_return_value = FlexShared<NullLiteralExpression>::emplace();
+      auto implied_return_value = Flex<NullLiteralExpression>::emplace();
       implied_return_value->node_id = expr_node_id;
-      implied_return_value->type = FlexShared<Type>::weak(&NULL_TYPE);
+      implied_return_value->type = Flex<Type>::weak(&NULL_TYPE);
       auto return_value = unify(
           m_current_function_signature.value()->return_type, implied_return_value
       );
@@ -752,22 +946,22 @@ public:
       }
       result->value = return_value.value();
     }
-    result->type = FlexShared<Type>::weak(&NEVER_TYPE);
+    result->type = Flex<Type>::weak(&NEVER_TYPE);
     return result;
   }
 
-  FlexShared<Expression> build_expr_expression_statement(NodeId expr_node_id) {
+  Flex<Expression> build_expr_expression_statement(NodeId expr_node_id) {
     const auto &expr_stmt_node = m_module_obj.ast.get_node(expr_node_id).as_ExprStmtNode();
     return build_expression(expr_stmt_node.expr);
   }
 
-  FlexShared<Expression> build_expr_block(NodeId expr_node_id) {
+  Flex<Expression> build_expr_block(NodeId expr_node_id) {
     const BlockExprNode &block_expr_node = m_module_obj.ast.get_node(expr_node_id)
                                                .as_BlockExprNode();
     if (block_expr_node.stmts.size() == 0) {
-      auto result = FlexShared<EmptyExpression>::emplace();
+      auto result = Flex<EmptyExpression>::emplace();
       result->node_id = expr_node_id;
-      result->type = FlexShared<Type>::weak(&NULL_TYPE);
+      result->type = Flex<Type>::weak(&NULL_TYPE);
       return result;
     } else if (block_expr_node.stmts.size() == 1) {
       return build_expression(block_expr_node.stmts[0]);
@@ -775,9 +969,9 @@ public:
     return build_expr_seq(expr_node_id, block_expr_node.stmts.data());
   }
 
-  FlexShared<Expression> build_expr_seq(NodeId expr_node_id, ConstSlice<NodeId> stmts) {
-    auto result = FlexShared<SequenceExpression>::emplace();
-    result->type = FlexShared<Type>::weak(&UNKNOWN_TYPE);
+  Flex<Expression> build_expr_seq(NodeId expr_node_id, ConstSlice<NodeId> stmts) {
+    auto result = Flex<SequenceExpression>::emplace();
+    result->type = Flex<Type>::weak(&UNKNOWN_TYPE);
     result->node_id = expr_node_id;
     for (size_t expr_index = 0; expr_index < stmts.size(); ++expr_index) {
       const auto &expr_node = m_module_obj.ast.get_node(stmts[expr_index]);
@@ -799,7 +993,7 @@ public:
     return result;
   }
 
-  FlexShared<Expression> build_expr_value_binding(NodeId expr_node_id, ConstSlice<NodeId> stmts) {
+  Flex<Expression> build_expr_value_binding(NodeId expr_node_id, ConstSlice<NodeId> stmts) {
     const Node &node = m_module_obj.ast.get_node(expr_node_id);
     NodeId target;
     Option<NodeId> type;
@@ -824,15 +1018,15 @@ public:
     binding->kind = is_const ? BindingKind::Constant : BindingKind::Variable;
     binding->visibility = DeclarationVisibility::Default;
     binding->type = type.has_value() ? evaluate_type_expr(type.value())
-                                     : FlexShared<Type>::weak(&UNKNOWN_TYPE);
+                                     : Flex<Type>::weak(&UNKNOWN_TYPE);
     binding->value = expr.has_value()
                          ? expect_expression_of_type(binding->type.value(), expr.value())
-                         : Option<FlexShared<Expression>>();
+                         : Option<Flex<Expression>>();
 
     auto result = emplace_flex<ValueBindingExpression>();
     result->name = binding->name;
     result->value = binding->value;
-    result->type = FlexShared<Type>::weak(&NULL_TYPE);
+    result->type = Flex<Type>::weak(&NULL_TYPE);
     push_binding(move(binding));
     if (stmts.size() == 1) {
       result->body = build_expression(stmts[0]);
@@ -845,14 +1039,14 @@ public:
     return result;
   }
 
-  FlexShared<Expression> build_expr_builtin_type(NodeId expr_node_id) {
+  Flex<Expression> build_expr_builtin_type(NodeId expr_node_id) {
     const Node &node = m_module_obj.ast.get_node(expr_node_id);
     const BuiltinTypeNode &expr_node = node.as_BuiltinTypeNode();
     switch (expr_node.kind) {
     case BuiltinKind::Null: {
       auto result = emplace_flex<NullLiteralExpression>();
       result->node_id = expr_node_id;
-      result->type = FlexShared<Type>::weak(&NULL_TYPE);
+      result->type = Flex<Type>::weak(&NULL_TYPE);
       return result;
     }
     default:
@@ -860,7 +1054,7 @@ public:
     }
   }
 
-  FlexShared<Expression> build_expr_boolean_literal(NodeId expr_node_id) {
+  Flex<Expression> build_expr_boolean_literal(NodeId expr_node_id) {
     const Node &node = m_module_obj.ast.get_node(expr_node_id);
     const BooleanLiteralNode &expr_node = node.as_BooleanLiteralNode();
     auto result = emplace_flex<BooleanLiteralExpression>();
@@ -870,7 +1064,7 @@ public:
     return result;
   }
 
-  FlexShared<Expression> build_expr_negate(NodeId expr_node_id) {
+  Flex<Expression> build_expr_negate(NodeId expr_node_id) {
     const Node &node = m_module_obj.ast.get_node(expr_node_id);
     const NegateExprNode &expr_node = node.as_NegateExprNode();
     auto result = emplace_flex<UnaryOperationExpression>();
@@ -926,16 +1120,16 @@ public:
     raise_error_at_node_id(expr_node_id, move(error_message));
   }
 
-  FlexShared<Expression> build_expr_identifier(NodeId node_id) {
+  Flex<Expression> build_expr_identifier(NodeId node_id) {
     const auto &identifier_node = m_module_obj.ast.get_node(node_id).as_IdentifierNode();
-    auto expr = FlexShared<IdentifierExpression>::emplace();
+    auto expr = Flex<IdentifierExpression>::emplace();
     expr->name = identifier_node.name;
     expr->type = resolve_value_binding(node_id, identifier_node.name).weak();
     expr->node_id = node_id;
     return expr;
   }
 
-  FlexShared<Type> evaluate_type_expr(NodeId type_expr_node_id) {
+  Flex<Type> evaluate_type_expr(NodeId type_expr_node_id) {
     const auto &type_expr_node = m_module_obj.ast.get_node(type_expr_node_id);
     switch (type_expr_node.type()) {
     case NodeType::IdentifierNode:
@@ -949,7 +1143,7 @@ public:
     }
   }
 
-  FlexShared<Type> evaluate_const_type_expr(const ConstTypeExprNode &const_type_expr_node) {
+  Flex<Type> evaluate_const_type_expr(const ConstTypeExprNode &const_type_expr_node) {
     auto expr = build_expression(const_type_expr_node.expr);
     switch (expr->type->kind) {
     case TypeKind::ConstInteger:
@@ -964,47 +1158,47 @@ public:
     }
   }
 
-  FlexShared<Type> evaluate_builtin_type_expr(const BuiltinTypeNode &builtin_type_node) {
+  Flex<Type> evaluate_builtin_type_expr(const BuiltinTypeNode &builtin_type_node) {
     switch (builtin_type_node.kind) {
     case BuiltinKind::Bool:
-      return FlexShared<Type>::weak(&BOOL_TYPE);
+      return Flex<Type>::weak(&BOOL_TYPE);
     case BuiltinKind::Byte:
-      return FlexShared<Type>::weak(&BYTE_TYPE);
+      return Flex<Type>::weak(&BYTE_TYPE);
     case BuiltinKind::Short:
-      return FlexShared<Type>::weak(&SHORT_TYPE);
+      return Flex<Type>::weak(&SHORT_TYPE);
     case BuiltinKind::Int:
-      return FlexShared<Type>::weak(&INT_TYPE);
+      return Flex<Type>::weak(&INT_TYPE);
     case BuiltinKind::Long:
-      return FlexShared<Type>::weak(&LONG_TYPE);
+      return Flex<Type>::weak(&LONG_TYPE);
     case BuiltinKind::UByte:
-      return FlexShared<Type>::weak(&UBYTE_TYPE);
+      return Flex<Type>::weak(&UBYTE_TYPE);
     case BuiltinKind::UShort:
-      return FlexShared<Type>::weak(&USHORT_TYPE);
+      return Flex<Type>::weak(&USHORT_TYPE);
     case BuiltinKind::UInt:
-      return FlexShared<Type>::weak(&UINT_TYPE);
+      return Flex<Type>::weak(&UINT_TYPE);
     case BuiltinKind::ULong:
-      return FlexShared<Type>::weak(&ULONG_TYPE);
+      return Flex<Type>::weak(&ULONG_TYPE);
     case BuiltinKind::USize:
-      return FlexShared<Type>::weak(&USIZE_TYPE);
+      return Flex<Type>::weak(&USIZE_TYPE);
     case BuiltinKind::Float:
-      return FlexShared<Type>::weak(&FLOAT_TYPE);
+      return Flex<Type>::weak(&FLOAT_TYPE);
     case BuiltinKind::Double:
-      return FlexShared<Type>::weak(&DOUBLE_TYPE);
+      return Flex<Type>::weak(&DOUBLE_TYPE);
     case BuiltinKind::Char:
-      return FlexShared<Type>::weak(&CHAR_TYPE);
+      return Flex<Type>::weak(&CHAR_TYPE);
     case BuiltinKind::Str:
-      return FlexShared<Type>::weak(&STR_TYPE);
+      return Flex<Type>::weak(&STR_TYPE);
     case BuiltinKind::Null:
-      return FlexShared<Type>::weak(&NULL_TYPE);
+      return Flex<Type>::weak(&NULL_TYPE);
     case BuiltinKind::Never:
-      return FlexShared<Type>::weak(&NEVER_TYPE);
+      return Flex<Type>::weak(&NEVER_TYPE);
     default:
       throw RuntimeError("unreachable");
     }
   }
 
-  FlexShared<Expression> build_expr_number_literal(NodeId expr_node_id) {
-    auto expr = FlexShared<NumberLiteralExpression>::emplace();
+  Flex<Expression> build_expr_number_literal(NodeId expr_node_id) {
+    auto expr = Flex<NumberLiteralExpression>::emplace();
     const auto &expr_node = m_module_obj.ast.get_node(expr_node_id).as_NumberLiteralNode();
     expr->node_id = expr_node_id;
     expr->value = expr_node.value;
@@ -1058,20 +1252,20 @@ public:
       const Option<BindingId> existing_binding_id = m_module_obj.scope->binding_ids.find(
           current_binding_details.name
       );
-      auto binding = FlexShared<Binding>::emplace();
+      auto binding = Flex<Binding>::emplace();
       switch (current_binding_details.kind) {
       case BindingKind::Variable:
       case BindingKind::Constant:
       case BindingKind::Function:
-        binding = FlexShared<ValueBinding>::emplace();
+        binding = Flex<ValueBinding>::emplace();
         break;
       case BindingKind::Type:
       case BindingKind::Class:
       case BindingKind::Concept:
-        binding = FlexShared<TypeBinding>::emplace();
+        binding = Flex<TypeBinding>::emplace();
         break;
       case BindingKind::Module:
-        binding = FlexShared<ModuleBinding>::emplace();
+        binding = Flex<ModuleBinding>::emplace();
         break;
       }
       binding->decl = decl_node_id;

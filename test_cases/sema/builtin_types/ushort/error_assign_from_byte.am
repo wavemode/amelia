@@ -1,6 +1,0 @@
-let x : ushort = y
-let y : byte = 42
-
-/* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'byte' to expected type 'ushort' (at test_cases/sema/builtin_types/ushort/error_assign_from_byte.am:1:18)")
-*/
