@@ -350,6 +350,12 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     serialize_number_literal(n.field).to_string(out);
     break;
   }
+  case NodeType::AsExprNode: {
+    const auto &n = node.as_AsExprNode();
+    print_node_field(out, "expr", n.expr);
+    print_node_field(out, "type", n.type);
+    break;
+  }
   case NodeType::IndexingExprNode: {
     const auto &n = node.as_IndexingExprNode();
     print_node_field(out, "object", n.object);

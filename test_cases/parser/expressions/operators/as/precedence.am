@@ -1,0 +1,26 @@
+let w = x * y as z
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclNode(
+      target=IdentifierNode(
+        name="w"
+      ),
+      expr=MultiplyExprNode(
+        left=IdentifierNode(
+          name="x"
+        ),
+        right=AsExprNode(
+          expr=IdentifierNode(
+            name="y"
+          ),
+          type=IdentifierNode(
+            name="z"
+          )
+        )
+      )
+    )
+  ]
+)
+*/

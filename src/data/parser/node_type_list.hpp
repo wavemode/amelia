@@ -436,6 +436,11 @@ struct NumericFieldAccessExprNode {
   NumberLiteral field;
 };
 
+struct AsExprNode {
+  NodeId expr;
+  NodeId type;
+};
+
 struct IndexingExprNode {
   NodeId object;
   List<NodeId> indices;
@@ -870,6 +875,7 @@ struct TypeFieldNode {};
   X(EllipsisExprNode)                                                                              \
   X(FieldAccessExprNode)                                                                           \
   X(NumericFieldAccessExprNode)                                                                    \
+  X(AsExprNode)                                                                                    \
   X(IndexingExprNode)                                                                              \
   X(IndexNode)                                                                                     \
   X(FunctionArgumentNode)                                                                          \

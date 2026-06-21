@@ -1595,7 +1595,18 @@ public:
       NodeId expr = parse_descend_expr_await_ref_copy_move_inline();
       return m_output.add_node(start_token.id, m_token_index, RefExprNode{is_const, is_move, expr});
     }
-    return parse_descend_expr_pos_neg_deref_not_bitnot_ell();
+    return parse_descend_expr_as();
+  }
+
+  NodeId parse_descend_expr_as() {
+    auto start_token = peek();
+    NodeId left = parse_descend_expr_pos_neg_deref_not_bitnot_ell();
+    while (peek().type == TokenType::KEYWORD_AS) {
+      ++m_token_index; // consume the 'as' keyword
+      NodeId type = parse_descend_expr_pos_neg_deref_not_bitnot_ell();
+      left = m_output.add_node(start_token.id, m_token_index, AsExprNode{left, type});
+    }
+    return left;
   }
 
   NodeId parse_descend_expr_pos_neg_deref_not_bitnot_ell() {

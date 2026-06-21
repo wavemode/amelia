@@ -1,0 +1,21 @@
+let x = y as z
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclNode(
+      target=IdentifierNode(
+        name="x"
+      ),
+      expr=AsExprNode(
+        expr=IdentifierNode(
+          name="y"
+        ),
+        type=IdentifierNode(
+          name="z"
+        )
+      )
+    )
+  ]
+)
+*/
