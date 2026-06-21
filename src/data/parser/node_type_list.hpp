@@ -639,7 +639,7 @@ struct TypeConstraintNode {
 };
 
 struct GenericParameterListNode {
-  List<NodeId> parameters;
+  Option<List<NodeId>> parameters;
   Option<List<NodeId>> additional_constraints;
 };
 

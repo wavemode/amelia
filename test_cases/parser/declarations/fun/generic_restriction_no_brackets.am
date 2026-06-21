@@ -1,0 +1,45 @@
+fun f when (int : int) (x : int) -> int {}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    FunctionDeclNode(
+      name=IdentifierNode(
+        name="f"
+      ),
+      signature=FunctionSignatureNode(
+        generic_parameter_list=GenericParameterListNode(
+          additional_constraints=[
+            TypeConstraintNode(
+              type=BuiltinTypeNode(
+                kind=int
+              ),
+              constraint=BuiltinTypeNode(
+                kind=int
+              )
+            )
+          ]
+        ),
+        parameters=[
+          FunctionParameterNode(
+            variadic=false,
+            name=IdentifierNode(
+              name="x"
+            ),
+            type=BuiltinTypeNode(
+              kind=int
+            )
+          )
+        ],
+        return_type=BuiltinTypeNode(
+          kind=int
+        )
+      ),
+      body=FunctionBodyNode(
+        is_default=false,
+        is_deleted=false
+      )
+    )
+  ]
+)
+*/

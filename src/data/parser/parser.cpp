@@ -829,16 +829,22 @@ public:
   Option<NodeId> try_parse_generic_parameter_list() {
     auto start_token = peek();
     if (start_token.type == TokenType::LEFT_BRACKET_NO_W ||
-        start_token.type == TokenType::LEFT_BRACKET) {
-      ++m_token_index; // consume the left bracket
-      List<NodeId> parameters;
-      do {
-        parameters.push_back(parse_generic_parameter());
-        if (peek().type == TokenType::COMMA) {
-          ++m_token_index; // consume the comma
-        }
-      } while (peek().type != TokenType::RIGHT_BRACKET);
-      read_token_type(TokenType::RIGHT_BRACKET, "Expected ']' to end generic parameter list");
+        start_token.type == TokenType::LEFT_BRACKET ||
+        start_token.type == TokenType::KEYWORD_WHEN) {
+
+      Option<List<NodeId>> parameters;
+      if (start_token.type == TokenType::LEFT_BRACKET_NO_W ||
+          start_token.type == TokenType::LEFT_BRACKET) {
+        ++m_token_index;
+        parameters = List<NodeId>{};
+        do {
+          parameters.value().push_back(parse_generic_parameter());
+          if (peek().type == TokenType::COMMA) {
+            ++m_token_index; // consume the comma
+          }
+        } while (peek().type != TokenType::RIGHT_BRACKET);
+        read_token_type(TokenType::RIGHT_BRACKET, "Expected ']' to end generic parameter list");
+      }
 
       Option<List<NodeId>> additional_constraints;
       if (peek().type == TokenType::KEYWORD_WHEN) {
