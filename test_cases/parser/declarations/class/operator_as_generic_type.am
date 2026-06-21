@@ -1,0 +1,66 @@
+class A {
+  operator as (List[int])() = [this.a]
+
+  a: int
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ClassDeclNode(
+      name=IdentifierNode(
+        name="A"
+      ),
+      body=ClassBodyNode(
+        decls=[
+          OperatorFunctionDeclNode(
+            operator_ident=OperatorIdentifierNode(
+              op=OperatorIdentAsNode(
+                type=ParenthesizedExprNode(
+                  exprs=[
+                    IndexingExprNode(
+                      object=IdentifierNode(
+                        name="List"
+                      ),
+                      indices=[
+                        IndexNode(
+                          value=BuiltinTypeNode(
+                            kind=int
+                          )
+                        )
+                      ]
+                    )
+                  ]
+                )
+              )
+            ),
+            signature=FunctionSignatureNode(),
+            body=FunctionBodyNode(
+              expr=BracketExprNode(
+                exprs=[
+                  FieldAccessExprNode(
+                    object=ThisLiteralNode(),
+                    field=IdentifierNode(
+                      name="a"
+                    )
+                  )
+                ]
+              ),
+              is_default=false,
+              is_deleted=false
+            )
+          ),
+          ClassFieldNode(
+            name=IdentifierNode(
+              name="a"
+            ),
+            type=BuiltinTypeNode(
+              kind=int
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

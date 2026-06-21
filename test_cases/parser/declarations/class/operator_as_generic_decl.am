@@ -1,0 +1,49 @@
+class A {
+  operator as T[T]() = T()
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ClassDeclNode(
+      name=IdentifierNode(
+        name="A"
+      ),
+      body=ClassBodyNode(
+        decls=[
+          OperatorFunctionDeclNode(
+            operator_ident=OperatorIdentifierNode(
+              op=OperatorIdentAsNode(
+                type=IdentifierNode(
+                  name="T"
+                )
+              )
+            ),
+            signature=FunctionSignatureNode(
+              generic_parameter_list=GenericParameterListNode(
+                parameters=[
+                  GenericParameterNode(
+                    is_const=false,
+                    name=IdentifierNode(
+                      name="T"
+                    )
+                  )
+                ]
+              )
+            ),
+            body=FunctionBodyNode(
+              expr=FunctionCallExprNode(
+                callee=IdentifierNode(
+                  name="T"
+                )
+              ),
+              is_default=false,
+              is_deleted=false
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/
