@@ -272,6 +272,24 @@ public:
       return unify(static_cast<AliasType &>(*target_type).target, assignment_type, expr, is_const);
     } else if (target_type->kind == TypeKind::Inferred) {
       const auto &inferred_type = static_cast<InferredType &>(*target_type).target;
+
+      if (inferred_type->kind == TypeKind::ConstBoolean &&
+          assignment_type->kind == TypeKind::ConstBoolean &&
+          static_cast<const ConstBooleanType &>(*assignment_type).value ==
+              static_cast<const ConstBooleanType &>(*inferred_type).value) {
+        return expr;
+      } else if (inferred_type->kind == TypeKind::ConstInteger &&
+                 assignment_type->kind == TypeKind::ConstInteger &&
+                 static_cast<const ConstIntegerType &>(*assignment_type).value ==
+                     static_cast<const ConstIntegerType &>(*inferred_type).value) {
+        return expr;
+      } else if (inferred_type->kind == TypeKind::ConstRational &&
+                 assignment_type->kind == TypeKind::ConstRational &&
+                 static_cast<const ConstRationalType &>(*assignment_type).value ==
+                     static_cast<const ConstRationalType &>(*inferred_type).value) {
+        return expr;
+      }
+
       if (inferred_type->kind == TypeKind::ConstBoolean) {
         if (assignment_type->kind == TypeKind::ConstBoolean &&
             static_cast<const ConstBooleanType &>(*assignment_type).value !=
@@ -283,6 +301,16 @@ public:
         if (assignment_type->kind == TypeKind::ConstInteger &&
             static_cast<const ConstIntegerType &>(*assignment_type).value !=
                 static_cast<const ConstIntegerType &>(*inferred_type).value) {
+          if (!can_builtin_type_represent_range(
+                  INT_TYPE,
+                  static_cast<const ConstIntegerType &>(*inferred_type).value,
+                  static_cast<const ConstIntegerType &>(*inferred_type).value
+              )) {
+            raise_error_at_node_id(
+                static_cast<InferredType &>(*target_type).inferred_at,
+                "Inferred type 'int' cannot represent value"
+            );
+          }
           target_type = Flex<Type>::weak(&INT_TYPE);
           return unify(target_type, assignment_type, expr, is_const);
         } else if ((assignment_type->kind == TypeKind::ConstRational &&
@@ -297,11 +325,6 @@ public:
         ) {
           target_type = Flex<Type>::weak(&DOUBLE_TYPE);
           return unify(target_type, assignment_type, expr, is_const);
-        } else if (assignment_type->kind == TypeKind::Builtin &&
-                   static_cast<const BuiltinType &>(*assignment_type).builtin_kind ==
-                       BuiltinKind::Float) {
-          target_type = Flex<Type>::weak(&FLOAT_TYPE);
-          return unify(target_type, assignment_type, expr, is_const);
         }
       } else if (inferred_type->kind == TypeKind::ConstRational) {
         if ((assignment_type->kind == TypeKind::ConstRational &&
@@ -315,9 +338,8 @@ public:
           return unify(target_type, assignment_type, expr, is_const);
         }
       }
-      return unify(
-          static_cast<InferredType &>(*target_type).target, assignment_type, expr, is_const
-      );
+      target_type = remove_const(static_cast<InferredType &>(*target_type).target);
+      return unify(target_type, assignment_type, expr, is_const);
     }
 
     if (target_type->kind == TypeKind::Builtin) {
@@ -330,6 +352,7 @@ public:
                          assignment_type->kind == TypeKind::ConstRational)) {
           auto new_target_type = emplace_flex<InferredType>();
           new_target_type->target = assignment_type;
+          new_target_type->inferred_at = expr->node_id;
           target_type = move(new_target_type);
         } else {
           target_type = remove_const(assignment_type);
@@ -972,8 +995,8 @@ public:
     }
 
     // First, we try to find a signature that exactly matches the types we passed. Then, we jump
-    // back to start and look for the first signature (in source declaration order) that is callable
-    // via implicit conversion of the passed args.
+    // back to start and look for the first signature (in source declaration order) that is
+    // callable via implicit conversion of the passed args.
     bool exact_match_only = true;
   start:
 

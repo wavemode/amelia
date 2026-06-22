@@ -1,14 +1,13 @@
 fun f() {
   return 5
-  let x: float = 5.0
-  return x
+  return 10
 }
 
 /* EXPECTED_OUTPUT:
 SemaResult(
   modules=[
     Module(
-      name="int_then_float_return",
+      name="multiple_int_returns",
       scope=Scope(
         bindings=[
           Binding(
@@ -16,7 +15,7 @@ SemaResult(
             type=FunctionType(
               signatures=[
                 Signature(
-                  return_type=float
+                  return_type=int
                 )
               ]
             ),
@@ -27,22 +26,11 @@ SemaResult(
                     lit=5
                   )
                 ),
-                ValueBindingExpression(
-                  name="x",
-                  binding_type=float,
-                  binding_value=BuiltinTypeCastExpression(
+                ReturnExpression(
+                  value=BuiltinTypeCastExpression(
                     expr=NumberLiteralExpression(
-                      lit=5.0
+                      lit=10
                     )
-                  ),
-                  body=SequenceExpression(
-                    exprs=[
-                      ReturnExpression(
-                        value=IdentifierExpression(
-                          name="x"
-                        )
-                      )
-                    ]
                   )
                 )
               ]

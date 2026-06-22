@@ -81,6 +81,7 @@ protected:
 struct InferredType : Type {
   InferredType() : Type(TypeKind::Inferred) {}
   Flex<Type> target;
+  NodeId inferred_at;
 };
 
 struct BuiltinType : Type {

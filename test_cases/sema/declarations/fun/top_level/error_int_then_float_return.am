@@ -1,0 +1,9 @@
+fun f() {
+  return 5
+  let x: float = 5.0
+  return x
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot convert expression of type 'float' to expected type 'int' (at test_cases/sema/declarations/fun/top_level/error_int_then_float_return.am:4:10)")
+*/

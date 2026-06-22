@@ -1,0 +1,8 @@
+fun f() {
+  return 54832110478547890578905743890572389045782903457897328493728943278942378942378098952347895
+  return 10
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("Inferred type 'int' cannot represent value (at test_cases/sema/declarations/fun/top_level/error_large_then_small_return.am:2:10)")
+*/
