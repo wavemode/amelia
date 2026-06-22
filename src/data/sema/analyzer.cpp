@@ -287,9 +287,13 @@ public:
           return unify(target_type, assignment_type, expr, is_const);
         }
       } else if (inferred_type->kind == TypeKind::ConstRational) {
-        if (assignment_type->kind == TypeKind::ConstRational &&
-            static_cast<const ConstRationalType &>(*assignment_type).value !=
-                static_cast<const ConstRationalType &>(*inferred_type).value) {
+        if ((assignment_type->kind == TypeKind::ConstRational &&
+             static_cast<const ConstRationalType &>(*assignment_type).value !=
+                 static_cast<const ConstRationalType &>(*inferred_type).value) ||
+            (assignment_type->kind == TypeKind::ConstInteger &&
+             (static_cast<const ConstRationalType &>(*inferred_type).value.denominator() != 1 ||
+              static_cast<const ConstIntegerType &>(*assignment_type).value !=
+                  static_cast<const ConstRationalType &>(*inferred_type).value.numerator()))) {
           target_type = Flex<Type>::weak(&DOUBLE_TYPE);
           return unify(target_type, assignment_type, expr, is_const);
         }

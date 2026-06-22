@@ -61,6 +61,9 @@ enum class ExpressionKind : uint8_t {
   ValueBinding,
   Empty,
   FunctionCall,
+  ConstInteger,
+  ConstRational,
+  ConstBoolean,
 };
 
 struct Expression {
@@ -132,6 +135,24 @@ struct FunctionType : Type {
   // TODO: implicit params
   // TODO: variadic
   // TODO: generic
+};
+
+struct ConstIntegerExpression : Expression {
+  ConstIntegerExpression() : Expression(ExpressionKind::ConstInteger) {}
+  Integer value;
+  Serialize serialize() const override;
+};
+
+struct ConstRationalExpression : Expression {
+  ConstRationalExpression() : Expression(ExpressionKind::ConstRational) {}
+  Rational value;
+  Serialize serialize() const override;
+};
+
+struct ConstBooleanExpression : Expression {
+  ConstBooleanExpression() : Expression(ExpressionKind::ConstBoolean) {}
+  bool value;
+  Serialize serialize() const override;
 };
 
 struct NumberLiteralExpression : Expression {

@@ -271,4 +271,29 @@ Serialize FunctionCallExpression::serialize() const {
   return result;
 }
 
+Serialize ConstIntegerExpression::serialize() const {
+  Serialize result;
+  result.set_object_name("ConstIntegerExpression");
+  String val;
+  value.to_string(val);
+  result.add_object_field("value", Serialize::literal(move(val)));
+  return result;
+}
+
+Serialize ConstRationalExpression::serialize() const {
+  Serialize result;
+  result.set_object_name("ConstRationalExpression");
+  String val;
+  value.to_fraction_string(val);
+  result.add_object_field("value", Serialize::literal(move(val)));
+  return result;
+}
+
+Serialize ConstBooleanExpression::serialize() const {
+  Serialize result;
+  result.set_object_name("ConstBooleanExpression");
+  result.add_object_field("value", Serialize::of(value));
+  return result;
+}
+
 } // namespace amelia
