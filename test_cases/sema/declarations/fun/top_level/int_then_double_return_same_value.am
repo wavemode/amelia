@@ -1,13 +1,13 @@
 fun f() {
-  return 5.0
   return 5
+  return 5.0
 }
 
 /* EXPECTED_OUTPUT:
 SemaResult(
   modules=[
     Module(
-      name="double_then_int_return",
+      name="int_then_double_return_same_value",
       scope=Scope(
         bindings=[
           Binding(
@@ -15,7 +15,7 @@ SemaResult(
             type=FunctionType(
               signatures=[
                 Signature(
-                  return_type=Const[5/1]
+                  return_type=Const[5]
                 )
               ]
             ),
@@ -23,13 +23,13 @@ SemaResult(
               exprs=[
                 ReturnExpression(
                   value=NumberLiteralExpression(
-                    lit=5.0
+                    lit=5
                   )
                 ),
                 ReturnExpression(
                   value=BuiltinTypeCastExpression(
                     expr=NumberLiteralExpression(
-                      lit=5
+                      lit=5.0
                     )
                   )
                 )

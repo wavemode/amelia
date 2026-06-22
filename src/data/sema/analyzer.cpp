@@ -285,6 +285,23 @@ public:
                 static_cast<const ConstIntegerType &>(*inferred_type).value) {
           target_type = Flex<Type>::weak(&INT_TYPE);
           return unify(target_type, assignment_type, expr, is_const);
+        } else if ((assignment_type->kind == TypeKind::ConstRational &&
+                    (static_cast<const ConstRationalType &>(*assignment_type).value.denominator() !=
+                         1 ||
+                     static_cast<const ConstRationalType &>(*assignment_type).value.numerator() !=
+                         static_cast<const ConstIntegerType &>(*inferred_type).value)) ||
+                   (assignment_type->kind == TypeKind::Builtin &&
+                    static_cast<const BuiltinType &>(*assignment_type).builtin_kind ==
+                        BuiltinKind::Double)
+
+        ) {
+          target_type = Flex<Type>::weak(&DOUBLE_TYPE);
+          return unify(target_type, assignment_type, expr, is_const);
+        } else if (assignment_type->kind == TypeKind::Builtin &&
+                   static_cast<const BuiltinType &>(*assignment_type).builtin_kind ==
+                       BuiltinKind::Float) {
+          target_type = Flex<Type>::weak(&FLOAT_TYPE);
+          return unify(target_type, assignment_type, expr, is_const);
         }
       } else if (inferred_type->kind == TypeKind::ConstRational) {
         if ((assignment_type->kind == TypeKind::ConstRational &&

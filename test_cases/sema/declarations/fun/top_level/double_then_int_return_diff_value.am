@@ -1,0 +1,46 @@
+fun f() {
+  return 5.0
+  return 6
+}
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="double_then_int_return_diff_value",
+      scope=Scope(
+        bindings=[
+          Binding(
+            name="f",
+            type=FunctionType(
+              signatures=[
+                Signature(
+                  return_type=double
+                )
+              ]
+            ),
+            value=SequenceExpression(
+              exprs=[
+                ReturnExpression(
+                  value=NumberLiteralExpression(
+                    lit=5.0
+                  )
+                ),
+                ReturnExpression(
+                  value=BuiltinTypeCastExpression(
+                    expr=NumberLiteralExpression(
+                      lit=6
+                    )
+                  )
+                )
+              ]
+            ),
+            kind=Function,
+            visibility=Default
+          )
+        ]
+      )
+    )
+  ]
+)
+*/
