@@ -5,7 +5,7 @@
 #include "prelude.hpp"
 
 #include "data/lexer/token_type.hpp"
-#include "data/sema/type.hpp"
+#include "data/sema/builtin_kind.hpp"
 #include "data/source/declaration_visibility.hpp"
 #include "data/source/number_literal.hpp"
 #include "data/util/integer.hpp"

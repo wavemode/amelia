@@ -1,9 +1,9 @@
-let y = 5
-let x = {
-  let y = 4;;;;;
+const y = 5
+const x = {
+  const y = 4;;;;;
   y
 }
-let z = y
+const z = y
 
 /* EXPECTED_OUTPUT:
 SemaResult(
@@ -38,7 +38,7 @@ SemaResult(
                 )
               ]
             ),
-            kind=Variable,
+            kind=Constant,
             visibility=Default
           ),
           Binding(
@@ -47,7 +47,7 @@ SemaResult(
             value=NumberLiteralExpression(
               lit=5
             ),
-            kind=Variable,
+            kind=Constant,
             visibility=Default
           ),
           Binding(
@@ -56,7 +56,7 @@ SemaResult(
             value=IdentifierExpression(
               name="y"
             ),
-            kind=Variable,
+            kind=Constant,
             visibility=Default
           )
         ]

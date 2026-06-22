@@ -1,6 +1,6 @@
-let x : const 5.1 = y
-let y = 5
+const x : const 5.1 = y
+const y = 5
 
 /* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'Const[5]' to expected type 'Const[51/10]' (at test_cases/sema/type_expressions/const/error_const_rational_assign_incompatible.am:1:21)")
+ERROR("Cannot convert expression of type 'Const[5]' to expected type 'Const[51/10]' (at test_cases/sema/type_expressions/const/error_const_rational_assign_incompatible.am:1:23)")
 */

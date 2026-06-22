@@ -1,5 +1,5 @@
-let x = y(z)
-let z = 10
+const x = y(z)
+const z = 10
 fun y(y: int) = y
 
 /* EXPECTED_OUTPUT:
@@ -26,14 +26,12 @@ SemaResult(
                 return_type=int
               ),
               arguments=[
-                BuiltinTypeCastExpression(
-                  expr=IdentifierExpression(
-                    name="z"
-                  )
+                IdentifierExpression(
+                  name="z"
                 )
               ]
             ),
-            kind=Variable,
+            kind=Constant,
             visibility=Default
           ),
           Binding(
@@ -63,7 +61,7 @@ SemaResult(
             value=NumberLiteralExpression(
               lit=10
             ),
-            kind=Variable,
+            kind=Constant,
             visibility=Default
           )
         ]

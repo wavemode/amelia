@@ -6,7 +6,6 @@
 #include "data/util/flex.hpp"
 
 #include "data/sema/expression.hpp"
-#include "data/sema/type.hpp"
 #include "data/source/declaration_visibility.hpp"
 
 namespace amelia {

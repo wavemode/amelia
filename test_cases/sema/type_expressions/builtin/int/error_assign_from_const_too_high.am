@@ -1,5 +1,5 @@
-let x : int = 2147483648
+const x : int = 2147483648
 
 /* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'Const[2147483648]' to expected type 'int' (at test_cases/sema/type_expressions/builtin/int/error_assign_from_const_too_high.am:1:15)")
+ERROR("Cannot convert expression of type 'Const[2147483648]' to expected type 'int' (at test_cases/sema/type_expressions/builtin/int/error_assign_from_const_too_high.am:1:17)")
 */

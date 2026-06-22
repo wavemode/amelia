@@ -1,6 +1,6 @@
 fun f() = 5
 
-let x = {
+const x = {
   fun f() = 10
   f()
 }
@@ -61,7 +61,7 @@ SemaResult(
                 )
               ]
             ),
-            kind=Variable,
+            kind=Constant,
             visibility=Default
           )
         ]

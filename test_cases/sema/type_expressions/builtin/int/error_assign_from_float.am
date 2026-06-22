@@ -1,6 +1,6 @@
-let x : int = y
-let y : float = 42
+const x : int = y
+const y : float = 42
 
 /* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'float' to expected type 'int' (at test_cases/sema/type_expressions/builtin/int/error_assign_from_float.am:1:15)")
+ERROR("Cannot convert expression of type 'float' to expected type 'int' (at test_cases/sema/type_expressions/builtin/int/error_assign_from_float.am:1:17)")
 */

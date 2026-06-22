@@ -2,7 +2,7 @@ fun f() {
   x
 }
 
-let x : int = 10
+const x : int = 10
 
 /* EXPECTED_OUTPUT:
 SemaResult(
@@ -38,7 +38,7 @@ SemaResult(
                 lit=10
               )
             ),
-            kind=Variable,
+            kind=Constant,
             visibility=Default
           )
         ]

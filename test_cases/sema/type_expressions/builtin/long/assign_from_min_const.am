@@ -1,5 +1,5 @@
-let x : long = y
-let y = -9223372036854775808
+const x : long = y
+const y = -9223372036854775808
 
 /* EXPECTED_OUTPUT:
 SemaResult(
@@ -16,7 +16,7 @@ SemaResult(
                 name="y"
               )
             ),
-            kind=Variable,
+            kind=Constant,
             visibility=Default
           ),
           Binding(
@@ -28,7 +28,7 @@ SemaResult(
                 lit=9223372036854775808
               )
             ),
-            kind=Variable,
+            kind=Constant,
             visibility=Default
           )
         ]

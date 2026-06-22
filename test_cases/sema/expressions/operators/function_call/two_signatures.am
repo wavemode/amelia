@@ -1,5 +1,5 @@
-let x = y(z)
-let z = 10.5
+const x = y(z)
+const z = 10.5
 fun y(y: int) = y
 fun y(t: float) = t
 
@@ -34,7 +34,7 @@ SemaResult(
                 )
               ]
             ),
-            kind=Variable,
+            kind=Constant,
             visibility=Default
           ),
           Binding(
@@ -73,7 +73,7 @@ SemaResult(
             value=NumberLiteralExpression(
               lit=10.5
             ),
-            kind=Variable,
+            kind=Constant,
             visibility=Default
           )
         ]

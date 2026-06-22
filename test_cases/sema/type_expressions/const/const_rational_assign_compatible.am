@@ -1,5 +1,5 @@
-let x : const 5.0 = y
-let y = 5
+const x : const 5.0 = y
+const y = 5
 
 /* EXPECTED_OUTPUT:
 SemaResult(
@@ -16,7 +16,7 @@ SemaResult(
                 name="y"
               )
             ),
-            kind=Variable,
+            kind=Constant,
             visibility=Default
           ),
           Binding(
@@ -25,7 +25,7 @@ SemaResult(
             value=NumberLiteralExpression(
               lit=5
             ),
-            kind=Variable,
+            kind=Constant,
             visibility=Default
           )
         ]

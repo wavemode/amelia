@@ -1,4 +1,4 @@
-let x = 5
+const x = 5
 
 /* EXPECTED_OUTPUT:
 SemaResult(
@@ -13,7 +13,7 @@ SemaResult(
             value=NumberLiteralExpression(
               lit=5
             ),
-            kind=Variable,
+            kind=Constant,
             visibility=Default
           )
         ]

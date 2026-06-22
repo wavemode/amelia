@@ -1,5 +1,5 @@
-let x : ubyte = y
-let y : ubyte = 42
+const x : ubyte = y
+const y : ubyte = 42
 
 /* EXPECTED_OUTPUT:
 SemaResult(
@@ -14,7 +14,7 @@ SemaResult(
             value=IdentifierExpression(
               name="y"
             ),
-            kind=Variable,
+            kind=Constant,
             visibility=Default
           ),
           Binding(
@@ -25,7 +25,7 @@ SemaResult(
                 lit=42
               )
             ),
-            kind=Variable,
+            kind=Constant,
             visibility=Default
           )
         ]

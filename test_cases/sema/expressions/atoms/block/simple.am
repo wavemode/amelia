@@ -1,5 +1,5 @@
-let x = {
-  let y = 4
+const x = {
+  const y = 4
   y
 }
 
@@ -31,7 +31,7 @@ SemaResult(
                 )
               ]
             ),
-            kind=Variable,
+            kind=Constant,
             visibility=Default
           )
         ]

@@ -1,5 +1,5 @@
-let x : double = y
-let y : ulong = 42
+const x : double = y
+const y : ulong = 42
 
 /* EXPECTED_OUTPUT:
 SemaResult(
@@ -16,7 +16,7 @@ SemaResult(
                 name="y"
               )
             ),
-            kind=Variable,
+            kind=Constant,
             visibility=Default
           ),
           Binding(
@@ -27,7 +27,7 @@ SemaResult(
                 lit=42
               )
             ),
-            kind=Variable,
+            kind=Constant,
             visibility=Default
           )
         ]

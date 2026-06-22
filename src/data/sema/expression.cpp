@@ -1,10 +1,163 @@
 #include "expression.hpp"
 
-#include "expression_variants.hpp"
-
-#include "data/sema/type.hpp"
-
 namespace amelia {
+
+Serialize serialize_builtin(const BuiltinType &type) {
+  return serialize_builtin_kind(type.builtin_kind);
+}
+
+Serialize Type::serialize() const {
+  switch (kind) {
+  case TypeKind::Inferred: {
+    return static_cast<const InferredType &>(*this).target->serialize();
+  }
+  case TypeKind::Builtin: {
+    const BuiltinType &builtin_type = static_cast<const BuiltinType &>(*this);
+    return serialize_builtin(builtin_type);
+  }
+  case TypeKind::Alias: {
+    const AliasType &alias = static_cast<const AliasType &>(*this);
+    Serialize result;
+    result.set_object_name("Alias");
+    result.add_object_field("name", Serialize::literal(alias.name));
+    result.add_object_field("target", alias.target->serialize());
+    return result;
+  }
+  case TypeKind::ConstInteger: {
+    const ConstIntegerType &const_integer = static_cast<const ConstIntegerType &>(*this);
+    String value("Const[");
+    const_integer.value.to_string(value);
+    value.append("]");
+    return Serialize::literal(move(value));
+  }
+  case TypeKind::ConstRational: {
+    const ConstRationalType &const_rational = static_cast<const ConstRationalType &>(*this);
+    String value("Const[");
+    const_rational.value.to_fraction_string(value);
+    value.append("]");
+    return Serialize::literal(move(value));
+  }
+  case TypeKind::ConstBoolean: {
+    const ConstBooleanType &const_boolean = static_cast<const ConstBooleanType &>(*this);
+    String value("Const[");
+    value.append(const_boolean.value ? Text("true") : Text("false"));
+    value.append("]");
+    return Serialize::literal(move(value));
+  }
+  case TypeKind::Function: {
+    const FunctionType &function_type = static_cast<const FunctionType &>(*this);
+    Serialize result;
+    Serialize signatures_list;
+    for (const auto &signature : function_type.signatures) {
+      signatures_list.add_list_item(signature.serialize());
+    }
+    result.set_object_name("FunctionType");
+    result.add_object_field("signatures", move(signatures_list));
+    return result;
+  }
+  default:
+    throw RuntimeError("not implemented");
+  }
+}
+
+Serialize FunctionType::Signature::serialize() const {
+  Serialize result;
+  result.set_object_name("Signature");
+  if (parameters.size() > 0) {
+    Serialize parameters_list;
+    for (const auto &parameter : parameters) {
+      Serialize parameter_ser;
+      parameter_ser.set_object_name("Parameter");
+      parameter_ser.add_object_field("name", Serialize::quoted(parameter.name));
+      parameter_ser.add_object_field("type", parameter.type->serialize());
+      if (parameter.default_value.has_value()) {
+        parameter_ser.add_object_field(
+            "default_value", parameter.default_value.value()->serialize()
+        );
+      }
+      parameters_list.add_list_item(move(parameter_ser));
+    }
+    result.add_object_field("parameters", move(parameters_list));
+  }
+  result.add_object_field("return_type", return_type->serialize());
+  return result;
+}
+
+Serialize serialize_type_kind(TypeKind kind) {
+  String result;
+  switch (kind) {
+  case TypeKind::Inferred:
+    result.append("Inferred");
+    break;
+  case TypeKind::Alias:
+    result.append("Alias");
+    break;
+  case TypeKind::TypeFn:
+    result.append("TypeFn");
+    break;
+  case TypeKind::Apply:
+    result.append("Apply");
+    break;
+  case TypeKind::Builtin:
+    result.append("Builtin");
+    break;
+  case TypeKind::BitInt:
+    result.append("BitInt");
+    break;
+  case TypeKind::Tuple:
+    result.append("Tuple");
+    break;
+  case TypeKind::Struct:
+    result.append("Struct");
+    break;
+  case TypeKind::Reference:
+    result.append("Reference");
+    break;
+  case TypeKind::Pointer:
+    result.append("Pointer");
+    break;
+  case TypeKind::Array:
+    result.append("Array");
+    break;
+  case TypeKind::Slice:
+    result.append("Slice");
+    break;
+  case TypeKind::Impl:
+    result.append("Impl");
+    break;
+  case TypeKind::ConstInteger:
+    result.append("ConstInteger");
+    break;
+  case TypeKind::ConstRational:
+    result.append("ConstRational");
+    break;
+  case TypeKind::ConstBoolean:
+    result.append("ConstBoolean");
+    break;
+  case TypeKind::Class:
+    result.append("Class");
+    break;
+  case TypeKind::Union:
+    result.append("Union");
+    break;
+  case TypeKind::Concept:
+    result.append("Concept");
+    break;
+  case TypeKind::Function:
+    result.append("Function");
+    break;
+  case TypeKind::FunctionPointer:
+    result.append("FunctionPointer");
+    break;
+  case TypeKind::Closure:
+    result.append("Closure");
+    break;
+  case TypeKind::Variable:
+    result.append("Variable");
+    break;
+  }
+  return Serialize::literal(move(result));
+}
 
 Expression::~Expression() = default;
 

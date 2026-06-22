@@ -1,6 +1,6 @@
-let x : ubyte = y
-let y : long = 42
+const x : ubyte = y
+const y : long = 42
 
 /* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'long' to expected type 'ubyte' (at test_cases/sema/type_expressions/builtin/ubyte/error_assign_from_long.am:1:17)")
+ERROR("Cannot convert expression of type 'long' to expected type 'ubyte' (at test_cases/sema/type_expressions/builtin/ubyte/error_assign_from_long.am:1:19)")
 */

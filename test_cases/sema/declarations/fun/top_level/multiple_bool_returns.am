@@ -1,0 +1,46 @@
+fun f() {
+  return true
+  return false
+}
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="multiple_bool_returns",
+      scope=Scope(
+        bindings=[
+          Binding(
+            name="f",
+            type=FunctionType(
+              signatures=[
+                Signature(
+                  return_type=bool
+                )
+              ]
+            ),
+            value=SequenceExpression(
+              exprs=[
+                ReturnExpression(
+                  value=BooleanLiteralExpression(
+                    value=true
+                  )
+                ),
+                ReturnExpression(
+                  value=BuiltinTypeCastExpression(
+                    expr=BooleanLiteralExpression(
+                      value=false
+                    )
+                  )
+                )
+              ]
+            ),
+            kind=Function,
+            visibility=Default
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

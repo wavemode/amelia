@@ -1,6 +1,6 @@
-let x : ushort = y
-let y : ulong = 42
+const x : ushort = y
+const y : ulong = 42
 
 /* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'ulong' to expected type 'ushort' (at test_cases/sema/type_expressions/builtin/ushort/error_assign_from_ulong.am:1:18)")
+ERROR("Cannot convert expression of type 'ulong' to expected type 'ushort' (at test_cases/sema/type_expressions/builtin/ushort/error_assign_from_ulong.am:1:20)")
 */

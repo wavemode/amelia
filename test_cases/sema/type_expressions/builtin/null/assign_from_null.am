@@ -1,5 +1,5 @@
-let x : null = y
-let y = null
+const x : null = y
+const y = null
 
 /* EXPECTED_OUTPUT:
 SemaResult(
@@ -14,14 +14,14 @@ SemaResult(
             value=IdentifierExpression(
               name="y"
             ),
-            kind=Variable,
+            kind=Constant,
             visibility=Default
           ),
           Binding(
             name="y",
             type=null,
             value=NullLiteralExpression(),
-            kind=Variable,
+            kind=Constant,
             visibility=Default
           )
         ]

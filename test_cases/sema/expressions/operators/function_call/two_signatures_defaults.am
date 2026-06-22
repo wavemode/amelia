@@ -1,4 +1,4 @@
-let x = y()
+const x = y()
 fun y(y: int) = y
 fun y(t: float = 40) = t
 
@@ -34,7 +34,7 @@ SemaResult(
                 (default)
               ]
             ),
-            kind=Variable,
+            kind=Constant,
             visibility=Default
           ),
           Binding(

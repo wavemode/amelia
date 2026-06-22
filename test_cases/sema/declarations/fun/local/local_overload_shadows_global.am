@@ -1,7 +1,7 @@
 fun f() = 5
 fun f(x: float) = x
 
-let x = {
+const x = {
   fun f() = 10
   fun f(x : int) = x
   f(5)
@@ -81,10 +81,8 @@ SemaResult(
                           return_type=int
                         ),
                         arguments=[
-                          BuiltinTypeCastExpression(
-                            expr=NumberLiteralExpression(
-                              lit=5
-                            )
+                          NumberLiteralExpression(
+                            lit=5
                           )
                         ]
                       )
@@ -93,7 +91,7 @@ SemaResult(
                 )
               ]
             ),
-            kind=Variable,
+            kind=Constant,
             visibility=Default
           )
         ]

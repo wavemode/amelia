@@ -1,4 +1,4 @@
-let x : byte
+const x : byte
 
 /* EXPECTED_OUTPUT:
 ERROR("Missing initializer for 'x' at top level (at test_cases/sema/top_level/error_let_no_initializer.am:1:1)")

@@ -1,6 +1,6 @@
-let x : int = y
-let y : long = 42
+const x : int = y
+const y : long = 42
 
 /* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'long' to expected type 'int' (at test_cases/sema/type_expressions/builtin/int/error_assign_from_long.am:1:15)")
+ERROR("Cannot convert expression of type 'long' to expected type 'int' (at test_cases/sema/type_expressions/builtin/int/error_assign_from_long.am:1:17)")
 */

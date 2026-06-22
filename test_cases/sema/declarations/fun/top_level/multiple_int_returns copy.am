@@ -1,0 +1,46 @@
+fun f() {
+  return 5
+  return 10
+}
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="multiple_int_returns copy",
+      scope=Scope(
+        bindings=[
+          Binding(
+            name="f",
+            type=FunctionType(
+              signatures=[
+                Signature(
+                  return_type=int
+                )
+              ]
+            ),
+            value=SequenceExpression(
+              exprs=[
+                ReturnExpression(
+                  value=NumberLiteralExpression(
+                    lit=5
+                  )
+                ),
+                ReturnExpression(
+                  value=BuiltinTypeCastExpression(
+                    expr=NumberLiteralExpression(
+                      lit=10
+                    )
+                  )
+                )
+              ]
+            ),
+            kind=Function,
+            visibility=Default
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

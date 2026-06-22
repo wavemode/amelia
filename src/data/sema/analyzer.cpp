@@ -2,15 +2,8 @@
 
 #include "analyzer.hpp"
 
-#include "data/sema/expression.hpp"
-
-#include "data/sema/expression_variants.hpp"
-
-#include "data/sema/type.hpp"
-
-#include "data/sema/type_variants.hpp"
-
 #include "data/lexer/lexer.hpp"
+#include "data/sema/expression.hpp"
 #include "data/source/source_location_error.hpp"
 #include "data/util/integer.hpp"
 #include "data/util/rational.hpp"
@@ -75,6 +68,17 @@ bool is_null_type(const Type &type) {
          static_cast<const BuiltinType &>(type).builtin_kind == BuiltinKind::Null;
 }
 
+Flex<Type> remove_const(const Flex<Type> &type) {
+  if (type->kind == TypeKind::ConstInteger) {
+    return Flex<Type>::weak(&INT_TYPE);
+  } else if (type->kind == TypeKind::ConstRational) {
+    return Flex<Type>::weak(&DOUBLE_TYPE);
+  } else if (type->kind == TypeKind::ConstBoolean) {
+    return Flex<Type>::weak(&BOOL_TYPE);
+  }
+  return type;
+}
+
 bool is_value_binding_node_type(NodeType node_type) {
   return node_type == NodeType::LetDeclNode || node_type == NodeType::ConstDeclNode ||
          node_type == NodeType::FunctionDeclNode;
@@ -83,10 +87,6 @@ bool is_value_binding_node_type(NodeType node_type) {
 bool can_builtin_type_represent_range(const Type &type, const Integer &min, const Integer &max) {
   if (type.kind == TypeKind::Builtin) {
     switch (static_cast<const BuiltinType &>(type).builtin_kind) {
-    case BuiltinKind::Null:
-      return min == 0 && max == 0;
-    case BuiltinKind::Bool:
-      return min >= 0 && max <= 1;
     case BuiltinKind::Byte:
       return min >= INT8_MIN && max <= INT8_MAX;
     case BuiltinKind::UByte:
@@ -153,8 +153,10 @@ public:
     scope.active_bindings.pop_back();
   }
 
-  Flex<Expression> require_unify(Flex<Type> &target_type, const Flex<Expression> &expr) {
-    auto unified_expr = unify(target_type, expr);
+  Flex<Expression> require_unify(
+      Flex<Type> &target_type, const Flex<Expression> &expr, bool is_const
+  ) {
+    auto unified_expr = unify(target_type, expr->type, expr, is_const);
     if (!unified_expr.has_value()) {
       String error_message = "Cannot convert expression of type '";
       expr->type->serialize().to_string(error_message);
@@ -166,21 +168,27 @@ public:
     return unified_expr.value();
   }
 
-  Option<Flex<Expression>> unify_exact(
-      const Flex<Type> &target_type, const Flex<Expression> &expr
-  ) {
-    const Flex<Type> &assignment_type = expr->type;
-
+  bool unify_exact(const Flex<Type> &target_type, const Flex<Type> &assignment_type) {
     if (is_unknown_type(assignment_type)) {
-      raise_error_at_node_id(expr->node_id, "Cannot infer type of expression");
+      return false;
     }
 
     if (is_unknown_type(target_type)) {
-      return None();
+      return false;
     }
 
     if (target_type == assignment_type) {
-      return expr;
+      return true;
+    }
+
+    if (assignment_type->kind == TypeKind::Alias) {
+      return unify_exact(target_type, static_cast<const AliasType &>(*assignment_type).target);
+    } else if (assignment_type->kind == TypeKind::Inferred) {
+      return unify_exact(target_type, static_cast<const InferredType &>(*assignment_type).target);
+    } else if (target_type->kind == TypeKind::Alias) {
+      return unify_exact(static_cast<const AliasType &>(*target_type).target, assignment_type);
+    } else if (target_type->kind == TypeKind::Inferred) {
+      return unify_exact(static_cast<const InferredType &>(*target_type).target, assignment_type);
     }
 
     if (assignment_type->kind == TypeKind::Builtin && target_type->kind != TypeKind::Builtin) {
@@ -188,50 +196,60 @@ public:
                                                 .builtin_kind;
       BuiltinKind target_builtin_kind = static_cast<const BuiltinType &>(*target_type).builtin_kind;
       if (assignment_builtin_kind == target_builtin_kind) {
-        return expr;
+        return true;
       }
-      return None();
+      return false;
     }
 
-    if (target_type->kind == TypeKind::ConstBoolean &&
-        assignment_type->kind == TypeKind::ConstBoolean &&
-        static_cast<const ConstBooleanType &>(*target_type).value ==
-            static_cast<const ConstBooleanType &>(*assignment_type).value) {
-      return expr;
+    if (assignment_type->kind == TypeKind::ConstBoolean) {
+      return (target_type->kind == TypeKind::Builtin &&
+              static_cast<const BuiltinType &>(*target_type).builtin_kind == BuiltinKind::Bool) ||
+             (target_type->kind == TypeKind::ConstBoolean &&
+
+              static_cast<const ConstBooleanType &>(*target_type).value ==
+                  static_cast<const ConstBooleanType &>(*assignment_type).value);
     }
 
-    if (target_type->kind == TypeKind::ConstInteger &&
-        assignment_type->kind == TypeKind::ConstInteger &&
-        static_cast<const ConstIntegerType &>(*target_type).value ==
-            static_cast<const ConstIntegerType &>(*assignment_type).value) {
-      return expr;
+    if (assignment_type->kind == TypeKind::ConstInteger) {
+      return (target_type->kind == TypeKind::Builtin &&
+              static_cast<const BuiltinType &>(*target_type).builtin_kind == BuiltinKind::Int &&
+              can_builtin_type_represent_range(
+                  *target_type,
+                  static_cast<const ConstIntegerType &>(*assignment_type).value,
+                  static_cast<const ConstIntegerType &>(*assignment_type).value
+              )) ||
+             (target_type->kind == TypeKind::ConstInteger &&
+              static_cast<const ConstIntegerType &>(*target_type).value ==
+                  static_cast<const ConstIntegerType &>(*assignment_type).value);
     }
 
-    if (target_type->kind == TypeKind::ConstRational &&
-        assignment_type->kind == TypeKind::ConstRational &&
-        static_cast<const ConstRationalType &>(*target_type).value ==
-            static_cast<const ConstRationalType &>(*assignment_type).value) {
-      return expr;
+    if (assignment_type->kind == TypeKind::ConstRational) {
+      return (target_type->kind == TypeKind::Builtin &&
+              static_cast<const BuiltinType &>(*target_type).builtin_kind == BuiltinKind::Double) ||
+             (target_type->kind == TypeKind::ConstRational &&
+              static_cast<const ConstRationalType &>(*target_type).value ==
+                  static_cast<const ConstRationalType &>(*assignment_type).value);
     }
 
-    // TODO: handle aliases
-
-    return None();
+    return false;
   }
 
-  Option<Flex<Expression>> unify(Flex<Type> &target_type, const Flex<Expression> &expr) {
-    const Flex<Type> &assignment_type = expr->type;
-
+  Option<Flex<Expression>> unify(
+      Flex<Type> &target_type,
+      const Flex<Type> &assignment_type,
+      const Flex<Expression> &expr,
+      bool is_const
+  ) {
     if (assignment_type->kind == TypeKind::Builtin) {
       BuiltinKind assignment_builtin_kind = static_cast<const BuiltinType &>(*assignment_type)
                                                 .builtin_kind;
 
-      // it is an error to attempt to assign unknown - it indicates a type inference cycle
+      // attempting to type something as unknown indicates a type inference cycle
       if (assignment_builtin_kind == BuiltinKind::Unknown) {
         raise_error_at_node_id(expr->node_id, "Cannot infer type of expression");
       }
 
-      // never unifies with all types
+      // all types can be unified with never
       if (assignment_builtin_kind == BuiltinKind::Never) {
         return expr;
       }
@@ -242,12 +260,59 @@ public:
       return expr;
     }
 
+    if (assignment_type->kind == TypeKind::Alias) {
+      return unify(
+          target_type, static_cast<const AliasType &>(*assignment_type).target, expr, is_const
+      );
+    } else if (assignment_type->kind == TypeKind::Inferred) {
+      return unify(
+          target_type, static_cast<const InferredType &>(*assignment_type).target, expr, is_const
+      );
+    } else if (target_type->kind == TypeKind::Alias) {
+      return unify(static_cast<AliasType &>(*target_type).target, assignment_type, expr, is_const);
+    } else if (target_type->kind == TypeKind::Inferred) {
+      const auto &inferred_type = static_cast<InferredType &>(*target_type).target;
+      if (inferred_type->kind == TypeKind::ConstBoolean) {
+        if (assignment_type->kind == TypeKind::ConstBoolean &&
+            static_cast<const ConstBooleanType &>(*assignment_type).value !=
+                static_cast<const ConstBooleanType &>(*inferred_type).value) {
+          target_type = Flex<Type>::weak(&BOOL_TYPE);
+          return unify(target_type, assignment_type, expr, is_const);
+        }
+      } else if (inferred_type->kind == TypeKind::ConstInteger) {
+        if (assignment_type->kind == TypeKind::ConstInteger &&
+            static_cast<const ConstIntegerType &>(*assignment_type).value !=
+                static_cast<const ConstIntegerType &>(*inferred_type).value) {
+          target_type = Flex<Type>::weak(&INT_TYPE);
+          return unify(target_type, assignment_type, expr, is_const);
+        }
+      } else if (inferred_type->kind == TypeKind::ConstRational) {
+        if (assignment_type->kind == TypeKind::ConstRational &&
+            static_cast<const ConstRationalType &>(*assignment_type).value !=
+                static_cast<const ConstRationalType &>(*inferred_type).value) {
+          target_type = Flex<Type>::weak(&DOUBLE_TYPE);
+          return unify(target_type, assignment_type, expr, is_const);
+        }
+      }
+      return unify(
+          static_cast<InferredType &>(*target_type).target, assignment_type, expr, is_const
+      );
+    }
+
     if (target_type->kind == TypeKind::Builtin) {
       BuiltinKind target_builtin_kind = static_cast<const BuiltinType &>(*target_type).builtin_kind;
 
       // all types unify with unknown
       if (target_builtin_kind == BuiltinKind::Unknown) {
-        target_type = assignment_type;
+        if (is_const && (assignment_type->kind == TypeKind::ConstBoolean ||
+                         assignment_type->kind == TypeKind::ConstInteger ||
+                         assignment_type->kind == TypeKind::ConstRational)) {
+          auto new_target_type = emplace_flex<InferredType>();
+          new_target_type->target = assignment_type;
+          target_type = move(new_target_type);
+        } else {
+          target_type = remove_const(assignment_type);
+        }
         return expr;
       }
 
@@ -570,7 +635,9 @@ public:
       binding.type = Flex<Type>::weak(&UNKNOWN_TYPE);
     }
     if (decl_node.expr.has_value()) {
-      binding.value = expect_expression_of_type(binding.type.value(), decl_node.expr.value());
+      binding.value = expect_expression_of_type(
+          binding.type.value(), decl_node.expr.value(), false
+      );
     }
   }
 
@@ -588,7 +655,7 @@ public:
     }
 
     if (decl_node.expr.has_value()) {
-      binding.value = expect_expression_of_type(binding.type.value(), decl_node.expr.value());
+      binding.value = expect_expression_of_type(binding.type.value(), decl_node.expr.value(), true);
     }
   }
 
@@ -686,7 +753,7 @@ public:
     Flex<Expression> result;
     if (function_body_node.expr.has_value()) {
       auto expr = build_expression(function_body_node.expr.value());
-      auto unified_expr = unify(signature.return_type, expr);
+      auto unified_expr = unify(signature.return_type, expr->type, expr, true);
       if (!unified_expr.has_value()) {
         String error_message = "Cannot convert expression of type '";
         expr->type->serialize().to_string(error_message);
@@ -760,14 +827,16 @@ public:
     result.type = evaluate_type_expr(parameter_node.type.value());
     if (parameter_node.default_value.has_value()) {
       result.default_value = expect_expression_of_type(
-          result.type, parameter_node.default_value.value()
+          result.type, parameter_node.default_value.value(), true
       );
     }
     return result;
   }
 
-  Flex<Expression> expect_expression_of_type(Flex<Type> &expected_type, NodeId expr_node_id) {
-    return require_unify(expected_type, build_expression(expr_node_id));
+  Flex<Expression> expect_expression_of_type(
+      Flex<Type> &expected_type, NodeId expr_node_id, bool is_const
+  ) {
+    return require_unify(expected_type, build_expression(expr_node_id), is_const);
   }
 
   Flex<Expression> build_expression(NodeId expr_node_id) {
@@ -898,9 +967,11 @@ public:
         if (pos_arg_index < pos_args.size()) {
           Option<Flex<Expression>> expr;
           if (exact_match_only) {
-            expr = unify_exact(param.type, pos_args[pos_arg_index]);
+            expr = unify_exact(param.type, pos_args[pos_arg_index]->type)
+                       ? pos_args[pos_arg_index]
+                       : Option<Flex<Expression>>();
           } else {
-            expr = unify(param.type, pos_args[pos_arg_index]);
+            expr = unify(param.type, pos_args[pos_arg_index]->type, pos_args[pos_arg_index], true);
           }
           if (!expr.has_value()) {
             goto fail;
@@ -910,9 +981,12 @@ public:
         } else if (named_args.has(param.name)) {
           Option<Flex<Expression>> expr;
           if (exact_match_only) {
-            expr = unify_exact(param.type, named_args[param.name]);
+            auto param_expr = named_args[param.name];
+            expr = unify_exact(param.type, param_expr->type) ? param_expr
+                                                             : Option<Flex<Expression>>();
           } else {
-            expr = unify(param.type, named_args[param.name]);
+            auto param_expr = named_args[param.name];
+            expr = unify(param.type, param_expr->type, param_expr, true);
           }
           if (!expr.has_value()) {
             goto fail;
@@ -961,14 +1035,17 @@ public:
     result->node_id = expr_node_id;
     if (return_node.expr.has_value()) {
       result->value = expect_expression_of_type(
-          m_current_function_signature.value()->return_type, return_node.expr.value()
+          m_current_function_signature.value()->return_type, return_node.expr.value(), true
       );
     } else {
       auto implied_return_value = Flex<NullLiteralExpression>::emplace();
       implied_return_value->node_id = expr_node_id;
       implied_return_value->type = Flex<Type>::weak(&NULL_TYPE);
       auto return_value = unify(
-          m_current_function_signature.value()->return_type, implied_return_value
+          m_current_function_signature.value()->return_type,
+          implied_return_value->type,
+          implied_return_value,
+          true
       );
       if (!return_value.has_value()) {
         String error_message = "Empty return statement in function returning '";
@@ -1112,7 +1189,7 @@ public:
     binding->type = type.has_value() ? evaluate_type_expr(type.value())
                                      : Flex<Type>::weak(&UNKNOWN_TYPE);
     binding->value = expr.has_value()
-                         ? expect_expression_of_type(binding->type.value(), expr.value())
+                         ? expect_expression_of_type(binding->type.value(), expr.value(), is_const)
                          : Option<Flex<Expression>>();
 
     auto result = emplace_flex<ValueBindingExpression>();

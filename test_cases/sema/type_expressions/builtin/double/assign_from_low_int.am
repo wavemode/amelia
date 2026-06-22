@@ -1,5 +1,5 @@
-let x : double = y
-let y = -184467440737095516151844674407370955161518446744073709551615184467440737095516152322
+const x : double = y
+const y = -184467440737095516151844674407370955161518446744073709551615184467440737095516152322
 
 /* EXPECTED_OUTPUT:
 SemaResult(
@@ -16,7 +16,7 @@ SemaResult(
                 name="y"
               )
             ),
-            kind=Variable,
+            kind=Constant,
             visibility=Default
           ),
           Binding(
@@ -28,7 +28,7 @@ SemaResult(
                 lit=184467440737095516151844674407370955161518446744073709551615184467440737095516152322
               )
             ),
-            kind=Variable,
+            kind=Constant,
             visibility=Default
           )
         ]

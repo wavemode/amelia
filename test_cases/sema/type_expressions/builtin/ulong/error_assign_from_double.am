@@ -1,6 +1,6 @@
-let x : ulong = y
-let y : double = 42
+const x : ulong = y
+const y : double = 42
 
 /* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'double' to expected type 'ulong' (at test_cases/sema/type_expressions/builtin/ulong/error_assign_from_double.am:1:17)")
+ERROR("Cannot convert expression of type 'double' to expected type 'ulong' (at test_cases/sema/type_expressions/builtin/ulong/error_assign_from_double.am:1:19)")
 */

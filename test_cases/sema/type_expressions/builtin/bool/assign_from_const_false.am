@@ -1,5 +1,5 @@
-let x : bool = y
-let y = false
+const x : bool = y
+const y = false
 
 /* EXPECTED_OUTPUT:
 SemaResult(
@@ -16,7 +16,7 @@ SemaResult(
                 name="y"
               )
             ),
-            kind=Variable,
+            kind=Constant,
             visibility=Default
           ),
           Binding(
@@ -25,7 +25,7 @@ SemaResult(
             value=BooleanLiteralExpression(
               value=false
             ),
-            kind=Variable,
+            kind=Constant,
             visibility=Default
           )
         ]

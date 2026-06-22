@@ -1,7 +1,7 @@
-let x = y(y=z)
-let z = 10.5
+const x = y(y=z)
+const z = 10.5
 fun y(y: int) = y
 
 /* EXPECTED_OUTPUT:
-ERROR("No function for call to 'y' matches the given arguments (y: Const[21/2]) (at test_cases/sema/expressions/operators/function_call/error_no_matching_signature_named.am:1:9)")
+ERROR("No function for call to 'y' matches the given arguments (y: Const[21/2]) (at test_cases/sema/expressions/operators/function_call/error_no_matching_signature_named.am:1:11)")
 */
