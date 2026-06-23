@@ -6,81 +6,75 @@ Serialize serialize_builtin(const BuiltinType &type) {
   return serialize_builtin_kind(type.builtin_kind);
 }
 
-Serialize Type::serialize() const {
-  switch (kind) {
-  case TypeKind::Inferred: {
-    return static_cast<const InferredType &>(*this).target->serialize();
+Serialize InferredType::serialize() const {
+  return target->serialize();
+}
+
+Serialize BuiltinType::serialize() const {
+  return serialize_builtin_kind(builtin_kind);
+}
+
+Serialize AliasType::serialize() const {
+  Serialize result;
+  result.set_object_name("Alias");
+  result.add_object_field("name", Serialize::literal(name));
+  result.add_object_field("target", target->serialize());
+  return result;
+}
+
+Serialize ConstIntegerType::serialize() const {
+  String val("Const[");
+  value.to_string(val);
+  val.append("]");
+  return Serialize::literal(move(val));
+}
+
+Serialize ConstRationalType::serialize() const {
+  String val("Const[");
+  value.to_fraction_string(val);
+  val.append("]");
+  return Serialize::literal(move(val));
+}
+
+Serialize ConstBooleanType::serialize() const {
+  String val("Const[");
+  val.append(value ? Text("true") : Text("false"));
+  val.append("]");
+  return Serialize::literal(move(val));
+}
+
+Serialize FunctionType::serialize() const {
+  Serialize result;
+  Serialize signatures_list;
+  for (const auto &signature : signatures) {
+    signatures_list.add_list_item(signature.serialize());
   }
-  case TypeKind::Builtin: {
-    const BuiltinType &builtin_type = static_cast<const BuiltinType &>(*this);
-    return serialize_builtin(builtin_type);
+  result.set_object_name("FunctionType");
+  result.add_object_field("signatures", move(signatures_list));
+  return result;
+}
+
+Serialize ReferenceType::serialize() const {
+  String val("&");
+  if (is_const) {
+    val.append("const ");
+  } else if (is_move) {
+    val.append("move ");
   }
-  case TypeKind::Alias: {
-    const AliasType &alias = static_cast<const AliasType &>(*this);
-    Serialize result;
-    result.set_object_name("Alias");
-    result.add_object_field("name", Serialize::literal(alias.name));
-    result.add_object_field("target", alias.target->serialize());
-    return result;
-  }
-  case TypeKind::ConstInteger: {
-    const ConstIntegerType &const_integer = static_cast<const ConstIntegerType &>(*this);
-    String value("Const[");
-    const_integer.value.to_string(value);
-    value.append("]");
-    return Serialize::literal(move(value));
-  }
-  case TypeKind::ConstRational: {
-    const ConstRationalType &const_rational = static_cast<const ConstRationalType &>(*this);
-    String value("Const[");
-    const_rational.value.to_fraction_string(value);
-    value.append("]");
-    return Serialize::literal(move(value));
-  }
-  case TypeKind::ConstBoolean: {
-    const ConstBooleanType &const_boolean = static_cast<const ConstBooleanType &>(*this);
-    String value("Const[");
-    value.append(const_boolean.value ? Text("true") : Text("false"));
-    value.append("]");
-    return Serialize::literal(move(value));
-  }
-  case TypeKind::Function: {
-    const FunctionType &function_type = static_cast<const FunctionType &>(*this);
-    Serialize result;
-    Serialize signatures_list;
-    for (const auto &signature : function_type.signatures) {
-      signatures_list.add_list_item(signature.serialize());
+  referent->serialize().to_string(val);
+  return Serialize::literal(move(val));
+}
+
+Serialize TupleType::serialize() const {
+  String val("(");
+  for (size_t i = 0; i < element_types.size(); ++i) {
+    element_types[i]->serialize().to_string(val);
+    if (i < element_types.size() - 1) {
+      val.append(", ");
     }
-    result.set_object_name("FunctionType");
-    result.add_object_field("signatures", move(signatures_list));
-    return result;
   }
-  case TypeKind::Reference: {
-    const ReferenceType &reference_type = static_cast<const ReferenceType &>(*this);
-    String value("&");
-    if (reference_type.is_const) {
-      value.append("const ");
-    } else if (reference_type.is_move) {
-      value.append("move ");
-    }
-    reference_type.referent->serialize().to_string(value);
-    return Serialize::literal(move(value));
-  }
-  case TypeKind::Tuple: {
-    const TupleType &tuple_type = static_cast<const TupleType &>(*this);
-    String value("(");
-    for (size_t i = 0; i < tuple_type.element_types.size(); ++i) {
-      tuple_type.element_types[i]->serialize().to_string(value);
-      if (i < tuple_type.element_types.size() - 1) {
-        value.append(", ");
-      }
-    }
-    value.append(")");
-    return Serialize::literal(move(value));
-  }
-  default:
-    throw RuntimeError("not implemented");
-  }
+  val.append(")");
+  return Serialize::literal(move(val));
 }
 
 Serialize FunctionType::Signature::serialize() const {

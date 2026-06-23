@@ -11,8 +11,6 @@
 
 namespace amelia {
 
-Serialize serialize_builtin_kind(BuiltinKind kind);
-
 enum class TypeKind : uint8_t {
   Inferred,
   Alias,
@@ -43,7 +41,8 @@ Serialize serialize_type_kind(TypeKind kind);
 
 struct Type {
   TypeKind kind;
-  Serialize serialize() const;
+
+  virtual Serialize serialize() const = 0;
   virtual ~Type() = default;
 
 protected:
@@ -84,11 +83,15 @@ struct InferredType : Type {
   InferredType() : Type(TypeKind::Inferred) {}
   Flex<Type> target;
   NodeId inferred_at;
+
+  Serialize serialize() const override;
 };
 
 struct BuiltinType : Type {
   BuiltinType() : Type(TypeKind::Builtin) {}
   BuiltinKind builtin_kind;
+
+  Serialize serialize() const override;
 };
 
 struct AliasType : Type {
@@ -96,6 +99,8 @@ struct AliasType : Type {
   String name;
   String module_name;
   Flex<Type> target;
+
+  Serialize serialize() const override;
 };
 
 struct ReferenceType : Type {
@@ -103,24 +108,32 @@ struct ReferenceType : Type {
   Flex<Type> referent;
   bool is_const;
   bool is_move;
+
+  Serialize serialize() const override;
 };
 
 struct ConstIntegerType : Type {
   ConstIntegerType() : Type(TypeKind::ConstInteger) {}
   ConstIntegerType(Integer value) : Type(TypeKind::ConstInteger), value(move(value)) {}
   Integer value;
+
+  Serialize serialize() const override;
 };
 
 struct ConstRationalType : Type {
   ConstRationalType() : Type(TypeKind::ConstRational) {}
   ConstRationalType(Rational value) : Type(TypeKind::ConstRational), value(move(value)) {}
   Rational value;
+
+  Serialize serialize() const override;
 };
 
 struct ConstBooleanType : Type {
   ConstBooleanType() : Type(TypeKind::ConstBoolean) {}
   ConstBooleanType(bool value) : Type(TypeKind::ConstBoolean), value(value) {}
   bool value;
+
+  Serialize serialize() const override;
 };
 
 struct FunctionType : Type {
@@ -145,11 +158,15 @@ struct FunctionType : Type {
   // TODO: implicit params
   // TODO: variadic
   // TODO: generic
+
+  Serialize serialize() const override;
 };
 
 struct TupleType : Type {
   TupleType() : Type(TypeKind::Tuple) {}
   List<Flex<Type>> element_types;
+
+  Serialize serialize() const override;
 };
 
 struct ConstIntegerExpression : Expression {
