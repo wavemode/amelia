@@ -182,9 +182,7 @@ public:
     scope.active_bindings.pop_back();
   }
 
-  Flex<Expression> require_unify(
-      Flex<Type> &target_type, const Flex<Expression> &expr, bool is_const
-  ) {
+  Flex<Expression> require_unify(Flex<Type> &target_type, Flex<Expression> &expr, bool is_const) {
     auto unified_expr = unify(target_type, expr->type, expr, is_const);
     if (!unified_expr.has_value()) {
       String error_message = "Cannot convert expression of type '";
@@ -197,84 +195,13 @@ public:
     return unified_expr.value();
   }
 
-  bool unify_exact(const Flex<Type> &target_type, const Flex<Type> &assignment_type) {
-    if (is_unknown_type(assignment_type)) {
-      return false;
-    }
-
-    if (is_unknown_type(target_type)) {
-      return false;
-    }
-
-    if (target_type == assignment_type) {
-      return true;
-    }
-
-    if (assignment_type->kind == TypeKind::Alias) {
-      return unify_exact(target_type, static_cast<const AliasType &>(*assignment_type).target);
-    } else if (assignment_type->kind == TypeKind::Inferred) {
-      return unify_exact(target_type, static_cast<const InferredType &>(*assignment_type).target);
-    } else if (target_type->kind == TypeKind::Alias) {
-      return unify_exact(static_cast<const AliasType &>(*target_type).target, assignment_type);
-    } else if (target_type->kind == TypeKind::Inferred) {
-      return unify_exact(static_cast<const InferredType &>(*target_type).target, assignment_type);
-    } else if (target_type->kind == TypeKind::Reference &&
-               assignment_type->kind == TypeKind::Reference) {
-      const auto &target_ref_type = static_cast<const ReferenceType &>(*target_type);
-      const auto &assignment_ref_type = static_cast<const ReferenceType &>(*assignment_type);
-      return target_ref_type.is_const == assignment_ref_type.is_const &&
-             target_ref_type.is_move == assignment_ref_type.is_move &&
-             unify_exact(target_ref_type.referent, assignment_ref_type.referent);
-    } else if (target_type->kind == TypeKind::Tuple && assignment_type->kind == TypeKind::Tuple) {
-      const TupleType &target_tuple_type = static_cast<const TupleType &>(*target_type);
-      const TupleType &assignment_tuple_type = static_cast<const TupleType &>(*assignment_type);
-      if (target_tuple_type.element_types.size() != assignment_tuple_type.element_types.size()) {
-        return false;
-      }
-      for (size_t i = 0; i < target_tuple_type.element_types.size(); ++i) {
-        if (!unify_exact(
-                target_tuple_type.element_types[i], assignment_tuple_type.element_types[i]
-            )) {
-          return false;
-        }
-      }
-      return true;
-    }
-
-    if (assignment_type->kind == TypeKind::Builtin && target_type->kind == TypeKind::Builtin) {
-      BuiltinKind assignment_builtin_kind = static_cast<const BuiltinType &>(*assignment_type)
-                                                .builtin_kind;
-      BuiltinKind target_builtin_kind = static_cast<const BuiltinType &>(*target_type).builtin_kind;
-      if (assignment_builtin_kind == target_builtin_kind) {
-        return true;
-      }
-      return false;
-    }
-
-    if (assignment_type->kind == TypeKind::ConstBoolean) {
-      return target_type->kind == TypeKind::ConstBoolean &&
-             static_cast<const ConstBooleanType &>(*target_type).value ==
-                 static_cast<const ConstBooleanType &>(*assignment_type).value;
-    }
-
-    if (assignment_type->kind == TypeKind::ConstInteger) {
-      return target_type->kind == TypeKind::ConstInteger &&
-             static_cast<const ConstIntegerType &>(*target_type).value ==
-                 static_cast<const ConstIntegerType &>(*assignment_type).value;
-    }
-
-    if (assignment_type->kind == TypeKind::ConstRational) {
-      return target_type->kind == TypeKind::ConstRational &&
-             static_cast<const ConstRationalType &>(*target_type).value ==
-                 static_cast<const ConstRationalType &>(*assignment_type).value;
-    }
-
-    return false;
+  bool unify_exact(Flex<Type> &target_type, Flex<Type> &assignment_type) {
+    return target_type->resolve().equals(assignment_type->resolve());
   }
 
   Option<Flex<Expression>> unify(
       Flex<Type> &target_type,
-      const Flex<Type> &assignment_type,
+      Flex<Type> &assignment_type,
       const Flex<Expression> &expr,
       bool is_const
   ) {
@@ -302,8 +229,8 @@ public:
 
     // compatible references
     if (target_type->kind == TypeKind::Reference && assignment_type->kind == TypeKind::Reference) {
-      const auto &target_ref_type = static_cast<const ReferenceType &>(*target_type);
-      const auto &assignment_ref_type = static_cast<const ReferenceType &>(*assignment_type);
+      auto &target_ref_type = static_cast<ReferenceType &>(*target_type);
+      auto &assignment_ref_type = static_cast<ReferenceType &>(*assignment_type);
       if (unify_exact(target_ref_type.referent, assignment_ref_type.referent)) {
         if (assignment_ref_type.is_const) {
           if (target_ref_type.is_const) {
@@ -322,7 +249,7 @@ public:
     // compatible tuples
     if (target_type->kind == TypeKind::Tuple && assignment_type->kind == TypeKind::Tuple) {
       TupleType &target_tuple_type = static_cast<TupleType &>(*target_type);
-      const TupleType &assignment_tuple_type = static_cast<const TupleType &>(*assignment_type);
+      TupleType &assignment_tuple_type = static_cast<TupleType &>(*assignment_type);
       if (target_tuple_type.element_types.size() == assignment_tuple_type.element_types.size()) {
         for (size_t i = 0; i < target_tuple_type.element_types.size(); ++i) {
           auto unified_element_expr = unify(
@@ -341,12 +268,10 @@ public:
     }
 
     if (assignment_type->kind == TypeKind::Alias) {
-      return unify(
-          target_type, static_cast<const AliasType &>(*assignment_type).target, expr, is_const
-      );
+      return unify(target_type, static_cast<AliasType &>(*assignment_type).target, expr, is_const);
     } else if (assignment_type->kind == TypeKind::Inferred) {
       return unify(
-          target_type, static_cast<const InferredType &>(*assignment_type).target, expr, is_const
+          target_type, static_cast<InferredType &>(*assignment_type).target, expr, is_const
       );
     } else if (target_type->kind == TypeKind::Alias) {
       return unify(static_cast<AliasType &>(*target_type).target, assignment_type, expr, is_const);
@@ -924,7 +849,8 @@ public:
   Flex<Expression> expect_expression_of_type(
       Flex<Type> &expected_type, NodeId expr_node_id, bool is_const
   ) {
-    return require_unify(expected_type, build_expression(expr_node_id), is_const);
+    auto expr = build_expression(expr_node_id);
+    return require_unify(expected_type, expr, is_const);
   }
 
   Flex<Expression> build_expression(NodeId expr_node_id) {
@@ -1100,7 +1026,7 @@ public:
   Option<Flex<FunctionCallExpression>> resolve_function_call(
       NodeId expr_node_id,
       Flex<Expression> callee,
-      ConstSlice<Flex<Expression>> pos_args,
+      Slice<Flex<Expression>> pos_args,
       const Map<Text, Flex<Expression>> &named_args
   ) {
     if (callee->type->kind != TypeKind::Function) {

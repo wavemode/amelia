@@ -43,6 +43,8 @@ struct Type {
   TypeKind kind;
 
   virtual Serialize serialize() const = 0;
+  virtual bool equals(Type &other) = 0;
+  virtual Type &resolve();
   virtual ~Type() = default;
 
 protected:
@@ -79,12 +81,16 @@ protected:
   Expression(ExpressionKind kind) : kind(kind) {}
 };
 
+/// Type variants
+
 struct InferredType : Type {
   InferredType() : Type(TypeKind::Inferred) {}
   Flex<Type> target;
   NodeId inferred_at;
 
   Serialize serialize() const override;
+  virtual bool equals(Type &other) override;
+  virtual Type &resolve() override;
 };
 
 struct BuiltinType : Type {
@@ -92,6 +98,7 @@ struct BuiltinType : Type {
   BuiltinKind builtin_kind;
 
   Serialize serialize() const override;
+  virtual bool equals(Type &other) override;
 };
 
 struct AliasType : Type {
@@ -101,6 +108,8 @@ struct AliasType : Type {
   Flex<Type> target;
 
   Serialize serialize() const override;
+  virtual bool equals(Type &other) override;
+  virtual Type &resolve() override;
 };
 
 struct ReferenceType : Type {
@@ -110,6 +119,7 @@ struct ReferenceType : Type {
   bool is_move;
 
   Serialize serialize() const override;
+  virtual bool equals(Type &other) override;
 };
 
 struct ConstIntegerType : Type {
@@ -118,6 +128,7 @@ struct ConstIntegerType : Type {
   Integer value;
 
   Serialize serialize() const override;
+  virtual bool equals(Type &other) override;
 };
 
 struct ConstRationalType : Type {
@@ -126,6 +137,7 @@ struct ConstRationalType : Type {
   Rational value;
 
   Serialize serialize() const override;
+  virtual bool equals(Type &other) override;
 };
 
 struct ConstBooleanType : Type {
@@ -134,6 +146,7 @@ struct ConstBooleanType : Type {
   bool value;
 
   Serialize serialize() const override;
+  virtual bool equals(Type &other) override;
 };
 
 struct FunctionType : Type {
@@ -160,6 +173,7 @@ struct FunctionType : Type {
   // TODO: generic
 
   Serialize serialize() const override;
+  virtual bool equals(Type &other) override;
 };
 
 struct TupleType : Type {
@@ -167,7 +181,10 @@ struct TupleType : Type {
   List<Flex<Type>> element_types;
 
   Serialize serialize() const override;
+  virtual bool equals(Type &other) override;
 };
+
+/// Expression variants
 
 struct ConstIntegerExpression : Expression {
   ConstIntegerExpression() : Expression(ExpressionKind::ConstInteger) {}

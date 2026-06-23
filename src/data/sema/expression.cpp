@@ -2,6 +2,10 @@
 
 namespace amelia {
 
+Type &Type::resolve() {
+  return *this;
+}
+
 Serialize serialize_builtin(const BuiltinType &type) {
   return serialize_builtin_kind(type.builtin_kind);
 }
@@ -10,8 +14,21 @@ Serialize InferredType::serialize() const {
   return target->serialize();
 }
 
+bool InferredType::equals(Type &other) {
+  return this == &other || target->equals(other);
+}
+
+Type &InferredType::resolve() {
+  return *target;
+}
+
 Serialize BuiltinType::serialize() const {
   return serialize_builtin_kind(builtin_kind);
+}
+
+bool BuiltinType::equals(Type &other) {
+  return this == &other || (other.kind == TypeKind::Builtin &&
+                            builtin_kind == static_cast<const BuiltinType &>(other).builtin_kind);
 }
 
 Serialize AliasType::serialize() const {
@@ -22,11 +39,24 @@ Serialize AliasType::serialize() const {
   return result;
 }
 
+bool AliasType::equals(Type &other) {
+  return this == &other || target->equals(other);
+}
+
+Type &AliasType::resolve() {
+  return *target;
+}
+
 Serialize ConstIntegerType::serialize() const {
   String val("Const[");
   value.to_string(val);
   val.append("]");
   return Serialize::literal(move(val));
+}
+
+bool ConstIntegerType::equals(Type &other) {
+  return this == &other || (other.kind == TypeKind::ConstInteger &&
+                            value == static_cast<const ConstIntegerType &>(other).value);
 }
 
 Serialize ConstRationalType::serialize() const {
@@ -36,11 +66,21 @@ Serialize ConstRationalType::serialize() const {
   return Serialize::literal(move(val));
 }
 
+bool ConstRationalType::equals(Type &other) {
+  return this == &other || (other.kind == TypeKind::ConstRational &&
+                            value == static_cast<const ConstRationalType &>(other).value);
+}
+
 Serialize ConstBooleanType::serialize() const {
   String val("Const[");
   val.append(value ? Text("true") : Text("false"));
   val.append("]");
   return Serialize::literal(move(val));
+}
+
+bool ConstBooleanType::equals(Type &other) {
+  return this == &other || (other.kind == TypeKind::ConstBoolean &&
+                            value == static_cast<const ConstBooleanType &>(other).value);
 }
 
 Serialize FunctionType::serialize() const {
@@ -54,6 +94,11 @@ Serialize FunctionType::serialize() const {
   return result;
 }
 
+bool FunctionType::equals(Type &) {
+  // equality for Function types is not well-defined
+  return false;
+}
+
 Serialize ReferenceType::serialize() const {
   String val("&");
   if (is_const) {
@@ -63,6 +108,18 @@ Serialize ReferenceType::serialize() const {
   }
   referent->serialize().to_string(val);
   return Serialize::literal(move(val));
+}
+
+bool ReferenceType::equals(Type &other) {
+  if (this == &other) {
+    return true;
+  }
+  if (other.kind != TypeKind::Reference) {
+    return false;
+  }
+  ReferenceType &other_ref_type = static_cast<ReferenceType &>(other);
+  return is_const == other_ref_type.is_const && is_move == other_ref_type.is_move &&
+         referent->equals(*other_ref_type.referent);
 }
 
 Serialize TupleType::serialize() const {
@@ -75,6 +132,25 @@ Serialize TupleType::serialize() const {
   }
   val.append(")");
   return Serialize::literal(move(val));
+}
+
+bool TupleType::equals(Type &other) {
+  if (this == &other) {
+    return true;
+  }
+  if (other.kind != TypeKind::Tuple) {
+    return false;
+  }
+  TupleType &other_tuple_type = static_cast<TupleType &>(other);
+  if (element_types.size() != other_tuple_type.element_types.size()) {
+    return false;
+  }
+  for (size_t i = 0; i < element_types.size(); ++i) {
+    if (!element_types[i]->resolve().equals(other_tuple_type.element_types[i]->resolve())) {
+      return false;
+    }
+  }
+  return true;
 }
 
 Serialize FunctionType::Signature::serialize() const {
