@@ -1,6 +1,0 @@
-const x : byte = y
-const y : ushort = 42
-
-/* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'ushort' to expected type 'byte' (at test_cases/sema/type_expressions/builtin/byte/error_assign_from_ushort.am:1:18)")
-*/

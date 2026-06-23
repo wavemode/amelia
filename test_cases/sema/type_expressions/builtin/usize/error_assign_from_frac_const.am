@@ -1,6 +1,0 @@
-const x : usize = y
-const y = 1.5
-
-/* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'Const[3/2]' to expected type 'usize' (at test_cases/sema/type_expressions/builtin/usize/error_assign_from_frac_const.am:1:19)")
-*/

@@ -1,6 +1,0 @@
-const x : float = y
-const y : double = 42
-
-/* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'double' to expected type 'float' (at test_cases/sema/type_expressions/builtin/float/error_assign_from_double.am:1:19)")
-*/

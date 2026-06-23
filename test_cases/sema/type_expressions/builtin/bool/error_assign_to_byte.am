@@ -1,6 +1,0 @@
-const x : byte = y
-const y = true
-
-/* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'Const[true]' to expected type 'byte' (at test_cases/sema/type_expressions/builtin/bool/error_assign_to_byte.am:1:18)")
-*/

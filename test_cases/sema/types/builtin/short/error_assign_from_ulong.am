@@ -1,0 +1,6 @@
+const x : short = y
+const y : ulong = 42
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot convert expression of type 'ulong' to expected type 'short' (at test_cases/sema/types/builtin/short/error_assign_from_ulong.am:1:19)")
+*/

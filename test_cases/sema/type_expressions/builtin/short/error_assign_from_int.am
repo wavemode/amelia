@@ -1,6 +1,0 @@
-const x : short = y
-const y : int = 42
-
-/* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'int' to expected type 'short' (at test_cases/sema/type_expressions/builtin/short/error_assign_from_int.am:1:19)")
-*/

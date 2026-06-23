@@ -1,0 +1,5 @@
+const x : byte = -129
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot convert expression of type 'Const[-129]' to expected type 'byte' (at test_cases/sema/types/builtin/byte/error_assign_from_const_too_low.am:1:18)")
+*/

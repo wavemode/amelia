@@ -1,0 +1,7 @@
+const x : int = 5
+let y = &const x
+let z : &move int = y
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot convert expression of type '&const int' to expected type '&move int' (at test_cases/sema/types/reference/error_const_not_assignable_to_move.am:3:21)")
+*/

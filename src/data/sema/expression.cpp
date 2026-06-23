@@ -66,6 +66,17 @@ Serialize Type::serialize() const {
     reference_type.referent->serialize().to_string(value);
     return Serialize::literal(move(value));
   }
+  case TypeKind::Tuple: {
+    const TupleType &tuple_type = static_cast<const TupleType &>(*this);
+    Serialize result;
+    result.set_object_name("TupleType");
+    Serialize element_types_list;
+    for (const auto &element_type : tuple_type.element_types) {
+      element_types_list.add_list_item(element_type->serialize());
+    }
+    result.add_object_field("element_types", move(element_types_list));
+    return result;
+  }
   default:
     throw RuntimeError("not implemented");
   }

@@ -283,6 +283,25 @@ public:
       return expr;
     }
 
+    // compatible references
+    if (target_type->kind == TypeKind::Reference && assignment_type->kind == TypeKind::Reference) {
+      const auto &target_ref_type = static_cast<const ReferenceType &>(*target_type);
+      const auto &assignment_ref_type = static_cast<const ReferenceType &>(*assignment_type);
+      if (unify_exact(target_ref_type.referent, assignment_ref_type.referent)) {
+        if (assignment_ref_type.is_const) {
+          if (target_ref_type.is_const) {
+            return expr;
+          }
+        } else if (target_ref_type.is_const) {
+          return builtin_type_cast(*target_type, expr);
+        } else if (target_ref_type.is_move == assignment_ref_type.is_move) {
+          return expr;
+        } else if (is_type_trivial(target_ref_type.referent)) {
+          return builtin_type_cast(*target_type, expr);
+        }
+      }
+    }
+
     if (assignment_type->kind == TypeKind::Alias) {
       return unify(
           target_type, static_cast<const AliasType &>(*assignment_type).target, expr, is_const
@@ -1404,9 +1423,20 @@ public:
       return evaluate_builtin_type_expr(type_expr_node.as_BuiltinTypeNode());
     case NodeType::ConstTypeExprNode:
       return evaluate_const_type_expr(type_expr_node.as_ConstTypeExprNode());
+    case NodeType::RefExprNode:
+      return evaluate_ref_type_expr(type_expr_node.as_RefExprNode());
     default:
       raise_error_at_node_id(type_expr_node_id, "not implemented");
     }
+  }
+
+  Flex<Type> evaluate_ref_type_expr(const RefExprNode &ref_expr_node) {
+    auto referent_type = evaluate_type_expr(ref_expr_node.expr);
+    auto result = emplace_flex<ReferenceType>();
+    result->referent = referent_type;
+    result->is_const = ref_expr_node.is_const;
+    result->is_move = ref_expr_node.is_move;
+    return result;
   }
 
   Flex<Type> evaluate_const_type_expr(const ConstTypeExprNode &const_type_expr_node) {

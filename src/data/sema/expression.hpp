@@ -146,6 +146,11 @@ struct FunctionType : Type {
   // TODO: generic
 };
 
+struct TupleType : Type {
+  TupleType() : Type(TypeKind::Tuple) {}
+  List<Flex<Type>> element_types;
+};
+
 struct ConstIntegerExpression : Expression {
   ConstIntegerExpression() : Expression(ExpressionKind::ConstInteger) {}
   Integer value;

@@ -1,6 +1,0 @@
-const x : ulong = y
-const y : long = 42
-
-/* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'long' to expected type 'ulong' (at test_cases/sema/type_expressions/builtin/ulong/error_assign_from_long.am:1:19)")
-*/

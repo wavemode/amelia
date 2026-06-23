@@ -1,6 +1,0 @@
-const x : bool = y
-const y = 42
-
-/* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'Const[42]' to expected type 'bool' (at test_cases/sema/type_expressions/builtin/bool/error_assign_from_const.am:1:18)")
-*/

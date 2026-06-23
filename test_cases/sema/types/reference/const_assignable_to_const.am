@@ -1,0 +1,48 @@
+const x : int = 5
+let y = &const x
+let z : &const int = y
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="const_assignable_to_const",
+      scope=Scope(
+        bindings=[
+          Binding(
+            name="x",
+            type=int,
+            value=BuiltinTypeCastExpression(
+              expr=NumberLiteralExpression(
+                lit=5
+              )
+            ),
+            kind=Constant,
+            visibility=Default
+          ),
+          Binding(
+            name="y",
+            type=&const int,
+            value=AddressOfExpression(
+              operand=IdentifierExpression(
+                name="x"
+              )
+            ),
+            kind=Variable,
+            visibility=Default
+          ),
+          Binding(
+            name="z",
+            type=&const int,
+            value=IdentifierExpression(
+              name="y"
+            ),
+            kind=Variable,
+            visibility=Default
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

@@ -1,0 +1,6 @@
+const x : const true = y
+const y = false
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot convert expression of type 'Const[false]' to expected type 'Const[true]' (at test_cases/sema/types/const/error_const_boolean_assign_incompatible.am:1:24)")
+*/

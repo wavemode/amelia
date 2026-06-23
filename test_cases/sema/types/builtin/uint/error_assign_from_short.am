@@ -1,0 +1,6 @@
+const x : uint = y
+const y : short = 42
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot convert expression of type 'short' to expected type 'uint' (at test_cases/sema/types/builtin/uint/error_assign_from_short.am:1:18)")
+*/

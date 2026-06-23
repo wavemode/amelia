@@ -1,0 +1,6 @@
+const x : uint = y
+const y : byte = 42
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot convert expression of type 'byte' to expected type 'uint' (at test_cases/sema/types/builtin/uint/error_assign_from_byte.am:1:18)")
+*/

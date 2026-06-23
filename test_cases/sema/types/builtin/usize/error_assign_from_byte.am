@@ -1,0 +1,6 @@
+const x : usize = y
+const y : byte = 42
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot convert expression of type 'byte' to expected type 'usize' (at test_cases/sema/types/builtin/usize/error_assign_from_byte.am:1:19)")
+*/

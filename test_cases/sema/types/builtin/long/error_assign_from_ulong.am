@@ -1,0 +1,6 @@
+const x : long = y
+const y : ulong = 42
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot convert expression of type 'ulong' to expected type 'long' (at test_cases/sema/types/builtin/long/error_assign_from_ulong.am:1:18)")
+*/

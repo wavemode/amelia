@@ -1,0 +1,6 @@
+const x : null = y
+const y : double = 42
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot convert expression of type 'double' to expected type 'null' (at test_cases/sema/types/builtin/null/error_assign_from_double.am:1:18)")
+*/
