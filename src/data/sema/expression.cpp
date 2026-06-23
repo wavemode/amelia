@@ -68,14 +68,15 @@ Serialize Type::serialize() const {
   }
   case TypeKind::Tuple: {
     const TupleType &tuple_type = static_cast<const TupleType &>(*this);
-    Serialize result;
-    result.set_object_name("TupleType");
-    Serialize element_types_list;
-    for (const auto &element_type : tuple_type.element_types) {
-      element_types_list.add_list_item(element_type->serialize());
+    String value("(");
+    for (size_t i = 0; i < tuple_type.element_types.size(); ++i) {
+      tuple_type.element_types[i]->serialize().to_string(value);
+      if (i < tuple_type.element_types.size() - 1) {
+        value.append(", ");
+      }
     }
-    result.add_object_field("element_types", move(element_types_list));
-    return result;
+    value.append(")");
+    return Serialize::literal(move(value));
   }
   default:
     throw RuntimeError("not implemented");
@@ -322,6 +323,17 @@ Serialize AddressOfExpression::serialize() const {
   Serialize result;
   result.set_object_name("AddressOfExpression");
   result.add_object_field("operand", operand->serialize());
+  return result;
+}
+
+Serialize TupleExpression::serialize() const {
+  Serialize result;
+  result.set_object_name("TupleExpression");
+  Serialize elements_ser;
+  for (const auto &element : elements) {
+    elements_ser.add_list_item(element->serialize());
+  }
+  result.add_object_field("elements", move(elements_ser));
   return result;
 }
 

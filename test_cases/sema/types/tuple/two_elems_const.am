@@ -1,15 +1,15 @@
-let x = (5, 6)
+const x = (5, 6)
 
 /* EXPECTED_OUTPUT:
 SemaResult(
   modules=[
     Module(
-      name="two_elems",
+      name="two_elems_const",
       scope=Scope(
         bindings=[
           Binding(
             name="x",
-            type=(int, int),
+            type=(Const[5], Const[6]),
             value=TupleExpression(
               elements=[
                 NumberLiteralExpression(
@@ -20,7 +20,7 @@ SemaResult(
                 )
               ]
             ),
-            kind=Variable,
+            kind=Constant,
             visibility=Default
           )
         ]

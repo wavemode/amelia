@@ -65,6 +65,7 @@ enum class ExpressionKind : uint8_t {
   ConstRational,
   ConstBoolean,
   AddressOf,
+  Tuple,
 };
 
 struct Expression {
@@ -246,6 +247,12 @@ struct FunctionCallExpression : Expression {
 struct AddressOfExpression : Expression {
   AddressOfExpression() : Expression(ExpressionKind::AddressOf) {}
   Flex<Expression> operand;
+  Serialize serialize() const override;
+};
+
+struct TupleExpression : Expression {
+  TupleExpression() : Expression(ExpressionKind::Tuple) {}
+  List<Flex<Expression>> elements;
   Serialize serialize() const override;
 };
 

@@ -68,29 +68,6 @@ bool is_null_type(const Type &type) {
          static_cast<const BuiltinType &>(type).builtin_kind == BuiltinKind::Null;
 }
 
-bool is_const_type(const Type &type) {
-  return type.kind == TypeKind::ConstInteger || type.kind == TypeKind::ConstRational ||
-         type.kind == TypeKind::ConstBoolean;
-}
-
-Flex<Type> remove_const(const Flex<Type> &type) {
-  if (type->kind == TypeKind::Alias) {
-    return remove_const(static_cast<const AliasType &>(*type).target);
-  } else if (type->kind == TypeKind::Inferred) {
-    return remove_const(static_cast<const InferredType &>(*type).target);
-  } else if (type->kind == TypeKind::ConstInteger) {
-    auto result = Flex<Type>::weak(&INT_TYPE);
-    return result;
-  } else if (type->kind == TypeKind::ConstRational) {
-    auto result = Flex<Type>::weak(&DOUBLE_TYPE);
-    return result;
-  } else if (type->kind == TypeKind::ConstBoolean) {
-    auto result = Flex<Type>::weak(&BOOL_TYPE);
-    return result;
-  }
-  return type;
-}
-
 bool is_value_binding_node_type(NodeType node_type) {
   return node_type == NodeType::LetDeclNode || node_type == NodeType::ConstDeclNode ||
          node_type == NodeType::FunctionDeclNode;
@@ -137,9 +114,44 @@ public:
   SemaWorkerState(SemaResult &sema_result, Module &module_obj)
       : m_sema_result(sema_result), m_module_obj(module_obj) {}
 
-  bool is_type_trivial(const Type &type) {
+  bool is_type_trivial(const Type &) {
     // TODO
     return true;
+  }
+
+  Flex<Type> remove_const(NodeId expr_node_id, const Flex<Type> &type) {
+    if (type->kind == TypeKind::Alias) {
+      return remove_const(expr_node_id, static_cast<const AliasType &>(*type).target);
+    } else if (type->kind == TypeKind::Inferred) {
+      return remove_const(expr_node_id, static_cast<const InferredType &>(*type).target);
+    } else if (type->kind == TypeKind::ConstInteger) {
+      auto result = Flex<Type>::weak(&INT_TYPE);
+      if (!can_builtin_type_represent_range(
+              *result,
+              static_cast<const ConstIntegerType &>(*type).value,
+              static_cast<const ConstIntegerType &>(*type).value
+          )) {
+        String error_message("Cannot convert expression of type '");
+        type->serialize().to_string(error_message);
+        error_message.append("' to expected type '");
+        result->serialize().to_string(error_message);
+        error_message.append("'");
+        raise_error_at_node_id(expr_node_id, move(error_message));
+      }
+      return result;
+    } else if (type->kind == TypeKind::ConstRational) {
+      return Flex<Type>::weak(&DOUBLE_TYPE);
+    } else if (type->kind == TypeKind::ConstBoolean) {
+      return Flex<Type>::weak(&BOOL_TYPE);
+    } else if (type->kind == TypeKind::Tuple) {
+      const TupleType &tuple_type = static_cast<const TupleType &>(*type);
+      auto result = emplace_flex<TupleType>();
+      for (const auto &element_type : tuple_type.element_types) {
+        result->element_types.push_back(remove_const(expr_node_id, element_type));
+      }
+      return result;
+    }
+    return type;
   }
 
   void push_binding(Flex<Binding> binding) {
@@ -208,13 +220,28 @@ public:
       return unify_exact(static_cast<const InferredType &>(*target_type).target, assignment_type);
     } else if (target_type->kind == TypeKind::Reference &&
                assignment_type->kind == TypeKind::Reference) {
-      return unify_exact(
-          static_cast<const ReferenceType &>(*target_type).referent,
-          static_cast<const ReferenceType &>(*assignment_type).referent
-      );
+      const auto &target_ref_type = static_cast<const ReferenceType &>(*target_type);
+      const auto &assignment_ref_type = static_cast<const ReferenceType &>(*assignment_type);
+      return target_ref_type.is_const == assignment_ref_type.is_const &&
+             target_ref_type.is_move == assignment_ref_type.is_move &&
+             unify_exact(target_ref_type.referent, assignment_ref_type.referent);
+    } else if (target_type->kind == TypeKind::Tuple && assignment_type->kind == TypeKind::Tuple) {
+      const TupleType &target_tuple_type = static_cast<const TupleType &>(*target_type);
+      const TupleType &assignment_tuple_type = static_cast<const TupleType &>(*assignment_type);
+      if (target_tuple_type.element_types.size() != assignment_tuple_type.element_types.size()) {
+        return false;
+      }
+      for (size_t i = 0; i < target_tuple_type.element_types.size(); ++i) {
+        if (!unify_exact(
+                target_tuple_type.element_types[i], assignment_tuple_type.element_types[i]
+            )) {
+          return false;
+        }
+      }
+      return true;
     }
 
-    if (assignment_type->kind == TypeKind::Builtin && target_type->kind != TypeKind::Builtin) {
+    if (assignment_type->kind == TypeKind::Builtin && target_type->kind == TypeKind::Builtin) {
       BuiltinKind assignment_builtin_kind = static_cast<const BuiltinType &>(*assignment_type)
                                                 .builtin_kind;
       BuiltinKind target_builtin_kind = static_cast<const BuiltinType &>(*target_type).builtin_kind;
@@ -225,33 +252,21 @@ public:
     }
 
     if (assignment_type->kind == TypeKind::ConstBoolean) {
-      return (target_type->kind == TypeKind::Builtin &&
-              static_cast<const BuiltinType &>(*target_type).builtin_kind == BuiltinKind::Bool) ||
-             (target_type->kind == TypeKind::ConstBoolean &&
-
-              static_cast<const ConstBooleanType &>(*target_type).value ==
-                  static_cast<const ConstBooleanType &>(*assignment_type).value);
+      return target_type->kind == TypeKind::ConstBoolean &&
+             static_cast<const ConstBooleanType &>(*target_type).value ==
+                 static_cast<const ConstBooleanType &>(*assignment_type).value;
     }
 
     if (assignment_type->kind == TypeKind::ConstInteger) {
-      return (target_type->kind == TypeKind::Builtin &&
-              static_cast<const BuiltinType &>(*target_type).builtin_kind == BuiltinKind::Int &&
-              can_builtin_type_represent_range(
-                  *target_type,
-                  static_cast<const ConstIntegerType &>(*assignment_type).value,
-                  static_cast<const ConstIntegerType &>(*assignment_type).value
-              )) ||
-             (target_type->kind == TypeKind::ConstInteger &&
-              static_cast<const ConstIntegerType &>(*target_type).value ==
-                  static_cast<const ConstIntegerType &>(*assignment_type).value);
+      return target_type->kind == TypeKind::ConstInteger &&
+             static_cast<const ConstIntegerType &>(*target_type).value ==
+                 static_cast<const ConstIntegerType &>(*assignment_type).value;
     }
 
     if (assignment_type->kind == TypeKind::ConstRational) {
-      return (target_type->kind == TypeKind::Builtin &&
-              static_cast<const BuiltinType &>(*target_type).builtin_kind == BuiltinKind::Double) ||
-             (target_type->kind == TypeKind::ConstRational &&
-              static_cast<const ConstRationalType &>(*target_type).value ==
-                  static_cast<const ConstRationalType &>(*assignment_type).value);
+      return target_type->kind == TypeKind::ConstRational &&
+             static_cast<const ConstRationalType &>(*target_type).value ==
+                 static_cast<const ConstRationalType &>(*assignment_type).value;
     }
 
     return false;
@@ -281,6 +296,8 @@ public:
     // identical types
     if (target_type == assignment_type) {
       return expr;
+    } else if (unify_exact(target_type, assignment_type)) {
+      return expr;
     }
 
     // compatible references
@@ -300,6 +317,27 @@ public:
           return builtin_type_cast(*target_type, expr);
         }
       }
+    }
+
+    // compatible tuples
+    if (target_type->kind == TypeKind::Tuple && assignment_type->kind == TypeKind::Tuple) {
+      TupleType &target_tuple_type = static_cast<TupleType &>(*target_type);
+      const TupleType &assignment_tuple_type = static_cast<const TupleType &>(*assignment_type);
+      if (target_tuple_type.element_types.size() == assignment_tuple_type.element_types.size()) {
+        for (size_t i = 0; i < target_tuple_type.element_types.size(); ++i) {
+          auto unified_element_expr = unify(
+              target_tuple_type.element_types[i],
+              assignment_tuple_type.element_types[i],
+              expr,
+              is_const
+          );
+          if (!unified_element_expr.has_value()) {
+            return None();
+          }
+        }
+        return builtin_type_cast(*target_type, expr);
+      }
+      return None();
     }
 
     if (assignment_type->kind == TypeKind::Alias) {
@@ -355,16 +393,9 @@ public:
           }
           target_type = Flex<Type>::weak(&INT_TYPE);
           return unify(target_type, assignment_type, expr, is_const);
-        } else if ((assignment_type->kind == TypeKind::ConstRational &&
-                    (static_cast<const ConstRationalType &>(*assignment_type).value.denominator() !=
-                         1 ||
-                     static_cast<const ConstRationalType &>(*assignment_type).value.numerator() !=
-                         static_cast<const ConstIntegerType &>(*inferred_type).value)) ||
-                   (assignment_type->kind == TypeKind::Builtin &&
-                    static_cast<const BuiltinType &>(*assignment_type).builtin_kind ==
-                        BuiltinKind::Double)
+        } else if (assignment_type->kind == TypeKind::ConstRational)
 
-        ) {
+        {
           target_type = Flex<Type>::weak(&DOUBLE_TYPE);
           return unify(target_type, assignment_type, expr, is_const);
         }
@@ -372,15 +403,12 @@ public:
         if ((assignment_type->kind == TypeKind::ConstRational &&
              static_cast<const ConstRationalType &>(*assignment_type).value !=
                  static_cast<const ConstRationalType &>(*inferred_type).value) ||
-            (assignment_type->kind == TypeKind::ConstInteger &&
-             (static_cast<const ConstRationalType &>(*inferred_type).value.denominator() != 1 ||
-              static_cast<const ConstIntegerType &>(*assignment_type).value !=
-                  static_cast<const ConstRationalType &>(*inferred_type).value.numerator()))) {
+            (assignment_type->kind == TypeKind::ConstInteger)) {
           target_type = Flex<Type>::weak(&DOUBLE_TYPE);
           return unify(target_type, assignment_type, expr, is_const);
         }
       }
-      target_type = remove_const(static_cast<InferredType &>(*target_type).target);
+      target_type = remove_const(expr->node_id, static_cast<InferredType &>(*target_type).target);
       return unify(target_type, assignment_type, expr, is_const);
     }
 
@@ -389,13 +417,13 @@ public:
 
       // all types unify with unknown
       if (target_builtin_kind == BuiltinKind::Unknown) {
-        if (is_const && is_const_type(assignment_type)) {
+        if (is_const) {
           auto new_target_type = emplace_flex<InferredType>();
           new_target_type->target = assignment_type;
           new_target_type->inferred_at = expr->node_id;
           target_type = move(new_target_type);
         } else {
-          target_type = remove_const(assignment_type);
+          target_type = remove_const(expr->node_id, assignment_type);
         }
         return expr;
       }
@@ -475,11 +503,8 @@ public:
           return builtin_type_cast(target_type, expr);
         }
       } else if (assignment_type->kind == TypeKind::ConstRational) {
-        const Rational &value = static_cast<const ConstRationalType &>(*assignment_type).value;
         if (target_builtin_kind == BuiltinKind::Float ||
-            target_builtin_kind == BuiltinKind::Double ||
-            (value.denominator() == 1 &&
-             can_builtin_type_represent_range(target_type, value.numerator(), value.numerator()))) {
+            target_builtin_kind == BuiltinKind::Double) {
           return builtin_type_cast(target_type, expr);
         }
       }
@@ -491,15 +516,6 @@ public:
           if (value >= 0 && value <= UINT32_MAX &&
               CharIterator::is_valid_code_point(value.to_uint32())) {
             return builtin_type_cast(target_type, expr);
-          }
-        } else if (assignment_type->kind == TypeKind::ConstRational) {
-          const Rational &value = static_cast<const ConstRationalType &>(*assignment_type).value;
-          if (value.denominator() == 1) {
-            const Integer &numerator = value.numerator();
-            if (numerator >= 0 && numerator <= UINT32_MAX &&
-                CharIterator::is_valid_code_point(numerator.to_uint32())) {
-              return builtin_type_cast(target_type, expr);
-            }
           }
         }
       }
@@ -528,24 +544,15 @@ public:
           if (value >= 0) {
             return builtin_type_cast(target_type, expr);
           }
-        } else if (assignment_type->kind == TypeKind::ConstRational) {
-          const Rational &value = static_cast<const ConstRationalType &>(*assignment_type).value;
-          if (value.denominator() == 1 && value.numerator() >= 0) {
-            return builtin_type_cast(target_type, expr);
-          }
         }
       }
     }
 
     // const integers and const rationals with compatible values implicitly convert to each other
     if (target_type->kind == TypeKind::ConstInteger) {
-      if ((assignment_type->kind == TypeKind::ConstInteger &&
-           static_cast<const ConstIntegerType &>(*target_type).value ==
-               static_cast<const ConstIntegerType &>(*assignment_type).value) ||
-          (assignment_type->kind == TypeKind::ConstRational &&
-           static_cast<const ConstIntegerType &>(*target_type).value ==
-               static_cast<const ConstRationalType &>(*assignment_type).value.numerator() &&
-           static_cast<const ConstRationalType &>(*assignment_type).value.denominator() == 1)) {
+      if (assignment_type->kind == TypeKind::ConstInteger &&
+          static_cast<const ConstIntegerType &>(*target_type).value ==
+              static_cast<const ConstIntegerType &>(*assignment_type).value) {
         return builtin_type_cast(target_type, expr);
       }
     } else if (target_type->kind == TypeKind::ConstRational) {
@@ -963,10 +970,41 @@ public:
     case NodeType::RefExprNode:
       result = build_expr_ref(expr_node_id);
       break;
+    case NodeType::ParenthesizedExprNode:
+      result = build_expr_paren(expr_node_id);
+      break;
     default:
       raise_error_at_node_id(expr_node_id, "not implemented");
     }
 
+    return result;
+  }
+
+  Flex<Expression> build_expr_paren(NodeId expr_node_id) {
+    const auto &paren_node = m_module_obj.ast.get_node(expr_node_id).as_ParenthesizedExprNode();
+    if (paren_node.exprs.size() == 0) {
+      auto result = emplace_flex<NullLiteralExpression>();
+      result->node_id = expr_node_id;
+      result->type = Flex<Type>::weak(&NULL_TYPE);
+      return result;
+    } else if (paren_node.exprs.size() == 1) {
+      return build_expression(paren_node.exprs[0]);
+    } else {
+      return build_expr_tuple(expr_node_id, paren_node.exprs.data());
+    }
+  }
+
+  Flex<Expression> build_expr_tuple(NodeId expr_node_id, ConstSlice<NodeId> expr_node_ids) {
+    auto result = emplace_flex<TupleExpression>();
+    result->node_id = expr_node_id;
+    for (NodeId sub_expr_node_id : expr_node_ids) {
+      result->elements.push_back(build_expression(sub_expr_node_id));
+    }
+    auto tuple_type = emplace_flex<TupleType>();
+    for (const auto &element : result->elements) {
+      tuple_type->element_types.push_back(element->type);
+    }
+    result->type = tuple_type;
     return result;
   }
 
@@ -1420,17 +1458,33 @@ public:
           ->type.value()
           .weak();
     case NodeType::BuiltinTypeNode:
-      return evaluate_builtin_type_expr(type_expr_node.as_BuiltinTypeNode());
+      return evaluate_type_expr_builtin(type_expr_node.as_BuiltinTypeNode());
     case NodeType::ConstTypeExprNode:
-      return evaluate_const_type_expr(type_expr_node.as_ConstTypeExprNode());
+      return evaluate_type_expr_const(type_expr_node.as_ConstTypeExprNode());
     case NodeType::RefExprNode:
-      return evaluate_ref_type_expr(type_expr_node.as_RefExprNode());
+      return evaluate_type_expr_ref(type_expr_node.as_RefExprNode());
+    case NodeType::ParenthesizedExprNode:
+      return evaluate_type_expr_paren(type_expr_node.as_ParenthesizedExprNode());
     default:
       raise_error_at_node_id(type_expr_node_id, "not implemented");
     }
   }
 
-  Flex<Type> evaluate_ref_type_expr(const RefExprNode &ref_expr_node) {
+  Flex<Type> evaluate_type_expr_paren(const ParenthesizedExprNode &paren_node) {
+    if (paren_node.exprs.size() == 0) {
+      return Flex<Type>::weak(&NULL_TYPE);
+    } else if (paren_node.exprs.size() == 1) {
+      return evaluate_type_expr(paren_node.exprs[0]);
+    } else {
+      auto tuple_type = emplace_flex<TupleType>();
+      for (NodeId sub_expr_node_id : paren_node.exprs) {
+        tuple_type->element_types.push_back(evaluate_type_expr(sub_expr_node_id));
+      }
+      return tuple_type;
+    }
+  }
+
+  Flex<Type> evaluate_type_expr_ref(const RefExprNode &ref_expr_node) {
     auto referent_type = evaluate_type_expr(ref_expr_node.expr);
     auto result = emplace_flex<ReferenceType>();
     result->referent = referent_type;
@@ -1439,7 +1493,7 @@ public:
     return result;
   }
 
-  Flex<Type> evaluate_const_type_expr(const ConstTypeExprNode &const_type_expr_node) {
+  Flex<Type> evaluate_type_expr_const(const ConstTypeExprNode &const_type_expr_node) {
     auto expr = build_expression(const_type_expr_node.expr);
     switch (expr->type->kind) {
     case TypeKind::ConstInteger:
@@ -1454,7 +1508,7 @@ public:
     }
   }
 
-  Flex<Type> evaluate_builtin_type_expr(const BuiltinTypeNode &builtin_type_node) {
+  Flex<Type> evaluate_type_expr_builtin(const BuiltinTypeNode &builtin_type_node) {
     switch (builtin_type_node.kind) {
     case BuiltinKind::Bool:
       return Flex<Type>::weak(&BOOL_TYPE);

@@ -1,10 +1,11 @@
 let x = (5, 6)
+let y : (int, int) = x
 
 /* EXPECTED_OUTPUT:
 SemaResult(
   modules=[
     Module(
-      name="two_elems",
+      name="assignable_int",
       scope=Scope(
         bindings=[
           Binding(
@@ -19,6 +20,15 @@ SemaResult(
                   lit=6
                 )
               ]
+            ),
+            kind=Variable,
+            visibility=Default
+          ),
+          Binding(
+            name="y",
+            type=(int, int),
+            value=IdentifierExpression(
+              name="x"
             ),
             kind=Variable,
             visibility=Default

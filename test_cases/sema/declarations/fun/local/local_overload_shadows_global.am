@@ -81,8 +81,10 @@ SemaResult(
                           return_type=int
                         ),
                         arguments=[
-                          NumberLiteralExpression(
-                            lit=5
+                          BuiltinTypeCastExpression(
+                            expr=NumberLiteralExpression(
+                              lit=5
+                            )
                           )
                         ]
                       )

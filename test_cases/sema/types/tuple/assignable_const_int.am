@@ -1,15 +1,16 @@
-let x = (5, 6)
+const x = (5, 6)
+let y : (int, int) = x
 
 /* EXPECTED_OUTPUT:
 SemaResult(
   modules=[
     Module(
-      name="two_elems",
+      name="assignable_const_int",
       scope=Scope(
         bindings=[
           Binding(
             name="x",
-            type=(int, int),
+            type=(Const[5], Const[6]),
             value=TupleExpression(
               elements=[
                 NumberLiteralExpression(
@@ -19,6 +20,17 @@ SemaResult(
                   lit=6
                 )
               ]
+            ),
+            kind=Constant,
+            visibility=Default
+          ),
+          Binding(
+            name="y",
+            type=(int, int),
+            value=BuiltinTypeCastExpression(
+              expr=IdentifierExpression(
+                name="x"
+              )
             ),
             kind=Variable,
             visibility=Default

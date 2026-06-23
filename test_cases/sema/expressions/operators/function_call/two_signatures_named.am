@@ -1,7 +1,7 @@
 const x = y(t=z)
 const z = 10.0
-fun y(y: int) = y
-fun y(t: int) = t
+fun y(y: float) = y
+fun y(t: double) = t
 
 /* EXPECTED_OUTPUT:
 SemaResult(
@@ -12,7 +12,7 @@ SemaResult(
         bindings=[
           Binding(
             name="x",
-            type=int,
+            type=double,
             value=FunctionCallExpression(
               callee=IdentifierExpression(
                 name="y"
@@ -21,10 +21,10 @@ SemaResult(
                 parameters=[
                   Parameter(
                     name="t",
-                    type=int
+                    type=double
                   )
                 ],
-                return_type=int
+                return_type=double
               ),
               arguments=[
                 BuiltinTypeCastExpression(
@@ -45,19 +45,19 @@ SemaResult(
                   parameters=[
                     Parameter(
                       name="y",
-                      type=int
+                      type=float
                     )
                   ],
-                  return_type=int
+                  return_type=float
                 ),
                 Signature(
                   parameters=[
                     Parameter(
                       name="t",
-                      type=int
+                      type=double
                     )
                   ],
-                  return_type=int
+                  return_type=double
                 )
               ]
             ),
