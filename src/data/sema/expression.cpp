@@ -55,6 +55,17 @@ Serialize Type::serialize() const {
     result.add_object_field("signatures", move(signatures_list));
     return result;
   }
+  case TypeKind::Reference: {
+    const ReferenceType &reference_type = static_cast<const ReferenceType &>(*this);
+    String value("&");
+    if (reference_type.is_const) {
+      value.append("const ");
+    } else if (reference_type.is_move) {
+      value.append("move ");
+    }
+    reference_type.referent->serialize().to_string(value);
+    return Serialize::literal(move(value));
+  }
   default:
     throw RuntimeError("not implemented");
   }
@@ -293,6 +304,13 @@ Serialize ConstBooleanExpression::serialize() const {
   Serialize result;
   result.set_object_name("ConstBooleanExpression");
   result.add_object_field("value", Serialize::of(value));
+  return result;
+}
+
+Serialize AddressOfExpression::serialize() const {
+  Serialize result;
+  result.set_object_name("AddressOfExpression");
+  result.add_object_field("operand", operand->serialize());
   return result;
 }
 

@@ -16,15 +16,15 @@ Serialize serialize_builtin_kind(BuiltinKind kind);
 enum class TypeKind : uint8_t {
   Inferred,
   Alias,
+  Reference,
+  Struct,
+  Tuple,
+  Array,
   TypeFn,
   Apply,
   Builtin,
   BitInt,
-  Tuple,
-  Struct,
-  Reference,
   Pointer,
-  Array,
   Slice,
   Impl,
   ConstInteger,
@@ -64,6 +64,7 @@ enum class ExpressionKind : uint8_t {
   ConstInteger,
   ConstRational,
   ConstBoolean,
+  AddressOf,
 };
 
 struct Expression {
@@ -94,6 +95,13 @@ struct AliasType : Type {
   String name;
   String module_name;
   Flex<Type> target;
+};
+
+struct ReferenceType : Type {
+  ReferenceType() : Type(TypeKind::Reference) {}
+  Flex<Type> referent;
+  bool is_const;
+  bool is_move;
 };
 
 struct ConstIntegerType : Type {
@@ -227,6 +235,12 @@ struct FunctionCallExpression : Expression {
   Flex<Expression> callee;
   FunctionType::Signature *signature;
   List<Option<Flex<Expression>>> arguments;
+  Serialize serialize() const override;
+};
+
+struct AddressOfExpression : Expression {
+  AddressOfExpression() : Expression(ExpressionKind::AddressOf) {}
+  Flex<Expression> operand;
   Serialize serialize() const override;
 };
 

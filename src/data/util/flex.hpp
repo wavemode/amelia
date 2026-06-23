@@ -20,16 +20,18 @@ namespace amelia {
 */
 template <typename T> class Flex {
 public:
+  // TODO: could leak memory if T ctor throws
   static Flex<T> strong(T &&obj) {
-    return Flex<T>(new T(move(obj)), new volatile uint32_t(1));
+    return Flex<T>(new T(move(obj)), new volatile uint32_t(0));
   }
 
   static Flex<T> weak(T *obj) {
     return Flex<T>(obj, nullptr);
   }
 
+  // TODO: could leak memory if T ctor throws
   template <typename... Args> static Flex<T> emplace(Args &&...args) {
-    return Flex<T>(new T(amelia::forward<Args>(args)...), new volatile uint32_t(1));
+    return Flex<T>(new T(amelia::forward<Args>(args)...), new volatile uint32_t(0));
   }
 
   Flex() noexcept : m_obj(nullptr), m_ref_count(nullptr) {}
@@ -134,8 +136,14 @@ public:
     return *m_obj;
   }
 
+  template <typename U> explicit operator Flex<U>() noexcept {
+    return Flex<U>(static_cast<U *>(m_obj), m_ref_count);
+  }
+
 private:
-  Flex(T *obj, volatile uint32_t *ref_count) noexcept : m_obj(obj), m_ref_count(ref_count) {}
+  Flex(T *obj, volatile uint32_t *ref_count) noexcept : m_obj(obj), m_ref_count(ref_count) {
+    acquire();
+  }
 
   void acquire() noexcept {
     if (m_ref_count) {

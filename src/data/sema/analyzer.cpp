@@ -68,13 +68,25 @@ bool is_null_type(const Type &type) {
          static_cast<const BuiltinType &>(type).builtin_kind == BuiltinKind::Null;
 }
 
+bool is_const_type(const Type &type) {
+  return type.kind == TypeKind::ConstInteger || type.kind == TypeKind::ConstRational ||
+         type.kind == TypeKind::ConstBoolean;
+}
+
 Flex<Type> remove_const(const Flex<Type> &type) {
-  if (type->kind == TypeKind::ConstInteger) {
-    return Flex<Type>::weak(&INT_TYPE);
+  if (type->kind == TypeKind::Alias) {
+    return remove_const(static_cast<const AliasType &>(*type).target);
+  } else if (type->kind == TypeKind::Inferred) {
+    return remove_const(static_cast<const InferredType &>(*type).target);
+  } else if (type->kind == TypeKind::ConstInteger) {
+    auto result = Flex<Type>::weak(&INT_TYPE);
+    return result;
   } else if (type->kind == TypeKind::ConstRational) {
-    return Flex<Type>::weak(&DOUBLE_TYPE);
+    auto result = Flex<Type>::weak(&DOUBLE_TYPE);
+    return result;
   } else if (type->kind == TypeKind::ConstBoolean) {
-    return Flex<Type>::weak(&BOOL_TYPE);
+    auto result = Flex<Type>::weak(&BOOL_TYPE);
+    return result;
   }
   return type;
 }
@@ -124,6 +136,11 @@ class SemaWorkerState {
 public:
   SemaWorkerState(SemaResult &sema_result, Module &module_obj)
       : m_sema_result(sema_result), m_module_obj(module_obj) {}
+
+  bool is_type_trivial(const Type &type) {
+    // TODO
+    return true;
+  }
 
   void push_binding(Flex<Binding> binding) {
     Scope &scope = *m_module_obj.scope;
@@ -189,6 +206,12 @@ public:
       return unify_exact(static_cast<const AliasType &>(*target_type).target, assignment_type);
     } else if (target_type->kind == TypeKind::Inferred) {
       return unify_exact(static_cast<const InferredType &>(*target_type).target, assignment_type);
+    } else if (target_type->kind == TypeKind::Reference &&
+               assignment_type->kind == TypeKind::Reference) {
+      return unify_exact(
+          static_cast<const ReferenceType &>(*target_type).referent,
+          static_cast<const ReferenceType &>(*assignment_type).referent
+      );
     }
 
     if (assignment_type->kind == TypeKind::Builtin && target_type->kind != TypeKind::Builtin) {
@@ -347,9 +370,7 @@ public:
 
       // all types unify with unknown
       if (target_builtin_kind == BuiltinKind::Unknown) {
-        if (is_const && (assignment_type->kind == TypeKind::ConstBoolean ||
-                         assignment_type->kind == TypeKind::ConstInteger ||
-                         assignment_type->kind == TypeKind::ConstRational)) {
+        if (is_const && is_const_type(assignment_type)) {
           auto new_target_type = emplace_flex<InferredType>();
           new_target_type->target = assignment_type;
           new_target_type->inferred_at = expr->node_id;
@@ -588,7 +609,7 @@ public:
     m_binding_currently_analyzing = old_binding_currently_analyzing;
   }
 
-  Flex<Type> resolve_type_binding(NodeId node_id, Text name) {
+  Flex<TypeBinding> resolve_type_binding(NodeId node_id, Text name) {
     const Option<BindingId> binding_id = m_module_obj.scope->active_binding_ids.find(name);
     if (!binding_id.has_value()) {
       String error_message = "Unknown type name '";
@@ -596,14 +617,11 @@ public:
       error_message.append("'");
       raise_error_at_node_id(node_id, move(error_message));
     }
-    Binding &binding = *m_module_obj.scope->active_bindings[binding_id.value()];
-    switch (binding.kind) {
-    case BindingKind::Type: {
-      if (!static_cast<TypeBinding &>(binding).type.has_value()) {
-        analyze_binding(binding);
-      }
-      return static_cast<TypeBinding &>(binding).type.value();
-    }
+    Flex<Binding> binding = m_module_obj.scope->active_bindings[binding_id.value()];
+    analyze_binding(binding);
+    switch (binding->kind) {
+    case BindingKind::Type:
+      return static_cast<Flex<TypeBinding>>(binding);
     default: {
       String error_message = "Identifier '";
       error_message.append(name);
@@ -613,7 +631,7 @@ public:
     }
   }
 
-  Flex<Type> resolve_value_binding(NodeId node_id, Text name) {
+  Flex<ValueBinding> resolve_value_binding(NodeId node_id, Text name) {
     const Option<BindingId> binding_id = m_module_obj.scope->active_binding_ids.find(name);
     if (!binding_id.has_value()) {
       String error_message = "Unknown identifier '";
@@ -621,13 +639,13 @@ public:
       error_message.append("'");
       raise_error_at_node_id(node_id, move(error_message));
     }
-    Binding &binding = *m_module_obj.scope->active_bindings[binding_id.value()];
+    Flex<Binding> binding = m_module_obj.scope->active_bindings[binding_id.value()];
     analyze_binding(binding);
-    switch (binding.kind) {
+    switch (binding->kind) {
     case BindingKind::Constant:
     case BindingKind::Variable:
     case BindingKind::Function:
-      return static_cast<ValueBinding &>(binding).type.value().weak();
+      return static_cast<Flex<ValueBinding>>(binding);
     default:
       raise_error_at_node_id(node_id, "not implemented");
     }
@@ -923,11 +941,49 @@ public:
     case NodeType::FunctionCallExprNode:
       result = build_expr_function_call(expr_node_id);
       break;
+    case NodeType::RefExprNode:
+      result = build_expr_ref(expr_node_id);
+      break;
     default:
       raise_error_at_node_id(expr_node_id, "not implemented");
     }
 
     return result;
+  }
+
+  Flex<Expression> build_expr_ref(NodeId expr_node_id) {
+    const auto &ref_node = m_module_obj.ast.get_node(expr_node_id).as_RefExprNode();
+    auto referent_expr = build_expression(ref_node.expr);
+    switch (referent_expr->kind) {
+    case ExpressionKind::Identifier: {
+      auto binding = resolve_value_binding(
+          referent_expr->node_id, static_cast<IdentifierExpression &>(*referent_expr).name
+      );
+      if (binding->kind == BindingKind::Variable || binding->kind == BindingKind::Constant) {
+        auto reference_type = emplace_flex<ReferenceType>();
+        reference_type->referent = referent_expr->type;
+        reference_type->is_const = ref_node.is_const;
+        if (!reference_type->is_const && binding->kind == BindingKind::Constant) {
+          String error_message = "Cannot take mutable reference to constant '";
+          error_message.append(binding->name);
+          error_message.append("'");
+          raise_error_at_node_id(expr_node_id, move(error_message));
+        }
+        reference_type->is_move = ref_node.is_move;
+        auto result = emplace_flex<AddressOfExpression>();
+        result->node_id = expr_node_id;
+        result->type = reference_type;
+        result->operand = referent_expr;
+        return result;
+      } else {
+        raise_error_at_node_id(
+            expr_node_id, "not implemented (ref of non-variable/constant identifier)"
+        );
+      }
+    }
+    default:
+      raise_error_at_node_id(expr_node_id, "not implemented (ref of non-identifier expression)");
+    }
   }
 
   Flex<Expression> build_expr_function_call(NodeId expr_node_id) {
@@ -1332,7 +1388,7 @@ public:
     const auto &identifier_node = m_module_obj.ast.get_node(node_id).as_IdentifierNode();
     auto expr = Flex<IdentifierExpression>::emplace();
     expr->name = identifier_node.name;
-    expr->type = resolve_value_binding(node_id, identifier_node.name);
+    expr->type = resolve_value_binding(node_id, identifier_node.name)->type.value();
     expr->node_id = node_id;
     return expr;
   }
@@ -1342,6 +1398,7 @@ public:
     switch (type_expr_node.type()) {
     case NodeType::IdentifierNode:
       return resolve_type_binding(type_expr_node_id, type_expr_node.as_IdentifierNode().name)
+          ->type.value()
           .weak();
     case NodeType::BuiltinTypeNode:
       return evaluate_builtin_type_expr(type_expr_node.as_BuiltinTypeNode());

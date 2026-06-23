@@ -24,6 +24,8 @@ enum class BuiltinKind : uint8_t {
   Null,
   Never,
   Unknown,
+  Integer,
+  Rational,
 };
 Serialize serialize_builtin_kind(BuiltinKind kind);
 

@@ -1,0 +1,36 @@
+let x = 5
+let y = &move x
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="move",
+      scope=Scope(
+        bindings=[
+          Binding(
+            name="x",
+            type=int,
+            value=NumberLiteralExpression(
+              lit=5
+            ),
+            kind=Variable,
+            visibility=Default
+          ),
+          Binding(
+            name="y",
+            type=&move int,
+            value=AddressOfExpression(
+              operand=IdentifierExpression(
+                name="x"
+              )
+            ),
+            kind=Variable,
+            visibility=Default
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

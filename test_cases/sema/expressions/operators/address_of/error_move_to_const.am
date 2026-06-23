@@ -1,0 +1,6 @@
+const x = 5
+let y = &move x
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot take mutable reference to constant 'x' (at test_cases/sema/expressions/operators/address_of/error_move_to_const.am:2:9)")
+*/
