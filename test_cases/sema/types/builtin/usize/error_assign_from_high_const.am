@@ -1,0 +1,6 @@
+const x : usize = y
+const y = 18446744073709551615184467440737095516151844674407370955161518446744073709551615
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot convert expression of type 'Const[18446744073709551615184467440737095516151844674407370955161518446744073709551615]' to expected type 'usize' (at test_cases/sema/types/builtin/usize/error_assign_from_high_const.am:1:19)")
+*/

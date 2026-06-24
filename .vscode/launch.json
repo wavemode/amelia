@@ -23,7 +23,7 @@
             "env": {
                 // "AMELIA_UPDATE_TEST_CASES": "1",
                 "AMELIA_TEST_CASE_FILTER":
-                  "test_cases/sema/declarations/fun/local/local_fun.am"
+                  "test_cases/sema/types/builtin/ushort/assign_from_ushort.am"
                 }
         }
     ]

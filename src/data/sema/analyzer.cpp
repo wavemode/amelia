@@ -196,14 +196,11 @@ public:
   }
 
   bool unify_exact(Flex<Type> &target_type, Flex<Type> &assignment_type) {
-    return target_type->resolve().equals(assignment_type->resolve());
+    return target_type->resolve().unify_exact(assignment_type->resolve());
   }
 
   Option<Flex<Expression>> unify(
-      Flex<Type> &target_type,
-      Flex<Type> &assignment_type,
-      const Flex<Expression> &expr,
-      bool is_const
+      Flex<Type> &target_type, Flex<Type> &assignment_type, Flex<Expression> &expr, bool is_const
   ) {
     if (assignment_type->kind == TypeKind::Builtin) {
       BuiltinKind assignment_builtin_kind = static_cast<const BuiltinType &>(*assignment_type)
@@ -352,156 +349,9 @@ public:
         }
         return expr;
       }
-
-      // const and builtin types implicitly convert to types that can represent their range of
-      // values
-      if (assignment_type->kind == TypeKind::Builtin) {
-        switch (static_cast<const BuiltinType &>(*assignment_type).builtin_kind) {
-        case BuiltinKind::Byte:
-          if (can_builtin_type_represent_range(*target_type, INT8_MIN, INT8_MAX)) {
-            return builtin_type_cast(target_type, expr);
-          }
-          break;
-        case BuiltinKind::UByte:
-          if (can_builtin_type_represent_range(*target_type, 0, UINT8_MAX)) {
-            return builtin_type_cast(target_type, expr);
-          }
-          break;
-        case BuiltinKind::Short:
-          if (can_builtin_type_represent_range(*target_type, INT16_MIN, INT16_MAX)) {
-            return builtin_type_cast(target_type, expr);
-          }
-          break;
-        case BuiltinKind::UShort:
-          if (can_builtin_type_represent_range(*target_type, 0, UINT16_MAX)) {
-            return builtin_type_cast(target_type, expr);
-          }
-          break;
-        case BuiltinKind::Int:
-          if (can_builtin_type_represent_range(*target_type, INT32_MIN, INT32_MAX)) {
-            return builtin_type_cast(target_type, expr);
-          }
-          break;
-        case BuiltinKind::UInt:
-          if (can_builtin_type_represent_range(*target_type, 0, UINT32_MAX)) {
-            return builtin_type_cast(target_type, expr);
-          }
-          break;
-        case BuiltinKind::Float:
-          if (target_builtin_kind == BuiltinKind::Float ||
-              target_builtin_kind == BuiltinKind::Double) {
-            return builtin_type_cast(target_type, expr);
-          }
-          break;
-        case BuiltinKind::Double:
-          if (target_builtin_kind == BuiltinKind::Double) {
-            return builtin_type_cast(target_type, expr);
-          }
-          break;
-        case BuiltinKind::Char:
-          if (can_builtin_type_represent_range(*target_type, 0, UINT32_MAX)) {
-            return builtin_type_cast(target_type, expr);
-          }
-          break;
-        case BuiltinKind::Long:
-          if (can_builtin_type_represent_range(*target_type, INT64_MIN, INT64_MAX)) {
-            return builtin_type_cast(target_type, expr);
-          }
-          break;
-        case BuiltinKind::ULong:
-          if (can_builtin_type_represent_range(*target_type, 0, UINT64_MAX)) {
-            return builtin_type_cast(target_type, expr);
-          }
-          break;
-        case BuiltinKind::USize:
-          if (target_builtin_kind == BuiltinKind::Float ||
-              target_builtin_kind == BuiltinKind::Double) {
-            return builtin_type_cast(target_type, expr);
-          }
-          break;
-        default:
-          break;
-        }
-      } else if (assignment_type->kind == TypeKind::ConstInteger) {
-        const Integer &value = static_cast<const ConstIntegerType &>(*assignment_type).value;
-        if (can_builtin_type_represent_range(target_type, value, value)) {
-          return builtin_type_cast(target_type, expr);
-        }
-      } else if (assignment_type->kind == TypeKind::ConstRational) {
-        if (target_builtin_kind == BuiltinKind::Float ||
-            target_builtin_kind == BuiltinKind::Double) {
-          return builtin_type_cast(target_type, expr);
-        }
-      }
-
-      // char implicitly converts from a const containing a valid Unicode code point
-      if (target_builtin_kind == BuiltinKind::Char) {
-        if (assignment_type->kind == TypeKind::ConstInteger) {
-          const Integer &value = static_cast<const ConstIntegerType &>(*assignment_type).value;
-          if (value >= 0 && value <= UINT32_MAX &&
-              CharIterator::is_valid_code_point(value.to_uint32())) {
-            return builtin_type_cast(target_type, expr);
-          }
-        }
-      }
-
-      // bool implicitly converts from Const[true] and Const[false]
-      if (target_builtin_kind == BuiltinKind::Bool) {
-        if (assignment_type->kind == TypeKind::ConstBoolean) {
-          return builtin_type_cast(target_type, expr);
-        }
-      }
-
-      // usize implicitly converts from any unsigned integral type or positive integral Const
-      if (target_builtin_kind == BuiltinKind::USize) {
-        if (assignment_type->kind == TypeKind::Builtin) {
-          switch (static_cast<const BuiltinType &>(*assignment_type).builtin_kind) {
-          case BuiltinKind::UByte:
-          case BuiltinKind::UShort:
-          case BuiltinKind::UInt:
-          case BuiltinKind::ULong:
-            return builtin_type_cast(target_type, expr);
-          default:
-            break;
-          }
-        } else if (assignment_type->kind == TypeKind::ConstInteger) {
-          const Integer &value = static_cast<const ConstIntegerType &>(*assignment_type).value;
-          if (value >= 0) {
-            return builtin_type_cast(target_type, expr);
-          }
-        }
-      }
     }
 
-    // const integers and const rationals with compatible values implicitly convert to each other
-    if (target_type->kind == TypeKind::ConstInteger) {
-      if (assignment_type->kind == TypeKind::ConstInteger &&
-          static_cast<const ConstIntegerType &>(*target_type).value ==
-              static_cast<const ConstIntegerType &>(*assignment_type).value) {
-        return builtin_type_cast(target_type, expr);
-      }
-    } else if (target_type->kind == TypeKind::ConstRational) {
-      if ((assignment_type->kind == TypeKind::ConstRational &&
-           static_cast<const ConstRationalType &>(*target_type).value ==
-               static_cast<const ConstRationalType &>(*assignment_type).value) ||
-          (assignment_type->kind == TypeKind::ConstInteger &&
-           static_cast<const ConstRationalType &>(*target_type).value ==
-               Rational(static_cast<const ConstIntegerType &>(*assignment_type).value))) {
-        return builtin_type_cast(target_type, expr);
-      }
-    }
-
-    // Const[true] and Const[false] implicitly convert to themselves
-    if (target_type->kind == TypeKind::ConstBoolean) {
-      if (assignment_type->kind == TypeKind::ConstBoolean) {
-        if (static_cast<const ConstBooleanType &>(*target_type).value ==
-            static_cast<const ConstBooleanType &>(*assignment_type).value) {
-          return builtin_type_cast(target_type, expr);
-        }
-      }
-    }
-
-    return None();
+    return assignment_type->resolve().unify(target_type, expr);
   }
 
   void analyze_module() {
@@ -1121,7 +971,7 @@ public:
           m_current_function_signature.value()->return_type, return_node.expr.value(), true
       );
     } else {
-      auto implied_return_value = Flex<NullLiteralExpression>::emplace();
+      Flex<Expression> implied_return_value = Flex<NullLiteralExpression>::emplace();
       implied_return_value->node_id = expr_node_id;
       implied_return_value->type = Flex<Type>::weak(&NULL_TYPE);
       auto return_value = unify(

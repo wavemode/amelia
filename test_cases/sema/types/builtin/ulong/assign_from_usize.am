@@ -1,16 +1,16 @@
-const x : usize = y
-const y = 18446744073709551615184467440737095516151844674407370955161518446744073709551615
+const x : ulong = y
+const y : usize = 42
 
 /* EXPECTED_OUTPUT:
 SemaResult(
   modules=[
     Module(
-      name="assign_from_high_const",
+      name="assign_from_usize",
       scope=Scope(
         bindings=[
           Binding(
             name="x",
-            type=usize,
+            type=ulong,
             value=BuiltinTypeCastExpression(
               expr=IdentifierExpression(
                 name="y"
@@ -21,9 +21,11 @@ SemaResult(
           ),
           Binding(
             name="y",
-            type=Const[18446744073709551615184467440737095516151844674407370955161518446744073709551615],
-            value=NumberLiteralExpression(
-              lit=18446744073709551615184467440737095516151844674407370955161518446744073709551615
+            type=usize,
+            value=BuiltinTypeCastExpression(
+              expr=NumberLiteralExpression(
+                lit=42
+              )
             ),
             kind=Constant,
             visibility=Default

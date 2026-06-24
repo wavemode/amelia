@@ -1,9 +1,65 @@
+#include <climits>
+
 #include "expression.hpp"
 
 namespace amelia {
 
+namespace {
+
+bool can_builtin_type_represent_range(const Type &type, const Integer &min, const Integer &max) {
+  if (type.kind == TypeKind::Builtin) {
+    switch (static_cast<const BuiltinType &>(type).builtin_kind) {
+    case BuiltinKind::Byte:
+      return min >= INT8_MIN && max <= INT8_MAX;
+    case BuiltinKind::UByte:
+      return min >= 0 && max <= UINT8_MAX;
+    case BuiltinKind::Short:
+      return min >= INT16_MIN && max <= INT16_MAX;
+    case BuiltinKind::UShort:
+      return min >= 0 && max <= UINT16_MAX;
+    case BuiltinKind::Int:
+      return min >= INT32_MIN && max <= INT32_MAX;
+    case BuiltinKind::UInt:
+      return min >= 0 && max <= UINT32_MAX;
+    case BuiltinKind::Long:
+      return min >= INT64_MIN && max <= INT64_MAX;
+    case BuiltinKind::ULong:
+      return min >= 0 && max <= UINT64_MAX;
+    case BuiltinKind::USize:
+      return min >= 0 && max <= UINT64_MAX;
+    case BuiltinKind::Float:
+    case BuiltinKind::Double:
+      return true;
+    default:
+      break;
+    }
+  }
+  return false;
+}
+
+Flex<Expression> builtin_type_cast(Type &target_type, Flex<Expression> expr) {
+  auto cast_expr = emplace_flex<BuiltinTypeCastExpression>();
+  cast_expr->type = Flex<Type>::weak(&target_type);
+  cast_expr->expr = move(expr);
+  return cast_expr;
+}
+
+} // namespace
+
 Type &Type::resolve() {
   return *this;
+}
+
+Option<Flex<Expression>> Type::unify(Flex<Type> &target, Flex<Expression> &expr) {
+  if (unify_exact(target->resolve())) {
+    return expr;
+  }
+  return None();
+}
+
+bool Type::is_trivial() {
+  // TODO
+  return true;
 }
 
 Serialize serialize_builtin(const BuiltinType &type) {
@@ -14,8 +70,8 @@ Serialize InferredType::serialize() const {
   return target->serialize();
 }
 
-bool InferredType::equals(Type &other) {
-  return this == &other || target->equals(other);
+bool InferredType::unify_exact(Type &other) {
+  return this == &other || target->unify_exact(other);
 }
 
 Type &InferredType::resolve() {
@@ -26,9 +82,88 @@ Serialize BuiltinType::serialize() const {
   return serialize_builtin_kind(builtin_kind);
 }
 
-bool BuiltinType::equals(Type &other) {
-  return this == &other || (other.kind == TypeKind::Builtin &&
-                            builtin_kind == static_cast<const BuiltinType &>(other).builtin_kind);
+bool BuiltinType::unify_exact(Type &other) {
+  return this == &other || builtin_kind == BuiltinKind::Never ||
+         (other.kind == TypeKind::Builtin &&
+          builtin_kind == static_cast<const BuiltinType &>(other).builtin_kind);
+}
+
+Option<Flex<Expression>> BuiltinType::unify(Flex<Type> &target, Flex<Expression> &expr) {
+  auto result = Type::unify(target, expr);
+  if (!result.has_value()) {
+    switch (builtin_kind) {
+    case BuiltinKind::Byte:
+      if (can_builtin_type_represent_range(target, INT8_MIN, INT8_MAX)) {
+        result = builtin_type_cast(target, expr);
+      }
+      break;
+    case BuiltinKind::UByte:
+      if (can_builtin_type_represent_range(target, 0, UINT8_MAX)) {
+        result = builtin_type_cast(target, expr);
+      }
+      break;
+    case BuiltinKind::Short:
+      if (can_builtin_type_represent_range(target, INT16_MIN, INT16_MAX)) {
+        result = builtin_type_cast(target, expr);
+      }
+      break;
+    case BuiltinKind::UShort:
+      if (can_builtin_type_represent_range(target, 0, UINT16_MAX)) {
+        result = builtin_type_cast(target, expr);
+      }
+      break;
+    case BuiltinKind::Int:
+      if (can_builtin_type_represent_range(target, INT32_MIN, INT32_MAX)) {
+        result = builtin_type_cast(target, expr);
+      }
+      break;
+    case BuiltinKind::UInt:
+      if (can_builtin_type_represent_range(target, 0, UINT32_MAX)) {
+        result = builtin_type_cast(target, expr);
+      }
+      break;
+    case BuiltinKind::Long:
+      if (can_builtin_type_represent_range(target, INT64_MIN, INT64_MAX)) {
+        result = builtin_type_cast(target, expr);
+      }
+      break;
+    case BuiltinKind::ULong:
+      if (can_builtin_type_represent_range(target, 0, UINT64_MAX)) {
+        result = builtin_type_cast(target, expr);
+      }
+      break;
+    case BuiltinKind::USize:
+      if (can_builtin_type_represent_range(target, 0, UINT64_MAX)) {
+        result = builtin_type_cast(target, expr);
+      }
+      break;
+    case BuiltinKind::Float:
+      if (target->kind == TypeKind::Builtin) {
+        auto target_builtin_kind = static_cast<const BuiltinType &>(*target).builtin_kind;
+        if (target_builtin_kind == BuiltinKind::Float ||
+            target_builtin_kind == BuiltinKind::Double) {
+          result = builtin_type_cast(target, expr);
+        }
+      }
+      break;
+    case BuiltinKind::Double:
+      if (target->kind == TypeKind::Builtin) {
+        auto target_builtin_kind = static_cast<const BuiltinType &>(*target).builtin_kind;
+        if (target_builtin_kind == BuiltinKind::Double) {
+          result = builtin_type_cast(target, expr);
+        }
+      }
+      break;
+    case BuiltinKind::Char:
+      if (can_builtin_type_represent_range(target, 0, UINT32_MAX)) {
+        result = builtin_type_cast(target, expr);
+      }
+      break;
+    default:
+      break;
+    }
+  }
+  return result;
 }
 
 Serialize AliasType::serialize() const {
@@ -39,8 +174,8 @@ Serialize AliasType::serialize() const {
   return result;
 }
 
-bool AliasType::equals(Type &other) {
-  return this == &other || target->equals(other);
+bool AliasType::unify_exact(Type &other) {
+  return this == &other || target->unify_exact(other);
 }
 
 Type &AliasType::resolve() {
@@ -54,9 +189,19 @@ Serialize ConstIntegerType::serialize() const {
   return Serialize::literal(move(val));
 }
 
-bool ConstIntegerType::equals(Type &other) {
+bool ConstIntegerType::unify_exact(Type &other) {
   return this == &other || (other.kind == TypeKind::ConstInteger &&
                             value == static_cast<const ConstIntegerType &>(other).value);
+}
+
+Option<Flex<Expression>> ConstIntegerType::unify(Flex<Type> &target, Flex<Expression> &expr) {
+  auto result = Type::unify(target, expr);
+  if (!result.has_value()) {
+    if (can_builtin_type_represent_range(target, value, value)) {
+      result = builtin_type_cast(target, expr);
+    }
+  }
+  return result;
 }
 
 Serialize ConstRationalType::serialize() const {
@@ -66,9 +211,22 @@ Serialize ConstRationalType::serialize() const {
   return Serialize::literal(move(val));
 }
 
-bool ConstRationalType::equals(Type &other) {
+bool ConstRationalType::unify_exact(Type &other) {
   return this == &other || (other.kind == TypeKind::ConstRational &&
                             value == static_cast<const ConstRationalType &>(other).value);
+}
+
+Option<Flex<Expression>> ConstRationalType::unify(Flex<Type> &target, Flex<Expression> &expr) {
+  auto result = Type::unify(target, expr);
+  if (!result.has_value()) {
+    if (target->kind == TypeKind::Builtin) {
+      auto target_builtin_kind = static_cast<const BuiltinType &>(*target).builtin_kind;
+      if (target_builtin_kind == BuiltinKind::Float || target_builtin_kind == BuiltinKind::Double) {
+        result = builtin_type_cast(target, expr);
+      }
+    }
+  }
+  return result;
 }
 
 Serialize ConstBooleanType::serialize() const {
@@ -78,9 +236,22 @@ Serialize ConstBooleanType::serialize() const {
   return Serialize::literal(move(val));
 }
 
-bool ConstBooleanType::equals(Type &other) {
+bool ConstBooleanType::unify_exact(Type &other) {
   return this == &other || (other.kind == TypeKind::ConstBoolean &&
                             value == static_cast<const ConstBooleanType &>(other).value);
+}
+
+Option<Flex<Expression>> ConstBooleanType::unify(Flex<Type> &target, Flex<Expression> &expr) {
+  auto result = Type::unify(target, expr);
+  if (!result.has_value()) {
+    if (target->kind == TypeKind::Builtin) {
+      auto target_builtin_kind = static_cast<const BuiltinType &>(*target).builtin_kind;
+      if (target_builtin_kind == BuiltinKind::Bool) {
+        result = builtin_type_cast(target, expr);
+      }
+    }
+  }
+  return result;
 }
 
 Serialize FunctionType::serialize() const {
@@ -94,8 +265,8 @@ Serialize FunctionType::serialize() const {
   return result;
 }
 
-bool FunctionType::equals(Type &) {
-  // equality for Function types is not well-defined
+bool FunctionType::unify_exact(Type &) {
+  // exact unification for Function types is not well-defined
   return false;
 }
 
@@ -110,7 +281,7 @@ Serialize ReferenceType::serialize() const {
   return Serialize::literal(move(val));
 }
 
-bool ReferenceType::equals(Type &other) {
+bool ReferenceType::unify_exact(Type &other) {
   if (this == &other) {
     return true;
   }
@@ -119,7 +290,7 @@ bool ReferenceType::equals(Type &other) {
   }
   ReferenceType &other_ref_type = static_cast<ReferenceType &>(other);
   return is_const == other_ref_type.is_const && is_move == other_ref_type.is_move &&
-         referent->equals(*other_ref_type.referent);
+         referent->unify_exact(*other_ref_type.referent);
 }
 
 Serialize TupleType::serialize() const {
@@ -134,7 +305,7 @@ Serialize TupleType::serialize() const {
   return Serialize::literal(move(val));
 }
 
-bool TupleType::equals(Type &other) {
+bool TupleType::unify_exact(Type &other) {
   if (this == &other) {
     return true;
   }
@@ -146,7 +317,7 @@ bool TupleType::equals(Type &other) {
     return false;
   }
   for (size_t i = 0; i < element_types.size(); ++i) {
-    if (!element_types[i]->resolve().equals(other_tuple_type.element_types[i]->resolve())) {
+    if (!element_types[i]->resolve().unify_exact(other_tuple_type.element_types[i]->resolve())) {
       return false;
     }
   }
