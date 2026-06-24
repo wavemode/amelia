@@ -131,13 +131,13 @@ CompilerTestExecutionOutcome execute_collection(
     }
     ++num_executed;
     bool should_error = TextUtils::contains(test_case.filename, "error_");
+    bool did_error = false;
     String actual_output;
     try {
       test_case_runner.run_test_case(actual_output, test_case);
       if (should_error) {
         printer.print("Expected test case to raise an exception but it raised none: ");
         printer.println(test_case.filename);
-        ++num_failed;
       }
     } catch (const SourceLocationError &e) {
       if (!should_error) {
@@ -145,7 +145,7 @@ CompilerTestExecutionOutcome execute_collection(
         printer.print(" (error message: \"");
         printer.print(Text::from(e.what()));
         printer.println("\")");
-        ++num_failed;
+        did_error = true;
       }
       actual_output.append("ERROR(\"");
       actual_output.append(Text::from(e.what()));
@@ -153,7 +153,7 @@ CompilerTestExecutionOutcome execute_collection(
     }
 
     if (actual_output.text() != test_case.expected_output) {
-      if (update_test_cases) {
+      if (update_test_cases && (should_error == did_error)) {
         update_file_expected_output(
             file_writer, test_case.filename, test_case.input, actual_output
         );

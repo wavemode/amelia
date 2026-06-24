@@ -182,8 +182,8 @@ public:
     scope.active_bindings.pop_back();
   }
 
-  Flex<Expression> require_unify(Flex<Type> &target_type, Flex<Expression> &expr, bool is_const) {
-    auto unified_expr = unify(target_type, expr->type, expr, is_const);
+  Flex<Expression> require_coerce(Flex<Type> &target_type, Flex<Expression> &expr, bool is_const) {
+    auto unified_expr = coerce(target_type, expr->type, expr, is_const);
     if (!unified_expr.has_value()) {
       String error_message = "Cannot convert expression of type '";
       expr->type->serialize().to_string(error_message);
@@ -195,11 +195,7 @@ public:
     return unified_expr.value();
   }
 
-  bool unify_exact(Flex<Type> &target_type, Flex<Type> &assignment_type) {
-    return target_type->resolve().unify_exact(assignment_type->resolve());
-  }
-
-  Option<Flex<Expression>> unify(
+  Option<Flex<Expression>> coerce(
       Flex<Type> &target_type, Flex<Type> &assignment_type, Flex<Expression> &expr, bool is_const
   ) {
     if (assignment_type->kind == TypeKind::Builtin) {
@@ -210,69 +206,15 @@ public:
       if (assignment_builtin_kind == BuiltinKind::Unknown) {
         raise_error_at_node_id(expr->node_id, "Cannot infer type of expression");
       }
-
-      // all types can be unified with never
-      if (assignment_builtin_kind == BuiltinKind::Never) {
-        return expr;
-      }
     }
 
-    // identical types
-    if (target_type == assignment_type) {
+    if (assignment_type->unify(target_type->resolve())) {
       return expr;
-    } else if (unify_exact(target_type, assignment_type)) {
-      return expr;
+    } else if (assignment_type->builtin_cast(target_type->resolve())) {
+      return builtin_type_cast(*target_type, move(expr));
     }
 
-    // compatible references
-    if (target_type->kind == TypeKind::Reference && assignment_type->kind == TypeKind::Reference) {
-      auto &target_ref_type = static_cast<ReferenceType &>(*target_type);
-      auto &assignment_ref_type = static_cast<ReferenceType &>(*assignment_type);
-      if (unify_exact(target_ref_type.referent, assignment_ref_type.referent)) {
-        if (assignment_ref_type.is_const) {
-          if (target_ref_type.is_const) {
-            return expr;
-          }
-        } else if (target_ref_type.is_const) {
-          return builtin_type_cast(*target_type, expr);
-        } else if (target_ref_type.is_move == assignment_ref_type.is_move) {
-          return expr;
-        } else if (is_type_trivial(target_ref_type.referent)) {
-          return builtin_type_cast(*target_type, expr);
-        }
-      }
-    }
-
-    // compatible tuples
-    if (target_type->kind == TypeKind::Tuple && assignment_type->kind == TypeKind::Tuple) {
-      TupleType &target_tuple_type = static_cast<TupleType &>(*target_type);
-      TupleType &assignment_tuple_type = static_cast<TupleType &>(*assignment_type);
-      if (target_tuple_type.element_types.size() == assignment_tuple_type.element_types.size()) {
-        for (size_t i = 0; i < target_tuple_type.element_types.size(); ++i) {
-          auto unified_element_expr = unify(
-              target_tuple_type.element_types[i],
-              assignment_tuple_type.element_types[i],
-              expr,
-              is_const
-          );
-          if (!unified_element_expr.has_value()) {
-            return None();
-          }
-        }
-        return builtin_type_cast(*target_type, expr);
-      }
-      return None();
-    }
-
-    if (assignment_type->kind == TypeKind::Alias) {
-      return unify(target_type, static_cast<AliasType &>(*assignment_type).target, expr, is_const);
-    } else if (assignment_type->kind == TypeKind::Inferred) {
-      return unify(
-          target_type, static_cast<InferredType &>(*assignment_type).target, expr, is_const
-      );
-    } else if (target_type->kind == TypeKind::Alias) {
-      return unify(static_cast<AliasType &>(*target_type).target, assignment_type, expr, is_const);
-    } else if (target_type->kind == TypeKind::Inferred) {
+    if (target_type->kind == TypeKind::Inferred) {
       const auto &inferred_type = static_cast<InferredType &>(*target_type).target;
 
       if (inferred_type->kind == TypeKind::ConstBoolean &&
@@ -297,7 +239,7 @@ public:
             static_cast<const ConstBooleanType &>(*assignment_type).value !=
                 static_cast<const ConstBooleanType &>(*inferred_type).value) {
           target_type = Flex<Type>::weak(&BOOL_TYPE);
-          return unify(target_type, assignment_type, expr, is_const);
+          return coerce(target_type, assignment_type, expr, is_const);
         }
       } else if (inferred_type->kind == TypeKind::ConstInteger) {
         if (assignment_type->kind == TypeKind::ConstInteger &&
@@ -314,12 +256,12 @@ public:
             );
           }
           target_type = Flex<Type>::weak(&INT_TYPE);
-          return unify(target_type, assignment_type, expr, is_const);
+          return coerce(target_type, assignment_type, expr, is_const);
         } else if (assignment_type->kind == TypeKind::ConstRational)
 
         {
           target_type = Flex<Type>::weak(&DOUBLE_TYPE);
-          return unify(target_type, assignment_type, expr, is_const);
+          return coerce(target_type, assignment_type, expr, is_const);
         }
       } else if (inferred_type->kind == TypeKind::ConstRational) {
         if ((assignment_type->kind == TypeKind::ConstRational &&
@@ -327,11 +269,11 @@ public:
                  static_cast<const ConstRationalType &>(*inferred_type).value) ||
             (assignment_type->kind == TypeKind::ConstInteger)) {
           target_type = Flex<Type>::weak(&DOUBLE_TYPE);
-          return unify(target_type, assignment_type, expr, is_const);
+          return coerce(target_type, assignment_type, expr, is_const);
         }
       }
       target_type = remove_const(expr->node_id, static_cast<InferredType &>(*target_type).target);
-      return unify(target_type, assignment_type, expr, is_const);
+      return coerce(target_type, assignment_type, expr, is_const);
     }
 
     if (target_type->kind == TypeKind::Builtin) {
@@ -351,7 +293,7 @@ public:
       }
     }
 
-    return assignment_type->resolve().unify(target_type, expr);
+    return None();
   }
 
   void analyze_module() {
@@ -616,7 +558,7 @@ public:
     Flex<Expression> result;
     if (function_body_node.expr.has_value()) {
       auto expr = build_expression(function_body_node.expr.value());
-      auto unified_expr = unify(signature.return_type, expr->type, expr, true);
+      auto unified_expr = coerce(signature.return_type, expr->type, expr, true);
       if (!unified_expr.has_value()) {
         String error_message = "Cannot convert expression of type '";
         expr->type->serialize().to_string(error_message);
@@ -700,7 +642,7 @@ public:
       Flex<Type> &expected_type, NodeId expr_node_id, bool is_const
   ) {
     auto expr = build_expression(expr_node_id);
-    return require_unify(expected_type, expr, is_const);
+    return require_coerce(expected_type, expr, is_const);
   }
 
   Flex<Expression> build_expression(NodeId expr_node_id) {
@@ -900,11 +842,10 @@ public:
         if (pos_arg_index < pos_args.size()) {
           Option<Flex<Expression>> expr;
           if (exact_match_only) {
-            expr = unify_exact(param.type, pos_args[pos_arg_index]->type)
-                       ? pos_args[pos_arg_index]
-                       : Option<Flex<Expression>>();
+            expr = pos_args[pos_arg_index]->type->unify(param.type) ? pos_args[pos_arg_index]
+                                                                    : Option<Flex<Expression>>();
           } else {
-            expr = unify(param.type, pos_args[pos_arg_index]->type, pos_args[pos_arg_index], true);
+            expr = coerce(param.type, pos_args[pos_arg_index]->type, pos_args[pos_arg_index], true);
           }
           if (!expr.has_value()) {
             goto fail;
@@ -914,12 +855,11 @@ public:
         } else if (named_args.has(param.name)) {
           Option<Flex<Expression>> expr;
           if (exact_match_only) {
-            auto param_expr = named_args[param.name];
-            expr = unify_exact(param.type, param_expr->type) ? param_expr
-                                                             : Option<Flex<Expression>>();
+            auto arg_expr = named_args[param.name];
+            expr = arg_expr->type->unify(param.type) ? arg_expr : Option<Flex<Expression>>();
           } else {
-            auto param_expr = named_args[param.name];
-            expr = unify(param.type, param_expr->type, param_expr, true);
+            auto arg_expr = named_args[param.name];
+            expr = coerce(param.type, arg_expr->type, arg_expr, true);
           }
           if (!expr.has_value()) {
             goto fail;
@@ -974,7 +914,7 @@ public:
       Flex<Expression> implied_return_value = Flex<NullLiteralExpression>::emplace();
       implied_return_value->node_id = expr_node_id;
       implied_return_value->type = Flex<Type>::weak(&NULL_TYPE);
-      auto return_value = unify(
+      auto return_value = coerce(
           m_current_function_signature.value()->return_type,
           implied_return_value->type,
           implied_return_value,
