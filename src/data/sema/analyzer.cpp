@@ -447,7 +447,10 @@ public:
           assignment_type.derive(resolve(assignment_type))
       );
     case TypeKind::Pointer:
-      throw RuntimeError("not implemented (unify(Pointer))");
+      return unify(
+          target_type.derive(static_cast<PointerType &>(*target_type)),
+          assignment_type.derive(resolve(assignment_type))
+      );
     case TypeKind::Slice:
       throw RuntimeError("not implemented (unify(Slice))");
     case TypeKind::Impl:
@@ -556,6 +559,17 @@ public:
             min_value_of_type(target_type) == min_value_of_type(assignment_type));
   }
 
+  bool unify(Flex<PointerType> target_type, Flex<Type> assignment_type) {
+    if (assignment_type->kind != TypeKind::Pointer) {
+      return false;
+    }
+    auto &assignment_type_ptr = static_cast<PointerType &>(*assignment_type);
+    if (!unify(target_type->pointee, assignment_type_ptr.pointee)) {
+      return false;
+    }
+    return target_type->is_const == assignment_type_ptr.is_const;
+  }
+
   bool unify(Flex<ConstIntegerType> target_type, Flex<Type> assignment_type) {
     return assignment_type->kind == TypeKind::ConstInteger &&
            target_type->value == static_cast<const ConstIntegerType &>(*assignment_type).value;
@@ -644,7 +658,7 @@ public:
     case TypeKind::BitInt:
       return coerce(target_type.derive(static_cast<BitIntType &>(*target_type)), expr);
     case TypeKind::Pointer:
-      throw RuntimeError("not implemented (coerce(Pointer))");
+      return coerce(target_type.derive(static_cast<PointerType &>(*target_type)), expr);
     case TypeKind::Slice:
       throw RuntimeError("not implemented (coerce(Slice))");
     case TypeKind::Impl:
@@ -781,6 +795,21 @@ public:
       return builtin_type_cast(*target_type, move(expr));
     }
 
+    return None();
+  }
+
+  Option<Flex<Expression>> coerce(Flex<PointerType> target_type, Flex<Expression> expr) {
+    if (expr->type->kind == TypeKind::Pointer) {
+      auto &expr_ptr_type = static_cast<PointerType &>(*expr->type);
+      if (
+        // Pointers point to the same type
+        unify(target_type->pointee, expr_ptr_type.pointee) &&
+        // If assignment is const, target must also be const
+        (target_type->is_const || !expr_ptr_type.is_const)
+      ) {
+        return builtin_type_cast(*target_type, move(expr));
+      }
+    }
     return None();
   }
 
@@ -1769,9 +1798,19 @@ public:
       return evaluate_type_expr_paren(type_expr_node.as_ParenthesizedExprNode());
     case NodeType::IndexingExprNode:
       return evaluate_type_expr_indexing(type_expr_node.as_IndexingExprNode());
+    case NodeType::DerefExprNode:
+      return evaluate_type_expr_deref(type_expr_node.as_DerefExprNode());
     default:
       raise_error_at_node_id(type_expr_node_id, "not implemented (unknown type expr)");
     }
+  }
+
+  Flex<Type> evaluate_type_expr_deref(const DerefExprNode &deref_node) {
+    auto pointed_type = evaluate_type_expr(deref_node.expr);
+    auto result = emplace_flex<PointerType>();
+    result->pointee = pointed_type;
+    result->is_const = deref_node.is_const;
+    return result;
   }
 
   Flex<Type> evaluate_type_expr_indexing(const IndexingExprNode &indexing_node) {

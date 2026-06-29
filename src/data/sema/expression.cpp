@@ -356,4 +356,14 @@ Serialize StringLiteralExpression::serialize() const {
   return Serialize::literal(move(repr));
 }
 
+Serialize PointerType::serialize() const {
+  String repr;
+  repr.append("*");
+  if (is_const) {
+    repr.append("const ");
+  }
+  pointee->serialize().to_string(repr);
+  return Serialize::literal(move(repr));
+}
+
 } // namespace amelia

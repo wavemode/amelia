@@ -110,6 +110,14 @@ struct ReferenceType : Type {
   Serialize serialize() const override;
 };
 
+struct PointerType : Type {
+  PointerType() : Type(TypeKind::Pointer) {}
+  Flex<Type> pointee;
+  bool is_const;
+
+  Serialize serialize() const override;
+};
+
 struct ConstIntegerType : Type {
   ConstIntegerType() : Type(TypeKind::ConstInteger) {}
   ConstIntegerType(Integer value) : Type(TypeKind::ConstInteger), value(move(value)) {}

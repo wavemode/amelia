@@ -1,0 +1,8 @@
+const x : *int = y
+const y : *const int = f()
+
+fun f() -> never = f()
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot convert expression of type '*const int' to expected type '*int' (at test_cases/sema/types/pointer/error_assign_const.am:1:18)")
+*/

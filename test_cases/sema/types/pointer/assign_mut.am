@@ -1,0 +1,63 @@
+const x : *int = y
+const y : *int = f()
+
+fun f() -> never = f()
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="assign_mut",
+      scope=Scope(
+        bindings=[
+          Binding(
+            name="f",
+            type=FunctionType(
+              signatures=[
+                Signature(
+                  return_type=never
+                )
+              ]
+            ),
+            value=FunctionCallExpression(
+              callee=IdentifierExpression(
+                name="f"
+              ),
+              signature=Signature(
+                return_type=never
+              ),
+              arguments=
+            ),
+            kind=Function,
+            visibility=Default
+          ),
+          Binding(
+            name="x",
+            type=*int,
+            value=IdentifierExpression(
+              name="y"
+            ),
+            kind=Constant,
+            visibility=Default
+          ),
+          Binding(
+            name="y",
+            type=*int,
+            value=FunctionCallExpression(
+              callee=IdentifierExpression(
+                name="f"
+              ),
+              signature=Signature(
+                return_type=never
+              ),
+              arguments=
+            ),
+            kind=Constant,
+            visibility=Default
+          )
+        ]
+      )
+    )
+  ]
+)
+*/
