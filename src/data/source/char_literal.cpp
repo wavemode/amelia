@@ -13,7 +13,9 @@ Serialize serialize_char_literal(uint32_t code_point, bool quoted) {
     repr.append('\\');
     repr.append('\\');
   } else if (code_point == '\'') {
-    repr.append('\\');
+    if (quoted) {
+      repr.append('\\');
+    }
     repr.append('\'');
   } else if (code_point == '\a') {
     repr.append('\\');

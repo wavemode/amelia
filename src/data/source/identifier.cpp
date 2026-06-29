@@ -3,6 +3,7 @@
 #include "identifier.hpp"
 
 #include "data/lexer/lexer.hpp"
+#include "data/source/char_literal.hpp"
 #include "data/util/set.hpp"
 #include "data/util/text_utils.hpp"
 
@@ -232,38 +233,6 @@ void Identifier::pretty_print(AbstractString &out, bool quoted, bool escaped) co
   size_t index = 0;
   for (uint32_t ch : name) {
     switch (ch) {
-    case '\a':
-      out.append('\\');
-      out.append('a');
-      break;
-    case '\b':
-      out.append('\\');
-      out.append('b');
-      break;
-    case '\f':
-      out.append('\\');
-      out.append('f');
-      break;
-    case '\n':
-      out.append('\\');
-      out.append('n');
-      break;
-    case '\r':
-      out.append('\\');
-      out.append('r');
-      break;
-    case '\t':
-      out.append('\\');
-      out.append('t');
-      break;
-    case '\v':
-      out.append('\\');
-      out.append('v');
-      break;
-    case '\\':
-      out.append('\\');
-      out.append('\\');
-      break;
     case '`':
       if (index != 0 && index != name.size() - 1) {
         out.append('\\');
@@ -271,21 +240,8 @@ void Identifier::pretty_print(AbstractString &out, bool quoted, bool escaped) co
       out.append('`');
       break;
     default:
-      if (ch < 32) {
-        out.append('\\');
-        out.append('x');
-        char hex_digits[3];
-        snprintf(hex_digits, 3, "%02x", ch);
-        out.append(hex_digits);
-      } else if (ch > 127) {
-        out.append('\\');
-        out.append('U');
-        char hex_digits[9];
-        snprintf(hex_digits, 9, "%08x", ch);
-        out.append(hex_digits);
-      } else {
-        out.append(ch);
-      }
+      serialize_char_literal(ch, false).to_string(out);
+      break;
     }
   }
 }

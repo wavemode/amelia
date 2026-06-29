@@ -1,6 +1,7 @@
 #include "token_formatter.hpp"
 
 #include "data/lexer/lexer.hpp"
+#include "data/source/char_literal.hpp"
 #include "data/source/identifier.hpp"
 #include "data/util/integer.hpp"
 
@@ -19,13 +20,7 @@ void TokenFormatter::format_token(AbstractString &out, size_t token_id) const {
     out.append('"');
     break;
   case TokenType::CHAR_LITERAL: {
-    out.append('\'');
-    uint32_t code_point = Lexer::read_char_literal(token.contents);
-    out.append("\\U");
-    String hex_code_point;
-    Integer(code_point).to_hex_string(hex_code_point);
-    TextUtils::pad_left_into(out, hex_code_point, 8, "0");
-    out.append('\'');
+    serialize_char_literal(Lexer::read_char_literal(token.contents)).to_string(out);
     break;
   }
   case TokenType::IDENTIFIER:
