@@ -1,0 +1,34 @@
+const x = 10
+const y = 10.1
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="decimal",
+      scope=Scope(
+        bindings=[
+          Binding(
+            name="x",
+            type=Const[10],
+            value=NumberLiteralExpression(
+              lit=10
+            ),
+            kind=Constant,
+            visibility=Default
+          ),
+          Binding(
+            name="y",
+            type=Const[10.1],
+            value=NumberLiteralExpression(
+              lit=10.1
+            ),
+            kind=Constant,
+            visibility=Default
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

@@ -942,14 +942,7 @@ public:
         if ((ch == 'e' || ch == 'E') && (base == 10 || assumed_octal)) {
           break;
         } else if (ch == 'p' || ch == 'P') {
-          if (base == 16) {
-            break;
-          } else {
-            throw_lexer_error(
-                current_location(),
-                "Only hexadecimal literals may use 'p' or 'P' as the exponent prefix"
-            );
-          }
+          break;
         } else if (ch >= 'a' && ch <= 'f') {
           digit_value = 10 + (ch - 'a');
         } else if (ch >= 'A' && ch <= 'F') {
@@ -997,11 +990,6 @@ public:
         base = 10;
       }
 
-      if (base != 10 && base != 16) {
-        throw_lexer_error_at_current_location("Floating point literals may only be in base 10 or 16"
-        );
-      }
-
       next();
       auto fractional_digits_start = current_location();
       while (!at_end()) {
@@ -1018,13 +1006,8 @@ public:
         } else if (TextUtils::is_alpha(ch)) {
           if ((ch == 'e' || ch == 'E') && base == 10) {
             break;
-          } else if ((ch == 'p' || ch == 'P') && base == 16) {
-            break;
           } else if (ch == 'p' || ch == 'P') {
-            throw_lexer_error(
-                current_location(),
-                "Only hexadecimal literals may use 'p' or 'P' as the exponent prefix"
-            );
+            break;
           } else if (ch >= 'a' && ch <= 'f') {
             digit_value = 10 + (ch - 'a');
           } else if (ch >= 'A' && ch <= 'F') {
