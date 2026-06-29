@@ -1,0 +1,36 @@
+const x : char = y
+const y = 0x10FFFF
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="assign_from_max_const",
+      scope=Scope(
+        bindings=[
+          Binding(
+            name="x",
+            type=char,
+            value=BuiltinTypeCastExpression(
+              expr=IdentifierExpression(
+                name="y"
+              )
+            ),
+            kind=Constant,
+            visibility=Default
+          ),
+          Binding(
+            name="y",
+            type=Const[1114111],
+            value=NumberLiteralExpression(
+              lit=0x10FFFF
+            ),
+            kind=Constant,
+            visibility=Default
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

@@ -1,0 +1,52 @@
+fun f() -> never = f()
+let x : int = f() // never unifies with everything
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="assign_from_recursion",
+      scope=Scope(
+        bindings=[
+          Binding(
+            name="f",
+            type=FunctionType(
+              signatures=[
+                Signature(
+                  return_type=never
+                )
+              ]
+            ),
+            value=FunctionCallExpression(
+              callee=IdentifierExpression(
+                name="f"
+              ),
+              signature=Signature(
+                return_type=never
+              ),
+              arguments=
+            ),
+            kind=Function,
+            visibility=Default
+          ),
+          Binding(
+            name="x",
+            type=int,
+            value=FunctionCallExpression(
+              callee=IdentifierExpression(
+                name="f"
+              ),
+              signature=Signature(
+                return_type=never
+              ),
+              arguments=
+            ),
+            kind=Variable,
+            visibility=Default
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

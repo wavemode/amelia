@@ -27,6 +27,8 @@ enum class TypeKind : uint8_t {
   ConstInteger,
   ConstRational,
   ConstBoolean,
+  ConstCharacter,
+  ConstString,
   Class,
   Union,
   Concept,
@@ -54,6 +56,7 @@ enum class ExpressionKind : uint8_t {
   NumberLiteral,
   BooleanLiteral,
   NullLiteral,
+  CharLiteral,
   Identifier,
   UnaryOperation,
   BuiltinTypeCast,
@@ -131,6 +134,22 @@ struct ConstBooleanType : Type {
   Serialize serialize() const override;
 };
 
+struct ConstCharacterType : Type {
+  ConstCharacterType() : Type(TypeKind::ConstCharacter) {}
+  ConstCharacterType(uint32_t value) : Type(TypeKind::ConstCharacter), value(value) {}
+  uint32_t value;
+
+  Serialize serialize() const override;
+};
+
+struct ConstStringType : Type {
+  ConstStringType() : Type(TypeKind::ConstString) {}
+  ConstStringType(String value) : Type(TypeKind::ConstString), value(move(value)) {}
+  String value;
+
+  Serialize serialize() const override;
+};
+
 struct FunctionType : Type {
   struct Parameter {
     String name;
@@ -174,24 +193,6 @@ struct BitIntType : Type {
 
 ////////// Expression variants //////////
 
-struct ConstIntegerExpression : Expression {
-  ConstIntegerExpression() : Expression(ExpressionKind::ConstInteger) {}
-  Integer value;
-  Serialize serialize() const override;
-};
-
-struct ConstRationalExpression : Expression {
-  ConstRationalExpression() : Expression(ExpressionKind::ConstRational) {}
-  Rational value;
-  Serialize serialize() const override;
-};
-
-struct ConstBooleanExpression : Expression {
-  ConstBooleanExpression() : Expression(ExpressionKind::ConstBoolean) {}
-  bool value;
-  Serialize serialize() const override;
-};
-
 struct NumberLiteralExpression : Expression {
   NumberLiteralExpression() : Expression(ExpressionKind::NumberLiteral) {}
   NumberLiteral value;
@@ -206,6 +207,18 @@ struct BooleanLiteralExpression : Expression {
 
 struct NullLiteralExpression : Expression {
   NullLiteralExpression() : Expression(ExpressionKind::NullLiteral) {}
+  Serialize serialize() const override;
+};
+
+struct CharLiteralExpression : Expression {
+  CharLiteralExpression() : Expression(ExpressionKind::CharLiteral) {}
+  uint32_t value;
+  Serialize serialize() const override;
+};
+
+struct StringLiteralExpression : Expression {
+  StringLiteralExpression() : Expression(ExpressionKind::CharLiteral) {}
+  String value;
   Serialize serialize() const override;
 };
 

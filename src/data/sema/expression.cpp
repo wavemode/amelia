@@ -2,6 +2,8 @@
 
 #include "expression.hpp"
 
+#include "data/source/char_literal.hpp"
+
 namespace amelia {
 
 Serialize serialize_builtin(const BuiltinType &type) {
@@ -146,6 +148,12 @@ Serialize serialize_type_kind(TypeKind kind) {
   case TypeKind::ConstBoolean:
     result.append("ConstBoolean");
     break;
+  case TypeKind::ConstCharacter:
+    result.append("ConstCharacter");
+    break;
+  case TypeKind::ConstString:
+    result.append("ConstString");
+    break;
   case TypeKind::Class:
     result.append("Class");
     break;
@@ -283,31 +291,6 @@ Serialize FunctionCallExpression::serialize() const {
   return result;
 }
 
-Serialize ConstIntegerExpression::serialize() const {
-  Serialize result;
-  result.set_object_name("ConstIntegerExpression");
-  String val;
-  value.to_string(val);
-  result.add_object_field("value", Serialize::literal(move(val)));
-  return result;
-}
-
-Serialize ConstRationalExpression::serialize() const {
-  Serialize result;
-  result.set_object_name("ConstRationalExpression");
-  String val;
-  value.to_fraction_string(val);
-  result.add_object_field("value", Serialize::literal(move(val)));
-  return result;
-}
-
-Serialize ConstBooleanExpression::serialize() const {
-  Serialize result;
-  result.set_object_name("ConstBooleanExpression");
-  result.add_object_field("value", Serialize::of(value));
-  return result;
-}
-
 Serialize AddressOfExpression::serialize() const {
   Serialize result;
   result.set_object_name("AddressOfExpression");
@@ -334,6 +317,42 @@ Serialize BitIntType::serialize() const {
   repr.append("bitint[");
   Serialize::of(static_cast<int64_t>(bit_width)).to_string(repr);
   repr.append("]");
+  return Serialize::literal(move(repr));
+}
+
+Serialize CharLiteralExpression::serialize() const {
+  String repr;
+  repr.append("CharLiteralExpression[");
+  serialize_char_literal(value).to_string(repr);
+  repr.append("]");
+  return Serialize::literal(move(repr));
+}
+
+Serialize ConstCharacterType::serialize() const {
+  String repr;
+  repr.append("Const[");
+  serialize_char_literal(value).to_string(repr);
+  repr.append("]");
+  return Serialize::literal(move(repr));
+}
+
+Serialize ConstStringType::serialize() const {
+  String repr;
+  repr.append("Const[\"");
+  for (uint32_t ch : value) {
+    serialize_char_literal(ch, false).to_string(repr);
+  }
+  repr.append("\"]");
+  return Serialize::literal(move(repr));
+}
+
+Serialize StringLiteralExpression::serialize() const {
+  String repr;
+  repr.append("StringLiteralExpression[\"");
+  for (uint32_t ch : value) {
+    serialize_char_literal(ch, false).to_string(repr);
+  }
+  repr.append("\"]");
   return Serialize::literal(move(repr));
 }
 

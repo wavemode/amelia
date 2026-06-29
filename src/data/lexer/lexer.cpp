@@ -895,7 +895,7 @@ public:
     auto base_prefix_start = current_location();
 
     if (at_end()) {
-      throw RuntimeError("Expected number literal, but got empty input");
+      throw SourceLocationError(start_location, "Expected number literal, but got empty input");
     }
 
     if (peek() == '0') {
@@ -1332,7 +1332,7 @@ void Lexer::read_string_literal(AbstractString &out, Text input, bool escape) {
   LexerState state(result, LexerContext{"(anon)"}, input);
   auto start_location = state.current_location();
   if (input.size() == 0) {
-    throw RuntimeError("Expected string literal, but got empty input");
+    throw SourceLocationError(start_location, "Expected string literal, but got empty input");
   }
   Text text;
   switch (state.peek()) {
@@ -1342,12 +1342,14 @@ void Lexer::read_string_literal(AbstractString &out, Text input, bool escape) {
   case 'r':
     state.next();
     if (state.peek() != '"') {
-      throw RuntimeError("Expected string literal, but got 'r' followed by non-quote character");
+      throw SourceLocationError(start_location, "Expected '\"' after 'r' in raw string literal");
     }
     text = Text(state.read_raw_quote(start_location).data());
     break;
   default:
-    throw RuntimeError("Expected string literal");
+    throw SourceLocationError(
+        start_location, "Expected string literal to start with '\"' or 'r\"'"
+    );
   }
   if (escape) {
     for (uint32_t cp : text) {
@@ -1402,10 +1404,10 @@ Identifier Lexer::read_quoted_ident(Text input) {
   LexerState state(result, LexerContext{"(anon)"}, input);
   auto start_location = state.current_location();
   if (input.size() == 0) {
-    throw RuntimeError("Expected quoted identifier, but got empty input");
+    throw SourceLocationError(start_location, "Expected quoted identifier, but got empty input");
   }
   if (input.data()[0] != '`') {
-    throw RuntimeError("Expected quoted identifier to start with backtick");
+    throw SourceLocationError(start_location, "Expected quoted identifier to start with backtick");
   }
   return Identifier(Text(state.read_quoted_ident(start_location).data()));
 }
@@ -1415,10 +1417,12 @@ uint32_t Lexer::read_char_literal(Text input) {
   LexerState state(result, LexerContext{"(anon)"}, input);
   auto start_location = state.current_location();
   if (input.size() == 0) {
-    throw RuntimeError("Expected character literal, but got empty input");
+    throw SourceLocationError(start_location, "Expected character literal, but got empty input");
   }
   if (input.begin().peek() != '\'') {
-    throw RuntimeError("Expected character literal to start with single quote");
+    throw SourceLocationError(
+        start_location, "Expected character literal to start with single quote"
+    );
   }
   return state.read_char_literal(start_location);
 }
@@ -1428,7 +1432,7 @@ NumberLiteral Lexer::read_number_literal(Text input) {
   LexerState state(result, LexerContext{"(anon)"}, input);
   auto start_location = state.current_location();
   if (input.size() == 0) {
-    throw RuntimeError("Expected number literal, but got empty input");
+    throw SourceLocationError(start_location, "Expected number literal, but got empty input");
   }
   return state.read_number(start_location);
 }

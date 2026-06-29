@@ -28,6 +28,7 @@ BuiltinType DOUBLE_TYPE;
 BuiltinType BOOL_TYPE;
 BuiltinType CHAR_TYPE;
 BuiltinType STR_TYPE;
+Flex<Type> STR_REF_TYPE;
 BuiltinType NULL_TYPE;
 BuiltinType NEVER_TYPE;
 BuiltinType UNKNOWN_TYPE;
@@ -50,6 +51,11 @@ bool init = []() {
   NULL_TYPE.builtin_kind = BuiltinKind::Null;
   NEVER_TYPE.builtin_kind = BuiltinKind::Never;
   UNKNOWN_TYPE.builtin_kind = BuiltinKind::Unknown;
+  auto str_ref_type = emplace_flex<ReferenceType>();
+  str_ref_type->referent = Flex<Type>::weak(&STR_TYPE);
+  str_ref_type->is_const = false;
+  str_ref_type->is_move = false;
+  STR_REF_TYPE = move(str_ref_type);
   return true;
 }();
 
@@ -111,7 +117,8 @@ public:
 
   bool is_integral_type(Type &input_type) {
     auto &type = resolve(input_type);
-    if (type.kind == TypeKind::ConstInteger || type.kind == TypeKind::BitInt) {
+    if (type.kind == TypeKind::ConstInteger || type.kind == TypeKind::BitInt ||
+        type.kind == TypeKind::ConstCharacter) {
       return true;
     }
     if (type.kind != TypeKind::Builtin) {
@@ -168,6 +175,8 @@ public:
       }
     } else if (type.kind == TypeKind::ConstInteger) {
       return static_cast<const ConstIntegerType &>(type).value;
+    } else if (type.kind == TypeKind::ConstCharacter) {
+      return Integer(static_cast<const ConstCharacterType &>(type).value);
     } else if (type.kind == TypeKind::BitInt) {
       const auto &bitint_type = static_cast<const BitIntType &>(type);
       if (bitint_type.is_signed) {
@@ -208,6 +217,8 @@ public:
       }
     } else if (type.kind == TypeKind::ConstInteger) {
       return static_cast<const ConstIntegerType &>(type).value;
+    } else if (type.kind == TypeKind::ConstCharacter) {
+      return Integer(static_cast<const ConstCharacterType &>(type).value);
     } else if (type.kind == TypeKind::BitInt) {
       const auto &bitint_type = static_cast<const BitIntType &>(type);
       if (bitint_type.is_signed) {
@@ -312,6 +323,10 @@ public:
       return remove_const(type.derive(static_cast<ConstRationalType &>(*type)));
     case TypeKind::ConstBoolean:
       return remove_const(type.derive(static_cast<ConstBooleanType &>(*type)));
+    case TypeKind::ConstCharacter:
+      return remove_const(type.derive(static_cast<ConstCharacterType &>(*type)));
+    case TypeKind::ConstString:
+      return remove_const(type.derive(static_cast<ConstStringType &>(*type)));
     case TypeKind::Class:
       throw RuntimeError("not implemented (remove_const(Class))");
     case TypeKind::Union:
@@ -379,6 +394,14 @@ public:
     return Flex<Type>::weak(&BOOL_TYPE);
   }
 
+  Flex<Type> remove_const(Flex<ConstCharacterType>) {
+    return Flex<Type>::weak(&CHAR_TYPE);
+  }
+
+  Flex<Type> remove_const(Flex<ConstStringType>) {
+    return STR_REF_TYPE;
+  }
+
   bool unify(Flex<Type> target_type, Flex<Type> assignment_type) {
     if (&*target_type == &*assignment_type) {
       return true;
@@ -444,6 +467,16 @@ public:
           target_type.derive(static_cast<ConstBooleanType &>(*target_type)),
           assignment_type.derive(resolve(assignment_type))
       );
+    case TypeKind::ConstCharacter:
+      return unify(
+          target_type.derive(static_cast<ConstCharacterType &>(*target_type)),
+          assignment_type.derive(resolve(assignment_type))
+      );
+    case TypeKind::ConstString:
+      return unify(
+          target_type.derive(static_cast<ConstStringType &>(*target_type)),
+          assignment_type.derive(resolve(assignment_type))
+      );
     case TypeKind::Class:
       throw RuntimeError("not implemented (unify(Class))");
     case TypeKind::Union:
@@ -507,6 +540,8 @@ public:
       return target_type->builtin_kind == BuiltinKind::Double;
     } else if (assignment_type->kind == TypeKind::ConstBoolean) {
       return target_type->builtin_kind == BuiltinKind::Bool;
+    } else if (assignment_type->kind == TypeKind::ConstCharacter) {
+      return target_type->builtin_kind == BuiltinKind::Char;
     }
     return false;
   }
@@ -536,6 +571,16 @@ public:
            target_type->value == static_cast<const ConstBooleanType &>(*assignment_type).value;
   }
 
+  bool unify(Flex<ConstCharacterType> target_type, Flex<Type> assignment_type) {
+    return assignment_type->kind == TypeKind::ConstCharacter &&
+           target_type->value == static_cast<const ConstCharacterType &>(*assignment_type).value;
+  }
+
+  bool unify(Flex<ConstStringType> target_type, Flex<Type> assignment_type) {
+    return assignment_type->kind == TypeKind::ConstString &&
+           target_type->value == static_cast<const ConstStringType &>(*assignment_type).value;
+  }
+
   Type &resolve(Type &type) {
     switch (type.kind) {
     case TypeKind::Alias:
@@ -558,6 +603,8 @@ public:
     case TypeKind::ConstInteger:
     case TypeKind::ConstRational:
     case TypeKind::ConstBoolean:
+    case TypeKind::ConstCharacter:
+    case TypeKind::ConstString:
     case TypeKind::Class:
     case TypeKind::Union:
     case TypeKind::Concept:
@@ -608,6 +655,10 @@ public:
       return coerce(target_type.derive(static_cast<ConstRationalType &>(*target_type)), expr);
     case TypeKind::ConstBoolean:
       return coerce(target_type.derive(static_cast<ConstBooleanType &>(*target_type)), expr);
+    case TypeKind::ConstCharacter:
+      return coerce(target_type.derive(static_cast<ConstCharacterType &>(*target_type)), expr);
+    case TypeKind::ConstString:
+      return coerce(target_type.derive(static_cast<ConstStringType &>(*target_type)), expr);
     case TypeKind::Class:
       throw RuntimeError("not implemented (coerce(Class))");
     case TypeKind::Union:
@@ -647,6 +698,12 @@ public:
           )
         )
       ) {
+        return builtin_type_cast(*target_type, move(expr));
+      }
+    } else if (expr->type->kind == TypeKind::ConstString) {
+      if (target_type->referent->kind == TypeKind::Builtin &&
+          static_cast<const BuiltinType &>(*target_type->referent).builtin_kind ==
+              BuiltinKind::Str) {
         return builtin_type_cast(*target_type, move(expr));
       }
     }
@@ -739,6 +796,16 @@ public:
 
   Option<Flex<Expression>> coerce(Flex<ConstBooleanType>, Flex<Expression>) {
     // by this point, we already know that expr->type is not an equivalent ConstBoolean
+    return None();
+  }
+
+  Option<Flex<Expression>> coerce(Flex<ConstCharacterType>, Flex<Expression>) {
+    // by this point, we already know that expr->type is not an equivalent ConstCharacter
+    return None();
+  }
+
+  Option<Flex<Expression>> coerce(Flex<ConstStringType>, Flex<Expression>) {
+    // by this point, we already know that expr->type is not an equivalent ConstString
     return None();
   }
 
@@ -1162,12 +1229,40 @@ public:
     case NodeType::ParenthesizedExprNode:
       result = build_expr_paren(expr_node_id);
       break;
+    case NodeType::CharLiteralNode:
+      result = build_expr_char_literal(expr_node_id);
+      break;
+    case NodeType::StringLiteralNode:
+      result = build_expr_string_literal(expr_node_id);
+      break;
     default:
       raise_error_at_node_id(
           expr_node_id, "not implemented (unknown node type in build_expression)"
       );
     }
 
+    return result;
+  }
+
+  Flex<Expression> build_expr_char_literal(NodeId expr_node_id) {
+    const auto &char_node = m_module_obj.ast.get_node(expr_node_id).as_CharLiteralNode();
+    auto result = emplace_flex<CharLiteralExpression>();
+    result->node_id = expr_node_id;
+    auto type = emplace_flex<ConstCharacterType>();
+    type->value = char_node.code_point;
+    result->type = type;
+    result->value = char_node.code_point;
+    return result;
+  }
+
+  Flex<Expression> build_expr_string_literal(NodeId expr_node_id) {
+    const auto &string_node = m_module_obj.ast.get_node(expr_node_id).as_StringLiteralNode();
+    auto result = emplace_flex<StringLiteralExpression>();
+    result->node_id = expr_node_id;
+    auto type = emplace_flex<ConstStringType>();
+    type->value = string_node.contents;
+    result->type = type;
+    result->value = string_node.contents;
     return result;
   }
 
