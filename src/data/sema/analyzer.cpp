@@ -1854,6 +1854,8 @@ public:
     case TypeKind::ConstInteger:
     case TypeKind::ConstRational:
     case TypeKind::ConstBoolean:
+    case TypeKind::ConstString:
+    case TypeKind::ConstCharacter:
       return expr->type;
     default:
       String error_message = "Expected a constant, but got an expression of type '";

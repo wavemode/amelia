@@ -1,0 +1,32 @@
+const x : const "hi" = y
+const y = "hi"
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="const_string_assign_same",
+      scope=Scope(
+        bindings=[
+          Binding(
+            name="x",
+            type=Const["hi"],
+            value=IdentifierExpression(
+              name="y"
+            ),
+            kind=Constant,
+            visibility=Default
+          ),
+          Binding(
+            name="y",
+            type=Const["hi"],
+            value=StringLiteralExpression["hi"],
+            kind=Constant,
+            visibility=Default
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

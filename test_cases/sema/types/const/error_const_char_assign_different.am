@@ -1,0 +1,6 @@
+const x : const 'a' = y
+const y = 'b'
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot convert expression of type 'Const['b']' to expected type 'Const['a']' (at test_cases/sema/types/const/error_const_char_assign_different.am:1:23)")
+*/
