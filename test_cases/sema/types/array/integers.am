@@ -1,0 +1,44 @@
+const x : [int, 3] = y
+const y = [1, 2, 3]
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="integers",
+      scope=Scope(
+        bindings=[
+          Binding(
+            name="x",
+            type=[int, 3],
+            value=IdentifierExpression(
+              name="y"
+            ),
+            kind=Constant,
+            visibility=Default
+          ),
+          Binding(
+            name="y",
+            type=[int, 3],
+            value=ArrayLiteralExpression(
+              elements=[
+                NumberLiteralExpression(
+                  lit=1
+                ),
+                NumberLiteralExpression(
+                  lit=2
+                ),
+                NumberLiteralExpression(
+                  lit=3
+                )
+              ]
+            ),
+            kind=Constant,
+            visibility=Default
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

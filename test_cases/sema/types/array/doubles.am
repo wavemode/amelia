@@ -1,0 +1,55 @@
+const x : [double, 2] = y
+const y = [z, 4.5]
+const z : float = 2.5
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="doubles",
+      scope=Scope(
+        bindings=[
+          Binding(
+            name="x",
+            type=[double, 2],
+            value=IdentifierExpression(
+              name="y"
+            ),
+            kind=Constant,
+            visibility=Default
+          ),
+          Binding(
+            name="y",
+            type=[double, 2],
+            value=ArrayLiteralExpression(
+              elements=[
+                BuiltinTypeCastExpression(
+                  expr=IdentifierExpression(
+                    name="z"
+                  )
+                ),
+                NumberLiteralExpression(
+                  lit=4.5
+                )
+              ]
+            ),
+            kind=Constant,
+            visibility=Default
+          ),
+          Binding(
+            name="z",
+            type=float,
+            value=BuiltinTypeCastExpression(
+              expr=NumberLiteralExpression(
+                lit=2.5
+              )
+            ),
+            kind=Constant,
+            visibility=Default
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

@@ -1,0 +1,56 @@
+let x = [
+  1,
+  3,
+  0xfffffffff,
+]
+let y : &[long] = &x
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="longs",
+      scope=Scope(
+        bindings=[
+          Binding(
+            name="x",
+            type=[long, 3],
+            value=ArrayLiteralExpression(
+              elements=[
+                BuiltinTypeCastExpression(
+                  expr=NumberLiteralExpression(
+                    lit=1
+                  )
+                ),
+                BuiltinTypeCastExpression(
+                  expr=NumberLiteralExpression(
+                    lit=3
+                  )
+                ),
+                NumberLiteralExpression(
+                  lit=0xfffffffff
+                )
+              ]
+            ),
+            kind=Variable,
+            visibility=Default
+          ),
+          Binding(
+            name="y",
+            type=&[long],
+            value=BuiltinTypeCastExpression(
+              expr=AddressOfExpression(
+                operand=IdentifierExpression(
+                  name="x"
+                )
+              )
+            ),
+            kind=Variable,
+            visibility=Default
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

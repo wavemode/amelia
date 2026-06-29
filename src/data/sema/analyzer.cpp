@@ -115,6 +115,18 @@ public:
            static_cast<const BuiltinType &>(type).builtin_kind == BuiltinKind::Null;
   }
 
+  bool is_float_type(Type &input_type) {
+    auto &type = resolve(input_type);
+    return type.kind == TypeKind::Builtin &&
+           (static_cast<const BuiltinType &>(type).builtin_kind == BuiltinKind::Float);
+  }
+
+  bool is_double_type(Type &input_type) {
+    auto &type = resolve(input_type);
+    return type.kind == TypeKind::Builtin &&
+           (static_cast<const BuiltinType &>(type).builtin_kind == BuiltinKind::Double);
+  }
+
   bool is_integral_type(Type &input_type) {
     auto &type = resolve(input_type);
     if (type.kind == TypeKind::ConstInteger || type.kind == TypeKind::BitInt ||
@@ -302,7 +314,7 @@ public:
     case TypeKind::Tuple:
       return remove_const(type.derive(static_cast<TupleType &>(*type)));
     case TypeKind::Array:
-      throw RuntimeError("not implemented (remove_const(Array))");
+      return remove_const(type.derive(static_cast<ArrayType &>(*type)));
     case TypeKind::TypeFn:
       throw RuntimeError("not implemented (remove_const(TypeFn))");
     case TypeKind::Apply:
@@ -312,9 +324,9 @@ public:
     case TypeKind::BitInt:
       return remove_const(type.derive(static_cast<BitIntType &>(*type)));
     case TypeKind::Pointer:
-      throw RuntimeError("not implemented (remove_const(Pointer))");
+      return remove_const(type.derive(static_cast<PointerType &>(*type)));
     case TypeKind::Slice:
-      throw RuntimeError("not implemented (remove_const(Slice))");
+      return remove_const(type.derive(static_cast<SliceType &>(*type)));
     case TypeKind::Impl:
       throw RuntimeError("not implemented (remove_const(Impl))");
     case TypeKind::ConstInteger:
@@ -364,12 +376,32 @@ public:
     return result;
   }
 
+  Flex<Type> remove_const(Flex<ArrayType> array_type) {
+    auto result = emplace_flex<ArrayType>();
+    result->element_type = remove_const(array_type->element_type);
+    result->size = array_type->size;
+    return result;
+  }
+
   Flex<Type> remove_const(Flex<BuiltinType> builtin_type) {
     return builtin_type;
   }
 
   Flex<Type> remove_const(Flex<BitIntType> bitint_type) {
     return bitint_type;
+  }
+
+  Flex<Type> remove_const(Flex<PointerType> pointer_type) {
+    auto result = emplace_flex<PointerType>();
+    result->pointee = remove_const(pointer_type->pointee);
+    result->is_const = pointer_type->is_const;
+    return result;
+  }
+
+  Flex<Type> remove_const(Flex<SliceType> slice_type) {
+    auto result = emplace_flex<SliceType>();
+    result->element_type = remove_const(slice_type->element_type);
+    return result;
   }
 
   Flex<Type> remove_const(Flex<ConstIntegerType> const_integer_type) {
@@ -431,7 +463,10 @@ public:
           assignment_type.derive(resolve(assignment_type))
       );
     case TypeKind::Array:
-      throw RuntimeError("not implemented (unify(Array))");
+      return unify(
+          target_type.derive(static_cast<ArrayType &>(*target_type)),
+          assignment_type.derive(resolve(assignment_type))
+      );
     case TypeKind::TypeFn:
       throw RuntimeError("not implemented (unify(TypeFn))");
     case TypeKind::Apply:
@@ -452,7 +487,10 @@ public:
           assignment_type.derive(resolve(assignment_type))
       );
     case TypeKind::Slice:
-      throw RuntimeError("not implemented (unify(Slice))");
+      return unify(
+          target_type.derive(static_cast<SliceType &>(*target_type)),
+          assignment_type.derive(resolve(assignment_type))
+      );
     case TypeKind::Impl:
       throw RuntimeError("not implemented (unify(Impl))");
     case TypeKind::ConstInteger:
@@ -532,6 +570,17 @@ public:
     return true;
   }
 
+  bool unify(Flex<ArrayType> target_type, Flex<Type> assignment_type) {
+    if (assignment_type->kind != TypeKind::Array) {
+      return false;
+    }
+    auto &assignment_array = static_cast<ArrayType &>(*assignment_type);
+    if (!unify(target_type->element_type, assignment_array.element_type)) {
+      return false;
+    }
+    return target_type->size == assignment_array.size;
+  }
+
   bool unify(Flex<BuiltinType> target_type, Flex<Type> assignment_type) {
     if (assignment_type->kind == TypeKind::Builtin) {
       return target_type->builtin_kind == static_cast<BuiltinType &>(*assignment_type).builtin_kind;
@@ -568,6 +617,15 @@ public:
       return false;
     }
     return target_type->is_const == assignment_type_ptr.is_const;
+  }
+
+  bool unify(Flex<SliceType> target_type, Flex<Type> assignment_type) {
+    if (assignment_type->kind == TypeKind::Slice) {
+      return unify(
+          target_type->element_type, static_cast<SliceType &>(*assignment_type).element_type
+      );
+    }
+    return false;
   }
 
   bool unify(Flex<ConstIntegerType> target_type, Flex<Type> assignment_type) {
@@ -660,7 +718,7 @@ public:
     case TypeKind::Pointer:
       return coerce(target_type.derive(static_cast<PointerType &>(*target_type)), expr);
     case TypeKind::Slice:
-      throw RuntimeError("not implemented (coerce(Slice))");
+      return coerce(target_type.derive(static_cast<SliceType &>(*target_type)), expr);
     case TypeKind::Impl:
       throw RuntimeError("not implemented (coerce(Impl))");
     case TypeKind::ConstInteger:
@@ -698,10 +756,6 @@ public:
     if (expr->type->kind == TypeKind::Reference) {
       auto &expr_ref_type = static_cast<ReferenceType &>(*expr->type);
       if (
-        // References refer to the same type
-        // TODO: compatible types
-        unify(target_type->referent, expr_ref_type.referent) &&
-        
         // If assignment is const, target must also be const
         (target_type->is_const || !expr_ref_type.is_const) &&
 
@@ -712,7 +766,23 @@ public:
           )
         )
       ) {
-        return builtin_type_cast(*target_type, move(expr));
+        if (
+          // References refer to the same type
+          // TODO: compatible types
+          unify(target_type->referent, expr_ref_type.referent)
+        ) {
+          return builtin_type_cast(*target_type, move(expr));
+        } else if (
+          // Target type refers to a slice and expr type refers to an array of the same type
+          target_type->referent->kind == TypeKind::Slice &&
+          expr_ref_type.referent->kind == TypeKind::Array &&
+          unify(
+            static_cast<SliceType &>(*target_type->referent).element_type,
+            static_cast<ArrayType &>(*expr_ref_type.referent).element_type
+          )
+        ) {
+          return builtin_type_cast(*target_type, move(expr));
+        }
       }
     } else if (expr->type->kind == TypeKind::ConstString) {
       if (target_type->referent->kind == TypeKind::Builtin &&
@@ -810,6 +880,11 @@ public:
         return builtin_type_cast(*target_type, move(expr));
       }
     }
+    return None();
+  }
+
+  Option<Flex<Expression>> coerce(Flex<SliceType>, Flex<Expression>) {
+    // slices themselves can't be coerced
     return None();
   }
 
@@ -1264,12 +1339,76 @@ public:
     case NodeType::StringLiteralNode:
       result = build_expr_string_literal(expr_node_id);
       break;
+    case NodeType::BracketExprNode:
+      result = build_expr_bracket(expr_node_id);
+      break;
     default:
       raise_error_at_node_id(
           expr_node_id, "not implemented (unknown node type in build_expression)"
       );
     }
 
+    return result;
+  }
+
+  Flex<Type> read_expr_list(List<Flex<Expression>> &output, ConstSlice<NodeId> expr_node_ids) {
+    // TODO: ellipsis
+
+    for (NodeId sub_expr_node_id : expr_node_ids) {
+      output.push_back(build_expression(sub_expr_node_id));
+    }
+
+    Flex<Type> result_type = Flex<Type>::weak(&NEVER_TYPE);
+    for (size_t i = 0; i < output.size(); ++i) {
+      Flex<Expression> &elem = output[i];
+      if (is_never_type(result_type)) {
+        result_type = remove_const(elem->type);
+      } else {
+        auto elem_type = remove_const(elem->type);
+        if (
+            // types are different
+            !unify(result_type, elem_type) &&
+            // both are integer types
+            is_integral_type(elem_type) &&
+            is_integral_type(result_type)
+            // the type of this elem can represent the entire range of the current inferred type
+            && can_type_represent_range(
+                   *elem_type, min_value_of_type(result_type), max_value_of_type(result_type)
+               )
+            // and the bit size of this elem type is larger
+            && repr_bit_size(elem_type) > repr_bit_size(result_type)
+        ) {
+          result_type = elem_type;
+        }
+
+        if (
+            // types are different
+            !unify(result_type, elem_type) &&
+            // inferred type is float and elem type is double
+            is_float_type(result_type) && is_double_type(elem_type)
+        ) {
+          result_type = elem_type;
+        }
+      }
+    }
+
+    // coerce each expression to the inferred type
+    for (size_t i = 0; i < output.size(); ++i) {
+      Flex<Expression> &elem = output[i];
+      elem = require_coerce(result_type, move(elem));
+    }
+
+    return result_type;
+  }
+
+  Flex<Expression> build_expr_bracket(NodeId expr_node_id) {
+    const auto &bracket_node = m_module_obj.ast.get_node(expr_node_id).as_BracketExprNode();
+    auto result = emplace_flex<ArrayLiteralExpression>();
+    result->node_id = expr_node_id;
+    auto array_type = emplace_flex<ArrayType>();
+    array_type->element_type = read_expr_list(result->elements, bracket_node.exprs.data());
+    array_type->size = result->elements.size();
+    result->type = array_type;
     return result;
   }
 
@@ -1800,8 +1939,43 @@ public:
       return evaluate_type_expr_indexing(type_expr_node.as_IndexingExprNode());
     case NodeType::DerefExprNode:
       return evaluate_type_expr_deref(type_expr_node.as_DerefExprNode());
+    case NodeType::BracketExprNode:
+      return evaluate_type_expr_bracket(type_expr_node.as_BracketExprNode());
     default:
       raise_error_at_node_id(type_expr_node_id, "not implemented (unknown type expr)");
+    }
+  }
+
+  Flex<Type> evaluate_type_expr_bracket(const BracketExprNode &bracket_node) {
+    if (bracket_node.exprs.size() == 1) {
+      auto element_type = evaluate_type_expr(bracket_node.exprs[0]);
+      auto result = emplace_flex<SliceType>();
+      result->element_type = element_type;
+      return result;
+    } else if (bracket_node.exprs.size() == 2) {
+      auto element_type = evaluate_type_expr(bracket_node.exprs[0]);
+      auto length_expr = build_expression(bracket_node.exprs[1]);
+      if (length_expr->type->kind != TypeKind::ConstInteger) {
+        String
+            error_message = "Expected a constant integer length, but got an expression of type '";
+        length_expr->type->serialize().to_string(error_message);
+        error_message.append('\'');
+        raise_error_at_node_id(bracket_node.exprs[1], move(error_message));
+      }
+      const Integer &length_value = static_cast<const ConstIntegerType &>(*length_expr->type).value;
+      if (length_value < 0 || length_value > UINT64_MAX) {
+        String error_message = "Array type length must be a non-negative integer less than ";
+        Integer(UINT64_MAX).to_string(error_message);
+        raise_error_at_node_id(bracket_node.exprs[1], move(error_message));
+      }
+      auto result = emplace_flex<ArrayType>();
+      result->element_type = element_type;
+      result->size = length_value.to_uint32();
+      return result;
+    } else {
+      raise_error_at_node_id(
+          m_binding_currently_analyzing.value()->decl, "Invalid type expression"
+      );
     }
   }
 
@@ -1880,6 +2054,12 @@ public:
 
   Flex<Type> evaluate_type_expr_ref(const RefExprNode &ref_expr_node) {
     auto referent_type = evaluate_type_expr(ref_expr_node.expr);
+    if (referent_type->kind == TypeKind::Builtin &&
+        static_cast<const BuiltinType &>(*referent_type).builtin_kind == BuiltinKind::Str) {
+      if (ref_expr_node.is_const || ref_expr_node.is_move) {
+        raise_error_at_node_id(ref_expr_node.expr, "Invalid type expression (required: `&str`)");
+      }
+    }
     auto result = emplace_flex<ReferenceType>();
     result->referent = referent_type;
     result->is_const = ref_expr_node.is_const;

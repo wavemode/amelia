@@ -366,4 +366,33 @@ Serialize PointerType::serialize() const {
   return Serialize::literal(move(repr));
 }
 
+Serialize SliceType::serialize() const {
+  String repr;
+  repr.append("[");
+  element_type->serialize().to_string(repr);
+  repr.append("]");
+  return Serialize::literal(move(repr));
+}
+
+Serialize ArrayType::serialize() const {
+  String repr;
+  repr.append("[");
+  element_type->serialize().to_string(repr);
+  repr.append(", ");
+  Integer(size).to_string(repr);
+  repr.append("]");
+  return Serialize::literal(move(repr));
+}
+
+Serialize ArrayLiteralExpression::serialize() const {
+  Serialize result;
+  result.set_object_name("ArrayLiteralExpression");
+  Serialize elements_ser;
+  for (const auto &element : elements) {
+    elements_ser.add_list_item(element->serialize());
+  }
+  result.add_object_field("elements", move(elements_ser));
+  return result;
+}
+
 } // namespace amelia

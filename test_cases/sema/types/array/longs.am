@@ -1,0 +1,48 @@
+const x : [long, 3] = y
+const y = [2, 3, 0xFFFFFFFFF]
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="longs",
+      scope=Scope(
+        bindings=[
+          Binding(
+            name="x",
+            type=[long, 3],
+            value=IdentifierExpression(
+              name="y"
+            ),
+            kind=Constant,
+            visibility=Default
+          ),
+          Binding(
+            name="y",
+            type=[long, 3],
+            value=ArrayLiteralExpression(
+              elements=[
+                BuiltinTypeCastExpression(
+                  expr=NumberLiteralExpression(
+                    lit=2
+                  )
+                ),
+                BuiltinTypeCastExpression(
+                  expr=NumberLiteralExpression(
+                    lit=3
+                  )
+                ),
+                NumberLiteralExpression(
+                  lit=0xFFFFFFFFF
+                )
+              ]
+            ),
+            kind=Constant,
+            visibility=Default
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

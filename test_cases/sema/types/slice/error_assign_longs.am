@@ -1,0 +1,10 @@
+let x = [
+  1,
+  3,
+  0xfffffffff,
+]
+let y : &[int] = &x
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot convert expression of type '&[long, 3]' to expected type '&[int]' (at test_cases/sema/types/slice/error_assign_longs.am:6:18)")
+*/

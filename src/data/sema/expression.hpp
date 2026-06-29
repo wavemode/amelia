@@ -69,6 +69,7 @@ enum class ExpressionKind : uint8_t {
   ConstBoolean,
   AddressOf,
   Tuple,
+  ArrayLiteral,
 };
 
 struct Expression {
@@ -114,6 +115,21 @@ struct PointerType : Type {
   PointerType() : Type(TypeKind::Pointer) {}
   Flex<Type> pointee;
   bool is_const;
+
+  Serialize serialize() const override;
+};
+
+struct SliceType : Type {
+  SliceType() : Type(TypeKind::Slice) {}
+  Flex<Type> element_type;
+
+  Serialize serialize() const override;
+};
+
+struct ArrayType : Type {
+  ArrayType() : Type(TypeKind::Array) {}
+  Flex<Type> element_type;
+  uint64_t size;
 
   Serialize serialize() const override;
 };
@@ -295,6 +311,12 @@ struct AddressOfExpression : Expression {
 
 struct TupleExpression : Expression {
   TupleExpression() : Expression(ExpressionKind::Tuple) {}
+  List<Flex<Expression>> elements;
+  Serialize serialize() const override;
+};
+
+struct ArrayLiteralExpression : Expression {
+  ArrayLiteralExpression() : Expression(ExpressionKind::ArrayLiteral) {}
   List<Flex<Expression>> elements;
   Serialize serialize() const override;
 };
