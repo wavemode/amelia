@@ -1,0 +1,6 @@
+const x : bitint[32] = y
+const y : uint = 42
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot convert expression of type 'uint' to expected type 'bitint[32]' (at test_cases/sema/types/builtin/bitint/error_assign_from_int_too_large.am:1:24)")
+*/

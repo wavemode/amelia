@@ -358,13 +358,13 @@ public:
   }
 
   Flex<Type> remove_const(Flex<ConstIntegerType> const_integer_type) {
-    auto result = emplace_flex<BitIntType>();
     auto bit_width = repr_bit_size(*const_integer_type);
     if (bit_width == 32) {
       return Flex<Type>::weak(&INT_TYPE);
     } else if (bit_width == 64) {
       return Flex<Type>::weak(&LONG_TYPE);
     } else {
+      auto result = emplace_flex<BitIntType>();
       result->bit_width = repr_bit_size(*const_integer_type);
       result->is_signed = true;
       return result;
@@ -1692,14 +1692,21 @@ public:
       );
     }
 
-    const auto &index_node = m_module_obj.ast.get_node(indexing_node.indices[0]);
-    if (index_node.type() != NodeType::NumberLiteralNode) {
+    const auto &index_node = m_module_obj.ast.get_node(indexing_node.indices[0]).as_IndexNode();
+    if (index_node.name.has_value()) {
+      raise_error_at_node_id(
+          indexing_node.indices[0], "not implemented (type expr indexing with named index)"
+      );
+    }
+
+    const auto &index_value_node = m_module_obj.ast.get_node(index_node.value);
+    if (index_value_node.type() != NodeType::NumberLiteralNode) {
       raise_error_at_node_id(
           indexing_node.indices[0], "not implemented (type expr indexing with non-number index)"
       );
     }
 
-    auto index_expr = build_expr_number_literal(indexing_node.indices[0]);
+    auto index_expr = build_expr_number_literal(index_node.value);
 
     if (index_expr->type->kind != TypeKind::ConstInteger) {
       String error_message = "Expected a constant integer index, but got an expression of type '";

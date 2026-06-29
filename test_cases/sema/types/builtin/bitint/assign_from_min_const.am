@@ -1,0 +1,39 @@
+const x : bitint[8] = y
+const y = -128
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="assign_from_min_const",
+      scope=Scope(
+        bindings=[
+          Binding(
+            name="x",
+            type=bitint[8],
+            value=BuiltinTypeCastExpression(
+              expr=IdentifierExpression(
+                name="y"
+              )
+            ),
+            kind=Constant,
+            visibility=Default
+          ),
+          Binding(
+            name="y",
+            type=Const[-128],
+            value=UnaryOperationExpression(
+              op_kind=Negate,
+              operand=NumberLiteralExpression(
+                lit=128
+              )
+            ),
+            kind=Constant,
+            visibility=Default
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

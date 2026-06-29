@@ -1,0 +1,6 @@
+const x : ubitint[8] = y
+const y : double = 42
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot convert expression of type 'double' to expected type 'ubitint[8]' (at test_cases/sema/types/builtin/ubitint/error_assign_from_double.am:1:24)")
+*/

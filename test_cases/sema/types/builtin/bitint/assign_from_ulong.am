@@ -1,0 +1,38 @@
+const x : bitint[65] = y
+const y : ulong = 42
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="assign_from_ulong",
+      scope=Scope(
+        bindings=[
+          Binding(
+            name="x",
+            type=bitint[65],
+            value=BuiltinTypeCastExpression(
+              expr=IdentifierExpression(
+                name="y"
+              )
+            ),
+            kind=Constant,
+            visibility=Default
+          ),
+          Binding(
+            name="y",
+            type=ulong,
+            value=BuiltinTypeCastExpression(
+              expr=NumberLiteralExpression(
+                lit=42
+              )
+            ),
+            kind=Constant,
+            visibility=Default
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

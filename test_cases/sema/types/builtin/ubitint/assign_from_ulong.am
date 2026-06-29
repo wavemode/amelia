@@ -1,0 +1,36 @@
+const x : ubitint[64] = y
+const y : ulong = 42
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="assign_from_ulong",
+      scope=Scope(
+        bindings=[
+          Binding(
+            name="x",
+            type=ubitint[64],
+            value=IdentifierExpression(
+              name="y"
+            ),
+            kind=Constant,
+            visibility=Default
+          ),
+          Binding(
+            name="y",
+            type=ulong,
+            value=BuiltinTypeCastExpression(
+              expr=NumberLiteralExpression(
+                lit=42
+              )
+            ),
+            kind=Constant,
+            visibility=Default
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

@@ -1,0 +1,36 @@
+const x : ubitint[32] = y
+const y : uint = 42
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="assign_from_uint",
+      scope=Scope(
+        bindings=[
+          Binding(
+            name="x",
+            type=ubitint[32],
+            value=IdentifierExpression(
+              name="y"
+            ),
+            kind=Constant,
+            visibility=Default
+          ),
+          Binding(
+            name="y",
+            type=uint,
+            value=BuiltinTypeCastExpression(
+              expr=NumberLiteralExpression(
+                lit=42
+              )
+            ),
+            kind=Constant,
+            visibility=Default
+          )
+        ]
+      )
+    )
+  ]
+)
+*/
