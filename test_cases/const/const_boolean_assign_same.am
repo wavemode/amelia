@@ -1,16 +1,16 @@
-const x : bool = y
-const y = false
+const x : const true = y
+const y = true
 
 /* EXPECTED_OUTPUT:
 SemaResult(
   modules=[
     Module(
-      name="assign_from_const_false",
+      name="const_boolean_assign_same",
       scope=Scope(
         bindings=[
           Binding(
             name="x",
-            type=bool,
+            type=Const[true],
             value=IdentifierExpression(
               name="y"
             ),
@@ -19,9 +19,9 @@ SemaResult(
           ),
           Binding(
             name="y",
-            type=Const[false],
+            type=Const[true],
             value=BooleanLiteralExpression(
-              value=false
+              value=true
             ),
             kind=Constant,
             visibility=Default

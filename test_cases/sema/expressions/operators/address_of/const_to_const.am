@@ -19,7 +19,7 @@ SemaResult(
           ),
           Binding(
             name="y",
-            type=&const Const[5],
+            type=&const int,
             value=AddressOfExpression(
               operand=IdentifierExpression(
                 name="x"

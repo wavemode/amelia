@@ -2,5 +2,5 @@ const x : long = y
 const y = -9223372036854775808.0
 
 /* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'Const[-9223372036854775808/1]' to expected type 'long' (at test_cases/sema/types/builtin/long/error_assign_from_min_const_frac.am:1:18)")
+ERROR("Cannot convert expression of type 'Const[-9223372036854775808.0]' to expected type 'long' (at test_cases/sema/types/builtin/long/error_assign_from_min_const_frac.am:1:18)")
 */

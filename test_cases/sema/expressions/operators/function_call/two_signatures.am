@@ -69,7 +69,7 @@ SemaResult(
           ),
           Binding(
             name="z",
-            type=Const[21/2],
+            type=Const[10.5],
             value=NumberLiteralExpression(
               lit=10.5
             ),

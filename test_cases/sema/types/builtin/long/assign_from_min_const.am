@@ -1,5 +1,4 @@
-const x : long = y
-const y = -9223372036854775808
+const x : long = -9223372036854775808
 
 /* EXPECTED_OUTPUT:
 SemaResult(
@@ -12,20 +11,11 @@ SemaResult(
             name="x",
             type=long,
             value=BuiltinTypeCastExpression(
-              expr=IdentifierExpression(
-                name="y"
-              )
-            ),
-            kind=Constant,
-            visibility=Default
-          ),
-          Binding(
-            name="y",
-            type=Const[-9223372036854775808],
-            value=UnaryOperationExpression(
-              op_kind=Negate,
-              operand=NumberLiteralExpression(
-                lit=9223372036854775808
+              expr=UnaryOperationExpression(
+                op_kind=Negate,
+                operand=NumberLiteralExpression(
+                  lit=9223372036854775808
+                )
               )
             ),
             kind=Constant,

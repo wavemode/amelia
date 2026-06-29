@@ -64,6 +64,14 @@ public:
     return Flex<T>(m_obj, nullptr);
   }
 
+  template <typename U> Flex<U> derive(U &obj) const noexcept {
+    return Flex<U>(&obj, m_ref_count);
+  }
+
+  template <typename U> Flex<U> derive(U *obj) const noexcept {
+    return Flex<U>(obj, m_ref_count);
+  }
+
   Flex<T> &operator=(const Flex<T> &other) noexcept {
     if (this != &other) {
       release();
@@ -134,10 +142,6 @@ public:
 
   operator const T &() const noexcept {
     return *m_obj;
-  }
-
-  template <typename U> explicit operator Flex<U>() noexcept {
-    return Flex<U>(static_cast<U *>(m_obj), m_ref_count);
   }
 
 private:

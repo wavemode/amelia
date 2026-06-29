@@ -1,13 +1,13 @@
 fun f() {
-  return 6
-  return 5.0
+  return 54832110478547890578905743890572389045782903457897328493728943278942378942378098952347895
+  return 10
 }
 
 /* EXPECTED_OUTPUT:
 SemaResult(
   modules=[
     Module(
-      name="int_then_double_return_diff_value",
+      name="large_then_small_return",
       scope=Scope(
         bindings=[
           Binding(
@@ -15,7 +15,7 @@ SemaResult(
             type=FunctionType(
               signatures=[
                 Signature(
-                  return_type=double
+                  return_type=bitint[512]
                 )
               ]
             ),
@@ -23,13 +23,13 @@ SemaResult(
               exprs=[
                 ReturnExpression(
                   value=NumberLiteralExpression(
-                    lit=6
+                    lit=54832110478547890578905743890572389045782903457897328493728943278942378942378098952347895
                   )
                 ),
                 ReturnExpression(
                   value=BuiltinTypeCastExpression(
                     expr=NumberLiteralExpression(
-                      lit=5.0
+                      lit=10
                     )
                   )
                 )

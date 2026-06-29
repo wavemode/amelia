@@ -12,7 +12,6 @@
 namespace amelia {
 
 enum class TypeKind : uint8_t {
-  Inferred,
   Alias,
   Reference,
   Struct,
@@ -45,10 +44,6 @@ struct Type {
   TypeKind kind;
 
   virtual Serialize serialize() const = 0;
-  virtual bool unify(Type &other);
-  virtual bool builtin_cast(Type &other);
-  virtual Type &resolve();
-  virtual bool is_trivial();
   virtual ~Type() = default;
 
 protected:
@@ -87,24 +82,11 @@ protected:
 
 ////////// Type variants //////////
 
-struct InferredType : Type {
-  InferredType() : Type(TypeKind::Inferred) {}
-  Flex<Type> target;
-  NodeId inferred_at;
-
-  Serialize serialize() const override;
-  bool unify(Type &other) override;
-  bool builtin_cast(Type &other) override;
-  Type &resolve() override;
-};
-
 struct BuiltinType : Type {
   BuiltinType() : Type(TypeKind::Builtin) {}
   BuiltinKind builtin_kind;
 
   Serialize serialize() const override;
-  bool unify(Type &other) override;
-  bool builtin_cast(Type &other) override;
 };
 
 struct AliasType : Type {
@@ -114,9 +96,6 @@ struct AliasType : Type {
   Flex<Type> target;
 
   Serialize serialize() const override;
-  bool unify(Type &other) override;
-  bool builtin_cast(Type &other) override;
-  Type &resolve() override;
 };
 
 struct ReferenceType : Type {
@@ -126,8 +105,6 @@ struct ReferenceType : Type {
   bool is_move;
 
   Serialize serialize() const override;
-  bool unify(Type &other) override;
-  bool builtin_cast(Type &other) override;
 };
 
 struct ConstIntegerType : Type {
@@ -136,8 +113,6 @@ struct ConstIntegerType : Type {
   Integer value;
 
   Serialize serialize() const override;
-  bool unify(Type &other) override;
-  bool builtin_cast(Type &other) override;
 };
 
 struct ConstRationalType : Type {
@@ -146,8 +121,6 @@ struct ConstRationalType : Type {
   Rational value;
 
   Serialize serialize() const override;
-  bool unify(Type &other) override;
-  bool builtin_cast(Type &other) override;
 };
 
 struct ConstBooleanType : Type {
@@ -156,8 +129,6 @@ struct ConstBooleanType : Type {
   bool value;
 
   Serialize serialize() const override;
-  bool unify(Type &other) override;
-  bool builtin_cast(Type &other) override;
 };
 
 struct FunctionType : Type {
@@ -191,8 +162,14 @@ struct TupleType : Type {
   List<Flex<Type>> element_types;
 
   Serialize serialize() const override;
-  bool unify(Type &other) override;
-  bool builtin_cast(Type &other) override;
+};
+
+struct BitIntType : Type {
+  BitIntType() : Type(TypeKind::BitInt) {}
+  uint32_t bit_width;
+  bool is_signed;
+
+  Serialize serialize() const override;
 };
 
 ////////// Expression variants //////////

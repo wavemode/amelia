@@ -10,7 +10,7 @@ SemaResult(
         bindings=[
           Binding(
             name="x",
-            type=Const[5/1],
+            type=Const[5.0],
             value=IdentifierExpression(
               name="y"
             ),
@@ -19,7 +19,7 @@ SemaResult(
           ),
           Binding(
             name="y",
-            type=Const[5/1],
+            type=Const[5.0],
             value=NumberLiteralExpression(
               lit=5.0
             ),

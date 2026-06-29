@@ -58,12 +58,6 @@ Serialize serialize_builtin_kind(BuiltinKind kind) {
   case BuiltinKind::Unknown:
     result.append("unknown");
     break;
-  case BuiltinKind::Integer:
-    result.append("Integer");
-    break;
-  case BuiltinKind::Rational:
-    result.append("Rational");
-    break;
   }
   return Serialize::literal(move(result));
 } // namespace amelia

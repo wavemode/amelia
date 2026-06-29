@@ -1,5 +1,4 @@
-const x : ubyte = y
-const y = 255
+const x : ubyte = 255
 
 /* EXPECTED_OUTPUT:
 SemaResult(
@@ -12,18 +11,9 @@ SemaResult(
             name="x",
             type=ubyte,
             value=BuiltinTypeCastExpression(
-              expr=IdentifierExpression(
-                name="y"
+              expr=NumberLiteralExpression(
+                lit=255
               )
-            ),
-            kind=Constant,
-            visibility=Default
-          ),
-          Binding(
-            name="y",
-            type=Const[255],
-            value=NumberLiteralExpression(
-              lit=255
             ),
             kind=Constant,
             visibility=Default

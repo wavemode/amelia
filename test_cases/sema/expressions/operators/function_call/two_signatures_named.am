@@ -27,10 +27,8 @@ SemaResult(
                 return_type=double
               ),
               arguments=[
-                BuiltinTypeCastExpression(
-                  expr=IdentifierExpression(
-                    name="z"
-                  )
+                IdentifierExpression(
+                  name="z"
                 )
               ]
             ),
@@ -69,7 +67,7 @@ SemaResult(
           ),
           Binding(
             name="z",
-            type=Const[10/1],
+            type=Const[10.0],
             value=NumberLiteralExpression(
               lit=10.0
             ),

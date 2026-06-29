@@ -11,10 +11,8 @@ SemaResult(
           Binding(
             name="x",
             type=bool,
-            value=BuiltinTypeCastExpression(
-              expr=IdentifierExpression(
-                name="y"
-              )
+            value=IdentifierExpression(
+              name="y"
             ),
             kind=Constant,
             visibility=Default

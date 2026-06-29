@@ -22,8 +22,8 @@
             "preLaunchTask": "make build-test",
             "env": {
                 // "AMELIA_UPDATE_TEST_CASES": "1",
-                "AMELIA_TEST_CASE_FILTER":
-                  "test_cases/sema/types/tuple/assignable_const_int.am"
+                // "AMELIA_TEST_CASE_FILTER":
+                //   "test_cases/sema/declarations/fun/top_level/error_int_then_double_return_diff_value.am"
                 }
         }
     ]

@@ -21,7 +21,7 @@ SemaResult(
           ),
           Binding(
             name="y",
-            type=Const[-3689348814741910323036893488147419103230368934881474191032303689348814741910323036893/2],
+            type=Const[-1844674407370955161518446744073709551615184467440737095516151844674407370955161518446.5],
             value=UnaryOperationExpression(
               op_kind=Negate,
               operand=NumberLiteralExpression(

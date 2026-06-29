@@ -23,10 +23,8 @@ SemaResult(
             value=SequenceExpression(
               exprs=[
                 ReturnExpression(
-                  value=BuiltinTypeCastExpression(
-                    expr=IdentifierExpression(
-                      name="x"
-                    )
+                  value=IdentifierExpression(
+                    name="x"
                   )
                 )
               ]

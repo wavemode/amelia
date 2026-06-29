@@ -1,5 +1,4 @@
-const x : ushort = y
-const y = 0
+const x : ushort = 0
 
 /* EXPECTED_OUTPUT:
 SemaResult(
@@ -12,18 +11,9 @@ SemaResult(
             name="x",
             type=ushort,
             value=BuiltinTypeCastExpression(
-              expr=IdentifierExpression(
-                name="y"
+              expr=NumberLiteralExpression(
+                lit=0
               )
-            ),
-            kind=Constant,
-            visibility=Default
-          ),
-          Binding(
-            name="y",
-            type=Const[0],
-            value=NumberLiteralExpression(
-              lit=0
             ),
             kind=Constant,
             visibility=Default

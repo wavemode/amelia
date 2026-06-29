@@ -240,6 +240,7 @@ double Integer::to_double() const {
   return static_cast<double>(*static_cast<cpp_int *>(m_value));
 }
 
+// TODO: huge number abbreviation
 void Integer::to_string(AbstractString &output) const {
   output.append(Text::from(static_cast<cpp_int *>(m_value)->str().c_str()));
 }

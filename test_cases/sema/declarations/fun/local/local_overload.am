@@ -14,7 +14,7 @@ SemaResult(
         bindings=[
           Binding(
             name="x",
-            type=Const[10],
+            type=int,
             value=SequenceExpression(
               exprs=[
                 ValueBindingExpression(
@@ -22,7 +22,7 @@ SemaResult(
                   binding_type=FunctionType(
                     signatures=[
                       Signature(
-                        return_type=Const[10]
+                        return_type=int
                       ),
                       Signature(
                         parameters=[
@@ -45,7 +45,7 @@ SemaResult(
                           name="f"
                         ),
                         signature=Signature(
-                          return_type=Const[10]
+                          return_type=int
                         ),
                         arguments=
                       )

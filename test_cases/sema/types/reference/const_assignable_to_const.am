@@ -12,10 +12,8 @@ SemaResult(
           Binding(
             name="x",
             type=int,
-            value=BuiltinTypeCastExpression(
-              expr=NumberLiteralExpression(
-                lit=5
-              )
+            value=NumberLiteralExpression(
+              lit=5
             ),
             kind=Constant,
             visibility=Default

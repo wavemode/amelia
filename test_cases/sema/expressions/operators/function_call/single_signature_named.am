@@ -26,10 +26,8 @@ SemaResult(
                 return_type=int
               ),
               arguments=[
-                BuiltinTypeCastExpression(
-                  expr=IdentifierExpression(
-                    name="z"
-                  )
+                IdentifierExpression(
+                  name="z"
                 )
               ]
             ),

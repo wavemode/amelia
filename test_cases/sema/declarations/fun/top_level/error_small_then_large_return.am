@@ -4,5 +4,5 @@ fun f() {
 }
 
 /* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'Const[54832110478547890578905743890572389045782903457897328493728943278942378942378098952347895]' to expected type 'int' (at test_cases/sema/declarations/fun/top_level/error_small_then_large_return.am:3:10)")
+ERROR("Cannot convert expression of type 'Const[54832110478547890578905743890572389045782903457897328493728943278942378942378098952347895]' to expected return type 'int' (at test_cases/sema/declarations/fun/top_level/error_small_then_large_return.am:3:10)")
 */

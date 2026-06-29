@@ -22,10 +22,8 @@ SemaResult(
                   Parameter(
                     name="y1",
                     type=int,
-                    default_value=BuiltinTypeCastExpression(
-                      expr=NumberLiteralExpression(
-                        lit=5
-                      )
+                    default_value=NumberLiteralExpression(
+                      lit=5
                     )
                   ),
                   Parameter(
@@ -69,10 +67,8 @@ SemaResult(
                     Parameter(
                       name="y1",
                       type=int,
-                      default_value=BuiltinTypeCastExpression(
-                        expr=NumberLiteralExpression(
-                          lit=5
-                        )
+                      default_value=NumberLiteralExpression(
+                        lit=5
                       )
                     ),
                     Parameter(

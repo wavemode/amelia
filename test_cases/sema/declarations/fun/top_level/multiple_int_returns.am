@@ -27,10 +27,8 @@ SemaResult(
                   )
                 ),
                 ReturnExpression(
-                  value=BuiltinTypeCastExpression(
-                    expr=NumberLiteralExpression(
-                      lit=10
-                    )
+                  value=NumberLiteralExpression(
+                    lit=10
                   )
                 )
               ]

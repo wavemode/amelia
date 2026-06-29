@@ -14,7 +14,7 @@ SemaResult(
             type=FunctionType(
               signatures=[
                 Signature(
-                  return_type=Const[5/1]
+                  return_type=double
                 )
               ]
             ),

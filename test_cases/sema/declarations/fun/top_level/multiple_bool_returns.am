@@ -27,10 +27,8 @@ SemaResult(
                   )
                 ),
                 ReturnExpression(
-                  value=BuiltinTypeCastExpression(
-                    expr=BooleanLiteralExpression(
-                      value=false
-                    )
+                  value=BooleanLiteralExpression(
+                    value=false
                   )
                 )
               ]

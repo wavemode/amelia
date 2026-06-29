@@ -1,0 +1,8 @@
+fun f() {
+  return 5
+  return 5.0
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot convert expression of type 'Const[5.0]' to expected return type 'int' (at test_cases/sema/declarations/fun/top_level/error_int_then_double_return_same_value.am:3:10)")
+*/

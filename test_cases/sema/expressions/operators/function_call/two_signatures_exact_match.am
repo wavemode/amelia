@@ -68,10 +68,8 @@ SemaResult(
           Binding(
             name="z",
             type=int,
-            value=BuiltinTypeCastExpression(
-              expr=NumberLiteralExpression(
-                lit=10
-              )
+            value=NumberLiteralExpression(
+              lit=10
             ),
             kind=Constant,
             visibility=Default

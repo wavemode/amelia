@@ -27,10 +27,8 @@ SemaResult(
           Binding(
             name="y",
             type=(int, int),
-            value=BuiltinTypeCastExpression(
-              expr=IdentifierExpression(
-                name="x"
-              )
+            value=IdentifierExpression(
+              name="x"
             ),
             kind=Variable,
             visibility=Default

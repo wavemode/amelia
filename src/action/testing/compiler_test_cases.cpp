@@ -130,6 +130,7 @@ CompilerTestExecutionOutcome execute_collection(
       continue;
     }
     ++num_executed;
+    // TODO: need more robust logic for deciding that something is supposed to error
     bool should_error = TextUtils::contains(test_case.filename, "error_");
     bool did_error = false;
     String actual_output;
@@ -140,12 +141,12 @@ CompilerTestExecutionOutcome execute_collection(
         printer.println(test_case.filename);
       }
     } catch (const SourceLocationError &e) {
+      did_error = true;
       if (!should_error) {
         printer.print("Test case threw an unexpected exception: ");
         printer.print(" (error message: \"");
         printer.print(Text::from(e.what()));
         printer.println("\")");
-        did_error = true;
       }
       actual_output.append("ERROR(\"");
       actual_output.append(Text::from(e.what()));

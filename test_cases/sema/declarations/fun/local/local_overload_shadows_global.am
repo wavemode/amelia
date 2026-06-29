@@ -20,7 +20,7 @@ SemaResult(
             type=FunctionType(
               signatures=[
                 Signature(
-                  return_type=Const[5]
+                  return_type=int
                 ),
                 Signature(
                   parameters=[
@@ -49,7 +49,7 @@ SemaResult(
                   binding_type=FunctionType(
                     signatures=[
                       Signature(
-                        return_type=Const[10]
+                        return_type=int
                       ),
                       Signature(
                         parameters=[
@@ -81,10 +81,8 @@ SemaResult(
                           return_type=int
                         ),
                         arguments=[
-                          BuiltinTypeCastExpression(
-                            expr=NumberLiteralExpression(
-                              lit=5
-                            )
+                          NumberLiteralExpression(
+                            lit=5
                           )
                         ]
                       )
