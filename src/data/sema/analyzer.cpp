@@ -97,84 +97,6 @@ public:
     return true;
   }
 
-  bool is_immutable_type(Type &type) {
-    switch (type.kind) {
-    case TypeKind::Alias:
-      return is_immutable_type(static_cast<AliasType &>(type).target);
-    case TypeKind::Reference:
-      return false;
-    case TypeKind::Struct:
-      throw RuntimeError("not implemented (is_immutable_type(Struct))");
-    case TypeKind::Tuple:
-      return false;
-    case TypeKind::Array:
-      return false;
-    case TypeKind::TypeFn:
-      throw RuntimeError("not implemented (is_immutable_type(TypeFn))");
-    case TypeKind::Apply:
-      throw RuntimeError("not implemented (is_immutable_type(Apply))");
-    case TypeKind::Builtin:
-      return is_immutable_builtin_type(static_cast<BuiltinType &>(type));
-    case TypeKind::BitInt:
-      return false;
-    case TypeKind::Pointer:
-      return false;
-    case TypeKind::Slice:
-      return false;
-    case TypeKind::Impl:
-      throw RuntimeError("not implemented (is_immutable_type(Impl))");
-    case TypeKind::ConstInteger:
-      return true;
-    case TypeKind::ConstRational:
-      return true;
-    case TypeKind::ConstBoolean:
-      return true;
-    case TypeKind::ConstCharacter:
-      return true;
-    case TypeKind::ConstString:
-      return true;
-    case TypeKind::Class:
-      throw RuntimeError("not implemented (is_immutable_type(Class))");
-    case TypeKind::Union:
-      throw RuntimeError("not implemented (is_immutable_type(Union))");
-    case TypeKind::Concept:
-      throw RuntimeError("not implemented (is_immutable_type(Concept))");
-    case TypeKind::Function:
-      throw RuntimeError("not implemented (is_immutable_type(Function))");
-    case TypeKind::FunctionPointer:
-      throw RuntimeError("not implemented (is_immutable_type(FunctionPointer))");
-    case TypeKind::Closure:
-      throw RuntimeError("not implemented (is_immutable_type(Closure))");
-    case TypeKind::Variable:
-      throw RuntimeError("not implemented (is_immutable_type(Variable))");
-    }
-  }
-
-  bool is_immutable_builtin_type(BuiltinType &type) {
-    switch (type.builtin_kind) {
-    case BuiltinKind::Byte:
-    case BuiltinKind::UByte:
-    case BuiltinKind::Short:
-    case BuiltinKind::UShort:
-    case BuiltinKind::Int:
-    case BuiltinKind::UInt:
-    case BuiltinKind::Long:
-    case BuiltinKind::ULong:
-    case BuiltinKind::USize:
-    case BuiltinKind::Float:
-    case BuiltinKind::Double:
-    case BuiltinKind::Bool:
-    case BuiltinKind::Char:
-      return false;
-    case BuiltinKind::Str:
-    case BuiltinKind::Null:
-    case BuiltinKind::Never:
-      return true;
-    case BuiltinKind::Unknown:
-      return false;
-    }
-  }
-
   bool is_unknown_type(Type &type) {
     return type.kind == TypeKind::Builtin &&
            static_cast<const BuiltinType &>(type).builtin_kind == BuiltinKind::Unknown;
@@ -844,9 +766,8 @@ public:
     if (assignment_type->kind == TypeKind::Reference) {
       auto &expr_ref_type = static_cast<ReferenceType &>(*assignment_type);
       if (
-        // If referent is not immutable and target is not const, assignment must also not be const
+        // If target is not const, assignment must also not be const
         (
-          is_immutable_type(target_type->referent) ||
           target_type->is_const ||
           !expr_ref_type.is_const
         ) &&
