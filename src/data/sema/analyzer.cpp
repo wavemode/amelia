@@ -807,20 +807,9 @@ public:
     return None();
   }
 
-  Option<Flex<Expression>> coerce(
-      Flex<TupleType> target_type, Flex<Type> assignment_type, Flex<Expression> expr
-  ) {
-    for (size_t i = 0; i < target_type->element_types.size(); ++i) {
-      if (!coerce(
-               target_type->element_types[i],
-               static_cast<TupleType &>(*assignment_type).element_types[i],
-               expr
-          )
-               .has_value()) {
-        return None();
-      }
-    }
-    return builtin_type_cast(*target_type, move(expr));
+  Option<Flex<Expression>> coerce(Flex<TupleType>, Flex<Type>, Flex<Expression>) {
+    // TODO: compatible tuples
+    return None();
   }
 
   Option<Flex<Expression>> coerce(
