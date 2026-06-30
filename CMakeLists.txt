@@ -1,6 +1,9 @@
-cmake_minimum_required(VERSION 3.23)
+cmake_minimum_required(VERSION 3.29)
 
 project(amelia)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_CXX_FLAGS_DEBUG "-O0")
 set(CMAKE_C_FLAGS_DEBUG "-O0")
@@ -9,10 +12,6 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     message(STATUS "Enabling Sanitizers: Address and Undefined Behavior")
     add_compile_options("-fsanitize=address,undefined" "-fno-omit-frame-pointer" "-g" "-gsplit-dwarf")
     add_link_options("-fsanitize=address,undefined" "-gsplit-dwarf")
-endif()
-
-if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    add_compile_options("-ftime-trace")
 endif()
 
 file(GLOB_RECURSE SOURCES_SYSTEM "${CMAKE_CURRENT_SOURCE_DIR}/src/system/*.cpp")

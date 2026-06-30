@@ -91,11 +91,13 @@ Integer::Integer(Text text_value) : m_value(nullptr) {
   if (text_value.size() > 0) {
     if (TextUtils::starts_with(text_value, "0b") || TextUtils::starts_with(text_value, "0B")) {
       result = binary_string_to_integer(TextUtils::tail_bytes(text_value, 2));
-    } else if (TextUtils::starts_with(text_value, "0o") ||
-               TextUtils::starts_with(text_value, "0O")) {
+    } else if (
+        TextUtils::starts_with(text_value, "0o") || TextUtils::starts_with(text_value, "0O")
+    ) {
       result = octal_string_to_integer(TextUtils::tail_bytes(text_value, 2));
-    } else if (TextUtils::starts_with(text_value, "0x") ||
-               TextUtils::starts_with(text_value, "0X")) {
+    } else if (
+        TextUtils::starts_with(text_value, "0x") || TextUtils::starts_with(text_value, "0X")
+    ) {
       result = hexadecimal_string_to_integer(TextUtils::tail_bytes(text_value, 2));
     } else if (TextUtils::starts_with(text_value, "0") && text_value.size() > 1) {
       result = octal_string_to_integer(TextUtils::tail_bytes(text_value, 1));

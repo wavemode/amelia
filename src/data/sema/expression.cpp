@@ -2,6 +2,7 @@
 
 #include "expression.hpp"
 
+#include "data/sema/binding.hpp"
 #include "data/source/char_literal.hpp"
 
 namespace amelia {
@@ -248,16 +249,8 @@ Serialize SequenceExpression::serialize() const {
 Serialize ValueBindingExpression::serialize() const {
   Serialize result;
   result.set_object_name("ValueBindingExpression");
-  result.add_object_field("name", Serialize::quoted(name));
-  if (binding_type.has_value()) {
-    result.add_object_field("binding_type", binding_type.value()->serialize());
-  }
-  if (binding_value.has_value()) {
-    result.add_object_field("binding_value", binding_value.value()->serialize());
-  }
-  if (body.has_value()) {
-    result.add_object_field("body", body.value()->serialize());
-  }
+  result.add_object_field("binding", binding->serialize());
+  result.add_object_field("body", body->serialize());
   return result;
 }
 
@@ -392,6 +385,15 @@ Serialize ArrayLiteralExpression::serialize() const {
     elements_ser.add_list_item(element->serialize());
   }
   result.add_object_field("elements", move(elements_ser));
+  return result;
+}
+
+Serialize TypeBindingExpression::serialize() const {
+  Serialize result;
+  result.set_object_name("TypeBindingExpression");
+  result.add_object_field("name", Serialize::quoted(name));
+  result.add_object_field("binding", binding->serialize());
+  result.add_object_field("body", body->serialize());
   return result;
 }
 

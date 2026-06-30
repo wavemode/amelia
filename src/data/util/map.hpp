@@ -202,8 +202,8 @@ template <typename K, typename V> struct hash_map_table {
           // distance-from-ideal of every other element in the table. If we've currently searched
           // farther than that, then our key is not in the table.
           size_t table_elem_ideal_position = table_elem_hash % table_size;
-          size_t table_elem_distance_from_ideal = (table_size - (table_elem_ideal_position - index)
-                                                  ) %
+          size_t table_elem_distance_from_ideal = (table_size -
+                                                   (table_elem_ideal_position - index)) %
                                                   table_size;
           if (probe_length > table_elem_distance_from_ideal) {
             return -1;

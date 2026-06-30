@@ -16,15 +16,17 @@ SemaResult(
             value=SequenceExpression(
               exprs=[
                 ValueBindingExpression(
-                  name="f",
-                  binding_type=FunctionType(
-                    signatures=[
-                      Signature(
-                        return_type=null
-                      )
-                    ]
+                  binding=ValueBinding(
+                    name="f",
+                    type=FunctionType(
+                      signatures=[
+                        Signature(
+                          return_type=null
+                        )
+                      ]
+                    ),
+                    value=SequenceExpression()
                   ),
-                  binding_value=SequenceExpression(),
                   body=SequenceExpression()
                 )
               ]

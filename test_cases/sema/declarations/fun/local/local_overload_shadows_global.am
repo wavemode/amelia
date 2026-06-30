@@ -43,25 +43,27 @@ SemaResult(
             value=SequenceExpression(
               exprs=[
                 ValueBindingExpression(
-                  name="f",
-                  binding_type=FunctionType(
-                    signatures=[
-                      Signature(
-                        return_type=int
-                      ),
-                      Signature(
-                        parameters=[
-                          Parameter(
-                            name="x",
-                            type=int
-                          )
-                        ],
-                        return_type=int
-                      )
-                    ]
-                  ),
-                  binding_value=IdentifierExpression(
-                    name="x"
+                  binding=ValueBinding(
+                    name="f",
+                    type=FunctionType(
+                      signatures=[
+                        Signature(
+                          return_type=int
+                        ),
+                        Signature(
+                          parameters=[
+                            Parameter(
+                              name="x",
+                              type=int
+                            )
+                          ],
+                          return_type=int
+                        )
+                      ]
+                    ),
+                    value=IdentifierExpression(
+                      name="x"
+                    )
                   ),
                   body=SequenceExpression(
                     exprs=[

@@ -152,6 +152,11 @@ public:
            node_type == NodeType::FunctionDeclNode;
   }
 
+  bool is_type_binding_node_type(NodeType node_type) {
+    // TODO
+    return node_type == NodeType::TypeDeclNode;
+  }
+
   Integer max_value_of_type(Type &type) {
     if (type.kind == TypeKind::Builtin) {
       switch (static_cast<const BuiltinType &>(type).builtin_kind) {
@@ -550,8 +555,9 @@ public:
   bool unify(Flex<BuiltinType> target_type, Flex<Type> assignment_type) {
     if (assignment_type->kind == TypeKind::Builtin) {
       return target_type->builtin_kind == static_cast<BuiltinType &>(*assignment_type).builtin_kind;
-    } else if (assignment_type->kind == TypeKind::ConstInteger ||
-               assignment_type->kind == TypeKind::BitInt) {
+    } else if (
+        assignment_type->kind == TypeKind::ConstInteger || assignment_type->kind == TypeKind::BitInt
+    ) {
       return is_integral_type(target_type) && min_value_of_type(target_type) < 0 &&
              repr_bit_size(target_type) == repr_bit_size(assignment_type);
     } else if (assignment_type->kind == TypeKind::ConstRational) {
@@ -766,33 +772,27 @@ public:
     if (assignment_type->kind == TypeKind::Reference) {
       auto &expr_ref_type = static_cast<ReferenceType &>(*assignment_type);
       if (
-        // If target is not const, assignment must also not be const
-        (
-          target_type->is_const ||
-          !expr_ref_type.is_const
-        ) &&
+          // If target is not const, assignment must also not be const
+          (target_type->is_const || !expr_ref_type.is_const) &&
 
-        // If target type is non-trivial, "move" quality of references must be the same
-        (
-          is_trivial_type(target_type->referent) || (
-            target_type->is_move == expr_ref_type.is_move
-          )
-        )
+          // If target type is non-trivial, "move" quality of references must be the same
+          (is_trivial_type(target_type->referent) ||
+           (target_type->is_move == expr_ref_type.is_move))
       ) {
         if (
-          // References refer to the same type
-          // TODO: compatible types
-          unify(target_type->referent, expr_ref_type.referent)
+            // References refer to the same type
+            // TODO: compatible types
+            unify(target_type->referent, expr_ref_type.referent)
         ) {
           return builtin_type_cast(*target_type, move(expr));
         } else if (
-          // Target type refers to a slice and expr type refers to an array of the same type
-          target_type->referent->kind == TypeKind::Slice &&
-          expr_ref_type.referent->kind == TypeKind::Array &&
-          unify(
-            static_cast<SliceType &>(*target_type->referent).element_type,
-            static_cast<ArrayType &>(*expr_ref_type.referent).element_type
-          )
+            // Target type refers to a slice and expr type refers to an array of the same type
+            target_type->referent->kind == TypeKind::Slice &&
+            expr_ref_type.referent->kind == TypeKind::Array &&
+            unify(
+                static_cast<SliceType &>(*target_type->referent).element_type,
+                static_cast<ArrayType &>(*expr_ref_type.referent).element_type
+            )
         ) {
           return builtin_type_cast(*target_type, move(expr));
         }
@@ -895,10 +895,10 @@ public:
     if (assignment_type->kind == TypeKind::Pointer) {
       auto &expr_ptr_type = static_cast<PointerType &>(*assignment_type);
       if (
-        // Pointers point to the same type
-        unify(target_type->pointee, expr_ptr_type.pointee) &&
-        // If assignment is const, target must also be const
-        (target_type->is_const || !expr_ptr_type.is_const)
+          // Pointers point to the same type
+          unify(target_type->pointee, expr_ptr_type.pointee) &&
+          // If assignment is const, target must also be const
+          (target_type->is_const || !expr_ptr_type.is_const)
       ) {
         return builtin_type_cast(*target_type, move(expr));
       }
@@ -1376,6 +1376,9 @@ public:
     case NodeType::ConstDeclNode:
       result = build_expr_value_binding(expr_node_id, ConstSlice<NodeId>());
       break;
+    case NodeType::TypeDeclNode:
+      result = build_expr_type_binding(expr_node_id, ConstSlice<NodeId>());
+      break;
     case NodeType::ReturnStmtNode:
       result = build_expr_return(expr_node_id);
       break;
@@ -1695,8 +1698,9 @@ public:
     auto result = emplace_flex<ReturnExpression>();
     result->node_id = expr_node_id;
     if (return_node.expr.has_value()) {
-      result->value = assign_current_function_return_value(build_expression(return_node.expr.value()
-      ));
+      result->value = assign_current_function_return_value(
+          build_expression(return_node.expr.value())
+      );
     } else {
       Flex<Expression> implied_return_value = Flex<NullLiteralExpression>::emplace();
       implied_return_value->node_id = expr_node_id;
@@ -1753,6 +1757,13 @@ public:
         result->type = expr->type;
         result->exprs.push_back(expr);
         break;
+      } else if (is_type_binding_node_type(expr_node.type())) {
+        auto expr = build_expr_type_binding(
+            stmts[expr_index], SliceUtils::tail(stmts, expr_index + 1)
+        );
+        result->type = expr->type;
+        result->exprs.push_back(expr);
+        break;
       }
 
       auto expr = build_expression(stmts[expr_index]);
@@ -1761,6 +1772,41 @@ public:
         result->type = expr->type;
       }
     }
+    return result;
+  }
+
+  Flex<Expression> build_expr_type_binding(NodeId expr_node_id, ConstSlice<NodeId> stmts) {
+    const Node &node = m_module_obj.ast.get_node(expr_node_id);
+    if (node.type() == NodeType::TypeDeclNode) {
+      return build_expr_type_decl(expr_node_id, stmts);
+    } else {
+      raise_error_at_node_id(
+          expr_node_id, "not implemented (unknown node type in build_expr_type_binding)"
+      );
+    }
+  }
+
+  Flex<Expression> build_expr_type_decl(NodeId expr_node_id, ConstSlice<NodeId> stmts) {
+    const auto &type_decl_node = m_module_obj.ast.get_node(expr_node_id).as_TypeDeclNode();
+    const auto &type_name_node = m_module_obj.ast.get_node(type_decl_node.name).as_IdentifierNode();
+
+    auto binding = emplace_flex<TypeBinding>();
+    binding->decl = expr_node_id;
+    binding->name = type_name_node.name;
+    binding->kind = BindingKind::Type;
+    binding->visibility = DeclarationVisibility::Default;
+    push_binding(binding);
+
+    analyze_binding(binding);
+
+    auto result = emplace_flex<TypeBindingExpression>();
+    result->name = binding->name;
+    result->binding = binding;
+    result->body = build_expr_seq(expr_node_id, stmts);
+    result->type = result->body->type;
+
+    pop_binding();
+
     return result;
   }
 
@@ -1821,11 +1867,9 @@ public:
     analyze_binding(binding);
 
     auto result = emplace_flex<ValueBindingExpression>();
-    result->name = binding->name;
-    result->binding_value = binding->value;
-    result->binding_type = binding->type;
+    result->binding = binding;
     result->body = build_expr_seq(expr_node_id, stmts);
-    result->type = result->body.value()->type;
+    result->type = result->body->type;
 
     while (m_module_obj.scope->active_bindings.size() > prior_bindings_size) {
       pop_binding();
@@ -1874,12 +1918,10 @@ public:
     }
 
     auto result = emplace_flex<ValueBindingExpression>();
-    result->name = binding->name;
-    result->binding_value = binding->value;
-    result->binding_type = binding->type;
+    result->binding = binding;
     push_binding(move(binding));
     result->body = build_expr_seq(expr_node_id, stmts);
-    result->type = result->body.value()->type;
+    result->type = result->body->type;
     pop_binding();
     return result;
   }

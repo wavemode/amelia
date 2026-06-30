@@ -15,10 +15,12 @@ SemaResult(
             value=SequenceExpression(
               exprs=[
                 ValueBindingExpression(
-                  name="y",
-                  binding_type=Const[4],
-                  binding_value=NumberLiteralExpression(
-                    lit=4
+                  binding=ValueBinding(
+                    name="y",
+                    type=Const[4],
+                    value=NumberLiteralExpression(
+                      lit=4
+                    )
                   ),
                   body=SequenceExpression()
                 )

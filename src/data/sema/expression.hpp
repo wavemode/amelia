@@ -41,6 +41,8 @@ enum class TypeKind : uint8_t {
 Serialize serialize_type_kind(TypeKind kind);
 
 struct Expression;
+struct ValueBinding;
+struct TypeBinding;
 
 struct Type {
   TypeKind kind;
@@ -61,8 +63,10 @@ enum class ExpressionKind : uint8_t {
   UnaryOperation,
   BuiltinTypeCast,
   Sequence,
+  TypeBinding,
   ValueBinding,
   Empty,
+  Return,
   FunctionCall,
   ConstInteger,
   ConstRational,
@@ -278,10 +282,16 @@ struct SequenceExpression : Expression {
 struct ValueBindingExpression : Expression {
   ValueBindingExpression() : Expression(ExpressionKind::ValueBinding) {}
   Serialize serialize() const override;
+  Flex<ValueBinding> binding;
+  Flex<Expression> body;
+};
+
+struct TypeBindingExpression : Expression {
+  TypeBindingExpression() : Expression(ExpressionKind::TypeBinding) {}
+  Serialize serialize() const override;
   String name;
-  Option<Flex<Type>> binding_type;
-  Option<Flex<Expression>> binding_value;
-  Option<Flex<Expression>> body;
+  Flex<TypeBinding> binding;
+  Flex<Expression> body;
 };
 
 struct EmptyExpression : Expression {
@@ -290,7 +300,7 @@ struct EmptyExpression : Expression {
 };
 
 struct ReturnExpression : Expression {
-  ReturnExpression() : Expression(ExpressionKind::Empty) {}
+  ReturnExpression() : Expression(ExpressionKind::Return) {}
   Option<Flex<Expression>> value;
   Serialize serialize() const override;
 };
