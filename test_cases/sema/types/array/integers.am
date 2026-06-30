@@ -8,16 +8,14 @@ SemaResult(
       name="integers",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="x",
             type=[int, 3],
             value=IdentifierExpression(
               name="y"
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           ),
-          Binding(
+          ValueBinding(
             name="y",
             type=[int, 3],
             value=ArrayLiteralExpression(
@@ -32,9 +30,7 @@ SemaResult(
                   lit=3
                 )
               ]
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           )
         ]
       )

@@ -7,7 +7,7 @@ SemaResult(
       name="empty_inferred",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="f",
             type=FunctionType(
               signatures=[
@@ -16,9 +16,7 @@ SemaResult(
                 )
               ]
             ),
-            value=SequenceExpression(),
-            kind=Function,
-            visibility=Default
+            value=SequenceExpression()
           )
         ]
       )

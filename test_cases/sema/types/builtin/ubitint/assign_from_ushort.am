@@ -8,25 +8,21 @@ SemaResult(
       name="assign_from_ushort",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="x",
             type=ubitint[16],
             value=IdentifierExpression(
               name="y"
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           ),
-          Binding(
+          ValueBinding(
             name="y",
             type=ushort,
             value=BuiltinTypeCastExpression(
               expr=NumberLiteralExpression(
                 lit=42
               )
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           )
         ]
       )

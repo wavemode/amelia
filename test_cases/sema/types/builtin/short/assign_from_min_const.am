@@ -7,7 +7,7 @@ SemaResult(
       name="assign_from_min_const",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="x",
             type=short,
             value=BuiltinTypeCastExpression(
@@ -17,9 +17,7 @@ SemaResult(
                   lit=32768
                 )
               )
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           )
         ]
       )

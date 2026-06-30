@@ -1,0 +1,41 @@
+type MyLong = long
+
+const x : MyLong = 0x7FFFFFFFFFFFFFFF
+const y : MyLong = -0x8000000000000000
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="long",
+      scope=Scope(
+        bindings=[
+          TypeBinding(
+            name="MyLong",
+            type=MyLong (aka long)
+          ),
+          ValueBinding(
+            name="x",
+            type=MyLong (aka long),
+            value=NumberLiteralExpression(
+              lit=0x7FFFFFFFFFFFFFFF
+            )
+          ),
+          ValueBinding(
+            name="y",
+            type=MyLong (aka long),
+            value=BuiltinTypeCastExpression(
+              expr=UnaryOperationExpression(
+                op_kind=Negate,
+                operand=NumberLiteralExpression(
+                  lit=0x8000000000000000
+                )
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

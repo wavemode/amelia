@@ -9,34 +9,28 @@ SemaResult(
       name="const_assignable_to_const",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="x",
             type=int,
             value=NumberLiteralExpression(
               lit=5
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           ),
-          Binding(
+          ValueBinding(
             name="y",
             type=&const int,
             value=AddressOfExpression(
               operand=IdentifierExpression(
                 name="x"
               )
-            ),
-            kind=Variable,
-            visibility=Default
+            )
           ),
-          Binding(
+          ValueBinding(
             name="z",
             type=&const int,
             value=IdentifierExpression(
               name="y"
-            ),
-            kind=Variable,
-            visibility=Default
+            )
           )
         ]
       )

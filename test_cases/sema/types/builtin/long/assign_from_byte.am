@@ -8,27 +8,23 @@ SemaResult(
       name="assign_from_byte",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="x",
             type=long,
             value=BuiltinTypeCastExpression(
               expr=IdentifierExpression(
                 name="y"
               )
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           ),
-          Binding(
+          ValueBinding(
             name="y",
             type=byte,
             value=BuiltinTypeCastExpression(
               expr=NumberLiteralExpression(
                 lit=42
               )
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           )
         ]
       )

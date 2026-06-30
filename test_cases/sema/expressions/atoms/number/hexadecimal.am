@@ -8,23 +8,19 @@ SemaResult(
       name="hexadecimal",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="x",
             type=Const[16],
             value=NumberLiteralExpression(
               lit=0x10
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           ),
-          Binding(
+          ValueBinding(
             name="y",
             type=Const[16.0625],
             value=NumberLiteralExpression(
               lit=0x10.1
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           )
         ]
       )

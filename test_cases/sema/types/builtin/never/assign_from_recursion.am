@@ -8,7 +8,7 @@ SemaResult(
       name="assign_from_recursion",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="f",
             type=FunctionType(
               signatures=[
@@ -25,11 +25,9 @@ SemaResult(
                 return_type=never
               ),
               arguments=
-            ),
-            kind=Function,
-            visibility=Default
+            )
           ),
-          Binding(
+          ValueBinding(
             name="x",
             type=int,
             value=FunctionCallExpression(
@@ -40,9 +38,7 @@ SemaResult(
                 return_type=never
               ),
               arguments=
-            ),
-            kind=Variable,
-            visibility=Default
+            )
           )
         ]
       )

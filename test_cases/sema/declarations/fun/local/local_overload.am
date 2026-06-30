@@ -12,7 +12,7 @@ SemaResult(
       name="local_overload",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="x",
             type=int,
             value=SequenceExpression(
@@ -53,9 +53,7 @@ SemaResult(
                   )
                 )
               ]
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           )
         ]
       )

@@ -15,7 +15,7 @@ SemaResult(
       name="local_overload_shadows_global",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="f",
             type=FunctionType(
               signatures=[
@@ -35,11 +35,9 @@ SemaResult(
             ),
             value=IdentifierExpression(
               name="x"
-            ),
-            kind=Function,
-            visibility=Default
+            )
           ),
-          Binding(
+          ValueBinding(
             name="x",
             type=int,
             value=SequenceExpression(
@@ -90,9 +88,7 @@ SemaResult(
                   )
                 )
               ]
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           )
         ]
       )

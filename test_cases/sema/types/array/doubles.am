@@ -9,16 +9,14 @@ SemaResult(
       name="doubles",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="x",
             type=[double, 2],
             value=IdentifierExpression(
               name="y"
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           ),
-          Binding(
+          ValueBinding(
             name="y",
             type=[double, 2],
             value=ArrayLiteralExpression(
@@ -32,20 +30,16 @@ SemaResult(
                   lit=4.5
                 )
               ]
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           ),
-          Binding(
+          ValueBinding(
             name="z",
             type=float,
             value=BuiltinTypeCastExpression(
               expr=NumberLiteralExpression(
                 lit=2.5
               )
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           )
         ]
       )

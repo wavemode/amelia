@@ -8,18 +8,16 @@ SemaResult(
       name="assign_from_low_int",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="x",
             type=double,
             value=BuiltinTypeCastExpression(
               expr=IdentifierExpression(
                 name="y"
               )
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           ),
-          Binding(
+          ValueBinding(
             name="y",
             type=Const[-184467440737095516151844674407370955161518446744073709551615184467440737095516152322],
             value=UnaryOperationExpression(
@@ -27,9 +25,7 @@ SemaResult(
               operand=NumberLiteralExpression(
                 lit=184467440737095516151844674407370955161518446744073709551615184467440737095516152322
               )
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           )
         ]
       )

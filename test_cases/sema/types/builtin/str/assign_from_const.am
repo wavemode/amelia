@@ -8,23 +8,17 @@ SemaResult(
       name="assign_from_const",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="x",
             type=&str,
-            value=BuiltinTypeCastExpression(
-              expr=IdentifierExpression(
-                name="y"
-              )
-            ),
-            kind=Variable,
-            visibility=Default
+            value=IdentifierExpression(
+              name="y"
+            )
           ),
-          Binding(
+          ValueBinding(
             name="y",
             type=Const["hello, world!"],
-            value=StringLiteralExpression["hello, world!"],
-            kind=Constant,
-            visibility=Default
+            value=StringLiteralExpression["hello, world!"]
           )
         ]
       )

@@ -11,7 +11,7 @@ SemaResult(
       name="null_inferred",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="f",
             type=FunctionType(
               signatures=[
@@ -26,18 +26,14 @@ SemaResult(
                   name="x"
                 )
               ]
-            ),
-            kind=Function,
-            visibility=Default
+            )
           ),
-          Binding(
+          ValueBinding(
             name="x",
             type=int,
             value=NumberLiteralExpression(
               lit=10
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           )
         ]
       )

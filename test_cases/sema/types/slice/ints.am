@@ -12,7 +12,7 @@ SemaResult(
       name="ints",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="x",
             type=[int, 3],
             value=ArrayLiteralExpression(
@@ -27,11 +27,9 @@ SemaResult(
                   lit=5
                 )
               ]
-            ),
-            kind=Variable,
-            visibility=Default
+            )
           ),
-          Binding(
+          ValueBinding(
             name="y",
             type=&[int],
             value=BuiltinTypeCastExpression(
@@ -40,9 +38,7 @@ SemaResult(
                   name="x"
                 )
               )
-            ),
-            kind=Variable,
-            visibility=Default
+            )
           )
         ]
       )

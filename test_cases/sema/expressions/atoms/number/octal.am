@@ -8,23 +8,19 @@ SemaResult(
       name="octal",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="x",
             type=Const[8],
             value=NumberLiteralExpression(
               lit=0o10
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           ),
-          Binding(
+          ValueBinding(
             name="y",
             type=Const[8.125],
             value=NumberLiteralExpression(
               lit=0o10.1
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           )
         ]
       )

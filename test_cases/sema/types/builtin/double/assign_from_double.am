@@ -8,25 +8,21 @@ SemaResult(
       name="assign_from_double",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="x",
             type=double,
             value=IdentifierExpression(
               name="y"
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           ),
-          Binding(
+          ValueBinding(
             name="y",
             type=double,
             value=BuiltinTypeCastExpression(
               expr=NumberLiteralExpression(
                 lit=42
               )
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           )
         ]
       )

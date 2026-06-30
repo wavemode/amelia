@@ -8,25 +8,21 @@ SemaResult(
       name="assign_from_max_const",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="x",
             type=char,
             value=BuiltinTypeCastExpression(
               expr=IdentifierExpression(
                 name="y"
               )
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           ),
-          Binding(
+          ValueBinding(
             name="y",
             type=Const[1114111],
             value=NumberLiteralExpression(
               lit=0x10FFFF
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           )
         ]
       )

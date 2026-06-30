@@ -10,7 +10,7 @@ SemaResult(
       name="ending_in_semicolon",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="x",
             type=null,
             value=SequenceExpression(
@@ -31,9 +31,7 @@ SemaResult(
                   )
                 )
               ]
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           )
         ]
       )

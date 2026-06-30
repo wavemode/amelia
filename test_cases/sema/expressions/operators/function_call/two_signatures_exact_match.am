@@ -10,7 +10,7 @@ SemaResult(
       name="two_signatures_exact_match",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="x",
             type=int,
             value=FunctionCallExpression(
@@ -31,11 +31,9 @@ SemaResult(
                   name="z"
                 )
               ]
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           ),
-          Binding(
+          ValueBinding(
             name="y",
             type=FunctionType(
               signatures=[
@@ -61,18 +59,14 @@ SemaResult(
             ),
             value=IdentifierExpression(
               name="y"
-            ),
-            kind=Function,
-            visibility=Default
+            )
           ),
-          Binding(
+          ValueBinding(
             name="z",
             type=int,
             value=NumberLiteralExpression(
               lit=10
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           )
         ]
       )

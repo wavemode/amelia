@@ -7,7 +7,7 @@ SemaResult(
       name="two_elems",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="x",
             type=(int, int),
             value=TupleExpression(
@@ -19,9 +19,7 @@ SemaResult(
                   lit=6
                 )
               ]
-            ),
-            kind=Variable,
-            visibility=Default
+            )
           )
         ]
       )

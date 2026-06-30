@@ -10,7 +10,7 @@ SemaResult(
       name="double_then_int_return_diff_value",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="f",
             type=FunctionType(
               signatures=[
@@ -34,9 +34,7 @@ SemaResult(
                   )
                 )
               ]
-            ),
-            kind=Function,
-            visibility=Default
+            )
           )
         ]
       )

@@ -10,7 +10,7 @@ SemaResult(
       name="first_arg_defaulted",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="x",
             type=float,
             value=FunctionCallExpression(
@@ -41,11 +41,9 @@ SemaResult(
                   )
                 )
               ]
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           ),
-          Binding(
+          ValueBinding(
             name="y",
             type=FunctionType(
               signatures=[
@@ -82,18 +80,14 @@ SemaResult(
             ),
             value=IdentifierExpression(
               name="y2"
-            ),
-            kind=Function,
-            visibility=Default
+            )
           ),
-          Binding(
+          ValueBinding(
             name="z",
             type=Const[10],
             value=NumberLiteralExpression(
               lit=10
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           )
         ]
       )

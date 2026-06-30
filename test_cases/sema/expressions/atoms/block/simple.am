@@ -10,7 +10,7 @@ SemaResult(
       name="simple",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="x",
             type=Const[4],
             value=SequenceExpression(
@@ -30,9 +30,7 @@ SemaResult(
                   )
                 )
               ]
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           )
         ]
       )

@@ -8,25 +8,21 @@ SemaResult(
       name="assign_from_ulong",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="x",
             type=ulong,
             value=IdentifierExpression(
               name="y"
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           ),
-          Binding(
+          ValueBinding(
             name="y",
             type=ulong,
             value=BuiltinTypeCastExpression(
               expr=NumberLiteralExpression(
                 lit=42
               )
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           )
         ]
       )

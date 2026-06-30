@@ -8,23 +8,19 @@ SemaResult(
       name="assign_from_high_frac",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="x",
             type=double,
             value=IdentifierExpression(
               name="y"
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           ),
-          Binding(
+          ValueBinding(
             name="y",
             type=Const[18446744073709551615184467440737095516151844674407370955161518446744073709551615184467.0],
             value=NumberLiteralExpression(
               lit=18446744073709551615184467440737095516151844674407370955161518446744073709551615184467.0
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           )
         ]
       )

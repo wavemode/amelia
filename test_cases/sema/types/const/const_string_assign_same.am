@@ -8,21 +8,17 @@ SemaResult(
       name="const_string_assign_same",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="x",
             type=Const["hi"],
             value=IdentifierExpression(
               name="y"
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           ),
-          Binding(
+          ValueBinding(
             name="y",
             type=Const["hi"],
-            value=StringLiteralExpression["hi"],
-            kind=Constant,
-            visibility=Default
+            value=StringLiteralExpression["hi"]
           )
         ]
       )

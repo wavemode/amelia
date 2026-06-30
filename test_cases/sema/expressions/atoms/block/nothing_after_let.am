@@ -9,7 +9,7 @@ SemaResult(
       name="nothing_after_let",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="x",
             type=null,
             value=SequenceExpression(
@@ -23,9 +23,7 @@ SemaResult(
                   body=SequenceExpression()
                 )
               ]
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           )
         ]
       )

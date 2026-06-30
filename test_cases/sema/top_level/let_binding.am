@@ -7,14 +7,12 @@ SemaResult(
       name="let_binding",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="x",
             type=Const[5],
             value=NumberLiteralExpression(
               lit=5
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           )
         ]
       )

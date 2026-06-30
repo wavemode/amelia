@@ -15,11 +15,11 @@ Serialize BuiltinType::serialize() const {
 }
 
 Serialize AliasType::serialize() const {
-  Serialize result;
-  result.set_object_name("Alias");
-  result.add_object_field("name", Serialize::literal(name));
-  result.add_object_field("target", target->serialize());
-  return result;
+  String repr(name);
+  repr.append(" (aka ");
+  target->serialize().to_string(repr);
+  repr.append(")");
+  return Serialize::literal(move(repr));
 }
 
 Serialize ConstIntegerType::serialize() const {
@@ -200,7 +200,7 @@ Serialize serialize_unary_operator_kind(UnaryOperatorKind kind) {
   case UnaryOperatorKind::Negate:
     return Serialize::literal("Negate");
   default:
-    throw RuntimeError("not implemented");
+    throw RuntimeError("not implemented (serialize_unary_operator_kind with unknown kind)");
   }
 }
 

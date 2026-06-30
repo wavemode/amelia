@@ -13,7 +13,7 @@ SemaResult(
       name="local_fun_shadows_global",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="f",
             type=FunctionType(
               signatures=[
@@ -24,11 +24,9 @@ SemaResult(
             ),
             value=NumberLiteralExpression(
               lit=5
-            ),
-            kind=Function,
-            visibility=Default
+            )
           ),
-          Binding(
+          ValueBinding(
             name="x",
             type=int,
             value=SequenceExpression(
@@ -60,9 +58,7 @@ SemaResult(
                   )
                 )
               ]
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           )
         ]
       )

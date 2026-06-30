@@ -1,27 +1,33 @@
-const x : int = y
-const y = -2147483648
+type MyInt = int
+
+const x : MyInt = 0x7FFFFFFF
+const y : MyInt = -0x80000000
 
 /* EXPECTED_OUTPUT:
 SemaResult(
   modules=[
     Module(
-      name="assign_from_min_const",
+      name="int",
       scope=Scope(
         bindings=[
+          TypeBinding(
+            name="MyInt",
+            type=MyInt (aka int)
+          ),
           ValueBinding(
             name="x",
-            type=int,
-            value=IdentifierExpression(
-              name="y"
+            type=MyInt (aka int),
+            value=NumberLiteralExpression(
+              lit=0x7FFFFFFF
             )
           ),
           ValueBinding(
             name="y",
-            type=Const[-2147483648],
+            type=MyInt (aka int),
             value=UnaryOperationExpression(
               op_kind=Negate,
               operand=NumberLiteralExpression(
-                lit=2147483648
+                lit=0x80000000
               )
             )
           )

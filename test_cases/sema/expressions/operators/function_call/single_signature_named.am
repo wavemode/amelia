@@ -9,7 +9,7 @@ SemaResult(
       name="single_signature_named",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="x",
             type=int,
             value=FunctionCallExpression(
@@ -30,11 +30,9 @@ SemaResult(
                   name="z"
                 )
               ]
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           ),
-          Binding(
+          ValueBinding(
             name="y",
             type=FunctionType(
               signatures=[
@@ -51,18 +49,14 @@ SemaResult(
             ),
             value=IdentifierExpression(
               name="y"
-            ),
-            kind=Function,
-            visibility=Default
+            )
           ),
-          Binding(
+          ValueBinding(
             name="z",
             type=Const[10],
             value=NumberLiteralExpression(
               lit=10
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           )
         ]
       )

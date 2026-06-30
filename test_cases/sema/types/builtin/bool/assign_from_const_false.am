@@ -8,23 +8,19 @@ SemaResult(
       name="assign_from_const_false",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="x",
             type=bool,
             value=IdentifierExpression(
               name="y"
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           ),
-          Binding(
+          ValueBinding(
             name="y",
             type=Const[false],
             value=BooleanLiteralExpression(
               value=false
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           )
         ]
       )

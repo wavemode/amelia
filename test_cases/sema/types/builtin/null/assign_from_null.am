@@ -8,21 +8,17 @@ SemaResult(
       name="assign_from_null",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="x",
             type=null,
             value=IdentifierExpression(
               name="y"
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           ),
-          Binding(
+          ValueBinding(
             name="y",
             type=null,
-            value=NullLiteralExpression(),
-            kind=Constant,
-            visibility=Default
+            value=NullLiteralExpression()
           )
         ]
       )

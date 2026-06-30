@@ -8,23 +8,19 @@ SemaResult(
       name="binary",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="x",
             type=Const[2],
             value=NumberLiteralExpression(
               lit=0b10
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           ),
-          Binding(
+          ValueBinding(
             name="y",
             type=Const[2.5],
             value=NumberLiteralExpression(
               lit=0b10.1
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           )
         ]
       )

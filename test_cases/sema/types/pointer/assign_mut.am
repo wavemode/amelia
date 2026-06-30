@@ -10,7 +10,7 @@ SemaResult(
       name="assign_mut",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="f",
             type=FunctionType(
               signatures=[
@@ -27,20 +27,16 @@ SemaResult(
                 return_type=never
               ),
               arguments=
-            ),
-            kind=Function,
-            visibility=Default
+            )
           ),
-          Binding(
+          ValueBinding(
             name="x",
             type=*int,
             value=IdentifierExpression(
               name="y"
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           ),
-          Binding(
+          ValueBinding(
             name="y",
             type=*int,
             value=FunctionCallExpression(
@@ -51,9 +47,7 @@ SemaResult(
                 return_type=never
               ),
               arguments=
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           )
         ]
       )

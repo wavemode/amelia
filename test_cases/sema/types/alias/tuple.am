@@ -1,0 +1,44 @@
+type MyTuple = (long, double, &str)
+
+let x : MyTuple = y
+const y = (0x7FFFFFFFFFFFFFFF, 3.14, "hello")
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="tuple",
+      scope=Scope(
+        bindings=[
+          TypeBinding(
+            name="MyTuple",
+            type=MyTuple (aka (long, double, &str))
+          ),
+          ValueBinding(
+            name="x",
+            type=MyTuple (aka (long, double, &str)),
+            value=IdentifierExpression(
+              name="y"
+            )
+          ),
+          ValueBinding(
+            name="y",
+            type=(Const[9223372036854775807], Const[3.14], Const["hello"]),
+            value=TupleExpression(
+              elements=[
+                NumberLiteralExpression(
+                  lit=0x7FFFFFFFFFFFFFFF
+                ),
+                NumberLiteralExpression(
+                  lit=3.14
+                ),
+                StringLiteralExpression["hello"]
+              ]
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

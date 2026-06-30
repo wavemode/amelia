@@ -8,7 +8,7 @@ SemaResult(
       name="assignable_const_int",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="x",
             type=(Const[5], Const[6]),
             value=TupleExpression(
@@ -20,18 +20,14 @@ SemaResult(
                   lit=6
                 )
               ]
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           ),
-          Binding(
+          ValueBinding(
             name="y",
             type=(int, int),
             value=IdentifierExpression(
               name="x"
-            ),
-            kind=Variable,
-            visibility=Default
+            )
           )
         ]
       )

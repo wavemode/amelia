@@ -7,7 +7,7 @@ SemaResult(
       name="expr_return",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="f",
             type=FunctionType(
               signatures=[
@@ -30,9 +30,7 @@ SemaResult(
                   )
                 )
               ]
-            ),
-            kind=Function,
-            visibility=Default
+            )
           )
         ]
       )

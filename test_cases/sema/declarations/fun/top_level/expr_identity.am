@@ -7,7 +7,7 @@ SemaResult(
       name="expr_identity",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="f",
             type=FunctionType(
               signatures=[
@@ -24,9 +24,7 @@ SemaResult(
             ),
             value=IdentifierExpression(
               name="x"
-            ),
-            kind=Function,
-            visibility=Default
+            )
           )
         ]
       )

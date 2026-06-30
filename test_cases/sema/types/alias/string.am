@@ -1,28 +1,30 @@
-const x : bitint[8] = y
-const y : byte = 42
+type MyString = str
+
+const x : &MyString = y
+const y = "hello"
 
 /* EXPECTED_OUTPUT:
 SemaResult(
   modules=[
     Module(
-      name="assign_from_byte",
+      name="string",
       scope=Scope(
         bindings=[
+          TypeBinding(
+            name="MyString",
+            type=MyString (aka str)
+          ),
           ValueBinding(
             name="x",
-            type=bitint[8],
+            type=&MyString (aka str),
             value=IdentifierExpression(
               name="y"
             )
           ),
           ValueBinding(
             name="y",
-            type=byte,
-            value=BuiltinTypeCastExpression(
-              expr=NumberLiteralExpression(
-                lit=42
-              )
-            )
+            type=Const["hello"],
+            value=StringLiteralExpression["hello"]
           )
         ]
       )

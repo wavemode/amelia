@@ -8,18 +8,16 @@ SemaResult(
       name="assign_from_min_const",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="x",
             type=bitint[8],
             value=BuiltinTypeCastExpression(
               expr=IdentifierExpression(
                 name="y"
               )
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           ),
-          Binding(
+          ValueBinding(
             name="y",
             type=Const[-128],
             value=UnaryOperationExpression(
@@ -27,9 +25,7 @@ SemaResult(
               operand=NumberLiteralExpression(
                 lit=128
               )
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           )
         ]
       )

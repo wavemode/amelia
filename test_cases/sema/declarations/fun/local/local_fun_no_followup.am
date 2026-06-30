@@ -10,7 +10,7 @@ SemaResult(
       name="local_fun_no_followup",
       scope=Scope(
         bindings=[
-          Binding(
+          ValueBinding(
             name="x",
             type=null,
             value=SequenceExpression(
@@ -28,9 +28,7 @@ SemaResult(
                   body=SequenceExpression()
                 )
               ]
-            ),
-            kind=Constant,
-            visibility=Default
+            )
           )
         ]
       )
