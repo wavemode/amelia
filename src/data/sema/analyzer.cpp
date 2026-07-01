@@ -936,15 +936,19 @@ public:
     return None();
   }
 
-  Flex<Expression> require_coerce(Flex<Type> target_type, Flex<Expression> expr) {
+  Flex<Expression> require_coerce(
+      Flex<Type> target_type, Flex<Expression> expr, String error_message_template
+  ) {
     auto unified_expr = coerce(target_type, expr->type, expr);
     if (!unified_expr.has_value()) {
-      String error_message = "Cannot convert expression of type '";
-      expr->type->serialize().to_string(error_message);
-      error_message.append("' to expected type '");
-      target_type->serialize().to_string(error_message);
-      error_message.append("'");
-      raise_error_at_node_id(expr->node_id, move(error_message));
+      String target_type_str;
+      target_type->serialize().to_string(target_type_str);
+      String expr_type_str;
+      expr->type->serialize().to_string(expr_type_str);
+      ;
+      TextUtils::replace(error_message_template, "{1}", expr_type_str);
+      TextUtils::replace(error_message_template, "{2}", target_type_str);
+      raise_error_at_node_id(expr->node_id, move(error_message_template));
     }
     return unified_expr.value();
   }
@@ -1256,16 +1260,11 @@ public:
         signature.return_type = remove_const(expr->type);
         result = expr;
       } else {
-        auto unified_expr = coerce(signature.return_type, expr);
-        if (!unified_expr.has_value()) {
-          String error_message = "Cannot convert expression of type '";
-          expr->type->serialize().to_string(error_message);
-          error_message.append("' to expected return type '");
-          signature.return_type->serialize().to_string(error_message);
-          error_message.append("'");
-          raise_error_at_node_id(expr->node_id, move(error_message));
-        }
-        result = unified_expr.value();
+        result = require_coerce(
+            signature.return_type,
+            expr,
+            "Cannot convert expression of type '{1}' to expected return type '{2}'"
+        );
       }
     } else {
       result = build_expr_seq(function_body_node_id, function_body_node.stmts.value().data());
@@ -1339,7 +1338,9 @@ public:
 
   Flex<Expression> expect_expression_of_type(Flex<Type> expected_type, NodeId expr_node_id) {
     auto expr = build_expression(expr_node_id);
-    return require_coerce(expected_type, expr);
+    return require_coerce(
+        expected_type, expr, "Cannot convert expression of type '{1}' to expected type '{2}'"
+    );
   }
 
   Flex<Expression> build_expression(NodeId expr_node_id) {
@@ -1453,7 +1454,9 @@ public:
     // coerce each expression to the inferred type
     for (size_t i = 0; i < output.size(); ++i) {
       Flex<Expression> &elem = output[i];
-      elem = require_coerce(result_type, move(elem));
+      elem = require_coerce(
+          result_type, move(elem), "Cannot convert expression of type '{1}' to expected type '{2}'"
+      );
     }
 
     return result_type;
@@ -1721,16 +1724,11 @@ public:
       return return_value;
     }
 
-    auto unified_expr = coerce(m_current_function_signature.value()->return_type, return_value);
-    if (!unified_expr.has_value()) {
-      String error_message = "Cannot convert expression of type '";
-      return_value->type->serialize().to_string(error_message);
-      error_message.append("' to expected return type '");
-      m_current_function_signature.value()->return_type->serialize().to_string(error_message);
-      error_message.append("'");
-      raise_error_at_node_id(return_value->node_id, move(error_message));
-    }
-    return unified_expr.value();
+    return require_coerce(
+        m_current_function_signature.value()->return_type,
+        return_value,
+        "Cannot convert expression of type '{1}' to expected return type '{2}'"
+    );
   }
 
   Flex<Expression> build_expr_expression_statement(NodeId expr_node_id) {
