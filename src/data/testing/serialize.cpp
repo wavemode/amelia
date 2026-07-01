@@ -269,6 +269,14 @@ void Serialize::to_string(AbstractString &out) const {
   internal::SerializeState(out).serialize(*this);
 }
 
+Serialize Serialize::quoted() const {
+  String repr;
+  repr.append('"');
+  internal::SerializeState(repr).serialize(*this);
+  repr.append('"');
+  return Serialize::literal(move(repr));
+}
+
 void Serialize::clear() {
   switch (m_kind) {
   case SerializeKind::Null:

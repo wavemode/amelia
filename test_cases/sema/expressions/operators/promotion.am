@@ -1,0 +1,65 @@
+let x : int = 4
+let y : long = 5
+
+let lhs_promote = x + y
+let rhs_promote = y + x
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="promotion",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="lhs_promote",
+            type=long,
+            value=BuiltinBinaryOperationExpression(
+              operator="+",
+              left=BuiltinTypeCastExpression(
+                expr=IdentifierExpression(
+                  name="x"
+                )
+              ),
+              right=IdentifierExpression(
+                name="y"
+              )
+            )
+          ),
+          ValueBinding(
+            name="rhs_promote",
+            type=long,
+            value=BuiltinBinaryOperationExpression(
+              operator="+",
+              left=IdentifierExpression(
+                name="y"
+              ),
+              right=BuiltinTypeCastExpression(
+                expr=IdentifierExpression(
+                  name="x"
+                )
+              )
+            )
+          ),
+          ValueBinding(
+            name="x",
+            type=int,
+            value=NumberLiteralExpression(
+              lit=4
+            )
+          ),
+          ValueBinding(
+            name="y",
+            type=long,
+            value=BuiltinTypeCastExpression(
+              expr=NumberLiteralExpression(
+                lit=5
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

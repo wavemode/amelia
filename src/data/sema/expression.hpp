@@ -59,8 +59,10 @@ enum class ExpressionKind : uint8_t {
   BooleanLiteral,
   NullLiteral,
   CharLiteral,
+  StringLiteral,
   Identifier,
   UnaryOperation,
+  BinaryOperation,
   BuiltinTypeCast,
   Sequence,
   TypeBinding,
@@ -245,7 +247,7 @@ struct CharLiteralExpression : Expression {
 };
 
 struct StringLiteralExpression : Expression {
-  StringLiteralExpression() : Expression(ExpressionKind::CharLiteral) {}
+  StringLiteralExpression() : Expression(ExpressionKind::StringLiteral) {}
   String value;
   Serialize serialize() const override;
 };
@@ -264,6 +266,18 @@ struct UnaryOperationExpression : Expression {
   UnaryOperationExpression() : Expression(ExpressionKind::UnaryOperation) {}
   UnaryOperatorKind op_kind;
   Flex<Expression> operand;
+  Serialize serialize() const override;
+};
+
+enum class BinaryOperatorKind : uint8_t { Add, Subtract, Multiply, Divide };
+
+Serialize serialize_binary_operator_kind(BinaryOperatorKind kind);
+
+struct BuiltinBinaryOperationExpression : Expression {
+  BuiltinBinaryOperationExpression() : Expression(ExpressionKind::BinaryOperation) {}
+  BinaryOperatorKind op_kind;
+  Flex<Expression> left;
+  Flex<Expression> right;
   Serialize serialize() const override;
 };
 

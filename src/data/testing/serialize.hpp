@@ -44,6 +44,7 @@ public:
   void add_list_item(Serialize item);
 
   void to_string(AbstractString &out) const;
+  Serialize quoted() const;
 
   friend class internal::SerializeState;
 

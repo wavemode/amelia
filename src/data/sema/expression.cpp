@@ -200,8 +200,19 @@ Serialize serialize_unary_operator_kind(UnaryOperatorKind kind) {
   switch (kind) {
   case UnaryOperatorKind::Negate:
     return Serialize::literal("Negate");
-  default:
-    throw RuntimeError("not implemented (serialize_unary_operator_kind with unknown kind)");
+  }
+}
+
+Serialize serialize_binary_operator_kind(BinaryOperatorKind kind) {
+  switch (kind) {
+  case BinaryOperatorKind::Add:
+    return Serialize::literal("+");
+  case BinaryOperatorKind::Subtract:
+    return Serialize::literal("-");
+  case BinaryOperatorKind::Multiply:
+    return Serialize::literal("*");
+  case BinaryOperatorKind::Divide:
+    return Serialize::literal("/");
   }
 }
 
@@ -394,6 +405,15 @@ Serialize TypeBindingExpression::serialize() const {
   result.add_object_field("name", Serialize::quoted(name));
   result.add_object_field("binding", binding->serialize());
   result.add_object_field("body", body->serialize());
+  return result;
+}
+
+Serialize BuiltinBinaryOperationExpression::serialize() const {
+  Serialize result;
+  result.set_object_name("BuiltinBinaryOperationExpression");
+  result.add_object_field("operator", serialize_binary_operator_kind(op_kind).quoted());
+  result.add_object_field("left", left->serialize());
+  result.add_object_field("right", right->serialize());
   return result;
 }
 
