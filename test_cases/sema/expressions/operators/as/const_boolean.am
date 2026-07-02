@@ -1,0 +1,22 @@
+const x = true as bool
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="const_boolean",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=bool,
+            value=BooleanLiteralExpression(
+              value=true
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

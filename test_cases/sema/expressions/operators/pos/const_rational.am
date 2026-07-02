@@ -1,0 +1,30 @@
+const x = 5.0
+const y = +x
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="const_rational",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=Const[5.0],
+            value=NumberLiteralExpression(
+              lit=5.0
+            )
+          ),
+          ValueBinding(
+            name="y",
+            type=Const[5.0],
+            value=IdentifierExpression(
+              name="x"
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

@@ -1,0 +1,74 @@
+const x = "hello, "
+const y = "world!"
+const z : const "hello, world!" = x + y
+const z2 = 'a' + "bc"
+const z3 = "ab" + 'c'
+const z4 : const true = z2 == z3
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="const_string",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=Const["hello, "],
+            value=StringLiteralExpression["hello, "]
+          ),
+          ValueBinding(
+            name="y",
+            type=Const["world!"],
+            value=StringLiteralExpression["world!"]
+          ),
+          ValueBinding(
+            name="z",
+            type=Const["hello, world!"],
+            value=BuiltinBinaryOperationExpression(
+              operator="+",
+              left=IdentifierExpression(
+                name="x"
+              ),
+              right=IdentifierExpression(
+                name="y"
+              )
+            )
+          ),
+          ValueBinding(
+            name="z2",
+            type=Const["abc"],
+            value=BuiltinBinaryOperationExpression(
+              operator="+",
+              left=CharLiteralExpression['a'],
+              right=StringLiteralExpression["bc"]
+            )
+          ),
+          ValueBinding(
+            name="z3",
+            type=Const["abc"],
+            value=BuiltinBinaryOperationExpression(
+              operator="+",
+              left=StringLiteralExpression["ab"],
+              right=CharLiteralExpression['c']
+            )
+          ),
+          ValueBinding(
+            name="z4",
+            type=Const[true],
+            value=BuiltinBinaryOperationExpression(
+              operator="==",
+              left=IdentifierExpression(
+                name="z2"
+              ),
+              right=IdentifierExpression(
+                name="z3"
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

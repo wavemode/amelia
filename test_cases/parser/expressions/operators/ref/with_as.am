@@ -1,0 +1,25 @@
+let x = &y as T
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclNode(
+      target=IdentifierNode(
+        name="x"
+      ),
+      expr=AsExprNode(
+        expr=RefExprNode(
+          is_const=false,
+          is_move=false,
+          expr=IdentifierNode(
+            name="y"
+          )
+        ),
+        type=IdentifierNode(
+          name="T"
+        )
+      )
+    )
+  ]
+)
+*/

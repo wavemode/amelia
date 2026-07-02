@@ -1,0 +1,33 @@
+const x = true
+const z : const false = !x
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="const_boolean",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=Const[true],
+            value=BooleanLiteralExpression(
+              value=true
+            )
+          ),
+          ValueBinding(
+            name="z",
+            type=Const[false],
+            value=UnaryOperationExpression(
+              op_kind="!",
+              operand=IdentifierExpression(
+                name="x"
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

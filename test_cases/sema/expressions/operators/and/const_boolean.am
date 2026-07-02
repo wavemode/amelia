@@ -1,0 +1,67 @@
+const x = true
+const y = true
+const z = x && y
+
+let a = true
+const b = z && a
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="const_boolean",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="a",
+            type=bool,
+            value=BooleanLiteralExpression(
+              value=true
+            )
+          ),
+          ValueBinding(
+            name="b",
+            type=bool,
+            value=BuiltinBinaryOperationExpression(
+              operator="&&",
+              left=IdentifierExpression(
+                name="z"
+              ),
+              right=IdentifierExpression(
+                name="a"
+              )
+            )
+          ),
+          ValueBinding(
+            name="x",
+            type=Const[true],
+            value=BooleanLiteralExpression(
+              value=true
+            )
+          ),
+          ValueBinding(
+            name="y",
+            type=Const[true],
+            value=BooleanLiteralExpression(
+              value=true
+            )
+          ),
+          ValueBinding(
+            name="z",
+            type=Const[true],
+            value=BuiltinBinaryOperationExpression(
+              operator="&&",
+              left=IdentifierExpression(
+                name="x"
+              ),
+              right=IdentifierExpression(
+                name="y"
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

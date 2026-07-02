@@ -1,0 +1,23 @@
+const x = ~'a'
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="const_character",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=Const[-98],
+            value=UnaryOperationExpression(
+              op_kind="~",
+              operand=CharLiteralExpression['a']
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

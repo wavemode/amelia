@@ -1,0 +1,67 @@
+const x = 400
+const y = 500
+const z = x | y
+
+let a = 400
+const b = z | a
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="const_integer",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="a",
+            type=int,
+            value=NumberLiteralExpression(
+              lit=400
+            )
+          ),
+          ValueBinding(
+            name="b",
+            type=int,
+            value=BuiltinBinaryOperationExpression(
+              operator="|",
+              left=IdentifierExpression(
+                name="z"
+              ),
+              right=IdentifierExpression(
+                name="a"
+              )
+            )
+          ),
+          ValueBinding(
+            name="x",
+            type=Const[400],
+            value=NumberLiteralExpression(
+              lit=400
+            )
+          ),
+          ValueBinding(
+            name="y",
+            type=Const[500],
+            value=NumberLiteralExpression(
+              lit=500
+            )
+          ),
+          ValueBinding(
+            name="z",
+            type=Const[500],
+            value=BuiltinBinaryOperationExpression(
+              operator="|",
+              left=IdentifierExpression(
+                name="x"
+              ),
+              right=IdentifierExpression(
+                name="y"
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

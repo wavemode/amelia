@@ -1,0 +1,7 @@
+const x = 1208925819614629174706176
+const y = -80
+const z = x >> y
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot perform binary operation '>>' on types 'Const[1208925819614629174706176]' and 'Const[-80]' (at test_cases/sema/expressions/operators/rshift/error_const_integer_negative.am:3:11)")
+*/

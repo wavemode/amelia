@@ -1,0 +1,28 @@
+const x = 'a'
+const y = +x
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="const_character",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=Const['a'],
+            value=CharLiteralExpression['a']
+          ),
+          ValueBinding(
+            name="y",
+            type=Const['a'],
+            value=IdentifierExpression(
+              name="x"
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

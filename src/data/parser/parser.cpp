@@ -1548,12 +1548,12 @@ public:
 
   NodeId parse_descend_expr_mul_div_mod() {
     auto start_token = peek();
-    NodeId left = parse_descend_expr_await_ref_copy_move_inline();
+    NodeId left = parse_descend_expr_as();
     auto next_token = peek();
     while (next_token.type == TokenType::STAR || next_token.type == TokenType::SLASH ||
            next_token.type == TokenType::PERCENT) {
       ++m_token_index; // consume the operator
-      NodeId right = parse_descend_expr_await_ref_copy_move_inline();
+      NodeId right = parse_descend_expr_as();
       if (next_token.type == TokenType::STAR) {
         left = m_output.add_node(start_token.id, m_token_index, MultiplyExprNode{left, right});
       } else if (next_token.type == TokenType::SLASH) {
@@ -1566,19 +1566,30 @@ public:
     return left;
   }
 
-  NodeId parse_descend_expr_await_ref_copy_move_inline() {
+  NodeId parse_descend_expr_as() {
+    auto start_token = peek();
+    NodeId left = parse_descend_expr_await_ref_copy_move();
+    while (peek().type == TokenType::KEYWORD_AS) {
+      ++m_token_index; // consume the 'as' keyword
+      NodeId type = parse_descend_expr_await_ref_copy_move();
+      left = m_output.add_node(start_token.id, m_token_index, AsExprNode{left, type});
+    }
+    return left;
+  }
+
+  NodeId parse_descend_expr_await_ref_copy_move() {
     auto start_token = peek();
     if (start_token.type == TokenType::KEYWORD_AWAIT) {
       ++m_token_index; // consume the 'await' keyword
-      NodeId expr = parse_descend_expr_await_ref_copy_move_inline();
+      NodeId expr = parse_descend_expr_await_ref_copy_move();
       return m_output.add_node(start_token.id, m_token_index, AwaitExprNode{expr});
     } else if (start_token.type == TokenType::KEYWORD_MOVE) {
       ++m_token_index; // consume the 'move' keyword
-      NodeId expr = parse_descend_expr_await_ref_copy_move_inline();
+      NodeId expr = parse_descend_expr_await_ref_copy_move();
       return m_output.add_node(start_token.id, m_token_index, MoveExprNode{expr});
     } else if (start_token.type == TokenType::KEYWORD_COPY) {
       ++m_token_index; // consume the 'copy' keyword
-      NodeId expr = parse_descend_expr_await_ref_copy_move_inline();
+      NodeId expr = parse_descend_expr_await_ref_copy_move();
       return m_output.add_node(start_token.id, m_token_index, CopyExprNode{expr});
     } else if (start_token.type == TokenType::AMPERSAND) {
       ++m_token_index; // consume the '&' operator
@@ -1592,21 +1603,10 @@ public:
         is_move = true;
         ++m_token_index; // consume the 'move' keyword
       }
-      NodeId expr = parse_descend_expr_await_ref_copy_move_inline();
+      NodeId expr = parse_descend_expr_await_ref_copy_move();
       return m_output.add_node(start_token.id, m_token_index, RefExprNode{is_const, is_move, expr});
     }
-    return parse_descend_expr_as();
-  }
-
-  NodeId parse_descend_expr_as() {
-    auto start_token = peek();
-    NodeId left = parse_descend_expr_pos_neg_deref_not_bitnot_ell();
-    while (peek().type == TokenType::KEYWORD_AS) {
-      ++m_token_index; // consume the 'as' keyword
-      NodeId type = parse_descend_expr_pos_neg_deref_not_bitnot_ell();
-      left = m_output.add_node(start_token.id, m_token_index, AsExprNode{left, type});
-    }
-    return left;
+    return parse_descend_expr_pos_neg_deref_not_bitnot_ell();
   }
 
   NodeId parse_descend_expr_pos_neg_deref_not_bitnot_ell() {

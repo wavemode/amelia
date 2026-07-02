@@ -1,0 +1,22 @@
+const x = 1234567 as int
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="const_integer",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=int,
+            value=NumberLiteralExpression(
+              lit=1234567
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

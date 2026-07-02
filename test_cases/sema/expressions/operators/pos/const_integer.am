@@ -1,0 +1,30 @@
+const x = 123
+const y = +x
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="const_integer",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=Const[123],
+            value=NumberLiteralExpression(
+              lit=123
+            )
+          ),
+          ValueBinding(
+            name="y",
+            type=Const[123],
+            value=IdentifierExpression(
+              name="x"
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

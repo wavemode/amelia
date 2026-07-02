@@ -1,0 +1,7 @@
+const x = 1
+const y = (1 << 80)
+const z = x << y
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot perform binary operation '<<' on types 'Const[1]' and 'Const[1208925819614629174706176]' (at test_cases/sema/expressions/operators/lshift/error_const_integer_too_big.am:3:11)")
+*/

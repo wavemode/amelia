@@ -1,0 +1,84 @@
+const x = 400.5
+const y = 500.4
+const z = x / y
+
+const w = z / 5
+
+let a = 400
+const b = z / a
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="const_rational",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="a",
+            type=int,
+            value=NumberLiteralExpression(
+              lit=400
+            )
+          ),
+          ValueBinding(
+            name="b",
+            type=double,
+            value=BuiltinBinaryOperationExpression(
+              operator="/",
+              left=IdentifierExpression(
+                name="z"
+              ),
+              right=BuiltinTypeCoerceExpression(
+                expr=IdentifierExpression(
+                  name="a"
+                )
+              )
+            )
+          ),
+          ValueBinding(
+            name="w",
+            type=Const[0.160071942446],
+            value=BuiltinBinaryOperationExpression(
+              operator="/",
+              left=IdentifierExpression(
+                name="z"
+              ),
+              right=NumberLiteralExpression(
+                lit=5
+              )
+            )
+          ),
+          ValueBinding(
+            name="x",
+            type=Const[400.5],
+            value=NumberLiteralExpression(
+              lit=400.5
+            )
+          ),
+          ValueBinding(
+            name="y",
+            type=Const[500.4],
+            value=NumberLiteralExpression(
+              lit=500.4
+            )
+          ),
+          ValueBinding(
+            name="z",
+            type=Const[0.80035971223],
+            value=BuiltinBinaryOperationExpression(
+              operator="/",
+              left=IdentifierExpression(
+                name="x"
+              ),
+              right=IdentifierExpression(
+                name="y"
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

@@ -1,0 +1,44 @@
+const x = true
+const y = true
+const z1 : const true = x == y
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="const_boolean",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=Const[true],
+            value=BooleanLiteralExpression(
+              value=true
+            )
+          ),
+          ValueBinding(
+            name="y",
+            type=Const[true],
+            value=BooleanLiteralExpression(
+              value=true
+            )
+          ),
+          ValueBinding(
+            name="z1",
+            type=Const[true],
+            value=BuiltinBinaryOperationExpression(
+              operator="==",
+              left=IdentifierExpression(
+                name="x"
+              ),
+              right=IdentifierExpression(
+                name="y"
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

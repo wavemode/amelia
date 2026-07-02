@@ -1,0 +1,70 @@
+const x = 97
+const y = 97
+const z1 : const true = x == y
+const z2 : const true = x == 97.0
+const z3 : const true = x == 'a'
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="const_integer",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=Const[97],
+            value=NumberLiteralExpression(
+              lit=97
+            )
+          ),
+          ValueBinding(
+            name="y",
+            type=Const[97],
+            value=NumberLiteralExpression(
+              lit=97
+            )
+          ),
+          ValueBinding(
+            name="z1",
+            type=Const[true],
+            value=BuiltinBinaryOperationExpression(
+              operator="==",
+              left=IdentifierExpression(
+                name="x"
+              ),
+              right=IdentifierExpression(
+                name="y"
+              )
+            )
+          ),
+          ValueBinding(
+            name="z2",
+            type=Const[true],
+            value=BuiltinBinaryOperationExpression(
+              operator="==",
+              left=IdentifierExpression(
+                name="x"
+              ),
+              right=NumberLiteralExpression(
+                lit=97.0
+              )
+            )
+          ),
+          ValueBinding(
+            name="z3",
+            type=Const[true],
+            value=BuiltinBinaryOperationExpression(
+              operator="==",
+              left=IdentifierExpression(
+                name="x"
+              ),
+              right=CharLiteralExpression['a']
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

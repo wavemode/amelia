@@ -1,0 +1,20 @@
+const x = 'a' as char
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="const_character",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=char,
+            value=CharLiteralExpression['a']
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

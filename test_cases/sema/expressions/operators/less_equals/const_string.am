@@ -1,0 +1,40 @@
+const x = "goodbye"
+const y = "hello"
+const z1 : const true = x <= y
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="const_string",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=Const["goodbye"],
+            value=StringLiteralExpression["goodbye"]
+          ),
+          ValueBinding(
+            name="y",
+            type=Const["hello"],
+            value=StringLiteralExpression["hello"]
+          ),
+          ValueBinding(
+            name="z1",
+            type=Const[true],
+            value=BuiltinBinaryOperationExpression(
+              operator="<=",
+              left=IdentifierExpression(
+                name="x"
+              ),
+              right=IdentifierExpression(
+                name="y"
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

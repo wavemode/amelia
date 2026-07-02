@@ -1,0 +1,120 @@
+const x = 400
+const y = 500
+const z = x * y
+const z2 = z * 'a'
+const z3 = 'a' * z
+const z4 : const true = z2 == z3
+
+const w = z * 5.0
+
+let a = 400
+const b = z * a
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="const_integer",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="a",
+            type=int,
+            value=NumberLiteralExpression(
+              lit=400
+            )
+          ),
+          ValueBinding(
+            name="b",
+            type=int,
+            value=BuiltinBinaryOperationExpression(
+              operator="*",
+              left=IdentifierExpression(
+                name="z"
+              ),
+              right=IdentifierExpression(
+                name="a"
+              )
+            )
+          ),
+          ValueBinding(
+            name="w",
+            type=Const[1000000.0],
+            value=BuiltinBinaryOperationExpression(
+              operator="*",
+              left=IdentifierExpression(
+                name="z"
+              ),
+              right=NumberLiteralExpression(
+                lit=5.0
+              )
+            )
+          ),
+          ValueBinding(
+            name="x",
+            type=Const[400],
+            value=NumberLiteralExpression(
+              lit=400
+            )
+          ),
+          ValueBinding(
+            name="y",
+            type=Const[500],
+            value=NumberLiteralExpression(
+              lit=500
+            )
+          ),
+          ValueBinding(
+            name="z",
+            type=Const[200000],
+            value=BuiltinBinaryOperationExpression(
+              operator="*",
+              left=IdentifierExpression(
+                name="x"
+              ),
+              right=IdentifierExpression(
+                name="y"
+              )
+            )
+          ),
+          ValueBinding(
+            name="z2",
+            type=Const[19400000],
+            value=BuiltinBinaryOperationExpression(
+              operator="*",
+              left=IdentifierExpression(
+                name="z"
+              ),
+              right=CharLiteralExpression['a']
+            )
+          ),
+          ValueBinding(
+            name="z3",
+            type=Const[19400000],
+            value=BuiltinBinaryOperationExpression(
+              operator="*",
+              left=CharLiteralExpression['a'],
+              right=IdentifierExpression(
+                name="z"
+              )
+            )
+          ),
+          ValueBinding(
+            name="z4",
+            type=Const[true],
+            value=BuiltinBinaryOperationExpression(
+              operator="==",
+              left=IdentifierExpression(
+                name="z2"
+              ),
+              right=IdentifierExpression(
+                name="z3"
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

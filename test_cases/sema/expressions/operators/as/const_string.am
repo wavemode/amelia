@@ -1,0 +1,20 @@
+const x = "hello" as &str
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="const_string",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=&str,
+            value=StringLiteralExpression["hello"]
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

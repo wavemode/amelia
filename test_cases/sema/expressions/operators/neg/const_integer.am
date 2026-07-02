@@ -1,0 +1,25 @@
+const x = -5
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="const_integer",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=Const[-5],
+            value=UnaryOperationExpression(
+              op_kind="-",
+              operand=NumberLiteralExpression(
+                lit=5
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

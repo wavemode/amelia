@@ -1,0 +1,44 @@
+const x = 28
+const y = 9
+const z = x % y
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="const_integer",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=Const[28],
+            value=NumberLiteralExpression(
+              lit=28
+            )
+          ),
+          ValueBinding(
+            name="y",
+            type=Const[9],
+            value=NumberLiteralExpression(
+              lit=9
+            )
+          ),
+          ValueBinding(
+            name="z",
+            type=Const[1],
+            value=BuiltinBinaryOperationExpression(
+              operator="%",
+              left=IdentifierExpression(
+                name="x"
+              ),
+              right=IdentifierExpression(
+                name="y"
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

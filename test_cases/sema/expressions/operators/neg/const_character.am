@@ -1,0 +1,40 @@
+const x = -'a'
+const z : const true = x == -97
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="const_character",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=Const[-97],
+            value=UnaryOperationExpression(
+              op_kind="-",
+              operand=CharLiteralExpression['a']
+            )
+          ),
+          ValueBinding(
+            name="z",
+            type=Const[true],
+            value=BuiltinBinaryOperationExpression(
+              operator="==",
+              left=IdentifierExpression(
+                name="x"
+              ),
+              right=UnaryOperationExpression(
+                op_kind="-",
+                operand=NumberLiteralExpression(
+                  lit=97
+                )
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

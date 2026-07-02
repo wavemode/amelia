@@ -1,0 +1,22 @@
+const x = 1234567.0 as double
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="const_rational",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=double,
+            value=NumberLiteralExpression(
+              lit=1234567.0
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/
