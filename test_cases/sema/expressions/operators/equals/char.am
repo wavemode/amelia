@@ -1,0 +1,40 @@
+let x : char = 'a'
+let y : char = 'b'
+let z : bool = x == y
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="char",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=char,
+            value=CharLiteralExpression['a']
+          ),
+          ValueBinding(
+            name="y",
+            type=char,
+            value=CharLiteralExpression['b']
+          ),
+          ValueBinding(
+            name="z",
+            type=bool,
+            value=BuiltinBinaryOperationExpression(
+              operator="==",
+              left=IdentifierExpression(
+                name="x"
+              ),
+              right=IdentifierExpression(
+                name="y"
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

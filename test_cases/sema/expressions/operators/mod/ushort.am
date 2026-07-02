@@ -1,0 +1,48 @@
+let x : ushort = 1
+let y : ushort = 2
+let z : ushort = x % y
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="ushort",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=ushort,
+            value=BuiltinTypeCastExpression(
+              expr=NumberLiteralExpression(
+                lit=1
+              )
+            )
+          ),
+          ValueBinding(
+            name="y",
+            type=ushort,
+            value=BuiltinTypeCastExpression(
+              expr=NumberLiteralExpression(
+                lit=2
+              )
+            )
+          ),
+          ValueBinding(
+            name="z",
+            type=ushort,
+            value=BuiltinBinaryOperationExpression(
+              operator="%",
+              left=IdentifierExpression(
+                name="x"
+              ),
+              right=IdentifierExpression(
+                name="y"
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

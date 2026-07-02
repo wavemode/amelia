@@ -1,0 +1,48 @@
+let x : ubyte = 1
+let y : ubyte = 2
+let z : bool = x <= y
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="ubyte",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=ubyte,
+            value=BuiltinTypeCastExpression(
+              expr=NumberLiteralExpression(
+                lit=1
+              )
+            )
+          ),
+          ValueBinding(
+            name="y",
+            type=ubyte,
+            value=BuiltinTypeCastExpression(
+              expr=NumberLiteralExpression(
+                lit=2
+              )
+            )
+          ),
+          ValueBinding(
+            name="z",
+            type=bool,
+            value=BuiltinBinaryOperationExpression(
+              operator="<=",
+              left=IdentifierExpression(
+                name="x"
+              ),
+              right=IdentifierExpression(
+                name="y"
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

@@ -1,6 +1,6 @@
 let x : ulong = 1
 let y : ulong = 2
-let z = x + y
+let z : ulong = x + y
 
 /* EXPECTED_OUTPUT:
 SemaResult(

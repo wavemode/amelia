@@ -1,0 +1,7 @@
+let x : usize = 1
+let y : usize = 2
+let z : usize = x || y
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot perform binary operation '||' on types 'usize' and 'usize' (at test_cases/sema/expressions/operators/or/error_usize.am:3:17)")
+*/

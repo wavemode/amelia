@@ -1,6 +1,6 @@
-let x : double = 1
-let y : double = 2
-let z = x / y
+let x : double = 1.5
+let y : double = 2.5
+let z : double = x / y
 
 /* EXPECTED_OUTPUT:
 SemaResult(
@@ -12,19 +12,15 @@ SemaResult(
           ValueBinding(
             name="x",
             type=double,
-            value=BuiltinTypeCastExpression(
-              expr=NumberLiteralExpression(
-                lit=1
-              )
+            value=NumberLiteralExpression(
+              lit=1.5
             )
           ),
           ValueBinding(
             name="y",
             type=double,
-            value=BuiltinTypeCastExpression(
-              expr=NumberLiteralExpression(
-                lit=2
-              )
+            value=NumberLiteralExpression(
+              lit=2.5
             )
           ),
           ValueBinding(

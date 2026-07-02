@@ -1,0 +1,48 @@
+let x : float = 1.5
+let y : float = 2.5
+let z : bool = x != y
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="float",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=float,
+            value=BuiltinTypeCastExpression(
+              expr=NumberLiteralExpression(
+                lit=1.5
+              )
+            )
+          ),
+          ValueBinding(
+            name="y",
+            type=float,
+            value=BuiltinTypeCastExpression(
+              expr=NumberLiteralExpression(
+                lit=2.5
+              )
+            )
+          ),
+          ValueBinding(
+            name="z",
+            type=bool,
+            value=BuiltinBinaryOperationExpression(
+              operator="!=",
+              left=IdentifierExpression(
+                name="x"
+              ),
+              right=IdentifierExpression(
+                name="y"
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

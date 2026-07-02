@@ -1,0 +1,7 @@
+let x : double = 1.5
+let y : double = 2.5
+let z : double = x | y
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot perform binary operation '|' on types 'double' and 'double' (at test_cases/sema/expressions/operators/bitwise_or/error_double.am:3:18)")
+*/

@@ -1,0 +1,44 @@
+let x : bool = true
+let y : bool = true
+let z : bool = x && y
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="bool",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=bool,
+            value=BooleanLiteralExpression(
+              value=true
+            )
+          ),
+          ValueBinding(
+            name="y",
+            type=bool,
+            value=BooleanLiteralExpression(
+              value=true
+            )
+          ),
+          ValueBinding(
+            name="z",
+            type=bool,
+            value=BuiltinBinaryOperationExpression(
+              operator="&&",
+              left=IdentifierExpression(
+                name="x"
+              ),
+              right=IdentifierExpression(
+                name="y"
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

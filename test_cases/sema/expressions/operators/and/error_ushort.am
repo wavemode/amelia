@@ -1,0 +1,7 @@
+let x : ushort = 1
+let y : ushort = 2
+let z : ushort = x && y
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot perform binary operation '&&' on types 'ushort' and 'ushort' (at test_cases/sema/expressions/operators/and/error_ushort.am:3:18)")
+*/

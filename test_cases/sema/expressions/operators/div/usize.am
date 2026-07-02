@@ -1,6 +1,6 @@
 let x : usize = 1
 let y : usize = 2
-let z = x / y
+let z : usize = x / y
 
 /* EXPECTED_OUTPUT:
 SemaResult(

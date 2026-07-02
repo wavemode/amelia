@@ -1,6 +1,6 @@
 let x : int = 1
 let y : int = 2
-let z = x + y
+let z : int = x + y
 
 /* EXPECTED_OUTPUT:
 SemaResult(

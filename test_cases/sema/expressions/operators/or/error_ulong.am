@@ -1,0 +1,7 @@
+let x : ulong = 1
+let y : ulong = 2
+let z : ulong = x || y
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot perform binary operation '||' on types 'ulong' and 'ulong' (at test_cases/sema/expressions/operators/or/error_ulong.am:3:17)")
+*/

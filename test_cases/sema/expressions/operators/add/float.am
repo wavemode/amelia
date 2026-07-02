@@ -1,6 +1,6 @@
-let x : float = 1
-let y : float = 2
-let z = x + y
+let x : float = 1.5
+let y : float = 2.5
+let z : float = x + y
 
 /* EXPECTED_OUTPUT:
 SemaResult(
@@ -14,7 +14,7 @@ SemaResult(
             type=float,
             value=BuiltinTypeCastExpression(
               expr=NumberLiteralExpression(
-                lit=1
+                lit=1.5
               )
             )
           ),
@@ -23,7 +23,7 @@ SemaResult(
             type=float,
             value=BuiltinTypeCastExpression(
               expr=NumberLiteralExpression(
-                lit=2
+                lit=2.5
               )
             )
           ),

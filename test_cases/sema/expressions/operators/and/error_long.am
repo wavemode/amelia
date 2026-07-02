@@ -1,0 +1,7 @@
+let x : long = 1
+let y : long = 2
+let z : long = x && y
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot perform binary operation '&&' on types 'long' and 'long' (at test_cases/sema/expressions/operators/and/error_long.am:3:16)")
+*/

@@ -1,0 +1,48 @@
+let x : short = 1
+let y : short = 2
+let z : bool = x > y
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="short",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=short,
+            value=BuiltinTypeCastExpression(
+              expr=NumberLiteralExpression(
+                lit=1
+              )
+            )
+          ),
+          ValueBinding(
+            name="y",
+            type=short,
+            value=BuiltinTypeCastExpression(
+              expr=NumberLiteralExpression(
+                lit=2
+              )
+            )
+          ),
+          ValueBinding(
+            name="z",
+            type=bool,
+            value=BuiltinBinaryOperationExpression(
+              operator=">",
+              left=IdentifierExpression(
+                name="x"
+              ),
+              right=IdentifierExpression(
+                name="y"
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

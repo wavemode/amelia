@@ -1,0 +1,7 @@
+let x : bool = true
+let y : bool = true
+let z : bool = x > y
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot perform binary operation '>' on types 'bool' and 'bool' (at test_cases/sema/expressions/operators/greater/error_bool.am:3:16)")
+*/

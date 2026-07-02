@@ -213,6 +213,34 @@ Serialize serialize_binary_operator_kind(BinaryOperatorKind kind) {
     return Serialize::literal("*");
   case BinaryOperatorKind::Divide:
     return Serialize::literal("/");
+  case BinaryOperatorKind::And:
+    return Serialize::literal("&&");
+  case BinaryOperatorKind::BitwiseAnd:
+    return Serialize::literal("&");
+  case BinaryOperatorKind::BitwiseOr:
+    return Serialize::literal("|");
+  case BinaryOperatorKind::BitwiseXor:
+    return Serialize::literal("^");
+  case BinaryOperatorKind::Equals:
+    return Serialize::literal("==");
+  case BinaryOperatorKind::Greater:
+    return Serialize::literal(">");
+  case BinaryOperatorKind::GreaterEquals:
+    return Serialize::literal(">=");
+  case BinaryOperatorKind::Less:
+    return Serialize::literal("<");
+  case BinaryOperatorKind::LessEquals:
+    return Serialize::literal("<=");
+  case BinaryOperatorKind::LeftShift:
+    return Serialize::literal("<<");
+  case BinaryOperatorKind::Modulo:
+    return Serialize::literal("%");
+  case BinaryOperatorKind::NotEquals:
+    return Serialize::literal("!=");
+  case BinaryOperatorKind::Or:
+    return Serialize::literal("||");
+  case BinaryOperatorKind::RightShift:
+    return Serialize::literal(">>");
   }
 }
 

@@ -1405,6 +1405,20 @@ public:
     case NodeType::SubtractExprNode:
     case NodeType::MultiplyExprNode:
     case NodeType::DivideExprNode:
+    case NodeType::AndExprNode:
+    case NodeType::BitwiseAndExprNode:
+    case NodeType::BitwiseOrExprNode:
+    case NodeType::BitwiseXorExprNode:
+    case NodeType::EqualsExprNode:
+    case NodeType::GreaterExprNode:
+    case NodeType::GreaterEqualsExprNode:
+    case NodeType::LessExprNode:
+    case NodeType::LessEqualsExprNode:
+    case NodeType::LeftShiftExprNode:
+    case NodeType::ModuloExprNode:
+    case NodeType::NotEqualsExprNode:
+    case NodeType::OrExprNode:
+    case NodeType::RightShiftExprNode:
       result = build_expr_binary_op(expr_node_id);
       break;
     default:
@@ -1985,6 +1999,90 @@ public:
       right_expr_node_id = expr_node.right;
       op_kind = BinaryOperatorKind::Divide;
     } break;
+    case NodeType::AndExprNode: {
+      const AndExprNode &expr_node = node.as_AndExprNode();
+      left_expr_node_id = expr_node.left;
+      right_expr_node_id = expr_node.right;
+      op_kind = BinaryOperatorKind::And;
+    } break;
+    case NodeType::BitwiseAndExprNode: {
+      const BitwiseAndExprNode &expr_node = node.as_BitwiseAndExprNode();
+      left_expr_node_id = expr_node.left;
+      right_expr_node_id = expr_node.right;
+      op_kind = BinaryOperatorKind::BitwiseAnd;
+    } break;
+    case NodeType::BitwiseOrExprNode: {
+      const BitwiseOrExprNode &expr_node = node.as_BitwiseOrExprNode();
+      left_expr_node_id = expr_node.left;
+      right_expr_node_id = expr_node.right;
+      op_kind = BinaryOperatorKind::BitwiseOr;
+    } break;
+    case NodeType::BitwiseXorExprNode: {
+      const BitwiseXorExprNode &expr_node = node.as_BitwiseXorExprNode();
+      left_expr_node_id = expr_node.left;
+      right_expr_node_id = expr_node.right;
+      op_kind = BinaryOperatorKind::BitwiseXor;
+    } break;
+    case NodeType::EqualsExprNode: {
+      const EqualsExprNode &expr_node = node.as_EqualsExprNode();
+      left_expr_node_id = expr_node.left;
+      right_expr_node_id = expr_node.right;
+      op_kind = BinaryOperatorKind::Equals;
+    } break;
+    case NodeType::GreaterExprNode: {
+      const GreaterExprNode &expr_node = node.as_GreaterExprNode();
+      left_expr_node_id = expr_node.left;
+      right_expr_node_id = expr_node.right;
+      op_kind = BinaryOperatorKind::Greater;
+    } break;
+    case NodeType::GreaterEqualsExprNode: {
+      const GreaterEqualsExprNode &expr_node = node.as_GreaterEqualsExprNode();
+      left_expr_node_id = expr_node.left;
+      right_expr_node_id = expr_node.right;
+      op_kind = BinaryOperatorKind::GreaterEquals;
+    } break;
+    case NodeType::LessExprNode: {
+      const LessExprNode &expr_node = node.as_LessExprNode();
+      left_expr_node_id = expr_node.left;
+      right_expr_node_id = expr_node.right;
+      op_kind = BinaryOperatorKind::Less;
+    } break;
+    case NodeType::LessEqualsExprNode: {
+      const LessEqualsExprNode &expr_node = node.as_LessEqualsExprNode();
+      left_expr_node_id = expr_node.left;
+      right_expr_node_id = expr_node.right;
+      op_kind = BinaryOperatorKind::LessEquals;
+    } break;
+    case NodeType::LeftShiftExprNode: {
+      const LeftShiftExprNode &expr_node = node.as_LeftShiftExprNode();
+      left_expr_node_id = expr_node.left;
+      right_expr_node_id = expr_node.right;
+      op_kind = BinaryOperatorKind::LeftShift;
+    } break;
+    case NodeType::ModuloExprNode: {
+      const ModuloExprNode &expr_node = node.as_ModuloExprNode();
+      left_expr_node_id = expr_node.left;
+      right_expr_node_id = expr_node.right;
+      op_kind = BinaryOperatorKind::Modulo;
+    } break;
+    case NodeType::NotEqualsExprNode: {
+      const NotEqualsExprNode &expr_node = node.as_NotEqualsExprNode();
+      left_expr_node_id = expr_node.left;
+      right_expr_node_id = expr_node.right;
+      op_kind = BinaryOperatorKind::NotEquals;
+    } break;
+    case NodeType::OrExprNode: {
+      const OrExprNode &expr_node = node.as_OrExprNode();
+      left_expr_node_id = expr_node.left;
+      right_expr_node_id = expr_node.right;
+      op_kind = BinaryOperatorKind::Or;
+    } break;
+    case NodeType::RightShiftExprNode: {
+      const RightShiftExprNode &expr_node = node.as_RightShiftExprNode();
+      left_expr_node_id = expr_node.left;
+      right_expr_node_id = expr_node.right;
+      op_kind = BinaryOperatorKind::RightShift;
+    } break;
     default:
       raise_error_at_node_id(expr_node_id, "not implemented (unknown binary op node type)");
     }
@@ -2050,6 +2148,50 @@ public:
       return perform_binary_op_mul(move(left_type), move(left), move(right_type), move(right));
     case BinaryOperatorKind::Divide:
       return perform_binary_op_div(move(left_type), move(left), move(right_type), move(right));
+    case BinaryOperatorKind::And:
+      return perform_binary_op_and(move(left_type), move(left), move(right_type), move(right));
+    case BinaryOperatorKind::BitwiseAnd:
+      return perform_binary_op_bitwise_and(
+          move(left_type), move(left), move(right_type), move(right)
+      );
+    case BinaryOperatorKind::BitwiseOr:
+      return perform_binary_op_bitwise_or(
+          move(left_type), move(left), move(right_type), move(right)
+      );
+    case BinaryOperatorKind::BitwiseXor:
+      return perform_binary_op_bitwise_xor(
+          move(left_type), move(left), move(right_type), move(right)
+      );
+    case BinaryOperatorKind::Equals:
+      return perform_binary_op_equals(move(left_type), move(left), move(right_type), move(right));
+    case BinaryOperatorKind::Greater:
+      return perform_binary_op_greater(move(left_type), move(left), move(right_type), move(right));
+    case BinaryOperatorKind::GreaterEquals:
+      return perform_binary_op_greater_equals(
+          move(left_type), move(left), move(right_type), move(right)
+      );
+    case BinaryOperatorKind::Less:
+      return perform_binary_op_less(move(left_type), move(left), move(right_type), move(right));
+    case BinaryOperatorKind::LessEquals:
+      return perform_binary_op_less_equals(
+          move(left_type), move(left), move(right_type), move(right)
+      );
+    case BinaryOperatorKind::LeftShift:
+      return perform_binary_op_left_shift(
+          move(left_type), move(left), move(right_type), move(right)
+      );
+    case BinaryOperatorKind::Modulo:
+      return perform_binary_op_modulo(move(left_type), move(left), move(right_type), move(right));
+    case BinaryOperatorKind::NotEquals:
+      return perform_binary_op_not_equals(
+          move(left_type), move(left), move(right_type), move(right)
+      );
+    case BinaryOperatorKind::Or:
+      return perform_binary_op_or(move(left_type), move(left), move(right_type), move(right));
+    case BinaryOperatorKind::RightShift:
+      return perform_binary_op_right_shift(
+          move(left_type), move(left), move(right_type), move(right)
+      );
     default:
       break;
     }
@@ -2447,6 +2589,1392 @@ public:
     case BuiltinKind::Str:
     case BuiltinKind::Null:
     case BuiltinKind::Never:
+    case BuiltinKind::Unknown:
+      return None();
+    }
+  }
+
+  Option<Flex<Expression>> perform_binary_op_and(
+      Flex<Type> left_type, Flex<Expression> left, Flex<Type> right_type, Flex<Expression> right
+  ) {
+    switch (left_type->kind) {
+    case TypeKind::Alias:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Alias)");
+    case TypeKind::Reference:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Reference)");
+    case TypeKind::Struct:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Struct)");
+    case TypeKind::Tuple:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Tuple)");
+    case TypeKind::Array:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Array)");
+    case TypeKind::TypeFn:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of TypeFn)");
+    case TypeKind::Apply:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Apply)");
+    case TypeKind::Builtin:
+      return perform_binary_op_and_builtin(
+          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          move(left),
+          move(right_type),
+          move(right)
+      );
+    case TypeKind::BitInt:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of BitInt)");
+    case TypeKind::Pointer:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Pointer)");
+    case TypeKind::Slice:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Slice)");
+    case TypeKind::Impl:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Impl)");
+    case TypeKind::ConstInteger:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstInteger)");
+    case TypeKind::ConstRational:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstRational)");
+    case TypeKind::ConstBoolean:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstBoolean)");
+    case TypeKind::ConstCharacter:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstCharacter)");
+    case TypeKind::ConstString:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstString)");
+    case TypeKind::Class:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Class)");
+    case TypeKind::Union:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Union)");
+    case TypeKind::Concept:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Concept)");
+    case TypeKind::Function:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Function)");
+    case TypeKind::FunctionPointer:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of FunctionPointer)");
+    case TypeKind::Closure:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Closure)");
+    case TypeKind::Variable:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Variable)");
+    }
+  }
+
+  Option<Flex<Expression>> perform_binary_op_and_builtin(
+      Flex<BuiltinType> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
+  ) {
+    if (!unify(left_type, right_type)) {
+      return None();
+    }
+    switch (left_type->builtin_kind) {
+    case BuiltinKind::Bool: {
+      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      result->node_id = left->node_id;
+      result->type = left->type;
+      result->op_kind = BinaryOperatorKind::And;
+      result->left = left;
+      result->right = right;
+      return result;
+    }
+    case BuiltinKind::Byte:
+    case BuiltinKind::UByte:
+    case BuiltinKind::Short:
+    case BuiltinKind::UShort:
+    case BuiltinKind::Int:
+    case BuiltinKind::UInt:
+    case BuiltinKind::Long:
+    case BuiltinKind::ULong:
+    case BuiltinKind::USize:
+    case BuiltinKind::Float:
+    case BuiltinKind::Double:
+    case BuiltinKind::Char:
+    case BuiltinKind::Str:
+    case BuiltinKind::Null:
+    case BuiltinKind::Never:
+    case BuiltinKind::Unknown:
+      return None();
+    }
+  }
+
+  Option<Flex<Expression>> perform_binary_op_bitwise_and(
+      Flex<Type> left_type, Flex<Expression> left, Flex<Type> right_type, Flex<Expression> right
+  ) {
+    switch (left_type->kind) {
+    case TypeKind::Alias:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Alias)");
+    case TypeKind::Reference:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Reference)");
+    case TypeKind::Struct:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Struct)");
+    case TypeKind::Tuple:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Tuple)");
+    case TypeKind::Array:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Array)");
+    case TypeKind::TypeFn:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of TypeFn)");
+    case TypeKind::Apply:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Apply)");
+    case TypeKind::Builtin:
+      return perform_binary_op_bitwise_and_builtin(
+          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          move(left),
+          move(right_type),
+          move(right)
+      );
+    case TypeKind::BitInt:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of BitInt)");
+    case TypeKind::Pointer:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Pointer)");
+    case TypeKind::Slice:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Slice)");
+    case TypeKind::Impl:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Impl)");
+    case TypeKind::ConstInteger:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstInteger)");
+    case TypeKind::ConstRational:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstRational)");
+    case TypeKind::ConstBoolean:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstBoolean)");
+    case TypeKind::ConstCharacter:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstCharacter)");
+    case TypeKind::ConstString:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstString)");
+    case TypeKind::Class:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Class)");
+    case TypeKind::Union:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Union)");
+    case TypeKind::Concept:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Concept)");
+    case TypeKind::Function:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Function)");
+    case TypeKind::FunctionPointer:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of FunctionPointer)");
+    case TypeKind::Closure:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Closure)");
+    case TypeKind::Variable:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Variable)");
+    }
+  }
+
+  Option<Flex<Expression>> perform_binary_op_bitwise_and_builtin(
+      Flex<BuiltinType> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
+  ) {
+    if (!unify(left_type, right_type)) {
+      return None();
+    }
+    switch (left_type->builtin_kind) {
+    case BuiltinKind::Byte:
+    case BuiltinKind::UByte:
+    case BuiltinKind::Short:
+    case BuiltinKind::UShort:
+    case BuiltinKind::Int:
+    case BuiltinKind::UInt:
+    case BuiltinKind::Long:
+    case BuiltinKind::ULong:
+    case BuiltinKind::USize: {
+      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      result->node_id = left->node_id;
+      result->type = left->type;
+      result->op_kind = BinaryOperatorKind::BitwiseAnd;
+      result->left = left;
+      result->right = right;
+      return result;
+    }
+    case BuiltinKind::Float:
+    case BuiltinKind::Double:
+    case BuiltinKind::Char:
+    case BuiltinKind::Bool:
+    case BuiltinKind::Str:
+    case BuiltinKind::Null:
+    case BuiltinKind::Never:
+    case BuiltinKind::Unknown:
+      return None();
+    }
+  }
+
+  Option<Flex<Expression>> perform_binary_op_bitwise_or(
+      Flex<Type> left_type, Flex<Expression> left, Flex<Type> right_type, Flex<Expression> right
+  ) {
+    switch (left_type->kind) {
+    case TypeKind::Alias:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Alias)");
+    case TypeKind::Reference:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Reference)");
+    case TypeKind::Struct:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Struct)");
+    case TypeKind::Tuple:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Tuple)");
+    case TypeKind::Array:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Array)");
+    case TypeKind::TypeFn:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of TypeFn)");
+    case TypeKind::Apply:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Apply)");
+    case TypeKind::Builtin:
+      return perform_binary_op_bitwise_or_builtin(
+          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          move(left),
+          move(right_type),
+          move(right)
+      );
+    case TypeKind::BitInt:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of BitInt)");
+    case TypeKind::Pointer:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Pointer)");
+    case TypeKind::Slice:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Slice)");
+    case TypeKind::Impl:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Impl)");
+    case TypeKind::ConstInteger:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstInteger)");
+    case TypeKind::ConstRational:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstRational)");
+    case TypeKind::ConstBoolean:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstBoolean)");
+    case TypeKind::ConstCharacter:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstCharacter)");
+    case TypeKind::ConstString:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstString)");
+    case TypeKind::Class:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Class)");
+    case TypeKind::Union:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Union)");
+    case TypeKind::Concept:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Concept)");
+    case TypeKind::Function:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Function)");
+    case TypeKind::FunctionPointer:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of FunctionPointer)");
+    case TypeKind::Closure:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Closure)");
+    case TypeKind::Variable:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Variable)");
+    }
+  }
+
+  Option<Flex<Expression>> perform_binary_op_bitwise_or_builtin(
+      Flex<BuiltinType> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
+  ) {
+    if (!unify(left_type, right_type)) {
+      return None();
+    }
+    switch (left_type->builtin_kind) {
+    case BuiltinKind::Byte:
+    case BuiltinKind::UByte:
+    case BuiltinKind::Short:
+    case BuiltinKind::UShort:
+    case BuiltinKind::Int:
+    case BuiltinKind::UInt:
+    case BuiltinKind::Long:
+    case BuiltinKind::ULong:
+    case BuiltinKind::USize: {
+      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      result->node_id = left->node_id;
+      result->type = left->type;
+      result->op_kind = BinaryOperatorKind::BitwiseOr;
+      result->left = left;
+      result->right = right;
+      return result;
+    }
+    case BuiltinKind::Float:
+    case BuiltinKind::Double:
+    case BuiltinKind::Char:
+    case BuiltinKind::Bool:
+    case BuiltinKind::Str:
+    case BuiltinKind::Null:
+    case BuiltinKind::Never:
+    case BuiltinKind::Unknown:
+      return None();
+    }
+  }
+
+  Option<Flex<Expression>> perform_binary_op_bitwise_xor(
+      Flex<Type> left_type, Flex<Expression> left, Flex<Type> right_type, Flex<Expression> right
+  ) {
+    switch (left_type->kind) {
+    case TypeKind::Alias:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Alias)");
+    case TypeKind::Reference:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Reference)");
+    case TypeKind::Struct:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Struct)");
+    case TypeKind::Tuple:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Tuple)");
+    case TypeKind::Array:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Array)");
+    case TypeKind::TypeFn:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of TypeFn)");
+    case TypeKind::Apply:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Apply)");
+    case TypeKind::Builtin:
+      return perform_binary_op_bitwise_xor_builtin(
+          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          move(left),
+          move(right_type),
+          move(right)
+      );
+    case TypeKind::BitInt:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of BitInt)");
+    case TypeKind::Pointer:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Pointer)");
+    case TypeKind::Slice:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Slice)");
+    case TypeKind::Impl:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Impl)");
+    case TypeKind::ConstInteger:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstInteger)");
+    case TypeKind::ConstRational:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstRational)");
+    case TypeKind::ConstBoolean:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstBoolean)");
+    case TypeKind::ConstCharacter:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstCharacter)");
+    case TypeKind::ConstString:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstString)");
+    case TypeKind::Class:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Class)");
+    case TypeKind::Union:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Union)");
+    case TypeKind::Concept:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Concept)");
+    case TypeKind::Function:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Function)");
+    case TypeKind::FunctionPointer:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of FunctionPointer)");
+    case TypeKind::Closure:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Closure)");
+    case TypeKind::Variable:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Variable)");
+    }
+  }
+
+  Option<Flex<Expression>> perform_binary_op_bitwise_xor_builtin(
+      Flex<BuiltinType> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
+  ) {
+    if (!unify(left_type, right_type)) {
+      return None();
+    }
+    switch (left_type->builtin_kind) {
+    case BuiltinKind::Byte:
+    case BuiltinKind::UByte:
+    case BuiltinKind::Short:
+    case BuiltinKind::UShort:
+    case BuiltinKind::Int:
+    case BuiltinKind::UInt:
+    case BuiltinKind::Long:
+    case BuiltinKind::ULong:
+    case BuiltinKind::USize: {
+      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      result->node_id = left->node_id;
+      result->type = left->type;
+      result->op_kind = BinaryOperatorKind::BitwiseXor;
+      result->left = left;
+      result->right = right;
+      return result;
+    }
+    case BuiltinKind::Float:
+    case BuiltinKind::Double:
+    case BuiltinKind::Char:
+    case BuiltinKind::Bool:
+    case BuiltinKind::Str:
+    case BuiltinKind::Null:
+    case BuiltinKind::Never:
+    case BuiltinKind::Unknown:
+      return None();
+    }
+  }
+
+  Option<Flex<Expression>> perform_binary_op_equals(
+      Flex<Type> left_type, Flex<Expression> left, Flex<Type> right_type, Flex<Expression> right
+  ) {
+    switch (left_type->kind) {
+    case TypeKind::Alias:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Alias)");
+    case TypeKind::Reference:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Reference)");
+    case TypeKind::Struct:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Struct)");
+    case TypeKind::Tuple:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Tuple)");
+    case TypeKind::Array:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Array)");
+    case TypeKind::TypeFn:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of TypeFn)");
+    case TypeKind::Apply:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Apply)");
+    case TypeKind::Builtin:
+      return perform_binary_op_equals_builtin(
+          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          move(left),
+          move(right_type),
+          move(right)
+      );
+    case TypeKind::BitInt:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of BitInt)");
+    case TypeKind::Pointer:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Pointer)");
+    case TypeKind::Slice:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Slice)");
+    case TypeKind::Impl:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Impl)");
+    case TypeKind::ConstInteger:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstInteger)");
+    case TypeKind::ConstRational:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstRational)");
+    case TypeKind::ConstBoolean:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstBoolean)");
+    case TypeKind::ConstCharacter:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstCharacter)");
+    case TypeKind::ConstString:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstString)");
+    case TypeKind::Class:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Class)");
+    case TypeKind::Union:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Union)");
+    case TypeKind::Concept:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Concept)");
+    case TypeKind::Function:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Function)");
+    case TypeKind::FunctionPointer:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of FunctionPointer)");
+    case TypeKind::Closure:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Closure)");
+    case TypeKind::Variable:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Variable)");
+    }
+  }
+
+  Option<Flex<Expression>> perform_binary_op_equals_builtin(
+      Flex<BuiltinType> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
+  ) {
+    if (!unify(left_type, right_type)) {
+      return None();
+    }
+    switch (left_type->builtin_kind) {
+    case BuiltinKind::Byte:
+    case BuiltinKind::UByte:
+    case BuiltinKind::Short:
+    case BuiltinKind::UShort:
+    case BuiltinKind::Int:
+    case BuiltinKind::UInt:
+    case BuiltinKind::Long:
+    case BuiltinKind::ULong:
+    case BuiltinKind::USize:
+    case BuiltinKind::Float:
+    case BuiltinKind::Double:
+    case BuiltinKind::Char:
+    case BuiltinKind::Bool:
+    case BuiltinKind::Null: {
+      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      result->node_id = left->node_id;
+      result->type = Flex<Type>::weak(&BOOL_TYPE);
+      result->op_kind = BinaryOperatorKind::Equals;
+      result->left = left;
+      result->right = right;
+      return result;
+    }
+    case BuiltinKind::Never:
+    case BuiltinKind::Str:
+    case BuiltinKind::Unknown:
+      return None();
+    }
+  }
+
+  Option<Flex<Expression>> perform_binary_op_greater(
+      Flex<Type> left_type, Flex<Expression> left, Flex<Type> right_type, Flex<Expression> right
+  ) {
+    switch (left_type->kind) {
+    case TypeKind::Alias:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Alias)");
+    case TypeKind::Reference:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Reference)");
+    case TypeKind::Struct:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Struct)");
+    case TypeKind::Tuple:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Tuple)");
+    case TypeKind::Array:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Array)");
+    case TypeKind::TypeFn:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of TypeFn)");
+    case TypeKind::Apply:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Apply)");
+    case TypeKind::Builtin:
+      return perform_binary_op_greater_builtin(
+          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          move(left),
+          move(right_type),
+          move(right)
+      );
+    case TypeKind::BitInt:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of BitInt)");
+    case TypeKind::Pointer:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Pointer)");
+    case TypeKind::Slice:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Slice)");
+    case TypeKind::Impl:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Impl)");
+    case TypeKind::ConstInteger:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstInteger)");
+    case TypeKind::ConstRational:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstRational)");
+    case TypeKind::ConstBoolean:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstBoolean)");
+    case TypeKind::ConstCharacter:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstCharacter)");
+    case TypeKind::ConstString:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstString)");
+    case TypeKind::Class:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Class)");
+    case TypeKind::Union:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Union)");
+    case TypeKind::Concept:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Concept)");
+    case TypeKind::Function:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Function)");
+    case TypeKind::FunctionPointer:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of FunctionPointer)");
+    case TypeKind::Closure:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Closure)");
+    case TypeKind::Variable:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Variable)");
+    }
+  }
+
+  Option<Flex<Expression>> perform_binary_op_greater_builtin(
+      Flex<BuiltinType> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
+  ) {
+    if (!unify(left_type, right_type)) {
+      return None();
+    }
+    switch (left_type->builtin_kind) {
+    case BuiltinKind::Byte:
+    case BuiltinKind::UByte:
+    case BuiltinKind::Short:
+    case BuiltinKind::UShort:
+    case BuiltinKind::Int:
+    case BuiltinKind::UInt:
+    case BuiltinKind::Long:
+    case BuiltinKind::ULong:
+    case BuiltinKind::USize:
+    case BuiltinKind::Float:
+    case BuiltinKind::Double:
+    case BuiltinKind::Char: {
+      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      result->node_id = left->node_id;
+      result->type = Flex<Type>::weak(&BOOL_TYPE);
+      result->op_kind = BinaryOperatorKind::Greater;
+      result->left = left;
+      result->right = right;
+      return result;
+    }
+    case BuiltinKind::Bool:
+    case BuiltinKind::Null:
+    case BuiltinKind::Never:
+    case BuiltinKind::Str:
+    case BuiltinKind::Unknown:
+      return None();
+    }
+  }
+
+  Option<Flex<Expression>> perform_binary_op_greater_equals(
+      Flex<Type> left_type, Flex<Expression> left, Flex<Type> right_type, Flex<Expression> right
+  ) {
+    switch (left_type->kind) {
+    case TypeKind::Alias:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Alias)");
+    case TypeKind::Reference:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Reference)");
+    case TypeKind::Struct:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Struct)");
+    case TypeKind::Tuple:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Tuple)");
+    case TypeKind::Array:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Array)");
+    case TypeKind::TypeFn:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of TypeFn)");
+    case TypeKind::Apply:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Apply)");
+    case TypeKind::Builtin:
+      return perform_binary_op_greater_equals_builtin(
+          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          move(left),
+          move(right_type),
+          move(right)
+      );
+    case TypeKind::BitInt:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of BitInt)");
+    case TypeKind::Pointer:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Pointer)");
+    case TypeKind::Slice:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Slice)");
+    case TypeKind::Impl:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Impl)");
+    case TypeKind::ConstInteger:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstInteger)");
+    case TypeKind::ConstRational:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstRational)");
+    case TypeKind::ConstBoolean:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstBoolean)");
+    case TypeKind::ConstCharacter:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstCharacter)");
+    case TypeKind::ConstString:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstString)");
+    case TypeKind::Class:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Class)");
+    case TypeKind::Union:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Union)");
+    case TypeKind::Concept:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Concept)");
+    case TypeKind::Function:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Function)");
+    case TypeKind::FunctionPointer:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of FunctionPointer)");
+    case TypeKind::Closure:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Closure)");
+    case TypeKind::Variable:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Variable)");
+    }
+  }
+
+  Option<Flex<Expression>> perform_binary_op_greater_equals_builtin(
+      Flex<BuiltinType> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
+  ) {
+    if (!unify(left_type, right_type)) {
+      return None();
+    }
+    switch (left_type->builtin_kind) {
+    case BuiltinKind::Byte:
+    case BuiltinKind::UByte:
+    case BuiltinKind::Short:
+    case BuiltinKind::UShort:
+    case BuiltinKind::Int:
+    case BuiltinKind::UInt:
+    case BuiltinKind::Long:
+    case BuiltinKind::ULong:
+    case BuiltinKind::USize:
+    case BuiltinKind::Float:
+    case BuiltinKind::Double:
+    case BuiltinKind::Char: {
+      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      result->node_id = left->node_id;
+      result->type = Flex<Type>::weak(&BOOL_TYPE);
+      result->op_kind = BinaryOperatorKind::GreaterEquals;
+      result->left = left;
+      result->right = right;
+      return result;
+    }
+    case BuiltinKind::Bool:
+    case BuiltinKind::Null:
+    case BuiltinKind::Never:
+    case BuiltinKind::Str:
+    case BuiltinKind::Unknown:
+      return None();
+    }
+  }
+
+  Option<Flex<Expression>> perform_binary_op_less(
+      Flex<Type> left_type, Flex<Expression> left, Flex<Type> right_type, Flex<Expression> right
+  ) {
+    switch (left_type->kind) {
+    case TypeKind::Alias:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Alias)");
+    case TypeKind::Reference:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Reference)");
+    case TypeKind::Struct:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Struct)");
+    case TypeKind::Tuple:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Tuple)");
+    case TypeKind::Array:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Array)");
+    case TypeKind::TypeFn:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of TypeFn)");
+    case TypeKind::Apply:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Apply)");
+    case TypeKind::Builtin:
+      return perform_binary_op_less_builtin(
+          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          move(left),
+          move(right_type),
+          move(right)
+      );
+    case TypeKind::BitInt:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of BitInt)");
+    case TypeKind::Pointer:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Pointer)");
+    case TypeKind::Slice:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Slice)");
+    case TypeKind::Impl:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Impl)");
+    case TypeKind::ConstInteger:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstInteger)");
+    case TypeKind::ConstRational:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstRational)");
+    case TypeKind::ConstBoolean:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstBoolean)");
+    case TypeKind::ConstCharacter:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstCharacter)");
+    case TypeKind::ConstString:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstString)");
+    case TypeKind::Class:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Class)");
+    case TypeKind::Union:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Union)");
+    case TypeKind::Concept:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Concept)");
+    case TypeKind::Function:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Function)");
+    case TypeKind::FunctionPointer:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of FunctionPointer)");
+    case TypeKind::Closure:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Closure)");
+    case TypeKind::Variable:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Variable)");
+    }
+  }
+
+  Option<Flex<Expression>> perform_binary_op_less_builtin(
+      Flex<BuiltinType> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
+  ) {
+    if (!unify(left_type, right_type)) {
+      return None();
+    }
+    switch (left_type->builtin_kind) {
+    case BuiltinKind::Byte:
+    case BuiltinKind::UByte:
+    case BuiltinKind::Short:
+    case BuiltinKind::UShort:
+    case BuiltinKind::Int:
+    case BuiltinKind::UInt:
+    case BuiltinKind::Long:
+    case BuiltinKind::ULong:
+    case BuiltinKind::USize:
+    case BuiltinKind::Float:
+    case BuiltinKind::Double:
+    case BuiltinKind::Char: {
+      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      result->node_id = left->node_id;
+      result->type = Flex<Type>::weak(&BOOL_TYPE);
+      result->op_kind = BinaryOperatorKind::Less;
+      result->left = left;
+      result->right = right;
+      return result;
+    }
+    case BuiltinKind::Bool:
+    case BuiltinKind::Null:
+    case BuiltinKind::Never:
+    case BuiltinKind::Str:
+    case BuiltinKind::Unknown:
+      return None();
+    }
+  }
+
+  Option<Flex<Expression>> perform_binary_op_less_equals(
+      Flex<Type> left_type, Flex<Expression> left, Flex<Type> right_type, Flex<Expression> right
+  ) {
+    switch (left_type->kind) {
+    case TypeKind::Alias:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Alias)");
+    case TypeKind::Reference:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Reference)");
+    case TypeKind::Struct:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Struct)");
+    case TypeKind::Tuple:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Tuple)");
+    case TypeKind::Array:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Array)");
+    case TypeKind::TypeFn:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of TypeFn)");
+    case TypeKind::Apply:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Apply)");
+    case TypeKind::Builtin:
+      return perform_binary_op_less_equals_builtin(
+          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          move(left),
+          move(right_type),
+          move(right)
+      );
+    case TypeKind::BitInt:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of BitInt)");
+    case TypeKind::Pointer:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Pointer)");
+    case TypeKind::Slice:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Slice)");
+    case TypeKind::Impl:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Impl)");
+    case TypeKind::ConstInteger:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstInteger)");
+    case TypeKind::ConstRational:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstRational)");
+    case TypeKind::ConstBoolean:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstBoolean)");
+    case TypeKind::ConstCharacter:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstCharacter)");
+    case TypeKind::ConstString:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstString)");
+    case TypeKind::Class:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Class)");
+    case TypeKind::Union:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Union)");
+    case TypeKind::Concept:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Concept)");
+    case TypeKind::Function:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Function)");
+    case TypeKind::FunctionPointer:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of FunctionPointer)");
+    case TypeKind::Closure:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Closure)");
+    case TypeKind::Variable:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Variable)");
+    }
+  }
+
+  Option<Flex<Expression>> perform_binary_op_less_equals_builtin(
+      Flex<BuiltinType> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
+  ) {
+    if (!unify(left_type, right_type)) {
+      return None();
+    }
+    switch (left_type->builtin_kind) {
+    case BuiltinKind::Byte:
+    case BuiltinKind::UByte:
+    case BuiltinKind::Short:
+    case BuiltinKind::UShort:
+    case BuiltinKind::Int:
+    case BuiltinKind::UInt:
+    case BuiltinKind::Long:
+    case BuiltinKind::ULong:
+    case BuiltinKind::USize:
+    case BuiltinKind::Float:
+    case BuiltinKind::Double:
+    case BuiltinKind::Char: {
+      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      result->node_id = left->node_id;
+      result->type = Flex<Type>::weak(&BOOL_TYPE);
+      result->op_kind = BinaryOperatorKind::LessEquals;
+      result->left = left;
+      result->right = right;
+      return result;
+    }
+    case BuiltinKind::Bool:
+    case BuiltinKind::Null:
+    case BuiltinKind::Never:
+    case BuiltinKind::Str:
+    case BuiltinKind::Unknown:
+      return None();
+    }
+  }
+
+  Option<Flex<Expression>> perform_binary_op_left_shift(
+      Flex<Type> left_type, Flex<Expression> left, Flex<Type> right_type, Flex<Expression> right
+  ) {
+    switch (left_type->kind) {
+    case TypeKind::Alias:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Alias)");
+    case TypeKind::Reference:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Reference)");
+    case TypeKind::Struct:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Struct)");
+    case TypeKind::Tuple:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Tuple)");
+    case TypeKind::Array:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Array)");
+    case TypeKind::TypeFn:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of TypeFn)");
+    case TypeKind::Apply:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Apply)");
+    case TypeKind::Builtin:
+      return perform_binary_op_left_shift_builtin(
+          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          move(left),
+          move(right_type),
+          move(right)
+      );
+    case TypeKind::BitInt:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of BitInt)");
+    case TypeKind::Pointer:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Pointer)");
+    case TypeKind::Slice:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Slice)");
+    case TypeKind::Impl:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Impl)");
+    case TypeKind::ConstInteger:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstInteger)");
+    case TypeKind::ConstRational:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstRational)");
+    case TypeKind::ConstBoolean:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstBoolean)");
+    case TypeKind::ConstCharacter:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstCharacter)");
+    case TypeKind::ConstString:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstString)");
+    case TypeKind::Class:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Class)");
+    case TypeKind::Union:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Union)");
+    case TypeKind::Concept:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Concept)");
+    case TypeKind::Function:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Function)");
+    case TypeKind::FunctionPointer:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of FunctionPointer)");
+    case TypeKind::Closure:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Closure)");
+    case TypeKind::Variable:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Variable)");
+    }
+  }
+
+  Option<Flex<Expression>> perform_binary_op_left_shift_builtin(
+      Flex<BuiltinType> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
+  ) {
+    if (right_type->kind != TypeKind::Builtin || !is_integral_type(right_type)) {
+      return None();
+    }
+    switch (left_type->builtin_kind) {
+    case BuiltinKind::Byte:
+    case BuiltinKind::UByte:
+    case BuiltinKind::Short:
+    case BuiltinKind::UShort:
+    case BuiltinKind::Int:
+    case BuiltinKind::UInt:
+    case BuiltinKind::Long:
+    case BuiltinKind::ULong:
+    case BuiltinKind::USize: {
+      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      result->node_id = left->node_id;
+      result->type = left->type;
+      result->op_kind = BinaryOperatorKind::LeftShift;
+      result->left = left;
+      result->right = right;
+      return result;
+    }
+    case BuiltinKind::Float:
+    case BuiltinKind::Double:
+    case BuiltinKind::Char:
+    case BuiltinKind::Bool:
+    case BuiltinKind::Null:
+    case BuiltinKind::Never:
+    case BuiltinKind::Str:
+    case BuiltinKind::Unknown:
+      return None();
+    }
+  }
+
+  Option<Flex<Expression>> perform_binary_op_modulo(
+      Flex<Type> left_type, Flex<Expression> left, Flex<Type> right_type, Flex<Expression> right
+  ) {
+    switch (left_type->kind) {
+    case TypeKind::Alias:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Alias)");
+    case TypeKind::Reference:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Reference)");
+    case TypeKind::Struct:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Struct)");
+    case TypeKind::Tuple:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Tuple)");
+    case TypeKind::Array:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Array)");
+    case TypeKind::TypeFn:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of TypeFn)");
+    case TypeKind::Apply:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Apply)");
+    case TypeKind::Builtin:
+      return perform_binary_op_modulo_builtin(
+          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          move(left),
+          move(right_type),
+          move(right)
+      );
+    case TypeKind::BitInt:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of BitInt)");
+    case TypeKind::Pointer:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Pointer)");
+    case TypeKind::Slice:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Slice)");
+    case TypeKind::Impl:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Impl)");
+    case TypeKind::ConstInteger:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstInteger)");
+    case TypeKind::ConstRational:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstRational)");
+    case TypeKind::ConstBoolean:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstBoolean)");
+    case TypeKind::ConstCharacter:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstCharacter)");
+    case TypeKind::ConstString:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstString)");
+    case TypeKind::Class:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Class)");
+    case TypeKind::Union:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Union)");
+    case TypeKind::Concept:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Concept)");
+    case TypeKind::Function:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Function)");
+    case TypeKind::FunctionPointer:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of FunctionPointer)");
+    case TypeKind::Closure:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Closure)");
+    case TypeKind::Variable:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Variable)");
+    }
+  }
+
+  Option<Flex<Expression>> perform_binary_op_modulo_builtin(
+      Flex<BuiltinType> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
+  ) {
+    if (!unify(left_type, right_type)) {
+      return None();
+    }
+    switch (left_type->builtin_kind) {
+    case BuiltinKind::Byte:
+    case BuiltinKind::UByte:
+    case BuiltinKind::Short:
+    case BuiltinKind::UShort:
+    case BuiltinKind::Int:
+    case BuiltinKind::UInt:
+    case BuiltinKind::Long:
+    case BuiltinKind::ULong:
+    case BuiltinKind::USize: {
+      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      result->node_id = left->node_id;
+      result->type = left->type;
+      result->op_kind = BinaryOperatorKind::Modulo;
+      result->left = left;
+      result->right = right;
+      return result;
+    }
+    case BuiltinKind::Float:
+    case BuiltinKind::Double:
+    case BuiltinKind::Char:
+    case BuiltinKind::Bool:
+    case BuiltinKind::Null:
+    case BuiltinKind::Never:
+    case BuiltinKind::Str:
+    case BuiltinKind::Unknown:
+      return None();
+    }
+  }
+
+  Option<Flex<Expression>> perform_binary_op_not_equals(
+      Flex<Type> left_type, Flex<Expression> left, Flex<Type> right_type, Flex<Expression> right
+  ) {
+    switch (left_type->kind) {
+    case TypeKind::Alias:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Alias)");
+    case TypeKind::Reference:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Reference)");
+    case TypeKind::Struct:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Struct)");
+    case TypeKind::Tuple:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Tuple)");
+    case TypeKind::Array:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Array)");
+    case TypeKind::TypeFn:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of TypeFn)");
+    case TypeKind::Apply:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Apply)");
+    case TypeKind::Builtin:
+      return perform_binary_op_not_equals_builtin(
+          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          move(left),
+          move(right_type),
+          move(right)
+      );
+    case TypeKind::BitInt:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of BitInt)");
+    case TypeKind::Pointer:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Pointer)");
+    case TypeKind::Slice:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Slice)");
+    case TypeKind::Impl:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Impl)");
+    case TypeKind::ConstInteger:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstInteger)");
+    case TypeKind::ConstRational:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstRational)");
+    case TypeKind::ConstBoolean:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstBoolean)");
+    case TypeKind::ConstCharacter:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstCharacter)");
+    case TypeKind::ConstString:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstString)");
+    case TypeKind::Class:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Class)");
+    case TypeKind::Union:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Union)");
+    case TypeKind::Concept:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Concept)");
+    case TypeKind::Function:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Function)");
+    case TypeKind::FunctionPointer:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of FunctionPointer)");
+    case TypeKind::Closure:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Closure)");
+    case TypeKind::Variable:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Variable)");
+    }
+  }
+
+  Option<Flex<Expression>> perform_binary_op_not_equals_builtin(
+      Flex<BuiltinType> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
+  ) {
+    if (!unify(left_type, right_type)) {
+      return None();
+    }
+    switch (left_type->builtin_kind) {
+    case BuiltinKind::Byte:
+    case BuiltinKind::UByte:
+    case BuiltinKind::Short:
+    case BuiltinKind::UShort:
+    case BuiltinKind::Int:
+    case BuiltinKind::UInt:
+    case BuiltinKind::Long:
+    case BuiltinKind::ULong:
+    case BuiltinKind::USize:
+    case BuiltinKind::Float:
+    case BuiltinKind::Double:
+    case BuiltinKind::Char:
+    case BuiltinKind::Bool:
+    case BuiltinKind::Null: {
+      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      result->node_id = left->node_id;
+      result->type = Flex<Type>::weak(&BOOL_TYPE);
+      result->op_kind = BinaryOperatorKind::NotEquals;
+      result->left = left;
+      result->right = right;
+      return result;
+    }
+    case BuiltinKind::Never:
+    case BuiltinKind::Str:
+    case BuiltinKind::Unknown:
+      return None();
+    }
+  }
+
+  Option<Flex<Expression>> perform_binary_op_or(
+      Flex<Type> left_type, Flex<Expression> left, Flex<Type> right_type, Flex<Expression> right
+  ) {
+    switch (left_type->kind) {
+    case TypeKind::Alias:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Alias)");
+    case TypeKind::Reference:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Reference)");
+    case TypeKind::Struct:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Struct)");
+    case TypeKind::Tuple:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Tuple)");
+    case TypeKind::Array:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Array)");
+    case TypeKind::TypeFn:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of TypeFn)");
+    case TypeKind::Apply:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Apply)");
+    case TypeKind::Builtin:
+      return perform_binary_op_or_builtin(
+          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          move(left),
+          move(right_type),
+          move(right)
+      );
+    case TypeKind::BitInt:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of BitInt)");
+    case TypeKind::Pointer:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Pointer)");
+    case TypeKind::Slice:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Slice)");
+    case TypeKind::Impl:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Impl)");
+    case TypeKind::ConstInteger:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstInteger)");
+    case TypeKind::ConstRational:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstRational)");
+    case TypeKind::ConstBoolean:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstBoolean)");
+    case TypeKind::ConstCharacter:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstCharacter)");
+    case TypeKind::ConstString:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstString)");
+    case TypeKind::Class:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Class)");
+    case TypeKind::Union:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Union)");
+    case TypeKind::Concept:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Concept)");
+    case TypeKind::Function:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Function)");
+    case TypeKind::FunctionPointer:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of FunctionPointer)");
+    case TypeKind::Closure:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Closure)");
+    case TypeKind::Variable:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Variable)");
+    }
+  }
+
+  Option<Flex<Expression>> perform_binary_op_or_builtin(
+      Flex<BuiltinType> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
+  ) {
+    if (!unify(left_type, right_type)) {
+      return None();
+    }
+    switch (left_type->builtin_kind) {
+    case BuiltinKind::Bool: {
+      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      result->node_id = left->node_id;
+      result->type = Flex<Type>::weak(&BOOL_TYPE);
+      result->op_kind = BinaryOperatorKind::Or;
+      result->left = left;
+      result->right = right;
+      return result;
+    }
+    case BuiltinKind::Byte:
+    case BuiltinKind::UByte:
+    case BuiltinKind::Short:
+    case BuiltinKind::UShort:
+    case BuiltinKind::Int:
+    case BuiltinKind::UInt:
+    case BuiltinKind::Long:
+    case BuiltinKind::ULong:
+    case BuiltinKind::USize:
+    case BuiltinKind::Float:
+    case BuiltinKind::Double:
+    case BuiltinKind::Char:
+    case BuiltinKind::Null:
+    case BuiltinKind::Never:
+    case BuiltinKind::Str:
+    case BuiltinKind::Unknown:
+      return None();
+    }
+  }
+
+  Option<Flex<Expression>> perform_binary_op_right_shift(
+      Flex<Type> left_type, Flex<Expression> left, Flex<Type> right_type, Flex<Expression> right
+  ) {
+    switch (left_type->kind) {
+    case TypeKind::Alias:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Alias)");
+    case TypeKind::Reference:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Reference)");
+    case TypeKind::Struct:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Struct)");
+    case TypeKind::Tuple:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Tuple)");
+    case TypeKind::Array:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Array)");
+    case TypeKind::TypeFn:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of TypeFn)");
+    case TypeKind::Apply:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Apply)");
+    case TypeKind::Builtin:
+      return perform_binary_op_right_shift_builtin(
+          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          move(left),
+          move(right_type),
+          move(right)
+      );
+    case TypeKind::BitInt:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of BitInt)");
+    case TypeKind::Pointer:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Pointer)");
+    case TypeKind::Slice:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Slice)");
+    case TypeKind::Impl:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Impl)");
+    case TypeKind::ConstInteger:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstInteger)");
+    case TypeKind::ConstRational:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstRational)");
+    case TypeKind::ConstBoolean:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstBoolean)");
+    case TypeKind::ConstCharacter:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstCharacter)");
+    case TypeKind::ConstString:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of ConstString)");
+    case TypeKind::Class:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Class)");
+    case TypeKind::Union:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Union)");
+    case TypeKind::Concept:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Concept)");
+    case TypeKind::Function:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Function)");
+    case TypeKind::FunctionPointer:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of FunctionPointer)");
+    case TypeKind::Closure:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Closure)");
+    case TypeKind::Variable:
+      raise_error_at_node_id(left->node_id, "not implemented (binary op of Variable)");
+    }
+  }
+
+  Option<Flex<Expression>> perform_binary_op_right_shift_builtin(
+      Flex<BuiltinType> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
+  ) {
+    if (right_type->kind != TypeKind::Builtin || !is_integral_type(right_type)) {
+      return None();
+    }
+    switch (left_type->builtin_kind) {
+    case BuiltinKind::Byte:
+    case BuiltinKind::UByte:
+    case BuiltinKind::Short:
+    case BuiltinKind::UShort:
+    case BuiltinKind::Int:
+    case BuiltinKind::UInt:
+    case BuiltinKind::Long:
+    case BuiltinKind::ULong:
+    case BuiltinKind::USize: {
+      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      result->node_id = left->node_id;
+      result->type = left->type;
+      result->op_kind = BinaryOperatorKind::RightShift;
+      result->left = left;
+      result->right = right;
+      return result;
+    }
+    case BuiltinKind::Float:
+    case BuiltinKind::Double:
+    case BuiltinKind::Char:
+    case BuiltinKind::Bool:
+    case BuiltinKind::Never:
+    case BuiltinKind::Null:
+    case BuiltinKind::Str:
     case BuiltinKind::Unknown:
       return None();
     }

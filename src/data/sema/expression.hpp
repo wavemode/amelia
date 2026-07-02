@@ -269,7 +269,26 @@ struct UnaryOperationExpression : Expression {
   Serialize serialize() const override;
 };
 
-enum class BinaryOperatorKind : uint8_t { Add, Subtract, Multiply, Divide };
+enum class BinaryOperatorKind : uint8_t {
+  Add,
+  Subtract,
+  Multiply,
+  Divide,
+  And,
+  BitwiseAnd,
+  BitwiseOr,
+  BitwiseXor,
+  Equals,
+  Greater,
+  GreaterEquals,
+  Less,
+  LessEquals,
+  LeftShift,
+  Modulo,
+  NotEquals,
+  Or,
+  RightShift,
+};
 
 Serialize serialize_binary_operator_kind(BinaryOperatorKind kind);
 

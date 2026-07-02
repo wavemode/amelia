@@ -1,0 +1,48 @@
+let x : long = 1
+let y : long = 2
+let z : long = x ^ y
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="long",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=long,
+            value=BuiltinTypeCastExpression(
+              expr=NumberLiteralExpression(
+                lit=1
+              )
+            )
+          ),
+          ValueBinding(
+            name="y",
+            type=long,
+            value=BuiltinTypeCastExpression(
+              expr=NumberLiteralExpression(
+                lit=2
+              )
+            )
+          ),
+          ValueBinding(
+            name="z",
+            type=long,
+            value=BuiltinBinaryOperationExpression(
+              operator="^",
+              left=IdentifierExpression(
+                name="x"
+              ),
+              right=IdentifierExpression(
+                name="y"
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

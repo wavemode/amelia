@@ -1,0 +1,7 @@
+let x : char = 'a'
+let y : char = 'b'
+let z : char = x ^ y
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot perform binary operation '^' on types 'char' and 'char' (at test_cases/sema/expressions/operators/bitwise_xor/error_char.am:3:16)")
+*/

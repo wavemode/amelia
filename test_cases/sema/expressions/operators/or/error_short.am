@@ -1,0 +1,7 @@
+let x : short = 1
+let y : short = 2
+let z : short = x || y
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot perform binary operation '||' on types 'short' and 'short' (at test_cases/sema/expressions/operators/or/error_short.am:3:17)")
+*/

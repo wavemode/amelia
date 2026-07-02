@@ -1,6 +1,6 @@
 let x : long = 1
 let y : long = 2
-let z = x + y
+let z : long = x + y
 
 /* EXPECTED_OUTPUT:
 SemaResult(

@@ -1,0 +1,44 @@
+let x : double = 1.5
+let y : double = 2.5
+let z : bool = x == y
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="double",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=double,
+            value=NumberLiteralExpression(
+              lit=1.5
+            )
+          ),
+          ValueBinding(
+            name="y",
+            type=double,
+            value=NumberLiteralExpression(
+              lit=2.5
+            )
+          ),
+          ValueBinding(
+            name="z",
+            type=bool,
+            value=BuiltinBinaryOperationExpression(
+              operator="==",
+              left=IdentifierExpression(
+                name="x"
+              ),
+              right=IdentifierExpression(
+                name="y"
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/
