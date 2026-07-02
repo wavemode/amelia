@@ -1,0 +1,6 @@
+let x : ushort = 1
+let z : ushort = !x
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot apply unary operator '!' to expression of type 'ushort' (at test_cases/sema/expressions/operators/not/error_ushort.am:2:18)")
+*/

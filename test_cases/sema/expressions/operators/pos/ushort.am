@@ -1,0 +1,32 @@
+let x : ushort = 1
+let z : ushort = +x
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="ushort",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=ushort,
+            value=BuiltinTypeCoerceExpression(
+              expr=NumberLiteralExpression(
+                lit=1
+              )
+            )
+          ),
+          ValueBinding(
+            name="z",
+            type=ushort,
+            value=IdentifierExpression(
+              name="x"
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

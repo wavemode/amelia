@@ -1,0 +1,28 @@
+let x : char = 'a'
+let z : char = +x
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="char",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=char,
+            value=CharLiteralExpression['a']
+          ),
+          ValueBinding(
+            name="z",
+            type=char,
+            value=IdentifierExpression(
+              name="x"
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

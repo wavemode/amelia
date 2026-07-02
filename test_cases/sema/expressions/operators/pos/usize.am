@@ -1,0 +1,32 @@
+let x : usize = 1
+let z : usize = +x
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="usize",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=usize,
+            value=BuiltinTypeCoerceExpression(
+              expr=NumberLiteralExpression(
+                lit=1
+              )
+            )
+          ),
+          ValueBinding(
+            name="z",
+            type=usize,
+            value=IdentifierExpression(
+              name="x"
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

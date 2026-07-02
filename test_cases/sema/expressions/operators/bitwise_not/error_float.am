@@ -1,0 +1,6 @@
+let x : float = 1.5
+let z : float = ~x
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot apply unary operator '~' to expression of type 'float' (at test_cases/sema/expressions/operators/bitwise_not/error_float.am:2:17)")
+*/

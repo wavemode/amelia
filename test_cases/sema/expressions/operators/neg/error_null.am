@@ -1,0 +1,6 @@
+let x : null = null
+let z : null = -x
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot apply unary operator '-' to expression of type 'null' (at test_cases/sema/expressions/operators/neg/error_null.am:2:16)")
+*/

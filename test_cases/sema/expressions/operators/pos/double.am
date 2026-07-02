@@ -1,0 +1,30 @@
+let x : double = 1.5
+let z : double = +x
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="double",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=double,
+            value=NumberLiteralExpression(
+              lit=1.5
+            )
+          ),
+          ValueBinding(
+            name="z",
+            type=double,
+            value=IdentifierExpression(
+              name="x"
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

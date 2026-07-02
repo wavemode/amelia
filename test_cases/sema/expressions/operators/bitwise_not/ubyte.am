@@ -1,5 +1,5 @@
-const x = -100
-let z : ubyte = x as ubyte
+let x : ubyte = 1
+let z : ubyte = ~x
 
 /* EXPECTED_OUTPUT:
 SemaResult(
@@ -10,19 +10,19 @@ SemaResult(
         bindings=[
           ValueBinding(
             name="x",
-            type=Const[-100],
-            value=UnaryOperationExpression(
-              op_kind="-",
-              operand=NumberLiteralExpression(
-                lit=100
+            type=ubyte,
+            value=BuiltinTypeCoerceExpression(
+              expr=NumberLiteralExpression(
+                lit=1
               )
             )
           ),
           ValueBinding(
             name="z",
             type=ubyte,
-            value=BuiltinTypeCastExpression(
-              expr=IdentifierExpression(
+            value=UnaryOperationExpression(
+              op_kind="~",
+              operand=IdentifierExpression(
                 name="x"
               )
             )

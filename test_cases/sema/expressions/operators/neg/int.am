@@ -1,7 +1,5 @@
-type MyInt = int
-
-const x : MyInt = 0x7FFFFFFF
-const y : MyInt = -0x80000000
+let x : int = 1
+let z : int = -x
 
 /* EXPECTED_OUTPUT:
 SemaResult(
@@ -10,24 +8,20 @@ SemaResult(
       name="int",
       scope=Scope(
         bindings=[
-          TypeBinding(
-            name="MyInt",
-            type=MyInt (aka int)
-          ),
           ValueBinding(
             name="x",
-            type=MyInt (aka int),
+            type=int,
             value=NumberLiteralExpression(
-              lit=0x7FFFFFFF
+              lit=1
             )
           ),
           ValueBinding(
-            name="y",
-            type=MyInt (aka int),
+            name="z",
+            type=int,
             value=UnaryOperationExpression(
               op_kind="-",
-              operand=NumberLiteralExpression(
-                lit=0x80000000
+              operand=IdentifierExpression(
+                name="x"
               )
             )
           )

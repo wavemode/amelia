@@ -260,7 +260,12 @@ struct IdentifierExpression : Expression {
   Serialize serialize() const override;
 };
 
-enum class UnaryOperatorKind : uint8_t { Negate };
+enum class UnaryOperatorKind : uint8_t {
+  Negate,
+  Positive,
+  Not,
+  BitwiseNot,
+};
 
 Serialize serialize_unary_operator_kind(UnaryOperatorKind kind);
 

@@ -1,0 +1,6 @@
+let x : int = 1
+let z : int = !x
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot apply unary operator '!' to expression of type 'int' (at test_cases/sema/expressions/operators/not/error_int.am:2:15)")
+*/

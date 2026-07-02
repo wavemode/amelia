@@ -1,0 +1,6 @@
+let x : bool = true
+let z : bool = +x
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot apply unary operator '+' to expression of type 'bool' (at test_cases/sema/expressions/operators/pos/error_bool.am:2:16)")
+*/

@@ -1,27 +1,29 @@
-const x : int = y
-const y = -2147483648
+let x : byte = 1
+let z : byte = -x
 
 /* EXPECTED_OUTPUT:
 SemaResult(
   modules=[
     Module(
-      name="assign_from_min_const",
+      name="byte",
       scope=Scope(
         bindings=[
           ValueBinding(
             name="x",
-            type=int,
-            value=IdentifierExpression(
-              name="y"
+            type=byte,
+            value=BuiltinTypeCoerceExpression(
+              expr=NumberLiteralExpression(
+                lit=1
+              )
             )
           ),
           ValueBinding(
-            name="y",
-            type=Const[-2147483648],
+            name="z",
+            type=byte,
             value=UnaryOperationExpression(
               op_kind="-",
-              operand=NumberLiteralExpression(
-                lit=2147483648
+              operand=IdentifierExpression(
+                name="x"
               )
             )
           )

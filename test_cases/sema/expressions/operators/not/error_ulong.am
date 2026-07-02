@@ -1,0 +1,6 @@
+let x : ulong = 1
+let z : ulong = !x
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot apply unary operator '!' to expression of type 'ulong' (at test_cases/sema/expressions/operators/not/error_ulong.am:2:17)")
+*/

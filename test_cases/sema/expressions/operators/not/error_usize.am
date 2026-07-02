@@ -1,0 +1,6 @@
+let x : usize = 1
+let z : usize = !x
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot apply unary operator '!' to expression of type 'usize' (at test_cases/sema/expressions/operators/not/error_usize.am:2:17)")
+*/

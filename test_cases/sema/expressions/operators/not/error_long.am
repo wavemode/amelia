@@ -1,0 +1,6 @@
+let x : long = 1
+let z : long = !x
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot apply unary operator '!' to expression of type 'long' (at test_cases/sema/expressions/operators/not/error_long.am:2:16)")
+*/

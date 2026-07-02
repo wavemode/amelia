@@ -1,0 +1,6 @@
+let x : byte = 1
+let z : byte = !x
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot apply unary operator '!' to expression of type 'byte' (at test_cases/sema/expressions/operators/not/error_byte.am:2:16)")
+*/

@@ -1,0 +1,32 @@
+let x : float = 1.5
+let z : float = +x
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="float",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=float,
+            value=BuiltinTypeCoerceExpression(
+              expr=NumberLiteralExpression(
+                lit=1.5
+              )
+            )
+          ),
+          ValueBinding(
+            name="z",
+            type=float,
+            value=IdentifierExpression(
+              name="x"
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

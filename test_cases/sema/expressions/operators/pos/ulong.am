@@ -1,0 +1,32 @@
+let x : ulong = 1
+let z : ulong = +x
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="ulong",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=ulong,
+            value=BuiltinTypeCoerceExpression(
+              expr=NumberLiteralExpression(
+                lit=1
+              )
+            )
+          ),
+          ValueBinding(
+            name="z",
+            type=ulong,
+            value=IdentifierExpression(
+              name="x"
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

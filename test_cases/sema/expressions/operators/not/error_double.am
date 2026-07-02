@@ -1,0 +1,6 @@
+let x : double = 1.5
+let z : double = !x
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot apply unary operator '!' to expression of type 'double' (at test_cases/sema/expressions/operators/not/error_double.am:2:18)")
+*/

@@ -1,0 +1,33 @@
+let x : bool = true
+let z : bool = !x
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="bool",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=bool,
+            value=BooleanLiteralExpression(
+              value=true
+            )
+          ),
+          ValueBinding(
+            name="z",
+            type=bool,
+            value=UnaryOperationExpression(
+              op_kind="!",
+              operand=IdentifierExpression(
+                name="x"
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

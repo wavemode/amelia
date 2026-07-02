@@ -199,7 +199,13 @@ Serialize IdentifierExpression::serialize() const {
 Serialize serialize_unary_operator_kind(UnaryOperatorKind kind) {
   switch (kind) {
   case UnaryOperatorKind::Negate:
-    return Serialize::literal("Negate");
+    return Serialize::literal("-");
+  case UnaryOperatorKind::Positive:
+    return Serialize::literal("+");
+  case UnaryOperatorKind::Not:
+    return Serialize::literal("!");
+  case UnaryOperatorKind::BitwiseNot:
+    return Serialize::literal("~");
   }
 }
 
@@ -247,7 +253,7 @@ Serialize serialize_binary_operator_kind(BinaryOperatorKind kind) {
 Serialize UnaryOperationExpression::serialize() const {
   Serialize result;
   result.set_object_name("UnaryOperationExpression");
-  result.add_object_field("op_kind", serialize_unary_operator_kind(op_kind));
+  result.add_object_field("op_kind", serialize_unary_operator_kind(op_kind).quoted());
   result.add_object_field("operand", operand->serialize());
   return result;
 }
