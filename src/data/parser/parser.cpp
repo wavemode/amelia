@@ -643,8 +643,7 @@ public:
         ++m_token_index; // consume the ',' token
         base_types.push_back(parse_expr());
       }
-      return Some(
-          m_output.add_node(peek(-1).id, m_token_index, BaseTypeListNode{move(base_types)})
+      return Some(m_output.add_node(peek(-1).id, m_token_index, BaseTypeListNode{move(base_types)})
       );
     }
     return None();
@@ -1197,8 +1196,7 @@ public:
 
   NodeId parse_label_statement() {
     auto label_token = next();
-    NodeId label = expect_identifier(
-        "Expected identifier after 'label' keyword in label statement"
+    NodeId label = expect_identifier("Expected identifier after 'label' keyword in label statement"
     );
     return m_output.add_node(label_token.id, m_token_index, LabelStmtNode{label});
   }
@@ -1634,9 +1632,8 @@ public:
       }
       NodeId expr = parse_descend_expr_pos_neg_deref_not_bitnot_ell();
       return m_output.add_node(start_token.id, m_token_index, DerefExprNode{is_const, expr});
-    } else if (
-        start_token.type == TokenType::EXCLAM || start_token.type == TokenType::EXCLAM_NO_W
-    ) {
+    } else if (start_token.type == TokenType::EXCLAM ||
+               start_token.type == TokenType::EXCLAM_NO_W) {
       ++m_token_index; // consume the '!' operator
       NodeId expr = parse_descend_expr_pos_neg_deref_not_bitnot_ell();
       return m_output.add_node(start_token.id, m_token_index, NotExprNode{expr});
@@ -2313,10 +2310,8 @@ public:
   NodeId parse_brace_expr() {
     auto next_token = peek(1);
     if (next_token.type == TokenType::END_OF_FILE) {
-      throw_parser_error_at_current_location(
-          "Unexpected end of file after '{'. Expected object "
-          "literal, object type, or block expr."
-      );
+      throw_parser_error_at_current_location("Unexpected end of file after '{'. Expected object "
+                                             "literal, object type, or block expr.");
     }
     if (next_token.type == TokenType::RIGHT_BRACE || next_token.type == TokenType::DOT) {
       return parse_object_literal();
@@ -2427,9 +2422,8 @@ public:
     auto next_token = peek();
     if (is_identifier(next_token.type)) {
       return peek(1).type == TokenType::ARROW;
-    } else if (
-        next_token.type == TokenType::LEFT_PAREN || next_token.type == TokenType::LEFT_PAREN_NO_W
-    ) {
+    } else if (next_token.type == TokenType::LEFT_PAREN ||
+               next_token.type == TokenType::LEFT_PAREN_NO_W) {
       int lookahead = 1;
       next_token = peek(lookahead);
       while (next_token.type != TokenType::RIGHT_PAREN) {

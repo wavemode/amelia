@@ -11,8 +11,7 @@ TEST_SUITE_BEGIN("load_module");
 using namespace amelia;
 
 TEST_CASE("target module is in second directory in path") {
-  ModuleLoaderContext ctx{
-      Set<String>({"src/test/action/sema/empty", "src/test/action/sema/basic"})
+  ModuleLoaderContext ctx{Set<String>({"src/test/action/sema/empty", "src/test/action/sema/basic"})
   };
   FileLoader file_loader;
   SemaResult sema_result;
@@ -135,8 +134,7 @@ TEST_CASE("single file declares two submodules with the same name") {
 }
 
 TEST_CASE("target module is both a submodule 'b::c' within a.am and 'c' within a/b.am") {
-  ModuleLoaderContext ctx{
-      Set<String>({"src/test/action/sema/duplicate_submodule_different_paths"})
+  ModuleLoaderContext ctx{Set<String>({"src/test/action/sema/duplicate_submodule_different_paths"})
   };
   FileLoader file_loader;
   SemaResult sema_result;
@@ -144,8 +142,7 @@ TEST_CASE("target module is both a submodule 'b::c' within a.am and 'c' within a
 }
 
 TEST_CASE("imported module is both a submodule 'b::c' within a.am and 'c' within a/b.am") {
-  ModuleLoaderContext ctx{
-      Set<String>({"src/test/action/sema/duplicate_submodule_different_paths"})
+  ModuleLoaderContext ctx{Set<String>({"src/test/action/sema/duplicate_submodule_different_paths"})
   };
   FileLoader file_loader;
   SemaResult sema_result;

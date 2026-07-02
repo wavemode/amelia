@@ -353,7 +353,7 @@ public:
   }
 
   Flex<Type> remove_const(Flex<AliasType> alias_type) {
-    return alias_type;
+    return remove_const(alias_type->target);
   }
 
   Flex<Type> remove_const(Flex<ReferenceType> reference_type) {
@@ -555,9 +555,8 @@ public:
   bool unify(Flex<BuiltinType> target_type, Flex<Type> assignment_type) {
     if (assignment_type->kind == TypeKind::Builtin) {
       return target_type->builtin_kind == static_cast<BuiltinType &>(*assignment_type).builtin_kind;
-    } else if (
-        assignment_type->kind == TypeKind::ConstInteger || assignment_type->kind == TypeKind::BitInt
-    ) {
+    } else if (assignment_type->kind == TypeKind::ConstInteger ||
+               assignment_type->kind == TypeKind::BitInt) {
       return is_integral_type(target_type) && min_value_of_type(target_type) < 0 &&
              repr_bit_size(target_type) == repr_bit_size(assignment_type);
     } else if (assignment_type->kind == TypeKind::ConstRational) {
@@ -1721,9 +1720,8 @@ public:
     auto result = emplace_flex<ReturnExpression>();
     result->node_id = expr_node_id;
     if (return_node.expr.has_value()) {
-      result->value = assign_current_function_return_value(
-          build_expression(return_node.expr.value())
-      );
+      result->value = assign_current_function_return_value(build_expression(return_node.expr.value()
+      ));
     } else {
       Flex<Expression> implied_return_value = Flex<NullLiteralExpression>::emplace();
       implied_return_value->node_id = expr_node_id;

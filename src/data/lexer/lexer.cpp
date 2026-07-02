@@ -295,8 +295,7 @@ public:
       } break;
       case '\r':
       case '\n':
-        throw_lexer_error_at_current_location(
-            "Unterminated quoted identifier - unexpected newline"
+        throw_lexer_error_at_current_location("Unterminated quoted identifier - unexpected newline"
         );
       default:
         next();

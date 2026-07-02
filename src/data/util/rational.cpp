@@ -55,10 +55,8 @@ Rational::Rational(Text value) {
         base = 2;
       } else if (TextUtils::starts_with(digits, "0x") || TextUtils::starts_with(digits, "0X")) {
         base = 16;
-      } else if (
-          TextUtils::starts_with(digits, "0o") || TextUtils::starts_with(digits, "0O") ||
-          (TextUtils::starts_with(digits, "0") && parts[0].size() > 1)
-      ) {
+      } else if (TextUtils::starts_with(digits, "0o") || TextUtils::starts_with(digits, "0O") ||
+                 (TextUtils::starts_with(digits, "0") && parts[0].size() > 1)) {
         base = 8;
       }
       m_denominator = Integer(base).pow(parts[1].size());
@@ -159,9 +157,8 @@ void Rational::to_fraction_string(AbstractString &output) const {
   m_denominator.to_string(output);
 }
 
-void Rational::to_decimal_string(
-    AbstractString &output, size_t max_digits_after_decimal_point
-) const {
+void Rational::to_decimal_string(AbstractString &output, size_t max_digits_after_decimal_point)
+    const {
   Rational abs_value = abs();
   Integer num = abs_value.numerator();
   Integer den = abs_value.denominator();
