@@ -2,5 +2,5 @@ const x : usize = y
 const y : long = 42
 
 /* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'long' to expected type 'usize' (at test_cases/sema/types/builtin/usize/error_assign_from_long.am:1:19)")
+ERROR("Cannot coerce expression of type 'long' to expected type 'usize' (at test_cases/sema/types/builtin/usize/error_assign_from_long.am:1:19)")
 */

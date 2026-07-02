@@ -10,7 +10,7 @@ SemaResult(
           ValueBinding(
             name="x",
             type=ushort,
-            value=BuiltinTypeCastExpression(
+            value=BuiltinTypeCoerceExpression(
               expr=NumberLiteralExpression(
                 lit=0
               )

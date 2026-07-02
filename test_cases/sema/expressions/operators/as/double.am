@@ -1,0 +1,32 @@
+let x = true
+let z : double = x as double
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="double",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=bool,
+            value=BooleanLiteralExpression(
+              value=true
+            )
+          ),
+          ValueBinding(
+            name="z",
+            type=double,
+            value=BuiltinTypeCastExpression(
+              expr=IdentifierExpression(
+                name="x"
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

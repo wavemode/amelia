@@ -32,7 +32,7 @@ SemaResult(
           ValueBinding(
             name="y",
             type=&[double],
-            value=BuiltinTypeCastExpression(
+            value=BuiltinTypeCoerceExpression(
               expr=AddressOfExpression(
                 operand=IdentifierExpression(
                   name="x"

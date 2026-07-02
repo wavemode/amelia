@@ -21,7 +21,7 @@ SemaResult(
             type=[double, 2],
             value=ArrayLiteralExpression(
               elements=[
-                BuiltinTypeCastExpression(
+                BuiltinTypeCoerceExpression(
                   expr=IdentifierExpression(
                     name="z"
                   )
@@ -35,7 +35,7 @@ SemaResult(
           ValueBinding(
             name="z",
             type=float,
-            value=BuiltinTypeCastExpression(
+            value=BuiltinTypeCoerceExpression(
               expr=NumberLiteralExpression(
                 lit=2.5
               )

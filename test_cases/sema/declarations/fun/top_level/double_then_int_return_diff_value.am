@@ -27,7 +27,7 @@ SemaResult(
                   )
                 ),
                 ReturnExpression(
-                  value=BuiltinTypeCastExpression(
+                  value=BuiltinTypeCoerceExpression(
                     expr=NumberLiteralExpression(
                       lit=6
                     )

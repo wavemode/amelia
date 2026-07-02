@@ -1,0 +1,32 @@
+let x = 50
+let z : uint = x as uint
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="uint",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=int,
+            value=NumberLiteralExpression(
+              lit=50
+            )
+          ),
+          ValueBinding(
+            name="z",
+            type=uint,
+            value=BuiltinTypeCastExpression(
+              expr=IdentifierExpression(
+                name="x"
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

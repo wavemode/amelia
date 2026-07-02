@@ -142,7 +142,13 @@ public:
     case BuiltinKind::USize:
     case BuiltinKind::Char:
       return true;
-    default:
+    case BuiltinKind::Bool:
+    case BuiltinKind::Float:
+    case BuiltinKind::Double:
+    case BuiltinKind::Str:
+    case BuiltinKind::Null:
+    case BuiltinKind::Never:
+    case BuiltinKind::Unknown:
       return false;
     }
   }
@@ -155,6 +161,37 @@ public:
   bool is_type_binding_node_type(NodeType node_type) {
     // TODO
     return node_type == NodeType::TypeDeclNode;
+  }
+
+  bool type_has_builtin_numeric_representation(Type &type) {
+    if (type.kind == TypeKind::ConstInteger || type.kind == TypeKind::BitInt ||
+        type.kind == TypeKind::ConstRational || type.kind == TypeKind::ConstBoolean) {
+      return true;
+    }
+    if (type.kind != TypeKind::Builtin) {
+      return false;
+    }
+    switch (static_cast<const BuiltinType &>(type).builtin_kind) {
+    case BuiltinKind::Byte:
+    case BuiltinKind::UByte:
+    case BuiltinKind::Short:
+    case BuiltinKind::UShort:
+    case BuiltinKind::Int:
+    case BuiltinKind::UInt:
+    case BuiltinKind::Long:
+    case BuiltinKind::ULong:
+    case BuiltinKind::USize:
+    case BuiltinKind::Float:
+    case BuiltinKind::Double:
+    case BuiltinKind::Bool:
+    case BuiltinKind::Char:
+    case BuiltinKind::Null:
+      return true;
+    case BuiltinKind::Str:
+    case BuiltinKind::Never:
+    case BuiltinKind::Unknown:
+      return false;
+    }
   }
 
   Integer max_value_of_type(Type &type) {
@@ -292,9 +329,16 @@ public:
     return min_value_of_type(type) <= min && max_value_of_type(type) >= max;
   }
 
-  Flex<Expression> builtin_type_cast(Type &target_type, Flex<Expression> expr) {
+  Flex<Expression> builtin_type_coerce(Flex<Type> target_type, Flex<Expression> expr) {
+    auto coerce_expr = emplace_flex<BuiltinTypeCoerceExpression>();
+    coerce_expr->type = target_type;
+    coerce_expr->expr = move(expr);
+    return coerce_expr;
+  }
+
+  Flex<Expression> builtin_type_cast(Flex<Type> target_type, Flex<Expression> expr) {
     auto cast_expr = emplace_flex<BuiltinTypeCastExpression>();
-    cast_expr->type = Flex<Type>::weak(&target_type);
+    cast_expr->type = target_type;
     cast_expr->expr = move(expr);
     return cast_expr;
   }
@@ -431,7 +475,6 @@ public:
   }
 
   bool unify(Flex<Type> target_type, Flex<Type> assignment_type) {
-    resolve_update(target_type);
     resolve_update(assignment_type);
 
     if (&*target_type == &*assignment_type) {
@@ -669,6 +712,100 @@ public:
     }
   }
 
+  Option<Flex<Expression>> cast(
+      Flex<Type> target_type, Flex<Type> source_type, Flex<Expression> expr
+  ) {
+    resolve_update(source_type);
+
+    if (unify(target_type, source_type)) {
+      return expr;
+    }
+
+    auto coerced = coerce(target_type, source_type, expr);
+    if (coerced.has_value()) {
+      return coerced.value();
+    }
+
+    // TODO: source type `operator as`
+
+    switch (target_type->kind) {
+    case TypeKind::Alias:
+      return cast(target_type.derive(static_cast<AliasType &>(*target_type)), source_type, expr);
+    case TypeKind::Reference:
+      throw RuntimeError("not implemented (cast(Reference))");
+    case TypeKind::Struct:
+      throw RuntimeError("not implemented (coerce(Struct))");
+    case TypeKind::Tuple:
+      throw RuntimeError("not implemented (coerce(Tuple))");
+    case TypeKind::Array:
+      throw RuntimeError("not implemented (coerce(Array))");
+    case TypeKind::TypeFn:
+      throw RuntimeError("not implemented (coerce(TypeFn))");
+    case TypeKind::Apply:
+      throw RuntimeError("not implemented (coerce(Apply))");
+    case TypeKind::Builtin:
+      return cast(target_type.derive(static_cast<BuiltinType &>(*target_type)), source_type, expr);
+    case TypeKind::BitInt:
+      return cast(target_type.derive(static_cast<BitIntType &>(*target_type)), source_type, expr);
+    case TypeKind::Pointer:
+      throw RuntimeError("not implemented (coerce(Pointer))");
+    case TypeKind::Slice:
+      throw RuntimeError("not implemented (coerce(Slice))");
+    case TypeKind::Impl:
+      throw RuntimeError("not implemented (coerce(Impl))");
+    case TypeKind::ConstInteger:
+      throw RuntimeError("not implemented (coerce(ConstInteger))");
+    case TypeKind::ConstRational:
+      throw RuntimeError("not implemented (coerce(ConstRational))");
+    case TypeKind::ConstBoolean:
+      throw RuntimeError("not implemented (coerce(ConstBoolean))");
+    case TypeKind::ConstCharacter:
+      throw RuntimeError("not implemented (coerce(ConstCharacter))");
+    case TypeKind::ConstString:
+      throw RuntimeError("not implemented (coerce(ConstString))");
+    case TypeKind::Class:
+      throw RuntimeError("not implemented (coerce(Class))");
+    case TypeKind::Union:
+      throw RuntimeError("not implemented (coerce(Union))");
+    case TypeKind::Concept:
+      throw RuntimeError("not implemented (coerce(Concept))");
+    case TypeKind::Function:
+      throw RuntimeError("not implemented (coerce(Function))");
+    case TypeKind::FunctionPointer:
+      throw RuntimeError("not implemented (coerce(FunctionPointer))");
+    case TypeKind::Closure:
+      throw RuntimeError("not implemented (coerce(Closure))");
+    case TypeKind::Variable:
+      throw RuntimeError("not implemented (coerce(Variable))");
+    }
+  }
+
+  Option<Flex<Expression>> cast(
+      Flex<AliasType> target_type, Flex<Type> source_type, Flex<Expression> expr
+  ) {
+    return cast(target_type->target, source_type, expr);
+  }
+
+  Option<Flex<Expression>> cast(
+      Flex<BuiltinType> target_type, Flex<Type> source_type, Flex<Expression> expr
+  ) {
+    if (target_type->builtin_kind != BuiltinKind::Char &&
+        type_has_builtin_numeric_representation(target_type) &&
+        type_has_builtin_numeric_representation(source_type)) {
+      return builtin_type_cast(target_type, move(expr));
+    }
+    return None();
+  }
+
+  Option<Flex<Expression>> cast(
+      Flex<BitIntType> target_type, Flex<Type> source_type, Flex<Expression> expr
+  ) {
+    if (type_has_builtin_numeric_representation(source_type)) {
+      return builtin_type_cast(target_type, move(expr));
+    }
+    return None();
+  }
+
   Option<Flex<Expression>> coerce(Flex<Type> target_type, Flex<Expression> expr) {
     return coerce(target_type, expr->type, expr);
   }
@@ -680,8 +817,9 @@ public:
       return expr;
     }
 
-    resolve_update(target_type);
     resolve_update(assignment_type);
+
+    // TODO: source type implicit `operator as`
 
     switch (target_type->kind) {
     case TypeKind::Alias:
@@ -783,7 +921,7 @@ public:
             // TODO: compatible types
             unify(target_type->referent, expr_ref_type.referent)
         ) {
-          return builtin_type_cast(*target_type, move(expr));
+          return builtin_type_coerce(target_type, move(expr));
         } else if (
             // Target type refers to a slice and expr type refers to an array of the same type
             target_type->referent->kind == TypeKind::Slice &&
@@ -793,14 +931,14 @@ public:
                 static_cast<ArrayType &>(*expr_ref_type.referent).element_type
             )
         ) {
-          return builtin_type_cast(*target_type, move(expr));
+          return builtin_type_coerce(target_type, move(expr));
         }
       }
     } else if (assignment_type->kind == TypeKind::ConstString) {
       if (target_type->referent->kind == TypeKind::Builtin &&
           static_cast<const BuiltinType &>(*target_type->referent).builtin_kind ==
               BuiltinKind::Str) {
-        return builtin_type_cast(*target_type, move(expr));
+        return builtin_type_coerce(target_type, move(expr));
       }
     }
     return None();
@@ -829,7 +967,7 @@ public:
                                                       min_value_of_type(assignment_type),
                                                       max_value_of_type(assignment_type)
                                                   )
-                 ? builtin_type_cast(*target_type, move(expr))
+                 ? builtin_type_coerce(target_type, move(expr))
                  : Option<Flex<Expression>>();
     case BuiltinKind::Float:
       return is_integral_type(assignment_type) ||
@@ -837,7 +975,7 @@ public:
                      (assignment_type->kind == TypeKind::Builtin &&
                       static_cast<const BuiltinType &>(*assignment_type).builtin_kind ==
                           BuiltinKind::Float)
-                 ? builtin_type_cast(*target_type, move(expr))
+                 ? builtin_type_coerce(target_type, move(expr))
                  : Option<Flex<Expression>>();
     case BuiltinKind::Double:
       return is_integral_type(assignment_type) ||
@@ -847,14 +985,14 @@ public:
                            BuiltinKind::Float ||
                        static_cast<const BuiltinType &>(*assignment_type).builtin_kind ==
                            BuiltinKind::Double))
-                 ? builtin_type_cast(*target_type, move(expr))
+                 ? builtin_type_coerce(target_type, move(expr))
                  : Option<Flex<Expression>>();
     case BuiltinKind::Bool:
       return (assignment_type->kind == TypeKind::ConstBoolean) ||
                      (assignment_type->kind == TypeKind::Builtin &&
                       static_cast<const BuiltinType &>(*assignment_type).builtin_kind ==
                           BuiltinKind::Bool)
-                 ? builtin_type_cast(*target_type, move(expr))
+                 ? builtin_type_coerce(target_type, move(expr))
                  : Option<Flex<Expression>>();
     case BuiltinKind::Char:
       return ((assignment_type->kind == TypeKind::ConstInteger &&
@@ -865,7 +1003,7 @@ public:
                 ))) ||
               (is_integral_type(assignment_type) && min_value_of_type(assignment_type) >= 0 &&
                max_value_of_type(assignment_type) < 0xD800))
-                 ? builtin_type_cast(*target_type, move(expr))
+                 ? builtin_type_coerce(target_type, move(expr))
                  : Option<Flex<Expression>>();
     case BuiltinKind::Str:
     case BuiltinKind::Null:
@@ -882,7 +1020,7 @@ public:
         can_type_represent_range(
             *target_type, min_value_of_type(assignment_type), max_value_of_type(assignment_type)
         )) {
-      return builtin_type_cast(*target_type, move(expr));
+      return builtin_type_coerce(target_type, move(expr));
     }
 
     return None();
@@ -899,7 +1037,7 @@ public:
           // If assignment is const, target must also be const
           (target_type->is_const || !expr_ptr_type.is_const)
       ) {
-        return builtin_type_cast(*target_type, move(expr));
+        return builtin_type_coerce(target_type, move(expr));
       }
     }
     return None();
@@ -935,8 +1073,14 @@ public:
     return None();
   }
 
+  Flex<Expression> require_coerce(Flex<Type> target_type, Flex<Expression> expr) {
+    return require_coerce(
+        target_type, expr, "Cannot coerce expression of type '{1}' to expected type '{2}'"
+    );
+  }
+
   Flex<Expression> require_coerce(
-      Flex<Type> target_type, Flex<Expression> expr, String error_message_template
+      Flex<Type> target_type, Flex<Expression> expr, String &&error_message_template
   ) {
     auto unified_expr = coerce(target_type, expr->type, expr);
     if (!unified_expr.has_value()) {
@@ -944,7 +1088,6 @@ public:
       target_type->serialize().to_string(target_type_str);
       String expr_type_str;
       expr->type->serialize().to_string(expr_type_str);
-      ;
       TextUtils::replace(error_message_template, "{1}", expr_type_str);
       TextUtils::replace(error_message_template, "{2}", target_type_str);
       raise_error_at_node_id(expr->node_id, move(error_message_template));
@@ -1337,9 +1480,7 @@ public:
 
   Flex<Expression> expect_expression_of_type(Flex<Type> expected_type, NodeId expr_node_id) {
     auto expr = build_expression(expr_node_id);
-    return require_coerce(
-        expected_type, expr, "Cannot convert expression of type '{1}' to expected type '{2}'"
-    );
+    return require_coerce(expected_type, expr);
   }
 
   Flex<Expression> build_expression(NodeId expr_node_id) {
@@ -1420,6 +1561,9 @@ public:
     case NodeType::RightShiftExprNode:
       result = build_expr_binary_op(expr_node_id);
       break;
+    case NodeType::AsExprNode:
+      result = build_expr_as(expr_node_id);
+      break;
     default:
       raise_error_at_node_id(
           expr_node_id, "not implemented (unknown node type in build_expression)"
@@ -1427,6 +1571,22 @@ public:
     }
 
     return result;
+  }
+
+  Flex<Expression> build_expr_as(NodeId expr_node_id) {
+    const auto &as_node = m_module_obj.ast.get_node(expr_node_id).as_AsExprNode();
+    auto expr = build_expression(as_node.expr);
+    auto target_type = evaluate_type_expr(as_node.type);
+    auto result = cast(target_type, expr->type, expr);
+    if (!result.has_value()) {
+      String error_message = "Cannot cast expression of type '";
+      expr->type->serialize().to_string(error_message);
+      error_message.append("' to type '");
+      target_type->serialize().to_string(error_message);
+      error_message.append("'");
+      raise_error_at_node_id(expr_node_id, move(error_message));
+    }
+    return result.value();
   }
 
   Flex<Type> read_expr_list(List<Flex<Expression>> &output, ConstSlice<NodeId> expr_node_ids) {
@@ -1473,9 +1633,7 @@ public:
     // coerce each expression to the inferred type
     for (size_t i = 0; i < output.size(); ++i) {
       Flex<Expression> &elem = output[i];
-      elem = require_coerce(
-          result_type, move(elem), "Cannot convert expression of type '{1}' to expected type '{2}'"
-      );
+      elem = require_coerce(result_type, move(elem));
     }
 
     return result_type;

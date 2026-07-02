@@ -24,7 +24,7 @@ SemaResult(
           ValueBinding(
             name="y",
             type=MyLong (aka long),
-            value=BuiltinTypeCastExpression(
+            value=BuiltinTypeCoerceExpression(
               expr=UnaryOperationExpression(
                 op_kind=Negate,
                 operand=NumberLiteralExpression(

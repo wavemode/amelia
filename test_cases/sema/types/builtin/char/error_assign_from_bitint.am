@@ -2,5 +2,5 @@ const x : char = y
 const y : bitint[1] = 0
 
 /* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'bitint[1]' to expected type 'char' (at test_cases/sema/types/builtin/char/error_assign_from_bitint.am:1:18)")
+ERROR("Cannot coerce expression of type 'bitint[1]' to expected type 'char' (at test_cases/sema/types/builtin/char/error_assign_from_bitint.am:1:18)")
 */

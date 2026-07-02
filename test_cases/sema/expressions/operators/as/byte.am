@@ -1,0 +1,34 @@
+let x : float = 1
+let z = x as byte
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="byte",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=float,
+            value=BuiltinTypeCoerceExpression(
+              expr=NumberLiteralExpression(
+                lit=1
+              )
+            )
+          ),
+          ValueBinding(
+            name="z",
+            type=byte,
+            value=BuiltinTypeCastExpression(
+              expr=IdentifierExpression(
+                name="x"
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

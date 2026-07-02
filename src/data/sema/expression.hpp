@@ -63,6 +63,8 @@ enum class ExpressionKind : uint8_t {
   Identifier,
   UnaryOperation,
   BinaryOperation,
+  TypeCastOperation,
+  BuiltinTypeCoerce,
   BuiltinTypeCast,
   Sequence,
   TypeBinding,
@@ -300,6 +302,12 @@ struct BuiltinBinaryOperationExpression : Expression {
   Serialize serialize() const override;
 };
 
+struct BuiltinTypeCoerceExpression : Expression {
+  BuiltinTypeCoerceExpression() : Expression(ExpressionKind::BuiltinTypeCoerce) {}
+  Flex<Expression> expr;
+  Serialize serialize() const override;
+};
+
 struct BuiltinTypeCastExpression : Expression {
   BuiltinTypeCastExpression() : Expression(ExpressionKind::BuiltinTypeCast) {}
   Flex<Expression> expr;
@@ -361,6 +369,12 @@ struct TupleExpression : Expression {
 struct ArrayLiteralExpression : Expression {
   ArrayLiteralExpression() : Expression(ExpressionKind::ArrayLiteral) {}
   List<Flex<Expression>> elements;
+  Serialize serialize() const override;
+};
+
+struct TypeCastOperationExpression : Expression {
+  TypeCastOperationExpression() : Expression(ExpressionKind::TypeCastOperation) {}
+  Flex<Expression> expr;
   Serialize serialize() const override;
 };
 

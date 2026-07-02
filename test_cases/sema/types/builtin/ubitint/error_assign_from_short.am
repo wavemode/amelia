@@ -2,5 +2,5 @@ const x : ubitint[16] = y
 const y : short = 42
 
 /* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'short' to expected type 'ubitint[16]' (at test_cases/sema/types/builtin/ubitint/error_assign_from_short.am:1:25)")
+ERROR("Cannot coerce expression of type 'short' to expected type 'ubitint[16]' (at test_cases/sema/types/builtin/ubitint/error_assign_from_short.am:1:25)")
 */

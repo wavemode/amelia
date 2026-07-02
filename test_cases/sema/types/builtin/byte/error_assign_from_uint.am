@@ -2,5 +2,5 @@ const x : byte = y
 const y : uint = 42
 
 /* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'uint' to expected type 'byte' (at test_cases/sema/types/builtin/byte/error_assign_from_uint.am:1:18)")
+ERROR("Cannot coerce expression of type 'uint' to expected type 'byte' (at test_cases/sema/types/builtin/byte/error_assign_from_uint.am:1:18)")
 */

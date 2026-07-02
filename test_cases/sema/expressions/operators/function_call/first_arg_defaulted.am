@@ -35,7 +35,7 @@ SemaResult(
               ),
               arguments=[
                 (default),
-                BuiltinTypeCastExpression(
+                BuiltinTypeCoerceExpression(
                   expr=IdentifierExpression(
                     name="z"
                   )

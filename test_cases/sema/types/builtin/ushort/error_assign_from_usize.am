@@ -2,5 +2,5 @@ const x : ushort = y
 const y : usize = 42
 
 /* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'usize' to expected type 'ushort' (at test_cases/sema/types/builtin/ushort/error_assign_from_usize.am:1:20)")
+ERROR("Cannot coerce expression of type 'usize' to expected type 'ushort' (at test_cases/sema/types/builtin/ushort/error_assign_from_usize.am:1:20)")
 */

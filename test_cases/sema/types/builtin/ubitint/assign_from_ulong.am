@@ -18,7 +18,7 @@ SemaResult(
           ValueBinding(
             name="y",
             type=ulong,
-            value=BuiltinTypeCastExpression(
+            value=BuiltinTypeCoerceExpression(
               expr=NumberLiteralExpression(
                 lit=42
               )

@@ -2,5 +2,5 @@ const x : bitint[63] = y
 const y : long = 42
 
 /* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'long' to expected type 'bitint[63]' (at test_cases/sema/types/builtin/bitint/error_assign_from_long_too_large.am:1:24)")
+ERROR("Cannot coerce expression of type 'long' to expected type 'bitint[63]' (at test_cases/sema/types/builtin/bitint/error_assign_from_long_too_large.am:1:24)")
 */

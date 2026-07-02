@@ -1,0 +1,32 @@
+let x = 50
+let z = x as ushort
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="ushort",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=int,
+            value=NumberLiteralExpression(
+              lit=50
+            )
+          ),
+          ValueBinding(
+            name="z",
+            type=ushort,
+            value=BuiltinTypeCastExpression(
+              expr=IdentifierExpression(
+                name="x"
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

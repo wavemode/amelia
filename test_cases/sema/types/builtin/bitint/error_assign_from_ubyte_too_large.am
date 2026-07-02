@@ -2,5 +2,5 @@ const x : bitint[8] = y
 const y : ubyte = 42
 
 /* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'ubyte' to expected type 'bitint[8]' (at test_cases/sema/types/builtin/bitint/error_assign_from_ubyte_too_large.am:1:23)")
+ERROR("Cannot coerce expression of type 'ubyte' to expected type 'bitint[8]' (at test_cases/sema/types/builtin/bitint/error_assign_from_ubyte_too_large.am:1:23)")
 */

@@ -1,0 +1,32 @@
+let x : int = 4
+let z = x as null
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="null",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=int,
+            value=NumberLiteralExpression(
+              lit=4
+            )
+          ),
+          ValueBinding(
+            name="z",
+            type=null,
+            value=BuiltinTypeCastExpression(
+              expr=IdentifierExpression(
+                name="x"
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

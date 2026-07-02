@@ -2,5 +2,5 @@ const x : short = y
 const y : ushort = 42
 
 /* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'ushort' to expected type 'short' (at test_cases/sema/types/builtin/short/error_assign_from_ushort.am:1:19)")
+ERROR("Cannot coerce expression of type 'ushort' to expected type 'short' (at test_cases/sema/types/builtin/short/error_assign_from_ushort.am:1:19)")
 */

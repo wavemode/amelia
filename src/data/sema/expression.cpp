@@ -265,9 +265,9 @@ Serialize NullLiteralExpression::serialize() const {
   return result;
 }
 
-Serialize BuiltinTypeCastExpression::serialize() const {
+Serialize BuiltinTypeCoerceExpression::serialize() const {
   Serialize result;
-  result.set_object_name("BuiltinTypeCastExpression");
+  result.set_object_name("BuiltinTypeCoerceExpression");
   result.add_object_field("expr", expr->serialize());
   return result;
 }
@@ -442,6 +442,21 @@ Serialize BuiltinBinaryOperationExpression::serialize() const {
   result.add_object_field("operator", serialize_binary_operator_kind(op_kind).quoted());
   result.add_object_field("left", left->serialize());
   result.add_object_field("right", right->serialize());
+  return result;
+}
+
+Serialize TypeCastOperationExpression::serialize() const {
+  Serialize result;
+  result.set_object_name("TypeCastOperationExpression");
+  result.add_object_field("expr", expr->serialize());
+  result.add_object_field("type", type->serialize());
+  return result;
+}
+
+Serialize BuiltinTypeCastExpression::serialize() const {
+  Serialize result;
+  result.set_object_name("BuiltinTypeCastExpression");
+  result.add_object_field("expr", expr->serialize());
   return result;
 }
 

@@ -28,7 +28,7 @@ SemaResult(
           ValueBinding(
             name="z",
             type=&move int,
-            value=BuiltinTypeCastExpression(
+            value=BuiltinTypeCoerceExpression(
               expr=IdentifierExpression(
                 name="y"
               )

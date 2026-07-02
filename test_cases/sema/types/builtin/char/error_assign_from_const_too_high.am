@@ -1,5 +1,5 @@
 const x : char = 0x120000
 
 /* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'Const[1179648]' to expected type 'char' (at test_cases/sema/types/builtin/char/error_assign_from_const_too_high.am:1:18)")
+ERROR("Cannot coerce expression of type 'Const[1179648]' to expected type 'char' (at test_cases/sema/types/builtin/char/error_assign_from_const_too_high.am:1:18)")
 */

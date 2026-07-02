@@ -1,0 +1,35 @@
+const x = -100
+let z : ubyte = x as ubyte
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="ubyte",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=Const[-100],
+            value=UnaryOperationExpression(
+              op_kind=Negate,
+              operand=NumberLiteralExpression(
+                lit=100
+              )
+            )
+          ),
+          ValueBinding(
+            name="z",
+            type=ubyte,
+            value=BuiltinTypeCastExpression(
+              expr=IdentifierExpression(
+                name="x"
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

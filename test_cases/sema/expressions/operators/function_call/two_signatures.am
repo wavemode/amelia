@@ -27,7 +27,7 @@ SemaResult(
                 return_type=float
               ),
               arguments=[
-                BuiltinTypeCastExpression(
+                BuiltinTypeCoerceExpression(
                   expr=IdentifierExpression(
                     name="z"
                   )

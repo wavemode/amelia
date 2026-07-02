@@ -2,5 +2,5 @@ const x : char = y
 const y : short = 42
 
 /* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'short' to expected type 'char' (at test_cases/sema/types/builtin/char/error_assign_from_short.am:1:18)")
+ERROR("Cannot coerce expression of type 'short' to expected type 'char' (at test_cases/sema/types/builtin/char/error_assign_from_short.am:1:18)")
 */

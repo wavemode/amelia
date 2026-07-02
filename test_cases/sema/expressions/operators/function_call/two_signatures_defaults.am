@@ -21,7 +21,7 @@ SemaResult(
                   Parameter(
                     name="t",
                     type=float,
-                    default_value=BuiltinTypeCastExpression(
+                    default_value=BuiltinTypeCoerceExpression(
                       expr=NumberLiteralExpression(
                         lit=40
                       )
@@ -53,7 +53,7 @@ SemaResult(
                     Parameter(
                       name="t",
                       type=float,
-                      default_value=BuiltinTypeCastExpression(
+                      default_value=BuiltinTypeCoerceExpression(
                         expr=NumberLiteralExpression(
                           lit=40
                         )

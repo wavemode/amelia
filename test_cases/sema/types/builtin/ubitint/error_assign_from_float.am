@@ -2,5 +2,5 @@ const x : ubitint[8] = y
 const y : float = 42
 
 /* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'float' to expected type 'ubitint[8]' (at test_cases/sema/types/builtin/ubitint/error_assign_from_float.am:1:24)")
+ERROR("Cannot coerce expression of type 'float' to expected type 'ubitint[8]' (at test_cases/sema/types/builtin/ubitint/error_assign_from_float.am:1:24)")
 */

@@ -2,5 +2,5 @@ const x : long = y
 const y = 9223372036854775807.0
 
 /* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'Const[9223372036854775807.0]' to expected type 'long' (at test_cases/sema/types/builtin/long/error_assign_from_max_const_frac.am:1:18)")
+ERROR("Cannot coerce expression of type 'Const[9223372036854775807.0]' to expected type 'long' (at test_cases/sema/types/builtin/long/error_assign_from_max_const_frac.am:1:18)")
 */

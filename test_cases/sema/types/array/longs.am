@@ -20,12 +20,12 @@ SemaResult(
             type=[long, 3],
             value=ArrayLiteralExpression(
               elements=[
-                BuiltinTypeCastExpression(
+                BuiltinTypeCoerceExpression(
                   expr=NumberLiteralExpression(
                     lit=2
                   )
                 ),
-                BuiltinTypeCastExpression(
+                BuiltinTypeCoerceExpression(
                   expr=NumberLiteralExpression(
                     lit=3
                   )

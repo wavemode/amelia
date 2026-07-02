@@ -1,0 +1,6 @@
+let x : int = 'a'
+let z : char = x as char
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot cast expression of type 'int' to type 'char' (at test_cases/sema/expressions/operators/as/error_char.am:2:16)")
+*/
