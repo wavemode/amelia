@@ -1,0 +1,7 @@
+let x : bitint[4] = 0b101
+let y : ubitint[8] = 0b010
+let z = x > y
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot perform binary operation '>' on types 'bitint[4]' and 'ubitint[8]' (at test_cases/sema/expressions/operators/greater/error_mixed_biting.am:3:9)")
+*/

@@ -1,0 +1,35 @@
+let x : bitint[4] = 1
+let z : bitint[4] = -x
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="bitint",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=bitint[4],
+            value=BuiltinTypeCoerceExpression(
+              expr=NumberLiteralExpression(
+                lit=1
+              )
+            )
+          ),
+          ValueBinding(
+            name="z",
+            type=bitint[4],
+            value=UnaryOperationExpression(
+              op_kind="-",
+              operand=IdentifierExpression(
+                name="x"
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

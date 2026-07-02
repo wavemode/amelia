@@ -1,0 +1,48 @@
+let x : byte = 1
+let y : byte = 2
+let z : byte = x - y
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="byte",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=byte,
+            value=BuiltinTypeCoerceExpression(
+              expr=NumberLiteralExpression(
+                lit=1
+              )
+            )
+          ),
+          ValueBinding(
+            name="y",
+            type=byte,
+            value=BuiltinTypeCoerceExpression(
+              expr=NumberLiteralExpression(
+                lit=2
+              )
+            )
+          ),
+          ValueBinding(
+            name="z",
+            type=byte,
+            value=BuiltinBinaryOperationExpression(
+              operator="-",
+              left=IdentifierExpression(
+                name="x"
+              ),
+              right=IdentifierExpression(
+                name="y"
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

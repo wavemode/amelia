@@ -194,6 +194,14 @@ public:
     }
   }
 
+  bool is_native_integral_type(Type &type) {
+    return is_integral_type(type) && repr_bit_size(type) <= 64;
+  }
+
+  bool is_non_promoting_binary_op(BinaryOperatorKind op_kind) {
+    return op_kind == BinaryOperatorKind::LeftShift || op_kind == BinaryOperatorKind::RightShift;
+  }
+
   Integer max_value_of_type(Type &type) {
     if (type.kind == TypeKind::Builtin) {
       switch (static_cast<const BuiltinType &>(type).builtin_kind) {
@@ -308,6 +316,7 @@ public:
         return 16;
       case BuiltinKind::Int:
       case BuiltinKind::UInt:
+      case BuiltinKind::Char:
         return 32;
       case BuiltinKind::Long:
       case BuiltinKind::ULong:
@@ -2244,7 +2253,11 @@ public:
           move(operand)
       );
     case TypeKind::BitInt:
-      raise_error_at_node_id(operand->node_id, "not implemented (unary op of BitInt)");
+      return perform_unary_op_negate_bitint(
+          operation_node_id,
+          operand_type.derive(static_cast<BitIntType &>(*operand_type)),
+          move(operand)
+      );
     case TypeKind::Pointer:
       raise_error_at_node_id(operand->node_id, "not implemented (unary op of Pointer)");
     case TypeKind::Slice:
@@ -2284,6 +2297,17 @@ public:
     case TypeKind::Variable:
       raise_error_at_node_id(operand->node_id, "not implemented (unary op of Variable)");
     }
+  }
+
+  Option<Flex<Expression>> perform_unary_op_negate_bitint(
+      NodeId operation_node_id, Flex<BitIntType>, Flex<Expression> operand
+  ) {
+    auto result = emplace_flex<UnaryOperationExpression>();
+    result->node_id = operation_node_id;
+    result->type = operand->type;
+    result->op_kind = UnaryOperatorKind::Negate;
+    result->operand = operand;
+    return result;
   }
 
   Option<Flex<Expression>> perform_unary_op_negate_builtin(
@@ -2365,7 +2389,11 @@ public:
           move(operand)
       );
     case TypeKind::BitInt:
-      raise_error_at_node_id(operand->node_id, "not implemented (unary op of BitInt)");
+      return perform_unary_op_bitwise_not_bitint(
+          operation_node_id,
+          operand_type.derive(static_cast<BitIntType &>(*operand_type)),
+          move(operand)
+      );
     case TypeKind::Pointer:
       raise_error_at_node_id(operand->node_id, "not implemented (unary op of Pointer)");
     case TypeKind::Slice:
@@ -2401,6 +2429,17 @@ public:
     case TypeKind::Variable:
       raise_error_at_node_id(operand->node_id, "not implemented (unary op of Variable)");
     }
+  }
+
+  Option<Flex<Expression>> perform_unary_op_bitwise_not_bitint(
+      NodeId operation_node_id, Flex<BitIntType>, Flex<Expression> operand
+  ) {
+    auto result = emplace_flex<UnaryOperationExpression>();
+    result->node_id = operation_node_id;
+    result->type = operand->type;
+    result->op_kind = UnaryOperatorKind::BitwiseNot;
+    result->operand = operand;
+    return result;
   }
 
   Option<Flex<Expression>> perform_unary_op_bitwise_not_builtin(
@@ -2469,7 +2508,7 @@ public:
           operand_type.derive(static_cast<BuiltinType &>(*operand_type)), move(operand)
       );
     case TypeKind::BitInt:
-      raise_error_at_node_id(operand->node_id, "not implemented (unary op of BitInt)");
+      return operand;
     case TypeKind::Pointer:
       raise_error_at_node_id(operand->node_id, "not implemented (unary op of Pointer)");
     case TypeKind::Slice:
@@ -2756,13 +2795,14 @@ public:
     auto left_expr = build_expression(left_expr_node_id);
     auto right_expr = build_expression(right_expr_node_id);
     auto result = perform_binary_op(
-        op_kind, left_expr->type, left_expr, right_expr->type, right_expr
+        op_kind, expr_node_id, left_expr->type, left_expr, right_expr->type, right_expr
     );
-    if (!result.has_value()) {
+    if (!result.has_value() && !is_non_promoting_binary_op(op_kind)) {
       auto try_convert_right = coerce(left_expr->type, right_expr);
       if (try_convert_right.has_value()) {
         result = perform_binary_op(
             op_kind,
+            expr_node_id,
             left_expr->type,
             left_expr,
             try_convert_right.value()->type,
@@ -2770,11 +2810,12 @@ public:
         );
       }
     }
-    if (!result.has_value()) {
+    if (!result.has_value() && !is_non_promoting_binary_op(op_kind)) {
       auto try_convert_left = coerce(right_expr->type, left_expr);
       if (try_convert_left.has_value()) {
         result = perform_binary_op(
             op_kind,
+            expr_node_id,
             try_convert_left.value()->type,
             move(try_convert_left.value()),
             right_expr->type,
@@ -2797,6 +2838,7 @@ public:
 
   Option<Flex<Expression>> perform_binary_op(
       BinaryOperatorKind op_kind,
+      NodeId operation_node_id,
       Flex<Type> left_type,
       Flex<Expression> left,
       Flex<Type> right_type,
@@ -2807,56 +2849,76 @@ public:
 
     switch (op_kind) {
     case BinaryOperatorKind::Add:
-      return perform_binary_op_add(move(left_type), move(left), move(right_type), move(right));
+      return perform_binary_op_add(
+          operation_node_id, move(left_type), move(left), move(right_type), move(right)
+      );
     case BinaryOperatorKind::Subtract:
-      return perform_binary_op_sub(move(left_type), move(left), move(right_type), move(right));
+      return perform_binary_op_sub(
+          operation_node_id, move(left_type), move(left), move(right_type), move(right)
+      );
     case BinaryOperatorKind::Multiply:
-      return perform_binary_op_mul(move(left_type), move(left), move(right_type), move(right));
+      return perform_binary_op_mul(
+          operation_node_id, move(left_type), move(left), move(right_type), move(right)
+      );
     case BinaryOperatorKind::Divide:
-      return perform_binary_op_div(move(left_type), move(left), move(right_type), move(right));
+      return perform_binary_op_div(
+          operation_node_id, move(left_type), move(left), move(right_type), move(right)
+      );
     case BinaryOperatorKind::And:
-      return perform_binary_op_and(move(left_type), move(left), move(right_type), move(right));
+      return perform_binary_op_and(
+          operation_node_id, move(left_type), move(left), move(right_type), move(right)
+      );
     case BinaryOperatorKind::BitwiseAnd:
       return perform_binary_op_bitwise_and(
-          move(left_type), move(left), move(right_type), move(right)
+          operation_node_id, move(left_type), move(left), move(right_type), move(right)
       );
     case BinaryOperatorKind::BitwiseOr:
       return perform_binary_op_bitwise_or(
-          move(left_type), move(left), move(right_type), move(right)
+          operation_node_id, move(left_type), move(left), move(right_type), move(right)
       );
     case BinaryOperatorKind::BitwiseXor:
       return perform_binary_op_bitwise_xor(
-          move(left_type), move(left), move(right_type), move(right)
+          operation_node_id, move(left_type), move(left), move(right_type), move(right)
       );
     case BinaryOperatorKind::Equals:
-      return perform_binary_op_equals(move(left_type), move(left), move(right_type), move(right));
+      return perform_binary_op_equals(
+          operation_node_id, move(left_type), move(left), move(right_type), move(right)
+      );
     case BinaryOperatorKind::Greater:
-      return perform_binary_op_greater(move(left_type), move(left), move(right_type), move(right));
+      return perform_binary_op_greater(
+          operation_node_id, move(left_type), move(left), move(right_type), move(right)
+      );
     case BinaryOperatorKind::GreaterEquals:
       return perform_binary_op_greater_equals(
-          move(left_type), move(left), move(right_type), move(right)
+          operation_node_id, move(left_type), move(left), move(right_type), move(right)
       );
     case BinaryOperatorKind::Less:
-      return perform_binary_op_less(move(left_type), move(left), move(right_type), move(right));
+      return perform_binary_op_less(
+          operation_node_id, move(left_type), move(left), move(right_type), move(right)
+      );
     case BinaryOperatorKind::LessEquals:
       return perform_binary_op_less_equals(
-          move(left_type), move(left), move(right_type), move(right)
+          operation_node_id, move(left_type), move(left), move(right_type), move(right)
       );
     case BinaryOperatorKind::LeftShift:
       return perform_binary_op_left_shift(
-          move(left_type), move(left), move(right_type), move(right)
+          operation_node_id, move(left_type), move(left), move(right_type), move(right)
       );
     case BinaryOperatorKind::Modulo:
-      return perform_binary_op_modulo(move(left_type), move(left), move(right_type), move(right));
+      return perform_binary_op_modulo(
+          operation_node_id, move(left_type), move(left), move(right_type), move(right)
+      );
     case BinaryOperatorKind::NotEquals:
       return perform_binary_op_not_equals(
-          move(left_type), move(left), move(right_type), move(right)
+          operation_node_id, move(left_type), move(left), move(right_type), move(right)
       );
     case BinaryOperatorKind::Or:
-      return perform_binary_op_or(move(left_type), move(left), move(right_type), move(right));
+      return perform_binary_op_or(
+          operation_node_id, move(left_type), move(left), move(right_type), move(right)
+      );
     case BinaryOperatorKind::RightShift:
       return perform_binary_op_right_shift(
-          move(left_type), move(left), move(right_type), move(right)
+          operation_node_id, move(left_type), move(left), move(right_type), move(right)
       );
     default:
       break;
@@ -2865,7 +2927,11 @@ public:
   }
 
   Option<Flex<Expression>> perform_binary_op_add(
-      Flex<Type> left_type, Flex<Expression> left, Flex<Type> right_type, Flex<Expression> right
+      NodeId operation_node_id,
+      Flex<Type> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
   ) {
     switch (left_type->kind) {
     case TypeKind::Alias:
@@ -2884,13 +2950,20 @@ public:
       raise_error_at_node_id(left->node_id, "not implemented (binary op of Apply)");
     case TypeKind::Builtin:
       return perform_binary_op_add_builtin(
+          operation_node_id,
           left_type.derive(static_cast<BuiltinType &>(*left_type)),
           move(left),
           move(right_type),
           move(right)
       );
     case TypeKind::BitInt:
-      raise_error_at_node_id(left->node_id, "not implemented (binary op of BitInt)");
+      return perform_binary_op_add_bitint(
+          operation_node_id,
+          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          move(left),
+          move(right_type),
+          move(right)
+      );
     case TypeKind::Pointer:
       raise_error_at_node_id(left->node_id, "not implemented (binary op of Pointer)");
     case TypeKind::Slice:
@@ -2925,6 +2998,7 @@ public:
   }
 
   Option<Flex<Expression>> perform_binary_op_add_builtin(
+      NodeId operation_node_id,
       Flex<BuiltinType> left_type,
       Flex<Expression> left,
       Flex<Type> right_type,
@@ -2946,7 +3020,7 @@ public:
     case BuiltinKind::Float:
     case BuiltinKind::Double: {
       auto result = emplace_flex<BuiltinBinaryOperationExpression>();
-      result->node_id = left->node_id;
+      result->node_id = operation_node_id;
       result->type = left->type;
       result->op_kind = BinaryOperatorKind::Add;
       result->left = left;
@@ -2963,8 +3037,31 @@ public:
     }
   }
 
+  Option<Flex<Expression>> perform_binary_op_add_bitint(
+      NodeId operation_node_id,
+      Flex<BitIntType> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
+  ) {
+    if (!unify(left_type, right_type)) {
+      return None();
+    }
+    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    result->node_id = operation_node_id;
+    result->type = left->type;
+    result->op_kind = BinaryOperatorKind::Add;
+    result->left = left;
+    result->right = right;
+    return result;
+  }
+
   Option<Flex<Expression>> perform_binary_op_sub(
-      Flex<Type> left_type, Flex<Expression> left, Flex<Type> right_type, Flex<Expression> right
+      NodeId operation_node_id,
+      Flex<Type> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
   ) {
     switch (left_type->kind) {
     case TypeKind::Alias:
@@ -2983,13 +3080,20 @@ public:
       raise_error_at_node_id(left->node_id, "not implemented (binary op of Apply)");
     case TypeKind::Builtin:
       return perform_binary_op_sub_builtin(
+          operation_node_id,
           left_type.derive(static_cast<BuiltinType &>(*left_type)),
           move(left),
           move(right_type),
           move(right)
       );
     case TypeKind::BitInt:
-      raise_error_at_node_id(left->node_id, "not implemented (binary op of BitInt)");
+      return perform_binary_op_sub_bitint(
+          operation_node_id,
+          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          move(left),
+          move(right_type),
+          move(right)
+      );
     case TypeKind::Pointer:
       raise_error_at_node_id(left->node_id, "not implemented (binary op of Pointer)");
     case TypeKind::Slice:
@@ -3023,7 +3127,27 @@ public:
     }
   }
 
+  Option<Flex<Expression>> perform_binary_op_sub_bitint(
+      NodeId operation_node_id,
+      Flex<BitIntType> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
+  ) {
+    if (!unify(left_type, right_type)) {
+      return None();
+    }
+    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    result->node_id = operation_node_id;
+    result->type = left->type;
+    result->op_kind = BinaryOperatorKind::Subtract;
+    result->left = left;
+    result->right = right;
+    return result;
+  }
+
   Option<Flex<Expression>> perform_binary_op_sub_builtin(
+      NodeId operation_node_id,
       Flex<BuiltinType> left_type,
       Flex<Expression> left,
       Flex<Type> right_type,
@@ -3045,7 +3169,7 @@ public:
     case BuiltinKind::Float:
     case BuiltinKind::Double: {
       auto result = emplace_flex<BuiltinBinaryOperationExpression>();
-      result->node_id = left->node_id;
+      result->node_id = operation_node_id;
       result->type = left->type;
       result->op_kind = BinaryOperatorKind::Subtract;
       result->left = left;
@@ -3063,7 +3187,11 @@ public:
   }
 
   Option<Flex<Expression>> perform_binary_op_mul(
-      Flex<Type> left_type, Flex<Expression> left, Flex<Type> right_type, Flex<Expression> right
+      NodeId operation_node_id,
+      Flex<Type> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
   ) {
     switch (left_type->kind) {
     case TypeKind::Alias:
@@ -3082,13 +3210,20 @@ public:
       raise_error_at_node_id(left->node_id, "not implemented (binary op of Apply)");
     case TypeKind::Builtin:
       return perform_binary_op_mul_builtin(
+          operation_node_id,
           left_type.derive(static_cast<BuiltinType &>(*left_type)),
           move(left),
           move(right_type),
           move(right)
       );
     case TypeKind::BitInt:
-      raise_error_at_node_id(left->node_id, "not implemented (binary op of BitInt)");
+      return perform_binary_op_mul_bitint(
+          operation_node_id,
+          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          move(left),
+          move(right_type),
+          move(right)
+      );
     case TypeKind::Pointer:
       raise_error_at_node_id(left->node_id, "not implemented (binary op of Pointer)");
     case TypeKind::Slice:
@@ -3122,7 +3257,27 @@ public:
     }
   }
 
+  Option<Flex<Expression>> perform_binary_op_mul_bitint(
+      NodeId operation_node_id,
+      Flex<BitIntType> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
+  ) {
+    if (!unify(left_type, right_type)) {
+      return None();
+    }
+    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    result->node_id = operation_node_id;
+    result->type = left->type;
+    result->op_kind = BinaryOperatorKind::Multiply;
+    result->left = left;
+    result->right = right;
+    return result;
+  }
+
   Option<Flex<Expression>> perform_binary_op_mul_builtin(
+      NodeId operation_node_id,
       Flex<BuiltinType> left_type,
       Flex<Expression> left,
       Flex<Type> right_type,
@@ -3144,7 +3299,7 @@ public:
     case BuiltinKind::Float:
     case BuiltinKind::Double: {
       auto result = emplace_flex<BuiltinBinaryOperationExpression>();
-      result->node_id = left->node_id;
+      result->node_id = operation_node_id;
       result->type = left->type;
       result->op_kind = BinaryOperatorKind::Multiply;
       result->left = left;
@@ -3162,7 +3317,11 @@ public:
   }
 
   Option<Flex<Expression>> perform_binary_op_div(
-      Flex<Type> left_type, Flex<Expression> left, Flex<Type> right_type, Flex<Expression> right
+      NodeId operation_node_id,
+      Flex<Type> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
   ) {
     switch (left_type->kind) {
     case TypeKind::Alias:
@@ -3181,13 +3340,20 @@ public:
       raise_error_at_node_id(left->node_id, "not implemented (binary op of Apply)");
     case TypeKind::Builtin:
       return perform_binary_op_div_builtin(
+          operation_node_id,
           left_type.derive(static_cast<BuiltinType &>(*left_type)),
           move(left),
           move(right_type),
           move(right)
       );
     case TypeKind::BitInt:
-      raise_error_at_node_id(left->node_id, "not implemented (binary op of BitInt)");
+      return perform_binary_op_div_bitint(
+          operation_node_id,
+          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          move(left),
+          move(right_type),
+          move(right)
+      );
     case TypeKind::Pointer:
       raise_error_at_node_id(left->node_id, "not implemented (binary op of Pointer)");
     case TypeKind::Slice:
@@ -3221,7 +3387,27 @@ public:
     }
   }
 
+  Option<Flex<Expression>> perform_binary_op_div_bitint(
+      NodeId operation_node_id,
+      Flex<BitIntType> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
+  ) {
+    if (!unify(left_type, right_type)) {
+      return None();
+    }
+    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    result->node_id = operation_node_id;
+    result->type = left->type;
+    result->op_kind = BinaryOperatorKind::Divide;
+    result->left = left;
+    result->right = right;
+    return result;
+  }
+
   Option<Flex<Expression>> perform_binary_op_div_builtin(
+      NodeId operation_node_id,
       Flex<BuiltinType> left_type,
       Flex<Expression> left,
       Flex<Type> right_type,
@@ -3243,7 +3429,7 @@ public:
     case BuiltinKind::Float:
     case BuiltinKind::Double: {
       auto result = emplace_flex<BuiltinBinaryOperationExpression>();
-      result->node_id = left->node_id;
+      result->node_id = operation_node_id;
       result->type = left->type;
       result->op_kind = BinaryOperatorKind::Divide;
       result->left = left;
@@ -3261,7 +3447,11 @@ public:
   }
 
   Option<Flex<Expression>> perform_binary_op_and(
-      Flex<Type> left_type, Flex<Expression> left, Flex<Type> right_type, Flex<Expression> right
+      NodeId operation_node_id,
+      Flex<Type> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
   ) {
     switch (left_type->kind) {
     case TypeKind::Alias:
@@ -3280,6 +3470,7 @@ public:
       raise_error_at_node_id(left->node_id, "not implemented (binary op of Apply)");
     case TypeKind::Builtin:
       return perform_binary_op_and_builtin(
+          operation_node_id,
           left_type.derive(static_cast<BuiltinType &>(*left_type)),
           move(left),
           move(right_type),
@@ -3321,6 +3512,7 @@ public:
   }
 
   Option<Flex<Expression>> perform_binary_op_and_builtin(
+      NodeId operation_node_id,
       Flex<BuiltinType> left_type,
       Flex<Expression> left,
       Flex<Type> right_type,
@@ -3332,7 +3524,7 @@ public:
     switch (left_type->builtin_kind) {
     case BuiltinKind::Bool: {
       auto result = emplace_flex<BuiltinBinaryOperationExpression>();
-      result->node_id = left->node_id;
+      result->node_id = operation_node_id;
       result->type = left->type;
       result->op_kind = BinaryOperatorKind::And;
       result->left = left;
@@ -3360,7 +3552,11 @@ public:
   }
 
   Option<Flex<Expression>> perform_binary_op_bitwise_and(
-      Flex<Type> left_type, Flex<Expression> left, Flex<Type> right_type, Flex<Expression> right
+      NodeId operation_node_id,
+      Flex<Type> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
   ) {
     switch (left_type->kind) {
     case TypeKind::Alias:
@@ -3379,13 +3575,20 @@ public:
       raise_error_at_node_id(left->node_id, "not implemented (binary op of Apply)");
     case TypeKind::Builtin:
       return perform_binary_op_bitwise_and_builtin(
+          operation_node_id,
           left_type.derive(static_cast<BuiltinType &>(*left_type)),
           move(left),
           move(right_type),
           move(right)
       );
     case TypeKind::BitInt:
-      raise_error_at_node_id(left->node_id, "not implemented (binary op of BitInt)");
+      return perform_binary_op_bitwise_and_bitint(
+          operation_node_id,
+          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          move(left),
+          move(right_type),
+          move(right)
+      );
     case TypeKind::Pointer:
       raise_error_at_node_id(left->node_id, "not implemented (binary op of Pointer)");
     case TypeKind::Slice:
@@ -3419,7 +3622,27 @@ public:
     }
   }
 
+  Option<Flex<Expression>> perform_binary_op_bitwise_and_bitint(
+      NodeId operation_node_id,
+      Flex<BitIntType> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
+  ) {
+    if (!unify(left_type, right_type)) {
+      return None();
+    }
+    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    result->node_id = operation_node_id;
+    result->type = left->type;
+    result->op_kind = BinaryOperatorKind::BitwiseAnd;
+    result->left = left;
+    result->right = right;
+    return result;
+  }
+
   Option<Flex<Expression>> perform_binary_op_bitwise_and_builtin(
+      NodeId operation_node_id,
       Flex<BuiltinType> left_type,
       Flex<Expression> left,
       Flex<Type> right_type,
@@ -3439,7 +3662,7 @@ public:
     case BuiltinKind::ULong:
     case BuiltinKind::USize: {
       auto result = emplace_flex<BuiltinBinaryOperationExpression>();
-      result->node_id = left->node_id;
+      result->node_id = operation_node_id;
       result->type = left->type;
       result->op_kind = BinaryOperatorKind::BitwiseAnd;
       result->left = left;
@@ -3459,7 +3682,11 @@ public:
   }
 
   Option<Flex<Expression>> perform_binary_op_bitwise_or(
-      Flex<Type> left_type, Flex<Expression> left, Flex<Type> right_type, Flex<Expression> right
+      NodeId operation_node_id,
+      Flex<Type> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
   ) {
     switch (left_type->kind) {
     case TypeKind::Alias:
@@ -3478,13 +3705,20 @@ public:
       raise_error_at_node_id(left->node_id, "not implemented (binary op of Apply)");
     case TypeKind::Builtin:
       return perform_binary_op_bitwise_or_builtin(
+          operation_node_id,
           left_type.derive(static_cast<BuiltinType &>(*left_type)),
           move(left),
           move(right_type),
           move(right)
       );
     case TypeKind::BitInt:
-      raise_error_at_node_id(left->node_id, "not implemented (binary op of BitInt)");
+      return perform_binary_op_bitwise_or_bitint(
+          operation_node_id,
+          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          move(left),
+          move(right_type),
+          move(right)
+      );
     case TypeKind::Pointer:
       raise_error_at_node_id(left->node_id, "not implemented (binary op of Pointer)");
     case TypeKind::Slice:
@@ -3518,7 +3752,27 @@ public:
     }
   }
 
+  Option<Flex<Expression>> perform_binary_op_bitwise_or_bitint(
+      NodeId operation_node_id,
+      Flex<BitIntType> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
+  ) {
+    if (!unify(left_type, right_type)) {
+      return None();
+    }
+    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    result->node_id = operation_node_id;
+    result->type = left->type;
+    result->op_kind = BinaryOperatorKind::BitwiseOr;
+    result->left = left;
+    result->right = right;
+    return result;
+  }
+
   Option<Flex<Expression>> perform_binary_op_bitwise_or_builtin(
+      NodeId operation_node_id,
       Flex<BuiltinType> left_type,
       Flex<Expression> left,
       Flex<Type> right_type,
@@ -3538,7 +3792,7 @@ public:
     case BuiltinKind::ULong:
     case BuiltinKind::USize: {
       auto result = emplace_flex<BuiltinBinaryOperationExpression>();
-      result->node_id = left->node_id;
+      result->node_id = operation_node_id;
       result->type = left->type;
       result->op_kind = BinaryOperatorKind::BitwiseOr;
       result->left = left;
@@ -3558,7 +3812,11 @@ public:
   }
 
   Option<Flex<Expression>> perform_binary_op_bitwise_xor(
-      Flex<Type> left_type, Flex<Expression> left, Flex<Type> right_type, Flex<Expression> right
+      NodeId operation_node_id,
+      Flex<Type> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
   ) {
     switch (left_type->kind) {
     case TypeKind::Alias:
@@ -3577,13 +3835,20 @@ public:
       raise_error_at_node_id(left->node_id, "not implemented (binary op of Apply)");
     case TypeKind::Builtin:
       return perform_binary_op_bitwise_xor_builtin(
+          operation_node_id,
           left_type.derive(static_cast<BuiltinType &>(*left_type)),
           move(left),
           move(right_type),
           move(right)
       );
     case TypeKind::BitInt:
-      raise_error_at_node_id(left->node_id, "not implemented (binary op of BitInt)");
+      return perform_binary_op_bitwise_xor_bitint(
+          operation_node_id,
+          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          move(left),
+          move(right_type),
+          move(right)
+      );
     case TypeKind::Pointer:
       raise_error_at_node_id(left->node_id, "not implemented (binary op of Pointer)");
     case TypeKind::Slice:
@@ -3617,7 +3882,27 @@ public:
     }
   }
 
+  Option<Flex<Expression>> perform_binary_op_bitwise_xor_bitint(
+      NodeId operation_node_id,
+      Flex<BitIntType> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
+  ) {
+    if (!unify(left_type, right_type)) {
+      return None();
+    }
+    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    result->node_id = operation_node_id;
+    result->type = left->type;
+    result->op_kind = BinaryOperatorKind::BitwiseXor;
+    result->left = left;
+    result->right = right;
+    return result;
+  }
+
   Option<Flex<Expression>> perform_binary_op_bitwise_xor_builtin(
+      NodeId operation_node_id,
       Flex<BuiltinType> left_type,
       Flex<Expression> left,
       Flex<Type> right_type,
@@ -3637,7 +3922,7 @@ public:
     case BuiltinKind::ULong:
     case BuiltinKind::USize: {
       auto result = emplace_flex<BuiltinBinaryOperationExpression>();
-      result->node_id = left->node_id;
+      result->node_id = operation_node_id;
       result->type = left->type;
       result->op_kind = BinaryOperatorKind::BitwiseXor;
       result->left = left;
@@ -3657,7 +3942,11 @@ public:
   }
 
   Option<Flex<Expression>> perform_binary_op_equals(
-      Flex<Type> left_type, Flex<Expression> left, Flex<Type> right_type, Flex<Expression> right
+      NodeId operation_node_id,
+      Flex<Type> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
   ) {
     switch (left_type->kind) {
     case TypeKind::Alias:
@@ -3676,13 +3965,20 @@ public:
       raise_error_at_node_id(left->node_id, "not implemented (binary op of Apply)");
     case TypeKind::Builtin:
       return perform_binary_op_equals_builtin(
+          operation_node_id,
           left_type.derive(static_cast<BuiltinType &>(*left_type)),
           move(left),
           move(right_type),
           move(right)
       );
     case TypeKind::BitInt:
-      raise_error_at_node_id(left->node_id, "not implemented (binary op of BitInt)");
+      return perform_binary_op_equals_bitint(
+          operation_node_id,
+          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          move(left),
+          move(right_type),
+          move(right)
+      );
     case TypeKind::Pointer:
       raise_error_at_node_id(left->node_id, "not implemented (binary op of Pointer)");
     case TypeKind::Slice:
@@ -3716,7 +4012,27 @@ public:
     }
   }
 
+  Option<Flex<Expression>> perform_binary_op_equals_bitint(
+      NodeId operation_node_id,
+      Flex<BitIntType> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
+  ) {
+    if (!unify(left_type, right_type)) {
+      return None();
+    }
+    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    result->node_id = operation_node_id;
+    result->type = Flex<Type>::weak(&BOOL_TYPE);
+    result->op_kind = BinaryOperatorKind::Equals;
+    result->left = left;
+    result->right = right;
+    return result;
+  }
+
   Option<Flex<Expression>> perform_binary_op_equals_builtin(
+      NodeId operation_node_id,
       Flex<BuiltinType> left_type,
       Flex<Expression> left,
       Flex<Type> right_type,
@@ -3741,7 +4057,7 @@ public:
     case BuiltinKind::Bool:
     case BuiltinKind::Null: {
       auto result = emplace_flex<BuiltinBinaryOperationExpression>();
-      result->node_id = left->node_id;
+      result->node_id = operation_node_id;
       result->type = Flex<Type>::weak(&BOOL_TYPE);
       result->op_kind = BinaryOperatorKind::Equals;
       result->left = left;
@@ -3756,7 +4072,11 @@ public:
   }
 
   Option<Flex<Expression>> perform_binary_op_greater(
-      Flex<Type> left_type, Flex<Expression> left, Flex<Type> right_type, Flex<Expression> right
+      NodeId operation_node_id,
+      Flex<Type> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
   ) {
     switch (left_type->kind) {
     case TypeKind::Alias:
@@ -3775,13 +4095,20 @@ public:
       raise_error_at_node_id(left->node_id, "not implemented (binary op of Apply)");
     case TypeKind::Builtin:
       return perform_binary_op_greater_builtin(
+          operation_node_id,
           left_type.derive(static_cast<BuiltinType &>(*left_type)),
           move(left),
           move(right_type),
           move(right)
       );
     case TypeKind::BitInt:
-      raise_error_at_node_id(left->node_id, "not implemented (binary op of BitInt)");
+      return perform_binary_op_greater_bitint(
+          operation_node_id,
+          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          move(left),
+          move(right_type),
+          move(right)
+      );
     case TypeKind::Pointer:
       raise_error_at_node_id(left->node_id, "not implemented (binary op of Pointer)");
     case TypeKind::Slice:
@@ -3815,7 +4142,27 @@ public:
     }
   }
 
+  Option<Flex<Expression>> perform_binary_op_greater_bitint(
+      NodeId operation_node_id,
+      Flex<BitIntType> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
+  ) {
+    if (!unify(left_type, right_type)) {
+      return None();
+    }
+    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    result->node_id = operation_node_id;
+    result->type = Flex<Type>::weak(&BOOL_TYPE);
+    result->op_kind = BinaryOperatorKind::Greater;
+    result->left = left;
+    result->right = right;
+    return result;
+  }
+
   Option<Flex<Expression>> perform_binary_op_greater_builtin(
+      NodeId operation_node_id,
       Flex<BuiltinType> left_type,
       Flex<Expression> left,
       Flex<Type> right_type,
@@ -3838,7 +4185,7 @@ public:
     case BuiltinKind::Double:
     case BuiltinKind::Char: {
       auto result = emplace_flex<BuiltinBinaryOperationExpression>();
-      result->node_id = left->node_id;
+      result->node_id = operation_node_id;
       result->type = Flex<Type>::weak(&BOOL_TYPE);
       result->op_kind = BinaryOperatorKind::Greater;
       result->left = left;
@@ -3855,7 +4202,11 @@ public:
   }
 
   Option<Flex<Expression>> perform_binary_op_greater_equals(
-      Flex<Type> left_type, Flex<Expression> left, Flex<Type> right_type, Flex<Expression> right
+      NodeId operation_node_id,
+      Flex<Type> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
   ) {
     switch (left_type->kind) {
     case TypeKind::Alias:
@@ -3874,13 +4225,20 @@ public:
       raise_error_at_node_id(left->node_id, "not implemented (binary op of Apply)");
     case TypeKind::Builtin:
       return perform_binary_op_greater_equals_builtin(
+          operation_node_id,
           left_type.derive(static_cast<BuiltinType &>(*left_type)),
           move(left),
           move(right_type),
           move(right)
       );
     case TypeKind::BitInt:
-      raise_error_at_node_id(left->node_id, "not implemented (binary op of BitInt)");
+      return perform_binary_op_greater_equals_bitint(
+          operation_node_id,
+          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          move(left),
+          move(right_type),
+          move(right)
+      );
     case TypeKind::Pointer:
       raise_error_at_node_id(left->node_id, "not implemented (binary op of Pointer)");
     case TypeKind::Slice:
@@ -3914,7 +4272,27 @@ public:
     }
   }
 
+  Option<Flex<Expression>> perform_binary_op_greater_equals_bitint(
+      NodeId operation_node_id,
+      Flex<BitIntType> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
+  ) {
+    if (!unify(left_type, right_type)) {
+      return None();
+    }
+    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    result->node_id = operation_node_id;
+    result->type = Flex<Type>::weak(&BOOL_TYPE);
+    result->op_kind = BinaryOperatorKind::GreaterEquals;
+    result->left = left;
+    result->right = right;
+    return result;
+  }
+
   Option<Flex<Expression>> perform_binary_op_greater_equals_builtin(
+      NodeId operation_node_id,
       Flex<BuiltinType> left_type,
       Flex<Expression> left,
       Flex<Type> right_type,
@@ -3937,7 +4315,7 @@ public:
     case BuiltinKind::Double:
     case BuiltinKind::Char: {
       auto result = emplace_flex<BuiltinBinaryOperationExpression>();
-      result->node_id = left->node_id;
+      result->node_id = operation_node_id;
       result->type = Flex<Type>::weak(&BOOL_TYPE);
       result->op_kind = BinaryOperatorKind::GreaterEquals;
       result->left = left;
@@ -3954,7 +4332,11 @@ public:
   }
 
   Option<Flex<Expression>> perform_binary_op_less(
-      Flex<Type> left_type, Flex<Expression> left, Flex<Type> right_type, Flex<Expression> right
+      NodeId operation_node_id,
+      Flex<Type> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
   ) {
     switch (left_type->kind) {
     case TypeKind::Alias:
@@ -3973,13 +4355,20 @@ public:
       raise_error_at_node_id(left->node_id, "not implemented (binary op of Apply)");
     case TypeKind::Builtin:
       return perform_binary_op_less_builtin(
+          operation_node_id,
           left_type.derive(static_cast<BuiltinType &>(*left_type)),
           move(left),
           move(right_type),
           move(right)
       );
     case TypeKind::BitInt:
-      raise_error_at_node_id(left->node_id, "not implemented (binary op of BitInt)");
+      return perform_binary_op_less_bitint(
+          operation_node_id,
+          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          move(left),
+          move(right_type),
+          move(right)
+      );
     case TypeKind::Pointer:
       raise_error_at_node_id(left->node_id, "not implemented (binary op of Pointer)");
     case TypeKind::Slice:
@@ -4013,7 +4402,27 @@ public:
     }
   }
 
+  Option<Flex<Expression>> perform_binary_op_less_bitint(
+      NodeId operation_node_id,
+      Flex<BitIntType> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
+  ) {
+    if (!unify(left_type, right_type)) {
+      return None();
+    }
+    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    result->node_id = operation_node_id;
+    result->type = Flex<Type>::weak(&BOOL_TYPE);
+    result->op_kind = BinaryOperatorKind::Less;
+    result->left = left;
+    result->right = right;
+    return result;
+  }
+
   Option<Flex<Expression>> perform_binary_op_less_builtin(
+      NodeId operation_node_id,
       Flex<BuiltinType> left_type,
       Flex<Expression> left,
       Flex<Type> right_type,
@@ -4036,7 +4445,7 @@ public:
     case BuiltinKind::Double:
     case BuiltinKind::Char: {
       auto result = emplace_flex<BuiltinBinaryOperationExpression>();
-      result->node_id = left->node_id;
+      result->node_id = operation_node_id;
       result->type = Flex<Type>::weak(&BOOL_TYPE);
       result->op_kind = BinaryOperatorKind::Less;
       result->left = left;
@@ -4053,7 +4462,11 @@ public:
   }
 
   Option<Flex<Expression>> perform_binary_op_less_equals(
-      Flex<Type> left_type, Flex<Expression> left, Flex<Type> right_type, Flex<Expression> right
+      NodeId operation_node_id,
+      Flex<Type> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
   ) {
     switch (left_type->kind) {
     case TypeKind::Alias:
@@ -4072,13 +4485,20 @@ public:
       raise_error_at_node_id(left->node_id, "not implemented (binary op of Apply)");
     case TypeKind::Builtin:
       return perform_binary_op_less_equals_builtin(
+          operation_node_id,
           left_type.derive(static_cast<BuiltinType &>(*left_type)),
           move(left),
           move(right_type),
           move(right)
       );
     case TypeKind::BitInt:
-      raise_error_at_node_id(left->node_id, "not implemented (binary op of BitInt)");
+      return perform_binary_op_less_equals_bitint(
+          operation_node_id,
+          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          move(left),
+          move(right_type),
+          move(right)
+      );
     case TypeKind::Pointer:
       raise_error_at_node_id(left->node_id, "not implemented (binary op of Pointer)");
     case TypeKind::Slice:
@@ -4112,7 +4532,27 @@ public:
     }
   }
 
+  Option<Flex<Expression>> perform_binary_op_less_equals_bitint(
+      NodeId operation_node_id,
+      Flex<BitIntType> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
+  ) {
+    if (!unify(left_type, right_type)) {
+      return None();
+    }
+    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    result->node_id = operation_node_id;
+    result->type = Flex<Type>::weak(&BOOL_TYPE);
+    result->op_kind = BinaryOperatorKind::LessEquals;
+    result->left = left;
+    result->right = right;
+    return result;
+  }
+
   Option<Flex<Expression>> perform_binary_op_less_equals_builtin(
+      NodeId operation_node_id,
       Flex<BuiltinType> left_type,
       Flex<Expression> left,
       Flex<Type> right_type,
@@ -4135,7 +4575,7 @@ public:
     case BuiltinKind::Double:
     case BuiltinKind::Char: {
       auto result = emplace_flex<BuiltinBinaryOperationExpression>();
-      result->node_id = left->node_id;
+      result->node_id = operation_node_id;
       result->type = Flex<Type>::weak(&BOOL_TYPE);
       result->op_kind = BinaryOperatorKind::LessEquals;
       result->left = left;
@@ -4152,7 +4592,11 @@ public:
   }
 
   Option<Flex<Expression>> perform_binary_op_left_shift(
-      Flex<Type> left_type, Flex<Expression> left, Flex<Type> right_type, Flex<Expression> right
+      NodeId operation_node_id,
+      Flex<Type> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
   ) {
     switch (left_type->kind) {
     case TypeKind::Alias:
@@ -4171,13 +4615,20 @@ public:
       raise_error_at_node_id(left->node_id, "not implemented (binary op of Apply)");
     case TypeKind::Builtin:
       return perform_binary_op_left_shift_builtin(
+          operation_node_id,
           left_type.derive(static_cast<BuiltinType &>(*left_type)),
           move(left),
           move(right_type),
           move(right)
       );
     case TypeKind::BitInt:
-      raise_error_at_node_id(left->node_id, "not implemented (binary op of BitInt)");
+      return perform_binary_op_left_shift_bitint(
+          operation_node_id,
+          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          move(left),
+          move(right_type),
+          move(right)
+      );
     case TypeKind::Pointer:
       raise_error_at_node_id(left->node_id, "not implemented (binary op of Pointer)");
     case TypeKind::Slice:
@@ -4211,13 +4662,33 @@ public:
     }
   }
 
+  Option<Flex<Expression>> perform_binary_op_left_shift_bitint(
+      NodeId operation_node_id,
+      Flex<BitIntType>,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
+  ) {
+    if (!is_native_integral_type(right_type)) {
+      return None();
+    }
+    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    result->node_id = operation_node_id;
+    result->type = left->type;
+    result->op_kind = BinaryOperatorKind::LeftShift;
+    result->left = left;
+    result->right = right;
+    return result;
+  }
+
   Option<Flex<Expression>> perform_binary_op_left_shift_builtin(
+      NodeId operation_node_id,
       Flex<BuiltinType> left_type,
       Flex<Expression> left,
       Flex<Type> right_type,
       Flex<Expression> right
   ) {
-    if (right_type->kind != TypeKind::Builtin || !is_integral_type(right_type)) {
+    if (!is_native_integral_type(right_type)) {
       return None();
     }
     switch (left_type->builtin_kind) {
@@ -4231,7 +4702,7 @@ public:
     case BuiltinKind::ULong:
     case BuiltinKind::USize: {
       auto result = emplace_flex<BuiltinBinaryOperationExpression>();
-      result->node_id = left->node_id;
+      result->node_id = operation_node_id;
       result->type = left->type;
       result->op_kind = BinaryOperatorKind::LeftShift;
       result->left = left;
@@ -4251,7 +4722,11 @@ public:
   }
 
   Option<Flex<Expression>> perform_binary_op_modulo(
-      Flex<Type> left_type, Flex<Expression> left, Flex<Type> right_type, Flex<Expression> right
+      NodeId operation_node_id,
+      Flex<Type> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
   ) {
     switch (left_type->kind) {
     case TypeKind::Alias:
@@ -4270,13 +4745,20 @@ public:
       raise_error_at_node_id(left->node_id, "not implemented (binary op of Apply)");
     case TypeKind::Builtin:
       return perform_binary_op_modulo_builtin(
+          operation_node_id,
           left_type.derive(static_cast<BuiltinType &>(*left_type)),
           move(left),
           move(right_type),
           move(right)
       );
     case TypeKind::BitInt:
-      raise_error_at_node_id(left->node_id, "not implemented (binary op of BitInt)");
+      return perform_binary_op_modulo_bitint(
+          operation_node_id,
+          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          move(left),
+          move(right_type),
+          move(right)
+      );
     case TypeKind::Pointer:
       raise_error_at_node_id(left->node_id, "not implemented (binary op of Pointer)");
     case TypeKind::Slice:
@@ -4310,7 +4792,27 @@ public:
     }
   }
 
+  Option<Flex<Expression>> perform_binary_op_modulo_bitint(
+      NodeId operation_node_id,
+      Flex<BitIntType> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
+  ) {
+    if (!unify(left_type, right_type)) {
+      return None();
+    }
+    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    result->node_id = operation_node_id;
+    result->type = left->type;
+    result->op_kind = BinaryOperatorKind::Modulo;
+    result->left = left;
+    result->right = right;
+    return result;
+  }
+
   Option<Flex<Expression>> perform_binary_op_modulo_builtin(
+      NodeId operation_node_id,
       Flex<BuiltinType> left_type,
       Flex<Expression> left,
       Flex<Type> right_type,
@@ -4330,7 +4832,7 @@ public:
     case BuiltinKind::ULong:
     case BuiltinKind::USize: {
       auto result = emplace_flex<BuiltinBinaryOperationExpression>();
-      result->node_id = left->node_id;
+      result->node_id = operation_node_id;
       result->type = left->type;
       result->op_kind = BinaryOperatorKind::Modulo;
       result->left = left;
@@ -4350,7 +4852,11 @@ public:
   }
 
   Option<Flex<Expression>> perform_binary_op_not_equals(
-      Flex<Type> left_type, Flex<Expression> left, Flex<Type> right_type, Flex<Expression> right
+      NodeId operation_node_id,
+      Flex<Type> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
   ) {
     switch (left_type->kind) {
     case TypeKind::Alias:
@@ -4369,13 +4875,20 @@ public:
       raise_error_at_node_id(left->node_id, "not implemented (binary op of Apply)");
     case TypeKind::Builtin:
       return perform_binary_op_not_equals_builtin(
+          operation_node_id,
           left_type.derive(static_cast<BuiltinType &>(*left_type)),
           move(left),
           move(right_type),
           move(right)
       );
     case TypeKind::BitInt:
-      raise_error_at_node_id(left->node_id, "not implemented (binary op of BitInt)");
+      return perform_binary_op_not_equals_bitint(
+          operation_node_id,
+          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          move(left),
+          move(right_type),
+          move(right)
+      );
     case TypeKind::Pointer:
       raise_error_at_node_id(left->node_id, "not implemented (binary op of Pointer)");
     case TypeKind::Slice:
@@ -4409,7 +4922,27 @@ public:
     }
   }
 
+  Option<Flex<Expression>> perform_binary_op_not_equals_bitint(
+      NodeId operation_node_id,
+      Flex<BitIntType> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
+  ) {
+    if (!unify(left_type, right_type)) {
+      return None();
+    }
+    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    result->node_id = operation_node_id;
+    result->type = Flex<Type>::weak(&BOOL_TYPE);
+    result->op_kind = BinaryOperatorKind::NotEquals;
+    result->left = left;
+    result->right = right;
+    return result;
+  }
+
   Option<Flex<Expression>> perform_binary_op_not_equals_builtin(
+      NodeId operation_node_id,
       Flex<BuiltinType> left_type,
       Flex<Expression> left,
       Flex<Type> right_type,
@@ -4434,7 +4967,7 @@ public:
     case BuiltinKind::Bool:
     case BuiltinKind::Null: {
       auto result = emplace_flex<BuiltinBinaryOperationExpression>();
-      result->node_id = left->node_id;
+      result->node_id = operation_node_id;
       result->type = Flex<Type>::weak(&BOOL_TYPE);
       result->op_kind = BinaryOperatorKind::NotEquals;
       result->left = left;
@@ -4449,7 +4982,11 @@ public:
   }
 
   Option<Flex<Expression>> perform_binary_op_or(
-      Flex<Type> left_type, Flex<Expression> left, Flex<Type> right_type, Flex<Expression> right
+      NodeId operation_node_id,
+      Flex<Type> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
   ) {
     switch (left_type->kind) {
     case TypeKind::Alias:
@@ -4468,6 +5005,7 @@ public:
       raise_error_at_node_id(left->node_id, "not implemented (binary op of Apply)");
     case TypeKind::Builtin:
       return perform_binary_op_or_builtin(
+          operation_node_id,
           left_type.derive(static_cast<BuiltinType &>(*left_type)),
           move(left),
           move(right_type),
@@ -4509,6 +5047,7 @@ public:
   }
 
   Option<Flex<Expression>> perform_binary_op_or_builtin(
+      NodeId operation_node_id,
       Flex<BuiltinType> left_type,
       Flex<Expression> left,
       Flex<Type> right_type,
@@ -4520,7 +5059,7 @@ public:
     switch (left_type->builtin_kind) {
     case BuiltinKind::Bool: {
       auto result = emplace_flex<BuiltinBinaryOperationExpression>();
-      result->node_id = left->node_id;
+      result->node_id = operation_node_id;
       result->type = Flex<Type>::weak(&BOOL_TYPE);
       result->op_kind = BinaryOperatorKind::Or;
       result->left = left;
@@ -4548,7 +5087,11 @@ public:
   }
 
   Option<Flex<Expression>> perform_binary_op_right_shift(
-      Flex<Type> left_type, Flex<Expression> left, Flex<Type> right_type, Flex<Expression> right
+      NodeId operation_node_id,
+      Flex<Type> left_type,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
   ) {
     switch (left_type->kind) {
     case TypeKind::Alias:
@@ -4567,13 +5110,20 @@ public:
       raise_error_at_node_id(left->node_id, "not implemented (binary op of Apply)");
     case TypeKind::Builtin:
       return perform_binary_op_right_shift_builtin(
+          operation_node_id,
           left_type.derive(static_cast<BuiltinType &>(*left_type)),
           move(left),
           move(right_type),
           move(right)
       );
     case TypeKind::BitInt:
-      raise_error_at_node_id(left->node_id, "not implemented (binary op of BitInt)");
+      return perform_binary_op_right_shift_bitint(
+          operation_node_id,
+          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          move(left),
+          move(right_type),
+          move(right)
+      );
     case TypeKind::Pointer:
       raise_error_at_node_id(left->node_id, "not implemented (binary op of Pointer)");
     case TypeKind::Slice:
@@ -4607,7 +5157,27 @@ public:
     }
   }
 
+  Option<Flex<Expression>> perform_binary_op_right_shift_bitint(
+      NodeId operation_node_id,
+      Flex<BitIntType>,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
+  ) {
+    if (!is_native_integral_type(right_type)) {
+      return None();
+    }
+    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    result->node_id = operation_node_id;
+    result->type = left->type;
+    result->op_kind = BinaryOperatorKind::RightShift;
+    result->left = left;
+    result->right = right;
+    return result;
+  }
+
   Option<Flex<Expression>> perform_binary_op_right_shift_builtin(
+      NodeId operation_node_id,
       Flex<BuiltinType> left_type,
       Flex<Expression> left,
       Flex<Type> right_type,
@@ -4627,7 +5197,7 @@ public:
     case BuiltinKind::ULong:
     case BuiltinKind::USize: {
       auto result = emplace_flex<BuiltinBinaryOperationExpression>();
-      result->node_id = left->node_id;
+      result->node_id = operation_node_id;
       result->type = left->type;
       result->op_kind = BinaryOperatorKind::RightShift;
       result->left = left;

@@ -1,0 +1,35 @@
+let x : ubitint[4] = 1
+let z = -x
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="ubitint",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=ubitint[4],
+            value=BuiltinTypeCoerceExpression(
+              expr=NumberLiteralExpression(
+                lit=1
+              )
+            )
+          ),
+          ValueBinding(
+            name="z",
+            type=ubitint[4],
+            value=UnaryOperationExpression(
+              op_kind="-",
+              operand=IdentifierExpression(
+                name="x"
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

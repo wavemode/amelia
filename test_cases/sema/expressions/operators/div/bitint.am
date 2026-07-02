@@ -1,0 +1,48 @@
+let x : bitint[4] = 0b101
+let y : bitint[4] = 0b010
+let z : bitint[4] = x / y
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="bitint",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=bitint[4],
+            value=BuiltinTypeCoerceExpression(
+              expr=NumberLiteralExpression(
+                lit=0b101
+              )
+            )
+          ),
+          ValueBinding(
+            name="y",
+            type=bitint[4],
+            value=BuiltinTypeCoerceExpression(
+              expr=NumberLiteralExpression(
+                lit=0b010
+              )
+            )
+          ),
+          ValueBinding(
+            name="z",
+            type=bitint[4],
+            value=BuiltinBinaryOperationExpression(
+              operator="/",
+              left=IdentifierExpression(
+                name="x"
+              ),
+              right=IdentifierExpression(
+                name="y"
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/
