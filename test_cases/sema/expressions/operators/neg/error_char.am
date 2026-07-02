@@ -1,6 +1,0 @@
-let x : char = 'a'
-let z : char = -x
-
-/* EXPECTED_OUTPUT:
-ERROR("Cannot apply unary operator '-' to expression of type 'char' (at test_cases/sema/expressions/operators/neg/error_char.am:2:16)")
-*/

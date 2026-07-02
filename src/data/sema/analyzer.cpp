@@ -352,6 +352,15 @@ public:
     return cast_expr;
   }
 
+  Flex<Type> char_to_uint(Flex<Type> type) {
+    if (type->kind == TypeKind::ConstCharacter ||
+        (type->kind == TypeKind::Builtin &&
+         static_cast<const BuiltinType &>(*type).builtin_kind == BuiltinKind::Char)) {
+      return Flex<Type>::weak(&UINT_TYPE);
+    }
+    return type;
+  }
+
   Flex<Type> remove_const(Flex<Type> type) {
     switch (type->kind) {
     case TypeKind::Alias:
@@ -2341,8 +2350,15 @@ public:
       result->operand = operand;
       return result;
     }
+    case BuiltinKind::Char: {
+      auto result = emplace_flex<UnaryOperationExpression>();
+      result->node_id = operation_node_id;
+      result->type = Flex<Type>::weak(&UINT_TYPE);
+      result->op_kind = UnaryOperatorKind::Negate;
+      result->operand = operand;
+      return result;
+    }
     case BuiltinKind::Bool:
-    case BuiltinKind::Char:
     case BuiltinKind::Str:
     case BuiltinKind::Null:
     case BuiltinKind::Never:
@@ -2485,10 +2501,17 @@ public:
       result->operand = operand;
       return result;
     }
+    case BuiltinKind::Char: {
+      auto result = emplace_flex<UnaryOperationExpression>();
+      result->node_id = operation_node_id;
+      result->type = Flex<Type>::weak(&UINT_TYPE);
+      result->op_kind = UnaryOperatorKind::BitwiseNot;
+      result->operand = operand;
+      return result;
+    }
     case BuiltinKind::Float:
     case BuiltinKind::Double:
     case BuiltinKind::Bool:
-    case BuiltinKind::Char:
     case BuiltinKind::Str:
     case BuiltinKind::Null:
     case BuiltinKind::Never:
@@ -3272,7 +3295,15 @@ public:
       result->right = right;
       return result;
     }
-    case BuiltinKind::Char:
+    case BuiltinKind::Char: {
+      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      result->node_id = operation_node_id;
+      result->type = Flex<Type>::weak(&UINT_TYPE);
+      result->op_kind = BinaryOperatorKind::Add;
+      result->left = left;
+      result->right = right;
+      return result;
+    }
     case BuiltinKind::Bool:
     case BuiltinKind::Str:
     case BuiltinKind::Null:
@@ -3545,7 +3576,15 @@ public:
       result->right = right;
       return result;
     }
-    case BuiltinKind::Char:
+    case BuiltinKind::Char: {
+      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      result->node_id = operation_node_id;
+      result->type = Flex<Type>::weak(&UINT_TYPE);
+      result->op_kind = BinaryOperatorKind::Subtract;
+      result->left = left;
+      result->right = right;
+      return result;
+    }
     case BuiltinKind::Bool:
     case BuiltinKind::Str:
     case BuiltinKind::Null:
@@ -3799,7 +3838,15 @@ public:
       result->right = right;
       return result;
     }
-    case BuiltinKind::Char:
+    case BuiltinKind::Char: {
+      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      result->node_id = operation_node_id;
+      result->type = Flex<Type>::weak(&UINT_TYPE);
+      result->op_kind = BinaryOperatorKind::Multiply;
+      result->left = left;
+      result->right = right;
+      return result;
+    }
     case BuiltinKind::Bool:
     case BuiltinKind::Str:
     case BuiltinKind::Null:
@@ -4009,7 +4056,15 @@ public:
       result->right = right;
       return result;
     }
-    case BuiltinKind::Char:
+    case BuiltinKind::Char: {
+      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      result->node_id = operation_node_id;
+      result->type = Flex<Type>::weak(&UINT_TYPE);
+      result->op_kind = BinaryOperatorKind::Divide;
+      result->left = left;
+      result->right = right;
+      return result;
+    }
     case BuiltinKind::Bool:
     case BuiltinKind::Str:
     case BuiltinKind::Null:
@@ -4300,9 +4355,17 @@ public:
       result->right = right;
       return result;
     }
+    case BuiltinKind::Char: {
+      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      result->node_id = operation_node_id;
+      result->type = Flex<Type>::weak(&UINT_TYPE);
+      result->op_kind = BinaryOperatorKind::BitwiseAnd;
+      result->left = left;
+      result->right = right;
+      return result;
+    }
     case BuiltinKind::Float:
     case BuiltinKind::Double:
-    case BuiltinKind::Char:
     case BuiltinKind::Bool:
     case BuiltinKind::Str:
     case BuiltinKind::Null:
@@ -4459,9 +4522,17 @@ public:
       result->right = right;
       return result;
     }
+    case BuiltinKind::Char: {
+      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      result->node_id = operation_node_id;
+      result->type = Flex<Type>::weak(&UINT_TYPE);
+      result->op_kind = BinaryOperatorKind::BitwiseOr;
+      result->left = left;
+      result->right = right;
+      return result;
+    }
     case BuiltinKind::Float:
     case BuiltinKind::Double:
-    case BuiltinKind::Char:
     case BuiltinKind::Bool:
     case BuiltinKind::Str:
     case BuiltinKind::Null:
@@ -4618,9 +4689,17 @@ public:
       result->right = right;
       return result;
     }
+    case BuiltinKind::Char: {
+      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      result->node_id = operation_node_id;
+      result->type = Flex<Type>::weak(&UINT_TYPE);
+      result->op_kind = BinaryOperatorKind::BitwiseXor;
+      result->left = left;
+      result->right = right;
+      return result;
+    }
     case BuiltinKind::Float:
     case BuiltinKind::Double:
-    case BuiltinKind::Char:
     case BuiltinKind::Bool:
     case BuiltinKind::Str:
     case BuiltinKind::Null:
@@ -6369,9 +6448,17 @@ public:
       result->right = right;
       return result;
     }
+    case BuiltinKind::Char: {
+      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      result->node_id = operation_node_id;
+      result->type = Flex<Type>::weak(&UINT_TYPE);
+      result->op_kind = BinaryOperatorKind::LeftShift;
+      result->left = left;
+      result->right = right;
+      return result;
+    }
     case BuiltinKind::Float:
     case BuiltinKind::Double:
-    case BuiltinKind::Char:
     case BuiltinKind::Bool:
     case BuiltinKind::Null:
     case BuiltinKind::Never:
@@ -6528,9 +6615,17 @@ public:
       result->right = right;
       return result;
     }
+    case BuiltinKind::Char: {
+      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      result->node_id = operation_node_id;
+      result->type = Flex<Type>::weak(&UINT_TYPE);
+      result->op_kind = BinaryOperatorKind::Modulo;
+      result->left = left;
+      result->right = right;
+      return result;
+    }
     case BuiltinKind::Float:
     case BuiltinKind::Double:
-    case BuiltinKind::Char:
     case BuiltinKind::Bool:
     case BuiltinKind::Null:
     case BuiltinKind::Never:
@@ -7165,9 +7260,17 @@ public:
       result->right = right;
       return result;
     }
+    case BuiltinKind::Char: {
+      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      result->node_id = operation_node_id;
+      result->type = Flex<Type>::weak(&UINT_TYPE);
+      result->op_kind = BinaryOperatorKind::RightShift;
+      result->left = left;
+      result->right = right;
+      return result;
+    }
     case BuiltinKind::Float:
     case BuiltinKind::Double:
-    case BuiltinKind::Char:
     case BuiltinKind::Bool:
     case BuiltinKind::Never:
     case BuiltinKind::Null:

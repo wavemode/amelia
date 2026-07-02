@@ -1,0 +1,31 @@
+let x : char = 'a'
+let z : uint = ~x
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="char",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=char,
+            value=CharLiteralExpression['a']
+          ),
+          ValueBinding(
+            name="z",
+            type=uint,
+            value=UnaryOperationExpression(
+              op_kind="~",
+              operand=IdentifierExpression(
+                name="x"
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/
