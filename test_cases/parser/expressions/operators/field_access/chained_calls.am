@@ -1,0 +1,41 @@
+let x = a
+  .b()
+  .c()
+  .d()
+
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclNode(
+      target=IdentifierNode(
+        name="x"
+      ),
+      expr=FunctionCallExprNode(
+        callee=FieldAccessExprNode(
+          object=FunctionCallExprNode(
+            callee=FieldAccessExprNode(
+              object=FunctionCallExprNode(
+                callee=FieldAccessExprNode(
+                  object=IdentifierNode(
+                    name="a"
+                  ),
+                  field=IdentifierNode(
+                    name="b"
+                  )
+                )
+              ),
+              field=IdentifierNode(
+                name="c"
+              )
+            )
+          ),
+          field=IdentifierNode(
+            name="d"
+          )
+        )
+      )
+    )
+  ]
+)
+*/

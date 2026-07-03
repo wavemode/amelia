@@ -1671,13 +1671,13 @@ public:
     auto start_token = peek();
     auto left = parse_atom();
     auto next_token = peek();
-    while (next_token.type == TokenType::DOT_NO_W || next_token.type == TokenType::NUMBER_FIELD ||
+    while (next_token.type == TokenType::DOT || next_token.type == TokenType::NUMBER_FIELD ||
            next_token.type == TokenType::LEFT_BRACKET_NO_W ||
            next_token.type == TokenType::LEFT_PAREN_NO_W ||
            next_token.type == TokenType::DOUBLE_COLON_NO_W ||
            next_token.type == TokenType::QUESTION_NO_W ||
            next_token.type == TokenType::EXCLAM_NO_W) {
-      if (next_token.type == TokenType::DOT_NO_W) {
+      if (next_token.type == TokenType::DOT) {
         ++m_token_index; // consume the '.' operator
         auto next_type = peek().type;
         if (!is_identifier_no_w(next_type) && next_type != TokenType::KEYWORD_OPERATOR &&
@@ -2492,7 +2492,7 @@ public:
 private:
   TokenWithId read_dot(Text error_message) {
     auto token = peek();
-    if (token.type != TokenType::DOT && token.type != TokenType::DOT_NO_W) {
+    if (token.type != TokenType::DOT) {
       throw_parser_error(token.id, String(error_message));
     }
     ++m_token_index;

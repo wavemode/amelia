@@ -130,7 +130,6 @@ using TokenId = int32_t;
   X(RIGHT_PAREN)                                                                                   \
   X(LEFT_BRACKET_NO_W)                                                                             \
   X(DOT)                                                                                           \
-  X(DOT_NO_W)                                                                                      \
   X(LEFT_BRACKET)                                                                                  \
   X(RIGHT_BRACKET)                                                                                 \
   X(ARROW)                                                                                         \

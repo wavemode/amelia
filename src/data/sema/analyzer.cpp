@@ -1148,6 +1148,31 @@ public:
     }
   }
 
+  bool is_binding_analyzed(Binding &binding) {
+    switch (binding.kind) {
+    case BindingKind::Variable:
+      return static_cast<ValueBinding &>(binding).type.has_value() &&
+             !is_unknown_type(static_cast<ValueBinding &>(binding).type.value());
+      break;
+    case BindingKind::Constant:
+      return static_cast<ValueBinding &>(binding).type.has_value() &&
+             !is_unknown_type(static_cast<ValueBinding &>(binding).type.value());
+      break;
+    case BindingKind::Function:
+      return static_cast<ValueBinding &>(binding).type.has_value() &&
+             !is_unknown_type(static_cast<ValueBinding &>(binding).type.value());
+      break;
+    case BindingKind::Type:
+      return static_cast<TypeBinding &>(binding).type.has_value() &&
+             !is_unknown_type(static_cast<TypeBinding &>(binding).type.value());
+      break;
+    default:
+      raise_error_at_node_id(
+          binding.decl, "not implemented (unknown binding kind in is_binding_analyzed)"
+      );
+    }
+  }
+
   void analyze_binding(Binding &binding) {
     auto old_binding_currently_analyzing = m_binding_currently_analyzing;
     m_binding_currently_analyzing = &binding;
