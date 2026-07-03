@@ -11,6 +11,8 @@
 
 namespace amelia {
 
+struct Binding;
+
 enum class TypeKind : uint8_t {
   Alias,
   Reference,
@@ -60,9 +62,11 @@ enum class ExpressionKind : uint8_t {
   NullLiteral,
   CharLiteral,
   StringLiteral,
+  ArrayLiteral,
+  TupleLiteral,
   Identifier,
-  UnaryOperation,
-  BinaryOperation,
+  BuiltinUnaryOperation,
+  BuiltinBinaryOperation,
   TypeCastOperation,
   BuiltinTypeCoerce,
   BuiltinTypeCast,
@@ -72,12 +76,7 @@ enum class ExpressionKind : uint8_t {
   Empty,
   Return,
   FunctionCall,
-  ConstInteger,
-  ConstRational,
-  ConstBoolean,
   AddressOf,
-  Tuple,
-  ArrayLiteral,
 };
 
 struct Expression {
@@ -256,7 +255,7 @@ struct StringLiteralExpression : Expression {
 
 struct IdentifierExpression : Expression {
   IdentifierExpression() : Expression(ExpressionKind::Identifier) {}
-  String name;
+  Flex<Binding> binding;
   Serialize serialize() const override;
 };
 
@@ -265,12 +264,14 @@ enum class UnaryOperatorKind : uint8_t {
   Positive,
   Not,
   BitwiseNot,
+  Decrement,
+  Increment,
 };
 
 Serialize serialize_unary_operator_kind(UnaryOperatorKind kind);
 
-struct UnaryOperationExpression : Expression {
-  UnaryOperationExpression() : Expression(ExpressionKind::UnaryOperation) {}
+struct BuiltinUnaryOperationExpression : Expression {
+  BuiltinUnaryOperationExpression() : Expression(ExpressionKind::BuiltinUnaryOperation) {}
   UnaryOperatorKind op_kind;
   Flex<Expression> operand;
   Serialize serialize() const override;
@@ -295,12 +296,23 @@ enum class BinaryOperatorKind : uint8_t {
   NotEquals,
   Or,
   RightShift,
+  Assignment,
+  BitAndAssignment,
+  BitOrAssignment,
+  BitXorAssignment,
+  DivAssignment,
+  LShiftAssignment,
+  ModAssignment,
+  MulAssignment,
+  RShiftAssignment,
+  SubAssignment,
+  AddAssignment,
 };
 
 Serialize serialize_binary_operator_kind(BinaryOperatorKind kind);
 
 struct BuiltinBinaryOperationExpression : Expression {
-  BuiltinBinaryOperationExpression() : Expression(ExpressionKind::BinaryOperation) {}
+  BuiltinBinaryOperationExpression() : Expression(ExpressionKind::BuiltinBinaryOperation) {}
   BinaryOperatorKind op_kind;
   Flex<Expression> left;
   Flex<Expression> right;
@@ -366,7 +378,7 @@ struct AddressOfExpression : Expression {
 };
 
 struct TupleExpression : Expression {
-  TupleExpression() : Expression(ExpressionKind::Tuple) {}
+  TupleExpression() : Expression(ExpressionKind::TupleLiteral) {}
   List<Flex<Expression>> elements;
   Serialize serialize() const override;
 };

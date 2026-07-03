@@ -1,0 +1,57 @@
+fun f() {
+  let x : int = 0
+  --x
+  return x
+}
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="int",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="f",
+            type=FunctionType(
+              signatures=[
+                Signature(
+                  return_type=int
+                )
+              ]
+            ),
+            value=SequenceExpression(
+              exprs=[
+                ValueBindingExpression(
+                  binding=ValueBinding(
+                    name="x",
+                    type=int,
+                    value=NumberLiteralExpression(
+                      lit=0
+                    )
+                  ),
+                  body=SequenceExpression(
+                    exprs=[
+                      BuiltinUnaryOperationExpression(
+                        op_kind="--",
+                        operand=IdentifierExpression(
+                          name="x"
+                        )
+                      ),
+                      ReturnExpression(
+                        value=IdentifierExpression(
+                          name="x"
+                        )
+                      )
+                    ]
+                  )
+                )
+              ]
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

@@ -20,7 +20,7 @@ SemaResult(
           ValueBinding(
             name="y",
             type=Const[-184467440737095516151844674407370955161518446744073709551615184467440737095516152322],
-            value=UnaryOperationExpression(
+            value=BuiltinUnaryOperationExpression(
               op_kind="-",
               operand=NumberLiteralExpression(
                 lit=184467440737095516151844674407370955161518446744073709551615184467440737095516152322

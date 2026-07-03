@@ -1585,6 +1585,10 @@ public:
     case NodeType::PositiveExprNode:
     case NodeType::NotExprNode:
     case NodeType::BitwiseNotExprNode:
+    case NodeType::PreDecrementStmtNode:
+    case NodeType::PostDecrementStmtNode:
+    case NodeType::PreIncrementStmtNode:
+    case NodeType::PostIncrementStmtNode:
       result = build_expr_unary_op(expr_node_id);
       break;
     case NodeType::AddExprNode:
@@ -1756,9 +1760,7 @@ public:
     auto referent_expr = build_expression(ref_node.expr);
     switch (referent_expr->kind) {
     case ExpressionKind::Identifier: {
-      auto binding = resolve_value_binding(
-          referent_expr->node_id, static_cast<IdentifierExpression &>(*referent_expr).name
-      );
+      auto &binding = static_cast<IdentifierExpression &>(*referent_expr).binding;
       if (binding->kind == BindingKind::Variable || binding->kind == BindingKind::Constant) {
         auto reference_type = emplace_flex<ReferenceType>();
         reference_type->referent = referent_expr->type;
@@ -2205,6 +2207,30 @@ public:
       op_kind = UnaryOperatorKind::BitwiseNot;
       break;
     }
+    case NodeType::PreDecrementStmtNode: {
+      const PreDecrementStmtNode &pre_dec_node = node.as_PreDecrementStmtNode();
+      operand_node_id = pre_dec_node.target;
+      op_kind = UnaryOperatorKind::Decrement;
+      break;
+    }
+    case NodeType::PostDecrementStmtNode: {
+      const PostDecrementStmtNode &post_dec_node = node.as_PostDecrementStmtNode();
+      operand_node_id = post_dec_node.target;
+      op_kind = UnaryOperatorKind::Decrement;
+      break;
+    }
+    case NodeType::PreIncrementStmtNode: {
+      const PreIncrementStmtNode &pre_inc_node = node.as_PreIncrementStmtNode();
+      operand_node_id = pre_inc_node.target;
+      op_kind = UnaryOperatorKind::Increment;
+      break;
+    }
+    case NodeType::PostIncrementStmtNode: {
+      const PostIncrementStmtNode &post_inc_node = node.as_PostIncrementStmtNode();
+      operand_node_id = post_inc_node.target;
+      op_kind = UnaryOperatorKind::Increment;
+      break;
+    }
     default:
       raise_error_at_node_id(
           expr_node_id, "not implemented (unknown unary op in build_expr_unary_op)"
@@ -2216,12 +2242,10 @@ public:
     if (!result.has_value()) {
       switch (op_kind) {
       case UnaryOperatorKind::Negate:
-        // TODO: attempt numeric coercion
-        break;
       case UnaryOperatorKind::Positive:
-        // TODO: attempt numeric coercion
-        break;
       case UnaryOperatorKind::BitwiseNot:
+      case UnaryOperatorKind::Decrement:
+      case UnaryOperatorKind::Increment:
         // TODO: attempt numeric coercion
         break;
       case UnaryOperatorKind::Not: {
@@ -2264,6 +2288,10 @@ public:
       return perform_unary_op_not(operation_node_id, move(operand_type), move(operand));
     case UnaryOperatorKind::BitwiseNot:
       return perform_unary_op_bitwise_not(operation_node_id, move(operand_type), move(operand));
+    case UnaryOperatorKind::Decrement:
+      return perform_unary_op_decrement(operation_node_id, move(operand_type), move(operand));
+    case UnaryOperatorKind::Increment:
+      return perform_unary_op_increment(operation_node_id, move(operand_type), move(operand));
     }
   }
 
@@ -2345,7 +2373,7 @@ public:
   Option<Flex<Expression>> perform_unary_op_negate_bitint(
       NodeId operation_node_id, Flex<BitIntType>, Flex<Expression> operand
   ) {
-    auto result = emplace_flex<UnaryOperationExpression>();
+    auto result = emplace_flex<BuiltinUnaryOperationExpression>();
     result->node_id = operation_node_id;
     result->type = operand->type;
     result->op_kind = UnaryOperatorKind::Negate;
@@ -2368,7 +2396,7 @@ public:
     case BuiltinKind::USize:
     case BuiltinKind::Float:
     case BuiltinKind::Double: {
-      auto result = emplace_flex<UnaryOperationExpression>();
+      auto result = emplace_flex<BuiltinUnaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = operand->type;
       result->op_kind = UnaryOperatorKind::Negate;
@@ -2376,7 +2404,7 @@ public:
       return result;
     }
     case BuiltinKind::Char: {
-      auto result = emplace_flex<UnaryOperationExpression>();
+      auto result = emplace_flex<BuiltinUnaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<Type>::weak(&UINT_TYPE);
       result->op_kind = UnaryOperatorKind::Negate;
@@ -2405,7 +2433,7 @@ public:
   Option<Flex<Expression>> perform_unary_op_negate_const_integer(
       NodeId operation_node_id, Flex<ConstIntegerType> operand_type, Flex<Expression> operand
   ) {
-    auto result = emplace_flex<UnaryOperationExpression>();
+    auto result = emplace_flex<BuiltinUnaryOperationExpression>();
     result->node_id = operation_node_id;
     result->type = Flex<ConstIntegerType>::emplace(-operand_type->value);
     result->op_kind = UnaryOperatorKind::Negate;
@@ -2416,7 +2444,7 @@ public:
   Option<Flex<Expression>> perform_unary_op_negate_const_rational(
       NodeId operation_node_id, Flex<ConstRationalType> operand_type, Flex<Expression> operand
   ) {
-    auto result = emplace_flex<UnaryOperationExpression>();
+    auto result = emplace_flex<BuiltinUnaryOperationExpression>();
     result->node_id = operation_node_id;
     result->type = Flex<ConstRationalType>::emplace(-operand_type->value);
     result->op_kind = UnaryOperatorKind::Negate;
@@ -2498,7 +2526,7 @@ public:
   Option<Flex<Expression>> perform_unary_op_bitwise_not_bitint(
       NodeId operation_node_id, Flex<BitIntType>, Flex<Expression> operand
   ) {
-    auto result = emplace_flex<UnaryOperationExpression>();
+    auto result = emplace_flex<BuiltinUnaryOperationExpression>();
     result->node_id = operation_node_id;
     result->type = operand->type;
     result->op_kind = UnaryOperatorKind::BitwiseNot;
@@ -2519,7 +2547,7 @@ public:
     case BuiltinKind::Long:
     case BuiltinKind::ULong:
     case BuiltinKind::USize: {
-      auto result = emplace_flex<UnaryOperationExpression>();
+      auto result = emplace_flex<BuiltinUnaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = operand->type;
       result->op_kind = UnaryOperatorKind::BitwiseNot;
@@ -2527,7 +2555,7 @@ public:
       return result;
     }
     case BuiltinKind::Char: {
-      auto result = emplace_flex<UnaryOperationExpression>();
+      auto result = emplace_flex<BuiltinUnaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<Type>::weak(&UINT_TYPE);
       result->op_kind = UnaryOperatorKind::BitwiseNot;
@@ -2558,7 +2586,7 @@ public:
   Option<Flex<Expression>> perform_unary_op_bitwise_not_const_integer(
       NodeId operation_node_id, Flex<ConstIntegerType> operand_type, Flex<Expression> operand
   ) {
-    auto result = emplace_flex<UnaryOperationExpression>();
+    auto result = emplace_flex<BuiltinUnaryOperationExpression>();
     result->node_id = operation_node_id;
     result->type = Flex<ConstIntegerType>::emplace(~operand_type->value);
     result->op_kind = UnaryOperatorKind::BitwiseNot;
@@ -2717,7 +2745,7 @@ public:
   ) {
     switch (operand_type->builtin_kind) {
     case BuiltinKind::Bool: {
-      auto result = emplace_flex<UnaryOperationExpression>();
+      auto result = emplace_flex<BuiltinUnaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = operand->type;
       result->op_kind = UnaryOperatorKind::Not;
@@ -2747,12 +2775,216 @@ public:
   Option<Flex<Expression>> perform_unary_op_not_const_boolean(
       NodeId operation_node_id, Flex<ConstBooleanType> operand_type, Flex<Expression> operand
   ) {
-    auto result = emplace_flex<UnaryOperationExpression>();
+    auto result = emplace_flex<BuiltinUnaryOperationExpression>();
     result->node_id = operation_node_id;
     result->type = Flex<ConstBooleanType>::emplace(!operand_type->value);
     result->op_kind = UnaryOperatorKind::Not;
     result->operand = operand;
     return result;
+  }
+
+  void assert_mutable_operand(Flex<Expression> operand) {
+    if (operand->kind == ExpressionKind::Identifier) {
+      auto &identifier_expr = static_cast<IdentifierExpression &>(*operand);
+      if (identifier_expr.binding->kind == BindingKind::Constant) {
+        String error_message = "Cannot modify constant '";
+        error_message.append(identifier_expr.binding->name);
+        error_message.append('\'');
+        raise_error_at_node_id(operand->node_id, move(error_message));
+      }
+      if (identifier_expr.binding->kind != BindingKind::Variable) {
+        String error_message = "Cannot assign to '";
+        error_message.append(identifier_expr.binding->name);
+        error_message.append("' because it is not a variable");
+        raise_error_at_node_id(operand->node_id, move(error_message));
+      }
+    } else { // TODO: field access, deref
+      raise_error_at_node_id(operand->node_id, "Operand of mutation must be an assignable place");
+    }
+  }
+
+  Option<Flex<Expression>> perform_unary_op_increment(
+      NodeId operation_node_id, Flex<Type> operand_type, Flex<Expression> operand
+  ) {
+    assert_mutable_operand(operand);
+    switch (operand_type->kind) {
+    case TypeKind::Alias:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of Alias)");
+    case TypeKind::Reference:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of Reference)");
+    case TypeKind::Struct:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of Struct)");
+    case TypeKind::Tuple:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of Tuple)");
+    case TypeKind::Array:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of Array)");
+    case TypeKind::TypeFn:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of TypeFn)");
+    case TypeKind::Apply:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of Apply)");
+    case TypeKind::Builtin:
+      return perform_unary_op_increment_builtin(
+          operation_node_id,
+          operand_type.derive(static_cast<BuiltinType &>(*operand_type)),
+          move(operand)
+      );
+    case TypeKind::BitInt:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of BitInt)");
+    case TypeKind::Pointer:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of Pointer)");
+    case TypeKind::Slice:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of Slice)");
+    case TypeKind::Impl:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of Impl)");
+    case TypeKind::ConstInteger:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of ConstInteger)");
+    case TypeKind::ConstRational:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of ConstRational)");
+    case TypeKind::ConstBoolean:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of ConstBoolean)");
+    case TypeKind::ConstCharacter:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of ConstCharacter)");
+    case TypeKind::ConstString:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of ConstString)");
+    case TypeKind::Class:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of Class)");
+    case TypeKind::Union:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of Union)");
+    case TypeKind::Concept:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of Concept)");
+    case TypeKind::Function:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of Function)");
+    case TypeKind::FunctionPointer:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of FunctionPointer)");
+    case TypeKind::Closure:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of Closure)");
+    case TypeKind::Variable:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of Variable)");
+    }
+  }
+
+  Option<Flex<Expression>> perform_unary_op_increment_builtin(
+      NodeId operation_node_id, Flex<BuiltinType> operand_type, Flex<Expression> operand
+  ) {
+    switch (operand_type->builtin_kind) {
+    case BuiltinKind::Byte:
+    case BuiltinKind::UByte:
+    case BuiltinKind::Short:
+    case BuiltinKind::UShort:
+    case BuiltinKind::Int:
+    case BuiltinKind::UInt:
+    case BuiltinKind::Long:
+    case BuiltinKind::ULong:
+    case BuiltinKind::USize:
+    case BuiltinKind::Float:
+    case BuiltinKind::Double: {
+      auto result = emplace_flex<BuiltinUnaryOperationExpression>();
+      result->node_id = operation_node_id;
+      result->type = Flex<Type>::weak(&NULL_TYPE);
+      result->op_kind = UnaryOperatorKind::Increment;
+      result->operand = operand;
+      return result;
+    }
+    case BuiltinKind::Char:
+    case BuiltinKind::Bool:
+    case BuiltinKind::Str:
+    case BuiltinKind::Null:
+    case BuiltinKind::Never:
+    case BuiltinKind::Unknown:
+      return None();
+    }
+  }
+
+  Option<Flex<Expression>> perform_unary_op_decrement(
+      NodeId operation_node_id, Flex<Type> operand_type, Flex<Expression> operand
+  ) {
+    assert_mutable_operand(operand);
+    switch (operand_type->kind) {
+    case TypeKind::Alias:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of Alias)");
+    case TypeKind::Reference:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of Reference)");
+    case TypeKind::Struct:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of Struct)");
+    case TypeKind::Tuple:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of Tuple)");
+    case TypeKind::Array:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of Array)");
+    case TypeKind::TypeFn:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of TypeFn)");
+    case TypeKind::Apply:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of Apply)");
+    case TypeKind::Builtin:
+      return perform_unary_op_decrement_builtin(
+          operation_node_id,
+          operand_type.derive(static_cast<BuiltinType &>(*operand_type)),
+          move(operand)
+      );
+    case TypeKind::BitInt:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of BitInt)");
+    case TypeKind::Pointer:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of Pointer)");
+    case TypeKind::Slice:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of Slice)");
+    case TypeKind::Impl:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of Impl)");
+    case TypeKind::ConstInteger:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of ConstInteger)");
+    case TypeKind::ConstRational:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of ConstRational)");
+    case TypeKind::ConstBoolean:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of ConstBoolean)");
+    case TypeKind::ConstCharacter:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of ConstCharacter)");
+    case TypeKind::ConstString:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of ConstString)");
+    case TypeKind::Class:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of Class)");
+    case TypeKind::Union:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of Union)");
+    case TypeKind::Concept:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of Concept)");
+    case TypeKind::Function:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of Function)");
+    case TypeKind::FunctionPointer:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of FunctionPointer)");
+    case TypeKind::Closure:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of Closure)");
+    case TypeKind::Variable:
+      raise_error_at_node_id(operand->node_id, "not implemented (unary op of Variable)");
+    }
+  }
+
+  Option<Flex<Expression>> perform_unary_op_decrement_builtin(
+      NodeId operation_node_id, Flex<BuiltinType> operand_type, Flex<Expression> operand
+  ) {
+    switch (operand_type->builtin_kind) {
+    case BuiltinKind::Byte:
+    case BuiltinKind::UByte:
+    case BuiltinKind::Short:
+    case BuiltinKind::UShort:
+    case BuiltinKind::Int:
+    case BuiltinKind::UInt:
+    case BuiltinKind::Long:
+    case BuiltinKind::ULong:
+    case BuiltinKind::USize:
+    case BuiltinKind::Float:
+    case BuiltinKind::Double: {
+      auto result = emplace_flex<BuiltinUnaryOperationExpression>();
+      result->node_id = operation_node_id;
+      result->type = Flex<Type>::weak(&NULL_TYPE);
+      result->op_kind = UnaryOperatorKind::Decrement;
+      result->operand = operand;
+      return result;
+    }
+    case BuiltinKind::Char:
+    case BuiltinKind::Bool:
+    case BuiltinKind::Str:
+    case BuiltinKind::Null:
+    case BuiltinKind::Never:
+    case BuiltinKind::Unknown:
+      return None();
+    }
   }
 
   Flex<Expression> build_expr_binary_op(NodeId expr_node_id) {
@@ -7308,8 +7540,9 @@ public:
   Flex<Expression> build_expr_identifier(NodeId node_id) {
     const auto &identifier_node = m_module_obj.ast.get_node(node_id).as_IdentifierNode();
     auto expr = Flex<IdentifierExpression>::emplace();
-    expr->name = identifier_node.name;
-    expr->type = resolve_value_binding(node_id, identifier_node.name)->type.value();
+    auto binding = resolve_value_binding(node_id, identifier_node.name);
+    expr->binding = binding.weak();
+    expr->type = binding->type.value();
     expr->node_id = node_id;
     return expr;
   }

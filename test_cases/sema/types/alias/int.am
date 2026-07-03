@@ -24,7 +24,7 @@ SemaResult(
           ValueBinding(
             name="y",
             type=MyInt (aka int),
-            value=UnaryOperationExpression(
+            value=BuiltinUnaryOperationExpression(
               op_kind="-",
               operand=NumberLiteralExpression(
                 lit=0x80000000

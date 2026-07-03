@@ -1,0 +1,59 @@
+fun f() {
+  let x : float = 0
+  x++
+  return x
+}
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="float",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="f",
+            type=FunctionType(
+              signatures=[
+                Signature(
+                  return_type=float
+                )
+              ]
+            ),
+            value=SequenceExpression(
+              exprs=[
+                ValueBindingExpression(
+                  binding=ValueBinding(
+                    name="x",
+                    type=float,
+                    value=BuiltinTypeCoerceExpression(
+                      expr=NumberLiteralExpression(
+                        lit=0
+                      )
+                    )
+                  ),
+                  body=SequenceExpression(
+                    exprs=[
+                      BuiltinUnaryOperationExpression(
+                        op_kind="++",
+                        operand=IdentifierExpression(
+                          name="x"
+                        )
+                      ),
+                      ReturnExpression(
+                        value=IdentifierExpression(
+                          name="x"
+                        )
+                      )
+                    ]
+                  )
+                )
+              ]
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

@@ -25,7 +25,7 @@ SemaResult(
             name="y",
             type=MyLong (aka long),
             value=BuiltinTypeCoerceExpression(
-              expr=UnaryOperationExpression(
+              expr=BuiltinUnaryOperationExpression(
                 op_kind="-",
                 operand=NumberLiteralExpression(
                   lit=0x8000000000000000

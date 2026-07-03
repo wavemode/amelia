@@ -192,7 +192,7 @@ Serialize NumberLiteralExpression::serialize() const {
 Serialize IdentifierExpression::serialize() const {
   Serialize result;
   result.set_object_name("IdentifierExpression");
-  result.add_object_field("name", Serialize::quoted(name));
+  result.add_object_field("name", Serialize::quoted(binding->name));
   return result;
 }
 
@@ -206,6 +206,10 @@ Serialize serialize_unary_operator_kind(UnaryOperatorKind kind) {
     return Serialize::literal("!");
   case UnaryOperatorKind::BitwiseNot:
     return Serialize::literal("~");
+  case UnaryOperatorKind::Decrement:
+    return Serialize::literal("--");
+  case UnaryOperatorKind::Increment:
+    return Serialize::literal("++");
   }
 }
 
@@ -247,12 +251,34 @@ Serialize serialize_binary_operator_kind(BinaryOperatorKind kind) {
     return Serialize::literal("||");
   case BinaryOperatorKind::RightShift:
     return Serialize::literal(">>");
+  case BinaryOperatorKind::Assignment:
+    return Serialize::literal("=");
+  case BinaryOperatorKind::BitAndAssignment:
+    return Serialize::literal("&=");
+  case BinaryOperatorKind::BitOrAssignment:
+    return Serialize::literal("|=");
+  case BinaryOperatorKind::BitXorAssignment:
+    return Serialize::literal("^=");
+  case BinaryOperatorKind::DivAssignment:
+    return Serialize::literal("/=");
+  case BinaryOperatorKind::LShiftAssignment:
+    return Serialize::literal("<<=");
+  case BinaryOperatorKind::ModAssignment:
+    return Serialize::literal("%=");
+  case BinaryOperatorKind::MulAssignment:
+    return Serialize::literal("*=");
+  case BinaryOperatorKind::RShiftAssignment:
+    return Serialize::literal(">>=");
+  case BinaryOperatorKind::SubAssignment:
+    return Serialize::literal("-=");
+  case BinaryOperatorKind::AddAssignment:
+    return Serialize::literal("+=");
   }
 }
 
-Serialize UnaryOperationExpression::serialize() const {
+Serialize BuiltinUnaryOperationExpression::serialize() const {
   Serialize result;
-  result.set_object_name("UnaryOperationExpression");
+  result.set_object_name("BuiltinUnaryOperationExpression");
   result.add_object_field("op_kind", serialize_unary_operator_kind(op_kind).quoted());
   result.add_object_field("operand", operand->serialize());
   return result;

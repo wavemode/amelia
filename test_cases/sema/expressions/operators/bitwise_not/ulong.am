@@ -20,7 +20,7 @@ SemaResult(
           ValueBinding(
             name="z",
             type=ulong,
-            value=UnaryOperationExpression(
+            value=BuiltinUnaryOperationExpression(
               op_kind="~",
               operand=IdentifierExpression(
                 name="x"

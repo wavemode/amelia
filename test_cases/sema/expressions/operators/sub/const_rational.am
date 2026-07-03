@@ -109,7 +109,7 @@ SemaResult(
               left=IdentifierExpression(
                 name="z2"
               ),
-              right=UnaryOperationExpression(
+              right=BuiltinUnaryOperationExpression(
                 op_kind="-",
                 operand=IdentifierExpression(
                   name="z3"
