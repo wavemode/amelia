@@ -12,6 +12,9 @@
 namespace amelia {
 
 struct Binding;
+struct ValueBinding;
+struct TypeBinding;
+struct Expression;
 
 enum class TypeKind : uint8_t {
   Alias,
@@ -41,10 +44,6 @@ enum class TypeKind : uint8_t {
 };
 
 Serialize serialize_type_kind(TypeKind kind);
-
-struct Expression;
-struct ValueBinding;
-struct TypeBinding;
 
 struct Type {
   TypeKind kind;
@@ -94,7 +93,7 @@ protected:
 ////////// Type variants //////////
 
 struct BuiltinType : Type {
-  BuiltinType() : Type(TypeKind::Builtin) {}
+  BuiltinType(BuiltinKind kind) : Type(TypeKind::Builtin), builtin_kind(kind) {}
   BuiltinKind builtin_kind;
 
   Serialize serialize() const override;

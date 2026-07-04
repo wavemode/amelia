@@ -1,0 +1,9 @@
+fun f() {
+  const x : double = 0
+  x++
+  return x
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot modify constant 'x' (at test_cases/sema/statements/post_increment/error_const.am:3:3)")
+*/
