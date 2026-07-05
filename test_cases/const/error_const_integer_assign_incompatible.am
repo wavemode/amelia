@@ -1,6 +1,0 @@
-const x : const 5 = y
-const y = 5.1
-
-/* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'double' to expected type 'Const[5]' (at test_cases/sema/types/const/error_const_integer_assign_incompatible.am:1:21)")
-*/

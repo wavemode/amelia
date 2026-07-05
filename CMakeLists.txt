@@ -14,12 +14,8 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_link_options("-fsanitize=address,undefined" "-gsplit-dwarf")
 endif()
 
-file(GLOB_RECURSE SOURCES_SYSTEM "${CMAKE_CURRENT_SOURCE_DIR}/src/system/*.cpp")
-file(GLOB_RECURSE SOURCES_ACTION "${CMAKE_CURRENT_SOURCE_DIR}/src/action/*.cpp")
-file(GLOB_RECURSE SOURCES_UTIL "${CMAKE_CURRENT_SOURCE_DIR}/src/util/*.cpp")
-file(GLOB_RECURSE SOURCES_DATA "${CMAKE_CURRENT_SOURCE_DIR}/src/data/*.cpp")
-file(GLOB_RECURSE SOURCES_EFFECT "${CMAKE_CURRENT_SOURCE_DIR}/src/effect/*.cpp")
-file(GLOB_RECURSE SOURCES_TEST "${CMAKE_CURRENT_SOURCE_DIR}/src/test/*.cpp")
+file(GLOB_RECURSE SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
+file(GLOB_RECURSE SOURCES_TEST "${CMAKE_CURRENT_SOURCE_DIR}/test/*.cpp")
 set(SOURCES_VENDOR
     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/sha2.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/vendor/xxhash.c"
@@ -36,11 +32,7 @@ target_compile_options(
 )
 
 add_library(amelia_core
-    ${SOURCES_SYSTEM}
-    ${SOURCES_ACTION}
-    ${SOURCES_UTIL}
-    ${SOURCES_DATA}
-    ${SOURCES_EFFECT}
+    ${SOURCES}
     ${SOURCES_VENDOR}
 )
 target_include_directories(amelia_core PUBLIC src vendor)

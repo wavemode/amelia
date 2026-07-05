@@ -1,6 +1,0 @@
-const x : const true = y
-const y : bool = true
-
-/* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'bool' to expected type 'Const[true]' (at test_cases/sema/types/const/error_const_boolean_assign_runtime.am:1:24)")
-*/

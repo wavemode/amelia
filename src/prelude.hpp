@@ -3,25 +3,25 @@
 #include <cstddef>
 #include <cstdint>
 
-#include "data/util/abstract_list.hpp"
-#include "data/util/abstract_string.hpp"
-#include "data/util/box.hpp"
-#include "data/util/char_iterator.hpp"
-#include "data/util/deque.hpp"
-#include "data/util/invalid_utf8_error.hpp"
-#include "data/util/list.hpp"
-#include "data/util/option.hpp"
-#include "data/util/pair.hpp"
-#include "data/util/ref.hpp"
-#include "data/util/runtime_error.hpp"
-#include "data/util/slice.hpp"
-#include "data/util/string.hpp"
-#include "data/util/text.hpp"
-#include "data/util/utility.hpp"
+#include "util/data/abstract_list.hpp"
+#include "util/data/abstract_string.hpp"
+#include "util/data/box.hpp"
+#include "util/data/char_iterator.hpp"
+#include "util/data/deque.hpp"
+#include "util/data/invalid_utf8_error.hpp"
+#include "util/data/list.hpp"
+#include "util/data/option.hpp"
+#include "util/data/pair.hpp"
+#include "util/data/ref.hpp"
+#include "util/data/runtime_error.hpp"
+#include "util/data/slice.hpp"
+#include "util/data/string.hpp"
+#include "util/data/text.hpp"
+#include "util/data/utility.hpp"
 
-#include "data/testing/serialize.hpp"
+#include "testing/data/serialize.hpp"
 
-#include "effect/sys/console_printer.hpp"
+#include "sys/effect/console_printer.hpp"
 
 namespace amelia {
 using ModuleId = int32_t;
