@@ -1,4 +1,4 @@
-build: format
+build:
 	NINJA_STATUS="[%f/%t | %r processes | %e s] " CMAKE_BUILD_PARALLEL_LEVEL=$(shell nproc) \
 	cmake --build build/debug --target amelia
 
@@ -22,7 +22,7 @@ configure-release:
       -DCMAKE_MODULE_LINKER_FLAGS="-fuse-ld=lld" \
 			-B build/release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Release -G "Ninja"
 
-build-test: format
+build-test:
 	NINJA_STATUS="[%f/%t | %r processes | %e s] " CMAKE_BUILD_PARALLEL_LEVEL=$(shell nproc) \
 	cmake --build build/debug --target amelia_test
 

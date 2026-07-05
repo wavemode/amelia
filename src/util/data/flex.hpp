@@ -198,20 +198,24 @@ private:
   void release() noexcept {
     if (m_control_block) {
       if (m_is_strong) {
-        --m_control_block->strong_count;
-        if (m_control_block->strong_count == 0) {
+        if (m_control_block->strong_count == 1) {
           m_control_block->clear();
           m_object = nullptr;
           if (m_control_block->weak_count == 0) {
             delete m_control_block;
             m_control_block = nullptr;
+          } else {
+            --m_control_block->strong_count;
           }
+        } else {
+          --m_control_block->strong_count;
         }
       } else {
-        --m_control_block->weak_count;
-        if (m_control_block->strong_count == 0 && m_control_block->weak_count == 0) {
+        if (m_control_block->strong_count == 0 && m_control_block->weak_count == 1) {
           delete m_control_block;
           m_control_block = nullptr;
+        } else {
+          --m_control_block->weak_count;
         }
       }
     }

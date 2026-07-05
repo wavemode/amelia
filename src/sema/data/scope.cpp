@@ -22,4 +22,6 @@ Serialize Scope::serialize() const {
   return result;
 }
 
+Scope::~Scope() {}
+
 } // namespace amelia

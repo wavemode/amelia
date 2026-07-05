@@ -17,6 +17,7 @@ struct Scope {
   List<Flex<Binding>> active_bindings;
 
   Serialize serialize() const;
+  ~Scope();
 };
 
 } // namespace amelia
