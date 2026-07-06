@@ -1,5 +1,9 @@
 #include "token_formatter.hpp"
 
+#include "lexer/data/token.hpp"
+#include "prelude.hpp"
+#include "source/data/number_literal.hpp"
+#include "util/data/text_utils.hpp"
 #include "lexer/data/lexer.hpp"
 #include "source/data/char_literal.hpp"
 #include "source/data/identifier.hpp"

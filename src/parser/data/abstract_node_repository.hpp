@@ -1,7 +1,5 @@
 #pragma once
 
-#include "node_type_list.hpp"
-
 namespace amelia {
 
 class Node;

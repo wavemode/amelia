@@ -1,9 +1,10 @@
 #pragma once
 
-#include "parser/data/node_type_list.hpp"
+#include <cstdint>
 
 namespace amelia {
 
+using NodeId = int32_t;
 class ParserResult;
 struct LexerResult;
 

@@ -9,6 +9,7 @@
 #include "source/data/number_literal.hpp"
 #include "util/data/map.hpp"
 #include "util/data/text_utils.hpp"
+#include "source/data/identifier.hpp"
 
 namespace amelia {
 

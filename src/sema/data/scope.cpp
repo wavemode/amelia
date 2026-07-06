@@ -1,5 +1,7 @@
 #include "scope.hpp"
 
+#include "testing/data/serialize.hpp"
+
 namespace amelia {
 
 Serialize Scope::serialize() const {
@@ -21,7 +23,5 @@ Serialize Scope::serialize() const {
   }
   return result;
 }
-
-Scope::~Scope() {}
 
 } // namespace amelia

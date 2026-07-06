@@ -5,13 +5,14 @@
 #include "prelude.hpp"
 
 #include "util/data/map.hpp"
-
-#include "lexer/data/lexer_context.hpp"
-#include "lexer/data/lexer_result.hpp"
-#include "source/data/identifier.hpp"
-#include "source/data/number_literal.hpp"
+#include "lexer/data/token_type.hpp"
 
 namespace amelia {
+
+class Identifier;
+struct NumberLiteral;
+struct LexerResult;
+struct LexerContext;
 
 extern const Map<Text, TokenType> RESERVED_WORDS;
 

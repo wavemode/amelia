@@ -7,9 +7,10 @@
 
 #include "sema/data/module.hpp"
 #include "sema/data/scope.hpp"
-#include "testing/data/serialize.hpp"
 
 namespace amelia {
+
+class Serialize;
 
 struct SemaResult {
   Map<String, ModuleId> module_ids;

@@ -1,8 +1,11 @@
 #include <doctest.h>
 
 #include "prelude.hpp"
+#include "util/data/set.hpp"
 
 #include "sema/action/load_module.hpp"
+#include "sema/data/sema_result.hpp"
+#include "sema/data/module_loader_context.hpp"
 #include "source/data/source_location_error.hpp"
 #include "fs/effect/file_loader.hpp"
 

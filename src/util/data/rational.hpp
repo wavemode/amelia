@@ -1,11 +1,15 @@
 #pragma once
 
 #include <cstdint>
+#include <cstddef>
 
 #include "util/data/integer.hpp"
-#include "util/data/string.hpp"
 
 namespace amelia {
+
+struct AbstractString;
+class String;
+class Text;
 
 class Rational {
 public:

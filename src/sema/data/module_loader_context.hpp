@@ -1,6 +1,7 @@
 #pragma once
 
 #include "util/data/set.hpp"
+#include "util/data/string.hpp"
 
 namespace amelia {
 

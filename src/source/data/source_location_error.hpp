@@ -1,10 +1,10 @@
 #pragma once
 
-#include "prelude.hpp"
-
-#include "source/data/location.hpp"
+#include "util/data/string.hpp"
 
 namespace amelia {
+
+struct Location;
 
 /**
  * @class SourceLocationError

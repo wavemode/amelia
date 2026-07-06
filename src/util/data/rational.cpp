@@ -1,6 +1,7 @@
 #include "rational.hpp"
 
 #include "prelude.hpp"
+
 #include "util/data/text_utils.hpp"
 
 namespace amelia {

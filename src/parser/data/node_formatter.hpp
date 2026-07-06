@@ -1,15 +1,15 @@
 #pragma once
 
-#include <cstddef>
-
-#include "prelude.hpp"
-
-#include "lexer/data/abstract_token_repository.hpp"
-#include "lexer/data/token_formatter.hpp"
-#include "parser/data/abstract_node_repository.hpp"
-#include "parser/data/node.hpp"
+#include <cstdint>
 
 namespace amelia {
+
+using NodeId = int32_t;
+struct AbstractNodeRepository;
+struct AbstractString;
+class Text;
+template <typename T> class List;
+template <typename T> class Option;
 
 class NodeFormatter {
 public:

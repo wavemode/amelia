@@ -2,7 +2,6 @@
 
 #include "prelude.hpp"
 
-#include "testing/data/serialize.hpp"
 #include "util/data/map.hpp"
 #include "util/data/set.hpp"
 
@@ -11,6 +10,8 @@
 #include "sema/data/scope.hpp"
 
 namespace amelia {
+
+class Serialize;
 
 struct ModuleImport {
   String name;

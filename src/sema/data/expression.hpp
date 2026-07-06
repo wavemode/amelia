@@ -1,16 +1,20 @@
 #pragma once
 
-#include "prelude.hpp"
+#include <cstdint>
+
+#include "util/data/list.hpp"
+#include "util/data/option.hpp"
+#include "util/data/string.hpp"
 
 #include "sema/data/builtin_kind.hpp"
-#include "source/data/number_literal.hpp"
-#include "testing/data/serialize.hpp"
-#include "util/data/flex.hpp"
 #include "util/data/integer.hpp"
 #include "util/data/rational.hpp"
+#include "source/data/number_literal.hpp"
+#include "util/data/flex.hpp"
 
 namespace amelia {
 
+class Serialize;
 struct Binding;
 struct ValueBinding;
 struct TypeBinding;

@@ -1,12 +1,11 @@
 #pragma once
 
-#include "prelude.hpp"
-
-#include "fs/interface/file_loader.hpp"
-#include "sema/data/module_loader_context.hpp"
-#include "sema/data/sema_result.hpp"
-
 namespace amelia {
+
+struct IFileLoader;
+struct SemaResult;
+struct ModuleLoaderContext;
+class String;
 
 void load_module(
     IFileLoader &file_loader,

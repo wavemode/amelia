@@ -1,8 +1,6 @@
 #pragma once
 
 #include "prelude.hpp"
-
-#include "testing/data/serialize.hpp"
 #include "util/data/flex.hpp"
 
 #include "sema/data/expression.hpp"
@@ -11,6 +9,7 @@
 namespace amelia {
 
 struct Scope;
+class Serialize;
 
 enum class BindingKind : uint8_t { Variable, Constant, Function, Type, Class, Concept, Module };
 

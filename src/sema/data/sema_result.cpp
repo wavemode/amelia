@@ -1,5 +1,7 @@
 #include "sema_result.hpp"
 
+#include "testing/data/serialize.hpp"
+
 namespace amelia {
 
 Serialize SemaResult::serialize() {

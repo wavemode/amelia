@@ -1,5 +1,7 @@
 #include "binding.hpp"
 
+#include "testing/data/serialize.hpp"
+
 namespace amelia {
 
 Serialize Binding::serialize() const {

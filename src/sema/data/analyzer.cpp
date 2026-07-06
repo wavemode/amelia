@@ -9,6 +9,7 @@
 #include "util/data/rational.hpp"
 #include "util/data/slice_utils.hpp"
 #include "util/data/text_utils.hpp"
+#include "sema/data/sema_result.hpp"
 
 namespace amelia {
 

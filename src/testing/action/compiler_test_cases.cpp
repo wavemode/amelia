@@ -1,5 +1,7 @@
 #include <cstddef>
 
+#include "prelude.hpp"
+
 #include "util/data/slice_utils.hpp"
 #include "util/data/text_utils.hpp"
 
@@ -27,6 +29,7 @@
 #include "testing/data/compiler_test_case.hpp"
 #include "testing/data/compiler_test_case_collection.hpp"
 #include "testing/data/compiler_test_case_outcome.hpp"
+#include "sema/data/module_loader_context.hpp"
 
 namespace amelia {
 

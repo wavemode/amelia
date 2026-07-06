@@ -1,10 +1,10 @@
 #pragma once
 
-#include "lexer/data/token.hpp"
 #include <cstdint>
 
 namespace amelia {
 
+struct Token;
 class Text;
 struct NumberLiteral;
 using TokenId = int32_t;

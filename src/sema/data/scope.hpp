@@ -2,13 +2,13 @@
 
 #include "prelude.hpp"
 
-#include "testing/data/serialize.hpp"
-
 #include "sema/data/binding.hpp"
 #include "util/data/flex.hpp"
 #include "util/data/map.hpp"
 
 namespace amelia {
+
+class Serialize;
 
 using BindingId = int32_t;
 
@@ -17,7 +17,6 @@ struct Scope {
   List<Flex<Binding>> active_bindings;
 
   Serialize serialize() const;
-  ~Scope();
 };
 
 } // namespace amelia

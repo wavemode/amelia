@@ -2,9 +2,11 @@
 
 #include <cstdint>
 
-#include "util/data/string.hpp"
-
 namespace amelia {
+
+struct AbstractString;
+class String;
+class Text;
 
 class Integer {
 public:

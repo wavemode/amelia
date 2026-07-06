@@ -1,6 +1,7 @@
 #include "module.hpp"
 
 #include "util/data/text_utils.hpp"
+#include "testing/data/serialize.hpp"
 
 namespace amelia {
 

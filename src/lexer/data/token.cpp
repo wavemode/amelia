@@ -4,6 +4,7 @@
 
 #include "lexer/data/lexer.hpp"
 #include "source/data/source_location_error.hpp"
+#include "source/data/identifier.hpp"
 
 namespace amelia {
 
