@@ -1,0 +1,72 @@
+fun f() {
+  let x : float = 1.2
+  let y : float = 3.4
+  x = y
+}
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="float",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="f",
+            type=FunctionType(
+              signatures=[
+                Signature(
+                  return_type=null
+                )
+              ]
+            ),
+            value=SequenceExpression(
+              exprs=[
+                ValueBindingExpression(
+                  binding=ValueBinding(
+                    name="x",
+                    type=float,
+                    value=BuiltinTypeCoerceExpression(
+                      expr=NumberLiteralExpression(
+                        lit=1.2
+                      )
+                    )
+                  ),
+                  body=SequenceExpression(
+                    exprs=[
+                      ValueBindingExpression(
+                        binding=ValueBinding(
+                          name="y",
+                          type=float,
+                          value=BuiltinTypeCoerceExpression(
+                            expr=NumberLiteralExpression(
+                              lit=3.4
+                            )
+                          )
+                        ),
+                        body=SequenceExpression(
+                          exprs=[
+                            BuiltinBinaryOperationExpression(
+                              operator="=",
+                              left=IdentifierExpression(
+                                name="x"
+                              ),
+                              right=IdentifierExpression(
+                                name="y"
+                              )
+                            )
+                          ]
+                        )
+                      )
+                    ]
+                  )
+                )
+              ]
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

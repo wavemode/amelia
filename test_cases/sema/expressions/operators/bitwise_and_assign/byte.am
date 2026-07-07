@@ -1,0 +1,72 @@
+fun f() {
+  let x : byte = 3
+  let y : byte = 4
+  x &= y
+}
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="byte",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="f",
+            type=FunctionType(
+              signatures=[
+                Signature(
+                  return_type=null
+                )
+              ]
+            ),
+            value=SequenceExpression(
+              exprs=[
+                ValueBindingExpression(
+                  binding=ValueBinding(
+                    name="x",
+                    type=byte,
+                    value=BuiltinTypeCoerceExpression(
+                      expr=NumberLiteralExpression(
+                        lit=3
+                      )
+                    )
+                  ),
+                  body=SequenceExpression(
+                    exprs=[
+                      ValueBindingExpression(
+                        binding=ValueBinding(
+                          name="y",
+                          type=byte,
+                          value=BuiltinTypeCoerceExpression(
+                            expr=NumberLiteralExpression(
+                              lit=4
+                            )
+                          )
+                        ),
+                        body=SequenceExpression(
+                          exprs=[
+                            BuiltinBinaryOperationExpression(
+                              operator="&=",
+                              left=IdentifierExpression(
+                                name="x"
+                              ),
+                              right=IdentifierExpression(
+                                name="y"
+                              )
+                            )
+                          ]
+                        )
+                      )
+                    ]
+                  )
+                )
+              ]
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

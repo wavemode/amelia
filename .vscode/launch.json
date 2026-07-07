@@ -23,7 +23,7 @@
             "env": {
                 // "AMELIA_UPDATE_TEST_CASES": "1",
                 "AMELIA_TEST_CASE_FILTER":
-                  "test_cases/sema/types/builtin/never/assign_from_recursion.am"
+                  "test_cases/sema/expressions/operators/add_assign/error_ubitint_coerce.am"
                 }
         }
     ]

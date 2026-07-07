@@ -1,0 +1,9 @@
+fun f() {
+  let x = null
+  let y = null
+  x &= y
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot perform binary operation '&=' on types 'null' and 'null' (at test_cases/sema/expressions/operators/bitwise_and_assign/error_null.am:4:3)")
+*/

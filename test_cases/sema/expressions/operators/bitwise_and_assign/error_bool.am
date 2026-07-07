@@ -1,0 +1,9 @@
+fun f() {
+  let x : bool = false
+  let y : bool = true
+  x &= y
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot perform binary operation '&=' on types 'bool' and 'bool' (at test_cases/sema/expressions/operators/bitwise_and_assign/error_bool.am:4:3)")
+*/

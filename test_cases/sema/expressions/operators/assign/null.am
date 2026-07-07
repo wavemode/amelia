@@ -1,0 +1,64 @@
+fun f() {
+  let x = null
+  let y = null
+  x = y
+}
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="null",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="f",
+            type=FunctionType(
+              signatures=[
+                Signature(
+                  return_type=null
+                )
+              ]
+            ),
+            value=SequenceExpression(
+              exprs=[
+                ValueBindingExpression(
+                  binding=ValueBinding(
+                    name="x",
+                    type=null,
+                    value=NullLiteralExpression()
+                  ),
+                  body=SequenceExpression(
+                    exprs=[
+                      ValueBindingExpression(
+                        binding=ValueBinding(
+                          name="y",
+                          type=null,
+                          value=NullLiteralExpression()
+                        ),
+                        body=SequenceExpression(
+                          exprs=[
+                            BuiltinBinaryOperationExpression(
+                              operator="=",
+                              left=IdentifierExpression(
+                                name="x"
+                              ),
+                              right=IdentifierExpression(
+                                name="y"
+                              )
+                            )
+                          ]
+                        )
+                      )
+                    ]
+                  )
+                )
+              ]
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

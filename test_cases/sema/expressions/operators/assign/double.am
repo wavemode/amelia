@@ -1,0 +1,68 @@
+fun f() {
+  let x : double = 1.2
+  let y : double = 3.4
+  x = y
+}
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="double",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="f",
+            type=FunctionType(
+              signatures=[
+                Signature(
+                  return_type=null
+                )
+              ]
+            ),
+            value=SequenceExpression(
+              exprs=[
+                ValueBindingExpression(
+                  binding=ValueBinding(
+                    name="x",
+                    type=double,
+                    value=NumberLiteralExpression(
+                      lit=1.2
+                    )
+                  ),
+                  body=SequenceExpression(
+                    exprs=[
+                      ValueBindingExpression(
+                        binding=ValueBinding(
+                          name="y",
+                          type=double,
+                          value=NumberLiteralExpression(
+                            lit=3.4
+                          )
+                        ),
+                        body=SequenceExpression(
+                          exprs=[
+                            BuiltinBinaryOperationExpression(
+                              operator="=",
+                              left=IdentifierExpression(
+                                name="x"
+                              ),
+                              right=IdentifierExpression(
+                                name="y"
+                              )
+                            )
+                          ]
+                        )
+                      )
+                    ]
+                  )
+                )
+              ]
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

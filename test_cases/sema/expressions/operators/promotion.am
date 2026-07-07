@@ -1,5 +1,5 @@
-let x : int = 4
-let y : long = 5
+let x : bitint[4] = 4
+let y : bitint[8] = 5
 
 let lhs_promote = x + y
 let rhs_promote = y + x
@@ -13,7 +13,7 @@ SemaResult(
         bindings=[
           ValueBinding(
             name="lhs_promote",
-            type=long,
+            type=bitint[8],
             value=BuiltinBinaryOperationExpression(
               operator="+",
               left=BuiltinTypeCoerceExpression(
@@ -28,7 +28,7 @@ SemaResult(
           ),
           ValueBinding(
             name="rhs_promote",
-            type=long,
+            type=bitint[8],
             value=BuiltinBinaryOperationExpression(
               operator="+",
               left=IdentifierExpression(
@@ -43,14 +43,16 @@ SemaResult(
           ),
           ValueBinding(
             name="x",
-            type=int,
-            value=NumberLiteralExpression(
-              lit=4
+            type=bitint[4],
+            value=BuiltinTypeCoerceExpression(
+              expr=NumberLiteralExpression(
+                lit=4
+              )
             )
           ),
           ValueBinding(
             name="y",
-            type=long,
+            type=bitint[8],
             value=BuiltinTypeCoerceExpression(
               expr=NumberLiteralExpression(
                 lit=5

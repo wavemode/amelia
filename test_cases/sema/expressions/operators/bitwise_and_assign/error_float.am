@@ -1,0 +1,9 @@
+fun f() {
+  let x : float = 1.2
+  let y : float = 3.4
+  x &= y
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot perform binary operation '&=' on types 'float' and 'float' (at test_cases/sema/expressions/operators/bitwise_and_assign/error_float.am:4:3)")
+*/

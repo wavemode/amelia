@@ -236,7 +236,39 @@ public:
   }
 
   bool is_non_promoting_binary_op(BinaryOperatorKind op_kind) {
-    return op_kind == BinaryOperatorKind::LeftShift || op_kind == BinaryOperatorKind::RightShift;
+    switch (op_kind) {
+      case BinaryOperatorKind::Add:
+      case BinaryOperatorKind::Subtract:
+      case BinaryOperatorKind::Multiply:
+      case BinaryOperatorKind::Divide:
+      case BinaryOperatorKind::BitwiseAnd:
+      case BinaryOperatorKind::BitwiseOr:
+      case BinaryOperatorKind::BitwiseXor:
+      case BinaryOperatorKind::Equals:
+      case BinaryOperatorKind::Greater:
+      case BinaryOperatorKind::GreaterEquals:
+      case BinaryOperatorKind::Less:
+      case BinaryOperatorKind::LessEquals:
+      case BinaryOperatorKind::Modulo:
+      case BinaryOperatorKind::NotEquals:
+      case BinaryOperatorKind::Or:
+      case BinaryOperatorKind::And:
+        return false;
+      case BinaryOperatorKind::LeftShift:
+      case BinaryOperatorKind::RightShift:
+      case BinaryOperatorKind::Assignment:
+      case BinaryOperatorKind::BitAndAssignment:
+      case BinaryOperatorKind::BitOrAssignment:
+      case BinaryOperatorKind::BitXorAssignment:
+      case BinaryOperatorKind::DivAssignment:
+      case BinaryOperatorKind::LShiftAssignment:
+      case BinaryOperatorKind::ModAssignment:
+      case BinaryOperatorKind::MulAssignment:
+      case BinaryOperatorKind::RShiftAssignment:
+      case BinaryOperatorKind::SubAssignment:
+      case BinaryOperatorKind::AddAssignment:
+        return true;
+    }
   }
 
   Integer max_value_of_type(Type &type) {
@@ -1644,6 +1676,17 @@ public:
     case NodeType::NotEqualsExprNode:
     case NodeType::OrExprNode:
     case NodeType::RightShiftExprNode:
+    case NodeType::AddAssignStmtNode:
+    case NodeType::AssignmentStmtNode:
+    case NodeType::BitwiseAndAssignStmtNode:
+    case NodeType::BitwiseOrAssignStmtNode:
+    case NodeType::BitwiseXorAssignStmtNode:
+    case NodeType::DivAssignStmtNode:
+    case NodeType::LeftShiftAssignStmtNode:
+    case NodeType::ModAssignStmtNode:
+    case NodeType::MulAssignStmtNode:
+    case NodeType::RightShiftAssignStmtNode:
+    case NodeType::SubAssignStmtNode:
       result = build_expr_binary_op(expr_node_id);
       break;
     case NodeType::AsExprNode:
@@ -7705,11 +7748,15 @@ public:
           operation_node_id,
           left_type.derive(static_cast<BuiltinType &>(*left_type)),
           move(left),
-          move(right_type),
           move(right)
       );
     case TypeKind::BitInt:
-      raise_error_at_node_id(operation_node_id, "not implemented (binary op of BitInt)");
+      return perform_binary_op_assignment_bitint(
+          operation_node_id,
+          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          move(left),
+          move(right)
+      );
     case TypeKind::Pointer:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Pointer)");
     case TypeKind::Slice:
@@ -7743,14 +7790,63 @@ public:
     }
   }
 
+  Option<Flex<Expression>> perform_binary_op_assignment_bitint(
+      NodeId operation_node_id,
+      Flex<BitIntType>,
+      Flex<Expression> left,
+      Flex<Expression> right
+  ) {
+    auto coerced_right_expr = coerce(left->type, right);
+    if (!coerced_right_expr.has_value()) {
+      return None();
+    }
+    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    result->node_id = operation_node_id;
+    result->type = NULL_TYPE;
+    result->op_kind = BinaryOperatorKind::Assignment;
+    result->left = left;
+    result->right = coerced_right_expr.value();
+    return result;
+  }
+
   Option<Flex<Expression>> perform_binary_op_assignment_builtin(
       NodeId operation_node_id,
       Flex<BuiltinType> left_type,
       Flex<Expression> left,
-      Flex<Type> right_type,
       Flex<Expression> right
   ) {
-    return None();
+    auto coerced_right_expr = coerce(left_type, right);
+    if (!coerced_right_expr.has_value()) {
+      return None();
+    } 
+    switch (left_type->builtin_kind) {
+    case BuiltinKind::Byte:
+    case BuiltinKind::UByte:
+    case BuiltinKind::Short:
+    case BuiltinKind::UShort:
+    case BuiltinKind::Int:
+    case BuiltinKind::UInt:
+    case BuiltinKind::Long:
+    case BuiltinKind::ULong:
+    case BuiltinKind::USize:
+    case BuiltinKind::Char:
+    case BuiltinKind::Float:
+    case BuiltinKind::Double:
+    case BuiltinKind::Bool:
+    case BuiltinKind::Never:
+    case BuiltinKind::Null: {
+      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      result->node_id = operation_node_id;
+      result->type = NULL_TYPE;
+      result->op_kind = BinaryOperatorKind::Assignment;
+      result->left = left;
+      result->right = coerced_right_expr.value();
+      return result;
+    }
+    case BuiltinKind::Str:
+    case BuiltinKind::Unknown:
+      return None();
+    }
   }
 
   Option<Flex<Expression>> perform_binary_op_bitandassignment(
@@ -7785,7 +7881,13 @@ public:
           move(right)
       );
     case TypeKind::BitInt:
-      raise_error_at_node_id(operation_node_id, "not implemented (binary op of BitInt)");
+      return perform_binary_op_bitandassignment_bitint(
+          operation_node_id,
+          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          move(left),
+          move(right_type),
+          move(right)
+      );
     case TypeKind::Pointer:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Pointer)");
     case TypeKind::Slice:
@@ -7819,6 +7921,26 @@ public:
     }
   }
 
+  Option<Flex<Expression>> perform_binary_op_bitandassignment_bitint(
+      NodeId operation_node_id,
+      Flex<BitIntType>,
+      Flex<Expression> left,
+      Flex<Type> right_type,
+      Flex<Expression> right
+  ) {
+    auto coerced_right_expr = coerce(left->type, right);
+    if (!coerced_right_expr.has_value()) {
+      return None();
+    }
+    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    result->node_id = operation_node_id;
+    result->type = NULL_TYPE;
+    result->op_kind = BinaryOperatorKind::BitAndAssignment;
+    result->left = left;
+    result->right = coerced_right_expr.value();
+    return result;
+  }
+
   Option<Flex<Expression>> perform_binary_op_bitandassignment_builtin(
       NodeId operation_node_id,
       Flex<BuiltinType> left_type,
@@ -7826,7 +7948,38 @@ public:
       Flex<Type> right_type,
       Flex<Expression> right
   ) {
-    return None();
+    auto coerced_right_expr = coerce(left_type, right);
+    if (!coerced_right_expr.has_value()) {
+      return None();
+    } 
+    switch (left_type->builtin_kind) {
+    case BuiltinKind::Byte:
+    case BuiltinKind::UByte:
+    case BuiltinKind::Short:
+    case BuiltinKind::UShort:
+    case BuiltinKind::Int:
+    case BuiltinKind::UInt:
+    case BuiltinKind::Long:
+    case BuiltinKind::ULong:
+    case BuiltinKind::USize: {
+      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      result->node_id = operation_node_id;
+      result->type = NULL_TYPE;
+      result->op_kind = BinaryOperatorKind::BitAndAssignment;
+      result->left = left;
+      result->right = coerced_right_expr.value();
+      return result;
+    }
+    case BuiltinKind::Char:
+    case BuiltinKind::Float:
+    case BuiltinKind::Double:
+    case BuiltinKind::Bool:
+    case BuiltinKind::Never:
+    case BuiltinKind::Null: 
+    case BuiltinKind::Str:
+    case BuiltinKind::Unknown:
+      return None();
+    }
   }
 
   Option<Flex<Expression>> perform_binary_op_bitorassignment(
@@ -7902,7 +8055,38 @@ public:
       Flex<Type> right_type,
       Flex<Expression> right
   ) {
-    return None();
+    auto coerced_right_expr = coerce(left_type, right);
+    if (!coerced_right_expr.has_value()) {
+      return None();
+    } 
+    switch (left_type->builtin_kind) {
+    case BuiltinKind::Byte:
+    case BuiltinKind::UByte:
+    case BuiltinKind::Short:
+    case BuiltinKind::UShort:
+    case BuiltinKind::Int:
+    case BuiltinKind::UInt:
+    case BuiltinKind::Long:
+    case BuiltinKind::ULong:
+    case BuiltinKind::USize: {
+      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      result->node_id = operation_node_id;
+      result->type = NULL_TYPE;
+      result->op_kind = BinaryOperatorKind::BitOrAssignment;
+      result->left = left;
+      result->right = coerced_right_expr.value();
+      return result;
+    }
+    case BuiltinKind::Char:
+    case BuiltinKind::Float:
+    case BuiltinKind::Double:
+    case BuiltinKind::Bool:
+    case BuiltinKind::Never:
+    case BuiltinKind::Null: 
+    case BuiltinKind::Str:
+    case BuiltinKind::Unknown:
+      return None();
+    }
   }
 
   Option<Flex<Expression>> perform_binary_op_bitxorassignment(
@@ -7978,7 +8162,38 @@ public:
       Flex<Type> right_type,
       Flex<Expression> right
   ) {
-    return None();
+    auto coerced_right_expr = coerce(left_type, right);
+    if (!coerced_right_expr.has_value()) {
+      return None();
+    } 
+    switch (left_type->builtin_kind) {
+    case BuiltinKind::Byte:
+    case BuiltinKind::UByte:
+    case BuiltinKind::Short:
+    case BuiltinKind::UShort:
+    case BuiltinKind::Int:
+    case BuiltinKind::UInt:
+    case BuiltinKind::Long:
+    case BuiltinKind::ULong:
+    case BuiltinKind::USize: {
+      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      result->node_id = operation_node_id;
+      result->type = NULL_TYPE;
+      result->op_kind = BinaryOperatorKind::BitXorAssignment;
+      result->left = left;
+      result->right = coerced_right_expr.value();
+      return result;
+    }
+    case BuiltinKind::Char:
+    case BuiltinKind::Float:
+    case BuiltinKind::Double:
+    case BuiltinKind::Bool:
+    case BuiltinKind::Never:
+    case BuiltinKind::Null: 
+    case BuiltinKind::Str:
+    case BuiltinKind::Unknown:
+      return None();
+    }
   }
 
   Option<Flex<Expression>> perform_binary_op_divassignment(
@@ -8054,7 +8269,38 @@ public:
       Flex<Type> right_type,
       Flex<Expression> right
   ) {
-    return None();
+    auto coerced_right_expr = coerce(left_type, right);
+    if (!coerced_right_expr.has_value()) {
+      return None();
+    } 
+    switch (left_type->builtin_kind) {
+    case BuiltinKind::Byte:
+    case BuiltinKind::UByte:
+    case BuiltinKind::Short:
+    case BuiltinKind::UShort:
+    case BuiltinKind::Int:
+    case BuiltinKind::UInt:
+    case BuiltinKind::Long:
+    case BuiltinKind::ULong:
+    case BuiltinKind::USize: 
+    case BuiltinKind::Float:
+    case BuiltinKind::Double: {
+      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      result->node_id = operation_node_id;
+      result->type = NULL_TYPE;
+      result->op_kind = BinaryOperatorKind::DivAssignment;
+      result->left = left;
+      result->right = coerced_right_expr.value();
+      return result;
+    }
+    case BuiltinKind::Char:
+    case BuiltinKind::Bool:
+    case BuiltinKind::Never:
+    case BuiltinKind::Null: 
+    case BuiltinKind::Str:
+    case BuiltinKind::Unknown:
+      return None();
+    }
   }
 
   Option<Flex<Expression>> perform_binary_op_lshiftassignment(
@@ -8130,7 +8376,37 @@ public:
       Flex<Type> right_type,
       Flex<Expression> right
   ) {
-    return None();
+    if (!is_native_integral_type(right_type)) {
+      return None();
+    }
+    switch (left_type->builtin_kind) {
+    case BuiltinKind::Byte:
+    case BuiltinKind::UByte:
+    case BuiltinKind::Short:
+    case BuiltinKind::UShort:
+    case BuiltinKind::Int:
+    case BuiltinKind::UInt:
+    case BuiltinKind::Long:
+    case BuiltinKind::ULong:
+    case BuiltinKind::USize: {
+      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      result->node_id = operation_node_id;
+      result->type = NULL_TYPE;
+      result->op_kind = BinaryOperatorKind::LShiftAssignment;
+      result->left = left;
+      result->right = right;
+      return result;
+    }
+    case BuiltinKind::Char:
+    case BuiltinKind::Float:
+    case BuiltinKind::Double:
+    case BuiltinKind::Bool:
+    case BuiltinKind::Null:
+    case BuiltinKind::Never:
+    case BuiltinKind::Str:
+    case BuiltinKind::Unknown:
+      return None();
+    }
   }
 
   Option<Flex<Expression>> perform_binary_op_modassignment(
@@ -8206,7 +8482,38 @@ public:
       Flex<Type> right_type,
       Flex<Expression> right
   ) {
-    return None();
+    auto coerced_right_expr = coerce(left_type, right);
+    if (!coerced_right_expr.has_value()) {
+      return None();
+    } 
+    switch (left_type->builtin_kind) {
+    case BuiltinKind::Byte:
+    case BuiltinKind::UByte:
+    case BuiltinKind::Short:
+    case BuiltinKind::UShort:
+    case BuiltinKind::Int:
+    case BuiltinKind::UInt:
+    case BuiltinKind::Long:
+    case BuiltinKind::ULong:
+    case BuiltinKind::USize:  {
+      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      result->node_id = operation_node_id;
+      result->type = NULL_TYPE;
+      result->op_kind = BinaryOperatorKind::ModAssignment;
+      result->left = left;
+      result->right = coerced_right_expr.value();
+      return result;
+    }
+    case BuiltinKind::Float:
+    case BuiltinKind::Double:
+    case BuiltinKind::Char:
+    case BuiltinKind::Bool:
+    case BuiltinKind::Never:
+    case BuiltinKind::Null: 
+    case BuiltinKind::Str:
+    case BuiltinKind::Unknown:
+      return None();
+    }
   }
 
   Option<Flex<Expression>> perform_binary_op_mulassignment(
@@ -8282,7 +8589,38 @@ public:
       Flex<Type> right_type,
       Flex<Expression> right
   ) {
-    return None();
+    auto coerced_right_expr = coerce(left_type, right);
+    if (!coerced_right_expr.has_value()) {
+      return None();
+    } 
+    switch (left_type->builtin_kind) {
+    case BuiltinKind::Byte:
+    case BuiltinKind::UByte:
+    case BuiltinKind::Short:
+    case BuiltinKind::UShort:
+    case BuiltinKind::Int:
+    case BuiltinKind::UInt:
+    case BuiltinKind::Long:
+    case BuiltinKind::ULong:
+    case BuiltinKind::USize:
+    case BuiltinKind::Float:
+    case BuiltinKind::Double:  {
+      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      result->node_id = operation_node_id;
+      result->type = NULL_TYPE;
+      result->op_kind = BinaryOperatorKind::MulAssignment;
+      result->left = left;
+      result->right = coerced_right_expr.value();
+      return result;
+    }
+    case BuiltinKind::Char:
+    case BuiltinKind::Bool:
+    case BuiltinKind::Never:
+    case BuiltinKind::Null: 
+    case BuiltinKind::Str:
+    case BuiltinKind::Unknown:
+      return None();
+    }
   }
 
   Option<Flex<Expression>> perform_binary_op_rshiftassignment(
@@ -8358,7 +8696,37 @@ public:
       Flex<Type> right_type,
       Flex<Expression> right
   ) {
-    return None();
+    if (!is_native_integral_type(right_type)) {
+      return None();
+    }
+    switch (left_type->builtin_kind) {
+    case BuiltinKind::Byte:
+    case BuiltinKind::UByte:
+    case BuiltinKind::Short:
+    case BuiltinKind::UShort:
+    case BuiltinKind::Int:
+    case BuiltinKind::UInt:
+    case BuiltinKind::Long:
+    case BuiltinKind::ULong:
+    case BuiltinKind::USize: {
+      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      result->node_id = operation_node_id;
+      result->type = NULL_TYPE;
+      result->op_kind = BinaryOperatorKind::RShiftAssignment;
+      result->left = left;
+      result->right = right;
+      return result;
+    }
+    case BuiltinKind::Char:
+    case BuiltinKind::Float:
+    case BuiltinKind::Double:
+    case BuiltinKind::Bool:
+    case BuiltinKind::Null:
+    case BuiltinKind::Never:
+    case BuiltinKind::Str:
+    case BuiltinKind::Unknown:
+      return None();
+    }
   }
 
   Option<Flex<Expression>> perform_binary_op_subassignment(
@@ -8434,7 +8802,38 @@ public:
       Flex<Type> right_type,
       Flex<Expression> right
   ) {
-    return None();
+    auto coerced_right_expr = coerce(left_type, right);
+    if (!coerced_right_expr.has_value()) {
+      return None();
+    } 
+    switch (left_type->builtin_kind) {
+    case BuiltinKind::Byte:
+    case BuiltinKind::UByte:
+    case BuiltinKind::Short:
+    case BuiltinKind::UShort:
+    case BuiltinKind::Int:
+    case BuiltinKind::UInt:
+    case BuiltinKind::Long:
+    case BuiltinKind::ULong:
+    case BuiltinKind::USize:
+    case BuiltinKind::Float:
+    case BuiltinKind::Double:  {
+      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      result->node_id = operation_node_id;
+      result->type = NULL_TYPE;
+      result->op_kind = BinaryOperatorKind::SubAssignment;
+      result->left = left;
+      result->right = coerced_right_expr.value();
+      return result;
+    }
+    case BuiltinKind::Char:
+    case BuiltinKind::Bool:
+    case BuiltinKind::Never:
+    case BuiltinKind::Null: 
+    case BuiltinKind::Str:
+    case BuiltinKind::Unknown:
+      return None();
+    }
   }
 
   Option<Flex<Expression>> perform_binary_op_addassignment(
@@ -8465,11 +8864,15 @@ public:
           operation_node_id,
           left_type.derive(static_cast<BuiltinType &>(*left_type)),
           move(left),
-          move(right_type),
           move(right)
       );
     case TypeKind::BitInt:
-      raise_error_at_node_id(operation_node_id, "not implemented (binary op of BitInt)");
+      return perform_binary_op_addassignment_bitint(
+          operation_node_id,
+          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          move(left),
+          move(right)
+      );
     case TypeKind::Pointer:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Pointer)");
     case TypeKind::Slice:
@@ -8503,14 +8906,64 @@ public:
     }
   }
 
+  Option<Flex<Expression>>
+  perform_binary_op_addassignment_bitint(
+      NodeId operation_node_id,
+      Flex<BitIntType> left_type,
+      Flex<Expression> left,
+      Flex<Expression> right
+  ) {
+    auto coerced_right_expr = coerce(left_type, right);
+    if (!coerced_right_expr.has_value()) {
+      return None();
+    } 
+    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    result->node_id = operation_node_id;
+    result->type = NULL_TYPE;
+    result->op_kind = BinaryOperatorKind::AddAssignment;
+    result->left = left;
+    result->right = coerced_right_expr.value();
+    return result;
+  }
+
   Option<Flex<Expression>> perform_binary_op_addassignment_builtin(
       NodeId operation_node_id,
       Flex<BuiltinType> left_type,
       Flex<Expression> left,
-      Flex<Type> right_type,
       Flex<Expression> right
   ) {
-    return None();
+    auto coerced_right_expr = coerce(left_type, right);
+    if (!coerced_right_expr.has_value()) {
+      return None();
+    } 
+    switch (left_type->builtin_kind) {
+    case BuiltinKind::Byte:
+    case BuiltinKind::UByte:
+    case BuiltinKind::Short:
+    case BuiltinKind::UShort:
+    case BuiltinKind::Int:
+    case BuiltinKind::UInt:
+    case BuiltinKind::Long:
+    case BuiltinKind::ULong:
+    case BuiltinKind::USize:
+    case BuiltinKind::Float:
+    case BuiltinKind::Double:  {
+      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      result->node_id = operation_node_id;
+      result->type = NULL_TYPE;
+      result->op_kind = BinaryOperatorKind::AddAssignment;
+      result->left = left;
+      result->right = coerced_right_expr.value();
+      return result;
+    }
+    case BuiltinKind::Char:
+    case BuiltinKind::Bool:
+    case BuiltinKind::Never:
+    case BuiltinKind::Null: 
+    case BuiltinKind::Str:
+    case BuiltinKind::Unknown:
+      return None();
+    }
   }
 
   Flex<Expression> build_expr_identifier(NodeId node_id) {

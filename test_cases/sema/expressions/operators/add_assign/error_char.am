@@ -1,0 +1,9 @@
+fun f() {
+  let x : char = 'a'
+  let y : char = 'b'
+  x += y
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot perform binary operation '+=' on types 'char' and 'char' (at test_cases/sema/expressions/operators/add_assign/error_char.am:4:3)")
+*/

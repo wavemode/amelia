@@ -1,0 +1,74 @@
+fun f() {
+  let x : bitint[8] = 2
+  let y : bitint[4] = 4
+  x += y
+}
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="ubitint",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="f",
+            type=FunctionType(
+              signatures=[
+                Signature(
+                  return_type=null
+                )
+              ]
+            ),
+            value=SequenceExpression(
+              exprs=[
+                ValueBindingExpression(
+                  binding=ValueBinding(
+                    name="x",
+                    type=bitint[8],
+                    value=BuiltinTypeCoerceExpression(
+                      expr=NumberLiteralExpression(
+                        lit=2
+                      )
+                    )
+                  ),
+                  body=SequenceExpression(
+                    exprs=[
+                      ValueBindingExpression(
+                        binding=ValueBinding(
+                          name="y",
+                          type=bitint[4],
+                          value=BuiltinTypeCoerceExpression(
+                            expr=NumberLiteralExpression(
+                              lit=4
+                            )
+                          )
+                        ),
+                        body=SequenceExpression(
+                          exprs=[
+                            BuiltinBinaryOperationExpression(
+                              operator="+=",
+                              left=IdentifierExpression(
+                                name="x"
+                              ),
+                              right=BuiltinTypeCoerceExpression(
+                                expr=IdentifierExpression(
+                                  name="y"
+                                )
+                              )
+                            )
+                          ]
+                        )
+                      )
+                    ]
+                  )
+                )
+              ]
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

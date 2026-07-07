@@ -1,0 +1,9 @@
+fun f() {
+  let x : bitint[4] = 2
+  let y : bitint[8] = 4
+  x &= y
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot perform binary operation '&=' on types 'bitint[4]' and 'bitint[8]' (at test_cases/sema/expressions/operators/bitwise_and_assign/error_ubitint_coerce.am:4:3)")
+*/
