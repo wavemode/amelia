@@ -9,7 +9,7 @@ class Text;
 struct NumberLiteral;
 using TokenId = int32_t;
 
-struct AbstractTokenRepository {
+struct ITokenRepository {
   virtual const Token &get_token(TokenId token_id) const = 0;
 };
 

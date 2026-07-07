@@ -129,23 +129,6 @@ public:
     push_binding(move(new_binding));
   }
 
-  void require_initialized(NodeId node_id, Text name) {
-    Binding &binding = resolve_value_binding(node_id, name);
-    if (binding.kind != BindingKind::Variable) {
-      String error_message = "Attempted to require initialization of non-variable binding '";
-      error_message.append(name);
-      error_message.append("'");
-      throw RuntimeError(error_message.c_str());
-    }
-    ValueBinding &value_binding = static_cast<ValueBinding &>(binding);
-    if (!value_binding.value.has_value()) {
-      String error_message = "Variable binding '";
-      error_message.append(name);
-      error_message.append("' is not initialized");
-      raise_error_at_node_id(node_id, move(error_message));
-    }
-  }
-
   bool is_trivial_type(Type &) {
     // TODO
     return true;
@@ -1385,12 +1368,16 @@ public:
       binding.type = evaluate_type_expr(decl_node.type.value());
       if (decl_node.expr.has_value()) {
         binding.value = expect_expression_of_type(binding.type.value(), decl_node.expr.value());
+      } else {
+        raise_error_at_node_id(binding.decl, "Missing initializer for constant declaration");
       }
     } else {
       binding.type = UNKNOWN_TYPE;
       if (decl_node.expr.has_value()) {
         binding.value = build_expression(decl_node.expr.value());
         binding.type = binding.value.value()->type;
+      } else {
+        raise_error_at_node_id(binding.decl, "Missing initializer for constant declaration");
       }
     }
   }

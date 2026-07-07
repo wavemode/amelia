@@ -11,7 +11,7 @@
 
 namespace amelia {
 
-TokenFormatter::TokenFormatter(const AbstractTokenRepository &repo) : m_repo(repo) {}
+TokenFormatter::TokenFormatter(const ITokenRepository &repo) : m_repo(repo) {}
 
 void TokenFormatter::format_token(AbstractString &out, size_t token_id) const {
   auto token = m_repo.get_token(token_id);

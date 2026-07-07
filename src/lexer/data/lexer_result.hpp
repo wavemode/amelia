@@ -2,13 +2,13 @@
 
 #include <cstddef>
 
-#include "lexer/data/abstract_token_repository.hpp"
+#include "lexer/interface/token_repository.hpp"
 #include "lexer/data/token.hpp"
 #include "prelude.hpp"
 
 namespace amelia {
 
-struct LexerResult : public AbstractTokenRepository {
+struct LexerResult : public ITokenRepository {
   ConstSlice<Token> tokens() const;
 
   const Token &get_token(TokenId token_id) const override;

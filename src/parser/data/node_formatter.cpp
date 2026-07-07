@@ -2,7 +2,7 @@
 
 #include "prelude.hpp"
 
-#include "lexer/data/abstract_token_repository.hpp"
+#include "lexer/interface/token_repository.hpp"
 #include "lexer/data/token_formatter.hpp"
 #include "parser/data/abstract_node_repository.hpp"
 #include "parser/data/node.hpp"

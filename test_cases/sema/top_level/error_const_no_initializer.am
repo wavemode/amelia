@@ -1,5 +1,5 @@
 const x : byte
 
 /* EXPECTED_OUTPUT:
-ERROR("Missing initializer for 'x' at top level (at test_cases/sema/top_level/error_const_no_initializer.am:1:1)")
+ERROR("Missing initializer for constant declaration (at test_cases/sema/top_level/error_const_no_initializer.am:1:1)")
 */
