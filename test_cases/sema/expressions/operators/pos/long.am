@@ -20,8 +20,11 @@ SemaResult(
           ValueBinding(
             name="z",
             type=long,
-            value=IdentifierExpression(
-              name="x"
+            value=NativeUnaryOperationExpression(
+              operator="+",
+              operand=IdentifierExpression(
+                name="x"
+              )
             )
           )
         ]

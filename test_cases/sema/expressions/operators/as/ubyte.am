@@ -12,7 +12,7 @@ SemaResult(
             name="x",
             type=Const[-100],
             value=NativeUnaryOperationExpression(
-              op_kind="-",
+              operator="-",
               operand=NumberLiteralExpression(
                 lit=100
               )

@@ -12,20 +12,20 @@ SemaResult(
         bindings=[
           TypeBinding(
             name="MyInt",
-            type=MyInt (aka int)
+            type=int::MyInt (aka int)
           ),
           ValueBinding(
             name="x",
-            type=MyInt (aka int),
+            type=int::MyInt (aka int),
             value=NumberLiteralExpression(
               lit=0x7FFFFFFF
             )
           ),
           ValueBinding(
             name="y",
-            type=MyInt (aka int),
+            type=int::MyInt (aka int),
             value=NativeUnaryOperationExpression(
-              op_kind="-",
+              operator="-",
               operand=NumberLiteralExpression(
                 lit=0x80000000
               )

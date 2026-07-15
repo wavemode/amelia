@@ -1,9 +1,9 @@
 #include "type.hpp"
 
+#include "builtin/data/builtin_type.hpp"
 #include "expr/data/expression.hpp"
 #include "util/data/integer.hpp"
 #include "util/data/option.hpp"
-#include "builtin/data/builtin_type.hpp"
 
 namespace amelia {
 

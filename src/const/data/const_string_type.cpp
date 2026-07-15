@@ -1,8 +1,8 @@
 #include "const_string_type.hpp"
 
 #include "builtin/data/builtin_type.hpp"
-#include "const/data/const_character_type.hpp"
 #include "const/data/const_boolean_type.hpp"
+#include "const/data/const_character_type.hpp"
 #include "operator/data/native_binary_operation.hpp"
 #include "source/data/char_literal.hpp"
 #include "type/logic/type_conversion.hpp"

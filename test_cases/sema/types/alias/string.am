@@ -12,11 +12,11 @@ SemaResult(
         bindings=[
           TypeBinding(
             name="MyString",
-            type=MyString (aka str)
+            type=string::MyString (aka str)
           ),
           ValueBinding(
             name="x",
-            type=&MyString (aka str),
+            type=&string::MyString (aka str),
             value=IdentifierExpression(
               name="y"
             )

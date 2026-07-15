@@ -15,7 +15,7 @@ SemaResult(
           ValueBinding(
             name="x",
             type=[long, 3],
-            value=ArrayExpression(
+            value=ArrayLiteralExpression(
               elements=[
                 NativeTypeCastExpression(
                   expr=NumberLiteralExpression(
@@ -37,10 +37,12 @@ SemaResult(
             name="y",
             type=&[long],
             value=NativeTypeCastExpression(
-              expr=AddressOfExpression(
-                operand=IdentifierExpression(
+              expr=ReferenceExpression(
+                referent=IdentifierExpression(
                   name="x"
-                )
+                ),
+                is_const=false,
+                is_move=false
               )
             )
           )

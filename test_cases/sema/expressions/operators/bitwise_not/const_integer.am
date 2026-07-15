@@ -11,7 +11,7 @@ SemaResult(
             name="x",
             type=Const[-6],
             value=NativeUnaryOperationExpression(
-              op_kind="~",
+              operator="~",
               operand=NumberLiteralExpression(
                 lit=5
               )

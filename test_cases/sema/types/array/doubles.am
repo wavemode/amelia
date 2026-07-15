@@ -19,7 +19,7 @@ SemaResult(
           ValueBinding(
             name="y",
             type=[double, 2],
-            value=ArrayExpression(
+            value=ArrayLiteralExpression(
               elements=[
                 NativeTypeCastExpression(
                   expr=IdentifierExpression(

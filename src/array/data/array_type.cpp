@@ -5,6 +5,7 @@
 #include "type/logic/type_conversion.hpp"
 #include "util/data/option.hpp"
 #include "util/data/serialize.hpp"
+#include "util/data/string.hpp"
 #include "util/data/text_utils.hpp"
 
 namespace amelia {
@@ -60,7 +61,12 @@ Option<Flex<Expression>> ArrayType::cast(const Type &assignment_type, const Expr
 }
 
 Serialize ArrayType::serialize() const {
-  return Serialize();
+  String repr("[");
+  element_type->serialize().to_string(repr);
+  repr.append(", ");
+  TextUtils::to_string(repr, size);
+  repr.append("]");
+  return Serialize::literal(move(repr));
 }
 
 } // namespace amelia

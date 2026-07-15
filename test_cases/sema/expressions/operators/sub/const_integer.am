@@ -90,7 +90,7 @@ SemaResult(
           ),
           ValueBinding(
             name="z3",
-            type=Const[197],
+            type=Const['\U000000c5'],
             value=NativeBinaryOperationExpression(
               operator="-",
               left=CharLiteralExpression['a'],
@@ -108,7 +108,7 @@ SemaResult(
                 name="z2"
               ),
               right=NativeUnaryOperationExpression(
-                op_kind="-",
+                operator="-",
                 operand=IdentifierExpression(
                   name="z3"
                 )

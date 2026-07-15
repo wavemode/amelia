@@ -124,20 +124,20 @@ bool is_non_promoting_binary_op(BinaryOperatorKind op_kind) {
 
 bool is_rhs_promoting_binary_op(BinaryOperatorKind op_kind) {
   switch (op_kind) {
-    case BinaryOperatorKind::Assignment:
-    case BinaryOperatorKind::AddAssignment:
-    case BinaryOperatorKind::SubAssignment:
-    case BinaryOperatorKind::MulAssignment:
-    case BinaryOperatorKind::DivAssignment:
-    case BinaryOperatorKind::ModAssignment:
-    case BinaryOperatorKind::LShiftAssignment:
-    case BinaryOperatorKind::RShiftAssignment:
-    case BinaryOperatorKind::BitAndAssignment:
-    case BinaryOperatorKind::BitOrAssignment:
-    case BinaryOperatorKind::BitXorAssignment:
-      return true;
-    default:
-      return false;
+  case BinaryOperatorKind::Assignment:
+  case BinaryOperatorKind::AddAssignment:
+  case BinaryOperatorKind::SubAssignment:
+  case BinaryOperatorKind::MulAssignment:
+  case BinaryOperatorKind::DivAssignment:
+  case BinaryOperatorKind::ModAssignment:
+  case BinaryOperatorKind::LShiftAssignment:
+  case BinaryOperatorKind::RShiftAssignment:
+  case BinaryOperatorKind::BitAndAssignment:
+  case BinaryOperatorKind::BitOrAssignment:
+  case BinaryOperatorKind::BitXorAssignment:
+    return true;
+  default:
+    return false;
   }
 }
 

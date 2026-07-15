@@ -18,10 +18,12 @@ SemaResult(
           ValueBinding(
             name="y",
             type=&move int,
-            value=AddressOfExpression(
-              operand=IdentifierExpression(
+            value=ReferenceExpression(
+              referent=IdentifierExpression(
                 name="x"
-              )
+              ),
+              is_const=false,
+              is_move=true
             )
           )
         ]

@@ -17,9 +17,7 @@ using NodeId = int32_t;
 
 struct Type : FlexFromThis<Type>, WithDynamicId {
 public:
-
-
-// Conversions
+  // Conversions
 
   virtual bool is_resolved() const;
   virtual Flex<Type> resolve() const;
@@ -28,23 +26,20 @@ public:
   virtual Flex<Type> remove_comptime_const() const;
 
   virtual bool unify(const Type &assignment_type) const;
-  virtual Option<Flex<Expression>> coerce(const Type &assignment_type, const Expression &expr) const;
+  virtual Option<Flex<Expression>> coerce(const Type &assignment_type, const Expression &expr)
+      const;
   virtual Option<Flex<Expression>> cast(const Type &assignment_type, const Expression &expr) const;
-  
+
   /// Conversion Helpers
 
   static Flex<Type> resolve_type(const Type &type);
   static Flex<Type> remove_comptime_const_from_type(const Type &type);
   static bool unify_types(const Type &target_type, const Type &assignment_type);
-  static Option<Flex<Expression>> coerce_expr(
-      const Type &target_type, const Expression &expr
-  );
+  static Option<Flex<Expression>> coerce_expr(const Type &target_type, const Expression &expr);
   static Option<Flex<Expression>> coerce_expr(
       const Type &target_type, const Type &expr_type, const Expression &expr
   );
-  static Option<Flex<Expression>> cast_expr(
-      const Type &target_type, const Expression &expr
-  );
+  static Option<Flex<Expression>> cast_expr(const Type &target_type, const Expression &expr);
   static Option<Flex<Expression>> cast_expr(
       const Type &target_type, const Type &expr_type, const Expression &expr
   );

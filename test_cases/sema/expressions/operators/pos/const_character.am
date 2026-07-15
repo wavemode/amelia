@@ -16,8 +16,11 @@ SemaResult(
           ValueBinding(
             name="y",
             type=Const['a'],
-            value=IdentifierExpression(
-              name="x"
+            value=NativeUnaryOperationExpression(
+              operator="+",
+              operand=IdentifierExpression(
+                name="x"
+              )
             )
           )
         ]

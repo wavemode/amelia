@@ -249,8 +249,9 @@ Flex<Expression> build_expr_var_decl(
     binding->type = UNKNOWN_TYPE;
     if (expr.has_value()) {
       binding->value = build_expression(module_state, expr.value());
-      binding->type = is_const ? binding->value.value()->type
-                               : Type::remove_comptime_const_from_type(binding->value.value()->type);
+      binding->type = is_const
+                          ? binding->value.value()->type
+                          : Type::remove_comptime_const_from_type(binding->value.value()->type);
     }
   }
 

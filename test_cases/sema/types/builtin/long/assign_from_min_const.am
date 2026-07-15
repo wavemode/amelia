@@ -10,12 +10,10 @@ SemaResult(
           ValueBinding(
             name="x",
             type=long,
-            value=NativeTypeCastExpression(
-              expr=NativeUnaryOperationExpression(
-                op_kind="-",
-                operand=NumberLiteralExpression(
-                  lit=9223372036854775808
-                )
+            value=NativeUnaryOperationExpression(
+              operator="-",
+              operand=NumberLiteralExpression(
+                lit=9223372036854775808
               )
             )
           )

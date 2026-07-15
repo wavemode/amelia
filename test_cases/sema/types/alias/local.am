@@ -13,27 +13,27 @@ SemaResult(
         bindings=[
           ValueBinding(
             name="x",
-            type=T (aka Const[5]),
-            value=SequenceExpression(
-              exprs=[
+            type=local::T (aka Const[5]),
+            value=StatementSequence(
+              stmts=[
                 TypeBindingStatement(
                   name="T",
                   binding=TypeBinding(
                     name="T",
-                    type=T (aka Const[5])
+                    type=local::T (aka Const[5])
                   ),
-                  body=SequenceExpression(
-                    exprs=[
+                  body=StatementSequence(
+                    stmts=[
                       ValueBindingStatement(
                         binding=ValueBinding(
                           name="y",
-                          type=T (aka Const[5]),
+                          type=local::T (aka Const[5]),
                           value=NumberLiteralExpression(
                             lit=5
                           )
                         ),
-                        body=SequenceExpression(
-                          exprs=[
+                        body=StatementSequence(
+                          stmts=[
                             IdentifierExpression(
                               name="y"
                             )

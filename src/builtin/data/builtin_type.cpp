@@ -2,11 +2,11 @@
 
 #include "expr/data/expression.hpp"
 
+#include "bitint/data/bitint_type.hpp"
 #include "const/data/const_boolean_type.hpp"
 #include "const/data/const_character_type.hpp"
 #include "const/data/const_integer_type.hpp"
 #include "const/data/const_rational_type.hpp"
-#include "bitint/data/bitint_type.hpp"
 #include "operator/logic/build_operator_expr.hpp"
 #include "reference/data/reference_type.hpp"
 #include "type/logic/type_conversion.hpp"
@@ -18,20 +18,18 @@
 namespace amelia {
 
 bool BuiltinType::unify(const Type &assignment_type) const {
-    if (assignment_type.is<BuiltinType>()) {
-      return builtin_kind == assignment_type.as<BuiltinType>().builtin_kind;
-    } else if (assignment_type.is<ConstIntegerType>() ||
-               assignment_type.is<BitIntType>()) {
-      return is_integral() && min_value() < 0 &&
-             repr_bit_size() == assignment_type.repr_bit_size();
-    } else if (assignment_type.is<ConstRationalType>()) {
-      return builtin_kind == BuiltinKind::Double;
-    } else if (assignment_type.is<ConstBooleanType>()) {
-      return builtin_kind == BuiltinKind::Bool;
-    } else if (assignment_type.is<ConstCharacterType>()) {
-      return builtin_kind == BuiltinKind::Char;
-    }
-    return false;
+  if (assignment_type.is<BuiltinType>()) {
+    return builtin_kind == assignment_type.as<BuiltinType>().builtin_kind;
+  } else if (assignment_type.is<ConstIntegerType>() || assignment_type.is<BitIntType>()) {
+    return is_integral() && min_value() < 0 && repr_bit_size() == assignment_type.repr_bit_size();
+  } else if (assignment_type.is<ConstRationalType>()) {
+    return builtin_kind == BuiltinKind::Double;
+  } else if (assignment_type.is<ConstBooleanType>()) {
+    return builtin_kind == BuiltinKind::Bool;
+  } else if (assignment_type.is<ConstCharacterType>()) {
+    return builtin_kind == BuiltinKind::Char;
+  }
+  return false;
 }
 
 Option<Flex<Expression>> BuiltinType::coerce(const Type &assignment_type, const Expression &expr)

@@ -21,7 +21,7 @@ SemaResult(
             name="z",
             type=short,
             value=NativeUnaryOperationExpression(
-              op_kind="~",
+              operator="~",
               operand=IdentifierExpression(
                 name="x"
               )

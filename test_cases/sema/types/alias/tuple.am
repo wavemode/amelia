@@ -12,11 +12,11 @@ SemaResult(
         bindings=[
           TypeBinding(
             name="MyTuple",
-            type=MyTuple (aka (long, double, &str))
+            type=tuple::MyTuple (aka (long, double, &str))
           ),
           ValueBinding(
             name="x",
-            type=MyTuple (aka (long, double, &str)),
+            type=tuple::MyTuple (aka (long, double, &str)),
             value=IdentifierExpression(
               name="y"
             )

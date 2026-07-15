@@ -18,7 +18,7 @@ SemaResult(
           ValueBinding(
             name="y",
             type=[int, 3],
-            value=ArrayExpression(
+            value=ArrayLiteralExpression(
               elements=[
                 NumberLiteralExpression(
                   lit=1

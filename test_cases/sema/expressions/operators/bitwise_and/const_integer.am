@@ -48,7 +48,7 @@ SemaResult(
           ),
           ValueBinding(
             name="z",
-            type=Const[100],
+            type=Const[400],
             value=NativeBinaryOperationExpression(
               operator="&",
               left=IdentifierExpression(

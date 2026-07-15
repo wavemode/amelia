@@ -9,9 +9,9 @@ SemaResult(
         bindings=[
           ValueBinding(
             name="x",
-            type=Const[-98],
+            type=Const[4294967198],
             value=NativeUnaryOperationExpression(
-              op_kind="~",
+              operator="~",
               operand=CharLiteralExpression['a']
             )
           )

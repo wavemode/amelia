@@ -6,6 +6,7 @@
 #include "literal/logic/build_literal_expr.hpp"
 #include "operator/logic/build_operator_expr.hpp"
 #include "parser/data/node.hpp"
+#include "reference/logic/build_ref_expr.hpp"
 #include "sema/interface/module_analysis_state.hpp"
 #include "statement/logic/sequence_exprs.hpp"
 #include "tuple/logic/build_tuple_expr.hpp"
@@ -38,7 +39,6 @@ Flex<Expression> build_expression(IModuleAnalysisState &module_state, NodeId exp
   case NodeType::IdentifierNode:
     result = build_expr_identifier(module_state, expr_node_id);
     break;
-  case NodeType::RefExprNode:
   case NodeType::NegateExprNode:
   case NodeType::PositiveExprNode:
   case NodeType::NotExprNode:
@@ -88,6 +88,9 @@ Flex<Expression> build_expression(IModuleAnalysisState &module_state, NodeId exp
     break;
   case NodeType::AsExprNode:
     result = build_type_cast_expression(module_state, expr_node_id);
+    break;
+  case NodeType::RefExprNode:
+    result = build_reference_expression(module_state, expr_node_id);
     break;
   default:
     module_state.raise_error_at_node(
@@ -183,9 +186,7 @@ Flex<Type> read_expr_list(
 
   // coerce each expression to the inferred type
   for (size_t i = 0; i < output.size(); ++i) {
-    output[i] = require_coerce(
-        module_state, original_result_type, move(output[i])
-    );
+    output[i] = require_coerce(module_state, original_result_type, move(output[i]));
   }
 
   return original_result_type;

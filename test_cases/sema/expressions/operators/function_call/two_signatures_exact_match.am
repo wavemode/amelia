@@ -36,6 +36,7 @@ SemaResult(
           ValueBinding(
             name="y",
             type=FunctionType(
+              name=y,
               signatures=[
                 Signature(
                   parameters=[

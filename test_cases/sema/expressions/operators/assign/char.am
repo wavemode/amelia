@@ -14,30 +14,31 @@ SemaResult(
           ValueBinding(
             name="f",
             type=FunctionType(
+              name=f,
               signatures=[
                 Signature(
                   return_type=null
                 )
               ]
             ),
-            value=SequenceExpression(
-              exprs=[
+            value=StatementSequence(
+              stmts=[
                 ValueBindingStatement(
                   binding=ValueBinding(
                     name="x",
                     type=char,
                     value=CharLiteralExpression['a']
                   ),
-                  body=SequenceExpression(
-                    exprs=[
+                  body=StatementSequence(
+                    stmts=[
                       ValueBindingStatement(
                         binding=ValueBinding(
                           name="y",
                           type=char,
                           value=CharLiteralExpression['b']
                         ),
-                        body=SequenceExpression(
-                          exprs=[
+                        body=StatementSequence(
+                          stmts=[
                             NativeBinaryOperationExpression(
                               operator="=",
                               left=IdentifierExpression(
