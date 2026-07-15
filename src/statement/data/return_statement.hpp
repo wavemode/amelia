@@ -6,7 +6,7 @@
 
 namespace amelia {
 
-struct ReturnStatement : ExpressionWithDynamicId<ReturnStatement> {
+struct ReturnStatement : Expression {
   Option<Flex<Expression>> value;
   Serialize serialize() const override;
 };

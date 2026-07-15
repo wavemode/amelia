@@ -5,7 +5,7 @@
 
 namespace amelia {
 
-struct BuiltinType : TypeWithDynamicId<BuiltinType> {
+struct BuiltinType : Type {
   BuiltinType(BuiltinKind);
   BuiltinKind builtin_kind;
 

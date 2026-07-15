@@ -6,7 +6,7 @@
 
 namespace amelia {
 
-struct BitIntType : TypeWithDynamicId<BitIntType> {
+struct BitIntType : Type {
   uint64_t bit_width;
   bool is_signed;
 

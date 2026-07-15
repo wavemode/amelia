@@ -4,7 +4,7 @@
 
 namespace amelia {
 
-struct ClosureType : TypeWithDynamicId<ClosureType> {
+struct ClosureType : Type {
   ClosureType();
   // TODO
 };

@@ -8,7 +8,7 @@ namespace amelia {
 
 class Serialize;
 
-struct StatementSequence : ExpressionWithDynamicId<StatementSequence> {
+struct StatementSequence : Expression {
   Serialize serialize() const override;
   List<Flex<Expression>> stmts;
 };

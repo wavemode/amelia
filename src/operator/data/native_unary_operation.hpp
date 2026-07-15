@@ -5,7 +5,7 @@
 
 namespace amelia {
 
-struct NativeUnaryOperationExpression : ExpressionWithDynamicId<NativeUnaryOperationExpression> {
+struct NativeUnaryOperationExpression : Expression {
   UnaryOperatorKind op_kind;
   Flex<Expression> operand;
   Serialize serialize() const override;

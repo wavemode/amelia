@@ -4,7 +4,7 @@
 
 namespace amelia {
 
-struct BooleanLiteralExpression : ExpressionWithDynamicId<BooleanLiteralExpression> {
+struct BooleanLiteralExpression : Expression {
   bool value;
   Serialize serialize() const override;
 };

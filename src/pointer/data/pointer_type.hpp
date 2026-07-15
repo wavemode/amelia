@@ -5,7 +5,7 @@
 
 namespace amelia {
 
-struct PointerType : TypeWithDynamicId<PointerType> {
+struct PointerType : Type {
   Flex<Type> pointee;
   bool is_const;
 

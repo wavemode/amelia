@@ -7,7 +7,7 @@
 
 namespace amelia {
 
-struct ConstStringType : TypeWithDynamicId<ConstStringType> {
+struct ConstStringType : Type {
   ConstStringType();
   ConstStringType(String &&val);
   String value;

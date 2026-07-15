@@ -4,7 +4,7 @@
 
 namespace amelia {
 
-struct ApplyType : TypeWithDynamicId<ApplyType> {
+struct ApplyType : Type {
   ApplyType();
   // TODO
 };

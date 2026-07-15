@@ -6,7 +6,7 @@
 
 namespace amelia {
 
-struct AliasType : TypeWithDynamicId<AliasType> {
+struct AliasType : Type {
   String name;
   String module_name;
   Flex<Type> target;

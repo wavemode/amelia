@@ -4,7 +4,7 @@
 
 namespace amelia {
 
-struct ConceptType : TypeWithDynamicId<ConceptType> {
+struct ConceptType : Type {
   ConceptType();
   // TODO
 };

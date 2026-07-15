@@ -4,7 +4,7 @@
 
 namespace amelia {
 
-struct TypeCastExpression : ExpressionWithDynamicId<TypeCastExpression> {
+struct TypeCastExpression : Expression {
   Flex<Expression> expr;
   Serialize serialize() const override;
 };

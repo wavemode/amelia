@@ -15,7 +15,7 @@ struct Expression;
 template <typename T> class Option;
 using NodeId = int32_t;
 
-struct Type : FlexFromThis<Type>, WithDynamicId {
+struct Type : FlexFromThis<Type>, Dynamic {
 public:
   // Conversions
 
@@ -80,12 +80,6 @@ public:
   /// System
 
   virtual ~Type() = default;
-};
-
-template <typename T> struct TypeWithDynamicId : Type {
-  TypeWithDynamicId() {
-    m_dynamic_id = type_id<T>();
-  }
 };
 
 } // namespace amelia

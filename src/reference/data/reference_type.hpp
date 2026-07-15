@@ -5,7 +5,7 @@
 
 namespace amelia {
 
-struct ReferenceType : TypeWithDynamicId<ReferenceType> {
+struct ReferenceType : Type {
   Flex<Type> referent;
   bool is_const;
   bool is_move;

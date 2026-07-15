@@ -6,7 +6,7 @@
 
 namespace amelia {
 
-struct ArrayLiteralExpression : ExpressionWithDynamicId<ArrayLiteralExpression> {
+struct ArrayLiteralExpression : Expression {
   Serialize serialize() const override;
   List<Flex<Expression>> elements;
 };

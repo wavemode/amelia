@@ -5,7 +5,7 @@
 
 namespace amelia {
 
-struct FunctionCallExpression : ExpressionWithDynamicId<FunctionCallExpression> {
+struct FunctionCallExpression : Expression {
   Flex<Expression> callee;
   FunctionSignature *signature;
   List<Option<Flex<Expression>>> arguments;

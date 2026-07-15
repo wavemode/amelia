@@ -5,7 +5,7 @@
 
 namespace amelia {
 
-struct NumberLiteralExpression : ExpressionWithDynamicId<NumberLiteralExpression> {
+struct NumberLiteralExpression : Expression {
   NumberLiteral value;
   Serialize serialize() const override;
 };

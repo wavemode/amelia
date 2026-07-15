@@ -5,7 +5,7 @@
 
 namespace amelia {
 
-struct NativeBinaryOperationExpression : ExpressionWithDynamicId<NativeBinaryOperationExpression> {
+struct NativeBinaryOperationExpression : Expression {
   BinaryOperatorKind op_kind;
   Flex<Expression> left;
   Flex<Expression> right;

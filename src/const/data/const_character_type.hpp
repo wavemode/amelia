@@ -6,7 +6,7 @@
 
 namespace amelia {
 
-struct ConstCharacterType : TypeWithDynamicId<ConstCharacterType> {
+struct ConstCharacterType : Type {
   ConstCharacterType();
   ConstCharacterType(uint32_t val);
   uint32_t value;

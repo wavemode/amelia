@@ -4,7 +4,7 @@
 
 namespace amelia {
 
-struct CharLiteralExpression : ExpressionWithDynamicId<CharLiteralExpression> {
+struct CharLiteralExpression : Expression {
   uint32_t value;
   Serialize serialize() const override;
 };

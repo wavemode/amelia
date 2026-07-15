@@ -4,7 +4,7 @@
 
 namespace amelia {
 
-struct UnionType : TypeWithDynamicId<UnionType> {
+struct UnionType : Type {
   UnionType();
   // TODO
 };

@@ -4,7 +4,7 @@
 
 namespace amelia {
 
-struct ConstBooleanType : TypeWithDynamicId<ConstBooleanType> {
+struct ConstBooleanType : Type {
   ConstBooleanType();
   ConstBooleanType(bool val);
   bool value;

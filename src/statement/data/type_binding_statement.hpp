@@ -7,7 +7,7 @@
 
 namespace amelia {
 
-struct TypeBindingStatement : ExpressionWithDynamicId<TypeBindingStatement> {
+struct TypeBindingStatement : Expression {
   Serialize serialize() const override;
   String name;
   Flex<TypeBinding> binding;

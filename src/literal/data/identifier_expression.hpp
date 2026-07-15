@@ -5,7 +5,7 @@
 
 namespace amelia {
 
-struct IdentifierExpression : ExpressionWithDynamicId<IdentifierExpression> {
+struct IdentifierExpression : Expression {
   Flex<Binding> binding;
   Serialize serialize() const override;
 };

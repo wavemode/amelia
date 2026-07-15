@@ -5,7 +5,7 @@
 
 namespace amelia {
 
-struct ConstIntegerType : TypeWithDynamicId<ConstIntegerType> {
+struct ConstIntegerType : Type {
   ConstIntegerType();
   ConstIntegerType(Integer &&val);
   Integer value;

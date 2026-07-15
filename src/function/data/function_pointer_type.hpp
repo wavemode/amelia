@@ -7,7 +7,7 @@
 
 namespace amelia {
 
-struct FunctionPointerType : TypeWithDynamicId<FunctionPointerType> {
+struct FunctionPointerType : Type {
   FunctionPointerType();
   Flex<FunctionSignature> signature;
 };

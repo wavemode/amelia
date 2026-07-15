@@ -4,7 +4,7 @@
 
 namespace amelia {
 
-struct VariableType : TypeWithDynamicId<VariableType> {
+struct VariableType : Type {
   VariableType();
   // TODO
 };

@@ -6,7 +6,7 @@
 
 namespace amelia {
 
-struct TupleExpression : ExpressionWithDynamicId<TupleExpression> {
+struct TupleExpression : Expression {
   Serialize serialize() const override;
   List<Flex<Expression>> elements;
 };

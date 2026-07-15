@@ -4,7 +4,7 @@
 
 namespace amelia {
 
-struct EmptyStatement : ExpressionWithDynamicId<EmptyStatement> {
+struct EmptyStatement : Expression {
   Serialize serialize() const override;
 };
 

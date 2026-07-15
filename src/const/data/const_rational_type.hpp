@@ -5,7 +5,7 @@
 
 namespace amelia {
 
-struct ConstRationalType : TypeWithDynamicId<ConstRationalType> {
+struct ConstRationalType : Type {
   ConstRationalType();
   ConstRationalType(Rational &&val);
   Rational value;

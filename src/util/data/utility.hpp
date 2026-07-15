@@ -179,27 +179,28 @@ template <typename T> uintptr_t type_id() {
   return reinterpret_cast<uintptr_t>(&x);
 }
 
-struct WithDynamicId {
+struct Dynamic {
   template <typename T> bool is() const {
-    return type_id<T>() == m_dynamic_id;
+    return dynamic_cast<const T *>(this) != nullptr;
   }
 
   template <typename T> T &as() {
-    if (!is<T>()) {
+    auto *ptr = dynamic_cast<T *>(this);
+    if (!ptr) {
       throw RuntimeError("as() called on a type that is not of the requested type");
     }
-    return static_cast<T &>(*this);
+    return *ptr;
   }
 
   template <typename T> const T &as() const {
-    if (!is<T>()) {
+    const auto *ptr = dynamic_cast<const T *>(this);
+    if (!ptr) {
       throw RuntimeError("as() called on a type that is not of the requested type");
     }
-    return static_cast<const T &>(*this);
+    return *ptr;
   }
 
-protected:
-  uintptr_t m_dynamic_id = 0;
+  virtual ~Dynamic() = default;
 };
 
 } // namespace amelia

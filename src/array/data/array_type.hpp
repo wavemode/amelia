@@ -8,7 +8,7 @@
 
 namespace amelia {
 
-struct ArrayType : TypeWithDynamicId<ArrayType> {
+struct ArrayType : Type {
   Flex<Type> element_type;
   uint64_t size;
 

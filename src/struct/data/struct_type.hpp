@@ -9,7 +9,7 @@
 
 namespace amelia {
 
-struct StructType : TypeWithDynamicId<StructType> {
+struct StructType : Type {
   StructType();
   Map<String, Flex<Type>> fields;
 };

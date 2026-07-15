@@ -4,7 +4,7 @@
 
 namespace amelia {
 
-struct NullLiteralExpression : ExpressionWithDynamicId<NullLiteralExpression> {
+struct NullLiteralExpression : Expression {
   Serialize serialize() const override;
 };
 

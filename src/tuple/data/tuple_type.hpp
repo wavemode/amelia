@@ -11,7 +11,7 @@ namespace amelia {
 
 struct Expression;
 
-struct TupleType : TypeWithDynamicId<TupleType> {
+struct TupleType : Type {
   List<Flex<Type>> element_types;
 
   virtual bool is_resolved() const override;

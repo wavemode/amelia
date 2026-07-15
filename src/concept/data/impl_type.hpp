@@ -5,7 +5,7 @@
 
 namespace amelia {
 
-struct ImplType : TypeWithDynamicId<ImplType> {
+struct ImplType : Type {
   ImplType();
   Flex<Type> concept_type;
 };

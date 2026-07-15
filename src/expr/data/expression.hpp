@@ -11,19 +11,13 @@ namespace amelia {
 class Serialize;
 using NodeId = int32_t;
 
-struct Expression : FlexFromThis<Expression>, WithDynamicId {
+struct Expression : FlexFromThis<Expression>, Dynamic {
   Flex<Type> type;
   NodeId node_id;
 
   virtual Serialize serialize() const = 0;
 
   virtual ~Expression() = default;
-};
-
-template <typename T> struct ExpressionWithDynamicId : Expression {
-  ExpressionWithDynamicId() {
-    m_dynamic_id = type_id<T>();
-  }
 };
 
 } // namespace amelia

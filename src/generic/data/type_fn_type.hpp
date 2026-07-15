@@ -4,7 +4,7 @@
 
 namespace amelia {
 
-struct TypeFnType : TypeWithDynamicId<TypeFnType> {
+struct TypeFnType : Type {
   TypeFnType();
   // TODO
 };

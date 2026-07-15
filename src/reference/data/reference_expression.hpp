@@ -4,7 +4,7 @@
 
 namespace amelia {
 
-struct ReferenceExpression : ExpressionWithDynamicId<ReferenceExpression> {
+struct ReferenceExpression : Expression {
   Flex<Expression> referent;
   bool is_const;
   bool is_move;
