@@ -52,6 +52,18 @@ Option<Flex<Expression>> ConstStringType::perform_binary_op(
     } else if (op_kind == BinaryOperatorKind::NotEquals) {
       result->type = emplace_flex<ConstBooleanType>(value != right_const_string_type.value);
       result->op_kind = BinaryOperatorKind::NotEquals;
+    } else if (op_kind == BinaryOperatorKind::Less) {
+      result->type = emplace_flex<ConstBooleanType>(value < right_const_string_type.value);
+      result->op_kind = BinaryOperatorKind::Less;
+    } else if (op_kind == BinaryOperatorKind::LessEquals) {
+      result->type = emplace_flex<ConstBooleanType>(value <= right_const_string_type.value);
+      result->op_kind = BinaryOperatorKind::LessEquals;
+    } else if (op_kind == BinaryOperatorKind::Greater) {
+      result->type = emplace_flex<ConstBooleanType>(value > right_const_string_type.value);
+      result->op_kind = BinaryOperatorKind::Greater;
+    } else if (op_kind == BinaryOperatorKind::GreaterEquals) {
+      result->type = emplace_flex<ConstBooleanType>(value >= right_const_string_type.value);
+      result->op_kind = BinaryOperatorKind::GreaterEquals;
     } else {
       return None();
     }
