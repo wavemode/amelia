@@ -239,6 +239,7 @@ Option<Flex<Expression>> ConstIntegerType::perform_unary_op(
     break;
   case UnaryOperatorKind::Positive:
     result_type = flex();
+    break;
   case UnaryOperatorKind::BitwiseNot:
     result_type = emplace_flex<ConstIntegerType>(~value);
     break;

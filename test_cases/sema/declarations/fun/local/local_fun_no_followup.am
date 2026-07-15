@@ -13,21 +13,22 @@ SemaResult(
           ValueBinding(
             name="x",
             type=null,
-            value=SequenceExpression(
-              exprs=[
+            value=StatementSequence(
+              stmts=[
                 ValueBindingStatement(
                   binding=ValueBinding(
                     name="f",
                     type=FunctionType(
+                      name=f,
                       signatures=[
                         Signature(
                           return_type=null
                         )
                       ]
                     ),
-                    value=SequenceExpression()
+                    value=StatementSequence()
                   ),
-                  body=SequenceExpression()
+                  body=StatementSequence()
                 )
               ]
             )

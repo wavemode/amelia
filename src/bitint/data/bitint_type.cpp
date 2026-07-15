@@ -91,9 +91,7 @@ Option<Flex<Expression>> BitIntType::perform_binary_op(
   switch (op_kind) {
   case BinaryOperatorKind::LeftShift:
   case BinaryOperatorKind::RightShift:
-    return perform_native_shift(
-        expr_node_id, op_kind, *this, left_expr, right_type, right_expr, *this
-    );
+    return perform_native_shift(expr_node_id, op_kind, *this, left_expr, right_type, right_expr);
   case BinaryOperatorKind::Add:
   case BinaryOperatorKind::Subtract:
   case BinaryOperatorKind::Multiply:
@@ -117,7 +115,7 @@ Option<Flex<Expression>> BitIntType::perform_binary_op(
   case BinaryOperatorKind::LShiftAssignment:
   case BinaryOperatorKind::RShiftAssignment:
     return perform_native_shift(
-        expr_node_id, op_kind, *this, left_expr, right_type, right_expr, NULL_TYPE
+        expr_node_id, op_kind, NULL_TYPE, left_expr, right_type, right_expr
     );
   case BinaryOperatorKind::Assignment:
   case BinaryOperatorKind::BitAndAssignment:
@@ -140,7 +138,21 @@ Option<Flex<Expression>> BitIntType::perform_binary_op(
 Option<Flex<Expression>> BitIntType::perform_unary_op(
     NodeId expr_node_id, UnaryOperatorKind op_kind, const Expression &expr
 ) const {
-  return Option<Flex<Expression>>();
+  switch (op_kind) {
+  case UnaryOperatorKind::Negate:
+    if (!is_signed) {
+      return None();
+    }
+    [[fallthrough]];
+  case UnaryOperatorKind::Positive:
+  case UnaryOperatorKind::BitwiseNot:
+    return perform_native_unary_op(expr_node_id, op_kind, *this, expr);
+  case UnaryOperatorKind::Decrement:
+  case UnaryOperatorKind::Increment:
+    return perform_native_unary_op(expr_node_id, op_kind, NULL_TYPE, expr);
+  case UnaryOperatorKind::Not:
+    return None();
+  }
 }
 
 bool BitIntType::is_primitive() const {

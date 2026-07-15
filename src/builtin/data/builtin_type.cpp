@@ -6,6 +6,7 @@
 #include "const/data/const_character_type.hpp"
 #include "const/data/const_integer_type.hpp"
 #include "const/data/const_rational_type.hpp"
+#include "bitint/data/bitint_type.hpp"
 #include "operator/logic/build_operator_expr.hpp"
 #include "reference/data/reference_type.hpp"
 #include "type/logic/type_conversion.hpp"
@@ -17,10 +18,20 @@
 namespace amelia {
 
 bool BuiltinType::unify(const Type &assignment_type) const {
-  if (!assignment_type.is<BuiltinType>()) {
+    if (assignment_type.is<BuiltinType>()) {
+      return builtin_kind == assignment_type.as<BuiltinType>().builtin_kind;
+    } else if (assignment_type.is<ConstIntegerType>() ||
+               assignment_type.is<BitIntType>()) {
+      return is_integral() && min_value() < 0 &&
+             repr_bit_size() == assignment_type.repr_bit_size();
+    } else if (assignment_type.is<ConstRationalType>()) {
+      return builtin_kind == BuiltinKind::Double;
+    } else if (assignment_type.is<ConstBooleanType>()) {
+      return builtin_kind == BuiltinKind::Bool;
+    } else if (assignment_type.is<ConstCharacterType>()) {
+      return builtin_kind == BuiltinKind::Char;
+    }
     return false;
-  }
-  return builtin_kind == assignment_type.as<BuiltinType>().builtin_kind;
 }
 
 Option<Flex<Expression>> BuiltinType::coerce(const Type &assignment_type, const Expression &expr)
@@ -183,7 +194,7 @@ static Option<Flex<Expression>> perform_binary_op_on_integral(
   case BinaryOperatorKind::LeftShift:
   case BinaryOperatorKind::RightShift:
     return perform_native_shift(
-        expr_node_id, op_kind, left_type, left_expr, right_type, right_expr, left_type
+        expr_node_id, op_kind, left_type, left_expr, right_type, right_expr
     );
   case BinaryOperatorKind::Add:
   case BinaryOperatorKind::Subtract:
@@ -208,7 +219,7 @@ static Option<Flex<Expression>> perform_binary_op_on_integral(
   case BinaryOperatorKind::LShiftAssignment:
   case BinaryOperatorKind::RShiftAssignment:
     return perform_native_shift(
-        expr_node_id, op_kind, left_type, left_expr, right_type, right_expr, NULL_TYPE
+        expr_node_id, op_kind, NULL_TYPE, left_expr, right_type, right_expr
     );
   case BinaryOperatorKind::Assignment:
   case BinaryOperatorKind::SubAssignment:
@@ -436,7 +447,9 @@ Option<Flex<Expression>> BuiltinType::perform_binary_op(
 ) const {
   switch (builtin_kind) {
   case BuiltinKind::Char:
-    return UINT_TYPE->perform_binary_op(expr_node_id, op_kind, left_expr, right_type, right_expr);
+    return perform_binary_op_on_char(
+        expr_node_id, op_kind, *this, left_expr, right_type, right_expr
+    );
   case BuiltinKind::Byte:
   case BuiltinKind::UByte:
   case BuiltinKind::Short:
@@ -483,10 +496,10 @@ static Option<Flex<Expression>> perform_unary_op_on_integral(
     [[fallthrough]];
   case UnaryOperatorKind::Positive:
   case UnaryOperatorKind::BitwiseNot:
-    return perform_native_unary_op(expr_node_id, op_kind, operand_type, operand_expr, operand_type);
+    return perform_native_unary_op(expr_node_id, op_kind, operand_type, operand_expr);
   case UnaryOperatorKind::Increment:
   case UnaryOperatorKind::Decrement:
-    return perform_native_unary_op(expr_node_id, op_kind, operand_type, operand_expr, NULL_TYPE);
+    return perform_native_unary_op(expr_node_id, op_kind, NULL_TYPE, operand_expr);
   case UnaryOperatorKind::Not:
     return None();
   }
@@ -501,10 +514,10 @@ static Option<Flex<Expression>> perform_unary_op_on_floating_point(
   switch (op_kind) {
   case UnaryOperatorKind::Negate:
   case UnaryOperatorKind::Positive:
-    return perform_native_unary_op(expr_node_id, op_kind, operand_type, operand_expr, operand_type);
+    return perform_native_unary_op(expr_node_id, op_kind, operand_type, operand_expr);
   case UnaryOperatorKind::Increment:
   case UnaryOperatorKind::Decrement:
-    return perform_native_unary_op(expr_node_id, op_kind, operand_type, operand_expr, NULL_TYPE);
+    return perform_native_unary_op(expr_node_id, op_kind, NULL_TYPE, operand_expr);
   case UnaryOperatorKind::Not:
   case UnaryOperatorKind::BitwiseNot:
     return None();
@@ -519,7 +532,7 @@ static Option<Flex<Expression>> perform_unary_op_on_boolean(
 ) {
   switch (op_kind) {
   case UnaryOperatorKind::Not:
-    return perform_native_unary_op(expr_node_id, op_kind, operand_type, operand_expr, operand_type);
+    return perform_native_unary_op(expr_node_id, op_kind, operand_type, operand_expr);
   case UnaryOperatorKind::Increment:
   case UnaryOperatorKind::Decrement:
   case UnaryOperatorKind::Negate:
@@ -537,7 +550,7 @@ static Option<Flex<Expression>> perform_unary_op_on_char(
 ) {
   switch (op_kind) {
   case UnaryOperatorKind::Positive:
-    return perform_native_unary_op(expr_node_id, op_kind, operand_type, operand_expr, operand_type);
+    return perform_native_unary_op(expr_node_id, op_kind, operand_type, operand_expr);
   case UnaryOperatorKind::BitwiseNot:
     return UINT_TYPE->perform_unary_op(expr_node_id, op_kind, operand_expr);
   case UnaryOperatorKind::Not:

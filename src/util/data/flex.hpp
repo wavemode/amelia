@@ -17,7 +17,7 @@ concept has_control_block_field = requires(T obj) {
 };
 } // namespace internal
 
-template <typename T> class FlexFromThis;
+template <typename T> struct FlexFromThis;
 
 /* Non-threadsafe reference-counted pointer that can be either strong or weak. */
 template <typename T> class Flex {
@@ -162,7 +162,7 @@ public:
   }
 
   template <typename U> friend class Flex;
-  template <typename U> friend class FlexFromThis;
+  template <typename U> friend struct FlexFromThis;
 
   template <typename U>
     requires(!internal::has_control_block_field<U>)

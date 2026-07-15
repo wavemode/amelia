@@ -13,20 +13,21 @@ SemaResult(
           ValueBinding(
             name="f",
             type=FunctionType(
+              name=f,
               signatures=[
                 Signature(
                   return_type=bitint[512]
                 )
               ]
             ),
-            value=SequenceExpression(
-              exprs=[
-                ReturnExpression(
+            value=StatementSequence(
+              stmts=[
+                ReturnStatement(
                   value=NumberLiteralExpression(
                     lit=54832110478547890578905743890572389045782903457897328493728943278942378942378098952347895
                   )
                 ),
-                ReturnExpression(
+                ReturnStatement(
                   value=NativeTypeCastExpression(
                     expr=NumberLiteralExpression(
                       lit=10

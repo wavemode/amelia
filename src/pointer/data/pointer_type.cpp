@@ -1,5 +1,6 @@
 #include "pointer_type.hpp"
 
+#include "expr/data/expression.hpp"
 #include "type/logic/type_conversion.hpp"
 #include "util/data/flex.hpp"
 #include "util/data/option.hpp"

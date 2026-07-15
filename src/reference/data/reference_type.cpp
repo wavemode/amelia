@@ -3,6 +3,7 @@
 #include "array/data/array_type.hpp"
 #include "builtin/data/builtin_type.hpp"
 #include "const/data/const_string_type.hpp"
+#include "expr/data/expression.hpp"
 #include "slice/data/slice_type.hpp"
 #include "type/logic/type_conversion.hpp"
 #include "util/data/flex.hpp"

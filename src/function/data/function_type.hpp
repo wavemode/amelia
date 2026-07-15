@@ -9,8 +9,6 @@
 namespace amelia {
 
 struct FunctionType : TypeWithDynamicId<FunctionType> {
-  FunctionType();
-
   String name;
   List<Flex<FunctionSignature>> signatures;
 

@@ -1,6 +1,6 @@
 #include "type_binding_statement.hpp"
 
-#include "sema/data/binding.hpp"
+#include "binding/data/binding.hpp"
 #include "util/data/serialize.hpp"
 #include "util/data/string.hpp"
 

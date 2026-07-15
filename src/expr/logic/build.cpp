@@ -121,7 +121,7 @@ Flex<Expression> require_coerce(
     const Expression &expr,
     String &&error_message_template
 ) {
-  auto unified_expr = target_type.coerce(expr.type->resolve_if_needed(), expr);
+  auto unified_expr = target_type.coerce_if_needed(expr.type->resolve_if_needed(), expr);
   if (!unified_expr.has_value()) {
     String target_type_str;
     target_type.serialize().to_string(target_type_str);

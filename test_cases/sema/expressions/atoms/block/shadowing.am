@@ -15,8 +15,8 @@ SemaResult(
           ValueBinding(
             name="x",
             type=Const[4],
-            value=SequenceExpression(
-              exprs=[
+            value=StatementSequence(
+              stmts=[
                 ValueBindingStatement(
                   binding=ValueBinding(
                     name="y",
@@ -25,13 +25,13 @@ SemaResult(
                       lit=4
                     )
                   ),
-                  body=SequenceExpression(
-                    exprs=[
-                      EmptyExpression(),
-                      EmptyExpression(),
-                      EmptyExpression(),
-                      EmptyExpression(),
-                      EmptyExpression(),
+                  body=StatementSequence(
+                    stmts=[
+                      EmptyStatement(),
+                      EmptyStatement(),
+                      EmptyStatement(),
+                      EmptyStatement(),
+                      EmptyStatement(),
                       IdentifierExpression(
                         name="y"
                       )

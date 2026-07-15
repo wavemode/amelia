@@ -47,12 +47,16 @@ Option<Flex<Expression>> ConstBooleanType::perform_binary_op(
   switch (op_kind) {
   case BinaryOperatorKind::And:
     result_type = emplace_flex<ConstBooleanType>(value && rhs_boolean_type.value);
+    break;
   case BinaryOperatorKind::Or:
     result_type = emplace_flex<ConstBooleanType>(value || rhs_boolean_type.value);
+    break;
   case BinaryOperatorKind::Equals:
     result_type = emplace_flex<ConstBooleanType>(value == rhs_boolean_type.value);
+    break;
   case BinaryOperatorKind::NotEquals:
     result_type = emplace_flex<ConstBooleanType>(value != rhs_boolean_type.value);
+    break;
   case BinaryOperatorKind::Add:
   case BinaryOperatorKind::Subtract:
   case BinaryOperatorKind::Multiply:

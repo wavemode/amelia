@@ -13,9 +13,19 @@ struct IModuleAnalysisState;
 
 using NodeId = int32_t;
 
-bool is_value_binding_node_type(NodeType node_type);
+bool is_binding_node_type(NodeType node_type);
 
-bool is_type_binding_node_type(NodeType node_type);
+Flex<Expression> build_statement(IModuleAnalysisState &module_state, NodeId expr_node_id);
+
+Flex<Expression> build_expr_expression_statement(
+    IModuleAnalysisState &module_state, NodeId expr_node_id
+);
+
+Flex<Expression> build_expr_return(IModuleAnalysisState &module_state, NodeId expr_node_id);
+
+Flex<Expression> assign_current_function_return_value(
+    IModuleAnalysisState &module_state, Flex<Expression> return_value
+);
 
 Flex<Expression> build_expr_type_decl(
     IModuleAnalysisState &module_state, NodeId expr_node_id, ConstSlice<NodeId> stmts
@@ -34,6 +44,10 @@ Flex<Expression> build_expr_var_decl(
 );
 
 Flex<Expression> build_expr_value_binding(
+    IModuleAnalysisState &module_state, NodeId expr_node_id, ConstSlice<NodeId> stmts
+);
+
+Flex<Expression> build_expr_binding(
     IModuleAnalysisState &module_state, NodeId expr_node_id, ConstSlice<NodeId> stmts
 );
 

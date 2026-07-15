@@ -8,6 +8,7 @@ namespace amelia {
 
 struct AliasType : TypeWithDynamicId<AliasType> {
   String name;
+  String module_name;
   Flex<Type> target;
 
   bool is_resolved() const override;

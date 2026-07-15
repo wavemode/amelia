@@ -10,6 +10,7 @@ SemaResult(
           ValueBinding(
             name="f",
             type=FunctionType(
+              name=f,
               signatures=[
                 Signature(
                   parameters=[

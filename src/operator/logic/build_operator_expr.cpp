@@ -3,6 +3,7 @@
 #include "builtin/data/builtin_type.hpp"
 #include "expr/data/expression.hpp"
 #include "expr/logic/build.hpp"
+#include "literal/data/identifier_expression.hpp"
 #include "operator/data/binary_operator_kind.hpp"
 #include "operator/data/native_binary_operation.hpp"
 #include "operator/data/native_unary_operation.hpp"
@@ -60,7 +61,56 @@ namespace {
   X(PreIncrementStmtNode)                                                                          \
   X(PostIncrementStmtNode)
 
-} // namespace
+void assert_mutable_operand(IModuleAnalysisState &module_state, Flex<Expression> operand) {
+  if (operand->is<IdentifierExpression>()) {
+    auto &identifier_expr = operand->as<IdentifierExpression>();
+    if (identifier_expr.binding->kind == BindingKind::Constant) {
+      String error_message = "Cannot modify constant '";
+      error_message.append(identifier_expr.binding->name);
+      error_message.append('\'');
+      module_state.raise_error_at_node(operand->node_id, move(error_message));
+    }
+    if (identifier_expr.binding->kind != BindingKind::Variable) {
+      String error_message = "Cannot assign to '";
+      error_message.append(identifier_expr.binding->name);
+      error_message.append("' because it is not a variable");
+      module_state.raise_error_at_node(operand->node_id, move(error_message));
+    }
+  } else { // TODO: field access, deref
+    module_state.raise_error_at_node(
+        operand->node_id, "Operand of mutation must be an assignable place"
+    );
+  }
+}
+
+bool is_mutating_binary_op(BinaryOperatorKind op_kind) {
+  switch (op_kind) {
+  case BinaryOperatorKind::Assignment:
+  case BinaryOperatorKind::AddAssignment:
+  case BinaryOperatorKind::SubAssignment:
+  case BinaryOperatorKind::MulAssignment:
+  case BinaryOperatorKind::DivAssignment:
+  case BinaryOperatorKind::ModAssignment:
+  case BinaryOperatorKind::LShiftAssignment:
+  case BinaryOperatorKind::RShiftAssignment:
+  case BinaryOperatorKind::BitAndAssignment:
+  case BinaryOperatorKind::BitOrAssignment:
+  case BinaryOperatorKind::BitXorAssignment:
+    return true;
+  default:
+    return false;
+  }
+}
+
+bool is_mutating_unary_op(UnaryOperatorKind op_kind) {
+  switch (op_kind) {
+  case UnaryOperatorKind::Increment:
+  case UnaryOperatorKind::Decrement:
+    return true;
+  default:
+    return false;
+  }
+}
 
 bool is_non_promoting_binary_op(BinaryOperatorKind op_kind) {
   switch (op_kind) {
@@ -173,6 +223,8 @@ UnaryOperatorKind unary_op_kind_of_node_type(NodeType node_type) {
   }
 }
 
+} // namespace
+
 Flex<Expression> build_binary_operator_expression(
     IModuleAnalysisState &module_state, NodeId expr_node_id
 ) {
@@ -211,6 +263,10 @@ Flex<Expression> build_binary_operator_expression(
   auto right_expr = build_expression(module_state, right_expr_node_id);
   auto original_right_type = right_expr->type;
 
+  if (is_mutating_binary_op(op_kind)) {
+    assert_mutable_operand(module_state, left_expr);
+  }
+
   auto left_type = left_expr->type;
   auto right_type = right_expr->type;
 
@@ -227,7 +283,7 @@ Flex<Expression> build_binary_operator_expression(
   }
   if (!is_non_promoting_binary_op(op_kind)) {
     if (!result.has_value()) {
-      auto try_convert_right = left_type->coerce(right_type, right_expr);
+      auto try_convert_right = left_type->coerce_if_needed(right_type, right_expr);
       if (try_convert_right.has_value()) {
         result = left_type->perform_binary_op(
             expr_node_id, op_kind, left_expr, left_type, move(try_convert_right.value())
@@ -235,7 +291,7 @@ Flex<Expression> build_binary_operator_expression(
       }
     }
     if (!result.has_value()) {
-      auto try_convert_left = right_type->coerce(left_type, left_expr);
+      auto try_convert_left = right_type->coerce_if_needed(left_type, left_expr);
       if (try_convert_left.has_value()) {
         result = right_type->perform_binary_op(
             expr_node_id, op_kind, move(try_convert_left.value()), right_type, right_expr
@@ -259,11 +315,10 @@ Flex<Expression> build_binary_operator_expression(
 Option<Flex<Expression>> perform_native_shift(
     NodeId expr_node_id,
     BinaryOperatorKind op_kind,
-    const Type &left_type,
+    const Type &result_type,
     const Expression &left_expr,
     const Type &right_type,
-    const Expression &right_expr,
-    const Type &result_type
+    const Expression &right_expr
 ) {
   if (!right_type.is_integral() || !right_type.is_primitive()) {
     return None();
@@ -301,9 +356,8 @@ Option<Flex<Expression>> perform_native_binary_op(
 Option<Flex<Expression>> perform_native_unary_op(
     NodeId expr_node_id,
     UnaryOperatorKind op_kind,
-    const Type &operand_type,
-    const Expression &operand_expr,
-    const Type &result_type
+    const Type &result_type,
+    const Expression &operand_expr
 ) {
   auto result = emplace_flex<NativeUnaryOperationExpression>();
   result->op_kind = op_kind;
@@ -347,6 +401,11 @@ Flex<Expression> build_unary_operator_expression(
   }
 
   auto operand_expr = build_expression(module_state, operand_node_id);
+
+  if (is_mutating_unary_op(op_kind)) {
+    assert_mutable_operand(module_state, operand_expr);
+  }
+
   auto result = operand_expr->type->perform_unary_op(expr_node_id, op_kind, operand_expr);
   if (!result.has_value()) {
     switch (op_kind) {
@@ -358,7 +417,7 @@ Flex<Expression> build_unary_operator_expression(
       // TODO: attempt numeric coercion
       break;
     case UnaryOperatorKind::Not: {
-      auto coerced_operand = BOOL_TYPE->coerce(operand_expr);
+      auto coerced_operand = BOOL_TYPE->coerce_if_needed(operand_expr);
       if (coerced_operand.has_value()) {
         result = BOOL_TYPE->perform_unary_op(expr_node_id, op_kind, coerced_operand.value());
       }

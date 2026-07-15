@@ -6,7 +6,6 @@
 namespace amelia {
 
 struct SliceType : TypeWithDynamicId<SliceType> {
-  SliceType();
   Flex<Type> element_type;
 
   bool is_resolved() const override;

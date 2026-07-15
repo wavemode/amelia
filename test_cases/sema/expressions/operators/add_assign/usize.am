@@ -15,14 +15,15 @@ SemaResult(
           ValueBinding(
             name="f",
             type=FunctionType(
+              name=f,
               signatures=[
                 Signature(
                   return_type=null
                 )
               ]
             ),
-            value=SequenceExpression(
-              exprs=[
+            value=StatementSequence(
+              stmts=[
                 ValueBindingStatement(
                   binding=ValueBinding(
                     name="x",
@@ -33,8 +34,8 @@ SemaResult(
                       )
                     )
                   ),
-                  body=SequenceExpression(
-                    exprs=[
+                  body=StatementSequence(
+                    stmts=[
                       ValueBindingStatement(
                         binding=ValueBinding(
                           name="y",
@@ -45,8 +46,8 @@ SemaResult(
                             )
                           )
                         ),
-                        body=SequenceExpression(
-                          exprs=[
+                        body=StatementSequence(
+                          stmts=[
                             NativeBinaryOperationExpression(
                               operator="+=",
                               left=IdentifierExpression(

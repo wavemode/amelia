@@ -52,7 +52,7 @@ Option<Flex<Expression>> ArrayType::cast(const Type &assignment_type, const Expr
     return None();
   }
 
-  if (!element_type->coerce(assignment_array_type.element_type, expr).has_value()) {
+  if (!element_type->coerce_if_needed(assignment_array_type.element_type, expr).has_value()) {
     return None();
   }
 

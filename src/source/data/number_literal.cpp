@@ -1,5 +1,8 @@
 #include "number_literal.hpp"
 
+#include "util/data/serialize.hpp"
+#include "util/data/string.hpp"
+
 namespace amelia {
 Serialize serialize_number_literal(const NumberLiteral &number_literal) {
   String result;
@@ -14,4 +17,5 @@ Serialize serialize_number_literal(const NumberLiteral &number_literal) {
   result.append(number_literal.exponent_digits);
   return Serialize::literal(move(result));
 }
+
 } // namespace amelia

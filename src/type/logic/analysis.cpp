@@ -1,6 +1,8 @@
 #include "analysis.hpp"
 
 #include "array/data/array_type.hpp"
+#include "binding/data/type_binding.hpp"
+#include "binding/logic/analysis.hpp"
 #include "bitint/data/bitint_type.hpp"
 #include "builtin/data/builtin_type.hpp"
 #include "const/data/const_boolean_type.hpp"
@@ -8,11 +10,11 @@
 #include "const/data/const_integer_type.hpp"
 #include "const/data/const_rational_type.hpp"
 #include "const/data/const_string_type.hpp"
+#include "expr/data/expression.hpp"
 #include "expr/logic/build.hpp"
 #include "parser/data/node.hpp"
 #include "pointer/data/pointer_type.hpp"
 #include "reference/data/reference_type.hpp"
-#include "sema/data/binding.hpp"
 #include "sema/interface/module_analysis_state.hpp"
 #include "slice/data/slice_type.hpp"
 #include "tuple/data/tuple_type.hpp"
@@ -49,7 +51,7 @@ Flex<Type> evaluate_type_expr_bracket(
     result->size = length_value.to_uint32();
     return result;
   } else {
-    module_state.raise_error_at_node(bracket_node.exprs[1], "Invalid type expression");
+    module_state.raise_error_at_node(expr_node_id, "Invalid type expression");
   }
 }
 
@@ -196,8 +198,9 @@ Flex<Type> evaluate_type_expr(IModuleAnalysisState &module_state, NodeId type_ex
   const auto &type_expr_node = module_state.get_node(type_expr_node_id);
   switch (type_expr_node.type()) {
   case NodeType::IdentifierNode:
-    return module_state
-        .resolve_type_binding(type_expr_node_id, type_expr_node.as_IdentifierNode().name)
+    return resolve_type_binding(
+               module_state, type_expr_node_id, type_expr_node.as_IdentifierNode().name
+    )
         ->type.value()
         .weak();
   case NodeType::BuiltinTypeNode:

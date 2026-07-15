@@ -30,7 +30,7 @@ Option<Flex<Expression>> AliasType::coerce(const Type &assignment_type, const Ex
   if (unify(assignment_type)) {
     return expr.flex();
   }
-  return target->coerce(assignment_type, expr);
+  return target->coerce_if_needed(assignment_type, expr);
 }
 
 Option<Flex<Expression>> AliasType::perform_binary_op(
@@ -58,7 +58,9 @@ Option<Flex<Expression>> AliasType::perform_unary_op(
 }
 
 Serialize AliasType::serialize() const {
-  String repr(name);
+  String repr(module_name);
+  repr.append("::");
+  repr.append(name);
   repr.append(" (aka ");
   target->serialize().to_string(repr);
   repr.append(')');

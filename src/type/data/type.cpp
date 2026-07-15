@@ -44,11 +44,24 @@ Option<Flex<Expression>> Type::coerce(const Expression &expr) const {
   return coerce(expr.type, expr);
 }
 
+Option<Flex<Expression>> Type::coerce_if_needed(const Expression &expr) const {
+  return coerce_if_needed(expr.type, expr);
+}
+
 Option<Flex<Expression>> Type::coerce(const Type &assignment_type, const Expression &expr) const {
   if (unify(assignment_type)) {
     return expr.flex();
   }
   return None();
+}
+
+Option<Flex<Expression>> Type::coerce_if_needed(
+    const Type &assignment_type, const Expression &expr
+) const {
+  if (unify(assignment_type)) {
+    return expr.flex();
+  }
+  return coerce(assignment_type, expr);
 }
 
 Option<Flex<Expression>> Type::cast(const Expression &expr) const {
@@ -95,19 +108,14 @@ bool Type::can_represent_range(const Integer &min, const Integer &max) const {
   return min >= min_value() && max <= max_value();
 }
 
-Option<Flex<Expression>> Type::perform_binary_op(
-    NodeId expr_node_id,
-    BinaryOperatorKind op_kind,
-    const Expression &left_expr,
-    const Type &right_type,
-    const Expression &right_expr
-) const {
+Option<Flex<Expression>> Type::
+    perform_binary_op(NodeId, BinaryOperatorKind, const Expression &, const Type &, const Expression &)
+        const {
   return None();
 }
 
-Option<Flex<Expression>> Type::perform_unary_op(
-    NodeId expr_node_id, UnaryOperatorKind op_kind, const Expression &expr
-) const {
+Option<Flex<Expression>> Type::perform_unary_op(NodeId, UnaryOperatorKind, const Expression &)
+    const {
   return None();
 }
 

@@ -10,6 +10,8 @@ using boost::multiprecision::cpp_int;
 
 namespace amelia {
 
+namespace {
+
 Integer binary_string_to_integer(Text binary_string) {
   Integer result;
   for (char c : binary_string) {
@@ -65,6 +67,8 @@ Integer hexadecimal_string_to_integer(Text hexadecimal_string) {
   }
   return result;
 }
+
+} // namespace
 
 Integer::Integer() : m_value(new cpp_int()) {}
 

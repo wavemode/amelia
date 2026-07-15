@@ -1,5 +1,8 @@
 #include "declaration_visibility.hpp"
 
+#include "util/data/serialize.hpp"
+#include "util/data/string.hpp"
+
 namespace amelia {
 Serialize serialize_declaration_visibility(DeclarationVisibility visibility) {
   String result;

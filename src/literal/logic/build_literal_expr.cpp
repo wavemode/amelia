@@ -1,5 +1,7 @@
 #include "build_literal_expr.hpp"
 
+#include "binding/data/value_binding.hpp"
+#include "binding/logic/analysis.hpp"
 #include "builtin/data/builtin_type.hpp"
 #include "const/data/const_boolean_type.hpp"
 #include "const/data/const_character_type.hpp"
@@ -121,7 +123,7 @@ Flex<Expression> build_expr_builtin_type(IModuleAnalysisState &module_state, Nod
 Flex<Expression> build_expr_identifier(IModuleAnalysisState &module_state, NodeId node_id) {
   const auto &identifier_node = module_state.get_node(node_id).as_IdentifierNode();
   auto expr = emplace_flex<IdentifierExpression>();
-  auto binding = module_state.resolve_value_binding(node_id, identifier_node.name);
+  auto binding = resolve_value_binding(module_state, node_id, identifier_node.name);
   expr->binding = binding.weak();
   expr->type = binding->type.value().weak();
   expr->node_id = node_id;

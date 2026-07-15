@@ -1,11 +1,18 @@
 #include "sequence_exprs.hpp"
 
+#include "binding/data/type_binding.hpp"
+#include "binding/data/value_binding.hpp"
+#include "binding/logic/analysis.hpp"
 #include "builtin/data/builtin_type.hpp"
 #include "expr/data/expression.hpp"
 #include "expr/logic/build.hpp"
+#include "function/data/function_signature.hpp"
+#include "literal/data/null_literal_expression.hpp"
+#include "operator/logic/build_operator_expr.hpp"
 #include "parser/data/node.hpp"
-#include "sema/data/binding.hpp"
 #include "sema/interface/module_analysis_state.hpp"
+#include "statement/data/empty_statement.hpp"
+#include "statement/data/return_statement.hpp"
 #include "statement/data/statement_sequence.hpp"
 #include "statement/data/type_binding_statement.hpp"
 #include "statement/data/value_binding_statement.hpp"
@@ -15,14 +22,99 @@
 
 namespace amelia {
 
-bool is_value_binding_node_type(NodeType node_type) {
+bool is_binding_node_type(NodeType node_type) {
   return node_type == NodeType::LetDeclNode || node_type == NodeType::ConstDeclNode ||
-         node_type == NodeType::FunctionDeclNode;
+         node_type == NodeType::FunctionDeclNode || node_type == NodeType::TypeDeclNode;
 }
 
-bool is_type_binding_node_type(NodeType node_type) {
-  // TODO
-  return node_type == NodeType::TypeDeclNode;
+Flex<Expression> build_statement(IModuleAnalysisState &module_state, NodeId expr_node_id) {
+  const auto &expr_node = module_state.get_node(expr_node_id);
+  Flex<Expression> result;
+  switch (expr_node.type()) {
+  case NodeType::ExprStmtNode:
+    result = build_expr_expression_statement(module_state, expr_node_id);
+    break;
+  case NodeType::EmptyStmtNode:
+    result = emplace_flex<EmptyStatement>();
+    result->node_id = expr_node_id;
+    result->type = NULL_TYPE;
+    break;
+  case NodeType::ReturnStmtNode:
+    result = build_expr_return(module_state, expr_node_id);
+    break;
+  case NodeType::PreDecrementStmtNode:
+  case NodeType::PostDecrementStmtNode:
+  case NodeType::PreIncrementStmtNode:
+  case NodeType::PostIncrementStmtNode:
+    result = build_unary_operator_expression(module_state, expr_node_id);
+    break;
+  case NodeType::AddAssignStmtNode:
+  case NodeType::AssignmentStmtNode:
+  case NodeType::BitwiseAndAssignStmtNode:
+  case NodeType::BitwiseOrAssignStmtNode:
+  case NodeType::BitwiseXorAssignStmtNode:
+  case NodeType::DivAssignStmtNode:
+  case NodeType::LeftShiftAssignStmtNode:
+  case NodeType::ModAssignStmtNode:
+  case NodeType::MulAssignStmtNode:
+  case NodeType::RightShiftAssignStmtNode:
+  case NodeType::SubAssignStmtNode:
+    result = build_binary_operator_expression(module_state, expr_node_id);
+    break;
+  default:
+    module_state.raise_error_at_node(
+        expr_node_id, "not implemented (unknown node type in build_statement)"
+    );
+  }
+
+  return result;
+}
+
+Flex<Expression> build_expr_return(IModuleAnalysisState &module_state, NodeId expr_node_id) {
+  const auto &return_node = module_state.get_node(expr_node_id).as_ReturnStmtNode();
+  auto result = emplace_flex<ReturnStatement>();
+  result->node_id = expr_node_id;
+  if (return_node.expr.has_value()) {
+    result->value = assign_current_function_return_value(
+        module_state, build_expression(module_state, return_node.expr.value())
+    );
+  } else {
+    Flex<Expression> implied_return_value = emplace_flex<NullLiteralExpression>();
+    implied_return_value->node_id = expr_node_id;
+    implied_return_value->type = NULL_TYPE;
+    result->value = assign_current_function_return_value(module_state, implied_return_value);
+  }
+  result->type = NEVER_TYPE;
+  return result;
+}
+
+Flex<Expression> assign_current_function_return_value(
+    IModuleAnalysisState &module_state, Flex<Expression> return_value
+) {
+  if (!module_state.current_function_signature().has_value()) {
+    module_state.raise_error_at_node(return_value->node_id, "Return value not within function");
+  }
+
+  if (is_unknown_type(module_state.current_function_signature().value()->return_type)) {
+    module_state.current_function_signature()
+        .value()
+        ->return_type = return_value->type->remove_comptime_const_if_needed();
+    return return_value;
+  }
+
+  return require_coerce(
+      module_state,
+      module_state.current_function_signature().value()->return_type,
+      return_value,
+      "Cannot convert expression of type '{1}' to expected return type '{2}'"
+  );
+}
+
+Flex<Expression> build_expr_expression_statement(
+    IModuleAnalysisState &module_state, NodeId expr_node_id
+) {
+  const auto &expr_stmt_node = module_state.get_node(expr_node_id).as_ExprStmtNode();
+  return build_expression(module_state, expr_stmt_node.expr);
 }
 
 Flex<Expression> build_expr_type_decl(
@@ -38,7 +130,7 @@ Flex<Expression> build_expr_type_decl(
   binding->visibility = DeclarationVisibility::Default;
   module_state.push_binding(binding);
 
-  module_state.analyze_binding(binding);
+  analyze_binding(module_state, binding);
 
   auto result = emplace_flex<TypeBindingStatement>();
   result->name = binding->name;
@@ -107,7 +199,7 @@ Flex<Expression> build_expr_fun_decl(
     stmts = ConstSlice<NodeId>(stmts.ptr() + 1, stmts.size() - 1);
   }
 
-  module_state.analyze_binding(binding);
+  analyze_binding(module_state, binding);
 
   auto result = emplace_flex<ValueBindingStatement>();
   result->binding = binding;
@@ -171,6 +263,23 @@ Flex<Expression> build_expr_var_decl(
   return result;
 }
 
+Flex<Expression> build_expr_binding(
+    IModuleAnalysisState &module_state, NodeId expr_node_id, ConstSlice<NodeId> stmts
+) {
+  const Node &node = module_state.get_node(expr_node_id);
+  if (node.type() == NodeType::LetDeclNode || node.type() == NodeType::ConstDeclNode) {
+    return build_expr_var_decl(module_state, expr_node_id, stmts);
+  } else if (node.type() == NodeType::FunctionDeclNode) {
+    return build_expr_fun_decl(module_state, expr_node_id, stmts);
+  } else if (node.type() == NodeType::TypeDeclNode) {
+    return build_expr_type_decl(module_state, expr_node_id, stmts);
+  } else {
+    module_state.raise_error_at_node(
+        expr_node_id, "not implemented (unknown node type in build_expr_binding)"
+    );
+  }
+}
+
 Flex<Expression> build_expr_value_binding(
     IModuleAnalysisState &module_state, NodeId expr_node_id, ConstSlice<NodeId> stmts
 ) {
@@ -194,26 +303,19 @@ Flex<Expression> build_expr_seq(
   result->node_id = expr_node_id;
   for (size_t expr_index = 0; expr_index < stmts.size(); ++expr_index) {
     const auto &expr_node = module_state.get_node(stmts[expr_index]);
-    if (is_value_binding_node_type(expr_node.type())) {
-      auto expr = build_expr_value_binding(
+    if (is_binding_node_type(expr_node.type())) {
+      auto expr = build_expr_binding(
           module_state, stmts[expr_index], SliceUtils::tail(stmts, expr_index + 1)
       );
       result->type = expr->type;
       result->stmts.push_back(expr);
       break;
-    } else if (is_type_binding_node_type(expr_node.type())) {
-      auto expr = build_expr_type_binding(
-          module_state, stmts[expr_index], SliceUtils::tail(stmts, expr_index + 1)
-      );
-      result->type = expr->type;
+    } else {
+      auto expr = build_statement(module_state, stmts[expr_index]);
       result->stmts.push_back(expr);
-      break;
-    }
-
-    auto expr = build_expression(module_state, stmts[expr_index]);
-    result->stmts.push_back(expr);
-    if (expr_index == stmts.size() - 1 && !is_never_type(result->type)) {
-      result->type = expr->type;
+      if (expr_index == stmts.size() - 1 && !is_never_type(result->type)) {
+        result->type = expr->type;
+      }
     }
   }
   return result;

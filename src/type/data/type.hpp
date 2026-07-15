@@ -29,8 +29,11 @@ struct Type : FlexFromThis<Type>, WithDynamicId {
 
   virtual bool unify(const Type &assignment_type) const;
   Option<Flex<Expression>> coerce(const Expression &expr) const;
+  Option<Flex<Expression>> coerce_if_needed(const Expression &expr) const;
   virtual Option<Flex<Expression>> coerce(const Type &assignment_type, const Expression &expr)
       const;
+  Option<Flex<Expression>> coerce_if_needed(const Type &assignment_type, const Expression &expr) const;
+
   Option<Flex<Expression>> cast(const Expression &expr) const;
   virtual Option<Flex<Expression>> cast(const Type &assignment_type, const Expression &expr) const;
 

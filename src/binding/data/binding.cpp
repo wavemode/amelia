@@ -1,5 +1,8 @@
 #include "binding.hpp"
 
+#include "binding/data/module_binding.hpp"
+#include "binding/data/type_binding.hpp"
+#include "binding/data/value_binding.hpp"
 #include "util/data/serialize.hpp"
 
 namespace amelia {
@@ -11,7 +14,7 @@ Serialize Binding::serialize() const {
   case BindingKind::Variable:
   case BindingKind::Constant:
   case BindingKind::Function: {
-    const ValueBinding &value_binding = this.as<ValueBinding>();
+    const ValueBinding &value_binding = static_cast<const ValueBinding &>(*this);
     result.set_object_name("ValueBinding");
     if (value_binding.type.has_value()) {
       result.add_object_field("type", value_binding.type.value()->serialize());
@@ -24,7 +27,7 @@ Serialize Binding::serialize() const {
   case BindingKind::Class:
   case BindingKind::Concept: {
     result.set_object_name("TypeBinding");
-    const TypeBinding &type_binding = this.as<TypeBinding>();
+    const TypeBinding &type_binding = static_cast<const TypeBinding &>(*this);
     if (type_binding.type.has_value()) {
       result.add_object_field("type", type_binding.type.value()->serialize());
     }
@@ -36,34 +39,6 @@ Serialize Binding::serialize() const {
     result.add_object_field("visibility", serialize_declaration_visibility(visibility));
   }
   return result;
-}
-
-Serialize serialize_binding_kind(BindingKind kind) {
-  String result;
-  switch (kind) {
-  case BindingKind::Variable:
-    result.append("Variable");
-    break;
-  case BindingKind::Constant:
-    result.append("Constant");
-    break;
-  case BindingKind::Function:
-    result.append("Function");
-    break;
-  case BindingKind::Type:
-    result.append("Type");
-    break;
-  case BindingKind::Class:
-    result.append("Class");
-    break;
-  case BindingKind::Concept:
-    result.append("Concept");
-    break;
-  case BindingKind::Module:
-    result.append("Module");
-    break;
-  }
-  return Serialize::literal(move(result));
 }
 
 } // namespace amelia

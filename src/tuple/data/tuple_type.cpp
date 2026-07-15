@@ -88,8 +88,7 @@ bool TupleType::unify(const Type &assignment_type) const {
   return true;
 }
 
-Option<Flex<Expression>> TupleType::coerce(const Type &assignment_type, const Expression &expr)
-    const {
+Option<Flex<Expression>> TupleType::coerce(const Type &, const Expression &) const {
   return None(); // TODO: compatible tuples
 }
 

@@ -173,7 +173,7 @@ Option<ModuleId> try_load_and_parse(
   Module &module_obj = sema_result.modules.emplace_back();
   module_obj.analyzed = false;
   module_obj.name = module_name;
-  module_obj.scope = Flex<Scope>::emplace();
+  module_obj.scope = emplace_flex<Scope>();
   module_obj.source_path = path;
   module_obj.source = move(source);
   Lexer::tokenize(module_obj.tokens, {module_obj.source_path}, module_obj.source);

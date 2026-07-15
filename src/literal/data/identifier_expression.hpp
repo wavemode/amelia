@@ -1,7 +1,7 @@
 #pragma once
 
+#include "binding/data/binding.hpp"
 #include "expr/data/expression.hpp"
-#include "sema/data/binding.hpp"
 
 namespace amelia {
 
