@@ -1,0 +1,6 @@
+const x : usize = y
+const y : ubyte = 42
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot coerce expression of type 'ubyte' to expected type 'usize' (at test_cases/sema/types/builtin/usize/error_assign_from_ubyte.am:1:19)")
+*/

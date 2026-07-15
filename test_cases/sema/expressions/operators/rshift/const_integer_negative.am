@@ -1,0 +1,47 @@
+const x = 1208925819614629174706176
+const y = -80
+const z = x >> y
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="const_integer_negative",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=Const[1208925819614629174706176],
+            value=NumberLiteralExpression(
+              lit=1208925819614629174706176
+            )
+          ),
+          ValueBinding(
+            name="y",
+            type=Const[-80],
+            value=NativeUnaryOperationExpression(
+              op_kind="-",
+              operand=NumberLiteralExpression(
+                lit=80
+              )
+            )
+          ),
+          ValueBinding(
+            name="z",
+            type=bitint[128],
+            value=NativeBinaryOperationExpression(
+              op_kind=">>",
+              left=IdentifierExpression(
+                name="x"
+              ),
+              right=IdentifierExpression(
+                name="y"
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

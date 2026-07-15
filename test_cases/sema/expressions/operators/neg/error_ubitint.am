@@ -1,0 +1,6 @@
+let x : ubitint[4] = 1
+let z = -x
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot apply unary operator '-' to expression of type 'ubitint[4]' (at test_cases/sema/expressions/operators/neg/error_ubitint.am:2:9)")
+*/

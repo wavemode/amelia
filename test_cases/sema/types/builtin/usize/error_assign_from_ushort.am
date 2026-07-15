@@ -1,0 +1,6 @@
+const x : usize = y
+const y : ushort = 42
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot coerce expression of type 'ushort' to expected type 'usize' (at test_cases/sema/types/builtin/usize/error_assign_from_ushort.am:1:19)")
+*/
