@@ -17,7 +17,7 @@ SemaResult(
             type=Const[4],
             value=SequenceExpression(
               exprs=[
-                ValueBindingExpression(
+                ValueBindingStatement(
                   binding=ValueBinding(
                     name="y",
                     type=Const[4],

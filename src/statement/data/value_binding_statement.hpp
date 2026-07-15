@@ -6,7 +6,7 @@
 
 namespace amelia {
 
-struct ValueBindingExpression : ExpressionWithDynamicId<ValueBindingExpression> {
+struct ValueBindingStatement : ExpressionWithDynamicId<ValueBindingStatement> {
   Serialize serialize() const override;
   Flex<ValueBinding> binding;
   Flex<Expression> body;

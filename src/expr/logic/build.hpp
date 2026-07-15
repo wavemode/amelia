@@ -15,6 +15,9 @@ struct IModuleAnalysisState;
 using NodeId = int32_t;
 
 Flex<Expression> build_expression(IModuleAnalysisState &module_state, NodeId expr_node_id);
+Flex<Expression> expect_expression_of_type(
+    IModuleAnalysisState &module_state, const Type &expected_type, NodeId expr_node_id
+);
 
 Flex<Expression> require_coerce(
     IModuleAnalysisState &module_state, const Type &target_type, const Expression &expr

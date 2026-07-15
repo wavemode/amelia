@@ -2022,7 +2022,7 @@ public:
 
     analyze_binding(binding);
 
-    auto result = emplace_flex<TypeBindingExpression>();
+    auto result = emplace_flex<TypeBindingStatement>();
     result->name = binding->name;
     result->binding = binding;
     result->body = build_expr_seq(expr_node_id, stmts);
@@ -2089,7 +2089,7 @@ public:
 
     analyze_binding(binding);
 
-    auto result = emplace_flex<ValueBindingExpression>();
+    auto result = emplace_flex<ValueBindingStatement>();
     result->binding = binding;
     result->body = build_expr_seq(expr_node_id, stmts);
     result->type = result->body->type;
@@ -2140,7 +2140,7 @@ public:
       }
     }
 
-    auto result = emplace_flex<ValueBindingExpression>();
+    auto result = emplace_flex<ValueBindingStatement>();
     result->binding = binding;
     push_binding(move(binding));
     result->body = build_expr_seq(expr_node_id, stmts);

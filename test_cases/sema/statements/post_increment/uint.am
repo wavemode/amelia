@@ -22,7 +22,7 @@ SemaResult(
             ),
             value=SequenceExpression(
               exprs=[
-                ValueBindingExpression(
+                ValueBindingStatement(
                   binding=ValueBinding(
                     name="x",
                     type=uint,

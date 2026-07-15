@@ -6,9 +6,9 @@
 
 namespace amelia {
 
-Serialize ValueBindingExpression::serialize() const {
+Serialize ValueBindingStatement::serialize() const {
   Serialize result;
-  result.set_object_name("ValueBindingExpression");
+  result.set_object_name("ValueBindingStatement");
   result.add_object_field("binding", binding->serialize());
   result.add_object_field("body", body->serialize());
   return result;

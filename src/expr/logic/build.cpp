@@ -94,9 +94,16 @@ Flex<Expression> build_expression(IModuleAnalysisState &module_state, NodeId exp
         expr_node_id, "not implemented (unknown node type in build_expression)"
     );
   }
-
   return result;
 }
+
+Flex<Expression> expect_expression_of_type(
+    IModuleAnalysisState &module_state, const Type &expected_type, NodeId expr_node_id
+) {
+  auto expr = build_expression(module_state, expr_node_id);
+  return require_coerce(module_state, expected_type, *expr);
+}
+
 Flex<Expression> require_coerce(
     IModuleAnalysisState &module_state, const Type &target_type, const Expression &expr
 ) {

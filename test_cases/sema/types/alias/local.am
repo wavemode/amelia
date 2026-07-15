@@ -16,7 +16,7 @@ SemaResult(
             type=T (aka Const[5]),
             value=SequenceExpression(
               exprs=[
-                TypeBindingExpression(
+                TypeBindingStatement(
                   name="T",
                   binding=TypeBinding(
                     name="T",
@@ -24,7 +24,7 @@ SemaResult(
                   ),
                   body=SequenceExpression(
                     exprs=[
-                      ValueBindingExpression(
+                      ValueBindingStatement(
                         binding=ValueBinding(
                           name="y",
                           type=T (aka Const[5]),

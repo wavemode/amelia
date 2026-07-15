@@ -22,7 +22,7 @@ SemaResult(
             ),
             value=SequenceExpression(
               exprs=[
-                ValueBindingExpression(
+                ValueBindingStatement(
                   binding=ValueBinding(
                     name="x",
                     type=null,
@@ -30,7 +30,7 @@ SemaResult(
                   ),
                   body=SequenceExpression(
                     exprs=[
-                      ValueBindingExpression(
+                      ValueBindingStatement(
                         binding=ValueBinding(
                           name="y",
                           type=null,
