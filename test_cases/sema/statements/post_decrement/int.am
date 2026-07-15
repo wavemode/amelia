@@ -32,7 +32,7 @@ SemaResult(
                   ),
                   body=SequenceExpression(
                     exprs=[
-                      BuiltinUnaryOperationExpression(
+                      NativeUnaryOperationExpression(
                         op_kind="--",
                         operand=IdentifierExpression(
                           name="x"

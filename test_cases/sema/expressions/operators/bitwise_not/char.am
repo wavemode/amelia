@@ -16,7 +16,7 @@ SemaResult(
           ValueBinding(
             name="z",
             type=uint,
-            value=BuiltinUnaryOperationExpression(
+            value=NativeUnaryOperationExpression(
               op_kind="~",
               operand=IdentifierExpression(
                 name="x"

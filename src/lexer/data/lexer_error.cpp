@@ -4,6 +4,7 @@
 
 namespace amelia {
 
-LexerError::LexerError(Location loc, String message) noexcept : SourceLocationError(loc, move(message)) {}
+LexerError::LexerError(Location loc, String message) noexcept
+    : SourceLocationError(loc, move(message)) {}
 
 } // namespace amelia

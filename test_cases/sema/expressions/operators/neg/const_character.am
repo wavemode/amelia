@@ -11,7 +11,7 @@ SemaResult(
           ValueBinding(
             name="x",
             type=Const[-97],
-            value=BuiltinUnaryOperationExpression(
+            value=NativeUnaryOperationExpression(
               op_kind="-",
               operand=CharLiteralExpression['a']
             )
@@ -19,12 +19,12 @@ SemaResult(
           ValueBinding(
             name="z",
             type=Const[true],
-            value=BuiltinBinaryOperationExpression(
+            value=NativeBinaryOperationExpression(
               operator="==",
               left=IdentifierExpression(
                 name="x"
               ),
-              right=BuiltinUnaryOperationExpression(
+              right=NativeUnaryOperationExpression(
                 op_kind="-",
                 operand=NumberLiteralExpression(
                   lit=97

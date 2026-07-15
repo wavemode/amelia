@@ -38,7 +38,7 @@ SemaResult(
                         ),
                         body=SequenceExpression(
                           exprs=[
-                            BuiltinBinaryOperationExpression(
+                            NativeBinaryOperationExpression(
                               operator="=",
                               left=IdentifierExpression(
                                 name="x"

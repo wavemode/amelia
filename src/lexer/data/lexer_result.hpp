@@ -2,9 +2,9 @@
 
 #include <cstddef>
 
-#include "lexer/interface/token_repository.hpp"
 #include "lexer/data/token.hpp"
-#include "prelude.hpp"
+#include "lexer/interface/token_repository.hpp"
+#include "util/data/list.hpp"
 
 namespace amelia {
 

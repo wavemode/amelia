@@ -2,7 +2,8 @@
 
 #include <doctest.h>
 
-#include "prelude.hpp"
+#include "util/data/slice.hpp"
+#include "util/data/string.hpp"
 
 TEST_SUITE_BEGIN("Slice");
 

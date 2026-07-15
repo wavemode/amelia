@@ -11,7 +11,7 @@ SemaResult(
           ValueBinding(
             name="x",
             type=ushort,
-            value=BuiltinTypeCoerceExpression(
+            value=NativeTypeCastExpression(
               expr=NumberLiteralExpression(
                 lit=1
               )
@@ -20,7 +20,7 @@ SemaResult(
           ValueBinding(
             name="z",
             type=ushort,
-            value=BuiltinUnaryOperationExpression(
+            value=NativeUnaryOperationExpression(
               op_kind="~",
               operand=IdentifierExpression(
                 name="x"

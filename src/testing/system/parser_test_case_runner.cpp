@@ -1,7 +1,7 @@
 #include "parser_test_case_runner.hpp"
 
-#include "testing/action/compiler_test_cases.hpp"
 #include "testing/data/compiler_test_case.hpp"
+#include "testing/logic/compiler_test_cases.hpp"
 
 namespace amelia {
 

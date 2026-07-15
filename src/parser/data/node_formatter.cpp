@@ -1,14 +1,12 @@
 #include "node_formatter.hpp"
 
-#include "prelude.hpp"
-
-#include "lexer/interface/token_repository.hpp"
+#include "lexer/data/lexer.hpp"
 #include "lexer/data/token_formatter.hpp"
+#include "lexer/interface/token_repository.hpp"
 #include "parser/data/abstract_node_repository.hpp"
 #include "parser/data/node.hpp"
+#include "util/data/serialize.hpp"
 #include "util/data/text_utils.hpp"
-
-#include "lexer/data/lexer.hpp"
 
 namespace amelia {
 

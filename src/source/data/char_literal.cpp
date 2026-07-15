@@ -2,6 +2,9 @@
 
 #include "char_literal.hpp"
 
+#include "util/data/serialize.hpp"
+#include "util/data/string.hpp"
+
 namespace amelia {
 
 Serialize serialize_char_literal(uint32_t code_point, bool quoted) {

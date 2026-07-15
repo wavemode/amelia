@@ -1,6 +1,8 @@
 #include <doctest.h>
 
-#include "prelude.hpp"
+#include "util/data/list.hpp"
+#include "util/data/pair.hpp"
+#include "util/data/slice.hpp"
 
 TEST_SUITE_BEGIN("List");
 

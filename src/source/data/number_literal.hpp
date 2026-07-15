@@ -1,8 +1,10 @@
 #pragma once
 
-#include "prelude.hpp"
+#include "util/data/text.hpp"
 
 namespace amelia {
+
+class Serialize;
 
 struct NumberLiteral {
   bool has_decimal_point;

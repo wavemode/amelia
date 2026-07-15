@@ -26,7 +26,7 @@ SemaResult(
           ValueBinding(
             name="z",
             type=Const[1208925819614629174706176],
-            value=BuiltinBinaryOperationExpression(
+            value=NativeBinaryOperationExpression(
               operator="<<",
               left=IdentifierExpression(
                 name="x"

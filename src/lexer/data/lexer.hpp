@@ -2,10 +2,9 @@
 
 #include <cstdint>
 
-#include "prelude.hpp"
-
-#include "util/data/map.hpp"
 #include "lexer/data/token_type.hpp"
+#include "util/data/map.hpp"
+#include "util/data/text.hpp"
 
 namespace amelia {
 

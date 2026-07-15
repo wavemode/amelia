@@ -1,5 +1,8 @@
 #include "token_type.hpp"
-#include "prelude.hpp"
+
+#include "util/data/abstract_string.hpp"
+#include "util/data/runtime_error.hpp"
+#include "util/data/text.hpp"
 
 namespace amelia {
 void token_type_to_string(AbstractString &out, TokenType type) {

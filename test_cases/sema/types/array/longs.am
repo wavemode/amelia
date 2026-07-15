@@ -18,14 +18,14 @@ SemaResult(
           ValueBinding(
             name="y",
             type=[long, 3],
-            value=ArrayLiteralExpression(
+            value=ArrayExpression(
               elements=[
-                BuiltinTypeCoerceExpression(
+                NativeTypeCastExpression(
                   expr=NumberLiteralExpression(
                     lit=2
                   )
                 ),
-                BuiltinTypeCoerceExpression(
+                NativeTypeCastExpression(
                   expr=NumberLiteralExpression(
                     lit=3
                   )

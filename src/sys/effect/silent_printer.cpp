@@ -1,5 +1,6 @@
 #include "silent_printer.hpp"
-#include "prelude.hpp"
+
+#include "util/data/text.hpp"
 
 namespace amelia {
 

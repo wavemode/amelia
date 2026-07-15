@@ -3,7 +3,12 @@
 #include <cstddef>
 #include <cstdint>
 
+#include "util/data/runtime_error.hpp"
+
 namespace amelia {
+
+template <typename From, typename To>
+concept matches_type = requires(void (*target)(To)) { target; };
 
 template <typename T> inline T &&move(T &arg) noexcept {
   return static_cast<T &&>(arg);
@@ -168,5 +173,33 @@ template <typename T> inline void reverse(T *slice, size_t size) {
     swap(slice[i], slice[size - 1 - i]);
   }
 }
+
+template <typename T> uintptr_t type_id() {
+  static char x;
+  return reinterpret_cast<uintptr_t>(&x);
+}
+
+struct WithDynamicId {
+  template <typename T> bool is() const {
+    return type_id<T>() == m_dynamic_id;
+  }
+
+  template <typename T> T &as() {
+    if (!is<T>()) {
+      throw RuntimeError("as() called on a type that is not of the requested type");
+    }
+    return static_cast<T &>(*this);
+  }
+
+  template <typename T> const T &as() const {
+    if (!is<T>()) {
+      throw RuntimeError("as() called on a type that is not of the requested type");
+    }
+    return static_cast<const T &>(*this);
+  }
+
+protected:
+  uintptr_t m_dynamic_id = 0;
+};
 
 } // namespace amelia

@@ -1,9 +1,8 @@
 #include <doctest.h>
 
-#include "prelude.hpp"
-
 #include "fs/effect/filesystem_walker.hpp"
 #include "sys/effect/console_printer.hpp"
+#include "util/data/string.hpp"
 
 TEST_SUITE_BEGIN("FilesystemWalker");
 

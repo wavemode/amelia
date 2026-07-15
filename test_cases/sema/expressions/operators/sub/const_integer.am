@@ -27,7 +27,7 @@ SemaResult(
           ValueBinding(
             name="b",
             type=int,
-            value=BuiltinBinaryOperationExpression(
+            value=NativeBinaryOperationExpression(
               operator="-",
               left=IdentifierExpression(
                 name="z"
@@ -40,7 +40,7 @@ SemaResult(
           ValueBinding(
             name="w",
             type=Const[-105.0],
-            value=BuiltinBinaryOperationExpression(
+            value=NativeBinaryOperationExpression(
               operator="-",
               left=IdentifierExpression(
                 name="z"
@@ -67,7 +67,7 @@ SemaResult(
           ValueBinding(
             name="z",
             type=Const[-100],
-            value=BuiltinBinaryOperationExpression(
+            value=NativeBinaryOperationExpression(
               operator="-",
               left=IdentifierExpression(
                 name="x"
@@ -80,7 +80,7 @@ SemaResult(
           ValueBinding(
             name="z2",
             type=Const[-197],
-            value=BuiltinBinaryOperationExpression(
+            value=NativeBinaryOperationExpression(
               operator="-",
               left=IdentifierExpression(
                 name="z"
@@ -91,7 +91,7 @@ SemaResult(
           ValueBinding(
             name="z3",
             type=Const[197],
-            value=BuiltinBinaryOperationExpression(
+            value=NativeBinaryOperationExpression(
               operator="-",
               left=CharLiteralExpression['a'],
               right=IdentifierExpression(
@@ -102,12 +102,12 @@ SemaResult(
           ValueBinding(
             name="z4",
             type=Const[true],
-            value=BuiltinBinaryOperationExpression(
+            value=NativeBinaryOperationExpression(
               operator="==",
               left=IdentifierExpression(
                 name="z2"
               ),
-              right=BuiltinUnaryOperationExpression(
+              right=NativeUnaryOperationExpression(
                 op_kind="-",
                 operand=IdentifierExpression(
                   name="z3"

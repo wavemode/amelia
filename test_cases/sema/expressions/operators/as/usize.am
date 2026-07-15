@@ -18,7 +18,7 @@ SemaResult(
           ValueBinding(
             name="z",
             type=usize,
-            value=BuiltinTypeCastExpression(
+            value=NativeTypeCastExpression(
               expr=IdentifierExpression(
                 name="x"
               )

@@ -4,7 +4,7 @@
 
 #include "file_writer.hpp"
 
-#include "prelude.hpp"
+#include "util/data/abstract_string.hpp"
 
 namespace amelia {
 

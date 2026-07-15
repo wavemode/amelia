@@ -22,7 +22,7 @@ SemaResult(
           ValueBinding(
             name="z1",
             type=Const[true],
-            value=BuiltinBinaryOperationExpression(
+            value=NativeBinaryOperationExpression(
               operator="==",
               left=IdentifierExpression(
                 name="x"

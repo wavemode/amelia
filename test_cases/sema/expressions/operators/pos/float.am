@@ -11,7 +11,7 @@ SemaResult(
           ValueBinding(
             name="x",
             type=float,
-            value=BuiltinTypeCoerceExpression(
+            value=NativeTypeCastExpression(
               expr=NumberLiteralExpression(
                 lit=1.5
               )

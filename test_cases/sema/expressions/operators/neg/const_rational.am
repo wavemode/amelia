@@ -10,7 +10,7 @@ SemaResult(
           ValueBinding(
             name="x",
             type=Const[-5.0],
-            value=BuiltinUnaryOperationExpression(
+            value=NativeUnaryOperationExpression(
               op_kind="-",
               operand=NumberLiteralExpression(
                 lit=5.0

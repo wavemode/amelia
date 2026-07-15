@@ -1,0 +1,12 @@
+#pragma once
+
+#include "expr/data/expression.hpp"
+
+namespace amelia {
+
+struct CharLiteralExpression : ExpressionWithDynamicId<CharLiteralExpression> {
+  uint32_t value;
+  Serialize serialize() const override;
+};
+
+} // namespace amelia

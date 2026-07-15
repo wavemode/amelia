@@ -1,8 +1,9 @@
 #include <cstdint>
 #include <cstring>
 
-#include "prelude.hpp"
 #include "string.hpp"
+
+#include "util/data/char_iterator.hpp"
 
 namespace amelia {
 

@@ -2,63 +2,18 @@
 
 #include "analyzer.hpp"
 
+#include "expression/data/expression.hpp"
 #include "lexer/data/lexer.hpp"
-#include "sema/data/expression.hpp"
+#include "sema/data/sema_result.hpp"
 #include "source/data/source_location_error.hpp"
 #include "util/data/integer.hpp"
 #include "util/data/rational.hpp"
 #include "util/data/slice_utils.hpp"
 #include "util/data/text_utils.hpp"
-#include "sema/data/sema_result.hpp"
 
 namespace amelia {
 
 namespace {
-
-Flex<Type> BYTE_TYPE;
-Flex<Type> UBYTE_TYPE;
-Flex<Type> SHORT_TYPE;
-Flex<Type> USHORT_TYPE;
-Flex<Type> INT_TYPE;
-Flex<Type> UINT_TYPE;
-Flex<Type> LONG_TYPE;
-Flex<Type> ULONG_TYPE;
-Flex<Type> USIZE_TYPE;
-Flex<Type> FLOAT_TYPE;
-Flex<Type> DOUBLE_TYPE;
-Flex<Type> BOOL_TYPE;
-Flex<Type> CHAR_TYPE;
-Flex<Type> STR_TYPE;
-Flex<Type> STR_REF_TYPE;
-Flex<Type> NULL_TYPE;
-Flex<Type> NEVER_TYPE;
-Flex<Type> UNKNOWN_TYPE;
-
-bool init = []() {
-  BYTE_TYPE = emplace_flex<BuiltinType>(BuiltinKind::Byte);
-  UBYTE_TYPE = emplace_flex<BuiltinType>(BuiltinKind::UByte);
-  SHORT_TYPE = emplace_flex<BuiltinType>(BuiltinKind::Short);
-  USHORT_TYPE = emplace_flex<BuiltinType>(BuiltinKind::UShort);
-  INT_TYPE = emplace_flex<BuiltinType>(BuiltinKind::Int);
-  UINT_TYPE = emplace_flex<BuiltinType>(BuiltinKind::UInt);
-  LONG_TYPE = emplace_flex<BuiltinType>(BuiltinKind::Long);
-  ULONG_TYPE = emplace_flex<BuiltinType>(BuiltinKind::ULong);
-  USIZE_TYPE = emplace_flex<BuiltinType>(BuiltinKind::USize);
-  FLOAT_TYPE = emplace_flex<BuiltinType>(BuiltinKind::Float);
-  DOUBLE_TYPE = emplace_flex<BuiltinType>(BuiltinKind::Double);
-  BOOL_TYPE = emplace_flex<BuiltinType>(BuiltinKind::Bool);
-  CHAR_TYPE = emplace_flex<BuiltinType>(BuiltinKind::Char);
-  STR_TYPE = emplace_flex<BuiltinType>(BuiltinKind::Str);
-  NULL_TYPE = emplace_flex<BuiltinType>(BuiltinKind::Null);
-  NEVER_TYPE = emplace_flex<BuiltinType>(BuiltinKind::Never);
-  UNKNOWN_TYPE = emplace_flex<BuiltinType>(BuiltinKind::Unknown);
-  auto str_ref_type = emplace_flex<ReferenceType>();
-  str_ref_type->referent = STR_TYPE;
-  str_ref_type->is_const = false;
-  str_ref_type->is_move = false;
-  STR_REF_TYPE = move(str_ref_type);
-  return true;
-}();
 
 class SemaWorkerState {
 public:
@@ -237,37 +192,37 @@ public:
 
   bool is_non_promoting_binary_op(BinaryOperatorKind op_kind) {
     switch (op_kind) {
-      case BinaryOperatorKind::Add:
-      case BinaryOperatorKind::Subtract:
-      case BinaryOperatorKind::Multiply:
-      case BinaryOperatorKind::Divide:
-      case BinaryOperatorKind::BitwiseAnd:
-      case BinaryOperatorKind::BitwiseOr:
-      case BinaryOperatorKind::BitwiseXor:
-      case BinaryOperatorKind::Equals:
-      case BinaryOperatorKind::Greater:
-      case BinaryOperatorKind::GreaterEquals:
-      case BinaryOperatorKind::Less:
-      case BinaryOperatorKind::LessEquals:
-      case BinaryOperatorKind::Modulo:
-      case BinaryOperatorKind::NotEquals:
-      case BinaryOperatorKind::Or:
-      case BinaryOperatorKind::And:
-        return false;
-      case BinaryOperatorKind::LeftShift:
-      case BinaryOperatorKind::RightShift:
-      case BinaryOperatorKind::Assignment:
-      case BinaryOperatorKind::BitAndAssignment:
-      case BinaryOperatorKind::BitOrAssignment:
-      case BinaryOperatorKind::BitXorAssignment:
-      case BinaryOperatorKind::DivAssignment:
-      case BinaryOperatorKind::LShiftAssignment:
-      case BinaryOperatorKind::ModAssignment:
-      case BinaryOperatorKind::MulAssignment:
-      case BinaryOperatorKind::RShiftAssignment:
-      case BinaryOperatorKind::SubAssignment:
-      case BinaryOperatorKind::AddAssignment:
-        return true;
+    case BinaryOperatorKind::Add:
+    case BinaryOperatorKind::Subtract:
+    case BinaryOperatorKind::Multiply:
+    case BinaryOperatorKind::Divide:
+    case BinaryOperatorKind::BitwiseAnd:
+    case BinaryOperatorKind::BitwiseOr:
+    case BinaryOperatorKind::BitwiseXor:
+    case BinaryOperatorKind::Equals:
+    case BinaryOperatorKind::Greater:
+    case BinaryOperatorKind::GreaterEquals:
+    case BinaryOperatorKind::Less:
+    case BinaryOperatorKind::LessEquals:
+    case BinaryOperatorKind::Modulo:
+    case BinaryOperatorKind::NotEquals:
+    case BinaryOperatorKind::Or:
+    case BinaryOperatorKind::And:
+      return false;
+    case BinaryOperatorKind::LeftShift:
+    case BinaryOperatorKind::RightShift:
+    case BinaryOperatorKind::Assignment:
+    case BinaryOperatorKind::BitAndAssignment:
+    case BinaryOperatorKind::BitOrAssignment:
+    case BinaryOperatorKind::BitXorAssignment:
+    case BinaryOperatorKind::DivAssignment:
+    case BinaryOperatorKind::LShiftAssignment:
+    case BinaryOperatorKind::ModAssignment:
+    case BinaryOperatorKind::MulAssignment:
+    case BinaryOperatorKind::RShiftAssignment:
+    case BinaryOperatorKind::SubAssignment:
+    case BinaryOperatorKind::AddAssignment:
+      return true;
     }
   }
 
@@ -407,15 +362,15 @@ public:
     return min_value_of_type(type) <= min && max_value_of_type(type) >= max;
   }
 
-  Flex<Expression> builtin_type_coerce(Flex<Type> target_type, Flex<Expression> expr) {
-    auto coerce_expr = emplace_flex<BuiltinTypeCoerceExpression>();
+  Flex<Expression> native_type_cast(Flex<Type> target_type, Flex<Expression> expr) {
+    auto coerce_expr = emplace_flex<NativeTypeCastExpression>();
     coerce_expr->type = target_type;
     coerce_expr->expr = move(expr);
     return coerce_expr;
   }
 
-  Flex<Expression> builtin_type_cast(Flex<Type> target_type, Flex<Expression> expr) {
-    auto cast_expr = emplace_flex<BuiltinTypeCastExpression>();
+  Flex<Expression> native_type_cast(Flex<Type> target_type, Flex<Expression> expr) {
+    auto cast_expr = emplace_flex<NativeTypeCastExpression>();
     cast_expr->type = target_type;
     cast_expr->expr = move(expr);
     return cast_expr;
@@ -423,115 +378,115 @@ public:
 
   Flex<Type> char_to_uint(Flex<Type> type) {
     if (type->kind == TypeKind::ConstCharacter ||
-        (type->kind == TypeKind::Builtin &&
-         static_cast<const BuiltinType &>(*type).builtin_kind == BuiltinKind::Char)) {
+        (type->kind == TypeKind::Builtin && type.as<BuiltinType>().builtin_kind == BuiltinKind::Char
+        )) {
       return UINT_TYPE;
     }
     return type;
   }
 
-  Flex<Type> remove_const(Flex<Type> type) {
+  Flex<Type> remove_comptime_const(Flex<Type> type) {
     switch (type->kind) {
     case TypeKind::Alias:
-      return remove_const(type.derive(static_cast<AliasType &>(*type)));
+      return remove_comptime_const(type.derive(type.as<AliasType>()));
     case TypeKind::Reference:
-      return remove_const(type.derive(static_cast<ReferenceType &>(*type)));
+      return remove_comptime_const(type.derive(type.as<ReferenceType>()));
     case TypeKind::Struct:
-      throw RuntimeError("not implemented (remove_const(Struct))");
+      throw RuntimeError("not implemented (remove_comptime_const(Struct))");
     case TypeKind::Tuple:
-      return remove_const(type.derive(static_cast<TupleType &>(*type)));
+      return remove_comptime_const(type.derive(type.as<TupleType>()));
     case TypeKind::Array:
-      return remove_const(type.derive(static_cast<ArrayType &>(*type)));
+      return remove_comptime_const(type.derive(type.as<ArrayType>()));
     case TypeKind::TypeFn:
-      throw RuntimeError("not implemented (remove_const(TypeFn))");
+      throw RuntimeError("not implemented (remove_comptime_const(TypeFn))");
     case TypeKind::Apply:
-      throw RuntimeError("not implemented (remove_const(Apply))");
+      throw RuntimeError("not implemented (remove_comptime_const(Apply))");
     case TypeKind::Builtin:
-      return remove_const(type.derive(static_cast<BuiltinType &>(*type)));
+      return remove_comptime_const(type.derive(type.as<BuiltinType>()));
     case TypeKind::BitInt:
-      return remove_const(type.derive(static_cast<BitIntType &>(*type)));
+      return remove_comptime_const(type.derive(type.as<BitIntType>()));
     case TypeKind::Pointer:
-      return remove_const(type.derive(static_cast<PointerType &>(*type)));
+      return remove_comptime_const(type.derive(type.as<PointerType>()));
     case TypeKind::Slice:
-      return remove_const(type.derive(static_cast<SliceType &>(*type)));
+      return remove_comptime_const(type.derive(type.as<SliceType>()));
     case TypeKind::Impl:
-      throw RuntimeError("not implemented (remove_const(Impl))");
+      throw RuntimeError("not implemented (remove_comptime_const(Impl))");
     case TypeKind::ConstInteger:
-      return remove_const(type.derive(static_cast<ConstIntegerType &>(*type)));
+      return remove_comptime_const(type.derive(type.as<ConstIntegerType>()));
     case TypeKind::ConstRational:
-      return remove_const(type.derive(static_cast<ConstRationalType &>(*type)));
+      return remove_comptime_const(type.derive(type.as<ConstRationalType>()));
     case TypeKind::ConstBoolean:
-      return remove_const(type.derive(static_cast<ConstBooleanType &>(*type)));
+      return remove_comptime_const(type.derive(type.as<ConstBooleanType>()));
     case TypeKind::ConstCharacter:
-      return remove_const(type.derive(static_cast<ConstCharacterType &>(*type)));
+      return remove_comptime_const(type.derive(type.as<ConstCharacterType>()));
     case TypeKind::ConstString:
-      return remove_const(type.derive(static_cast<ConstStringType &>(*type)));
+      return remove_comptime_const(type.derive(type.as<ConstStringType>()));
     case TypeKind::Class:
-      throw RuntimeError("not implemented (remove_const(Class))");
+      throw RuntimeError("not implemented (remove_comptime_const(Class))");
     case TypeKind::Union:
-      throw RuntimeError("not implemented (remove_const(Union))");
+      throw RuntimeError("not implemented (remove_comptime_const(Union))");
     case TypeKind::Concept:
-      throw RuntimeError("not implemented (remove_const(Concept))");
+      throw RuntimeError("not implemented (remove_comptime_const(Concept))");
     case TypeKind::Function:
-      throw RuntimeError("not implemented (remove_const(Function))");
+      throw RuntimeError("not implemented (remove_comptime_const(Function))");
     case TypeKind::FunctionPointer:
-      throw RuntimeError("not implemented (remove_const(FunctionPointer))");
+      throw RuntimeError("not implemented (remove_comptime_const(FunctionPointer))");
     case TypeKind::Closure:
-      throw RuntimeError("not implemented (remove_const(Closure))");
+      throw RuntimeError("not implemented (remove_comptime_const(Closure))");
     case TypeKind::Variable:
-      throw RuntimeError("not implemented (remove_const(Variable))");
+      throw RuntimeError("not implemented (remove_comptime_const(Variable))");
     }
   }
 
-  Flex<Type> remove_const(Flex<AliasType> alias_type) {
-    return remove_const(alias_type->target);
+  Flex<Type> remove_comptime_const(Flex<AliasType> alias_type) {
+    return remove_comptime_const(alias_type->target);
   }
 
-  Flex<Type> remove_const(Flex<ReferenceType> reference_type) {
+  Flex<Type> remove_comptime_const(Flex<ReferenceType> reference_type) {
     auto result = emplace_flex<ReferenceType>();
-    result->referent = remove_const(reference_type->referent);
+    result->referent = remove_comptime_const(reference_type->referent);
     result->is_const = reference_type->is_const;
     result->is_move = reference_type->is_move;
     return result;
   }
 
-  Flex<Type> remove_const(Flex<TupleType> tuple_type) {
+  Flex<Type> remove_comptime_const(Flex<TupleType> tuple_type) {
     auto result = emplace_flex<TupleType>();
     for (const auto &element_type : tuple_type->element_types) {
-      result->element_types.push_back(remove_const(element_type));
+      result->element_types.push_back(remove_comptime_const(element_type));
     }
     return result;
   }
 
-  Flex<Type> remove_const(Flex<ArrayType> array_type) {
+  Flex<Type> remove_comptime_const(Flex<ArrayType> array_type) {
     auto result = emplace_flex<ArrayType>();
-    result->element_type = remove_const(array_type->element_type);
+    result->element_type = remove_comptime_const(array_type->element_type);
     result->size = array_type->size;
     return result;
   }
 
-  Flex<Type> remove_const(Flex<BuiltinType> builtin_type) {
+  Flex<Type> remove_comptime_const(Flex<BuiltinType> builtin_type) {
     return builtin_type;
   }
 
-  Flex<Type> remove_const(Flex<BitIntType> bitint_type) {
+  Flex<Type> remove_comptime_const(Flex<BitIntType> bitint_type) {
     return bitint_type;
   }
 
-  Flex<Type> remove_const(Flex<PointerType> pointer_type) {
+  Flex<Type> remove_comptime_const(Flex<PointerType> pointer_type) {
     auto result = emplace_flex<PointerType>();
-    result->pointee = remove_const(pointer_type->pointee);
+    result->pointee = remove_comptime_const(pointer_type->pointee);
     result->is_const = pointer_type->is_const;
     return result;
   }
 
-  Flex<Type> remove_const(Flex<SliceType> slice_type) {
+  Flex<Type> remove_comptime_const(Flex<SliceType> slice_type) {
     auto result = emplace_flex<SliceType>();
-    result->element_type = remove_const(slice_type->element_type);
+    result->element_type = remove_comptime_const(slice_type->element_type);
     return result;
   }
 
-  Flex<Type> remove_const(Flex<ConstIntegerType> const_integer_type) {
+  Flex<Type> remove_comptime_const(Flex<ConstIntegerType> const_integer_type) {
     auto bit_width = repr_bit_size(*const_integer_type);
     if (bit_width == 32) {
       return INT_TYPE;
@@ -545,19 +500,19 @@ public:
     }
   }
 
-  Flex<Type> remove_const(Flex<ConstRationalType>) {
+  Flex<Type> remove_comptime_const(Flex<ConstRationalType>) {
     return DOUBLE_TYPE;
   }
 
-  Flex<Type> remove_const(Flex<ConstBooleanType>) {
+  Flex<Type> remove_comptime_const(Flex<ConstBooleanType>) {
     return BOOL_TYPE;
   }
 
-  Flex<Type> remove_const(Flex<ConstCharacterType>) {
+  Flex<Type> remove_comptime_const(Flex<ConstCharacterType>) {
     return CHAR_TYPE;
   }
 
-  Flex<Type> remove_const(Flex<ConstStringType>) {
+  Flex<Type> remove_comptime_const(Flex<ConstStringType>) {
     return STR_REF_TYPE;
   }
 
@@ -569,55 +524,45 @@ public:
     }
 
     if (assignment_type->kind == TypeKind::Builtin &&
-        static_cast<BuiltinType &>(*assignment_type).builtin_kind == BuiltinKind::Never) {
+        assignment_type.as<BuiltinType>().builtin_kind == BuiltinKind::Never) {
       return true;
     }
 
     switch (target_type->kind) {
     case TypeKind::Alias:
-      return unify(target_type.derive(static_cast<AliasType &>(*target_type)), assignment_type);
+      return unify(target_type.derive(target_type.as<AliasType>()), assignment_type);
     case TypeKind::Reference:
-      return unify(target_type.derive(static_cast<ReferenceType &>(*target_type)), assignment_type);
+      return unify(target_type.derive(target_type.as<ReferenceType>()), assignment_type);
     case TypeKind::Struct:
       throw RuntimeError("not implemented (unify(Struct))");
     case TypeKind::Tuple:
-      return unify(target_type.derive(static_cast<TupleType &>(*target_type)), assignment_type);
+      return unify(target_type.derive(target_type.as<TupleType>()), assignment_type);
     case TypeKind::Array:
-      return unify(target_type.derive(static_cast<ArrayType &>(*target_type)), assignment_type);
+      return unify(target_type.derive(target_type.as<ArrayType>()), assignment_type);
     case TypeKind::TypeFn:
       throw RuntimeError("not implemented (unify(TypeFn))");
     case TypeKind::Apply:
       throw RuntimeError("not implemented (unify(Apply))");
     case TypeKind::Builtin:
-      return unify(target_type.derive(static_cast<BuiltinType &>(*target_type)), assignment_type);
+      return unify(target_type.derive(target_type.as<BuiltinType>()), assignment_type);
     case TypeKind::BitInt:
-      return unify(target_type.derive(static_cast<BitIntType &>(*target_type)), assignment_type);
+      return unify(target_type.derive(target_type.as<BitIntType>()), assignment_type);
     case TypeKind::Pointer:
-      return unify(target_type.derive(static_cast<PointerType &>(*target_type)), assignment_type);
+      return unify(target_type.derive(target_type.as<PointerType>()), assignment_type);
     case TypeKind::Slice:
-      return unify(target_type.derive(static_cast<SliceType &>(*target_type)), assignment_type);
+      return unify(target_type.derive(target_type.as<SliceType>()), assignment_type);
     case TypeKind::Impl:
       throw RuntimeError("not implemented (unify(Impl))");
     case TypeKind::ConstInteger:
-      return unify(
-          target_type.derive(static_cast<ConstIntegerType &>(*target_type)), assignment_type
-      );
+      return unify(target_type.derive(target_type.as<ConstIntegerType>()), assignment_type);
     case TypeKind::ConstRational:
-      return unify(
-          target_type.derive(static_cast<ConstRationalType &>(*target_type)), assignment_type
-      );
+      return unify(target_type.derive(target_type.as<ConstRationalType>()), assignment_type);
     case TypeKind::ConstBoolean:
-      return unify(
-          target_type.derive(static_cast<ConstBooleanType &>(*target_type)), assignment_type
-      );
+      return unify(target_type.derive(target_type.as<ConstBooleanType>()), assignment_type);
     case TypeKind::ConstCharacter:
-      return unify(
-          target_type.derive(static_cast<ConstCharacterType &>(*target_type)), assignment_type
-      );
+      return unify(target_type.derive(target_type.as<ConstCharacterType>()), assignment_type);
     case TypeKind::ConstString:
-      return unify(
-          target_type.derive(static_cast<ConstStringType &>(*target_type)), assignment_type
-      );
+      return unify(target_type.derive(target_type.as<ConstStringType>()), assignment_type);
     case TypeKind::Class:
       throw RuntimeError("not implemented (unify(Class))");
     case TypeKind::Union:
@@ -647,7 +592,7 @@ public:
     if (assignment_type->kind != TypeKind::Reference) {
       return false;
     }
-    auto &assignment_type_ref = static_cast<ReferenceType &>(*assignment_type);
+    auto &assignment_type_ref = assignment_type.as<ReferenceType>();
     if (!unify(target_type->referent, assignment_type_ref.referent)) {
       return false;
     }
@@ -659,7 +604,7 @@ public:
     if (assignment_type->kind != TypeKind::Tuple) {
       return false;
     }
-    TupleType &assignment_tuple = static_cast<TupleType &>(*assignment_type);
+    TupleType &assignment_tuple = assignment_type.as<TupleType>();
     if (target_type->element_types.size() != assignment_tuple.element_types.size()) {
       return false;
     }
@@ -675,7 +620,7 @@ public:
     if (assignment_type->kind != TypeKind::Array) {
       return false;
     }
-    auto &assignment_array = static_cast<ArrayType &>(*assignment_type);
+    auto &assignment_array = assignment_type.as<ArrayType>();
     if (!unify(target_type->element_type, assignment_array.element_type)) {
       return false;
     }
@@ -684,7 +629,7 @@ public:
 
   bool unify(Flex<BuiltinType> target_type, Flex<Type> assignment_type) {
     if (assignment_type->kind == TypeKind::Builtin) {
-      return target_type->builtin_kind == static_cast<BuiltinType &>(*assignment_type).builtin_kind;
+      return target_type->builtin_kind == assignment_type.as<BuiltinType>().builtin_kind;
     } else if (assignment_type->kind == TypeKind::ConstInteger ||
                assignment_type->kind == TypeKind::BitInt) {
       return is_integral_type(target_type) && min_value_of_type(target_type) < 0 &&
@@ -713,7 +658,7 @@ public:
     if (assignment_type->kind != TypeKind::Pointer) {
       return false;
     }
-    auto &assignment_type_ptr = static_cast<PointerType &>(*assignment_type);
+    auto &assignment_type_ptr = assignment_type.as<PointerType>();
     if (!unify(target_type->pointee, assignment_type_ptr.pointee)) {
       return false;
     }
@@ -722,36 +667,34 @@ public:
 
   bool unify(Flex<SliceType> target_type, Flex<Type> assignment_type) {
     if (assignment_type->kind == TypeKind::Slice) {
-      return unify(
-          target_type->element_type, static_cast<SliceType &>(*assignment_type).element_type
-      );
+      return unify(target_type->element_type, assignment_type.as<SliceType>().element_type);
     }
     return false;
   }
 
   bool unify(Flex<ConstIntegerType> target_type, Flex<Type> assignment_type) {
     return assignment_type->kind == TypeKind::ConstInteger &&
-           target_type->value == static_cast<const ConstIntegerType &>(*assignment_type).value;
+           target_type->value == assignment_type.as<ConstIntegerType>().value;
   }
 
   bool unify(Flex<ConstRationalType> target_type, Flex<Type> assignment_type) {
     return assignment_type->kind == TypeKind::ConstRational &&
-           target_type->value == static_cast<const ConstRationalType &>(*assignment_type).value;
+           target_type->value == assignment_type.as<ConstRationalType>().value;
   }
 
   bool unify(Flex<ConstBooleanType> target_type, Flex<Type> assignment_type) {
     return assignment_type->kind == TypeKind::ConstBoolean &&
-           target_type->value == static_cast<const ConstBooleanType &>(*assignment_type).value;
+           target_type->value == assignment_type.as<ConstBooleanType>().value;
   }
 
   bool unify(Flex<ConstCharacterType> target_type, Flex<Type> assignment_type) {
     return assignment_type->kind == TypeKind::ConstCharacter &&
-           target_type->value == static_cast<const ConstCharacterType &>(*assignment_type).value;
+           target_type->value == assignment_type.as<ConstCharacterType>().value;
   }
 
   bool unify(Flex<ConstStringType> target_type, Flex<Type> assignment_type) {
     return assignment_type->kind == TypeKind::ConstString &&
-           target_type->value == static_cast<const ConstStringType &>(*assignment_type).value;
+           target_type->value == assignment_type.as<ConstStringType>().value;
   }
 
   Type &resolve(Type &type) {
@@ -817,7 +760,7 @@ public:
 
     switch (target_type->kind) {
     case TypeKind::Alias:
-      return cast(target_type.derive(static_cast<AliasType &>(*target_type)), source_type, expr);
+      return cast(target_type.derive(target_type.as<AliasType>()), source_type, expr);
     case TypeKind::Reference:
       throw RuntimeError("not implemented (cast(Reference))");
     case TypeKind::Struct:
@@ -831,9 +774,9 @@ public:
     case TypeKind::Apply:
       throw RuntimeError("not implemented (coerce(Apply))");
     case TypeKind::Builtin:
-      return cast(target_type.derive(static_cast<BuiltinType &>(*target_type)), source_type, expr);
+      return cast(target_type.derive(target_type.as<BuiltinType>()), source_type, expr);
     case TypeKind::BitInt:
-      return cast(target_type.derive(static_cast<BitIntType &>(*target_type)), source_type, expr);
+      return cast(target_type.derive(target_type.as<BitIntType>()), source_type, expr);
     case TypeKind::Pointer:
       throw RuntimeError("not implemented (coerce(Pointer))");
     case TypeKind::Slice:
@@ -879,7 +822,7 @@ public:
     if (target_type->builtin_kind != BuiltinKind::Char &&
         type_has_builtin_numeric_representation(target_type) &&
         type_has_builtin_numeric_representation(source_type)) {
-      return builtin_type_cast(target_type, move(expr));
+      return native_type_cast(target_type, move(expr));
     }
     return None();
   }
@@ -888,7 +831,7 @@ public:
       Flex<BitIntType> target_type, Flex<Type> source_type, Flex<Expression> expr
   ) {
     if (type_has_builtin_numeric_representation(source_type)) {
-      return builtin_type_cast(target_type, move(expr));
+      return native_type_cast(target_type, move(expr));
     }
     return None();
   }
@@ -910,19 +853,13 @@ public:
 
     switch (target_type->kind) {
     case TypeKind::Alias:
-      return coerce(
-          target_type.derive(static_cast<AliasType &>(*target_type)), assignment_type, expr
-      );
+      return coerce(target_type.derive(target_type.as<AliasType>()), assignment_type, expr);
     case TypeKind::Reference:
-      return coerce(
-          target_type.derive(static_cast<ReferenceType &>(*target_type)), assignment_type, expr
-      );
+      return coerce(target_type.derive(target_type.as<ReferenceType>()), assignment_type, expr);
     case TypeKind::Struct:
       throw RuntimeError("not implemented (coerce(Struct))");
     case TypeKind::Tuple:
-      return coerce(
-          target_type.derive(static_cast<TupleType &>(*target_type)), assignment_type, expr
-      );
+      return coerce(target_type.derive(target_type.as<TupleType>()), assignment_type, expr);
     case TypeKind::Array:
       throw RuntimeError("not implemented (coerce(Array))");
     case TypeKind::TypeFn:
@@ -930,43 +867,27 @@ public:
     case TypeKind::Apply:
       throw RuntimeError("not implemented (coerce(Apply))");
     case TypeKind::Builtin:
-      return coerce(
-          target_type.derive(static_cast<BuiltinType &>(*target_type)), assignment_type, expr
-      );
+      return coerce(target_type.derive(target_type.as<BuiltinType>()), assignment_type, expr);
     case TypeKind::BitInt:
-      return coerce(
-          target_type.derive(static_cast<BitIntType &>(*target_type)), assignment_type, expr
-      );
+      return coerce(target_type.derive(target_type.as<BitIntType>()), assignment_type, expr);
     case TypeKind::Pointer:
-      return coerce(
-          target_type.derive(static_cast<PointerType &>(*target_type)), assignment_type, expr
-      );
+      return coerce(target_type.derive(target_type.as<PointerType>()), assignment_type, expr);
     case TypeKind::Slice:
-      return coerce(
-          target_type.derive(static_cast<SliceType &>(*target_type)), assignment_type, expr
-      );
+      return coerce(target_type.derive(target_type.as<SliceType>()), assignment_type, expr);
     case TypeKind::Impl:
       throw RuntimeError("not implemented (coerce(Impl))");
     case TypeKind::ConstInteger:
-      return coerce(
-          target_type.derive(static_cast<ConstIntegerType &>(*target_type)), assignment_type, expr
-      );
+      return coerce(target_type.derive(target_type.as<ConstIntegerType>()), assignment_type, expr);
     case TypeKind::ConstRational:
-      return coerce(
-          target_type.derive(static_cast<ConstRationalType &>(*target_type)), assignment_type, expr
-      );
+      return coerce(target_type.derive(target_type.as<ConstRationalType>()), assignment_type, expr);
     case TypeKind::ConstBoolean:
-      return coerce(
-          target_type.derive(static_cast<ConstBooleanType &>(*target_type)), assignment_type, expr
-      );
+      return coerce(target_type.derive(target_type.as<ConstBooleanType>()), assignment_type, expr);
     case TypeKind::ConstCharacter:
       return coerce(
-          target_type.derive(static_cast<ConstCharacterType &>(*target_type)), assignment_type, expr
+          target_type.derive(target_type.as<ConstCharacterType>()), assignment_type, expr
       );
     case TypeKind::ConstString:
-      return coerce(
-          target_type.derive(static_cast<ConstStringType &>(*target_type)), assignment_type, expr
-      );
+      return coerce(target_type.derive(target_type.as<ConstStringType>()), assignment_type, expr);
     case TypeKind::Class:
       throw RuntimeError("not implemented (coerce(Class))");
     case TypeKind::Union:
@@ -994,7 +915,7 @@ public:
       Flex<ReferenceType> target_type, Flex<Type> assignment_type, Flex<Expression> expr
   ) {
     if (assignment_type->kind == TypeKind::Reference) {
-      auto &expr_ref_type = static_cast<ReferenceType &>(*assignment_type);
+      auto &expr_ref_type = assignment_type.as<ReferenceType>();
       if (
           // If target is not const, assignment must also not be const
           (target_type->is_const || !expr_ref_type.is_const) &&
@@ -1008,7 +929,7 @@ public:
             // TODO: compatible types
             unify(target_type->referent, expr_ref_type.referent)
         ) {
-          return builtin_type_coerce(target_type, move(expr));
+          return native_type_cast(target_type, move(expr));
         } else if (
             // Target type refers to a slice and expr type refers to an array of the same type
             target_type->referent->kind == TypeKind::Slice &&
@@ -1018,14 +939,14 @@ public:
                 static_cast<ArrayType &>(*expr_ref_type.referent).element_type
             )
         ) {
-          return builtin_type_coerce(target_type, move(expr));
+          return native_type_cast(target_type, move(expr));
         }
       }
     } else if (assignment_type->kind == TypeKind::ConstString) {
       if (target_type->referent->kind == TypeKind::Builtin &&
           static_cast<const BuiltinType &>(*target_type->referent).builtin_kind ==
               BuiltinKind::Str) {
-        return builtin_type_coerce(target_type, move(expr));
+        return native_type_cast(target_type, move(expr));
       }
     }
     return None();
@@ -1054,43 +975,39 @@ public:
                                                       min_value_of_type(assignment_type),
                                                       max_value_of_type(assignment_type)
                                                   )
-                 ? builtin_type_coerce(target_type, move(expr))
+                 ? native_type_cast(target_type, move(expr))
                  : Option<Flex<Expression>>();
     case BuiltinKind::Float:
       return is_integral_type(assignment_type) ||
                      (assignment_type->kind == TypeKind::ConstRational) ||
                      (assignment_type->kind == TypeKind::Builtin &&
-                      static_cast<const BuiltinType &>(*assignment_type).builtin_kind ==
-                          BuiltinKind::Float)
-                 ? builtin_type_coerce(target_type, move(expr))
+                      assignment_type.as<BuiltinType>().builtin_kind == BuiltinKind::Float)
+                 ? native_type_cast(target_type, move(expr))
                  : Option<Flex<Expression>>();
     case BuiltinKind::Double:
       return is_integral_type(assignment_type) ||
                      (assignment_type->kind == TypeKind::ConstRational) ||
                      (assignment_type->kind == TypeKind::Builtin &&
-                      (static_cast<const BuiltinType &>(*assignment_type).builtin_kind ==
-                           BuiltinKind::Float ||
-                       static_cast<const BuiltinType &>(*assignment_type).builtin_kind ==
-                           BuiltinKind::Double))
-                 ? builtin_type_coerce(target_type, move(expr))
+                      (assignment_type.as<BuiltinType>().builtin_kind == BuiltinKind::Float ||
+                       assignment_type.as<BuiltinType>().builtin_kind == BuiltinKind::Double))
+                 ? native_type_cast(target_type, move(expr))
                  : Option<Flex<Expression>>();
     case BuiltinKind::Bool:
       return (assignment_type->kind == TypeKind::ConstBoolean) ||
                      (assignment_type->kind == TypeKind::Builtin &&
-                      static_cast<const BuiltinType &>(*assignment_type).builtin_kind ==
-                          BuiltinKind::Bool)
-                 ? builtin_type_coerce(target_type, move(expr))
+                      assignment_type.as<BuiltinType>().builtin_kind == BuiltinKind::Bool)
+                 ? native_type_cast(target_type, move(expr))
                  : Option<Flex<Expression>>();
     case BuiltinKind::Char:
       return ((assignment_type->kind == TypeKind::ConstInteger &&
-               (static_cast<const ConstIntegerType &>(*assignment_type).value <= UINT32_MAX &&
-                static_cast<const ConstIntegerType &>(*assignment_type).value >= 0 &&
+               (assignment_type.as<ConstIntegerType>().value <= UINT32_MAX &&
+                assignment_type.as<ConstIntegerType>().value >= 0 &&
                 CharIterator::is_valid_code_point(
-                    static_cast<const ConstIntegerType &>(*assignment_type).value.to_uint32()
+                    assignment_type.as<ConstIntegerType>().value.to_uint32()
                 ))) ||
               (is_integral_type(assignment_type) && min_value_of_type(assignment_type) >= 0 &&
                max_value_of_type(assignment_type) < 0xD800))
-                 ? builtin_type_coerce(target_type, move(expr))
+                 ? native_type_cast(target_type, move(expr))
                  : Option<Flex<Expression>>();
     case BuiltinKind::Str:
     case BuiltinKind::Null:
@@ -1107,7 +1024,7 @@ public:
         can_type_represent_range(
             *target_type, min_value_of_type(assignment_type), max_value_of_type(assignment_type)
         )) {
-      return builtin_type_coerce(target_type, move(expr));
+      return native_type_cast(target_type, move(expr));
     }
 
     return None();
@@ -1117,14 +1034,14 @@ public:
       Flex<PointerType> target_type, Flex<Type> assignment_type, Flex<Expression> expr
   ) {
     if (assignment_type->kind == TypeKind::Pointer) {
-      auto &expr_ptr_type = static_cast<PointerType &>(*assignment_type);
+      auto &expr_ptr_type = assignment_type.as<PointerType>();
       if (
           // Pointers point to the same type
           unify(target_type->pointee, expr_ptr_type.pointee) &&
           // If assignment is const, target must also be const
           (target_type->is_const || !expr_ptr_type.is_const)
       ) {
-        return builtin_type_coerce(target_type, move(expr));
+        return native_type_cast(target_type, move(expr));
       }
     }
     return None();
@@ -1251,7 +1168,7 @@ public:
       analyze_function_binding(static_cast<ValueBinding &>(binding));
       break;
     case BindingKind::Type:
-      analyte_type_binding(static_cast<TypeBinding &>(binding));
+      analyze_type_binding(static_cast<TypeBinding &>(binding));
       break;
     default:
       raise_error_at_node_id(
@@ -1274,7 +1191,7 @@ public:
     analyze_binding(binding);
     switch (binding->kind) {
     case BindingKind::Type:
-      return binding.derive(static_cast<TypeBinding &>(*binding));
+      return binding.derive(binding.as<TypeBinding>());
     default: {
       String error_message = "Identifier '";
       error_message.append(name);
@@ -1298,7 +1215,7 @@ public:
     case BindingKind::Constant:
     case BindingKind::Variable:
     case BindingKind::Function:
-      return binding.derive(static_cast<ValueBinding &>(*binding));
+      return binding.derive(binding.as<ValueBinding>());
     default:
       raise_error_at_node_id(
           node_id, "not implemented (unknown binding kind in resolve_value_binding)"
@@ -1339,7 +1256,7 @@ public:
     }
   }
 
-  void analyte_type_binding(TypeBinding &binding) {
+  void analyze_type_binding(TypeBinding &binding) {
     if (binding.type.has_value()) {
       return;
     }
@@ -1349,7 +1266,7 @@ public:
     const auto &node = m_module_obj.ast.get_node(binding.decl);
     if (node.type() != NodeType::TypeDeclNode) {
       raise_error_at_node_id(
-          binding.decl, "not implemented (analyte_type_binding for non-TypeDecl node)"
+          binding.decl, "not implemented (analyze_type_binding for non-TypeDecl node)"
       );
     }
     const auto &type_decl_node = node.as_TypeDeclNode();
@@ -1363,7 +1280,8 @@ public:
       binding.type = result;
     } else {
       raise_error_at_node_id(
-          binding.decl, "not implemented (analyte_type_binding for TypeDecl node without type_expr)"
+          binding.decl, "not implemented (analyze_type_binding for TypeDecl node without
+          type_expr)"
       );
     }
   }
@@ -1384,7 +1302,7 @@ public:
       binding.type = UNKNOWN_TYPE;
       if (decl_node.expr.has_value()) {
         binding.value = build_expression(decl_node.expr.value());
-        binding.type = remove_const(binding.value.value()->type);
+        binding.type = remove_comptime_const(binding.value.value()->type);
       }
     }
   }
@@ -1492,7 +1410,7 @@ public:
     for (const auto &param : signature.parameters) {
       auto binding = emplace_flex<ValueBinding>();
       binding->name = param.name;
-      binding->type = remove_const(param.type);
+      binding->type = remove_comptime_const(param.type);
       push_binding(move(binding));
     }
 
@@ -1509,7 +1427,7 @@ public:
     if (function_body_node.expr.has_value()) {
       auto expr = build_expression(function_body_node.expr.value());
       if (is_unknown_type(signature.return_type)) {
-        signature.return_type = remove_const(expr->type);
+        signature.return_type = remove_comptime_const(expr->type);
         result = expr;
       } else {
         result = require_coerce(
@@ -1733,9 +1651,9 @@ public:
     for (size_t i = 0; i < output.size(); ++i) {
       Flex<Expression> &elem = output[i];
       if (is_never_type(result_type)) {
-        result_type = remove_const(elem->type);
+        result_type = remove_comptime_const(elem->type);
       } else {
-        auto elem_type = remove_const(elem->type);
+        auto elem_type = remove_comptime_const(elem->type);
         if (
             // types are different
             !unify(result_type, elem_type) &&
@@ -1774,7 +1692,7 @@ public:
 
   Flex<Expression> build_expr_bracket(NodeId expr_node_id) {
     const auto &bracket_node = m_module_obj.ast.get_node(expr_node_id).as_BracketExprNode();
-    auto result = emplace_flex<ArrayLiteralExpression>();
+    auto result = emplace_flex<ArrayExpression>();
     result->node_id = expr_node_id;
     auto array_type = emplace_flex<ArrayType>();
     array_type->element_type = read_expr_list(result->elements, bracket_node.exprs.data());
@@ -1838,7 +1756,7 @@ public:
     auto referent_expr = build_expression(ref_node.expr);
     switch (referent_expr->kind) {
     case ExpressionKind::Identifier: {
-      auto &binding = static_cast<IdentifierExpression &>(*referent_expr).binding;
+      auto &binding = referent_expr.as<IdentifierExpression>().binding;
       if (binding->kind == BindingKind::Variable || binding->kind == BindingKind::Constant) {
         auto reference_type = emplace_flex<ReferenceType>();
         reference_type->referent = referent_expr->type;
@@ -2027,7 +1945,7 @@ public:
     }
 
     if (is_unknown_type(m_current_function_signature.value()->return_type)) {
-      m_current_function_signature.value()->return_type = remove_const(return_value->type);
+      m_current_function_signature.value()->return_type = remove_comptime_const(return_value->type);
       return return_value;
     }
 
@@ -2218,7 +2136,7 @@ public:
       if (expr.has_value()) {
         binding->value = build_expression(expr.value());
         binding->type = is_const ? binding->value.value()->type
-                                 : remove_const(binding->value.value()->type);
+                                 : remove_comptime_const(binding->value.value()->type);
       }
     }
 
@@ -2391,15 +2309,11 @@ public:
       raise_error_at_node_id(operand->node_id, "not implemented (unary op of Apply)");
     case TypeKind::Builtin:
       return perform_unary_op_negate_builtin(
-          operation_node_id,
-          operand_type.derive(static_cast<BuiltinType &>(*operand_type)),
-          move(operand)
+          operation_node_id, operand_type.derive(operand_type.as<BuiltinType>()), move(operand)
       );
     case TypeKind::BitInt:
       return perform_unary_op_negate_bitint(
-          operation_node_id,
-          operand_type.derive(static_cast<BitIntType &>(*operand_type)),
-          move(operand)
+          operation_node_id, operand_type.derive(operand_type.as<BitIntType>()), move(operand)
       );
     case TypeKind::Pointer:
       raise_error_at_node_id(operand->node_id, "not implemented (unary op of Pointer)");
@@ -2409,14 +2323,12 @@ public:
       raise_error_at_node_id(operand->node_id, "not implemented (unary op of Impl)");
     case TypeKind::ConstInteger:
       return perform_unary_op_negate_const_integer(
-          operation_node_id,
-          operand_type.derive(static_cast<ConstIntegerType &>(*operand_type)),
-          move(operand)
+          operation_node_id, operand_type.derive(operand_type.as<ConstIntegerType>()), move(operand)
       );
     case TypeKind::ConstRational:
       return perform_unary_op_negate_const_rational(
           operation_node_id,
-          operand_type.derive(static_cast<ConstRationalType &>(*operand_type)),
+          operand_type.derive(operand_type.as<ConstRationalType>()),
           move(operand)
       );
     case TypeKind::ConstBoolean:
@@ -2424,7 +2336,7 @@ public:
     case TypeKind::ConstCharacter:
       return perform_unary_op_negate_const_character(
           operation_node_id,
-          operand_type.derive(static_cast<ConstCharacterType &>(*operand_type)),
+          operand_type.derive(operand_type.as<ConstCharacterType>()),
           move(operand)
       );
     case TypeKind::ConstString:
@@ -2449,7 +2361,7 @@ public:
   Option<Flex<Expression>> perform_unary_op_negate_bitint(
       NodeId operation_node_id, Flex<BitIntType>, Flex<Expression> operand
   ) {
-    auto result = emplace_flex<BuiltinUnaryOperationExpression>();
+    auto result = emplace_flex<NativeUnaryOperationExpression>();
     result->node_id = operation_node_id;
     result->type = operand->type;
     result->op_kind = UnaryOperatorKind::Negate;
@@ -2472,7 +2384,7 @@ public:
     case BuiltinKind::USize:
     case BuiltinKind::Float:
     case BuiltinKind::Double: {
-      auto result = emplace_flex<BuiltinUnaryOperationExpression>();
+      auto result = emplace_flex<NativeUnaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = operand->type;
       result->op_kind = UnaryOperatorKind::Negate;
@@ -2480,7 +2392,7 @@ public:
       return result;
     }
     case BuiltinKind::Char: {
-      auto result = emplace_flex<BuiltinUnaryOperationExpression>();
+      auto result = emplace_flex<NativeUnaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = UINT_TYPE;
       result->op_kind = UnaryOperatorKind::Negate;
@@ -2509,7 +2421,7 @@ public:
   Option<Flex<Expression>> perform_unary_op_negate_const_integer(
       NodeId operation_node_id, Flex<ConstIntegerType> operand_type, Flex<Expression> operand
   ) {
-    auto result = emplace_flex<BuiltinUnaryOperationExpression>();
+    auto result = emplace_flex<NativeUnaryOperationExpression>();
     result->node_id = operation_node_id;
     result->type = Flex<ConstIntegerType>::emplace(-operand_type->value);
     result->op_kind = UnaryOperatorKind::Negate;
@@ -2520,7 +2432,7 @@ public:
   Option<Flex<Expression>> perform_unary_op_negate_const_rational(
       NodeId operation_node_id, Flex<ConstRationalType> operand_type, Flex<Expression> operand
   ) {
-    auto result = emplace_flex<BuiltinUnaryOperationExpression>();
+    auto result = emplace_flex<NativeUnaryOperationExpression>();
     result->node_id = operation_node_id;
     result->type = Flex<ConstRationalType>::emplace(-operand_type->value);
     result->op_kind = UnaryOperatorKind::Negate;
@@ -2548,15 +2460,11 @@ public:
       raise_error_at_node_id(operand->node_id, "not implemented (unary op of Apply)");
     case TypeKind::Builtin:
       return perform_unary_op_bitwise_not_builtin(
-          operation_node_id,
-          operand_type.derive(static_cast<BuiltinType &>(*operand_type)),
-          move(operand)
+          operation_node_id, operand_type.derive(operand_type.as<BuiltinType>()), move(operand)
       );
     case TypeKind::BitInt:
       return perform_unary_op_bitwise_not_bitint(
-          operation_node_id,
-          operand_type.derive(static_cast<BitIntType &>(*operand_type)),
-          move(operand)
+          operation_node_id, operand_type.derive(operand_type.as<BitIntType>()), move(operand)
       );
     case TypeKind::Pointer:
       raise_error_at_node_id(operand->node_id, "not implemented (unary op of Pointer)");
@@ -2566,9 +2474,7 @@ public:
       raise_error_at_node_id(operand->node_id, "not implemented (unary op of Impl)");
     case TypeKind::ConstInteger:
       return perform_unary_op_bitwise_not_const_integer(
-          operation_node_id,
-          operand_type.derive(static_cast<ConstIntegerType &>(*operand_type)),
-          move(operand)
+          operation_node_id, operand_type.derive(operand_type.as<ConstIntegerType>()), move(operand)
       );
     case TypeKind::ConstRational:
       return None();
@@ -2577,7 +2483,7 @@ public:
     case TypeKind::ConstCharacter:
       return perform_unary_op_bitwise_not_const_character(
           operation_node_id,
-          operand_type.derive(static_cast<ConstCharacterType &>(*operand_type)),
+          operand_type.derive(operand_type.as<ConstCharacterType>()),
           move(operand)
       );
     case TypeKind::ConstString:
@@ -2602,7 +2508,7 @@ public:
   Option<Flex<Expression>> perform_unary_op_bitwise_not_bitint(
       NodeId operation_node_id, Flex<BitIntType>, Flex<Expression> operand
   ) {
-    auto result = emplace_flex<BuiltinUnaryOperationExpression>();
+    auto result = emplace_flex<NativeUnaryOperationExpression>();
     result->node_id = operation_node_id;
     result->type = operand->type;
     result->op_kind = UnaryOperatorKind::BitwiseNot;
@@ -2623,7 +2529,7 @@ public:
     case BuiltinKind::Long:
     case BuiltinKind::ULong:
     case BuiltinKind::USize: {
-      auto result = emplace_flex<BuiltinUnaryOperationExpression>();
+      auto result = emplace_flex<NativeUnaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = operand->type;
       result->op_kind = UnaryOperatorKind::BitwiseNot;
@@ -2631,7 +2537,7 @@ public:
       return result;
     }
     case BuiltinKind::Char: {
-      auto result = emplace_flex<BuiltinUnaryOperationExpression>();
+      auto result = emplace_flex<NativeUnaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = UINT_TYPE;
       result->op_kind = UnaryOperatorKind::BitwiseNot;
@@ -2662,7 +2568,7 @@ public:
   Option<Flex<Expression>> perform_unary_op_bitwise_not_const_integer(
       NodeId operation_node_id, Flex<ConstIntegerType> operand_type, Flex<Expression> operand
   ) {
-    auto result = emplace_flex<BuiltinUnaryOperationExpression>();
+    auto result = emplace_flex<NativeUnaryOperationExpression>();
     result->node_id = operation_node_id;
     result->type = Flex<ConstIntegerType>::emplace(~operand_type->value);
     result->op_kind = UnaryOperatorKind::BitwiseNot;
@@ -2690,7 +2596,7 @@ public:
       raise_error_at_node_id(operand->node_id, "not implemented (unary op of Apply)");
     case TypeKind::Builtin:
       return perform_unary_op_positive_builtin(
-          operand_type.derive(static_cast<BuiltinType &>(*operand_type)), move(operand)
+          operand_type.derive(operand_type.as<BuiltinType>()), move(operand)
       );
     case TypeKind::BitInt:
       return operand;
@@ -2773,9 +2679,7 @@ public:
       raise_error_at_node_id(operand->node_id, "not implemented (unary op of Apply)");
     case TypeKind::Builtin:
       return perform_unary_op_not_builtin(
-          operation_node_id,
-          operand_type.derive(static_cast<BuiltinType &>(*operand_type)),
-          move(operand)
+          operation_node_id, operand_type.derive(operand_type.as<BuiltinType>()), move(operand)
       );
     case TypeKind::BitInt:
       raise_error_at_node_id(operand->node_id, "not implemented (unary op of BitInt)");
@@ -2791,9 +2695,7 @@ public:
       raise_error_at_node_id(operand->node_id, "not implemented (unary op of ConstRational)");
     case TypeKind::ConstBoolean:
       return perform_unary_op_not_const_boolean(
-          operation_node_id,
-          operand_type.derive(static_cast<ConstBooleanType &>(*operand_type)),
-          move(operand)
+          operation_node_id, operand_type.derive(operand_type.as<ConstBooleanType>()), move(operand)
       );
     case TypeKind::ConstCharacter:
       raise_error_at_node_id(operand->node_id, "not implemented (unary op of ConstCharacter)");
@@ -2821,7 +2723,7 @@ public:
   ) {
     switch (operand_type->builtin_kind) {
     case BuiltinKind::Bool: {
-      auto result = emplace_flex<BuiltinUnaryOperationExpression>();
+      auto result = emplace_flex<NativeUnaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = operand->type;
       result->op_kind = UnaryOperatorKind::Not;
@@ -2851,7 +2753,7 @@ public:
   Option<Flex<Expression>> perform_unary_op_not_const_boolean(
       NodeId operation_node_id, Flex<ConstBooleanType> operand_type, Flex<Expression> operand
   ) {
-    auto result = emplace_flex<BuiltinUnaryOperationExpression>();
+    auto result = emplace_flex<NativeUnaryOperationExpression>();
     result->node_id = operation_node_id;
     result->type = Flex<ConstBooleanType>::emplace(!operand_type->value);
     result->op_kind = UnaryOperatorKind::Not;
@@ -2861,7 +2763,7 @@ public:
 
   void assert_mutable_operand(Flex<Expression> operand) {
     if (operand->kind == ExpressionKind::Identifier) {
-      auto &identifier_expr = static_cast<IdentifierExpression &>(*operand);
+      auto &identifier_expr = operand.as<IdentifierExpression>();
       if (identifier_expr.binding->kind == BindingKind::Constant) {
         String error_message = "Cannot modify constant '";
         error_message.append(identifier_expr.binding->name);
@@ -2875,7 +2777,8 @@ public:
         raise_error_at_node_id(operand->node_id, move(error_message));
       }
     } else { // TODO: field access, deref
-      raise_error_at_node_id(operand->node_id, "Operand of mutation must be an assignable place");
+      raise_error_at_node_id(operand->node_id, "Operand of mutation must be an assignable
+      place");
     }
   }
 
@@ -2900,9 +2803,7 @@ public:
       raise_error_at_node_id(operand->node_id, "not implemented (unary op of Apply)");
     case TypeKind::Builtin:
       return perform_unary_op_increment_builtin(
-          operation_node_id,
-          operand_type.derive(static_cast<BuiltinType &>(*operand_type)),
-          move(operand)
+          operation_node_id, operand_type.derive(operand_type.as<BuiltinType>()), move(operand)
       );
     case TypeKind::BitInt:
       raise_error_at_node_id(operand->node_id, "not implemented (unary op of BitInt)");
@@ -2954,7 +2855,7 @@ public:
     case BuiltinKind::USize:
     case BuiltinKind::Float:
     case BuiltinKind::Double: {
-      auto result = emplace_flex<BuiltinUnaryOperationExpression>();
+      auto result = emplace_flex<NativeUnaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = NULL_TYPE;
       result->op_kind = UnaryOperatorKind::Increment;
@@ -2992,9 +2893,7 @@ public:
       raise_error_at_node_id(operand->node_id, "not implemented (unary op of Apply)");
     case TypeKind::Builtin:
       return perform_unary_op_decrement_builtin(
-          operation_node_id,
-          operand_type.derive(static_cast<BuiltinType &>(*operand_type)),
-          move(operand)
+          operation_node_id, operand_type.derive(operand_type.as<BuiltinType>()), move(operand)
       );
     case TypeKind::BitInt:
       raise_error_at_node_id(operand->node_id, "not implemented (unary op of BitInt)");
@@ -3046,7 +2945,7 @@ public:
     case BuiltinKind::USize:
     case BuiltinKind::Float:
     case BuiltinKind::Double: {
-      auto result = emplace_flex<BuiltinUnaryOperationExpression>();
+      auto result = emplace_flex<NativeUnaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = NULL_TYPE;
       result->op_kind = UnaryOperatorKind::Decrement;
@@ -3259,8 +3158,8 @@ public:
         op_kind, expr_node_id, left_type, left_expr, right_type, right_expr
     );
     if (!result.has_value() && !is_non_promoting_binary_op(op_kind)) {
-      left_expr->type = remove_const(left_expr->type);
-      right_expr->type = remove_const(right_expr->type);
+      left_expr->type = remove_comptime_const(left_expr->type);
+      right_expr->type = remove_comptime_const(right_expr->type);
       left_type = left_expr->type;
       right_type = right_expr->type;
 
@@ -3453,7 +3352,7 @@ public:
     case TypeKind::Builtin:
       return perform_binary_op_add_builtin(
           operation_node_id,
-          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          left_type.derive(left_type.as<BuiltinType>()),
           move(left),
           move(right_type),
           move(right)
@@ -3461,7 +3360,7 @@ public:
     case TypeKind::BitInt:
       return perform_binary_op_add_bitint(
           operation_node_id,
-          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          left_type.derive(left_type.as<BitIntType>()),
           move(left),
           move(right_type),
           move(right)
@@ -3475,7 +3374,7 @@ public:
     case TypeKind::ConstInteger:
       return perform_binary_op_add_const_integer(
           operation_node_id,
-          left_type.derive(static_cast<ConstIntegerType &>(*left_type)),
+          left_type.derive(left_type.as<ConstIntegerType>()),
           move(left),
           move(right_type),
           move(right)
@@ -3483,7 +3382,7 @@ public:
     case TypeKind::ConstRational:
       return perform_binary_op_add_const_rational(
           operation_node_id,
-          left_type.derive(static_cast<ConstRationalType &>(*left_type)),
+          left_type.derive(left_type.as<ConstRationalType>()),
           move(left),
           move(right_type),
           move(right)
@@ -3493,7 +3392,7 @@ public:
     case TypeKind::ConstCharacter:
       return perform_binary_op_add_const_character(
           operation_node_id,
-          left_type.derive(static_cast<ConstCharacterType &>(*left_type)),
+          left_type.derive(left_type.as<ConstCharacterType>()),
           move(left),
           move(right_type),
           move(right)
@@ -3501,7 +3400,7 @@ public:
     case TypeKind::ConstString:
       return perform_binary_op_add_const_string(
           operation_node_id,
-          left_type.derive(static_cast<ConstStringType &>(*left_type)),
+          left_type.derive(left_type.as<ConstStringType>()),
           move(left),
           move(right_type),
           move(right)
@@ -3515,8 +3414,12 @@ public:
     case TypeKind::Function:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Function)");
     case TypeKind::FunctionPointer:
-      raise_error_at_node_id(operation_node_id, "not implemented (binary op of FunctionPointer)");
-    case TypeKind::Closure:
+    raise_error_at_node_id(
+        operation_node_id,
+        "not implemented (binary op of
+        FunctionPointer
+    ) ");
+        case TypeKind::Closure:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Closure)");
     case TypeKind::Variable:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Variable)");
@@ -3531,8 +3434,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstInteger) {
-      auto &right_const_integer_type = static_cast<ConstIntegerType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_integer_type = right_type.as<ConstIntegerType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstIntegerType>::emplace(
           Integer(left_type->value) + right_const_integer_type.value
@@ -3542,8 +3445,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstCharacter) {
-      auto &right_const_character_type = static_cast<ConstCharacterType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_character_type = right_type.as<ConstCharacterType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstIntegerType>::emplace(
           Integer(left_type->value) + Integer(right_const_character_type.value)
@@ -3553,8 +3456,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstRational) {
-      auto &right_const_rational_type = static_cast<ConstRationalType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_rational_type = right_type.as<ConstRationalType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstRationalType>::emplace(
           Rational(Integer(left_type->value)) + right_const_rational_type.value
@@ -3564,8 +3467,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstString) {
-      auto &right_const_string_type = static_cast<ConstStringType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_string_type = right_type.as<ConstStringType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       String repr;
       repr.append(left_type->value);
@@ -3588,8 +3491,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstString) {
-      auto &right_const_string_type = static_cast<ConstStringType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_string_type = right_type.as<ConstStringType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstStringType>::emplace(
           left_type->value + right_const_string_type.value
@@ -3599,8 +3502,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstCharacter) {
-      auto &right_const_character_type = static_cast<ConstCharacterType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_character_type = right_type.as<ConstCharacterType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       String repr;
       repr.append(left_type->value);
@@ -3623,8 +3526,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstInteger) {
-      auto &right_const_integer_type = static_cast<ConstIntegerType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_integer_type = right_type.as<ConstIntegerType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstRationalType>::emplace(
           left_type->value + Rational(right_const_integer_type.value)
@@ -3634,8 +3537,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstRational) {
-      auto &right_const_rational_type = static_cast<ConstRationalType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_rational_type = right_type.as<ConstRationalType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstRationalType>::emplace(
           left_type->value + right_const_rational_type.value
@@ -3645,8 +3548,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstCharacter) {
-      auto &right_const_character_type = static_cast<ConstCharacterType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_character_type = right_type.as<ConstCharacterType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstRationalType>::emplace(
           left_type->value + Rational(Integer(right_const_character_type.value))
@@ -3668,8 +3571,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstInteger) {
-      auto &right_const_integer_type = static_cast<ConstIntegerType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_integer_type = right_type.as<ConstIntegerType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstIntegerType>::emplace(
           left_type->value + right_const_integer_type.value
@@ -3679,8 +3582,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstRational) {
-      auto &right_const_rational_type = static_cast<ConstRationalType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_rational_type = right_type.as<ConstRationalType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstRationalType>::emplace(
           Rational(left_type->value) + right_const_rational_type.value
@@ -3690,8 +3593,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstCharacter) {
-      auto &right_const_character_type = static_cast<ConstCharacterType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_character_type = right_type.as<ConstCharacterType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstIntegerType>::emplace(
           left_type->value + Integer(right_const_character_type.value)
@@ -3727,7 +3630,7 @@ public:
     case BuiltinKind::USize:
     case BuiltinKind::Float:
     case BuiltinKind::Double: {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = left->type;
       result->op_kind = BinaryOperatorKind::Add;
@@ -3736,7 +3639,7 @@ public:
       return result;
     }
     case BuiltinKind::Char: {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = UINT_TYPE;
       result->op_kind = BinaryOperatorKind::Add;
@@ -3763,7 +3666,7 @@ public:
     if (!unify(left_type, right_type)) {
       return None();
     }
-    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    auto result = emplace_flex<NativeBinaryOperationExpression>();
     result->node_id = operation_node_id;
     result->type = left->type;
     result->op_kind = BinaryOperatorKind::Add;
@@ -3797,7 +3700,7 @@ public:
     case TypeKind::Builtin:
       return perform_binary_op_sub_builtin(
           operation_node_id,
-          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          left_type.derive(left_type.as<BuiltinType>()),
           move(left),
           move(right_type),
           move(right)
@@ -3805,7 +3708,7 @@ public:
     case TypeKind::BitInt:
       return perform_binary_op_sub_bitint(
           operation_node_id,
-          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          left_type.derive(left_type.as<BitIntType>()),
           move(left),
           move(right_type),
           move(right)
@@ -3819,7 +3722,7 @@ public:
     case TypeKind::ConstInteger:
       return perform_binary_op_sub_const_integer(
           operation_node_id,
-          left_type.derive(static_cast<ConstIntegerType &>(*left_type)),
+          left_type.derive(left_type.as<ConstIntegerType>()),
           move(left),
           move(right_type),
           move(right)
@@ -3827,7 +3730,7 @@ public:
     case TypeKind::ConstRational:
       return perform_binary_op_sub_const_rational(
           operation_node_id,
-          left_type.derive(static_cast<ConstRationalType &>(*left_type)),
+          left_type.derive(left_type.as<ConstRationalType>()),
           move(left),
           move(right_type),
           move(right)
@@ -3837,7 +3740,7 @@ public:
     case TypeKind::ConstCharacter:
       return perform_binary_op_sub_const_character(
           operation_node_id,
-          left_type.derive(static_cast<ConstCharacterType &>(*left_type)),
+          left_type.derive(left_type.as<ConstCharacterType>()),
           move(left),
           move(right_type),
           move(right)
@@ -3853,8 +3756,12 @@ public:
     case TypeKind::Function:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Function)");
     case TypeKind::FunctionPointer:
-      raise_error_at_node_id(operation_node_id, "not implemented (binary op of FunctionPointer)");
-    case TypeKind::Closure:
+    raise_error_at_node_id(
+        operation_node_id,
+        "not implemented (binary op of
+        FunctionPointer
+    ) ");
+        case TypeKind::Closure:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Closure)");
     case TypeKind::Variable:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Variable)");
@@ -3885,8 +3792,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstInteger) {
-      auto &right_const_integer_type = static_cast<ConstIntegerType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_integer_type = right_type.as<ConstIntegerType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstRationalType>::emplace(
           left_type->value - Rational(right_const_integer_type.value)
@@ -3896,8 +3803,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstRational) {
-      auto &right_const_rational_type = static_cast<ConstRationalType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_rational_type = right_type.as<ConstRationalType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstRationalType>::emplace(
           left_type->value - right_const_rational_type.value
@@ -3907,8 +3814,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstCharacter) {
-      auto &right_const_character_type = static_cast<ConstCharacterType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_character_type = right_type.as<ConstCharacterType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstRationalType>::emplace(
           left_type->value - Rational(Integer(right_const_character_type.value))
@@ -3930,8 +3837,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstInteger) {
-      auto &right_const_integer_type = static_cast<ConstIntegerType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_integer_type = right_type.as<ConstIntegerType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstIntegerType>::emplace(
           left_type->value - right_const_integer_type.value
@@ -3941,8 +3848,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstRational) {
-      auto &right_const_rational_type = static_cast<ConstRationalType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_rational_type = right_type.as<ConstRationalType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstRationalType>::emplace(
           Rational(left_type->value) - right_const_rational_type.value
@@ -3952,8 +3859,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstCharacter) {
-      auto &right_const_character_type = static_cast<ConstCharacterType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_character_type = right_type.as<ConstCharacterType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstIntegerType>::emplace(
           left_type->value - right_const_character_type.value
@@ -3977,7 +3884,7 @@ public:
     if (!unify(left_type, right_type)) {
       return None();
     }
-    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    auto result = emplace_flex<NativeBinaryOperationExpression>();
     result->node_id = operation_node_id;
     result->type = left->type;
     result->op_kind = BinaryOperatorKind::Subtract;
@@ -4008,7 +3915,7 @@ public:
     case BuiltinKind::USize:
     case BuiltinKind::Float:
     case BuiltinKind::Double: {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = left->type;
       result->op_kind = BinaryOperatorKind::Subtract;
@@ -4017,7 +3924,7 @@ public:
       return result;
     }
     case BuiltinKind::Char: {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = UINT_TYPE;
       result->op_kind = BinaryOperatorKind::Subtract;
@@ -4059,7 +3966,7 @@ public:
     case TypeKind::Builtin:
       return perform_binary_op_mul_builtin(
           operation_node_id,
-          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          left_type.derive(left_type.as<BuiltinType>()),
           move(left),
           move(right_type),
           move(right)
@@ -4067,7 +3974,7 @@ public:
     case TypeKind::BitInt:
       return perform_binary_op_mul_bitint(
           operation_node_id,
-          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          left_type.derive(left_type.as<BitIntType>()),
           move(left),
           move(right_type),
           move(right)
@@ -4081,7 +3988,7 @@ public:
     case TypeKind::ConstInteger:
       return perform_binary_op_mul_const_integer(
           operation_node_id,
-          left_type.derive(static_cast<ConstIntegerType &>(*left_type)),
+          left_type.derive(left_type.as<ConstIntegerType>()),
           move(left),
           move(right_type),
           move(right)
@@ -4089,7 +3996,7 @@ public:
     case TypeKind::ConstRational:
       return perform_binary_op_mul_const_rational(
           operation_node_id,
-          left_type.derive(static_cast<ConstRationalType &>(*left_type)),
+          left_type.derive(left_type.as<ConstRationalType>()),
           move(left),
           move(right_type),
           move(right)
@@ -4099,7 +4006,7 @@ public:
     case TypeKind::ConstCharacter:
       return perform_binary_op_mul_const_character(
           operation_node_id,
-          left_type.derive(static_cast<ConstCharacterType &>(*left_type)),
+          left_type.derive(left_type.as<ConstCharacterType>()),
           move(left),
           move(right_type),
           move(right)
@@ -4115,8 +4022,12 @@ public:
     case TypeKind::Function:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Function)");
     case TypeKind::FunctionPointer:
-      raise_error_at_node_id(operation_node_id, "not implemented (binary op of FunctionPointer)");
-    case TypeKind::Closure:
+    raise_error_at_node_id(
+        operation_node_id,
+        "not implemented (binary op of
+        FunctionPointer
+    ) ");
+        case TypeKind::Closure:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Closure)");
     case TypeKind::Variable:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Variable)");
@@ -4147,8 +4058,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstInteger) {
-      auto &right_const_integer_type = static_cast<ConstIntegerType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_integer_type = right_type.as<ConstIntegerType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstRationalType>::emplace(
           left_type->value * Rational(right_const_integer_type.value)
@@ -4158,8 +4069,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstRational) {
-      auto &right_const_rational_type = static_cast<ConstRationalType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_rational_type = right_type.as<ConstRationalType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstRationalType>::emplace(
           left_type->value * right_const_rational_type.value
@@ -4169,8 +4080,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstCharacter) {
-      auto &right_const_character_type = static_cast<ConstCharacterType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_character_type = right_type.as<ConstCharacterType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstRationalType>::emplace(
           left_type->value * Rational(Integer(right_const_character_type.value))
@@ -4192,8 +4103,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstInteger) {
-      auto &right_const_integer_type = static_cast<ConstIntegerType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_integer_type = right_type.as<ConstIntegerType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstIntegerType>::emplace(
           left_type->value * right_const_integer_type.value
@@ -4203,8 +4114,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstRational) {
-      auto &right_const_rational_type = static_cast<ConstRationalType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_rational_type = right_type.as<ConstRationalType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstRationalType>::emplace(
           Rational(left_type->value) * right_const_rational_type.value
@@ -4214,8 +4125,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstCharacter) {
-      auto &right_const_character_type = static_cast<ConstCharacterType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_character_type = right_type.as<ConstCharacterType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstIntegerType>::emplace(
           left_type->value * right_const_character_type.value
@@ -4239,7 +4150,7 @@ public:
     if (!unify(left_type, right_type)) {
       return None();
     }
-    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    auto result = emplace_flex<NativeBinaryOperationExpression>();
     result->node_id = operation_node_id;
     result->type = left->type;
     result->op_kind = BinaryOperatorKind::Multiply;
@@ -4270,7 +4181,7 @@ public:
     case BuiltinKind::USize:
     case BuiltinKind::Float:
     case BuiltinKind::Double: {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = left->type;
       result->op_kind = BinaryOperatorKind::Multiply;
@@ -4279,7 +4190,7 @@ public:
       return result;
     }
     case BuiltinKind::Char: {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = UINT_TYPE;
       result->op_kind = BinaryOperatorKind::Multiply;
@@ -4321,7 +4232,7 @@ public:
     case TypeKind::Builtin:
       return perform_binary_op_div_builtin(
           operation_node_id,
-          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          left_type.derive(left_type.as<BuiltinType>()),
           move(left),
           move(right_type),
           move(right)
@@ -4329,7 +4240,7 @@ public:
     case TypeKind::BitInt:
       return perform_binary_op_div_bitint(
           operation_node_id,
-          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          left_type.derive(left_type.as<BitIntType>()),
           move(left),
           move(right_type),
           move(right)
@@ -4343,7 +4254,7 @@ public:
     case TypeKind::ConstInteger:
       return perform_binary_op_div_const_integer(
           operation_node_id,
-          left_type.derive(static_cast<ConstIntegerType &>(*left_type)),
+          left_type.derive(left_type.as<ConstIntegerType>()),
           move(left),
           move(right_type),
           move(right)
@@ -4351,7 +4262,7 @@ public:
     case TypeKind::ConstRational:
       return perform_binary_op_div_const_rational(
           operation_node_id,
-          left_type.derive(static_cast<ConstRationalType &>(*left_type)),
+          left_type.derive(left_type.as<ConstRationalType>()),
           move(left),
           move(right_type),
           move(right)
@@ -4371,8 +4282,12 @@ public:
     case TypeKind::Function:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Function)");
     case TypeKind::FunctionPointer:
-      raise_error_at_node_id(operation_node_id, "not implemented (binary op of FunctionPointer)");
-    case TypeKind::Closure:
+    raise_error_at_node_id(
+        operation_node_id,
+        "not implemented (binary op of
+        FunctionPointer
+    ) ");
+        case TypeKind::Closure:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Closure)");
     case TypeKind::Variable:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Variable)");
@@ -4387,8 +4302,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstInteger) {
-      auto &right_const_integer_type = static_cast<ConstIntegerType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_integer_type = right_type.as<ConstIntegerType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstRationalType>::emplace(
           left_type->value / Rational(right_const_integer_type.value)
@@ -4398,8 +4313,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstRational) {
-      auto &right_const_rational_type = static_cast<ConstRationalType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_rational_type = right_type.as<ConstRationalType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstRationalType>::emplace(
           left_type->value / right_const_rational_type.value
@@ -4421,8 +4336,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstInteger) {
-      auto &right_const_integer_type = static_cast<ConstIntegerType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_integer_type = right_type.as<ConstIntegerType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstIntegerType>::emplace(
           left_type->value / right_const_integer_type.value
@@ -4432,8 +4347,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstRational) {
-      auto &right_const_rational_type = static_cast<ConstRationalType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_rational_type = right_type.as<ConstRationalType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstRationalType>::emplace(
           Rational(left_type->value) / right_const_rational_type.value
@@ -4457,7 +4372,7 @@ public:
     if (!unify(left_type, right_type)) {
       return None();
     }
-    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    auto result = emplace_flex<NativeBinaryOperationExpression>();
     result->node_id = operation_node_id;
     result->type = left->type;
     result->op_kind = BinaryOperatorKind::Divide;
@@ -4488,7 +4403,7 @@ public:
     case BuiltinKind::USize:
     case BuiltinKind::Float:
     case BuiltinKind::Double: {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = left->type;
       result->op_kind = BinaryOperatorKind::Divide;
@@ -4497,7 +4412,7 @@ public:
       return result;
     }
     case BuiltinKind::Char: {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = UINT_TYPE;
       result->op_kind = BinaryOperatorKind::Divide;
@@ -4539,7 +4454,7 @@ public:
     case TypeKind::Builtin:
       return perform_binary_op_and_builtin(
           operation_node_id,
-          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          left_type.derive(left_type.as<BuiltinType>()),
           move(left),
           move(right_type),
           move(right)
@@ -4559,7 +4474,7 @@ public:
     case TypeKind::ConstBoolean:
       return perform_binary_op_and_const_boolean(
           operation_node_id,
-          left_type.derive(static_cast<ConstBooleanType &>(*left_type)),
+          left_type.derive(left_type.as<ConstBooleanType>()),
           move(left),
           move(right_type),
           move(right)
@@ -4577,8 +4492,12 @@ public:
     case TypeKind::Function:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Function)");
     case TypeKind::FunctionPointer:
-      raise_error_at_node_id(operation_node_id, "not implemented (binary op of FunctionPointer)");
-    case TypeKind::Closure:
+    raise_error_at_node_id(
+        operation_node_id,
+        "not implemented (binary op of
+        FunctionPointer
+    ) ");
+        case TypeKind::Closure:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Closure)");
     case TypeKind::Variable:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Variable)");
@@ -4593,8 +4512,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstBoolean) {
-      auto &right_const_boolean_type = static_cast<ConstBooleanType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_boolean_type = right_type.as<ConstBooleanType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value && right_const_boolean_type.value
@@ -4620,7 +4539,7 @@ public:
     }
     switch (left_type->builtin_kind) {
     case BuiltinKind::Bool: {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = left->type;
       result->op_kind = BinaryOperatorKind::And;
@@ -4673,7 +4592,7 @@ public:
     case TypeKind::Builtin:
       return perform_binary_op_bitwise_and_builtin(
           operation_node_id,
-          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          left_type.derive(left_type.as<BuiltinType>()),
           move(left),
           move(right_type),
           move(right)
@@ -4681,7 +4600,7 @@ public:
     case TypeKind::BitInt:
       return perform_binary_op_bitwise_and_bitint(
           operation_node_id,
-          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          left_type.derive(left_type.as<BitIntType>()),
           move(left),
           move(right_type),
           move(right)
@@ -4695,7 +4614,7 @@ public:
     case TypeKind::ConstInteger:
       return perform_binary_op_bitwise_and_const_integer(
           operation_node_id,
-          left_type.derive(static_cast<ConstIntegerType &>(*left_type)),
+          left_type.derive(left_type.as<ConstIntegerType>()),
           move(left),
           move(right_type),
           move(right)
@@ -4717,8 +4636,12 @@ public:
     case TypeKind::Function:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Function)");
     case TypeKind::FunctionPointer:
-      raise_error_at_node_id(operation_node_id, "not implemented (binary op of FunctionPointer)");
-    case TypeKind::Closure:
+    raise_error_at_node_id(
+        operation_node_id,
+        "not implemented (binary op of
+        FunctionPointer
+    ) ");
+        case TypeKind::Closure:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Closure)");
     case TypeKind::Variable:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Variable)");
@@ -4733,8 +4656,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstInteger) {
-      auto &right_const_integer_type = static_cast<ConstIntegerType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_integer_type = right_type.as<ConstIntegerType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstIntegerType>::emplace(
           left_type->value ^ right_const_integer_type.value
@@ -4758,7 +4681,7 @@ public:
     if (!unify(left_type, right_type)) {
       return None();
     }
-    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    auto result = emplace_flex<NativeBinaryOperationExpression>();
     result->node_id = operation_node_id;
     result->type = left->type;
     result->op_kind = BinaryOperatorKind::BitwiseAnd;
@@ -4787,7 +4710,7 @@ public:
     case BuiltinKind::Long:
     case BuiltinKind::ULong:
     case BuiltinKind::USize: {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = left->type;
       result->op_kind = BinaryOperatorKind::BitwiseAnd;
@@ -4796,7 +4719,7 @@ public:
       return result;
     }
     case BuiltinKind::Char: {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = UINT_TYPE;
       result->op_kind = BinaryOperatorKind::BitwiseAnd;
@@ -4840,7 +4763,7 @@ public:
     case TypeKind::Builtin:
       return perform_binary_op_bitwise_or_builtin(
           operation_node_id,
-          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          left_type.derive(left_type.as<BuiltinType>()),
           move(left),
           move(right_type),
           move(right)
@@ -4848,7 +4771,7 @@ public:
     case TypeKind::BitInt:
       return perform_binary_op_bitwise_or_bitint(
           operation_node_id,
-          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          left_type.derive(left_type.as<BitIntType>()),
           move(left),
           move(right_type),
           move(right)
@@ -4862,7 +4785,7 @@ public:
     case TypeKind::ConstInteger:
       return perform_binary_op_bitwise_or_const_integer(
           operation_node_id,
-          left_type.derive(static_cast<ConstIntegerType &>(*left_type)),
+          left_type.derive(left_type.as<ConstIntegerType>()),
           move(left),
           move(right_type),
           move(right)
@@ -4884,8 +4807,12 @@ public:
     case TypeKind::Function:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Function)");
     case TypeKind::FunctionPointer:
-      raise_error_at_node_id(operation_node_id, "not implemented (binary op of FunctionPointer)");
-    case TypeKind::Closure:
+    raise_error_at_node_id(
+        operation_node_id,
+        "not implemented (binary op of
+        FunctionPointer
+    ) ");
+        case TypeKind::Closure:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Closure)");
     case TypeKind::Variable:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Variable)");
@@ -4900,8 +4827,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstInteger) {
-      auto &right_const_integer_type = static_cast<ConstIntegerType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_integer_type = right_type.as<ConstIntegerType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstIntegerType>::emplace(
           left_type->value | right_const_integer_type.value
@@ -4925,7 +4852,7 @@ public:
     if (!unify(left_type, right_type)) {
       return None();
     }
-    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    auto result = emplace_flex<NativeBinaryOperationExpression>();
     result->node_id = operation_node_id;
     result->type = left->type;
     result->op_kind = BinaryOperatorKind::BitwiseOr;
@@ -4954,7 +4881,7 @@ public:
     case BuiltinKind::Long:
     case BuiltinKind::ULong:
     case BuiltinKind::USize: {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = left->type;
       result->op_kind = BinaryOperatorKind::BitwiseOr;
@@ -4963,7 +4890,7 @@ public:
       return result;
     }
     case BuiltinKind::Char: {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = UINT_TYPE;
       result->op_kind = BinaryOperatorKind::BitwiseOr;
@@ -5007,7 +4934,7 @@ public:
     case TypeKind::Builtin:
       return perform_binary_op_bitwise_xor_builtin(
           operation_node_id,
-          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          left_type.derive(left_type.as<BuiltinType>()),
           move(left),
           move(right_type),
           move(right)
@@ -5015,7 +4942,7 @@ public:
     case TypeKind::BitInt:
       return perform_binary_op_bitwise_xor_bitint(
           operation_node_id,
-          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          left_type.derive(left_type.as<BitIntType>()),
           move(left),
           move(right_type),
           move(right)
@@ -5029,7 +4956,7 @@ public:
     case TypeKind::ConstInteger:
       return perform_binary_op_bitwise_xor_const_integer(
           operation_node_id,
-          left_type.derive(static_cast<ConstIntegerType &>(*left_type)),
+          left_type.derive(left_type.as<ConstIntegerType>()),
           move(left),
           move(right_type),
           move(right)
@@ -5051,8 +4978,12 @@ public:
     case TypeKind::Function:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Function)");
     case TypeKind::FunctionPointer:
-      raise_error_at_node_id(operation_node_id, "not implemented (binary op of FunctionPointer)");
-    case TypeKind::Closure:
+    raise_error_at_node_id(
+        operation_node_id,
+        "not implemented (binary op of
+        FunctionPointer
+    ) ");
+        case TypeKind::Closure:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Closure)");
     case TypeKind::Variable:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Variable)");
@@ -5067,8 +4998,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstInteger) {
-      auto &right_const_integer_type = static_cast<ConstIntegerType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_integer_type = right_type.as<ConstIntegerType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstIntegerType>::emplace(
           left_type->value ^ right_const_integer_type.value
@@ -5092,7 +5023,7 @@ public:
     if (!unify(left_type, right_type)) {
       return None();
     }
-    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    auto result = emplace_flex<NativeBinaryOperationExpression>();
     result->node_id = operation_node_id;
     result->type = left->type;
     result->op_kind = BinaryOperatorKind::BitwiseXor;
@@ -5121,7 +5052,7 @@ public:
     case BuiltinKind::Long:
     case BuiltinKind::ULong:
     case BuiltinKind::USize: {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = left->type;
       result->op_kind = BinaryOperatorKind::BitwiseXor;
@@ -5130,7 +5061,7 @@ public:
       return result;
     }
     case BuiltinKind::Char: {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = UINT_TYPE;
       result->op_kind = BinaryOperatorKind::BitwiseXor;
@@ -5174,7 +5105,7 @@ public:
     case TypeKind::Builtin:
       return perform_binary_op_equals_builtin(
           operation_node_id,
-          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          left_type.derive(left_type.as<BuiltinType>()),
           move(left),
           move(right_type),
           move(right)
@@ -5182,7 +5113,7 @@ public:
     case TypeKind::BitInt:
       return perform_binary_op_equals_bitint(
           operation_node_id,
-          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          left_type.derive(left_type.as<BitIntType>()),
           move(left),
           move(right_type),
           move(right)
@@ -5196,7 +5127,7 @@ public:
     case TypeKind::ConstInteger:
       return perform_binary_op_equals_const_integer(
           operation_node_id,
-          left_type.derive(static_cast<ConstIntegerType &>(*left_type)),
+          left_type.derive(left_type.as<ConstIntegerType>()),
           move(left),
           move(right_type),
           move(right)
@@ -5204,7 +5135,7 @@ public:
     case TypeKind::ConstRational:
       return perform_binary_op_equals_const_rational(
           operation_node_id,
-          left_type.derive(static_cast<ConstRationalType &>(*left_type)),
+          left_type.derive(left_type.as<ConstRationalType>()),
           move(left),
           move(right_type),
           move(right)
@@ -5212,7 +5143,7 @@ public:
     case TypeKind::ConstBoolean:
       return perform_binary_op_equals_const_boolean(
           operation_node_id,
-          left_type.derive(static_cast<ConstBooleanType &>(*left_type)),
+          left_type.derive(left_type.as<ConstBooleanType>()),
           move(left),
           move(right_type),
           move(right)
@@ -5220,7 +5151,7 @@ public:
     case TypeKind::ConstCharacter:
       return perform_binary_op_equals_const_character(
           operation_node_id,
-          left_type.derive(static_cast<ConstCharacterType &>(*left_type)),
+          left_type.derive(left_type.as<ConstCharacterType>()),
           move(left),
           move(right_type),
           move(right)
@@ -5228,7 +5159,7 @@ public:
     case TypeKind::ConstString:
       return perform_binary_op_equals_const_string(
           operation_node_id,
-          left_type.derive(static_cast<ConstStringType &>(*left_type)),
+          left_type.derive(left_type.as<ConstStringType>()),
           move(left),
           move(right_type),
           move(right)
@@ -5242,8 +5173,12 @@ public:
     case TypeKind::Function:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Function)");
     case TypeKind::FunctionPointer:
-      raise_error_at_node_id(operation_node_id, "not implemented (binary op of FunctionPointer)");
-    case TypeKind::Closure:
+    raise_error_at_node_id(
+        operation_node_id,
+        "not implemented (binary op of
+        FunctionPointer
+    ) ");
+        case TypeKind::Closure:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Closure)");
     case TypeKind::Variable:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Variable)");
@@ -5258,8 +5193,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstInteger) {
-      auto &right_const_integer_type = static_cast<ConstIntegerType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_integer_type = right_type.as<ConstIntegerType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value == right_const_integer_type.value
@@ -5269,8 +5204,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstRational) {
-      auto &right_const_rational_type = static_cast<ConstRationalType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_rational_type = right_type.as<ConstRationalType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           Rational(left_type->value) == right_const_rational_type.value
@@ -5280,8 +5215,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstCharacter) {
-      auto &right_const_character_type = static_cast<ConstCharacterType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_character_type = right_type.as<ConstCharacterType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value == right_const_character_type.value
@@ -5303,8 +5238,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstRational) {
-      auto &right_const_rational_type = static_cast<ConstRationalType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_rational_type = right_type.as<ConstRationalType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value == right_const_rational_type.value
@@ -5314,8 +5249,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstInteger) {
-      auto &right_const_integer_type = static_cast<ConstIntegerType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_integer_type = right_type.as<ConstIntegerType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value == Rational(right_const_integer_type.value)
@@ -5325,8 +5260,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstCharacter) {
-      auto &right_const_character_type = static_cast<ConstCharacterType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_character_type = right_type.as<ConstCharacterType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value == Rational(right_const_character_type.value)
@@ -5348,8 +5283,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstBoolean) {
-      auto &right_const_boolean_type = static_cast<ConstBooleanType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_boolean_type = right_type.as<ConstBooleanType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value == right_const_boolean_type.value
@@ -5371,8 +5306,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstCharacter) {
-      auto &right_const_character_type = static_cast<ConstCharacterType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_character_type = right_type.as<ConstCharacterType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value == right_const_character_type.value
@@ -5382,8 +5317,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstInteger) {
-      auto &right_const_integer_type = static_cast<ConstIntegerType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_integer_type = right_type.as<ConstIntegerType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           Integer(left_type->value) == right_const_integer_type.value
@@ -5393,8 +5328,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstRational) {
-      auto &right_const_rational_type = static_cast<ConstRationalType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_rational_type = right_type.as<ConstRationalType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           Rational(left_type->value) == right_const_rational_type.value
@@ -5416,8 +5351,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstString) {
-      auto &right_const_string_type = static_cast<ConstStringType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_string_type = right_type.as<ConstStringType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value == right_const_string_type.value
@@ -5441,7 +5376,7 @@ public:
     if (!unify(left_type, right_type)) {
       return None();
     }
-    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    auto result = emplace_flex<NativeBinaryOperationExpression>();
     result->node_id = operation_node_id;
     result->type = BOOL_TYPE;
     result->op_kind = BinaryOperatorKind::Equals;
@@ -5475,7 +5410,7 @@ public:
     case BuiltinKind::Char:
     case BuiltinKind::Bool:
     case BuiltinKind::Null: {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = BOOL_TYPE;
       result->op_kind = BinaryOperatorKind::Equals;
@@ -5515,7 +5450,7 @@ public:
     case TypeKind::Builtin:
       return perform_binary_op_greater_builtin(
           operation_node_id,
-          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          left_type.derive(left_type.as<BuiltinType>()),
           move(left),
           move(right_type),
           move(right)
@@ -5523,7 +5458,7 @@ public:
     case TypeKind::BitInt:
       return perform_binary_op_greater_bitint(
           operation_node_id,
-          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          left_type.derive(left_type.as<BitIntType>()),
           move(left),
           move(right_type),
           move(right)
@@ -5537,7 +5472,7 @@ public:
     case TypeKind::ConstInteger:
       return perform_binary_op_greater_const_integer(
           operation_node_id,
-          left_type.derive(static_cast<ConstIntegerType &>(*left_type)),
+          left_type.derive(left_type.as<ConstIntegerType>()),
           move(left),
           move(right_type),
           move(right)
@@ -5545,7 +5480,7 @@ public:
     case TypeKind::ConstRational:
       return perform_binary_op_greater_const_rational(
           operation_node_id,
-          left_type.derive(static_cast<ConstRationalType &>(*left_type)),
+          left_type.derive(left_type.as<ConstRationalType>()),
           move(left),
           move(right_type),
           move(right)
@@ -5555,7 +5490,7 @@ public:
     case TypeKind::ConstCharacter:
       return perform_binary_op_greater_const_character(
           operation_node_id,
-          left_type.derive(static_cast<ConstCharacterType &>(*left_type)),
+          left_type.derive(left_type.as<ConstCharacterType>()),
           move(left),
           move(right_type),
           move(right)
@@ -5563,7 +5498,7 @@ public:
     case TypeKind::ConstString:
       return perform_binary_op_greater_const_string(
           operation_node_id,
-          left_type.derive(static_cast<ConstStringType &>(*left_type)),
+          left_type.derive(left_type.as<ConstStringType>()),
           move(left),
           move(right_type),
           move(right)
@@ -5577,8 +5512,12 @@ public:
     case TypeKind::Function:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Function)");
     case TypeKind::FunctionPointer:
-      raise_error_at_node_id(operation_node_id, "not implemented (binary op of FunctionPointer)");
-    case TypeKind::Closure:
+    raise_error_at_node_id(
+        operation_node_id,
+        "not implemented (binary op of
+        FunctionPointer
+    ) ");
+        case TypeKind::Closure:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Closure)");
     case TypeKind::Variable:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Variable)");
@@ -5593,8 +5532,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstInteger) {
-      auto &right_const_integer_type = static_cast<ConstIntegerType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_integer_type = right_type.as<ConstIntegerType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value > right_const_integer_type.value
@@ -5604,8 +5543,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstRational) {
-      auto &right_const_rational_type = static_cast<ConstRationalType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_rational_type = right_type.as<ConstRationalType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           Rational(left_type->value) > right_const_rational_type.value
@@ -5615,8 +5554,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstCharacter) {
-      auto &right_const_character_type = static_cast<ConstCharacterType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_character_type = right_type.as<ConstCharacterType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value > right_const_character_type.value
@@ -5638,8 +5577,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstRational) {
-      auto &right_const_rational_type = static_cast<ConstRationalType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_rational_type = right_type.as<ConstRationalType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value > right_const_rational_type.value
@@ -5649,8 +5588,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstInteger) {
-      auto &right_const_integer_type = static_cast<ConstIntegerType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_integer_type = right_type.as<ConstIntegerType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value > Rational(right_const_integer_type.value)
@@ -5660,8 +5599,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstCharacter) {
-      auto &right_const_character_type = static_cast<ConstCharacterType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_character_type = right_type.as<ConstCharacterType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value > Rational(right_const_character_type.value)
@@ -5683,8 +5622,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstCharacter) {
-      auto &right_const_character_type = static_cast<ConstCharacterType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_character_type = right_type.as<ConstCharacterType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value > right_const_character_type.value
@@ -5694,8 +5633,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstInteger) {
-      auto &right_const_integer_type = static_cast<ConstIntegerType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_integer_type = right_type.as<ConstIntegerType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           Integer(left_type->value) > right_const_integer_type.value
@@ -5705,8 +5644,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstRational) {
-      auto &right_const_rational_type = static_cast<ConstRationalType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_rational_type = right_type.as<ConstRationalType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           Rational(left_type->value) > right_const_rational_type.value
@@ -5728,8 +5667,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstString) {
-      auto &right_const_string_type = static_cast<ConstStringType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_string_type = right_type.as<ConstStringType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value > right_const_string_type.value
@@ -5753,7 +5692,7 @@ public:
     if (!unify(left_type, right_type)) {
       return None();
     }
-    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    auto result = emplace_flex<NativeBinaryOperationExpression>();
     result->node_id = operation_node_id;
     result->type = BOOL_TYPE;
     result->op_kind = BinaryOperatorKind::Greater;
@@ -5785,7 +5724,7 @@ public:
     case BuiltinKind::Float:
     case BuiltinKind::Double:
     case BuiltinKind::Char: {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = BOOL_TYPE;
       result->op_kind = BinaryOperatorKind::Greater;
@@ -5827,7 +5766,7 @@ public:
     case TypeKind::Builtin:
       return perform_binary_op_greater_equals_builtin(
           operation_node_id,
-          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          left_type.derive(left_type.as<BuiltinType>()),
           move(left),
           move(right_type),
           move(right)
@@ -5835,7 +5774,7 @@ public:
     case TypeKind::BitInt:
       return perform_binary_op_greater_equals_bitint(
           operation_node_id,
-          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          left_type.derive(left_type.as<BitIntType>()),
           move(left),
           move(right_type),
           move(right)
@@ -5849,7 +5788,7 @@ public:
     case TypeKind::ConstInteger:
       return perform_binary_op_greater_equals_const_integer(
           operation_node_id,
-          left_type.derive(static_cast<ConstIntegerType &>(*left_type)),
+          left_type.derive(left_type.as<ConstIntegerType>()),
           move(left),
           move(right_type),
           move(right)
@@ -5857,7 +5796,7 @@ public:
     case TypeKind::ConstRational:
       return perform_binary_op_greater_equals_const_rational(
           operation_node_id,
-          left_type.derive(static_cast<ConstRationalType &>(*left_type)),
+          left_type.derive(left_type.as<ConstRationalType>()),
           move(left),
           move(right_type),
           move(right)
@@ -5867,7 +5806,7 @@ public:
     case TypeKind::ConstCharacter:
       return perform_binary_op_greater_equals_const_character(
           operation_node_id,
-          left_type.derive(static_cast<ConstCharacterType &>(*left_type)),
+          left_type.derive(left_type.as<ConstCharacterType>()),
           move(left),
           move(right_type),
           move(right)
@@ -5875,7 +5814,7 @@ public:
     case TypeKind::ConstString:
       return perform_binary_op_greater_equals_const_string(
           operation_node_id,
-          left_type.derive(static_cast<ConstStringType &>(*left_type)),
+          left_type.derive(left_type.as<ConstStringType>()),
           move(left),
           move(right_type),
           move(right)
@@ -5889,8 +5828,12 @@ public:
     case TypeKind::Function:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Function)");
     case TypeKind::FunctionPointer:
-      raise_error_at_node_id(operation_node_id, "not implemented (binary op of FunctionPointer)");
-    case TypeKind::Closure:
+    raise_error_at_node_id(
+        operation_node_id,
+        "not implemented (binary op of
+        FunctionPointer
+    ) ");
+        case TypeKind::Closure:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Closure)");
     case TypeKind::Variable:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Variable)");
@@ -5905,8 +5848,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstInteger) {
-      auto &right_const_integer_type = static_cast<ConstIntegerType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_integer_type = right_type.as<ConstIntegerType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value >= right_const_integer_type.value
@@ -5916,8 +5859,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstRational) {
-      auto &right_const_rational_type = static_cast<ConstRationalType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_rational_type = right_type.as<ConstRationalType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           Rational(left_type->value) >= right_const_rational_type.value
@@ -5927,8 +5870,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstCharacter) {
-      auto &right_const_character_type = static_cast<ConstCharacterType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_character_type = right_type.as<ConstCharacterType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value >= right_const_character_type.value
@@ -5950,8 +5893,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstRational) {
-      auto &right_const_rational_type = static_cast<ConstRationalType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_rational_type = right_type.as<ConstRationalType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value >= right_const_rational_type.value
@@ -5961,8 +5904,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstInteger) {
-      auto &right_const_integer_type = static_cast<ConstIntegerType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_integer_type = right_type.as<ConstIntegerType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value >= Rational(right_const_integer_type.value)
@@ -5972,8 +5915,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstCharacter) {
-      auto &right_const_character_type = static_cast<ConstCharacterType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_character_type = right_type.as<ConstCharacterType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value >= Rational(right_const_character_type.value)
@@ -5995,8 +5938,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstCharacter) {
-      auto &right_const_character_type = static_cast<ConstCharacterType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_character_type = right_type.as<ConstCharacterType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value >= right_const_character_type.value
@@ -6006,8 +5949,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstInteger) {
-      auto &right_const_integer_type = static_cast<ConstIntegerType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_integer_type = right_type.as<ConstIntegerType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           Integer(left_type->value) >= right_const_integer_type.value
@@ -6017,8 +5960,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstRational) {
-      auto &right_const_rational_type = static_cast<ConstRationalType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_rational_type = right_type.as<ConstRationalType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           Rational(left_type->value) >= right_const_rational_type.value
@@ -6040,8 +5983,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstString) {
-      auto &right_const_string_type = static_cast<ConstStringType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_string_type = right_type.as<ConstStringType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value >= right_const_string_type.value
@@ -6065,7 +6008,7 @@ public:
     if (!unify(left_type, right_type)) {
       return None();
     }
-    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    auto result = emplace_flex<NativeBinaryOperationExpression>();
     result->node_id = operation_node_id;
     result->type = BOOL_TYPE;
     result->op_kind = BinaryOperatorKind::GreaterEquals;
@@ -6097,7 +6040,7 @@ public:
     case BuiltinKind::Float:
     case BuiltinKind::Double:
     case BuiltinKind::Char: {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = BOOL_TYPE;
       result->op_kind = BinaryOperatorKind::GreaterEquals;
@@ -6139,7 +6082,7 @@ public:
     case TypeKind::Builtin:
       return perform_binary_op_less_builtin(
           operation_node_id,
-          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          left_type.derive(left_type.as<BuiltinType>()),
           move(left),
           move(right_type),
           move(right)
@@ -6147,7 +6090,7 @@ public:
     case TypeKind::BitInt:
       return perform_binary_op_less_bitint(
           operation_node_id,
-          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          left_type.derive(left_type.as<BitIntType>()),
           move(left),
           move(right_type),
           move(right)
@@ -6161,7 +6104,7 @@ public:
     case TypeKind::ConstInteger:
       return perform_binary_op_less_const_integer(
           operation_node_id,
-          left_type.derive(static_cast<ConstIntegerType &>(*left_type)),
+          left_type.derive(left_type.as<ConstIntegerType>()),
           move(left),
           move(right_type),
           move(right)
@@ -6169,7 +6112,7 @@ public:
     case TypeKind::ConstRational:
       return perform_binary_op_less_const_rational(
           operation_node_id,
-          left_type.derive(static_cast<ConstRationalType &>(*left_type)),
+          left_type.derive(left_type.as<ConstRationalType>()),
           move(left),
           move(right_type),
           move(right)
@@ -6179,7 +6122,7 @@ public:
     case TypeKind::ConstCharacter:
       return perform_binary_op_less_const_character(
           operation_node_id,
-          left_type.derive(static_cast<ConstCharacterType &>(*left_type)),
+          left_type.derive(left_type.as<ConstCharacterType>()),
           move(left),
           move(right_type),
           move(right)
@@ -6187,7 +6130,7 @@ public:
     case TypeKind::ConstString:
       return perform_binary_op_less_const_string(
           operation_node_id,
-          left_type.derive(static_cast<ConstStringType &>(*left_type)),
+          left_type.derive(left_type.as<ConstStringType>()),
           move(left),
           move(right_type),
           move(right)
@@ -6201,8 +6144,12 @@ public:
     case TypeKind::Function:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Function)");
     case TypeKind::FunctionPointer:
-      raise_error_at_node_id(operation_node_id, "not implemented (binary op of FunctionPointer)");
-    case TypeKind::Closure:
+    raise_error_at_node_id(
+        operation_node_id,
+        "not implemented (binary op of
+        FunctionPointer
+    ) ");
+        case TypeKind::Closure:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Closure)");
     case TypeKind::Variable:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Variable)");
@@ -6217,8 +6164,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstInteger) {
-      auto &right_const_integer_type = static_cast<ConstIntegerType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_integer_type = right_type.as<ConstIntegerType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value < right_const_integer_type.value
@@ -6228,8 +6175,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstRational) {
-      auto &right_const_rational_type = static_cast<ConstRationalType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_rational_type = right_type.as<ConstRationalType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           Rational(left_type->value) < right_const_rational_type.value
@@ -6239,8 +6186,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstCharacter) {
-      auto &right_const_character_type = static_cast<ConstCharacterType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_character_type = right_type.as<ConstCharacterType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value < right_const_character_type.value
@@ -6262,8 +6209,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstRational) {
-      auto &right_const_rational_type = static_cast<ConstRationalType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_rational_type = right_type.as<ConstRationalType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value < right_const_rational_type.value
@@ -6273,8 +6220,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstInteger) {
-      auto &right_const_integer_type = static_cast<ConstIntegerType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_integer_type = right_type.as<ConstIntegerType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value < Rational(right_const_integer_type.value)
@@ -6284,8 +6231,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstCharacter) {
-      auto &right_const_character_type = static_cast<ConstCharacterType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_character_type = right_type.as<ConstCharacterType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value < Rational(right_const_character_type.value)
@@ -6307,8 +6254,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstCharacter) {
-      auto &right_const_character_type = static_cast<ConstCharacterType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_character_type = right_type.as<ConstCharacterType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value < right_const_character_type.value
@@ -6318,8 +6265,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstInteger) {
-      auto &right_const_integer_type = static_cast<ConstIntegerType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_integer_type = right_type.as<ConstIntegerType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           Integer(left_type->value) < right_const_integer_type.value
@@ -6329,8 +6276,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstRational) {
-      auto &right_const_rational_type = static_cast<ConstRationalType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_rational_type = right_type.as<ConstRationalType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           Rational(left_type->value) < right_const_rational_type.value
@@ -6352,8 +6299,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstString) {
-      auto &right_const_string_type = static_cast<ConstStringType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_string_type = right_type.as<ConstStringType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value < right_const_string_type.value
@@ -6377,7 +6324,7 @@ public:
     if (!unify(left_type, right_type)) {
       return None();
     }
-    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    auto result = emplace_flex<NativeBinaryOperationExpression>();
     result->node_id = operation_node_id;
     result->type = BOOL_TYPE;
     result->op_kind = BinaryOperatorKind::Less;
@@ -6409,7 +6356,7 @@ public:
     case BuiltinKind::Float:
     case BuiltinKind::Double:
     case BuiltinKind::Char: {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = BOOL_TYPE;
       result->op_kind = BinaryOperatorKind::Less;
@@ -6451,7 +6398,7 @@ public:
     case TypeKind::Builtin:
       return perform_binary_op_less_equals_builtin(
           operation_node_id,
-          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          left_type.derive(left_type.as<BuiltinType>()),
           move(left),
           move(right_type),
           move(right)
@@ -6459,7 +6406,7 @@ public:
     case TypeKind::BitInt:
       return perform_binary_op_less_equals_bitint(
           operation_node_id,
-          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          left_type.derive(left_type.as<BitIntType>()),
           move(left),
           move(right_type),
           move(right)
@@ -6473,7 +6420,7 @@ public:
     case TypeKind::ConstInteger:
       return perform_binary_op_less_equals_const_integer(
           operation_node_id,
-          left_type.derive(static_cast<ConstIntegerType &>(*left_type)),
+          left_type.derive(left_type.as<ConstIntegerType>()),
           move(left),
           move(right_type),
           move(right)
@@ -6481,7 +6428,7 @@ public:
     case TypeKind::ConstRational:
       return perform_binary_op_less_equals_const_rational(
           operation_node_id,
-          left_type.derive(static_cast<ConstRationalType &>(*left_type)),
+          left_type.derive(left_type.as<ConstRationalType>()),
           move(left),
           move(right_type),
           move(right)
@@ -6491,7 +6438,7 @@ public:
     case TypeKind::ConstCharacter:
       return perform_binary_op_less_equals_const_character(
           operation_node_id,
-          left_type.derive(static_cast<ConstCharacterType &>(*left_type)),
+          left_type.derive(left_type.as<ConstCharacterType>()),
           move(left),
           move(right_type),
           move(right)
@@ -6499,7 +6446,7 @@ public:
     case TypeKind::ConstString:
       return perform_binary_op_less_equals_const_string(
           operation_node_id,
-          left_type.derive(static_cast<ConstStringType &>(*left_type)),
+          left_type.derive(left_type.as<ConstStringType>()),
           move(left),
           move(right_type),
           move(right)
@@ -6513,8 +6460,12 @@ public:
     case TypeKind::Function:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Function)");
     case TypeKind::FunctionPointer:
-      raise_error_at_node_id(operation_node_id, "not implemented (binary op of FunctionPointer)");
-    case TypeKind::Closure:
+    raise_error_at_node_id(
+        operation_node_id,
+        "not implemented (binary op of
+        FunctionPointer
+    ) ");
+        case TypeKind::Closure:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Closure)");
     case TypeKind::Variable:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Variable)");
@@ -6529,8 +6480,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstInteger) {
-      auto &right_const_integer_type = static_cast<ConstIntegerType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_integer_type = right_type.as<ConstIntegerType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value <= right_const_integer_type.value
@@ -6540,8 +6491,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstRational) {
-      auto &right_const_rational_type = static_cast<ConstRationalType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_rational_type = right_type.as<ConstRationalType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           Rational(left_type->value) <= right_const_rational_type.value
@@ -6551,8 +6502,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstCharacter) {
-      auto &right_const_character_type = static_cast<ConstCharacterType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_character_type = right_type.as<ConstCharacterType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value <= right_const_character_type.value
@@ -6574,8 +6525,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstRational) {
-      auto &right_const_rational_type = static_cast<ConstRationalType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_rational_type = right_type.as<ConstRationalType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value <= right_const_rational_type.value
@@ -6585,8 +6536,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstInteger) {
-      auto &right_const_integer_type = static_cast<ConstIntegerType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_integer_type = right_type.as<ConstIntegerType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value <= Rational(right_const_integer_type.value)
@@ -6596,8 +6547,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstCharacter) {
-      auto &right_const_character_type = static_cast<ConstCharacterType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_character_type = right_type.as<ConstCharacterType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value <= Rational(right_const_character_type.value)
@@ -6619,8 +6570,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstCharacter) {
-      auto &right_const_character_type = static_cast<ConstCharacterType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_character_type = right_type.as<ConstCharacterType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value <= right_const_character_type.value
@@ -6630,8 +6581,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstInteger) {
-      auto &right_const_integer_type = static_cast<ConstIntegerType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_integer_type = right_type.as<ConstIntegerType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           Integer(left_type->value) <= right_const_integer_type.value
@@ -6641,8 +6592,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstRational) {
-      auto &right_const_rational_type = static_cast<ConstRationalType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_rational_type = right_type.as<ConstRationalType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           Rational(left_type->value) <= right_const_rational_type.value
@@ -6664,8 +6615,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstString) {
-      auto &right_const_string_type = static_cast<ConstStringType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_string_type = right_type.as<ConstStringType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value <= right_const_string_type.value
@@ -6689,7 +6640,7 @@ public:
     if (!unify(left_type, right_type)) {
       return None();
     }
-    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    auto result = emplace_flex<NativeBinaryOperationExpression>();
     result->node_id = operation_node_id;
     result->type = BOOL_TYPE;
     result->op_kind = BinaryOperatorKind::LessEquals;
@@ -6721,7 +6672,7 @@ public:
     case BuiltinKind::Float:
     case BuiltinKind::Double:
     case BuiltinKind::Char: {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = BOOL_TYPE;
       result->op_kind = BinaryOperatorKind::LessEquals;
@@ -6763,7 +6714,7 @@ public:
     case TypeKind::Builtin:
       return perform_binary_op_left_shift_builtin(
           operation_node_id,
-          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          left_type.derive(left_type.as<BuiltinType>()),
           move(left),
           move(right_type),
           move(right)
@@ -6771,7 +6722,7 @@ public:
     case TypeKind::BitInt:
       return perform_binary_op_left_shift_bitint(
           operation_node_id,
-          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          left_type.derive(left_type.as<BitIntType>()),
           move(left),
           move(right_type),
           move(right)
@@ -6785,7 +6736,7 @@ public:
     case TypeKind::ConstInteger:
       return perform_binary_op_left_shift_const_integer(
           operation_node_id,
-          left_type.derive(static_cast<ConstIntegerType &>(*left_type)),
+          left_type.derive(left_type.as<ConstIntegerType>()),
           move(left),
           move(right_type),
           move(right)
@@ -6807,8 +6758,12 @@ public:
     case TypeKind::Function:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Function)");
     case TypeKind::FunctionPointer:
-      raise_error_at_node_id(operation_node_id, "not implemented (binary op of FunctionPointer)");
-    case TypeKind::Closure:
+    raise_error_at_node_id(
+        operation_node_id,
+        "not implemented (binary op of
+        FunctionPointer
+    ) ");
+        case TypeKind::Closure:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Closure)");
     case TypeKind::Variable:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Variable)");
@@ -6823,11 +6778,11 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstInteger) {
-      auto &right_const_integer_type = static_cast<ConstIntegerType &>(*right_type);
+      auto &right_const_integer_type = right_type.as<ConstIntegerType>();
       if (right_const_integer_type.value < 0 || right_const_integer_type.value > UINT32_MAX) {
         return None();
       }
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstIntegerType>::emplace(
           left_type->value << right_const_integer_type.value.to_uint32()
@@ -6851,7 +6806,7 @@ public:
     if (!is_native_integral_type(right_type)) {
       return None();
     }
-    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    auto result = emplace_flex<NativeBinaryOperationExpression>();
     result->node_id = operation_node_id;
     result->type = left->type;
     result->op_kind = BinaryOperatorKind::LeftShift;
@@ -6880,7 +6835,7 @@ public:
     case BuiltinKind::Long:
     case BuiltinKind::ULong:
     case BuiltinKind::USize: {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = left->type;
       result->op_kind = BinaryOperatorKind::LeftShift;
@@ -6889,7 +6844,7 @@ public:
       return result;
     }
     case BuiltinKind::Char: {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = UINT_TYPE;
       result->op_kind = BinaryOperatorKind::LeftShift;
@@ -6933,7 +6888,7 @@ public:
     case TypeKind::Builtin:
       return perform_binary_op_modulo_builtin(
           operation_node_id,
-          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          left_type.derive(left_type.as<BuiltinType>()),
           move(left),
           move(right_type),
           move(right)
@@ -6941,7 +6896,7 @@ public:
     case TypeKind::BitInt:
       return perform_binary_op_modulo_bitint(
           operation_node_id,
-          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          left_type.derive(left_type.as<BitIntType>()),
           move(left),
           move(right_type),
           move(right)
@@ -6955,7 +6910,7 @@ public:
     case TypeKind::ConstInteger:
       return perform_binary_op_modulo_const_integer(
           operation_node_id,
-          left_type.derive(static_cast<ConstIntegerType &>(*left_type)),
+          left_type.derive(left_type.as<ConstIntegerType>()),
           move(left),
           move(right_type),
           move(right)
@@ -6977,8 +6932,12 @@ public:
     case TypeKind::Function:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Function)");
     case TypeKind::FunctionPointer:
-      raise_error_at_node_id(operation_node_id, "not implemented (binary op of FunctionPointer)");
-    case TypeKind::Closure:
+    raise_error_at_node_id(
+        operation_node_id,
+        "not implemented (binary op of
+        FunctionPointer
+    ) ");
+        case TypeKind::Closure:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Closure)");
     case TypeKind::Variable:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Variable)");
@@ -6993,8 +6952,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstInteger) {
-      auto &right_const_integer_type = static_cast<ConstIntegerType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_integer_type = right_type.as<ConstIntegerType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstIntegerType>::emplace(
           left_type->value % right_const_integer_type.value
@@ -7018,7 +6977,7 @@ public:
     if (!unify(left_type, right_type)) {
       return None();
     }
-    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    auto result = emplace_flex<NativeBinaryOperationExpression>();
     result->node_id = operation_node_id;
     result->type = left->type;
     result->op_kind = BinaryOperatorKind::Modulo;
@@ -7047,7 +7006,7 @@ public:
     case BuiltinKind::Long:
     case BuiltinKind::ULong:
     case BuiltinKind::USize: {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = left->type;
       result->op_kind = BinaryOperatorKind::Modulo;
@@ -7056,7 +7015,7 @@ public:
       return result;
     }
     case BuiltinKind::Char: {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = UINT_TYPE;
       result->op_kind = BinaryOperatorKind::Modulo;
@@ -7100,7 +7059,7 @@ public:
     case TypeKind::Builtin:
       return perform_binary_op_not_equals_builtin(
           operation_node_id,
-          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          left_type.derive(left_type.as<BuiltinType>()),
           move(left),
           move(right_type),
           move(right)
@@ -7108,7 +7067,7 @@ public:
     case TypeKind::BitInt:
       return perform_binary_op_not_equals_bitint(
           operation_node_id,
-          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          left_type.derive(left_type.as<BitIntType>()),
           move(left),
           move(right_type),
           move(right)
@@ -7122,7 +7081,7 @@ public:
     case TypeKind::ConstInteger:
       return perform_binary_op_not_equals_const_integer(
           operation_node_id,
-          left_type.derive(static_cast<ConstIntegerType &>(*left_type)),
+          left_type.derive(left_type.as<ConstIntegerType>()),
           move(left),
           move(right_type),
           move(right)
@@ -7130,7 +7089,7 @@ public:
     case TypeKind::ConstRational:
       return perform_binary_op_not_equals_const_rational(
           operation_node_id,
-          left_type.derive(static_cast<ConstRationalType &>(*left_type)),
+          left_type.derive(left_type.as<ConstRationalType>()),
           move(left),
           move(right_type),
           move(right)
@@ -7138,7 +7097,7 @@ public:
     case TypeKind::ConstBoolean:
       return perform_binary_op_not_equals_const_boolean(
           operation_node_id,
-          left_type.derive(static_cast<ConstBooleanType &>(*left_type)),
+          left_type.derive(left_type.as<ConstBooleanType>()),
           move(left),
           move(right_type),
           move(right)
@@ -7146,7 +7105,7 @@ public:
     case TypeKind::ConstCharacter:
       return perform_binary_op_not_equals_const_character(
           operation_node_id,
-          left_type.derive(static_cast<ConstCharacterType &>(*left_type)),
+          left_type.derive(left_type.as<ConstCharacterType>()),
           move(left),
           move(right_type),
           move(right)
@@ -7154,7 +7113,7 @@ public:
     case TypeKind::ConstString:
       return perform_binary_op_not_equals_const_string(
           operation_node_id,
-          left_type.derive(static_cast<ConstStringType &>(*left_type)),
+          left_type.derive(left_type.as<ConstStringType>()),
           move(left),
           move(right_type),
           move(right)
@@ -7168,8 +7127,12 @@ public:
     case TypeKind::Function:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Function)");
     case TypeKind::FunctionPointer:
-      raise_error_at_node_id(operation_node_id, "not implemented (binary op of FunctionPointer)");
-    case TypeKind::Closure:
+    raise_error_at_node_id(
+        operation_node_id,
+        "not implemented (binary op of
+        FunctionPointer
+    ) ");
+        case TypeKind::Closure:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Closure)");
     case TypeKind::Variable:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Variable)");
@@ -7184,8 +7147,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstInteger) {
-      auto &right_const_integer_type = static_cast<ConstIntegerType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_integer_type = right_type.as<ConstIntegerType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value != right_const_integer_type.value
@@ -7195,8 +7158,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstRational) {
-      auto &right_const_rational_type = static_cast<ConstRationalType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_rational_type = right_type.as<ConstRationalType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           Rational(left_type->value) != right_const_rational_type.value
@@ -7206,8 +7169,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstCharacter) {
-      auto &right_const_character_type = static_cast<ConstCharacterType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_character_type = right_type.as<ConstCharacterType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value != right_const_character_type.value
@@ -7229,8 +7192,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstRational) {
-      auto &right_const_rational_type = static_cast<ConstRationalType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_rational_type = right_type.as<ConstRationalType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value != right_const_rational_type.value
@@ -7240,8 +7203,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstInteger) {
-      auto &right_const_integer_type = static_cast<ConstIntegerType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_integer_type = right_type.as<ConstIntegerType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value != Rational(right_const_integer_type.value)
@@ -7251,8 +7214,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstCharacter) {
-      auto &right_const_character_type = static_cast<ConstCharacterType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_character_type = right_type.as<ConstCharacterType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value != Rational(right_const_character_type.value)
@@ -7274,8 +7237,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstBoolean) {
-      auto &right_const_boolean_type = static_cast<ConstBooleanType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_boolean_type = right_type.as<ConstBooleanType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value != right_const_boolean_type.value
@@ -7297,8 +7260,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstCharacter) {
-      auto &right_const_character_type = static_cast<ConstCharacterType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_character_type = right_type.as<ConstCharacterType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value != right_const_character_type.value
@@ -7308,8 +7271,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstInteger) {
-      auto &right_const_integer_type = static_cast<ConstIntegerType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_integer_type = right_type.as<ConstIntegerType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           Integer(left_type->value) != right_const_integer_type.value
@@ -7319,8 +7282,8 @@ public:
       result->right = right;
       return result;
     } else if (right_type->kind == TypeKind::ConstRational) {
-      auto &right_const_rational_type = static_cast<ConstRationalType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_rational_type = right_type.as<ConstRationalType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           Rational(left_type->value) != right_const_rational_type.value
@@ -7342,8 +7305,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstString) {
-      auto &right_const_string_type = static_cast<ConstStringType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_string_type = right_type.as<ConstStringType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value != right_const_string_type.value
@@ -7367,7 +7330,7 @@ public:
     if (!unify(left_type, right_type)) {
       return None();
     }
-    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    auto result = emplace_flex<NativeBinaryOperationExpression>();
     result->node_id = operation_node_id;
     result->type = BOOL_TYPE;
     result->op_kind = BinaryOperatorKind::NotEquals;
@@ -7401,7 +7364,7 @@ public:
     case BuiltinKind::Char:
     case BuiltinKind::Bool:
     case BuiltinKind::Null: {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = BOOL_TYPE;
       result->op_kind = BinaryOperatorKind::NotEquals;
@@ -7441,7 +7404,7 @@ public:
     case TypeKind::Builtin:
       return perform_binary_op_or_builtin(
           operation_node_id,
-          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          left_type.derive(left_type.as<BuiltinType>()),
           move(left),
           move(right_type),
           move(right)
@@ -7461,7 +7424,7 @@ public:
     case TypeKind::ConstBoolean:
       return perform_binary_op_or_const_boolean(
           operation_node_id,
-          left_type.derive(static_cast<ConstBooleanType &>(*left_type)),
+          left_type.derive(left_type.as<ConstBooleanType>()),
           move(left),
           move(right_type),
           move(right)
@@ -7479,8 +7442,12 @@ public:
     case TypeKind::Function:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Function)");
     case TypeKind::FunctionPointer:
-      raise_error_at_node_id(operation_node_id, "not implemented (binary op of FunctionPointer)");
-    case TypeKind::Closure:
+    raise_error_at_node_id(
+        operation_node_id,
+        "not implemented (binary op of
+        FunctionPointer
+    ) ");
+        case TypeKind::Closure:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Closure)");
     case TypeKind::Variable:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Variable)");
@@ -7495,8 +7462,8 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstBoolean) {
-      auto &right_const_boolean_type = static_cast<ConstBooleanType &>(*right_type);
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto &right_const_boolean_type = right_type.as<ConstBooleanType>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstBooleanType>::emplace(
           left_type->value || right_const_boolean_type.value
@@ -7522,7 +7489,7 @@ public:
     }
     switch (left_type->builtin_kind) {
     case BuiltinKind::Bool: {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = BOOL_TYPE;
       result->op_kind = BinaryOperatorKind::Or;
@@ -7575,7 +7542,7 @@ public:
     case TypeKind::Builtin:
       return perform_binary_op_right_shift_builtin(
           operation_node_id,
-          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          left_type.derive(left_type.as<BuiltinType>()),
           move(left),
           move(right_type),
           move(right)
@@ -7583,7 +7550,7 @@ public:
     case TypeKind::BitInt:
       return perform_binary_op_right_shift_bitint(
           operation_node_id,
-          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          left_type.derive(left_type.as<BitIntType>()),
           move(left),
           move(right_type),
           move(right)
@@ -7597,7 +7564,7 @@ public:
     case TypeKind::ConstInteger:
       return perform_binary_op_right_shift_const_integer(
           operation_node_id,
-          left_type.derive(static_cast<ConstIntegerType &>(*left_type)),
+          left_type.derive(left_type.as<ConstIntegerType>()),
           move(left),
           move(right_type),
           move(right)
@@ -7619,8 +7586,12 @@ public:
     case TypeKind::Function:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Function)");
     case TypeKind::FunctionPointer:
-      raise_error_at_node_id(operation_node_id, "not implemented (binary op of FunctionPointer)");
-    case TypeKind::Closure:
+    raise_error_at_node_id(
+        operation_node_id,
+        "not implemented (binary op of
+        FunctionPointer
+    ) ");
+        case TypeKind::Closure:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Closure)");
     case TypeKind::Variable:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Variable)");
@@ -7635,11 +7606,11 @@ public:
       Flex<Expression> right
   ) {
     if (right_type->kind == TypeKind::ConstInteger) {
-      auto &right_const_integer_type = static_cast<ConstIntegerType &>(*right_type);
+      auto &right_const_integer_type = right_type.as<ConstIntegerType>();
       if (right_const_integer_type.value < 0 || right_const_integer_type.value > UINT32_MAX) {
         return None();
       }
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = Flex<ConstIntegerType>::emplace(
           left_type->value >> right_const_integer_type.value.to_uint32()
@@ -7663,7 +7634,7 @@ public:
     if (!is_native_integral_type(right_type)) {
       return None();
     }
-    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    auto result = emplace_flex<NativeBinaryOperationExpression>();
     result->node_id = operation_node_id;
     result->type = left->type;
     result->op_kind = BinaryOperatorKind::RightShift;
@@ -7692,7 +7663,7 @@ public:
     case BuiltinKind::Long:
     case BuiltinKind::ULong:
     case BuiltinKind::USize: {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = left->type;
       result->op_kind = BinaryOperatorKind::RightShift;
@@ -7701,7 +7672,7 @@ public:
       return result;
     }
     case BuiltinKind::Char: {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = UINT_TYPE;
       result->op_kind = BinaryOperatorKind::RightShift;
@@ -7745,17 +7716,11 @@ public:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Apply)");
     case TypeKind::Builtin:
       return perform_binary_op_assignment_builtin(
-          operation_node_id,
-          left_type.derive(static_cast<BuiltinType &>(*left_type)),
-          move(left),
-          move(right)
+          operation_node_id, left_type.derive(left_type.as<BuiltinType>()), move(left), move(right)
       );
     case TypeKind::BitInt:
       return perform_binary_op_assignment_bitint(
-          operation_node_id,
-          left_type.derive(static_cast<BitIntType &>(*left_type)),
-          move(left),
-          move(right)
+          operation_node_id, left_type.derive(left_type.as<BitIntType>()), move(left), move(right)
       );
     case TypeKind::Pointer:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Pointer)");
@@ -7782,8 +7747,12 @@ public:
     case TypeKind::Function:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Function)");
     case TypeKind::FunctionPointer:
-      raise_error_at_node_id(operation_node_id, "not implemented (binary op of FunctionPointer)");
-    case TypeKind::Closure:
+    raise_error_at_node_id(
+        operation_node_id,
+        "not implemented (binary op of
+        FunctionPointer
+    ) ");
+        case TypeKind::Closure:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Closure)");
     case TypeKind::Variable:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Variable)");
@@ -7791,16 +7760,13 @@ public:
   }
 
   Option<Flex<Expression>> perform_binary_op_assignment_bitint(
-      NodeId operation_node_id,
-      Flex<BitIntType>,
-      Flex<Expression> left,
-      Flex<Expression> right
+      NodeId operation_node_id, Flex<BitIntType>, Flex<Expression> left, Flex<Expression> right
   ) {
     auto coerced_right_expr = coerce(left->type, right);
     if (!coerced_right_expr.has_value()) {
       return None();
     }
-    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    auto result = emplace_flex<NativeBinaryOperationExpression>();
     result->node_id = operation_node_id;
     result->type = NULL_TYPE;
     result->op_kind = BinaryOperatorKind::Assignment;
@@ -7818,7 +7784,7 @@ public:
     auto coerced_right_expr = coerce(left_type, right);
     if (!coerced_right_expr.has_value()) {
       return None();
-    } 
+    }
     switch (left_type->builtin_kind) {
     case BuiltinKind::Byte:
     case BuiltinKind::UByte:
@@ -7835,7 +7801,7 @@ public:
     case BuiltinKind::Bool:
     case BuiltinKind::Never:
     case BuiltinKind::Null: {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = NULL_TYPE;
       result->op_kind = BinaryOperatorKind::Assignment;
@@ -7875,7 +7841,7 @@ public:
     case TypeKind::Builtin:
       return perform_binary_op_bitandassignment_builtin(
           operation_node_id,
-          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          left_type.derive(left_type.as<BuiltinType>()),
           move(left),
           move(right_type),
           move(right)
@@ -7883,7 +7849,7 @@ public:
     case TypeKind::BitInt:
       return perform_binary_op_bitandassignment_bitint(
           operation_node_id,
-          left_type.derive(static_cast<BitIntType &>(*left_type)),
+          left_type.derive(left_type.as<BitIntType>()),
           move(left),
           move(right_type),
           move(right)
@@ -7913,8 +7879,12 @@ public:
     case TypeKind::Function:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Function)");
     case TypeKind::FunctionPointer:
-      raise_error_at_node_id(operation_node_id, "not implemented (binary op of FunctionPointer)");
-    case TypeKind::Closure:
+    raise_error_at_node_id(
+        operation_node_id,
+        "not implemented (binary op of
+        FunctionPointer
+    ) ");
+        case TypeKind::Closure:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Closure)");
     case TypeKind::Variable:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Variable)");
@@ -7932,7 +7902,7 @@ public:
     if (!coerced_right_expr.has_value()) {
       return None();
     }
-    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    auto result = emplace_flex<NativeBinaryOperationExpression>();
     result->node_id = operation_node_id;
     result->type = NULL_TYPE;
     result->op_kind = BinaryOperatorKind::BitAndAssignment;
@@ -7951,7 +7921,7 @@ public:
     auto coerced_right_expr = coerce(left_type, right);
     if (!coerced_right_expr.has_value()) {
       return None();
-    } 
+    }
     switch (left_type->builtin_kind) {
     case BuiltinKind::Byte:
     case BuiltinKind::UByte:
@@ -7962,7 +7932,7 @@ public:
     case BuiltinKind::Long:
     case BuiltinKind::ULong:
     case BuiltinKind::USize: {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = NULL_TYPE;
       result->op_kind = BinaryOperatorKind::BitAndAssignment;
@@ -7975,7 +7945,7 @@ public:
     case BuiltinKind::Double:
     case BuiltinKind::Bool:
     case BuiltinKind::Never:
-    case BuiltinKind::Null: 
+    case BuiltinKind::Null:
     case BuiltinKind::Str:
     case BuiltinKind::Unknown:
       return None();
@@ -8008,7 +7978,7 @@ public:
     case TypeKind::Builtin:
       return perform_binary_op_bitorassignment_builtin(
           operation_node_id,
-          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          left_type.derive(left_type.as<BuiltinType>()),
           move(left),
           move(right_type),
           move(right)
@@ -8040,8 +8010,12 @@ public:
     case TypeKind::Function:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Function)");
     case TypeKind::FunctionPointer:
-      raise_error_at_node_id(operation_node_id, "not implemented (binary op of FunctionPointer)");
-    case TypeKind::Closure:
+    raise_error_at_node_id(
+        operation_node_id,
+        "not implemented (binary op of
+        FunctionPointer
+    ) ");
+        case TypeKind::Closure:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Closure)");
     case TypeKind::Variable:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Variable)");
@@ -8058,7 +8032,7 @@ public:
     auto coerced_right_expr = coerce(left_type, right);
     if (!coerced_right_expr.has_value()) {
       return None();
-    } 
+    }
     switch (left_type->builtin_kind) {
     case BuiltinKind::Byte:
     case BuiltinKind::UByte:
@@ -8069,7 +8043,7 @@ public:
     case BuiltinKind::Long:
     case BuiltinKind::ULong:
     case BuiltinKind::USize: {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = NULL_TYPE;
       result->op_kind = BinaryOperatorKind::BitOrAssignment;
@@ -8082,7 +8056,7 @@ public:
     case BuiltinKind::Double:
     case BuiltinKind::Bool:
     case BuiltinKind::Never:
-    case BuiltinKind::Null: 
+    case BuiltinKind::Null:
     case BuiltinKind::Str:
     case BuiltinKind::Unknown:
       return None();
@@ -8115,7 +8089,7 @@ public:
     case TypeKind::Builtin:
       return perform_binary_op_bitxorassignment_builtin(
           operation_node_id,
-          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          left_type.derive(left_type.as<BuiltinType>()),
           move(left),
           move(right_type),
           move(right)
@@ -8147,8 +8121,12 @@ public:
     case TypeKind::Function:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Function)");
     case TypeKind::FunctionPointer:
-      raise_error_at_node_id(operation_node_id, "not implemented (binary op of FunctionPointer)");
-    case TypeKind::Closure:
+    raise_error_at_node_id(
+        operation_node_id,
+        "not implemented (binary op of
+        FunctionPointer
+    ) ");
+        case TypeKind::Closure:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Closure)");
     case TypeKind::Variable:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Variable)");
@@ -8165,7 +8143,7 @@ public:
     auto coerced_right_expr = coerce(left_type, right);
     if (!coerced_right_expr.has_value()) {
       return None();
-    } 
+    }
     switch (left_type->builtin_kind) {
     case BuiltinKind::Byte:
     case BuiltinKind::UByte:
@@ -8176,7 +8154,7 @@ public:
     case BuiltinKind::Long:
     case BuiltinKind::ULong:
     case BuiltinKind::USize: {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = NULL_TYPE;
       result->op_kind = BinaryOperatorKind::BitXorAssignment;
@@ -8189,7 +8167,7 @@ public:
     case BuiltinKind::Double:
     case BuiltinKind::Bool:
     case BuiltinKind::Never:
-    case BuiltinKind::Null: 
+    case BuiltinKind::Null:
     case BuiltinKind::Str:
     case BuiltinKind::Unknown:
       return None();
@@ -8222,7 +8200,7 @@ public:
     case TypeKind::Builtin:
       return perform_binary_op_divassignment_builtin(
           operation_node_id,
-          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          left_type.derive(left_type.as<BuiltinType>()),
           move(left),
           move(right_type),
           move(right)
@@ -8254,8 +8232,12 @@ public:
     case TypeKind::Function:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Function)");
     case TypeKind::FunctionPointer:
-      raise_error_at_node_id(operation_node_id, "not implemented (binary op of FunctionPointer)");
-    case TypeKind::Closure:
+    raise_error_at_node_id(
+        operation_node_id,
+        "not implemented (binary op of
+        FunctionPointer
+    ) ");
+        case TypeKind::Closure:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Closure)");
     case TypeKind::Variable:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Variable)");
@@ -8272,7 +8254,7 @@ public:
     auto coerced_right_expr = coerce(left_type, right);
     if (!coerced_right_expr.has_value()) {
       return None();
-    } 
+    }
     switch (left_type->builtin_kind) {
     case BuiltinKind::Byte:
     case BuiltinKind::UByte:
@@ -8282,10 +8264,10 @@ public:
     case BuiltinKind::UInt:
     case BuiltinKind::Long:
     case BuiltinKind::ULong:
-    case BuiltinKind::USize: 
+    case BuiltinKind::USize:
     case BuiltinKind::Float:
     case BuiltinKind::Double: {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = NULL_TYPE;
       result->op_kind = BinaryOperatorKind::DivAssignment;
@@ -8296,7 +8278,7 @@ public:
     case BuiltinKind::Char:
     case BuiltinKind::Bool:
     case BuiltinKind::Never:
-    case BuiltinKind::Null: 
+    case BuiltinKind::Null:
     case BuiltinKind::Str:
     case BuiltinKind::Unknown:
       return None();
@@ -8329,7 +8311,7 @@ public:
     case TypeKind::Builtin:
       return perform_binary_op_lshiftassignment_builtin(
           operation_node_id,
-          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          left_type.derive(left_type.as<BuiltinType>()),
           move(left),
           move(right_type),
           move(right)
@@ -8361,8 +8343,12 @@ public:
     case TypeKind::Function:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Function)");
     case TypeKind::FunctionPointer:
-      raise_error_at_node_id(operation_node_id, "not implemented (binary op of FunctionPointer)");
-    case TypeKind::Closure:
+    raise_error_at_node_id(
+        operation_node_id,
+        "not implemented (binary op of
+        FunctionPointer
+    ) ");
+        case TypeKind::Closure:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Closure)");
     case TypeKind::Variable:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Variable)");
@@ -8389,7 +8375,7 @@ public:
     case BuiltinKind::Long:
     case BuiltinKind::ULong:
     case BuiltinKind::USize: {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = NULL_TYPE;
       result->op_kind = BinaryOperatorKind::LShiftAssignment;
@@ -8435,7 +8421,7 @@ public:
     case TypeKind::Builtin:
       return perform_binary_op_modassignment_builtin(
           operation_node_id,
-          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          left_type.derive(left_type.as<BuiltinType>()),
           move(left),
           move(right_type),
           move(right)
@@ -8467,8 +8453,12 @@ public:
     case TypeKind::Function:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Function)");
     case TypeKind::FunctionPointer:
-      raise_error_at_node_id(operation_node_id, "not implemented (binary op of FunctionPointer)");
-    case TypeKind::Closure:
+    raise_error_at_node_id(
+        operation_node_id,
+        "not implemented (binary op of
+        FunctionPointer
+    ) ");
+        case TypeKind::Closure:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Closure)");
     case TypeKind::Variable:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Variable)");
@@ -8485,7 +8475,7 @@ public:
     auto coerced_right_expr = coerce(left_type, right);
     if (!coerced_right_expr.has_value()) {
       return None();
-    } 
+    }
     switch (left_type->builtin_kind) {
     case BuiltinKind::Byte:
     case BuiltinKind::UByte:
@@ -8495,8 +8485,8 @@ public:
     case BuiltinKind::UInt:
     case BuiltinKind::Long:
     case BuiltinKind::ULong:
-    case BuiltinKind::USize:  {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    case BuiltinKind::USize: {
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = NULL_TYPE;
       result->op_kind = BinaryOperatorKind::ModAssignment;
@@ -8509,7 +8499,7 @@ public:
     case BuiltinKind::Char:
     case BuiltinKind::Bool:
     case BuiltinKind::Never:
-    case BuiltinKind::Null: 
+    case BuiltinKind::Null:
     case BuiltinKind::Str:
     case BuiltinKind::Unknown:
       return None();
@@ -8542,7 +8532,7 @@ public:
     case TypeKind::Builtin:
       return perform_binary_op_mulassignment_builtin(
           operation_node_id,
-          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          left_type.derive(left_type.as<BuiltinType>()),
           move(left),
           move(right_type),
           move(right)
@@ -8574,8 +8564,12 @@ public:
     case TypeKind::Function:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Function)");
     case TypeKind::FunctionPointer:
-      raise_error_at_node_id(operation_node_id, "not implemented (binary op of FunctionPointer)");
-    case TypeKind::Closure:
+    raise_error_at_node_id(
+        operation_node_id,
+        "not implemented (binary op of
+        FunctionPointer
+    ) ");
+        case TypeKind::Closure:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Closure)");
     case TypeKind::Variable:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Variable)");
@@ -8592,7 +8586,7 @@ public:
     auto coerced_right_expr = coerce(left_type, right);
     if (!coerced_right_expr.has_value()) {
       return None();
-    } 
+    }
     switch (left_type->builtin_kind) {
     case BuiltinKind::Byte:
     case BuiltinKind::UByte:
@@ -8604,8 +8598,8 @@ public:
     case BuiltinKind::ULong:
     case BuiltinKind::USize:
     case BuiltinKind::Float:
-    case BuiltinKind::Double:  {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    case BuiltinKind::Double: {
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = NULL_TYPE;
       result->op_kind = BinaryOperatorKind::MulAssignment;
@@ -8616,7 +8610,7 @@ public:
     case BuiltinKind::Char:
     case BuiltinKind::Bool:
     case BuiltinKind::Never:
-    case BuiltinKind::Null: 
+    case BuiltinKind::Null:
     case BuiltinKind::Str:
     case BuiltinKind::Unknown:
       return None();
@@ -8649,7 +8643,7 @@ public:
     case TypeKind::Builtin:
       return perform_binary_op_rshiftassignment_builtin(
           operation_node_id,
-          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          left_type.derive(left_type.as<BuiltinType>()),
           move(left),
           move(right_type),
           move(right)
@@ -8681,8 +8675,12 @@ public:
     case TypeKind::Function:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Function)");
     case TypeKind::FunctionPointer:
-      raise_error_at_node_id(operation_node_id, "not implemented (binary op of FunctionPointer)");
-    case TypeKind::Closure:
+    raise_error_at_node_id(
+        operation_node_id,
+        "not implemented (binary op of
+        FunctionPointer
+    ) ");
+        case TypeKind::Closure:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Closure)");
     case TypeKind::Variable:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Variable)");
@@ -8709,7 +8707,7 @@ public:
     case BuiltinKind::Long:
     case BuiltinKind::ULong:
     case BuiltinKind::USize: {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = NULL_TYPE;
       result->op_kind = BinaryOperatorKind::RShiftAssignment;
@@ -8755,7 +8753,7 @@ public:
     case TypeKind::Builtin:
       return perform_binary_op_subassignment_builtin(
           operation_node_id,
-          left_type.derive(static_cast<BuiltinType &>(*left_type)),
+          left_type.derive(left_type.as<BuiltinType>()),
           move(left),
           move(right_type),
           move(right)
@@ -8787,8 +8785,12 @@ public:
     case TypeKind::Function:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Function)");
     case TypeKind::FunctionPointer:
-      raise_error_at_node_id(operation_node_id, "not implemented (binary op of FunctionPointer)");
-    case TypeKind::Closure:
+    raise_error_at_node_id(
+        operation_node_id,
+        "not implemented (binary op of
+        FunctionPointer
+    ) ");
+        case TypeKind::Closure:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Closure)");
     case TypeKind::Variable:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Variable)");
@@ -8805,7 +8807,7 @@ public:
     auto coerced_right_expr = coerce(left_type, right);
     if (!coerced_right_expr.has_value()) {
       return None();
-    } 
+    }
     switch (left_type->builtin_kind) {
     case BuiltinKind::Byte:
     case BuiltinKind::UByte:
@@ -8817,8 +8819,8 @@ public:
     case BuiltinKind::ULong:
     case BuiltinKind::USize:
     case BuiltinKind::Float:
-    case BuiltinKind::Double:  {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    case BuiltinKind::Double: {
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = NULL_TYPE;
       result->op_kind = BinaryOperatorKind::SubAssignment;
@@ -8829,7 +8831,7 @@ public:
     case BuiltinKind::Char:
     case BuiltinKind::Bool:
     case BuiltinKind::Never:
-    case BuiltinKind::Null: 
+    case BuiltinKind::Null:
     case BuiltinKind::Str:
     case BuiltinKind::Unknown:
       return None();
@@ -8861,17 +8863,11 @@ public:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Apply)");
     case TypeKind::Builtin:
       return perform_binary_op_addassignment_builtin(
-          operation_node_id,
-          left_type.derive(static_cast<BuiltinType &>(*left_type)),
-          move(left),
-          move(right)
+          operation_node_id, left_type.derive(left_type.as<BuiltinType>()), move(left), move(right)
       );
     case TypeKind::BitInt:
       return perform_binary_op_addassignment_bitint(
-          operation_node_id,
-          left_type.derive(static_cast<BitIntType &>(*left_type)),
-          move(left),
-          move(right)
+          operation_node_id, left_type.derive(left_type.as<BitIntType>()), move(left), move(right)
       );
     case TypeKind::Pointer:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Pointer)");
@@ -8898,16 +8894,19 @@ public:
     case TypeKind::Function:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Function)");
     case TypeKind::FunctionPointer:
-      raise_error_at_node_id(operation_node_id, "not implemented (binary op of FunctionPointer)");
-    case TypeKind::Closure:
+    raise_error_at_node_id(
+        operation_node_id,
+        "not implemented (binary op of
+        FunctionPointer
+    ) ");
+        case TypeKind::Closure:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Closure)");
     case TypeKind::Variable:
       raise_error_at_node_id(operation_node_id, "not implemented (binary op of Variable)");
     }
   }
 
-  Option<Flex<Expression>>
-  perform_binary_op_addassignment_bitint(
+  Option<Flex<Expression>> perform_binary_op_addassignment_bitint(
       NodeId operation_node_id,
       Flex<BitIntType> left_type,
       Flex<Expression> left,
@@ -8916,8 +8915,8 @@ public:
     auto coerced_right_expr = coerce(left_type, right);
     if (!coerced_right_expr.has_value()) {
       return None();
-    } 
-    auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    }
+    auto result = emplace_flex<NativeBinaryOperationExpression>();
     result->node_id = operation_node_id;
     result->type = NULL_TYPE;
     result->op_kind = BinaryOperatorKind::AddAssignment;
@@ -8935,7 +8934,7 @@ public:
     auto coerced_right_expr = coerce(left_type, right);
     if (!coerced_right_expr.has_value()) {
       return None();
-    } 
+    }
     switch (left_type->builtin_kind) {
     case BuiltinKind::Byte:
     case BuiltinKind::UByte:
@@ -8947,8 +8946,8 @@ public:
     case BuiltinKind::ULong:
     case BuiltinKind::USize:
     case BuiltinKind::Float:
-    case BuiltinKind::Double:  {
-      auto result = emplace_flex<BuiltinBinaryOperationExpression>();
+    case BuiltinKind::Double: {
+      auto result = emplace_flex<NativeBinaryOperationExpression>();
       result->node_id = operation_node_id;
       result->type = NULL_TYPE;
       result->op_kind = BinaryOperatorKind::AddAssignment;
@@ -8959,7 +8958,7 @@ public:
     case BuiltinKind::Char:
     case BuiltinKind::Bool:
     case BuiltinKind::Never:
-    case BuiltinKind::Null: 
+    case BuiltinKind::Null:
     case BuiltinKind::Str:
     case BuiltinKind::Unknown:
       return None();
@@ -9012,10 +9011,9 @@ public:
       auto element_type = evaluate_type_expr(bracket_node.exprs[0]);
       auto length_expr = build_expression(bracket_node.exprs[1]);
       if (length_expr->type->kind != TypeKind::ConstInteger) {
-        String
-            error_message = "Expected a constant integer length, but got an expression of type '";
-        length_expr->type->serialize().to_string(error_message);
-        error_message.append('\'');
+        String error_message = "Expected a constant integer length, but got an expression of type
+            '"; length_expr->type->serialize().to_string(error_message); error_message.append('\''
+        );
         raise_error_at_node_id(bracket_node.exprs[1], move(error_message));
       }
       const Integer &length_value = static_cast<const ConstIntegerType &>(*length_expr->type).value;
@@ -9047,7 +9045,11 @@ public:
     const auto &object_node = m_module_obj.ast.get_node(indexing_node.object);
 
     if (object_node.type() != NodeType::BitIntTypeNode) {
-      raise_error_at_node_id(indexing_node.object, "not implemented (indexing of non-bitint type)");
+      raise_error_at_node_id(
+          indexing_node.object,
+          "not implemented (indexing of non-bitint
+          type
+      ) ");
     }
 
     if (indexing_node.indices.size() != 1) {
@@ -9074,9 +9076,9 @@ public:
 
     const Integer &index_value = static_cast<const ConstIntegerType &>(*index_expr->type).value;
     if (index_value < 1 || index_value > UINT32_MAX) {
-      String error_message = "BitInt bit-count must be a positive integer less than or equal to ";
-      Serialize::of(int64_t(UINT32_MAX)).to_string(error_message);
-      raise_error_at_node_id(indexing_node.indices[0], move(error_message));
+      String error_message = "BitInt bit-count must be a positive integer less than or equal to
+                             "; Serialize::of(int64_t(UINT32_MAX)).to_string(error_message);
+          raise_error_at_node_id(indexing_node.indices[0], move(error_message));
     }
     bool is_signed = object_node.as_BitIntTypeNode().is_signed;
 

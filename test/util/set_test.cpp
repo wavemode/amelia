@@ -1,8 +1,7 @@
 #include <doctest.h>
 
-#include "prelude.hpp"
-
 #include "util/data/set.hpp"
+#include "util/data/string.hpp"
 
 TEST_SUITE_BEGIN("Set");
 

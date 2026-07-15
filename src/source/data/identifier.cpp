@@ -4,6 +4,8 @@
 
 #include "lexer/data/lexer.hpp"
 #include "source/data/char_literal.hpp"
+#include "util/data/char_iterator.hpp"
+#include "util/data/serialize.hpp"
 #include "util/data/set.hpp"
 #include "util/data/text_utils.hpp"
 

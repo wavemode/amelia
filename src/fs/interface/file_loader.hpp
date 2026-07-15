@@ -1,10 +1,10 @@
 #pragma once
 
-#include "prelude.hpp"
-
 namespace amelia {
 
 struct AbstractString;
+template <typename T> class Option;
+class RuntimeError;
 
 struct IFileLoader {
   virtual void load_file(AbstractString &output, const AbstractString &file_path) = 0;

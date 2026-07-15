@@ -1,6 +1,6 @@
 #include "binding.hpp"
 
-#include "testing/data/serialize.hpp"
+#include "util/data/serialize.hpp"
 
 namespace amelia {
 
@@ -11,7 +11,7 @@ Serialize Binding::serialize() const {
   case BindingKind::Variable:
   case BindingKind::Constant:
   case BindingKind::Function: {
-    const ValueBinding &value_binding = static_cast<const ValueBinding &>(*this);
+    const ValueBinding &value_binding = this.as<ValueBinding>();
     result.set_object_name("ValueBinding");
     if (value_binding.type.has_value()) {
       result.add_object_field("type", value_binding.type.value()->serialize());
@@ -24,7 +24,7 @@ Serialize Binding::serialize() const {
   case BindingKind::Class:
   case BindingKind::Concept: {
     result.set_object_name("TypeBinding");
-    const TypeBinding &type_binding = static_cast<const TypeBinding &>(*this);
+    const TypeBinding &type_binding = this.as<TypeBinding>();
     if (type_binding.type.has_value()) {
       result.add_object_field("type", type_binding.type.value()->serialize());
     }

@@ -1,17 +1,21 @@
 #pragma once
 
-#include "prelude.hpp"
-
-#include "util/data/map.hpp"
-#include "util/data/set.hpp"
+#include <cstdint>
 
 #include "lexer/data/lexer_result.hpp"
 #include "parser/data/parser_result.hpp"
 #include "sema/data/scope.hpp"
+#include "source/data/location.hpp"
+#include "util/data/list.hpp"
+#include "util/data/map.hpp"
+#include "util/data/set.hpp"
+#include "util/data/string.hpp"
 
 namespace amelia {
 
 class Serialize;
+
+using ModuleId = int32_t;
 
 struct ModuleImport {
   String name;

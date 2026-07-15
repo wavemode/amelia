@@ -1,7 +1,5 @@
 #include "source_location_error.hpp"
 
-#include "prelude.hpp"
-
 #include "source/data/location.hpp"
 #include "util/data/text_utils.hpp"
 

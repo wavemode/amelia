@@ -4,6 +4,9 @@
 
 #include "file_loader.hpp"
 
+#include "util/data/option.hpp"
+#include "util/data/string.hpp"
+
 namespace amelia {
 
 void FileLoader::load_file(AbstractString &output, const AbstractString &file_path) {

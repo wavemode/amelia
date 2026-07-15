@@ -27,7 +27,7 @@ SemaResult(
                   )
                 ),
                 ReturnExpression(
-                  value=BuiltinTypeCoerceExpression(
+                  value=NativeTypeCastExpression(
                     expr=NumberLiteralExpression(
                       lit=10
                     )

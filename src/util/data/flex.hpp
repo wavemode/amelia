@@ -9,42 +9,20 @@ namespace internal {
 struct ControlBlock {
   uint32_t strong_count;
   uint32_t weak_count;
-  void *object;
-  void (*deleter)(void *);
-
-  void clear() noexcept {
-    deleter(object);
-    object = nullptr;
-  }
 };
 
-template <typename T> void free_obj(void *obj) {
-  delete static_cast<T *>(obj);
-}
+template <typename T>
+concept has_control_block_field = requires(T obj) {
+  { obj.m_control_block } -> amelia::matches_type<ControlBlock *>;
+};
 } // namespace internal
+
+template <typename T> class FlexFromThis;
 
 /* Non-threadsafe reference-counted pointer that can be either strong or weak. */
 template <typename T> class Flex {
 public:
   Flex() noexcept {}
-
-  static Flex<T> strong(T &&obj) {
-    Flex<T> result;
-    result.m_object = new T(move(obj));
-    result
-        .m_control_block = new internal::ControlBlock{1, 0, result.m_object, internal::free_obj<T>};
-    result.m_is_strong = true;
-    return result;
-  }
-
-  template <typename... Args> static Flex<T> emplace(Args &&...args) {
-    Flex<T> result;
-    result.m_object = new T(amelia::forward<Args>(args)...);
-    result
-        .m_control_block = new internal::ControlBlock{1, 0, result.m_object, internal::free_obj<T>};
-    result.m_is_strong = true;
-    return result;
-  }
 
   Flex(const Flex<T> &other) noexcept
       : m_object(other.m_object), m_control_block(other.m_control_block),
@@ -87,22 +65,26 @@ public:
     return result;
   }
 
-  template <typename U> Flex<U> derive(U &obj) const noexcept {
+  Flex<T> strong() const noexcept {
+    Flex<T> result;
+    result.m_object = m_object;
+    result.m_control_block = m_control_block;
+    result.m_is_strong = true;
+    result.acquire();
+    return result;
+  }
+
+  template <typename U> Flex<U> downcast() const noexcept {
     Flex<U> result;
-    result.m_object = &obj;
+    result.m_object = static_cast<U *>(m_object);
     result.m_control_block = m_control_block;
     result.m_is_strong = m_is_strong;
     result.acquire();
     return result;
   }
 
-  template <typename U> Flex<U> derive(U *obj) const noexcept {
-    Flex<U> result;
-    result.m_object = obj;
-    result.m_control_block = m_control_block;
-    result.m_is_strong = m_is_strong;
-    result.acquire();
-    return result;
+  bool is_null() const noexcept {
+    return m_object == nullptr || m_control_block == nullptr || m_control_block->strong_count == 0;
   }
 
   Flex<T> &operator=(const Flex<T> &other) noexcept {
@@ -180,6 +162,23 @@ public:
   }
 
   template <typename U> friend class Flex;
+  template <typename U> friend class FlexFromThis;
+
+  template <typename U>
+    requires(!internal::has_control_block_field<U>)
+  friend Flex<U> make_flex(U &&obj);
+
+  template <typename U>
+    requires(internal::has_control_block_field<U>)
+  friend Flex<U> make_flex(U &&obj);
+
+  template <typename U, typename... Args>
+    requires(!internal::has_control_block_field<U>)
+  friend Flex<U> emplace_flex(Args &&...args);
+
+  template <typename U, typename... Args>
+    requires(internal::has_control_block_field<U>)
+  friend Flex<U> emplace_flex(Args &&...args);
 
 private:
   Flex(T *object, internal::ControlBlock *control_block, bool is_strong)
@@ -199,7 +198,7 @@ private:
     if (m_control_block) {
       if (m_is_strong) {
         if (m_control_block->strong_count == 1) {
-          m_control_block->clear();
+          delete m_object;
           m_object = nullptr;
           if (m_control_block->weak_count == 0) {
             delete m_control_block;
@@ -224,7 +223,7 @@ private:
   T *get() const {
     if (!m_object || !m_control_block) {
       throw RuntimeError("Dereferencing null Flex");
-    } else if (!m_is_strong && m_control_block->strong_count == 0) {
+    } else if (m_control_block->strong_count == 0) {
       throw RuntimeError("Dereferencing expired weak Flex");
     }
     return m_object;
@@ -235,12 +234,81 @@ private:
   bool m_is_strong = false;
 };
 
-template <typename T> Flex<T> make_flex(T &&obj) {
-  return Flex<T>::strong(move(obj));
+template <typename T> struct FlexFromThis {
+public:
+  Flex<T> flex() const {
+    if (!m_control_block) {
+      throw RuntimeError("FlexFromThis::flex() called on an object that was not created with "
+                         "make_flex or emplace_flex");
+    }
+    Flex<T> result;
+    result.m_object = const_cast<T *>(static_cast<const T *>(this));
+    result.m_control_block = m_control_block;
+    result.m_is_strong = true;
+    result.acquire();
+    return result;
+  }
+
+  template <typename U>
+    requires(!internal::has_control_block_field<U>)
+  friend Flex<U> make_flex(U &&obj);
+
+  template <typename U>
+    requires(internal::has_control_block_field<U>)
+  friend Flex<U> make_flex(U &&obj);
+
+  template <typename U, typename... Args>
+    requires(!internal::has_control_block_field<U>)
+  friend Flex<U> emplace_flex(Args &&...args);
+
+  template <typename U, typename... Args>
+    requires(internal::has_control_block_field<U>)
+  friend Flex<U> emplace_flex(Args &&...args);
+
+private:
+  internal::ControlBlock *m_control_block = nullptr;
+};
+
+template <typename U>
+  requires(!internal::has_control_block_field<U>)
+Flex<U> make_flex(U &&obj) {
+  Flex<U> result;
+  result.m_object = new U(move(obj));
+  result.m_control_block = new internal::ControlBlock{1, 0};
+  result.m_is_strong = true;
+  return result;
 }
 
-template <typename T, typename... Args> Flex<T> emplace_flex(Args &&...args) {
-  return Flex<T>::emplace(amelia::forward<Args>(args)...);
+template <typename U>
+  requires(internal::has_control_block_field<U>)
+Flex<U> make_flex(U &&obj) {
+  Flex<U> result;
+  result.m_object = new U(move(obj));
+  result.m_control_block = new internal::ControlBlock{1, 0};
+  result.m_is_strong = true;
+  result.m_object->m_control_block = result.m_control_block;
+  return result;
+}
+
+template <typename U, typename... Args>
+  requires(!internal::has_control_block_field<U>)
+Flex<U> emplace_flex(Args &&...args) {
+  Flex<U> result;
+  result.m_object = new U(amelia::forward<Args>(args)...);
+  result.m_control_block = new internal::ControlBlock{1, 0};
+  result.m_is_strong = true;
+  return result;
+}
+
+template <typename U, typename... Args>
+  requires(internal::has_control_block_field<U>)
+Flex<U> emplace_flex(Args &&...args) {
+  Flex<U> result;
+  result.m_object = new U(amelia::forward<Args>(args)...);
+  result.m_control_block = new internal::ControlBlock{1, 0};
+  result.m_is_strong = true;
+  result.m_object->m_control_block = result.m_control_block;
+  return result;
 }
 
 } // namespace amelia

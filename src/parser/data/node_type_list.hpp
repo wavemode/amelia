@@ -2,15 +2,19 @@
 
 #include <cstdint>
 
-#include "prelude.hpp"
+#include "util/data/list.hpp"
+#include "util/data/option.hpp"
+#include "util/data/string.hpp"
 
+#include "builtin/data/builtin_kind.hpp"
 #include "lexer/data/token_type.hpp"
-#include "sema/data/builtin_kind.hpp"
 #include "source/data/declaration_visibility.hpp"
 #include "source/data/number_literal.hpp"
 #include "util/data/integer.hpp"
 
 namespace amelia {
+
+using NodeId = int32_t;
 
 struct ModuleNode {
   List<NodeId> decls;

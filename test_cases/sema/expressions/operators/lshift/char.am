@@ -17,7 +17,7 @@ SemaResult(
           ValueBinding(
             name="y",
             type=char,
-            value=BuiltinTypeCoerceExpression(
+            value=NativeTypeCastExpression(
               expr=NumberLiteralExpression(
                 lit=3
               )
@@ -26,7 +26,7 @@ SemaResult(
           ValueBinding(
             name="z",
             type=uint,
-            value=BuiltinBinaryOperationExpression(
+            value=NativeBinaryOperationExpression(
               operator="<<",
               left=IdentifierExpression(
                 name="x"

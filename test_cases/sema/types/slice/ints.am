@@ -15,7 +15,7 @@ SemaResult(
           ValueBinding(
             name="x",
             type=[int, 3],
-            value=ArrayLiteralExpression(
+            value=ArrayExpression(
               elements=[
                 NumberLiteralExpression(
                   lit=1
@@ -32,7 +32,7 @@ SemaResult(
           ValueBinding(
             name="y",
             type=&[int],
-            value=BuiltinTypeCoerceExpression(
+            value=NativeTypeCastExpression(
               expr=AddressOfExpression(
                 operand=IdentifierExpression(
                   name="x"

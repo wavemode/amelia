@@ -11,7 +11,7 @@ SemaResult(
           ValueBinding(
             name="x",
             type=byte,
-            value=BuiltinTypeCoerceExpression(
+            value=NativeTypeCastExpression(
               expr=NumberLiteralExpression(
                 lit=1
               )

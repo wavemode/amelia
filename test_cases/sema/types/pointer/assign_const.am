@@ -32,7 +32,7 @@ SemaResult(
           ValueBinding(
             name="x",
             type=*const int,
-            value=BuiltinTypeCoerceExpression(
+            value=NativeTypeCastExpression(
               expr=IdentifierExpression(
                 name="y"
               )

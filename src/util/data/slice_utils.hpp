@@ -1,6 +1,6 @@
 #pragma once
 
-#include "prelude.hpp"
+#include "util/data/slice.hpp"
 
 namespace amelia {
 

@@ -5,6 +5,7 @@
 
 namespace amelia {
 
-ParserError::ParserError(Location loc, String message) noexcept : SourceLocationError(loc, move(message)) {}
+ParserError::ParserError(Location loc, String message) noexcept
+    : SourceLocationError(loc, move(message)) {}
 
 } // namespace amelia

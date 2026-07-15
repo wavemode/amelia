@@ -4,7 +4,7 @@
 #include <doctest.h>
 
 #include "util/data/rational.hpp"
-#include "prelude.hpp"
+#include "util/data/string.hpp"
 
 TEST_SUITE_BEGIN("Rational");
 

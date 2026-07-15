@@ -1,8 +1,6 @@
 #include <doctest.h>
 
-#include "prelude.hpp"
-
-#include "testing/action/compiler_test_cases.hpp"
+#include "testing/logic/compiler_test_cases.hpp"
 #include "testing/data/compiler_test_case_collection.hpp"
 #include "testing/data/compiler_test_case_outcome.hpp"
 #include "util/data/text_utils.hpp"

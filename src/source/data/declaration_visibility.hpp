@@ -1,8 +1,8 @@
 #pragma once
 
-#include "prelude.hpp"
-
 namespace amelia {
+
+class Serialize;
 
 enum class DeclarationVisibility {
   Public,

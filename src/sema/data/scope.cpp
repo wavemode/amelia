@@ -1,6 +1,6 @@
 #include "scope.hpp"
 
-#include "testing/data/serialize.hpp"
+#include "util/data/serialize.hpp"
 
 namespace amelia {
 

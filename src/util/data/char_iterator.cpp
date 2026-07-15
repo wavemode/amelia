@@ -3,7 +3,11 @@
 #include <utfcpp/utf8.h>
 
 #include "char_iterator.hpp"
-#include "prelude.hpp"
+
+#include "util/data/invalid_utf8_error.hpp"
+#include "util/data/list.hpp"
+#include "util/data/text.hpp"
+#include "util/data/utility.hpp"
 
 namespace amelia {
 

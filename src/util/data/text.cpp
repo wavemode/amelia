@@ -1,7 +1,9 @@
 #include <cstring>
 
-#include "prelude.hpp"
 #include "text.hpp"
+
+#include "util/data/char_iterator.hpp"
+#include "util/data/utility.hpp"
 
 namespace amelia {
 

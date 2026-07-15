@@ -14,9 +14,9 @@ SemaResult(
           ValueBinding(
             name="lhs_promote",
             type=bitint[8],
-            value=BuiltinBinaryOperationExpression(
+            value=NativeBinaryOperationExpression(
               operator="+",
-              left=BuiltinTypeCoerceExpression(
+              left=NativeTypeCastExpression(
                 expr=IdentifierExpression(
                   name="x"
                 )
@@ -29,12 +29,12 @@ SemaResult(
           ValueBinding(
             name="rhs_promote",
             type=bitint[8],
-            value=BuiltinBinaryOperationExpression(
+            value=NativeBinaryOperationExpression(
               operator="+",
               left=IdentifierExpression(
                 name="y"
               ),
-              right=BuiltinTypeCoerceExpression(
+              right=NativeTypeCastExpression(
                 expr=IdentifierExpression(
                   name="x"
                 )
@@ -44,7 +44,7 @@ SemaResult(
           ValueBinding(
             name="x",
             type=bitint[4],
-            value=BuiltinTypeCoerceExpression(
+            value=NativeTypeCastExpression(
               expr=NumberLiteralExpression(
                 lit=4
               )
@@ -53,7 +53,7 @@ SemaResult(
           ValueBinding(
             name="y",
             type=bitint[8],
-            value=BuiltinTypeCoerceExpression(
+            value=NativeTypeCastExpression(
               expr=NumberLiteralExpression(
                 lit=5
               )

@@ -2,7 +2,9 @@
 #include <cstring>
 
 #include "environment_reader.hpp"
-#include "prelude.hpp"
+
+#include "util/data/abstract_string.hpp"
+#include "util/data/text.hpp"
 
 namespace amelia {
 void EnvironmentReader::get_env(AbstractString &output, const AbstractString &name) {

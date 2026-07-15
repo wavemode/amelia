@@ -1,15 +1,20 @@
 #pragma once
 
-#include "prelude.hpp"
-#include "util/data/flex.hpp"
+#include <cstdint>
 
-#include "sema/data/expression.hpp"
+#include "expr/data/expression.hpp"
 #include "source/data/declaration_visibility.hpp"
+#include "util/data/flex.hpp"
+#include "util/data/list.hpp"
+#include "util/data/option.hpp"
+#include "util/data/string.hpp"
 
 namespace amelia {
 
 struct Scope;
 class Serialize;
+
+using BindingId = int32_t;
 
 enum class BindingKind : uint8_t { Variable, Constant, Function, Type, Class, Concept, Module };
 

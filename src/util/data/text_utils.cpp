@@ -2,8 +2,10 @@
 #include <cstdio>
 #include <cstring>
 
-#include "prelude.hpp"
 #include "text_utils.hpp"
+
+#include "util/data/char_iterator.hpp"
+#include "util/data/string.hpp"
 
 namespace amelia {
 

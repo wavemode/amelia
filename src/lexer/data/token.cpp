@@ -3,8 +3,8 @@
 #include "util/data/text_utils.hpp"
 
 #include "lexer/data/lexer.hpp"
-#include "source/data/source_location_error.hpp"
 #include "source/data/identifier.hpp"
+#include "source/data/source_location_error.hpp"
 
 namespace amelia {
 

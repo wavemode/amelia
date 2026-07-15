@@ -26,7 +26,7 @@ SemaResult(
                   binding=ValueBinding(
                     name="x",
                     type=float,
-                    value=BuiltinTypeCoerceExpression(
+                    value=NativeTypeCastExpression(
                       expr=NumberLiteralExpression(
                         lit=1.2
                       )
@@ -38,7 +38,7 @@ SemaResult(
                         binding=ValueBinding(
                           name="y",
                           type=float,
-                          value=BuiltinTypeCoerceExpression(
+                          value=NativeTypeCastExpression(
                             expr=NumberLiteralExpression(
                               lit=3.4
                             )
@@ -46,7 +46,7 @@ SemaResult(
                         ),
                         body=SequenceExpression(
                           exprs=[
-                            BuiltinBinaryOperationExpression(
+                            NativeBinaryOperationExpression(
                               operator="=",
                               left=IdentifierExpression(
                                 name="x"
