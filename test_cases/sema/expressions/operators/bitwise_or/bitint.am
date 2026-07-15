@@ -31,7 +31,7 @@ SemaResult(
             name="z",
             type=bitint[4],
             value=NativeBinaryOperationExpression(
-              operator="|",
+              op_kind="|",
               left=IdentifierExpression(
                 name="x"
               ),

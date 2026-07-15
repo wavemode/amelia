@@ -21,7 +21,7 @@ SemaResult(
             name="y",
             type=Const[-128],
             value=NativeUnaryOperationExpression(
-              operator="-",
+              op_kind="-",
               operand=NumberLiteralExpression(
                 lit=128
               )

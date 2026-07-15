@@ -17,7 +17,7 @@ SemaResult(
             name="z",
             type=char,
             value=NativeUnaryOperationExpression(
-              operator="+",
+              op_kind="+",
               operand=IdentifierExpression(
                 name="x"
               )

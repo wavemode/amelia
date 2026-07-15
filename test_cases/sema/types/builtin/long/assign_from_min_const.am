@@ -11,7 +11,7 @@ SemaResult(
             name="x",
             type=long,
             value=NativeUnaryOperationExpression(
-              operator="-",
+              op_kind="-",
               operand=NumberLiteralExpression(
                 lit=9223372036854775808
               )

@@ -12,7 +12,7 @@ SemaResult(
             type=short,
             value=NativeTypeCastExpression(
               expr=NativeUnaryOperationExpression(
-                operator="-",
+                op_kind="-",
                 operand=NumberLiteralExpression(
                   lit=32768
                 )

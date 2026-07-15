@@ -31,7 +31,7 @@ SemaResult(
             name="z",
             type=ubyte,
             value=NativeBinaryOperationExpression(
-              operator="&",
+              op_kind="&",
               left=IdentifierExpression(
                 name="x"
               ),

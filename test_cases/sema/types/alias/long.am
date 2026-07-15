@@ -25,7 +25,7 @@ SemaResult(
             name="y",
             type=long::MyLong (aka long),
             value=NativeUnaryOperationExpression(
-              operator="-",
+              op_kind="-",
               operand=NumberLiteralExpression(
                 lit=0x8000000000000000
               )

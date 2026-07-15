@@ -31,7 +31,7 @@ SemaResult(
             name="z",
             type=ubitint[8],
             value=NativeBinaryOperationExpression(
-              operator="/",
+              op_kind="/",
               left=NativeTypeCastExpression(
                 expr=IdentifierExpression(
                   name="x"

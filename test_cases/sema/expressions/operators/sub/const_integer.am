@@ -28,7 +28,7 @@ SemaResult(
             name="b",
             type=int,
             value=NativeBinaryOperationExpression(
-              operator="-",
+              op_kind="-",
               left=IdentifierExpression(
                 name="z"
               ),
@@ -41,7 +41,7 @@ SemaResult(
             name="w",
             type=Const[-105.0],
             value=NativeBinaryOperationExpression(
-              operator="-",
+              op_kind="-",
               left=IdentifierExpression(
                 name="z"
               ),
@@ -68,7 +68,7 @@ SemaResult(
             name="z",
             type=Const[-100],
             value=NativeBinaryOperationExpression(
-              operator="-",
+              op_kind="-",
               left=IdentifierExpression(
                 name="x"
               ),
@@ -81,7 +81,7 @@ SemaResult(
             name="z2",
             type=Const[-197],
             value=NativeBinaryOperationExpression(
-              operator="-",
+              op_kind="-",
               left=IdentifierExpression(
                 name="z"
               ),
@@ -92,7 +92,7 @@ SemaResult(
             name="z3",
             type=Const['\U000000c5'],
             value=NativeBinaryOperationExpression(
-              operator="-",
+              op_kind="-",
               left=CharLiteralExpression['a'],
               right=IdentifierExpression(
                 name="z"
@@ -103,12 +103,12 @@ SemaResult(
             name="z4",
             type=Const[true],
             value=NativeBinaryOperationExpression(
-              operator="==",
+              op_kind="==",
               left=IdentifierExpression(
                 name="z2"
               ),
               right=NativeUnaryOperationExpression(
-                operator="-",
+                op_kind="-",
                 operand=IdentifierExpression(
                   name="z3"
                 )

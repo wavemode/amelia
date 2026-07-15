@@ -34,7 +34,7 @@ SemaResult(
                   body=StatementSequence(
                     stmts=[
                       NativeUnaryOperationExpression(
-                        operator="++",
+                        op_kind="++",
                         operand=IdentifierExpression(
                           name="x"
                         )

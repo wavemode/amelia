@@ -23,7 +23,7 @@ SemaResult(
             name="z1",
             type=Const[false],
             value=NativeBinaryOperationExpression(
-              operator="!=",
+              op_kind="!=",
               left=IdentifierExpression(
                 name="x"
               ),

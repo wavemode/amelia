@@ -40,7 +40,7 @@ SemaResult(
                         body=StatementSequence(
                           stmts=[
                             NativeBinaryOperationExpression(
-                              operator="=",
+                              op_kind="=",
                               left=IdentifierExpression(
                                 name="x"
                               ),

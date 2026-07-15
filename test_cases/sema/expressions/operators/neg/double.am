@@ -19,7 +19,7 @@ SemaResult(
             name="z",
             type=double,
             value=NativeUnaryOperationExpression(
-              operator="-",
+              op_kind="-",
               operand=IdentifierExpression(
                 name="x"
               )

@@ -21,7 +21,7 @@ SemaResult(
             name="z",
             type=bitint[4],
             value=NativeUnaryOperationExpression(
-              operator="~",
+              op_kind="~",
               operand=IdentifierExpression(
                 name="x"
               )
