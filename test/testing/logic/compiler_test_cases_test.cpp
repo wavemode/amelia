@@ -3,11 +3,11 @@
 #include "testing/logic/compiler_test_cases.hpp"
 #include "testing/data/compiler_test_case.hpp"
 #include "testing/data/compiler_test_case_collection.hpp"
-#include "fs/effect/file_loader.hpp"
-#include "fs/effect/file_writer.hpp"
-#include "fs/effect/filesystem_walker.hpp"
-#include "sys/effect/environment_reader.hpp"
-#include "sys/effect/silent_printer.hpp"
+#include "util/effect/file_loader.hpp"
+#include "util/effect/file_writer.hpp"
+#include "util/effect/filesystem_walker.hpp"
+#include "util/effect/environment_reader.hpp"
+#include "util/effect/silent_printer.hpp"
 #include "testing/system/lexer_test_case_runner.hpp"
 
 TEST_SUITE_BEGIN("compiler_test_cases");

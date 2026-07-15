@@ -91,7 +91,9 @@ Option<Flex<Expression>> BitIntType::perform_binary_op(
   switch (op_kind) {
   case BinaryOperatorKind::LeftShift:
   case BinaryOperatorKind::RightShift:
-    return perform_native_shift(expr_node_id, op_kind, *this, left_expr, right_type, right_expr, *this);
+    return perform_native_shift(
+        expr_node_id, op_kind, *this, left_expr, right_type, right_expr, *this
+    );
   case BinaryOperatorKind::Add:
   case BinaryOperatorKind::Subtract:
   case BinaryOperatorKind::Multiply:
@@ -114,7 +116,9 @@ Option<Flex<Expression>> BitIntType::perform_binary_op(
     );
   case BinaryOperatorKind::LShiftAssignment:
   case BinaryOperatorKind::RShiftAssignment:
-    return perform_native_shift(expr_node_id, op_kind, *this, left_expr, right_type, right_expr, NULL_TYPE);
+    return perform_native_shift(
+        expr_node_id, op_kind, *this, left_expr, right_type, right_expr, NULL_TYPE
+    );
   case BinaryOperatorKind::Assignment:
   case BinaryOperatorKind::BitAndAssignment:
   case BinaryOperatorKind::BitOrAssignment:

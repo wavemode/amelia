@@ -16,7 +16,7 @@ struct ConstBooleanType : TypeWithDynamicId<ConstBooleanType> {
 
   bool has_native_numeric_repr() const override;
 
-    Option<Flex<Expression>> perform_binary_op(
+  Option<Flex<Expression>> perform_binary_op(
       NodeId expr_node_id,
       BinaryOperatorKind op_kind,
       const Expression &left_expr,

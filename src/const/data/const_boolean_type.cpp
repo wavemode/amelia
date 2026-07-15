@@ -1,13 +1,13 @@
 #include "const_boolean_type.hpp"
 
 #include "builtin/data/builtin_type.hpp"
-#include "type/logic/type_conversion.hpp"
-#include "util/data/flex.hpp"
-#include "util/data/serialize.hpp"
-#include "util/data/string.hpp"
-#include "util/data/option.hpp"
 #include "operator/data/native_binary_operation.hpp"
 #include "operator/data/native_unary_operation.hpp"
+#include "type/logic/type_conversion.hpp"
+#include "util/data/flex.hpp"
+#include "util/data/option.hpp"
+#include "util/data/serialize.hpp"
+#include "util/data/string.hpp"
 
 namespace amelia {
 
@@ -45,39 +45,39 @@ Option<Flex<Expression>> ConstBooleanType::perform_binary_op(
   auto &rhs_boolean_type = right_type.as<ConstBooleanType>();
   Flex<Type> result_type;
   switch (op_kind) {
-    case BinaryOperatorKind::And:
-      result_type = emplace_flex<ConstBooleanType>(value && rhs_boolean_type.value);
-    case BinaryOperatorKind::Or:
-      result_type = emplace_flex<ConstBooleanType>(value || rhs_boolean_type.value);
-    case BinaryOperatorKind::Equals:
-      result_type = emplace_flex<ConstBooleanType>(value == rhs_boolean_type.value);
-    case BinaryOperatorKind::NotEquals:
-      result_type = emplace_flex<ConstBooleanType>(value != rhs_boolean_type.value);
-    case BinaryOperatorKind::Add:
-    case BinaryOperatorKind::Subtract:
-    case BinaryOperatorKind::Multiply:
-    case BinaryOperatorKind::Divide:
-    case BinaryOperatorKind::BitwiseAnd:
-    case BinaryOperatorKind::BitwiseOr:
-    case BinaryOperatorKind::BitwiseXor:
-    case BinaryOperatorKind::Greater:
-    case BinaryOperatorKind::GreaterEquals:
-    case BinaryOperatorKind::Less:
-    case BinaryOperatorKind::LessEquals:
-    case BinaryOperatorKind::LeftShift:
-    case BinaryOperatorKind::Modulo:
-    case BinaryOperatorKind::RightShift:
-    case BinaryOperatorKind::Assignment:
-    case BinaryOperatorKind::BitAndAssignment:
-    case BinaryOperatorKind::BitOrAssignment:
-    case BinaryOperatorKind::BitXorAssignment:
-    case BinaryOperatorKind::DivAssignment:
-    case BinaryOperatorKind::LShiftAssignment:
-    case BinaryOperatorKind::ModAssignment:
-    case BinaryOperatorKind::MulAssignment:
-    case BinaryOperatorKind::RShiftAssignment:
-    case BinaryOperatorKind::SubAssignment:
-    case BinaryOperatorKind::AddAssignment:
+  case BinaryOperatorKind::And:
+    result_type = emplace_flex<ConstBooleanType>(value && rhs_boolean_type.value);
+  case BinaryOperatorKind::Or:
+    result_type = emplace_flex<ConstBooleanType>(value || rhs_boolean_type.value);
+  case BinaryOperatorKind::Equals:
+    result_type = emplace_flex<ConstBooleanType>(value == rhs_boolean_type.value);
+  case BinaryOperatorKind::NotEquals:
+    result_type = emplace_flex<ConstBooleanType>(value != rhs_boolean_type.value);
+  case BinaryOperatorKind::Add:
+  case BinaryOperatorKind::Subtract:
+  case BinaryOperatorKind::Multiply:
+  case BinaryOperatorKind::Divide:
+  case BinaryOperatorKind::BitwiseAnd:
+  case BinaryOperatorKind::BitwiseOr:
+  case BinaryOperatorKind::BitwiseXor:
+  case BinaryOperatorKind::Greater:
+  case BinaryOperatorKind::GreaterEquals:
+  case BinaryOperatorKind::Less:
+  case BinaryOperatorKind::LessEquals:
+  case BinaryOperatorKind::LeftShift:
+  case BinaryOperatorKind::Modulo:
+  case BinaryOperatorKind::RightShift:
+  case BinaryOperatorKind::Assignment:
+  case BinaryOperatorKind::BitAndAssignment:
+  case BinaryOperatorKind::BitOrAssignment:
+  case BinaryOperatorKind::BitXorAssignment:
+  case BinaryOperatorKind::DivAssignment:
+  case BinaryOperatorKind::LShiftAssignment:
+  case BinaryOperatorKind::ModAssignment:
+  case BinaryOperatorKind::MulAssignment:
+  case BinaryOperatorKind::RShiftAssignment:
+  case BinaryOperatorKind::SubAssignment:
+  case BinaryOperatorKind::AddAssignment:
     return None();
   }
 
@@ -95,15 +95,15 @@ Option<Flex<Expression>> ConstBooleanType::perform_unary_op(
 ) const {
   Flex<Type> result_type;
   switch (op_kind) {
-    case UnaryOperatorKind::Not:
-      result_type = emplace_flex<ConstBooleanType>(!value);
-      break;
-    case UnaryOperatorKind::Negate:
-    case UnaryOperatorKind::Positive:
-    case UnaryOperatorKind::BitwiseNot:
-    case UnaryOperatorKind::Decrement:
-    case UnaryOperatorKind::Increment:
-      return None();
+  case UnaryOperatorKind::Not:
+    result_type = emplace_flex<ConstBooleanType>(!value);
+    break;
+  case UnaryOperatorKind::Negate:
+  case UnaryOperatorKind::Positive:
+  case UnaryOperatorKind::BitwiseNot:
+  case UnaryOperatorKind::Decrement:
+  case UnaryOperatorKind::Increment:
+    return None();
   }
   auto result_expr = emplace_flex<NativeUnaryOperationExpression>();
   result_expr->node_id = expr_node_id;

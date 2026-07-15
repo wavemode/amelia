@@ -1,6 +1,6 @@
 #include <doctest.h>
 
-#include "fs/effect/file_loader.hpp"
+#include "util/effect/file_loader.hpp"
 #include "util/data/string.hpp"
 
 TEST_SUITE_BEGIN("FileLoader");
@@ -9,7 +9,7 @@ using namespace amelia;
 
 TEST_CASE("can read empty file") {
   FileLoader loader;
-  String filename = "test/fs/effect/loader/empty.txt";
+  String filename = "test/util/effect/loader/empty.txt";
   String expected_contents = "";
 
   String result;
@@ -19,7 +19,7 @@ TEST_CASE("can read empty file") {
 
 TEST_CASE("can read ASCII") {
   FileLoader loader;
-  String filename = "test/fs/effect/loader/hello.txt";
+  String filename = "test/util/effect/loader/hello.txt";
   String expected_contents = "Hello, world!\n";
 
   String result;
@@ -29,7 +29,7 @@ TEST_CASE("can read ASCII") {
 
 TEST_CASE("can read UTF-8") {
   FileLoader loader;
-  String filename = "test/fs/effect/loader/emojis.txt";
+  String filename = "test/util/effect/loader/emojis.txt";
   String expected_contents = "✅⛔\n";
 
   String result;

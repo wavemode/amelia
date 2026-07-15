@@ -2,8 +2,8 @@
 
 #include "integer.hpp"
 
-#include "util/data/string.hpp"
 #include "util/data/char_iterator.hpp"
+#include "util/data/string.hpp"
 #include "util/data/text_utils.hpp"
 
 using boost::multiprecision::cpp_int;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "fs/interface/filesystem_walker.hpp"
+#include "util/interface/filesystem_walker.hpp"
 
 namespace amelia {
 

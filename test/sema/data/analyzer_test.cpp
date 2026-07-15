@@ -4,11 +4,11 @@
 #include "testing/data/compiler_test_case_collection.hpp"
 #include "testing/data/compiler_test_case_outcome.hpp"
 #include "util/data/text_utils.hpp"
-#include "fs/effect/file_loader.hpp"
-#include "fs/effect/file_writer.hpp"
-#include "fs/effect/filesystem_walker.hpp"
-#include "sys/effect/console_printer.hpp"
-#include "sys/effect/environment_reader.hpp"
+#include "util/effect/file_loader.hpp"
+#include "util/effect/file_writer.hpp"
+#include "util/effect/filesystem_walker.hpp"
+#include "util/effect/console_printer.hpp"
+#include "util/effect/environment_reader.hpp"
 #include "testing/system/sema_test_case_runner.hpp"
 
 TEST_SUITE_BEGIN("Analyzer");

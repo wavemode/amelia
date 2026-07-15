@@ -2,9 +2,6 @@
 
 #include "compiler_test_cases.hpp"
 
-#include "fs/interface/file_loader.hpp"
-#include "fs/interface/file_writer.hpp"
-#include "fs/interface/filesystem_walker.hpp"
 #include "lexer/data/lexer.hpp"
 #include "lexer/data/lexer_context.hpp"
 #include "lexer/data/lexer_result.hpp"
@@ -18,8 +15,6 @@
 #include "sema/data/sema_result.hpp"
 #include "sema/logic/load_module.hpp"
 #include "source/data/source_location_error.hpp"
-#include "sys/interface/environment_reader.hpp"
-#include "sys/interface/printer.hpp"
 #include "testing/data/compiler_test_case.hpp"
 #include "testing/data/compiler_test_case_collection.hpp"
 #include "testing/data/compiler_test_case_outcome.hpp"
@@ -27,6 +22,11 @@
 #include "util/data/serialize.hpp"
 #include "util/data/slice_utils.hpp"
 #include "util/data/text_utils.hpp"
+#include "util/interface/environment_reader.hpp"
+#include "util/interface/file_loader.hpp"
+#include "util/interface/file_writer.hpp"
+#include "util/interface/filesystem_walker.hpp"
+#include "util/interface/printer.hpp"
 
 namespace amelia {
 

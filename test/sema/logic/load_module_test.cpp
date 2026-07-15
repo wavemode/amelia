@@ -5,7 +5,7 @@
 #include "sema/data/sema_result.hpp"
 #include "sema/data/module_loader_context.hpp"
 #include "source/data/source_location_error.hpp"
-#include "fs/effect/file_loader.hpp"
+#include "util/effect/file_loader.hpp"
 
 TEST_SUITE_BEGIN("load_module");
 

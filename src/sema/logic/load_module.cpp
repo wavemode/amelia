@@ -2,13 +2,13 @@
 
 #include "util/data/text_utils.hpp"
 
-#include "fs/interface/file_loader.hpp"
 #include "lexer/data/lexer.hpp"
 #include "lexer/data/lexer_context.hpp"
 #include "parser/data/parser.hpp"
 #include "sema/data/module_loader_context.hpp"
 #include "sema/data/sema_result.hpp"
 #include "source/data/source_location_error.hpp"
+#include "util/interface/file_loader.hpp"
 
 namespace amelia {
 

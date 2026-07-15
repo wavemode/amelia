@@ -223,9 +223,7 @@ Flex<Expression> build_binary_operator_expression(
     left_type = left_expr->type;
     right_type = right_expr->type;
 
-    result = left_type->perform_binary_op(
-        expr_node_id, op_kind, left_expr, right_type, right_expr
-    );
+    result = left_type->perform_binary_op(expr_node_id, op_kind, left_expr, right_type, right_expr);
   }
   if (!is_non_promoting_binary_op(op_kind)) {
     if (!result.has_value()) {
