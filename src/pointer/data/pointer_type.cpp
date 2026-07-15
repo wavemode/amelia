@@ -36,7 +36,7 @@ bool PointerType::unify(const Type &assignment_type) const {
     return false;
   }
   auto &assignment_type_ref = assignment_type.as<PointerType>();
-  if (!pointee->unify(assignment_type_ref.pointee)) {
+  if (!Type::unify_types(pointee, assignment_type_ref.pointee)) {
     return false;
   }
   return is_const == assignment_type_ref.is_const;
@@ -53,7 +53,7 @@ Option<Flex<Expression>> PointerType::coerce(const Type &assignment_type, const 
       if (
             // Pointers refer to the same type
             // TODO: compatible types
-            pointee->unify(expr_ref_type.pointee)
+            Type::unify_types(pointee, expr_ref_type.pointee)
         ) {
         return native_type_cast(*this, expr);
       }

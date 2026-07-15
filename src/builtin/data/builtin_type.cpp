@@ -258,7 +258,7 @@ static Option<Flex<Expression>> perform_binary_op_on_char(
   case BinaryOperatorKind::BitwiseOr:
   case BinaryOperatorKind::BitwiseXor:
   case BinaryOperatorKind::Modulo:
-    return UINT_TYPE->perform_binary_op(expr_node_id, op_kind, left_expr, right_type, right_expr);
+    return UINT_TYPE->perform_binary_op(expr_node_id, op_kind, left_expr, UINT_TYPE, right_expr);
   case BinaryOperatorKind::Equals:
   case BinaryOperatorKind::Greater:
   case BinaryOperatorKind::GreaterEquals:

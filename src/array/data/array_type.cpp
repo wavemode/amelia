@@ -38,7 +38,7 @@ bool ArrayType::unify(const Type &assignment_type) const {
 
   const auto &assignment_array_type = assignment_type.as<ArrayType>();
   return size == assignment_array_type.size &&
-         element_type->unify(assignment_array_type.element_type);
+         Type::unify_types(element_type, assignment_array_type.element_type);
 }
 
 Option<Flex<Expression>> ArrayType::cast(const Type &assignment_type, const Expression &expr)
@@ -52,7 +52,7 @@ Option<Flex<Expression>> ArrayType::cast(const Type &assignment_type, const Expr
     return None();
   }
 
-  if (!element_type->coerce_if_needed(assignment_array_type.element_type, expr).has_value()) {
+  if (!Type::coerce_expr(element_type, assignment_array_type.element_type, expr).has_value()) {
     return None();
   }
 

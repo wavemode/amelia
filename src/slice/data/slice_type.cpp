@@ -31,7 +31,7 @@ bool SliceType::unify(const Type &assignment_type) const {
     return false;
   }
   const auto &assignment_slice = assignment_type.as<SliceType>();
-  return element_type->unify(assignment_slice.element_type);
+  return Type::unify_types(element_type, assignment_slice.element_type);
 }
 
 Serialize SliceType::serialize() const {

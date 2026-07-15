@@ -18,11 +18,11 @@ bool AliasType::is_comptime_const() const {
 }
 
 Flex<Type> AliasType::remove_comptime_const() const {
-  return target->remove_comptime_const();
+  return Type::remove_comptime_const_from_type(target);
 }
 
 bool AliasType::unify(const Type &assignment_type) const {
-  return target->unify(assignment_type);
+  return Type::unify_types(target, assignment_type);
 }
 
 Option<Flex<Expression>> AliasType::coerce(const Type &assignment_type, const Expression &expr)
@@ -30,7 +30,7 @@ Option<Flex<Expression>> AliasType::coerce(const Type &assignment_type, const Ex
   if (unify(assignment_type)) {
     return expr.flex();
   }
-  return target->coerce_if_needed(assignment_type, expr);
+  return Type::coerce_expr(target, assignment_type, expr);
 }
 
 Option<Flex<Expression>> AliasType::perform_binary_op(

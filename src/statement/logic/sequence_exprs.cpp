@@ -98,7 +98,7 @@ Flex<Expression> assign_current_function_return_value(
   if (is_unknown_type(module_state.current_function_signature().value()->return_type)) {
     module_state.current_function_signature()
         .value()
-        ->return_type = return_value->type->remove_comptime_const_if_needed();
+        ->return_type = Type::remove_comptime_const_from_type(return_value->type);
     return return_value;
   }
 
@@ -250,7 +250,7 @@ Flex<Expression> build_expr_var_decl(
     if (expr.has_value()) {
       binding->value = build_expression(module_state, expr.value());
       binding->type = is_const ? binding->value.value()->type
-                               : binding->value.value()->type->remove_comptime_const_if_needed();
+                               : Type::remove_comptime_const_from_type(binding->value.value()->type);
     }
   }
 

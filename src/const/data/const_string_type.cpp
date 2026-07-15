@@ -2,6 +2,7 @@
 
 #include "builtin/data/builtin_type.hpp"
 #include "const/data/const_character_type.hpp"
+#include "const/data/const_boolean_type.hpp"
 #include "operator/data/native_binary_operation.hpp"
 #include "source/data/char_literal.hpp"
 #include "type/logic/type_conversion.hpp"
@@ -38,15 +39,22 @@ Option<Flex<Expression>> ConstStringType::perform_binary_op(
     const Type &right_type,
     const Expression &right_expr
 ) const {
-  if (op_kind != BinaryOperatorKind::Add) {
-    return None();
-  }
   if (right_type.is<ConstStringType>()) {
     auto &right_const_string_type = right_type.as<ConstStringType>();
     auto result = emplace_flex<NativeBinaryOperationExpression>();
     result->node_id = expr_node_id;
-    result->type = emplace_flex<ConstStringType>(value + right_const_string_type.value);
-    result->op_kind = BinaryOperatorKind::Add;
+    if (op_kind == BinaryOperatorKind::Add) {
+      result->type = emplace_flex<ConstStringType>(value + right_const_string_type.value);
+      result->op_kind = BinaryOperatorKind::Add;
+    } else if (op_kind == BinaryOperatorKind::Equals) {
+      result->type = emplace_flex<ConstBooleanType>(value == right_const_string_type.value);
+      result->op_kind = BinaryOperatorKind::Equals;
+    } else if (op_kind == BinaryOperatorKind::NotEquals) {
+      result->type = emplace_flex<ConstBooleanType>(value != right_const_string_type.value);
+      result->op_kind = BinaryOperatorKind::NotEquals;
+    } else {
+      return None();
+    }
     result->left = left_expr.flex();
     result->right = right_expr.flex();
     return result;
@@ -54,11 +62,15 @@ Option<Flex<Expression>> ConstStringType::perform_binary_op(
     auto &right_const_character_type = right_type.as<ConstCharacterType>();
     auto result = emplace_flex<NativeBinaryOperationExpression>();
     result->node_id = expr_node_id;
-    String repr;
-    repr.append(value);
-    repr.append(right_const_character_type.value);
-    result->type = emplace_flex<ConstStringType>(move(repr));
-    result->op_kind = BinaryOperatorKind::Add;
+    if (op_kind == BinaryOperatorKind::Add) {
+      String repr;
+      repr.append(value);
+      repr.append(right_const_character_type.value);
+      result->type = emplace_flex<ConstStringType>(move(repr));
+      result->op_kind = BinaryOperatorKind::Add;
+    } else {
+      return None();
+    }
     result->left = left_expr.flex();
     result->right = right_expr.flex();
     return result;

@@ -45,7 +45,7 @@ bool ReferenceType::unify(const Type &assignment_type) const {
     return false;
   }
   auto &assignment_type_ref = assignment_type.as<ReferenceType>();
-  if (!referent->unify(assignment_type_ref.referent)) {
+  if (!Type::unify_types(referent, assignment_type_ref.referent)) {
     return false;
   }
   return is_const == assignment_type_ref.is_const && is_move == assignment_type_ref.is_move;
@@ -66,14 +66,14 @@ Option<Flex<Expression>> ReferenceType::coerce(const Type &assignment_type, cons
       if (
             // References refer to the same type
             // TODO: compatible types
-            referent->unify(expr_ref_type.referent)
+            Type::unify_types(referent, expr_ref_type.referent)
         ) {
         return native_type_cast(*this, expr);
       } else if (
             // Target type refers to a slice and expr type refers to an array of the same type
             referent->is<SliceType>() &&
             expr_ref_type.referent->is<ArrayType>() &&
-            referent->as<SliceType>().element_type->unify(
+            Type::unify_types(referent->as<SliceType>().element_type,
               expr_ref_type.referent->as<ArrayType>().element_type
             )
         ) {

@@ -121,7 +121,7 @@ Flex<Expression> require_coerce(
     const Expression &expr,
     String &&error_message_template
 ) {
-  auto unified_expr = target_type.coerce_if_needed(expr.type->resolve_if_needed(), expr);
+  auto unified_expr = Type::coerce_expr(target_type, expr.type, expr);
   if (!unified_expr.has_value()) {
     String target_type_str;
     target_type.serialize().to_string(target_type_str);
@@ -149,15 +149,15 @@ Flex<Type> read_expr_list(
   for (size_t i = 0; i < output.size(); ++i) {
     Flex<Expression> &elem = output[i];
     if (is_never_type(original_result_type)) {
-      original_result_type = elem->type->remove_comptime_const_if_needed();
+      original_result_type = Type::remove_comptime_const_from_type(elem->type);
     } else {
-      auto original_elem_type = elem->type->remove_comptime_const_if_needed();
+      auto original_elem_type = Type::remove_comptime_const_from_type(elem->type);
 
-      auto elem_type = original_elem_type->resolve_if_needed();
-      auto result_type = original_result_type->resolve_if_needed();
+      auto elem_type = Type::resolve_type(original_elem_type);
+      auto result_type = Type::resolve_type(original_result_type);
       if (
           // types are different
-          !result_type->unify(elem_type) &&
+          !Type::unify_types(result_type, elem_type) &&
           // both are integer types
           elem_type->is_integral() &&
           result_type->is_integral()
@@ -172,7 +172,7 @@ Flex<Type> read_expr_list(
 
       if (
           // types are different
-          !result_type->unify(elem_type) &&
+          !Type::unify_types(result_type, elem_type) &&
           // inferred type is float and elem type is double
           is_float_type(result_type) && is_double_type(elem_type)
       ) {
@@ -184,7 +184,7 @@ Flex<Type> read_expr_list(
   // coerce each expression to the inferred type
   for (size_t i = 0; i < output.size(); ++i) {
     output[i] = require_coerce(
-        module_state, original_result_type->resolve_if_needed(), move(output[i])
+        module_state, original_result_type, move(output[i])
     );
   }
 

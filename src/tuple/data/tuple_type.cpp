@@ -80,7 +80,7 @@ bool TupleType::unify(const Type &assignment_type) const {
   }
 
   for (size_t i = 0; i < element_types.size(); ++i) {
-    if (!element_types[i]->unify(*assignment_tuple.element_types[i])) {
+    if (!Type::unify_types(element_types[i], *assignment_tuple.element_types[i])) {
       return false;
     }
   }

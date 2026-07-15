@@ -99,10 +99,10 @@ start:
       if (pos_arg_index < pos_args.size()) {
         Option<Flex<Expression>> expr;
         if (exact_match_only) {
-          expr = param.type->unify(pos_args[pos_arg_index]->type) ? pos_args[pos_arg_index]
+          expr = Type::unify_types(param.type, pos_args[pos_arg_index]->type) ? pos_args[pos_arg_index]
                                                                   : Option<Flex<Expression>>();
         } else {
-          expr = param.type->coerce_if_needed(pos_args[pos_arg_index]);
+          expr = Type::coerce_expr(param.type, pos_args[pos_arg_index]);
         }
         if (!expr.has_value()) {
           goto fail;
@@ -113,10 +113,10 @@ start:
         Option<Flex<Expression>> expr;
         if (exact_match_only) {
           auto arg_expr = named_args[param.name];
-          expr = param.type->unify(arg_expr->type) ? arg_expr : Option<Flex<Expression>>();
+          expr = Type::unify_types(param.type, arg_expr->type) ? arg_expr : Option<Flex<Expression>>();
         } else {
           auto arg_expr = named_args[param.name];
-          expr = param.type->coerce_if_needed(arg_expr);
+          expr = Type::coerce_expr(param.type, arg_expr);
         }
         if (!expr.has_value()) {
           goto fail;

@@ -10,6 +10,7 @@ SemaResult(
           ValueBinding(
             name="f",
             type=FunctionType(
+              name=f,
               signatures=[
                 Signature(
                   parameters=[
@@ -22,9 +23,9 @@ SemaResult(
                 )
               ]
             ),
-            value=SequenceExpression(
-              exprs=[
-                ReturnExpression(
+            value=StatementSequence(
+              stmts=[
+                ReturnStatement(
                   value=IdentifierExpression(
                     name="x"
                   )

@@ -3,8 +3,61 @@
 #include "expr/data/expression.hpp"
 #include "util/data/integer.hpp"
 #include "util/data/option.hpp"
+#include "builtin/data/builtin_type.hpp"
 
 namespace amelia {
+
+Flex<Type> Type::resolve_type(const Type &type) {
+  if (type.is_resolved()) {
+    return type.flex();
+  }
+  return type.resolve();
+}
+
+Flex<Type> Type::remove_comptime_const_from_type(const Type &type) {
+  if (!type.is_comptime_const()) {
+    return type.flex();
+  }
+  return type.remove_comptime_const();
+}
+
+bool Type::unify_types(const Type &target_type, const Type &assignment_type) {
+  if (is_unknown_type(assignment_type) || is_unknown_type(target_type)) {
+    return false;
+  }
+
+  if (is_never_type(assignment_type)) {
+    return true;
+  }
+
+  return target_type.unify(assignment_type);
+}
+
+Option<Flex<Expression>> Type::coerce_expr(const Type &target_type, const Expression &expr) {
+  return coerce_expr(target_type, expr.type, expr);
+}
+
+Option<Flex<Expression>> Type::coerce_expr(
+    const Type &target_type, const Type &expr_type, const Expression &expr
+) {
+  if (unify_types(target_type, expr_type)) {
+    return expr.flex();
+  }
+  return target_type.coerce(resolve_type(expr_type), expr);
+}
+
+Option<Flex<Expression>> Type::cast_expr(const Type &target_type, const Expression &expr) {
+  return cast_expr(target_type, expr.type, expr);
+}
+
+Option<Flex<Expression>> Type::cast_expr(
+    const Type &target_type, const Type &expr_type, const Expression &expr
+) {
+  if (unify_types(target_type, expr_type)) {
+    return expr.flex();
+  }
+  return target_type.cast(expr_type, expr);
+}
 
 bool Type::is_resolved() const {
   return true;
@@ -12,13 +65,6 @@ bool Type::is_resolved() const {
 
 Flex<Type> Type::resolve() const {
   return flex();
-}
-
-Flex<Type> Type::resolve_if_needed() const {
-  if (is_resolved()) {
-    return flex();
-  }
-  return resolve();
 }
 
 bool Type::is_comptime_const() const {
@@ -29,49 +75,15 @@ Flex<Type> Type::remove_comptime_const() const {
   return flex();
 }
 
-Flex<Type> Type::remove_comptime_const_if_needed() const {
-  if (is_comptime_const()) {
-    return remove_comptime_const();
-  }
-  return flex();
-}
-
 bool Type::unify(const Type &assignment_type) const {
   return this == &assignment_type;
 }
 
-Option<Flex<Expression>> Type::coerce(const Expression &expr) const {
-  return coerce(expr.type, expr);
-}
-
-Option<Flex<Expression>> Type::coerce_if_needed(const Expression &expr) const {
-  return coerce_if_needed(expr.type, expr);
-}
-
-Option<Flex<Expression>> Type::coerce(const Type &assignment_type, const Expression &expr) const {
-  if (unify(assignment_type)) {
-    return expr.flex();
-  }
+Option<Flex<Expression>> Type::coerce(const Type &, const Expression &) const {
   return None();
 }
 
-Option<Flex<Expression>> Type::coerce_if_needed(
-    const Type &assignment_type, const Expression &expr
-) const {
-  if (unify(assignment_type)) {
-    return expr.flex();
-  }
-  return coerce(assignment_type, expr);
-}
-
-Option<Flex<Expression>> Type::cast(const Expression &expr) const {
-  return cast(expr.type, expr);
-}
-
-Option<Flex<Expression>> Type::cast(const Type &assignment_type, const Expression &expr) const {
-  if (unify(assignment_type)) {
-    return expr.flex();
-  }
+Option<Flex<Expression>> Type::cast(const Type &, const Expression &) const {
   return None();
 }
 
