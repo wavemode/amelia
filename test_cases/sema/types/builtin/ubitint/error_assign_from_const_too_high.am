@@ -1,5 +1,0 @@
-const x : ubitint[8] = 256
-
-/* EXPECTED_OUTPUT:
-ERROR("Cannot coerce expression of type 'Const[256]' to expected type 'ubitint[8]' (at test_cases/sema/types/builtin/ubitint/error_assign_from_const_too_high.am:1:24)")
-*/

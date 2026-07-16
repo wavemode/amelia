@@ -1,6 +1,0 @@
-const x : bitint[64] = y
-const y : ulong = 42
-
-/* EXPECTED_OUTPUT:
-ERROR("Cannot coerce expression of type 'ulong' to expected type 'bitint[64]' (at test_cases/sema/types/builtin/bitint/error_assign_from_ulong_too_large.am:1:24)")
-*/

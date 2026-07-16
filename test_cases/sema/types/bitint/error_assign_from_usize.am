@@ -1,0 +1,6 @@
+const x : bitint[65] = y
+const y : usize = 42
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot coerce expression of type 'usize' to expected type 'bitint[65]' (at test_cases/sema/types/bitint/error_assign_from_usize.am:1:24)")
+*/

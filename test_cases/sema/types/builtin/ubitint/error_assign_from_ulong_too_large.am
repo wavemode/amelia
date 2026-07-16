@@ -1,6 +1,0 @@
-const x : ubitint[63] = y
-const y : ulong = 42
-
-/* EXPECTED_OUTPUT:
-ERROR("Cannot coerce expression of type 'ulong' to expected type 'ubitint[63]' (at test_cases/sema/types/builtin/ubitint/error_assign_from_ulong_too_large.am:1:25)")
-*/

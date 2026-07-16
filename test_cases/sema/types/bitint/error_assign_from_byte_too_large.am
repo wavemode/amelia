@@ -1,0 +1,6 @@
+const x : bitint[7] = y
+const y : byte = 42
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot coerce expression of type 'byte' to expected type 'bitint[7]' (at test_cases/sema/types/bitint/error_assign_from_byte_too_large.am:1:23)")
+*/

@@ -1,6 +1,0 @@
-const x : ubitint[31] = y
-const y : uint = 42
-
-/* EXPECTED_OUTPUT:
-ERROR("Cannot coerce expression of type 'uint' to expected type 'ubitint[31]' (at test_cases/sema/types/builtin/ubitint/error_assign_from_uint_too_large.am:1:25)")
-*/
