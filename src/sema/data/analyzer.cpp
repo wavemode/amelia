@@ -7,7 +7,7 @@
 #include "sema/data/scope.hpp"
 #include "sema/data/sema_result.hpp"
 #include "sema/interface/module_analysis_state.hpp"
-#include "source/data/source_location_error.hpp"
+#include "sema/data/type_error.hpp"
 
 namespace amelia {
 
@@ -107,10 +107,10 @@ public:
   }
 
 private:
-  [[noreturn]] void raise_error_at_node(NodeId node_id, String &&error_message) override {
+  [[noreturn]] void raise_type_error_at_node(NodeId node_id, String &&error_message) override {
     const Node &node = get_node(node_id);
     const Token &token = m_module_obj.tokens.get_token(node.start_token());
-    throw SourceLocationError(token.location, move(error_message));
+    throw TypeError(token.location, move(error_message));
   }
 
   Module &m_module_obj;

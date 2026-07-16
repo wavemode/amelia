@@ -62,7 +62,7 @@ Flex<Expression> build_statement(IModuleAnalysisState &module_state, NodeId expr
     result = build_binary_operator_expression(module_state, expr_node_id);
     break;
   default:
-    module_state.raise_error_at_node(
+    module_state.raise_type_error_at_node(
         expr_node_id, "not implemented (unknown node type in build_statement)"
     );
   }
@@ -92,7 +92,7 @@ Flex<Expression> assign_current_function_return_value(
     IModuleAnalysisState &module_state, Flex<Expression> return_value
 ) {
   if (!module_state.current_function_signature().has_value()) {
-    module_state.raise_error_at_node(return_value->node_id, "Return value not within function");
+    module_state.raise_type_error_at_node(return_value->node_id, "Return value not within function");
   }
 
   if (is_unknown_type(module_state.current_function_signature().value()->return_type)) {
@@ -150,7 +150,7 @@ Flex<Expression> build_expr_type_binding(
   if (node.type() == NodeType::TypeDeclNode) {
     return build_expr_type_decl(module_state, expr_node_id, stmts);
   } else {
-    module_state.raise_error_at_node(
+    module_state.raise_type_error_at_node(
         expr_node_id, "not implemented (unknown node type in build_expr_type_binding)"
     );
   }
@@ -275,7 +275,7 @@ Flex<Expression> build_expr_binding(
   } else if (node.type() == NodeType::TypeDeclNode) {
     return build_expr_type_decl(module_state, expr_node_id, stmts);
   } else {
-    module_state.raise_error_at_node(
+    module_state.raise_type_error_at_node(
         expr_node_id, "not implemented (unknown node type in build_expr_binding)"
     );
   }
@@ -290,7 +290,7 @@ Flex<Expression> build_expr_value_binding(
   } else if (node.type() == NodeType::FunctionDeclNode) {
     return build_expr_fun_decl(module_state, expr_node_id, stmts);
   } else {
-    module_state.raise_error_at_node(
+    module_state.raise_type_error_at_node(
         expr_node_id, "not implemented (unknown node type in build_expr_value_binding)"
     );
   }

@@ -68,16 +68,16 @@ void assert_mutable_operand(IModuleAnalysisState &module_state, Flex<Expression>
       String error_message = "Cannot modify constant '";
       error_message.append(identifier_expr.binding->name);
       error_message.append('\'');
-      module_state.raise_error_at_node(operand->node_id, move(error_message));
+      module_state.raise_type_error_at_node(operand->node_id, move(error_message));
     }
     if (identifier_expr.binding->kind != BindingKind::Variable) {
       String error_message = "Cannot assign to '";
       error_message.append(identifier_expr.binding->name);
       error_message.append("' because it is not a variable");
-      module_state.raise_error_at_node(operand->node_id, move(error_message));
+      module_state.raise_type_error_at_node(operand->node_id, move(error_message));
     }
   } else { // TODO: field access, deref
-    module_state.raise_error_at_node(
+    module_state.raise_type_error_at_node(
         operand->node_id, "Operand of mutation must be an assignable place"
     );
   }
@@ -315,7 +315,7 @@ Flex<Expression> build_binary_operator_expression(
     error_message.append("' and '");
     original_right_type->serialize().to_string(error_message);
     error_message.append("'");
-    module_state.raise_error_at_node(expr_node_id, move(error_message));
+    module_state.raise_type_error_at_node(expr_node_id, move(error_message));
   }
   return result.value();
 }
@@ -439,7 +439,7 @@ Flex<Expression> build_unary_operator_expression(
     error_message.append("' to expression of type '");
     operand_expr->type->serialize().to_string(error_message);
     error_message.append("'");
-    module_state.raise_error_at_node(expr_node_id, move(error_message));
+    module_state.raise_type_error_at_node(expr_node_id, move(error_message));
   }
 
   return result.value();

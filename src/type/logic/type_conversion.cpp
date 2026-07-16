@@ -25,7 +25,7 @@ Flex<Expression> build_type_cast_expression(
     error_message.append("' to type '");
     target_type->serialize().to_string(error_message);
     error_message.append("'");
-    module_state.raise_error_at_node(expr_node_id, move(error_message));
+    module_state.raise_type_error_at_node(expr_node_id, move(error_message));
   }
 
   // in case the type coerced without actually changing

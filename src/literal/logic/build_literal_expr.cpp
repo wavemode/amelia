@@ -116,7 +116,7 @@ Flex<Expression> build_expr_builtin_type(IModuleAnalysisState &module_state, Nod
     return result;
   }
   default:
-    module_state.raise_error_at_node(expr_node_id, "not implemented");
+    module_state.raise_type_error_at_node(expr_node_id, "not implemented");
   }
 }
 

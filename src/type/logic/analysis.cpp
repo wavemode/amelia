@@ -38,20 +38,20 @@ Flex<Type> evaluate_type_expr_bracket(
       String error_message = "Expected a constant integer length, but got an expression of type'";
       length_expr->type->serialize().to_string(error_message);
       error_message.append('\'');
-      module_state.raise_error_at_node(bracket_node.exprs[1], move(error_message));
+      module_state.raise_type_error_at_node(bracket_node.exprs[1], move(error_message));
     }
     const Integer &length_value = static_cast<const ConstIntegerType &>(*length_expr->type).value;
     if (length_value < 0 || length_value > UINT64_MAX) {
       String error_message = "Array type length must be a non-negative integer less than ";
       Integer(UINT64_MAX).to_string(error_message);
-      module_state.raise_error_at_node(bracket_node.exprs[1], move(error_message));
+      module_state.raise_type_error_at_node(bracket_node.exprs[1], move(error_message));
     }
     auto result = emplace_flex<ArrayType>();
     result->element_type = element_type;
     result->size = length_value.to_uint32();
     return result;
   } else {
-    module_state.raise_error_at_node(expr_node_id, "Invalid type expression");
+    module_state.raise_type_error_at_node(expr_node_id, "Invalid type expression");
   }
 }
 
@@ -71,20 +71,20 @@ Flex<Type> evaluate_type_expr_indexing(
   const auto &object_node = module_state.get_node(indexing_node.object);
 
   if (object_node.type() != NodeType::BitIntTypeNode) {
-    module_state.raise_error_at_node(
+    module_state.raise_type_error_at_node(
         indexing_node.object, "not implemented (indexing of non-bitint type)"
     );
   }
 
   if (indexing_node.indices.size() != 1) {
-    module_state.raise_error_at_node(
+    module_state.raise_type_error_at_node(
         indexing_node.object, "not implemented (type expr indexing with multiple indices)"
     );
   }
 
   const auto &index_node = module_state.get_node(indexing_node.indices[0]).as_IndexNode();
   if (index_node.name.has_value()) {
-    module_state.raise_error_at_node(
+    module_state.raise_type_error_at_node(
         indexing_node.indices[0], "not implemented (type expr indexing with named index)"
     );
   }
@@ -95,14 +95,14 @@ Flex<Type> evaluate_type_expr_indexing(
     String error_message = "Expected an integer constant, but got an expression of type '";
     index_expr->type->serialize().to_string(error_message);
     error_message.append('\'');
-    module_state.raise_error_at_node(indexing_node.indices[0], move(error_message));
+    module_state.raise_type_error_at_node(indexing_node.indices[0], move(error_message));
   }
 
   const Integer &index_value = static_cast<const ConstIntegerType &>(*index_expr->type).value;
   if (index_value < 1 || index_value > UINT32_MAX) {
     String error_message = "BitInt bit-count must be a positive integer less than or equal to";
     Serialize::of(int64_t(UINT32_MAX)).to_string(error_message);
-    module_state.raise_error_at_node(indexing_node.indices[0], move(error_message));
+    module_state.raise_type_error_at_node(indexing_node.indices[0], move(error_message));
   }
   bool is_signed = object_node.as_BitIntTypeNode().is_signed;
 
@@ -152,7 +152,7 @@ Flex<Type> evaluate_type_expr_const(
   String error_message = "Expected a constant, but got an expression of type '";
   expr->type->serialize().to_string(error_message);
   error_message.append('\'');
-  module_state.raise_error_at_node(expr->node_id, move(error_message));
+  module_state.raise_type_error_at_node(expr->node_id, move(error_message));
 }
 
 Flex<Type> evaluate_type_expr_builtin(const BuiltinTypeNode &builtin_type_node) {
@@ -220,7 +220,7 @@ Flex<Type> evaluate_type_expr(IModuleAnalysisState &module_state, NodeId type_ex
         module_state, type_expr_node_id, type_expr_node.as_BracketExprNode()
     );
   default:
-    module_state.raise_error_at_node(type_expr_node_id, "not implemented (unknown type expr)");
+    module_state.raise_type_error_at_node(type_expr_node_id, "not implemented (unknown type expr)");
   }
 }
 

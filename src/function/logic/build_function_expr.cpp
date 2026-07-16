@@ -28,12 +28,12 @@ Flex<Expression> build_funcall_expression(IModuleAnalysisState &module_state, No
         String error_message = "Duplicate argument name '";
         error_message.append(name_node.name);
         error_message.append("' in function call");
-        module_state.raise_error_at_node(arg_node.name.value(), move(error_message));
+        module_state.raise_type_error_at_node(arg_node.name.value(), move(error_message));
       }
       named_args.set(name_node.name, move(expr));
     } else {
       if (named_args.size() > 0) {
-        module_state.raise_error_at_node(
+        module_state.raise_type_error_at_node(
             arg_node_id, "Positional arguments must appear before named arguments"
         );
       }
@@ -64,7 +64,7 @@ Flex<Expression> build_funcall_expression(IModuleAnalysisState &module_state, No
       ++named_arg_count;
     }
     error_message.append(")");
-    module_state.raise_error_at_node(expr_node_id, move(error_message));
+    module_state.raise_type_error_at_node(expr_node_id, move(error_message));
   }
   return result.value();
 }
@@ -77,7 +77,7 @@ Option<Flex<FunctionCallExpression>> resolve_function_call(
     const Map<Text, Flex<Expression>> &named_args
 ) {
   if (!callee->type->is<FunctionType>()) {
-    module_state.raise_error_at_node(
+    module_state.raise_type_error_at_node(
         expr_node_id, "not implemented (called expression is not a function)"
     );
   }

@@ -25,7 +25,7 @@ Flex<Expression> build_reference_expression(
         String error_message = "Cannot take mutable reference to constant '";
         error_message.append(binding->name);
         error_message.append("'");
-        module_state.raise_error_at_node(expr_node_id, move(error_message));
+        module_state.raise_type_error_at_node(expr_node_id, move(error_message));
       }
       reference_type->is_move = ref_node.is_move;
       auto result = emplace_flex<ReferenceExpression>();
@@ -36,11 +36,11 @@ Flex<Expression> build_reference_expression(
       result->is_move = ref_node.is_move;
       return result;
     }
-    module_state.raise_error_at_node(
+    module_state.raise_type_error_at_node(
         expr_node_id, "not implemented (ref of non-variable/constant identifier)"
     );
   }
-  module_state.raise_error_at_node(
+  module_state.raise_type_error_at_node(
       expr_node_id, "not implemented (ref of non-identifier expression)"
   );
 }

@@ -25,7 +25,7 @@ void require_initializer(IModuleAnalysisState &module_state, const ValueBinding 
     String error_message = "Missing initializer for '";
     error_message.append(binding.name);
     error_message.append("' at top level");
-    module_state.raise_error_at_node(binding.decl, move(error_message));
+    module_state.raise_type_error_at_node(binding.decl, move(error_message));
   }
 }
 
@@ -34,7 +34,7 @@ void disallow_shadowing(IModuleAnalysisState &module_state, const ValueBinding &
     String error_message = "Duplicate declaration of '";
     error_message.append(binding.name);
     error_message.append("'");
-    module_state.raise_error_at_node(binding.decl, move(error_message));
+    module_state.raise_type_error_at_node(binding.decl, move(error_message));
   }
 }
 
@@ -50,7 +50,7 @@ void disallow_function_from_shadowing_non_function(
       String error_message = "Function declaration '";
       error_message.append(binding.name);
       error_message.append("' conflicts with previous declaration of the same name");
-      module_state.raise_error_at_node(binding.decl, move(error_message));
+      module_state.raise_type_error_at_node(binding.decl, move(error_message));
     }
     current_binding = static_cast<ValueBinding *>(&shadowed_binding);
   }
@@ -92,7 +92,7 @@ bool is_binding_analyzed(IModuleAnalysisState &module_state, const Binding &bind
            !is_unknown_type(static_cast<const TypeBinding &>(binding).type.value());
     break;
   default:
-    module_state.raise_error_at_node(
+    module_state.raise_type_error_at_node(
         binding.decl, "not implemented (unknown binding kind in is_binding_analyzed)"
     );
   }
@@ -116,7 +116,7 @@ void analyze_binding(IModuleAnalysisState &module_state, Binding &binding) {
     analyze_type_binding(module_state, static_cast<TypeBinding &>(binding));
     break;
   default:
-    module_state.raise_error_at_node(
+    module_state.raise_type_error_at_node(
         binding.decl, "not implemented (unknown binding kind in analyze_binding)"
     );
   }
@@ -132,7 +132,7 @@ Flex<TypeBinding> resolve_type_binding(
     String error_message = "Unknown type name '";
     error_message.append(name);
     error_message.append("'");
-    module_state.raise_error_at_node(node_id, move(error_message));
+    module_state.raise_type_error_at_node(node_id, move(error_message));
   }
   Flex<Binding> binding = module_state.get_binding_by_id(binding_id.value());
   analyze_binding(module_state, binding);
@@ -143,7 +143,7 @@ Flex<TypeBinding> resolve_type_binding(
     String error_message = "Identifier '";
     error_message.append(name);
     error_message.append("' is not a type name");
-    module_state.raise_error_at_node(node_id, move(error_message));
+    module_state.raise_type_error_at_node(node_id, move(error_message));
   }
   }
 }
@@ -156,7 +156,7 @@ Flex<ValueBinding> resolve_value_binding(
     String error_message = "Unknown variable '";
     error_message.append(name);
     error_message.append("'");
-    module_state.raise_error_at_node(node_id, move(error_message));
+    module_state.raise_type_error_at_node(node_id, move(error_message));
   }
   Flex<Binding> binding = module_state.get_binding_by_id(binding_id.value());
   analyze_binding(module_state, binding);
@@ -166,7 +166,7 @@ Flex<ValueBinding> resolve_value_binding(
   case BindingKind::Function:
     return binding.downcast<ValueBinding>();
   default:
-    module_state.raise_error_at_node(
+    module_state.raise_type_error_at_node(
         node_id, "not implemented (unknown binding kind in resolve_value_binding)"
     );
   }
@@ -241,7 +241,7 @@ void get_binding_details(
     break;
   }
   default:
-    module_state.raise_error_at_node(decl_node_id, "not implemented (unknown top-level decl node)");
+    module_state.raise_type_error_at_node(decl_node_id, "not implemented (unknown top-level decl node)");
   }
 }
 
@@ -254,7 +254,7 @@ void analyze_type_binding(IModuleAnalysisState &module_state, TypeBinding &bindi
 
   const auto &node = module_state.get_node(binding.decl);
   if (node.type() != NodeType::TypeDeclNode) {
-    module_state.raise_error_at_node(
+    module_state.raise_type_error_at_node(
         binding.decl, "not implemented (analyze_type_binding for non-TypeDecl node)"
     );
   }
@@ -268,7 +268,7 @@ void analyze_type_binding(IModuleAnalysisState &module_state, TypeBinding &bindi
     result->target = Type::resolve_type(type);
     binding.type = result;
   } else {
-    module_state.raise_error_at_node(
+    module_state.raise_type_error_at_node(
         binding.decl, "not implemented (analyze_type_binding for TypeDecl node without type_expr)"
     );
   }
@@ -311,7 +311,7 @@ void analyze_const_binding(IModuleAnalysisState &module_state, ValueBinding &bin
           module_state, binding.type.value(), decl_node.expr.value()
       );
     } else {
-      module_state.raise_error_at_node(
+      module_state.raise_type_error_at_node(
           binding.decl, "Missing initializer for constant declaration"
       );
     }
@@ -321,7 +321,7 @@ void analyze_const_binding(IModuleAnalysisState &module_state, ValueBinding &bin
       binding.value = build_expression(module_state, decl_node.expr.value());
       binding.type = binding.value.value()->type;
     } else {
-      module_state.raise_error_at_node(
+      module_state.raise_type_error_at_node(
           binding.decl, "Missing initializer for constant declaration"
       );
     }
@@ -334,7 +334,7 @@ FunctionParameter analyze_function_parameter(
   const auto &parameter_node = module_state.get_node(parameter_node_id).as_FunctionParameterNode();
   const auto &parameter_name_node = module_state.get_node(parameter_node.name);
   if (parameter_name_node.type() != NodeType::IdentifierNode) {
-    module_state.raise_error_at_node(
+    module_state.raise_type_error_at_node(
         parameter_node.name, "not implemented (function param not Ident)"
     );
   }
@@ -342,7 +342,7 @@ FunctionParameter analyze_function_parameter(
   FunctionParameter result;
   result.name = parameter_name_node.as_IdentifierNode().name;
   if (!parameter_node.type.has_value()) {
-    module_state.raise_error_at_node(
+    module_state.raise_type_error_at_node(
         parameter_node.type.value(), "not implemented (missing function param type annotation)"
     );
   }
@@ -367,7 +367,7 @@ FunctionSignature analyze_function_signature(
       String error_message = "Duplicate parameter name '";
       error_message.append(param.name);
       error_message.append("' in function signature");
-      module_state.raise_error_at_node(parameter_node_id, move(error_message));
+      module_state.raise_type_error_at_node(parameter_node_id, move(error_message));
     }
     seen_param_names.add(param.name);
     result.parameters.push_back(move(param));
@@ -418,7 +418,7 @@ void analyze_function_binding(IModuleAnalysisState &module_state, ValueBinding &
       String error_message = "Overload of function '";
       error_message.append(binding.name);
       error_message.append("' must be declared adjacent to its other overloads");
-      module_state.raise_error_at_node(binding.decl, move(error_message));
+      module_state.raise_type_error_at_node(binding.decl, move(error_message));
     }
 
     current_binding = static_cast<ValueBinding *>(&shadowed_binding);
@@ -432,7 +432,7 @@ void analyze_function_binding(IModuleAnalysisState &module_state, ValueBinding &
   while (true) {
     const auto &decl_node = module_state.get_node(current_binding->decl).as_FunctionDeclNode();
     if (!decl_node.body.has_value()) {
-      module_state.raise_error_at_node(
+      module_state.raise_type_error_at_node(
           current_binding->decl, "not implemented (function declaration without body)"
       );
     }
@@ -467,7 +467,7 @@ Flex<Expression> analyze_function_body(
                                        .as_FunctionBodyNode();
 
   if (function_body_node.is_default || function_body_node.is_deleted) {
-    module_state.raise_error_at_node(
+    module_state.raise_type_error_at_node(
         function_body_node_id, "not implemented (defaulted or deleted function)"
     );
   }
@@ -496,7 +496,7 @@ Flex<Expression> analyze_function_body(
       signature.return_type = NULL_TYPE;
     } else if (!is_never_type(result->type) && !is_null_type(signature.return_type)) {
       // function body does not return a value on all code paths, and we can't default to null
-      module_state.raise_error_at_node(
+      module_state.raise_type_error_at_node(
           function_body_node_id, "Non-null function does not return a value on all code paths"
       );
     }

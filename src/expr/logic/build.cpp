@@ -93,7 +93,7 @@ Flex<Expression> build_expression(IModuleAnalysisState &module_state, NodeId exp
     result = build_reference_expression(module_state, expr_node_id);
     break;
   default:
-    module_state.raise_error_at_node(
+    module_state.raise_type_error_at_node(
         expr_node_id, "not implemented (unknown node type in build_expression)"
     );
   }
@@ -132,7 +132,7 @@ Flex<Expression> require_coerce(
     expr.type->serialize().to_string(expr_type_str);
     TextUtils::replace(error_message_template, "{1}", expr_type_str);
     TextUtils::replace(error_message_template, "{2}", target_type_str);
-    module_state.raise_error_at_node(expr.node_id, move(error_message_template));
+    module_state.raise_type_error_at_node(expr.node_id, move(error_message_template));
   }
   return unified_expr.value();
 }

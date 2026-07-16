@@ -34,7 +34,7 @@ struct IModuleAnalysisState {
 
   virtual String current_module_name() const = 0;
 
-  [[noreturn]] virtual void raise_error_at_node(NodeId node_id, String &&message) = 0;
+  [[noreturn]] virtual void raise_type_error_at_node(NodeId node_id, String &&message) = 0;
 };
 
 } // namespace amelia
