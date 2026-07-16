@@ -1,0 +1,30 @@
+let x : *&*&T
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclNode(
+      target=IdentifierNode(
+        name="x"
+      ),
+      type=DerefExprNode(
+        is_const=false,
+        expr=RefExprNode(
+          is_const=false,
+          is_move=false,
+          expr=DerefExprNode(
+            is_const=false,
+            expr=RefExprNode(
+              is_const=false,
+              is_move=false,
+              expr=IdentifierNode(
+                name="T"
+              )
+            )
+          )
+        )
+      )
+    )
+  ]
+)
+*/

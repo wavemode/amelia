@@ -437,7 +437,7 @@ struct FieldAccessExprNode {
 
 struct NumericFieldAccessExprNode {
   NodeId object;
-  NumberLiteral field;
+  String field;
 };
 
 struct AsExprNode {
