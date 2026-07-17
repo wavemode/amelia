@@ -7,56 +7,58 @@
 
 namespace amelia {
 
-Flex<Type> Type::resolve_type(const Type &type) {
-  if (type.is_resolved()) {
-    return type.flex();
+Flex<Type> Type::resolve_type() const {
+  if (is_resolved()) {
+    return flex();
   }
-  return type.resolve();
+  return resolve();
 }
 
-Flex<Type> Type::remove_comptime_const_from_type(const Type &type) {
-  if (!type.is_comptime_const()) {
-    return type.flex();
+Flex<Type> Type::remove_comptime_const_from_type() const {
+  if (!is_comptime_const()) {
+    return flex();
   }
-  return type.remove_comptime_const();
+  return remove_comptime_const();
 }
 
-bool Type::unify_types(const Type &target_type, const Type &assignment_type) {
-  if (is_unknown_type(assignment_type) || is_unknown_type(target_type)) {
-    return false;
+bool Type::unify_type(const Type &assignment_type) const {
+  if (this == &assignment_type) {
+    return true;
   }
 
   if (is_never_type(assignment_type)) {
     return true;
   }
 
-  return target_type.unify(assignment_type);
+  if (is_unknown_type(*this) || is_unknown_type(assignment_type)) {
+    return false;
+  }
+
+  return unify(assignment_type);
 }
 
-Option<Flex<Expression>> Type::coerce_expr(const Type &target_type, const Expression &expr) {
-  return coerce_expr(target_type, expr.type, expr);
+Option<Flex<Expression>> Type::coerce_expr(const Expression &expr) const {
+  return coerce_expr(expr.type, expr);
 }
 
-Option<Flex<Expression>> Type::coerce_expr(
-    const Type &target_type, const Type &expr_type, const Expression &expr
-) {
-  if (unify_types(target_type, expr_type)) {
+Option<Flex<Expression>> Type::coerce_expr(const Type &expr_type, const Expression &expr) const {
+  if (unify_type(expr_type)) {
     return expr.flex();
   }
-  return target_type.coerce(resolve_type(expr_type), expr);
+
+  return coerce(expr_type, expr);
 }
 
-Option<Flex<Expression>> Type::cast_expr(const Type &target_type, const Expression &expr) {
-  return cast_expr(target_type, expr.type, expr);
+Option<Flex<Expression>> Type::cast_expr(const Expression &expr) const {
+  return cast_expr(expr.type, expr);
 }
 
-Option<Flex<Expression>> Type::cast_expr(
-    const Type &target_type, const Type &expr_type, const Expression &expr
-) {
-  if (unify_types(target_type, expr_type)) {
+Option<Flex<Expression>> Type::cast_expr(const Type &expr_type, const Expression &expr) const {
+  if (unify_type(expr_type)) {
     return expr.flex();
   }
-  return target_type.cast(expr_type, expr);
+
+  return cast(expr_type, expr);
 }
 
 bool Type::is_resolved() const {

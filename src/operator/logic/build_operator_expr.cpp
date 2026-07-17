@@ -282,8 +282,8 @@ Flex<Expression> build_binary_operator_expression(
       expr_node_id, op_kind, left_expr, right_type, right_expr
   );
   if (!result.has_value()) {
-    left_expr->type = Type::remove_comptime_const_from_type(left_expr->type);
-    right_expr->type = Type::remove_comptime_const_from_type(right_expr->type);
+    left_expr->type = left_expr->type->remove_comptime_const_from_type();
+    right_expr->type = right_expr->type->remove_comptime_const_from_type();
     left_type = left_expr->type;
     right_type = right_expr->type;
 
@@ -291,7 +291,7 @@ Flex<Expression> build_binary_operator_expression(
   }
   if (!is_non_promoting_binary_op(op_kind)) {
     if (!result.has_value()) {
-      auto try_convert_right = Type::coerce_expr(left_type, right_type, right_expr);
+      auto try_convert_right = left_type->coerce_expr(right_type, right_expr);
       if (try_convert_right.has_value()) {
         result = left_type->perform_binary_op(
             expr_node_id, op_kind, left_expr, left_type, move(try_convert_right.value())
@@ -299,7 +299,7 @@ Flex<Expression> build_binary_operator_expression(
       }
     }
     if (!result.has_value() && !is_rhs_promoting_binary_op(op_kind)) {
-      auto try_convert_left = Type::coerce_expr(right_type, left_type, left_expr);
+      auto try_convert_left = right_type->coerce_expr(left_type, left_expr);
       if (try_convert_left.has_value()) {
         result = right_type->perform_binary_op(
             expr_node_id, op_kind, move(try_convert_left.value()), right_type, right_expr
@@ -349,7 +349,7 @@ Option<Flex<Expression>> perform_native_binary_op(
     const Expression &right_expr,
     const Type &result_type
 ) {
-  if (!Type::unify_types(left_type, right_type)) {
+  if (!left_type.unify_type(right_type)) {
     return None();
   }
   auto result = emplace_flex<NativeBinaryOperationExpression>();
@@ -425,7 +425,7 @@ Flex<Expression> build_unary_operator_expression(
       // TODO: attempt numeric coercion
       break;
     case UnaryOperatorKind::Not: {
-      auto coerced_operand = Type::coerce_expr(BOOL_TYPE, operand_expr);
+      auto coerced_operand = BOOL_TYPE->coerce_expr(operand_expr);
       if (coerced_operand.has_value()) {
         result = BOOL_TYPE->perform_unary_op(expr_node_id, op_kind, coerced_operand.value());
       }

@@ -1,6 +1,9 @@
+#include <climits>
+
 #include "analysis.hpp"
 
 #include "array/data/array_type.hpp"
+#include "array/logic/build_array_expr.hpp"
 #include "binding/data/type_binding.hpp"
 #include "binding/logic/analysis.hpp"
 #include "bitint/data/bitint_type.hpp"
@@ -25,37 +28,40 @@ namespace amelia {
 
 namespace {
 
-Flex<Type> evaluate_type_expr_bracket(
-    // IModuleAnalysisState &module_state, NodeId expr_node_id, const BracketExprNode &bracket_node
+Flex<Type> evaluate_type_expr_array(
+    IModuleAnalysisState &module_state, NodeId expr_node_id, const ArrayExprNode &array_node
 ) {
-  // if (bracket_node.exprs.size() == 1) {
-  //   auto element_type = evaluate_type_expr(module_state, bracket_node.exprs[0]);
-  //   auto result = emplace_flex<SliceType>();
-  //   result->element_type = element_type;
-  //   return result;
-  // } else if (bracket_node.exprs.size() == 2) {
-  //   auto element_type = evaluate_type_expr(module_state, bracket_node.exprs[0]);
-  //   auto length_expr = build_expression(module_state, bracket_node.exprs[1]);
-  //   if (!length_expr->type->is<ConstIntegerType>()) {
-  //     String error_message = "Expected a constant integer length, but got an expression of
-  //     type'"; length_expr->type->serialize().to_string(error_message);
-  //     error_message.append('\'');
-  //     module_state.raise_type_error_at_node(bracket_node.exprs[1], move(error_message));
-  //   }
-  //   const Integer &length_value = static_cast<const ConstIntegerType
-  //   &>(*length_expr->type).value; if (length_value < 0 || length_value > UINT64_MAX) {
-  //     String error_message = "Array type length must be a non-negative integer less than ";
-  //     Integer(UINT64_MAX).to_string(error_message);
-  //     module_state.raise_type_error_at_node(bracket_node.exprs[1], move(error_message));
-  //   }
-  //   auto result = emplace_flex<ArrayType>();
-  //   result->element_type = element_type;
-  //   result->size = length_value.to_uint32();
-  //   return result;
-  // } else {
-  //   module_state.raise_type_error_at_node(expr_node_id, "Invalid type expression");
-  // }
-  return {};
+  if (array_node.elements.has_value()) {
+    module_state.raise_type_error_at_node(
+        expr_node_id, "Invalid type expression (array type with braces)"
+    );
+  }
+
+  if (array_node.infer_size) {
+    module_state.raise_type_error_at_node(
+        expr_node_id, "not implemented (array type expression with inferred size)"
+    );
+  }
+
+  if (array_node.size.has_value()) {
+    if (array_node.is_const) {
+      module_state.raise_type_error_at_node(
+          expr_node_id, "Invalid type expression (array type w/ const designator)"
+      );
+    }
+
+    uint64_t size_value = evaluate_array_size_expr(module_state, array_node.size.value());
+
+    auto result = emplace_flex<ArrayType>();
+    result->element_type = evaluate_type_expr(module_state, array_node.type_expr);
+    result->size = size_value;
+    return result;
+  } else {
+    auto result = emplace_flex<SliceType>();
+    result->element_type = evaluate_type_expr(module_state, array_node.type_expr);
+    result->is_const = array_node.is_const;
+    return result;
+  }
 }
 
 Flex<Type> evaluate_type_expr_deref(
@@ -220,10 +226,10 @@ Flex<Type> evaluate_type_expr(IModuleAnalysisState &module_state, NodeId type_ex
     return evaluate_type_expr_indexing(module_state, type_expr_node.as_IndexingExprNode());
   case NodeType::DerefExprNode:
     return evaluate_type_expr_deref(module_state, type_expr_node.as_DerefExprNode());
-  // case NodeType::BracketExprNode:
-  //   return evaluate_type_expr_bracket(
-  //       module_state, type_expr_node_id, type_expr_node.as_BracketExprNode()
-  //   );
+  case NodeType::ArrayExprNode:
+    return evaluate_type_expr_array(
+        module_state, type_expr_node_id, type_expr_node.as_ArrayExprNode()
+    );
   default:
     module_state.raise_type_error_at_node(type_expr_node_id, "not implemented (unknown type expr)");
   }

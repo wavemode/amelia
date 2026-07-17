@@ -32,7 +32,7 @@ Flex<Type> TupleType::resolve() const {
 
   auto resolved_tuple = emplace_flex<TupleType>();
   for (const auto &element_type : element_types) {
-    resolved_tuple->element_types.push_back(element_type->resolve());
+    resolved_tuple->element_types.push_back(element_type->resolve_type());
   }
 
   resolved_type_cached = resolved_tuple;
@@ -62,7 +62,7 @@ Flex<Type> TupleType::remove_comptime_const() const {
 
   auto new_tuple = emplace_flex<TupleType>();
   for (const auto &element_type : element_types) {
-    new_tuple->element_types.push_back(element_type->remove_comptime_const());
+    new_tuple->element_types.push_back(element_type->remove_comptime_const_from_type());
   }
 
   remove_comptime_const_cached = new_tuple;
@@ -80,7 +80,7 @@ bool TupleType::unify(const Type &assignment_type) const {
   }
 
   for (size_t i = 0; i < element_types.size(); ++i) {
-    if (!Type::unify_types(element_types[i], *assignment_tuple.element_types[i])) {
+    if (!element_types[i]->unify_type(assignment_tuple.element_types[i])) {
       return false;
     }
   }

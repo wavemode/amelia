@@ -1,5 +1,4 @@
-const x : [long, 3] = y
-const y = [2, 3, 0xFFFFFFFFF]
+const x = [...]long {2, 3, 0xFFFFFFFFF}
 
 /* EXPECTED_OUTPUT:
 SemaResult(
@@ -10,13 +9,6 @@ SemaResult(
         bindings=[
           ValueBinding(
             name="x",
-            type=[long, 3],
-            value=IdentifierExpression(
-              name="y"
-            )
-          ),
-          ValueBinding(
-            name="y",
             type=[long, 3],
             value=ArrayLiteralExpression(
               elements=[

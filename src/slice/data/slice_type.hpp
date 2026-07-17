@@ -7,6 +7,7 @@ namespace amelia {
 
 struct SliceType : Type {
   Flex<Type> element_type;
+  bool is_const;
 
   bool is_resolved() const override;
   Flex<Type> resolve() const override;
@@ -15,6 +16,8 @@ struct SliceType : Type {
   Flex<Type> remove_comptime_const() const override;
 
   bool unify(const Type &assignment_type) const override;
+  Option<Flex<Expression>> coerce(const Type &assignment_type, const Expression &expr)
+      const override;
 
   Serialize serialize() const override;
 };

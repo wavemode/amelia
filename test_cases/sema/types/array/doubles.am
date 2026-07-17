@@ -1,5 +1,5 @@
-const x : [double, 2] = y
-const y = [z, 4.5]
+const x : [2]double = y
+const y = [2]double {z, 4.5}
 const z : float = 2.5
 
 /* EXPECTED_OUTPUT:

@@ -30,10 +30,4 @@ Flex<Expression> require_coerce(
     String &&error_message_template
 );
 
-Flex<Type> read_expr_list(
-    IModuleAnalysisState &module_state,
-    List<Flex<Expression>> &output,
-    ConstSlice<NodeId> expr_node_ids
-);
-
 } // namespace amelia

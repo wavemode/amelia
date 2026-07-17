@@ -1,10 +1,10 @@
-let x = [
+let x = [...]long {
   1,
   3,
   0xfffffffff,
-]
-let y : &[int] = &x
+}
+let y : []int = &x
 
 /* EXPECTED_OUTPUT:
-ERROR("Cannot coerce expression of type '&[long, 3]' to expected type '&[int]' (at test_cases/sema/types/slice/error_assign_longs.am:6:18)")
+ERROR("Cannot coerce expression of type '&[long, 3]' to expected type '[]int' (at test_cases/sema/types/slice/error_assign_longs.am:6:17)")
 */

@@ -1900,8 +1900,7 @@ public:
     auto left = parse_type_atom();
     auto next_token = peek();
     while (next_token.type == TokenType::LEFT_BRACKET_NO_W ||
-           next_token.type == TokenType::DOUBLE_COLON_NO_W
-          ) {
+           next_token.type == TokenType::DOUBLE_COLON_NO_W) {
       if (next_token.type == TokenType::LEFT_BRACKET_NO_W) {
         ++m_token_index; // consume the '[' operator
         List<NodeId> indices;

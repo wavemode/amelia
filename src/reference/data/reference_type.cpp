@@ -18,7 +18,7 @@ bool ReferenceType::is_resolved() const {
 
 Flex<Type> ReferenceType::resolve() const {
   auto resolved_ref = emplace_flex<ReferenceType>();
-  resolved_ref->referent = referent->resolve();
+  resolved_ref->referent = referent->resolve_type();
   resolved_ref->is_const = is_const;
   resolved_ref->is_move = is_move;
   return resolved_ref;
@@ -30,7 +30,7 @@ bool ReferenceType::is_comptime_const() const {
 
 Flex<Type> ReferenceType::remove_comptime_const() const {
   auto result = emplace_flex<ReferenceType>();
-  result->referent = referent->remove_comptime_const();
+  result->referent = referent->remove_comptime_const_from_type();
   result->is_const = is_const;
   result->is_move = is_move;
   return result;
@@ -45,7 +45,7 @@ bool ReferenceType::unify(const Type &assignment_type) const {
     return false;
   }
   auto &assignment_type_ref = assignment_type.as<ReferenceType>();
-  if (!Type::unify_types(referent, assignment_type_ref.referent)) {
+  if (!referent->unify_type(assignment_type_ref.referent)) {
     return false;
   }
   return is_const == assignment_type_ref.is_const && is_move == assignment_type_ref.is_move;
@@ -66,16 +66,7 @@ Option<Flex<Expression>> ReferenceType::coerce(const Type &assignment_type, cons
       if (
             // References refer to the same type
             // TODO: compatible types
-            Type::unify_types(referent, expr_ref_type.referent)
-        ) {
-        return native_type_cast(*this, expr);
-      } else if (
-            // Target type refers to a slice and expr type refers to an array of the same type
-            referent->is<SliceType>() &&
-            expr_ref_type.referent->is<ArrayType>() &&
-            Type::unify_types(referent->as<SliceType>().element_type,
-              expr_ref_type.referent->as<ArrayType>().element_type
-            )
+            referent->unify_type(expr_ref_type.referent)
         ) {
         return native_type_cast(*this, expr);
       }

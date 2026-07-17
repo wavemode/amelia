@@ -16,7 +16,7 @@ bool ArrayType::is_resolved() const {
 
 Flex<Type> ArrayType::resolve() const {
   auto resolved_array = emplace_flex<ArrayType>();
-  resolved_array->element_type = element_type->resolve();
+  resolved_array->element_type = element_type->resolve_type();
   resolved_array->size = size;
   return resolved_array;
 }
@@ -27,7 +27,7 @@ bool ArrayType::is_comptime_const() const {
 
 Flex<Type> ArrayType::remove_comptime_const() const {
   auto result = emplace_flex<ArrayType>();
-  result->element_type = element_type->remove_comptime_const();
+  result->element_type = element_type->remove_comptime_const_from_type();
   result->size = size;
   return result;
 }
@@ -39,7 +39,7 @@ bool ArrayType::unify(const Type &assignment_type) const {
 
   const auto &assignment_array_type = assignment_type.as<ArrayType>();
   return size == assignment_array_type.size &&
-         Type::unify_types(element_type, assignment_array_type.element_type);
+         element_type->unify_type(assignment_array_type.element_type);
 }
 
 Option<Flex<Expression>> ArrayType::cast(const Type &assignment_type, const Expression &expr)
@@ -53,7 +53,7 @@ Option<Flex<Expression>> ArrayType::cast(const Type &assignment_type, const Expr
     return None();
   }
 
-  if (!Type::coerce_expr(element_type, assignment_array_type.element_type, expr).has_value()) {
+  if (!element_type->coerce_expr(assignment_array_type.element_type, expr).has_value()) {
     return None();
   }
 

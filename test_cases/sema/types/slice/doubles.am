@@ -1,9 +1,9 @@
-let x = [
+let x = [3]double {
   1.2,
   3.4,
   5.6,
-]
-let y : &[double] = &x
+}
+let y : []double = &x
 
 /* EXPECTED_OUTPUT:
 SemaResult(
@@ -31,7 +31,7 @@ SemaResult(
           ),
           ValueBinding(
             name="y",
-            type=&[double],
+            type=[]double,
             value=NativeTypeCastExpression(
               expr=ReferenceExpression(
                 referent=IdentifierExpression(

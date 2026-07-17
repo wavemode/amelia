@@ -17,7 +17,7 @@ Flex<Expression> build_type_cast_expression(
   const auto &as_node = module_state.get_node(expr_node_id).as_AsExprNode();
   auto expr = build_expression(module_state, as_node.expr);
   auto target_type = evaluate_type_expr(module_state, as_node.type);
-  auto result = Type::cast_expr(target_type, expr->type, expr);
+  auto result = target_type->cast_expr(expr->type, expr);
 
   if (!result.has_value()) {
     String error_message = "Cannot cast expression of type '";

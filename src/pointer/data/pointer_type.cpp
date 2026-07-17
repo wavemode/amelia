@@ -15,7 +15,7 @@ bool PointerType::is_resolved() const {
 
 Flex<Type> PointerType::resolve() const {
   auto resolved_ref = emplace_flex<PointerType>();
-  resolved_ref->pointee = pointee->resolve();
+  resolved_ref->pointee = pointee->resolve_type();
   resolved_ref->is_const = is_const;
   return resolved_ref;
 }
@@ -26,7 +26,7 @@ bool PointerType::is_comptime_const() const {
 
 Flex<Type> PointerType::remove_comptime_const() const {
   auto result = emplace_flex<PointerType>();
-  result->pointee = pointee->remove_comptime_const();
+  result->pointee = pointee->remove_comptime_const_from_type();
   result->is_const = is_const;
   return result;
 }
@@ -36,7 +36,7 @@ bool PointerType::unify(const Type &assignment_type) const {
     return false;
   }
   auto &assignment_type_ref = assignment_type.as<PointerType>();
-  if (!Type::unify_types(pointee, assignment_type_ref.pointee)) {
+  if (!pointee->unify_type(assignment_type_ref.pointee)) {
     return false;
   }
   return is_const == assignment_type_ref.is_const;
@@ -53,7 +53,7 @@ Option<Flex<Expression>> PointerType::coerce(const Type &assignment_type, const 
       if (
             // Pointers refer to the same type
             // TODO: compatible types
-            Type::unify_types(pointee, expr_ref_type.pointee)
+            pointee->unify_type(expr_ref_type.pointee)
         ) {
         return native_type_cast(*this, expr);
       }

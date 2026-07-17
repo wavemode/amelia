@@ -1,5 +1,6 @@
 #include "build.hpp"
 
+#include "array/logic/build_array_expr.hpp"
 #include "builtin/data/builtin_type.hpp"
 #include "expr/data/expression.hpp"
 #include "function/logic/build_function_expr.hpp"
@@ -32,8 +33,8 @@ Flex<Expression> build_expression(IModuleAnalysisState &module_state, NodeId exp
     return build_expr_boolean_literal(module_state, expr_node_id);
   case NodeType::BuiltinTypeNode:
     return build_expr_builtin_type(module_state, expr_node_id);
-  // case NodeType::BracketExprNode:
-  //   return build_expr_bracket(module_state, expr_node_id);
+  case NodeType::ArrayExprNode:
+    return build_expr_array(module_state, expr_node_id);
   case NodeType::ParenthesizedExprNode:
     return build_expr_paren(module_state, expr_node_id);
   case NodeType::IdentifierNode:
@@ -124,7 +125,7 @@ Flex<Expression> require_coerce(
     const Expression &expr,
     String &&error_message_template
 ) {
-  auto unified_expr = Type::coerce_expr(target_type, expr.type, expr);
+  auto unified_expr = target_type.coerce_expr(expr.type, expr);
   if (!unified_expr.has_value()) {
     String target_type_str;
     target_type.serialize().to_string(target_type_str);
@@ -135,61 +136,6 @@ Flex<Expression> require_coerce(
     module_state.raise_type_error_at_node(expr.node_id, move(error_message_template));
   }
   return unified_expr.value();
-}
-
-Flex<Type> read_expr_list(
-    IModuleAnalysisState &module_state,
-    List<Flex<Expression>> &output,
-    ConstSlice<NodeId> expr_node_ids
-) {
-  // TODO: ellipsis
-
-  for (NodeId sub_expr_node_id : expr_node_ids) {
-    output.push_back(build_expression(module_state, sub_expr_node_id));
-  }
-
-  Flex<Type> original_result_type = NEVER_TYPE;
-  for (size_t i = 0; i < output.size(); ++i) {
-    Flex<Expression> &elem = output[i];
-    if (is_never_type(original_result_type)) {
-      original_result_type = Type::remove_comptime_const_from_type(elem->type);
-    } else {
-      auto original_elem_type = Type::remove_comptime_const_from_type(elem->type);
-
-      auto elem_type = Type::resolve_type(original_elem_type);
-      auto result_type = Type::resolve_type(original_result_type);
-      if (
-          // types are different
-          !Type::unify_types(result_type, elem_type) &&
-          // both are integer types
-          elem_type->is_integral() &&
-          result_type->is_integral()
-          // the type of this elem can represent the entire range of the current inferred type
-          && elem_type->can_represent_range(result_type->min_value(), result_type->max_value())
-              
-          // and the bit size of this elem type is larger
-          && elem_type->repr_bit_size() > result_type->repr_bit_size()
-      ) {
-        original_result_type = original_elem_type;
-      }
-
-      if (
-          // types are different
-          !Type::unify_types(result_type, elem_type) &&
-          // inferred type is float and elem type is double
-          is_float_type(result_type) && is_double_type(elem_type)
-      ) {
-        original_result_type = original_elem_type;
-      }
-    }
-  }
-
-  // coerce each expression to the inferred type
-  for (size_t i = 0; i < output.size(); ++i) {
-    output[i] = require_coerce(module_state, original_result_type, move(output[i]));
-  }
-
-  return original_result_type;
 }
 
 } // namespace amelia

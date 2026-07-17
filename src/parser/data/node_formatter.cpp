@@ -79,7 +79,7 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   case NodeType::ArrayExprNode: {
     const auto &n = node.as_ArrayExprNode();
     print_node_field(out, "size", n.size);
-    if (n.infer_size) {  
+    if (n.infer_size) {
       print_boolean_field(out, "infer_size", n.infer_size);
     }
     if (n.is_const) {
