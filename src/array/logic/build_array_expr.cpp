@@ -9,17 +9,18 @@
 
 namespace amelia {
 
-Flex<Expression> build_expr_bracket(IModuleAnalysisState &module_state, NodeId expr_node_id) {
-  const auto &bracket_node = module_state.get_node(expr_node_id).as_BracketExprNode();
-  auto result = emplace_flex<ArrayLiteralExpression>();
-  result->node_id = expr_node_id;
-  auto array_type = emplace_flex<ArrayType>();
-  array_type->element_type = read_expr_list(
-      module_state, result->elements, bracket_node.exprs.data()
-  );
-  array_type->size = result->elements.size();
-  result->type = array_type;
-  return result;
+Flex<Expression> build_expr_bracket(IModuleAnalysisState &, NodeId) {
+  // const auto &bracket_node = module_state.get_node(expr_node_id).as_BracketExprNode();
+  // auto result = emplace_flex<ArrayLiteralExpression>();
+  // result->node_id = expr_node_id;
+  // auto array_type = emplace_flex<ArrayType>();
+  // array_type->element_type = read_expr_list(
+  //     module_state, result->elements, bracket_node.exprs.data()
+  // );
+  // array_type->size = result->elements.size();
+  // result->type = array_type;
+  // return result;
+  return {};
 }
 
 } // namespace amelia

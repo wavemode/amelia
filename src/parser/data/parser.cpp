@@ -285,7 +285,7 @@ public:
     auto next_token = peek();
     if (next_token.type == TokenType::LEFT_PAREN || next_token.type == TokenType::LEFT_PAREN_NO_W) {
       ++m_token_index; // consume the '(' token
-      repr_type = parse_expr();
+      repr_type = parse_type_expr();
       read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after enum representation type");
     }
     auto base_types = try_parse_base_type_list();
@@ -599,7 +599,7 @@ public:
       ++m_token_index; // consume the ':' token
     }
 
-    NodeId type = parse_expr();
+    NodeId type = parse_type_expr();
 
     Option<NodeId> default_value;
     if (peek().type == TokenType::ASSIGN) {
@@ -642,7 +642,7 @@ public:
       base_types.push_back(expect_identifier("Expected base type name after ':'"));
       while (peek().type == TokenType::COMMA) {
         ++m_token_index; // consume the ',' token
-        base_types.push_back(parse_expr());
+        base_types.push_back(parse_type_expr());
       }
       return Some(m_output.add_node(peek(-1).id, m_token_index, BaseTypeListNode{move(base_types)})
       );
@@ -816,7 +816,7 @@ public:
     Option<NodeId> initializer;
     if (peek().type == TokenType::COLON) {
       ++m_token_index; // consume the ':' token
-      type = parse_expr();
+      type = parse_type_expr();
     }
     if (peek().type == TokenType::ASSIGN) {
       ++m_token_index; // consume the '=' token
@@ -885,7 +885,7 @@ public:
     Option<NodeId> constraint;
     if (peek().type == TokenType::COLON) {
       ++m_token_index; // consume the ':' token
-      constraint = parse_expr();
+      constraint = parse_type_expr();
     }
 
     Option<NodeId> default_value;
@@ -902,11 +902,11 @@ public:
 
   NodeId parse_type_constraint() {
     auto start_token = peek();
-    NodeId lhs = parse_expr();
+    NodeId lhs = parse_type_expr();
     Option<NodeId> rhs;
     if (peek().type == TokenType::COLON) {
       ++m_token_index; // consume the ':' token
-      rhs = parse_expr();
+      rhs = parse_type_expr();
     }
     return m_output.add_node(start_token.id, m_token_index, TypeConstraintNode{lhs, rhs});
   }
@@ -988,7 +988,7 @@ public:
     Option<NodeId> type_expr;
     if (peek().type == TokenType::ASSIGN) {
       ++m_token_index; // consume the '=' token
-      type_expr = parse_expr();
+      type_expr = parse_type_expr();
     }
     return m_output.add_node(
         type_token.id, m_token_index, TypeDeclNode{name, generic_parameter_list, type_expr}
@@ -1104,7 +1104,7 @@ public:
     Option<NodeId> type;
     if (peek().type == TokenType::COLON) {
       ++m_token_index; // consume the ':' token
-      type = parse_expr();
+      type = parse_type_expr();
     }
 
     Option<NodeId> default_value;
@@ -1190,7 +1190,7 @@ public:
     auto next_token = peek();
     if (next_token.type == TokenType::ARROW) {
       ++m_token_index; // consume the '->' token
-      return parse_expr();
+      return parse_type_expr();
     }
     return None();
   }
@@ -1257,7 +1257,7 @@ public:
     Option<NodeId> type_annotation;
     if (peek().type == TokenType::COLON) {
       ++m_token_index; // consume the ':' token
-      type_annotation = parse_expr();
+      type_annotation = parse_type_expr();
     }
     return m_output.add_node(
         name_token.id, m_token_index, ForInVariableNode{name, type_annotation}
@@ -1324,7 +1324,7 @@ public:
     Option<NodeId> expr;
     if (peek().type == TokenType::COLON) {
       ++m_token_index; // consume the ':' token
-      type_annotation = parse_expr();
+      type_annotation = parse_type_expr();
     }
     if (peek().type == TokenType::ASSIGN) {
       ++m_token_index; // consume the '=' token
@@ -1342,7 +1342,7 @@ public:
     Option<NodeId> expr;
     if (peek().type == TokenType::COLON) {
       ++m_token_index; // consume the ':' token
-      type_annotation = parse_expr();
+      type_annotation = parse_type_expr();
     }
     if (peek().type == TokenType::ASSIGN) {
       ++m_token_index; // consume the '=' token
@@ -1572,7 +1572,7 @@ public:
     NodeId left = parse_descend_expr_prefix();
     while (peek().type == TokenType::KEYWORD_AS) {
       ++m_token_index; // consume the 'as' keyword
-      NodeId type = parse_descend_expr_prefix();
+      NodeId type = parse_descend_type_expr_prefix();
       left = m_output.add_node(start_token.id, m_token_index, AsExprNode{left, type});
     }
     return left;
@@ -1650,13 +1650,13 @@ public:
       return m_output.add_node(start_token.id, m_token_index, AsyncExprNode{type_expr});
     } else if (start_token.type == TokenType::KEYWORD_CONST) {
       ++m_token_index; // consume the 'const' keyword
-      NodeId type_expr = parse_descend_expr_prefix();
-      return m_output.add_node(start_token.id, m_token_index, ConstTypeExprNode{type_expr});
+      NodeId expr = parse_descend_expr_prefix();
+      return m_output.add_node(start_token.id, m_token_index, ConstTypeExprNode{expr});
     }
-    return parse_descend_expr_field_ix_funcall_scope_question_exclam();
+    return parse_descend_expr_postfix();
   }
 
-  NodeId parse_descend_expr_field_ix_funcall_scope_question_exclam() {
+  NodeId parse_descend_expr_postfix() {
     auto start_token = peek();
     auto left = parse_atom();
     auto next_token = peek();
@@ -1692,7 +1692,9 @@ public:
         left = m_output.add_node(
             start_token.id,
             m_token_index,
-            NumericFieldAccessExprNode{left, String(Lexer::read_number_literal(next_token.contents).fractional_digits)}
+            NumericFieldAccessExprNode{
+                left, String(Lexer::read_number_literal(next_token.contents).fractional_digits)
+            }
         );
       } else if (next_token.type == TokenType::LEFT_BRACKET_NO_W) {
         ++m_token_index; // consume the '[' operator
@@ -1754,26 +1756,11 @@ public:
     return left;
   }
 
-  NodeId parse_scoped_name() {
-    auto start_token = peek();
-    auto lhs = expect_identifier("Expected identifier at beginning of scoped name");
-    while (peek().type == TokenType::DOUBLE_COLON_NO_W) {
-      ++m_token_index; // consume the '::' operator
-      auto next_type = peek().type;
-      if (!is_identifier_no_w(next_type) && next_type != TokenType::KEYWORD_OPERATOR) {
-        throw_parser_error_at_current_location(
-            "Expected identifier immediately after '::' in scope resolution expression"
-        );
-      }
-      lhs = m_output.add_node(
-          start_token.id, m_token_index, ScopeResolutionExprNode{lhs, parse_identifier()}
-      );
-    }
-    return lhs;
-  }
-
   NodeId parse_atom() {
     switch (peek().type) {
+    case TokenType::LEFT_BRACKET:
+    case TokenType::LEFT_BRACKET_NO_W:
+      return parse_array_type();
     case TokenType::IDENTIFIER:
     case TokenType::IDENTIFIER_NO_W:
     case TokenType::QUOTED_IDENTIFIER:
@@ -1798,9 +1785,6 @@ public:
         return parse_lambda_expr();
       }
       return parse_parenthesized_expr();
-    case TokenType::LEFT_BRACKET:
-    case TokenType::LEFT_BRACKET_NO_W:
-      return parse_bracket_expr();
     case TokenType::LEFT_BRACE:
       return parse_brace_expr();
     case TokenType::KEYWORD_IF:
@@ -1847,10 +1831,218 @@ public:
     case TokenType::KEYWORD_TYPEOF:
       return parse_typeof_expr();
     default:
-      String err("Expected expression, got token ");
+      String err = "Expected expression, got token ";
       m_token_formatter.format_token(err, m_token_index);
       throw_parser_error_at_current_location(move(err));
     }
+  }
+
+  NodeId parse_type_expr() {
+    return parse_descend_type_expr_prefix();
+  }
+
+  NodeId parse_descend_type_expr_prefix() {
+    auto start_token = peek();
+    if (start_token.type == TokenType::AMPERSAND) {
+      ++m_token_index; // consume the '&' operator
+      bool is_const = false;
+      bool is_move = false;
+      auto following_token = peek();
+      if (following_token.type == TokenType::KEYWORD_CONST) {
+        is_const = true;
+        ++m_token_index; // consume the 'const' keyword
+      } else if (following_token.type == TokenType::KEYWORD_MOVE) {
+        is_move = true;
+        ++m_token_index; // consume the 'move' keyword
+      }
+      NodeId expr = parse_descend_type_expr_prefix();
+      return m_output.add_node(start_token.id, m_token_index, RefExprNode{is_const, is_move, expr});
+    } else if (start_token.type == TokenType::STAR) {
+      ++m_token_index; // consume the '*' operator
+      bool is_const = false;
+      if (peek().type == TokenType::KEYWORD_CONST) {
+        is_const = true;
+        ++m_token_index; // consume the 'const' keyword
+      }
+      NodeId expr = parse_descend_type_expr_prefix();
+      return m_output.add_node(start_token.id, m_token_index, DerefExprNode{is_const, expr});
+    } else if (start_token.type == TokenType::EXCLAM ||
+               start_token.type == TokenType::EXCLAM_NO_W) {
+      ++m_token_index; // consume the '!' operator
+      NodeId expr = parse_descend_type_expr_prefix();
+      return m_output.add_node(start_token.id, m_token_index, NotExprNode{expr});
+    } else if (start_token.type == TokenType::ELLIPSIS) {
+      ++m_token_index; // consume the '...' operator
+      NodeId expr = parse_descend_type_expr_prefix();
+      return m_output.add_node(start_token.id, m_token_index, EllipsisExprNode{expr});
+    } else if (start_token.type == TokenType::KEYWORD_IMPL) {
+      ++m_token_index; // consume the 'impl' keyword
+      NodeId type_expr = parse_descend_type_expr_prefix();
+      return m_output.add_node(start_token.id, m_token_index, ImplTypeExprNode{type_expr});
+    } else if (start_token.type == TokenType::KEYWORD_ANY) {
+      ++m_token_index; // consume the 'any' keyword
+      NodeId type_expr = parse_descend_type_expr_prefix();
+      return m_output.add_node(start_token.id, m_token_index, AnyTypeExprNode{type_expr});
+    } else if (start_token.type == TokenType::KEYWORD_ASYNC) {
+      ++m_token_index; // consume the 'async' keyword
+      NodeId type_expr = parse_descend_type_expr_prefix();
+      return m_output.add_node(start_token.id, m_token_index, AsyncExprNode{type_expr});
+    } else if (start_token.type == TokenType::KEYWORD_CONST) {
+      ++m_token_index; // consume the 'const' keyword
+      NodeId type_expr = parse_atom();
+      return m_output.add_node(start_token.id, m_token_index, ConstTypeExprNode{type_expr});
+    }
+    return parse_descend_type_expr_postfix();
+  }
+
+  NodeId parse_descend_type_expr_postfix() {
+    auto start_token = peek();
+    auto left = parse_type_atom();
+    auto next_token = peek();
+    while (next_token.type == TokenType::LEFT_BRACKET_NO_W ||
+           next_token.type == TokenType::DOUBLE_COLON_NO_W
+          ) {
+      if (next_token.type == TokenType::LEFT_BRACKET_NO_W) {
+        ++m_token_index; // consume the '[' operator
+        List<NodeId> indices;
+        while (peek().type != TokenType::RIGHT_BRACKET) {
+          auto index_start_token = peek();
+          Option<NodeId> name;
+          if (is_identifier(peek().type) && peek(1).type == TokenType::ASSIGN) {
+            name = parse_identifier();
+            ++m_token_index; // consume the '=' token
+          }
+          NodeId value = parse_expr();
+          if (peek().type == TokenType::COMMA) {
+            ++m_token_index; // consume the comma
+          }
+          indices.push_back(
+              m_output.add_node(index_start_token.id, m_token_index, IndexNode{name, value})
+          );
+        }
+        ++m_token_index; // consume the ']' token
+        left = m_output.add_node(
+            start_token.id, m_token_index, IndexingExprNode{left, move(indices)}
+        );
+      } else if (next_token.type == TokenType::DOUBLE_COLON_NO_W) {
+        ++m_token_index; // consume the '::' operator
+        auto next_type = peek().type;
+        if (!is_identifier_no_w(next_type) && next_type != TokenType::KEYWORD_OPERATOR) {
+          throw_parser_error_at_current_location(
+              "Expected identifier immediately after '::' in scope resolution expression"
+          );
+        }
+        left = m_output.add_node(
+            start_token.id, m_token_index, ScopeResolutionExprNode{left, parse_identifier()}
+        );
+      } else {
+        throw RuntimeError("unreachable");
+      }
+      next_token = peek();
+    }
+    return left;
+  }
+
+  NodeId parse_type_atom() {
+    switch (peek().type) {
+    case TokenType::LEFT_BRACKET:
+    case TokenType::LEFT_BRACKET_NO_W:
+      return parse_array_type();
+    case TokenType::IDENTIFIER:
+    case TokenType::IDENTIFIER_NO_W:
+    case TokenType::QUOTED_IDENTIFIER:
+    case TokenType::QUOTED_IDENTIFIER_NO_W:
+    case TokenType::KEYWORD_THIS_TYPE:
+      return parse_identifier();
+    case TokenType::LEFT_PAREN:
+    case TokenType::LEFT_PAREN_NO_W:
+      return parse_parenthesized_expr();
+    case TokenType::LEFT_BRACE:
+      return parse_brace_expr();
+    case TokenType::KEYWORD_FUN:
+      return parse_function_expr(true);
+    case TokenType::KEYWORD_BOOL:
+    case TokenType::KEYWORD_BYTE:
+    case TokenType::KEYWORD_SHORT:
+    case TokenType::KEYWORD_INT:
+    case TokenType::KEYWORD_LONG:
+    case TokenType::KEYWORD_UBYTE:
+    case TokenType::KEYWORD_USHORT:
+    case TokenType::KEYWORD_UINT:
+    case TokenType::KEYWORD_ULONG:
+    case TokenType::KEYWORD_USIZE:
+    case TokenType::KEYWORD_FLOAT:
+    case TokenType::KEYWORD_DOUBLE:
+    case TokenType::KEYWORD_CHAR:
+    case TokenType::KEYWORD_STR:
+    case TokenType::KEYWORD_NULL:
+    case TokenType::KEYWORD_NEVER:
+      return parse_builtin_type();
+    case TokenType::KEYWORD_BITINT:
+    case TokenType::KEYWORD_UBITINT:
+      return parse_bitint_type();
+    case TokenType::KEYWORD_AUTO:
+      return parse_auto_type();
+    case TokenType::KEYWORD_TYPEOF:
+      return parse_typeof_expr();
+    default:
+      String err = "Expected type expression, got token ";
+      m_token_formatter.format_token(err, m_token_index);
+      throw_parser_error_at_current_location(move(err));
+    }
+  }
+
+  NodeId parse_scoped_name() {
+    auto start_token = peek();
+    auto lhs = expect_identifier("Expected identifier at beginning of scoped name");
+    while (peek().type == TokenType::DOUBLE_COLON_NO_W) {
+      ++m_token_index; // consume the '::' operator
+      auto next_type = peek().type;
+      if (!is_identifier_no_w(next_type) && next_type != TokenType::KEYWORD_OPERATOR) {
+        throw_parser_error_at_current_location(
+            "Expected identifier immediately after '::' in scope resolution expression"
+        );
+      }
+      lhs = m_output.add_node(
+          start_token.id, m_token_index, ScopeResolutionExprNode{lhs, parse_identifier()}
+      );
+    }
+    return lhs;
+  }
+
+  NodeId parse_array_type() {
+    auto start_token = peek();
+    ++m_token_index; // consume the '[' operator
+    Option<NodeId> size;
+    bool infer_size = false;
+    auto following_token = peek();
+    if (following_token.type == TokenType::ELLIPSIS) {
+      ++m_token_index; // consume the '...' operator
+      infer_size = true;
+    } else if (following_token.type != TokenType::RIGHT_BRACKET) {
+      size = parse_expr();
+    }
+    read_token_type(TokenType::RIGHT_BRACKET, "Expected ']' after array size expression");
+    bool is_const = false;
+    if (peek().type == TokenType::KEYWORD_CONST) {
+      is_const = true;
+      ++m_token_index; // consume the 'const' keyword
+    }
+    NodeId type_expr = parse_type_expr();
+
+    Option<List<NodeId>> elements;
+    if (peek().type == TokenType::LEFT_BRACE) {
+      ++m_token_index; // consume the '{' operator
+      elements = List<NodeId>();
+      parse_comma_separated_expr_list(elements.value(), TokenType::RIGHT_BRACE);
+      read_token_type(TokenType::RIGHT_BRACE, "Expected '}' after array elements");
+    }
+
+    return m_output.add_node(
+        start_token.id,
+        m_token_index,
+        ArrayExprNode{size, infer_size, is_const, type_expr, elements}
+    );
   }
 
   NodeId parse_bitint_type() {
@@ -1972,11 +2164,11 @@ public:
     );
   }
 
-  NodeId parse_function_expr() {
+  NodeId parse_function_expr(bool is_type = false) {
     auto fun_token = next();
     NodeId signature = parse_function_signature();
     Option<NodeId> body;
-    if (peek().type == TokenType::LEFT_BRACE) {
+    if (!is_type && peek().type == TokenType::LEFT_BRACE) {
       body = try_parse_function_body();
     }
     return m_output.add_node(fun_token.id, m_token_index, FunctionExprNode{signature, body});
@@ -2138,7 +2330,7 @@ public:
       operator_node = m_output.add_node(start_token.id, m_token_index, OperatorIdentFuncallNode{});
       break;
     case TokenType::KEYWORD_AS: {
-      auto type = parse_atom();
+      auto type = parse_type_expr();
       operator_node = m_output.add_node(start_token.id, m_token_index, OperatorIdentAsNode{type});
       break;
     }
@@ -2255,7 +2447,7 @@ public:
       var = parse_identifier();
       ++m_token_index; // consume the ':' token
     }
-    NodeId exc_type = parse_expr();
+    NodeId exc_type = parse_type_expr();
     read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after catch clause exception type");
     NodeId body = parse_expr();
     return m_output.add_node(catch_token.id, m_token_index, CatchClauseNode{exc_type, var, body});
@@ -2278,14 +2470,6 @@ public:
         m_token_index,
         IfExprNode{move(introductory_decls), condition, then_branch, else_branch}
     );
-  }
-
-  NodeId parse_bracket_expr() {
-    auto open_bracket = next();
-    List<NodeId> exprs;
-    parse_comma_separated_expr_list(exprs, TokenType::RIGHT_BRACKET);
-    ++m_token_index; // consume the right bracket
-    return m_output.add_node(open_bracket.id, m_token_index, BracketExprNode{move(exprs)});
   }
 
   NodeId parse_parenthesized_expr() {

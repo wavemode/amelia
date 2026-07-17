@@ -5,6 +5,7 @@
 #include "lexer/interface/token_repository.hpp"
 #include "parser/data/abstract_node_repository.hpp"
 #include "parser/data/node.hpp"
+#include "util/data/integer.hpp"
 #include "util/data/serialize.hpp"
 #include "util/data/text_utils.hpp"
 
@@ -25,7 +26,7 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     const auto &n = node.as_IdentifierNode();
     String name;
     Serialize::quoted(n.name).to_string(name);
-    print_field(out, "name", name);
+    print_text_field(out, "name", name);
     break;
   }
   case NodeType::EmptyStmtNode: {
@@ -75,16 +76,24 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "exprs", n.exprs);
     break;
   }
+  case NodeType::ArrayExprNode: {
+    const auto &n = node.as_ArrayExprNode();
+    print_node_field(out, "size", n.size);
+    if (n.infer_size) {  
+      print_boolean_field(out, "infer_size", n.infer_size);
+    }
+    if (n.is_const) {
+      print_boolean_field(out, "is_const", n.is_const);
+    }
+    print_node_field(out, "type_expr", n.type_expr);
+    print_node_field(out, "elements", n.elements);
+    break;
+  }
   case NodeType::ModuleNode: {
     const auto &n = node.as_ModuleNode();
     print_node_field(out, "decls", n.decls);
     print_node_field(out, "imports", n.imports);
     print_node_field(out, "submodules", n.submodules);
-    break;
-  }
-  case NodeType::BracketExprNode: {
-    const auto &n = node.as_BracketExprNode();
-    print_node_field(out, "exprs", n.exprs);
     break;
   }
   case NodeType::BlockExprNode: {
@@ -301,8 +310,8 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   }
   case NodeType::RefExprNode: {
     const auto &n = node.as_RefExprNode();
-    print_field(out, "is_const", n.is_const);
-    print_field(out, "is_move", n.is_move);
+    print_boolean_field(out, "is_const", n.is_const);
+    print_boolean_field(out, "is_move", n.is_move);
     print_node_field(out, "expr", n.expr);
     break;
   }
@@ -323,7 +332,7 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   }
   case NodeType::DerefExprNode: {
     const auto &n = node.as_DerefExprNode();
-    print_field(out, "is_const", n.is_const);
+    print_boolean_field(out, "is_const", n.is_const);
     print_node_field(out, "expr", n.expr);
     break;
   }
@@ -352,8 +361,9 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     const auto &n = node.as_NumericFieldAccessExprNode();
     print_node_field(out, "object", n.object);
     open_line(out);
-    out.append("field=");
+    out.append("field=\"");
     out.append(n.field);
+    out.append('"');
     break;
   }
   case NodeType::AsExprNode: {
@@ -654,7 +664,7 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   }
   case NodeType::FunctionParameterNode: {
     const auto &n = node.as_FunctionParameterNode();
-    print_field(out, "variadic", n.variadic);
+    print_boolean_field(out, "variadic", n.variadic);
     print_node_field(out, "name", n.name);
     print_node_field(out, "type", n.type);
     print_node_field(out, "default_value", n.default_value);
@@ -673,8 +683,8 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     const auto &n = node.as_FunctionBodyNode();
     print_node_field(out, "expr", n.expr);
     print_node_field(out, "stmts", n.stmts);
-    print_field(out, "is_default", n.is_default);
-    print_field(out, "is_deleted", n.is_deleted);
+    print_boolean_field(out, "is_default", n.is_default);
+    print_boolean_field(out, "is_deleted", n.is_deleted);
     break;
   }
   case NodeType::ImplicitParameterListNode: {
@@ -704,7 +714,7 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
       kind = "const_ref";
       break;
     }
-    print_field(out, "kind", kind);
+    print_text_field(out, "kind", kind);
     print_node_field(out, "var", n.var);
     break;
   }
@@ -809,7 +819,7 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   }
   case NodeType::GenericParameterNode: {
     const auto &n = node.as_GenericParameterNode();
-    print_field(out, "is_const", n.is_const);
+    print_boolean_field(out, "is_const", n.is_const);
     print_node_field(out, "name", n.name);
     print_node_field(out, "constraint", n.constraint);
     print_node_field(out, "default_value", n.default_value);
@@ -849,7 +859,7 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   }
   case NodeType::BooleanLiteralNode: {
     const auto &n = node.as_BooleanLiteralNode();
-    print_field(out, "value", n.value);
+    print_boolean_field(out, "value", n.value);
     break;
   }
   case NodeType::ThisLiteralNode: {
@@ -895,7 +905,7 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
       visibility = "default";
       break;
     }
-    print_field(out, "visibility", visibility);
+    print_text_field(out, "visibility", visibility);
     print_node_field(out, "scope", n.scope);
     print_node_field(out, "decl", n.decl);
     break;
@@ -948,7 +958,7 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   }
   case NodeType::BitIntTypeNode: {
     const auto &n = node.as_BitIntTypeNode();
-    print_field(out, "is_signed", n.is_signed);
+    print_boolean_field(out, "is_signed", n.is_signed);
     break;
   }
   case NodeType::AutoTypeNode: {
@@ -1127,14 +1137,21 @@ void NodeFormatter::print_node_field(AbstractString &out, Text name, Option<Node
   out.append('=');
   format_node(out, node_id.value());
 }
-void NodeFormatter::print_field(AbstractString &out, Text name, Text value) {
+void NodeFormatter::print_text_field(AbstractString &out, Text name, Text value) {
   open_line(out);
   out.append(name);
   out.append('=');
   out.append(value);
 }
 
-void NodeFormatter::print_field(AbstractString &out, Text name, bool value) {
+void NodeFormatter::print_numeric_field(AbstractString &out, Text name, Integer value) {
+  open_line(out);
+  out.append(name);
+  out.append('=');
+  value.to_string(out);
+}
+
+void NodeFormatter::print_boolean_field(AbstractString &out, Text name, bool value) {
   open_line(out);
   out.append(name);
   out.append('=');

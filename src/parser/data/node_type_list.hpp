@@ -158,8 +158,12 @@ struct ParenthesizedExprNode {
   List<NodeId> exprs;
 };
 
-struct BracketExprNode {
-  List<NodeId> exprs;
+struct ArrayExprNode {
+  Option<NodeId> size;
+  bool infer_size;
+  bool is_const;
+  NodeId type_expr;
+  Option<List<NodeId>> elements;
 };
 
 struct BlockExprNode {
@@ -834,7 +838,7 @@ struct TypeFieldNode {};
   X(CharLiteralNode)                                                                               \
   X(NumberLiteralNode)                                                                             \
   X(ParenthesizedExprNode)                                                                         \
-  X(BracketExprNode)                                                                               \
+  X(ArrayExprNode)                                                                                 \
   X(BlockExprNode)                                                                                 \
   X(WithExprNode)                                                                                  \
   X(KeyValueEntryNode)                                                                             \

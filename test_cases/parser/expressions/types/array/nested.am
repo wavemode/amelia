@@ -1,4 +1,4 @@
-let x : [4]int
+let x : [4][3]int
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
@@ -9,8 +9,11 @@ ModuleNode(
       ),
       type=ArrayExprNode(
         size=NumberLiteralNode(value=4),
-        type_expr=BuiltinTypeNode(
-          kind=int
+        type_expr=ArrayExprNode(
+          size=NumberLiteralNode(value=3),
+          type_expr=BuiltinTypeNode(
+            kind=int
+          )
         )
       )
     )

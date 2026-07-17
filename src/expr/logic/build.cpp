@@ -32,8 +32,8 @@ Flex<Expression> build_expression(IModuleAnalysisState &module_state, NodeId exp
     return build_expr_boolean_literal(module_state, expr_node_id);
   case NodeType::BuiltinTypeNode:
     return build_expr_builtin_type(module_state, expr_node_id);
-  case NodeType::BracketExprNode:
-    return build_expr_bracket(module_state, expr_node_id);
+  // case NodeType::BracketExprNode:
+  //   return build_expr_bracket(module_state, expr_node_id);
   case NodeType::ParenthesizedExprNode:
     return build_expr_paren(module_state, expr_node_id);
   case NodeType::IdentifierNode:

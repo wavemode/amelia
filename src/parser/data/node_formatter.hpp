@@ -8,6 +8,7 @@ using NodeId = int32_t;
 struct AbstractNodeRepository;
 struct AbstractString;
 class Text;
+class Integer;
 template <typename T> class List;
 template <typename T> class Option;
 
@@ -24,9 +25,11 @@ private:
 
   void print_node_field(AbstractString &out, Text name, Option<NodeId> node_id);
 
-  void print_field(AbstractString &out, Text name, Text value);
+  void print_text_field(AbstractString &out, Text name, Text value);
 
-  void print_field(AbstractString &out, Text name, bool value);
+  void print_numeric_field(AbstractString &out, Text name, Integer value);
+
+  void print_boolean_field(AbstractString &out, Text name, bool value);
 
   void open_line(AbstractString &out, bool with_comma = true);
 

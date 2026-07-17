@@ -1,4 +1,4 @@
-let x = [1, 2, 3].map(x -> x + 1)
+let x = [3]int {1, 2, 3}.map(x -> x + 1)
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
@@ -9,8 +9,12 @@ ModuleNode(
       ),
       expr=FunctionCallExprNode(
         callee=FieldAccessExprNode(
-          object=BracketExprNode(
-            exprs=[
+          object=ArrayExprNode(
+            size=NumberLiteralNode(value=3),
+            type_expr=BuiltinTypeNode(
+              kind=int
+            ),
+            elements=[
               NumberLiteralNode(value=1),
               NumberLiteralNode(value=2),
               NumberLiteralNode(value=3)

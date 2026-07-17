@@ -1,4 +1,4 @@
-let x : &const [T]
+let x : []const T
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
@@ -7,15 +7,10 @@ ModuleNode(
       target=IdentifierNode(
         name="x"
       ),
-      type=RefExprNode(
+      type=ArrayExprNode(
         is_const=true,
-        is_move=false,
-        expr=BracketExprNode(
-          exprs=[
-            IdentifierNode(
-              name="T"
-            )
-          ]
+        type_expr=IdentifierNode(
+          name="T"
         )
       )
     )

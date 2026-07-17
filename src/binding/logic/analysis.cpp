@@ -241,7 +241,9 @@ void get_binding_details(
     break;
   }
   default:
-    module_state.raise_type_error_at_node(decl_node_id, "not implemented (unknown top-level decl node)");
+    module_state.raise_type_error_at_node(
+        decl_node_id, "not implemented (unknown top-level decl node)"
+    );
   }
 }
 

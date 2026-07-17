@@ -1,5 +1,5 @@
 class A {
-  operator as T[T]() = T()
+  operator as T [T]() = T()
 }
 
 /* EXPECTED_OUTPUT:

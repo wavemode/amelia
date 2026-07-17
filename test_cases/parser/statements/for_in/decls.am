@@ -1,6 +1,6 @@
 let z = {
   for (
-    let w = [1, 2, 3, 4]
+    let w = [4]int {1, 2, 3, 4}
     const y = w.map(x -> x * 2)
     x in y
   ) a()
@@ -21,8 +21,12 @@ ModuleNode(
                 target=IdentifierNode(
                   name="w"
                 ),
-                expr=BracketExprNode(
-                  exprs=[
+                expr=ArrayExprNode(
+                  size=NumberLiteralNode(value=4),
+                  type_expr=BuiltinTypeNode(
+                    kind=int
+                  ),
+                  elements=[
                     NumberLiteralNode(value=1),
                     NumberLiteralNode(value=2),
                     NumberLiteralNode(value=3),

@@ -1,4 +1,4 @@
-let x = [1, 2, 3]
+let x = [...]int {1, 2, 3}
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
@@ -7,8 +7,12 @@ ModuleNode(
       target=IdentifierNode(
         name="x"
       ),
-      expr=BracketExprNode(
-        exprs=[
+      expr=ArrayExprNode(
+        infer_size=true,
+        type_expr=BuiltinTypeNode(
+          kind=int
+        ),
+        elements=[
           NumberLiteralNode(value=1),
           NumberLiteralNode(value=2),
           NumberLiteralNode(value=3)

@@ -1,4 +1,4 @@
-let x : []T
+let x : [][]T
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
@@ -8,8 +8,10 @@ ModuleNode(
         name="x"
       ),
       type=ArrayExprNode(
-        type_expr=IdentifierNode(
-          name="T"
+        type_expr=ArrayExprNode(
+          type_expr=IdentifierNode(
+            name="T"
+          )
         )
       )
     )

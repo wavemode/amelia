@@ -92,7 +92,9 @@ Flex<Expression> assign_current_function_return_value(
     IModuleAnalysisState &module_state, Flex<Expression> return_value
 ) {
   if (!module_state.current_function_signature().has_value()) {
-    module_state.raise_type_error_at_node(return_value->node_id, "Return value not within function");
+    module_state.raise_type_error_at_node(
+        return_value->node_id, "Return value not within function"
+    );
   }
 
   if (is_unknown_type(module_state.current_function_signature().value()->return_type)) {

@@ -1,5 +1,5 @@
 class A {
-  operator as (List[int])() = [this.a]
+  operator as List[int]() = list(this.a)
 
   a: int
 }
@@ -16,19 +16,15 @@ ModuleNode(
           OperatorFunctionDeclNode(
             operator_ident=OperatorIdentifierNode(
               op=OperatorIdentAsNode(
-                type=ParenthesizedExprNode(
-                  exprs=[
-                    IndexingExprNode(
-                      object=IdentifierNode(
-                        name="List"
-                      ),
-                      indices=[
-                        IndexNode(
-                          value=BuiltinTypeNode(
-                            kind=int
-                          )
-                        )
-                      ]
+                type=IndexingExprNode(
+                  object=IdentifierNode(
+                    name="List"
+                  ),
+                  indices=[
+                    IndexNode(
+                      value=BuiltinTypeNode(
+                        kind=int
+                      )
                     )
                   ]
                 )
@@ -36,12 +32,17 @@ ModuleNode(
             ),
             signature=FunctionSignatureNode(),
             body=FunctionBodyNode(
-              expr=BracketExprNode(
-                exprs=[
-                  FieldAccessExprNode(
-                    object=ThisLiteralNode(),
-                    field=IdentifierNode(
-                      name="a"
+              expr=FunctionCallExprNode(
+                callee=IdentifierNode(
+                  name="list"
+                ),
+                args=[
+                  FunctionArgumentNode(
+                    expr=FieldAccessExprNode(
+                      object=ThisLiteralNode(),
+                      field=IdentifierNode(
+                        name="a"
+                      )
                     )
                   )
                 ]
