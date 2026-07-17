@@ -15,12 +15,12 @@ SemaResult(
             name="lhs_promote",
             type=bitint[8],
             value=NativeBinaryOperationExpression(
-              op_kind="+",
               left=NativeTypeCastExpression(
                 expr=IdentifierExpression(
                   name="x"
                 )
               ),
+              op_kind="+",
               right=IdentifierExpression(
                 name="y"
               )
@@ -30,10 +30,10 @@ SemaResult(
             name="rhs_promote",
             type=bitint[8],
             value=NativeBinaryOperationExpression(
-              op_kind="+",
               left=IdentifierExpression(
                 name="y"
               ),
+              op_kind="+",
               right=NativeTypeCastExpression(
                 expr=IdentifierExpression(
                   name="x"

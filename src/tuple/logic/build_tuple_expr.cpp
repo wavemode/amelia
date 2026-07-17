@@ -12,6 +12,8 @@
 
 namespace amelia {
 
+namespace {
+
 Flex<Expression> build_expr_tuple(
     IModuleAnalysisState &module_state, NodeId expr_node_id, ConstSlice<NodeId> expr_node_ids
 ) {
@@ -27,6 +29,8 @@ Flex<Expression> build_expr_tuple(
   result->type = tuple_type;
   return result;
 }
+
+} // namespace
 
 Flex<Expression> build_expr_paren(IModuleAnalysisState &module_state, NodeId expr_node_id) {
   const auto &paren_node = module_state.get_node(expr_node_id).as_ParenthesizedExprNode();

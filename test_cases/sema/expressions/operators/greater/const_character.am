@@ -25,10 +25,10 @@ SemaResult(
             name="z1",
             type=Const[true],
             value=NativeBinaryOperationExpression(
-              op_kind=">",
               left=IdentifierExpression(
                 name="x"
               ),
+              op_kind=">",
               right=IdentifierExpression(
                 name="y"
               )
@@ -38,10 +38,10 @@ SemaResult(
             name="z2",
             type=Const[true],
             value=NativeBinaryOperationExpression(
-              op_kind=">",
               left=IdentifierExpression(
                 name="x"
               ),
+              op_kind=">",
               right=NumberLiteralExpression(
                 lit=97
               )
@@ -51,10 +51,10 @@ SemaResult(
             name="z3",
             type=Const[true],
             value=NativeBinaryOperationExpression(
-              op_kind=">",
               left=IdentifierExpression(
                 name="x"
               ),
+              op_kind=">",
               right=NumberLiteralExpression(
                 lit=97.9
               )

@@ -1,0 +1,60 @@
+let x = {
+  while(
+    let i = 0
+    i < 10
+  ) ++i
+}
+
+
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="intro_decls",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=null,
+            value=StatementSequence(
+              stmts=[
+                ValueBindingStatement(
+                  binding=ValueBinding(
+                    name="i",
+                    type=int,
+                    value=NumberLiteralExpression(
+                      lit=0
+                    )
+                  ),
+                  body=StatementSequence(
+                    stmts=[
+                      WhileStatement(
+                        condition=NativeBinaryOperationExpression(
+                          left=IdentifierExpression(
+                            name="i"
+                          ),
+                          op_kind="<",
+                          right=NumberLiteralExpression(
+                            lit=10
+                          )
+                        ),
+                        body=NativeUnaryOperationExpression(
+                          op_kind="++",
+                          operand=IdentifierExpression(
+                            name="i"
+                          )
+                        )
+                      )
+                    ]
+                  )
+                )
+              ]
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

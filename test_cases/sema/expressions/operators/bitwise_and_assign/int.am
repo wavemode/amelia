@@ -44,10 +44,10 @@ SemaResult(
                         body=StatementSequence(
                           stmts=[
                             NativeBinaryOperationExpression(
-                              op_kind="&=",
                               left=IdentifierExpression(
                                 name="x"
                               ),
+                              op_kind="&=",
                               right=IdentifierExpression(
                                 name="y"
                               )

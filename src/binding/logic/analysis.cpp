@@ -489,7 +489,7 @@ Flex<Expression> analyze_function_body(
       );
     }
   } else {
-    result = build_expr_seq(
+    result = build_stmt_seq(
         module_state, function_body_node_id, function_body_node.stmts.value().data()
     );
 

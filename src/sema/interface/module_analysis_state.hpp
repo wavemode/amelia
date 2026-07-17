@@ -32,6 +32,9 @@ struct IModuleAnalysisState {
   virtual Option<Binding *> binding_currently_analyzing() const = 0;
   virtual void set_binding_currently_analyzing(Option<Binding *> binding) = 0;
 
+  virtual Option<NodeId> intro_decls_currently_analyzing() const = 0;
+  virtual void set_intro_decls_currently_analyzing(Option<NodeId> node_id) = 0;
+
   virtual String current_module_name() const = 0;
 
   [[noreturn]] virtual void raise_type_error_at_node(NodeId node_id, String &&message) = 0;

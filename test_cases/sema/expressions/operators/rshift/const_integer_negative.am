@@ -30,10 +30,10 @@ SemaResult(
             name="z",
             type=bitint[128],
             value=NativeBinaryOperationExpression(
-              op_kind=">>",
               left=IdentifierExpression(
                 name="x"
               ),
+              op_kind=">>",
               right=IdentifierExpression(
                 name="y"
               )

@@ -106,6 +106,14 @@ public:
     m_binding_currently_analyzing = binding;
   }
 
+  Option<NodeId> intro_decls_currently_analyzing() const override {
+    return m_intro_decls_currently_analyzing;
+  }
+
+  void set_intro_decls_currently_analyzing(Option<NodeId> node_id) override {
+    m_intro_decls_currently_analyzing = node_id;
+  }
+
 private:
   [[noreturn]] void raise_type_error_at_node(NodeId node_id, String &&error_message) override {
     const Node &node = get_node(node_id);
@@ -116,6 +124,7 @@ private:
   Module &m_module_obj;
   Option<FunctionSignature *> m_current_function_signature;
   Option<Binding *> m_binding_currently_analyzing;
+  Option<NodeId> m_intro_decls_currently_analyzing;
 };
 
 class SemaState {

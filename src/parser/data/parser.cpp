@@ -2494,11 +2494,13 @@ public:
   }
 
   NodeId parse_block_expr() {
-    auto open_brace = next();
+    auto left_brace_token = read_token_type(
+        TokenType::LEFT_BRACE, "Expected '{' at the beginning of block expression"
+    );
     List<NodeId> stmts;
     parse_statements(stmts, TokenType::RIGHT_BRACE);
-    ++m_token_index; // consume the right brace
-    return m_output.add_node(open_brace.id, m_token_index, BlockExprNode{move(stmts)});
+    read_token_type(TokenType::RIGHT_BRACE, "Expected '}' at the end of block expression");
+    return m_output.add_node(left_brace_token.id, m_token_index, BlockExprNode{move(stmts)});
   }
 
   NodeId parse_object_literal() {

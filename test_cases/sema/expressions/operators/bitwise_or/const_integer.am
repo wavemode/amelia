@@ -23,10 +23,10 @@ SemaResult(
             name="b",
             type=int,
             value=NativeBinaryOperationExpression(
-              op_kind="|",
               left=IdentifierExpression(
                 name="z"
               ),
+              op_kind="|",
               right=IdentifierExpression(
                 name="a"
               )
@@ -50,10 +50,10 @@ SemaResult(
             name="z",
             type=Const[500],
             value=NativeBinaryOperationExpression(
-              op_kind="|",
               left=IdentifierExpression(
                 name="x"
               ),
+              op_kind="|",
               right=IdentifierExpression(
                 name="y"
               )

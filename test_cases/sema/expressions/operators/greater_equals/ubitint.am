@@ -31,12 +31,12 @@ SemaResult(
             name="z",
             type=bool,
             value=NativeBinaryOperationExpression(
-              op_kind=">=",
               left=NativeTypeCastExpression(
                 expr=IdentifierExpression(
                   name="x"
                 )
               ),
+              op_kind=">=",
               right=IdentifierExpression(
                 name="y"
               )

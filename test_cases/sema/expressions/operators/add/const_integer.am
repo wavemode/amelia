@@ -28,10 +28,10 @@ SemaResult(
             name="b",
             type=int,
             value=NativeBinaryOperationExpression(
-              op_kind="+",
               left=IdentifierExpression(
                 name="z"
               ),
+              op_kind="+",
               right=IdentifierExpression(
                 name="a"
               )
@@ -41,10 +41,10 @@ SemaResult(
             name="w",
             type=Const[905.0],
             value=NativeBinaryOperationExpression(
-              op_kind="+",
               left=IdentifierExpression(
                 name="z"
               ),
+              op_kind="+",
               right=NumberLiteralExpression(
                 lit=5.0
               )
@@ -68,10 +68,10 @@ SemaResult(
             name="z",
             type=Const[900],
             value=NativeBinaryOperationExpression(
-              op_kind="+",
               left=IdentifierExpression(
                 name="x"
               ),
+              op_kind="+",
               right=IdentifierExpression(
                 name="y"
               )
@@ -81,10 +81,10 @@ SemaResult(
             name="z2",
             type=Const['\U000003e5'],
             value=NativeBinaryOperationExpression(
-              op_kind="+",
               left=IdentifierExpression(
                 name="z"
               ),
+              op_kind="+",
               right=CharLiteralExpression['a']
             )
           ),
@@ -92,8 +92,8 @@ SemaResult(
             name="z3",
             type=Const['\U000003e5'],
             value=NativeBinaryOperationExpression(
-              op_kind="+",
               left=CharLiteralExpression['a'],
+              op_kind="+",
               right=IdentifierExpression(
                 name="z"
               )
@@ -103,10 +103,10 @@ SemaResult(
             name="z4",
             type=Const[true],
             value=NativeBinaryOperationExpression(
-              op_kind="==",
               left=IdentifierExpression(
                 name="z2"
               ),
+              op_kind="==",
               right=IdentifierExpression(
                 name="z3"
               )

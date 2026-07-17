@@ -25,10 +25,10 @@ SemaResult(
             name="b",
             type=double,
             value=NativeBinaryOperationExpression(
-              op_kind="/",
               left=IdentifierExpression(
                 name="z"
               ),
+              op_kind="/",
               right=NativeTypeCastExpression(
                 expr=IdentifierExpression(
                   name="a"
@@ -40,10 +40,10 @@ SemaResult(
             name="w",
             type=Const[0.160071942446],
             value=NativeBinaryOperationExpression(
-              op_kind="/",
               left=IdentifierExpression(
                 name="z"
               ),
+              op_kind="/",
               right=NumberLiteralExpression(
                 lit=5
               )
@@ -67,10 +67,10 @@ SemaResult(
             name="z",
             type=Const[0.80035971223],
             value=NativeBinaryOperationExpression(
-              op_kind="/",
               left=IdentifierExpression(
                 name="x"
               ),
+              op_kind="/",
               right=IdentifierExpression(
                 name="y"
               )

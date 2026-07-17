@@ -20,10 +20,10 @@ SemaResult(
             name="z",
             type=Const[true],
             value=NativeBinaryOperationExpression(
-              op_kind="==",
               left=IdentifierExpression(
                 name="x"
               ),
+              op_kind="==",
               right=NativeUnaryOperationExpression(
                 op_kind="-",
                 operand=NumberLiteralExpression(

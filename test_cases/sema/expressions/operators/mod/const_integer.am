@@ -27,10 +27,10 @@ SemaResult(
             name="z",
             type=Const[1],
             value=NativeBinaryOperationExpression(
-              op_kind="%",
               left=IdentifierExpression(
                 name="x"
               ),
+              op_kind="%",
               right=IdentifierExpression(
                 name="y"
               )
