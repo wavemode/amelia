@@ -239,13 +239,17 @@ Flex<Expression> build_stmt_while(IModuleAnalysisState &module_state, NodeId exp
     if (!intro_decls_currently_analyzing.has_value() ||
         intro_decls_currently_analyzing.value() != expr_node_id) {
       List<NodeId> decls;
-      for (size_t i = 1; i < while_node.introductory_decls.size(); ++i) {
+      for (size_t i = 0; i < while_node.introductory_decls.size(); ++i) {
+        const Node &n = module_state.get_node(while_node.introductory_decls[i]);
+        if (n.type() == NodeType::EmptyStmtNode) {
+          continue;
+        }
         decls.push_back(while_node.introductory_decls[i]);
       }
       decls.push_back(expr_node_id);
       module_state.set_intro_decls_currently_analyzing(expr_node_id);
       auto result = build_stmt_binding(
-          module_state, while_node.introductory_decls[0], decls.data()
+          module_state, decls[0], decls.data() + 1
       );
       module_state.set_intro_decls_currently_analyzing(intro_decls_currently_analyzing);
       return result;

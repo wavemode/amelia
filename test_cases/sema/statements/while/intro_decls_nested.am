@@ -1,0 +1,97 @@
+let x = {
+  while(
+    let i = {
+      while (let j = 20; j > 10) --j
+      0
+    }
+    i < 10
+  ) ++i
+}
+
+
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="intro_decls_nested",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=null,
+            value=StatementSequence(
+              stmts=[
+                ValueBindingStatement(
+                  binding=ValueBinding(
+                    name="i",
+                    type=int,
+                    value=StatementSequence(
+                      stmts=[
+                        ValueBindingStatement(
+                          binding=ValueBinding(
+                            name="j",
+                            type=int,
+                            value=NumberLiteralExpression(
+                              lit=20
+                            )
+                          ),
+                          body=StatementSequence(
+                            stmts=[
+                              WhileStatement(
+                                condition=NativeBinaryOperationExpression(
+                                  left=IdentifierExpression(
+                                    name="j"
+                                  ),
+                                  op_kind=">",
+                                  right=NumberLiteralExpression(
+                                    lit=10
+                                  )
+                                ),
+                                body=NativeUnaryOperationExpression(
+                                  op_kind="--",
+                                  operand=IdentifierExpression(
+                                    name="j"
+                                  )
+                                )
+                              )
+                            ]
+                          )
+                        ),
+                        NumberLiteralExpression(
+                          lit=0
+                        )
+                      ]
+                    )
+                  ),
+                  body=StatementSequence(
+                    stmts=[
+                      WhileStatement(
+                        condition=NativeBinaryOperationExpression(
+                          left=IdentifierExpression(
+                            name="i"
+                          ),
+                          op_kind="<",
+                          right=NumberLiteralExpression(
+                            lit=10
+                          )
+                        ),
+                        body=NativeUnaryOperationExpression(
+                          op_kind="++",
+                          operand=IdentifierExpression(
+                            name="i"
+                          )
+                        )
+                      )
+                    ]
+                  )
+                )
+              ]
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/
