@@ -1,0 +1,56 @@
+let x = {
+  goto x
+  f()
+  label x
+}
+
+fun f() {}
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="forward_over_funcall",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="f",
+            type=FunctionType(
+              name=f,
+              signatures=[
+                Signature(
+                  return_type=null
+                )
+              ]
+            ),
+            value=StatementSequence()
+          ),
+          ValueBinding(
+            name="x",
+            type=null,
+            value=StatementSequence(
+              stmts=[
+                GotoStatement(
+                  label=x
+                ),
+                FunctionCallExpression(
+                  callee=IdentifierExpression(
+                    name="f"
+                  ),
+                  signature=Signature(
+                    return_type=null
+                  ),
+                  arguments=
+                ),
+                LabelStatement(
+                  name=x
+                )
+              ]
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

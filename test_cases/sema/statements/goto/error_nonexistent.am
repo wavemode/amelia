@@ -1,0 +1,7 @@
+let x = {
+  goto x
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("Label 'x' not found in scope (at test_cases/sema/statements/goto/error_nonexistent.am:2:3)")
+*/

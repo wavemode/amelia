@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+#include "statement/data/goto_request.hpp"
+#include "util/data/map.hpp"
 #include "util/data/option.hpp"
 #include "util/data/string.hpp"
 
@@ -16,6 +18,11 @@ struct ModuleAnalysisContext {
   Option<FunctionSignature *> current_function_signature;
   Option<Binding *> binding_currently_analyzing;
   Option<NodeId> intro_decls_currently_analyzing;
+
+  uint32_t current_scope_level = 0;
+  uint32_t max_scope_level = 0;
+  Map<Text, uint32_t> labels_in_scope;
+  Map<Text, GotoRequest> gotos_in_scope;
 };
 
-};
+}; // namespace amelia

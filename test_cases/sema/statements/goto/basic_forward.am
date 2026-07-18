@@ -1,0 +1,31 @@
+let x = {
+  goto x
+  label x
+}
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="basic_forward",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=null,
+            value=StatementSequence(
+              stmts=[
+                GotoStatement(
+                  label=x
+                ),
+                LabelStatement(
+                  name=x
+                )
+              ]
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

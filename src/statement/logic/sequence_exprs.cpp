@@ -10,8 +10,12 @@
 #include "literal/data/null_literal_expression.hpp"
 #include "operator/logic/build_operator_expr.hpp"
 #include "parser/data/node.hpp"
+#include "sema/data/module_analysis_context.hpp"
 #include "sema/interface/module_analysis_state.hpp"
 #include "statement/data/empty_statement.hpp"
+#include "statement/data/goto_request.hpp"
+#include "statement/data/goto_statement.hpp"
+#include "statement/data/label_statement.hpp"
 #include "statement/data/return_statement.hpp"
 #include "statement/data/statement_sequence.hpp"
 #include "statement/data/type_binding_statement.hpp"
@@ -19,7 +23,6 @@
 #include "statement/data/while_statement.hpp"
 #include "type/logic/analysis.hpp"
 #include "util/data/flex.hpp"
-#include "sema/data/module_analysis_context.hpp"
 #include "util/data/slice_utils.hpp"
 
 namespace amelia {
@@ -27,6 +30,43 @@ namespace amelia {
 namespace {
 
 Flex<Expression> build_statement(IModuleAnalysisState &module_state, NodeId expr_node_id);
+
+uint32_t push_scope(IModuleAnalysisState &module_state) {
+  auto &ctx = module_state.current_context();
+  uint32_t old_scope_level = ctx.current_scope_level;
+  ctx.current_scope_level = ++ctx.max_scope_level;
+  return old_scope_level;
+}
+
+void restore_scope(IModuleAnalysisState &module_state, uint32_t old_scope_level) {
+  auto &ctx = module_state.current_context();
+  ctx.current_scope_level = old_scope_level;
+  if (old_scope_level == 0) {
+    if (ctx.gotos_in_scope.size() > 0) {
+      for (const auto &[label_name, goto_request] : ctx.gotos_in_scope) {
+        String error_message = "Label '";
+        error_message.append(label_name);
+        error_message.append("' not found in scope");
+        module_state.raise_type_error_at_node(goto_request.goto_stmt->node_id, move(error_message));
+      }
+    }
+    ctx.labels_in_scope.clear();
+  }
+}
+
+void perform_goto(IModuleAnalysisState &module_state, Text label_name) {
+  auto &ctx = module_state.current_context();
+  auto label_scope_level = ctx.labels_in_scope.get(label_name);
+  const auto &goto_request = ctx.gotos_in_scope.get(label_name);
+
+  if (goto_request.goto_scope_level < label_scope_level) {
+    module_state.raise_type_error_at_node(
+        goto_request.goto_stmt->node_id, "This goto would illegally enter a new scope"
+    );
+  }
+
+  ctx.gotos_in_scope.remove(label_name);
+}
 
 bool is_binding_node_type(NodeType node_type) {
   return node_type == NodeType::LetDeclNode || node_type == NodeType::ConstDeclNode ||
@@ -42,9 +82,10 @@ Flex<Expression> assign_current_function_return_value(
     );
   }
 
-  if (is_unknown_type(module_state.current_context().current_function_signature.value()->return_type)) {
-    module_state.current_context().current_function_signature
-        .value()
+  if (is_unknown_type(module_state.current_context().current_function_signature.value()->return_type
+      )) {
+    module_state.current_context()
+        .current_function_signature.value()
         ->return_type = return_value->type->remove_comptime_const_from_type();
     return return_value;
   }
@@ -236,7 +277,8 @@ Flex<Expression> build_stmt_while(IModuleAnalysisState &module_state, NodeId exp
   const auto &while_node = module_state.get_node(expr_node_id).as_WhileStmtNode();
 
   if (while_node.introductory_decls.size() > 0) {
-    auto intro_decls_currently_analyzing = module_state.current_context().intro_decls_currently_analyzing;
+    auto intro_decls_currently_analyzing = module_state.current_context()
+                                               .intro_decls_currently_analyzing;
     if (!intro_decls_currently_analyzing.has_value() ||
         intro_decls_currently_analyzing.value() != expr_node_id) {
       List<NodeId> decls;
@@ -249,10 +291,9 @@ Flex<Expression> build_stmt_while(IModuleAnalysisState &module_state, NodeId exp
       }
       decls.push_back(expr_node_id);
       module_state.current_context().intro_decls_currently_analyzing = expr_node_id;
-      auto result = build_stmt_binding(
-          module_state, decls[0], decls.data() + 1
-      );
-      module_state.current_context().intro_decls_currently_analyzing = intro_decls_currently_analyzing;
+      auto result = build_stmt_binding(module_state, decls[0], decls.data() + 1);
+      module_state.current_context()
+          .intro_decls_currently_analyzing = intro_decls_currently_analyzing;
       return result;
     }
   }
@@ -261,13 +302,62 @@ Flex<Expression> build_stmt_while(IModuleAnalysisState &module_state, NodeId exp
   result->node_id = expr_node_id;
   result->type = NULL_TYPE;
   result->condition = expect_expression_of_type(module_state, BOOL_TYPE, while_node.condition);
+
+  auto old_scope = push_scope(module_state);
   result->body = build_statement(module_state, while_node.body);
+  restore_scope(module_state, old_scope);
+
   return result;
 }
 
 Flex<Expression> build_block_statement(IModuleAnalysisState &module_state, NodeId expr_node_id) {
   const BlockStmtNode &block_expr_node = module_state.get_node(expr_node_id).as_BlockStmtNode();
   return build_stmt_seq(module_state, expr_node_id, block_expr_node.stmts.data());
+}
+
+Flex<Expression> build_label_statement(IModuleAnalysisState &module_state, NodeId expr_node_id) {
+  const LabelStmtNode &label_stmt_node = module_state.get_node(expr_node_id).as_LabelStmtNode();
+  const IdentifierNode &label_name_node = module_state.get_node(label_stmt_node.label)
+                                              .as_IdentifierNode();
+  auto &ctx = module_state.current_context();
+  if (ctx.labels_in_scope.has(label_name_node.name)) {
+    String error_message = "Duplicate label name '";
+    error_message.append(label_name_node.name);
+    error_message.append("' in scope");
+    module_state.raise_type_error_at_node(expr_node_id, move(error_message));
+  }
+
+  ctx.labels_in_scope.set(label_name_node.name, ctx.current_scope_level);
+
+  if (ctx.gotos_in_scope.has(label_name_node.name)) {
+    perform_goto(module_state, label_name_node.name);
+  }
+
+  auto result = emplace_flex<LabelStatement>();
+  result->node_id = expr_node_id;
+  result->name = label_name_node.name;
+  result->type = NULL_TYPE;
+  return result;
+}
+
+Flex<Expression> build_goto_statement(IModuleAnalysisState &module_state, NodeId expr_node_id) {
+  const GotoStmtNode &goto_stmt_node = module_state.get_node(expr_node_id).as_GotoStmtNode();
+  const IdentifierNode &label_name_node = module_state.get_node(goto_stmt_node.label)
+                                              .as_IdentifierNode();
+  auto &ctx = module_state.current_context();
+
+  auto goto_statement = emplace_flex<GotoStatement>();
+  goto_statement->node_id = expr_node_id;
+  goto_statement->label = label_name_node.name;
+  goto_statement->type = NEVER_TYPE;
+
+  ctx.gotos_in_scope.set(label_name_node.name, {&*goto_statement, ctx.current_scope_level});
+
+  if (ctx.labels_in_scope.has(label_name_node.name)) {
+    perform_goto(module_state, label_name_node.name);
+  }
+
+  return goto_statement;
 }
 
 Flex<Expression> build_statement(IModuleAnalysisState &module_state, NodeId expr_node_id) {
@@ -316,6 +406,12 @@ Flex<Expression> build_statement(IModuleAnalysisState &module_state, NodeId expr
   case NodeType::BlockStmtNode:
     result = build_block_statement(module_state, expr_node_id);
     break;
+  case NodeType::LabelStmtNode:
+    result = build_label_statement(module_state, expr_node_id);
+    break;
+  case NodeType::GotoStmtNode:
+    result = build_goto_statement(module_state, expr_node_id);
+    break;
   default:
     module_state.raise_type_error_at_node(
         expr_node_id, "not implemented (unknown node type in build_statement)"
@@ -330,6 +426,7 @@ Flex<Expression> build_statement(IModuleAnalysisState &module_state, NodeId expr
 Flex<Expression> build_stmt_seq(
     IModuleAnalysisState &module_state, NodeId expr_node_id, ConstSlice<NodeId> stmts
 ) {
+  auto old_scope = push_scope(module_state);
   auto result = emplace_flex<StatementSequence>();
   result->type = NULL_TYPE;
   result->node_id = expr_node_id;
@@ -350,6 +447,7 @@ Flex<Expression> build_stmt_seq(
       }
     }
   }
+  restore_scope(module_state, old_scope);
   return result;
 }
 

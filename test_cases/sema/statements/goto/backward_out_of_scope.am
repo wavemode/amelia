@@ -1,0 +1,66 @@
+let x = {
+  label x
+  {
+    let y = 5
+    let z = 10
+    goto x
+  }
+}
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="backward_out_of_scope",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=never,
+            value=StatementSequence(
+              stmts=[
+                LabelStatement(
+                  name=x
+                ),
+                StatementSequence(
+                  stmts=[
+                    ValueBindingStatement(
+                      binding=ValueBinding(
+                        name="y",
+                        type=int,
+                        value=NumberLiteralExpression(
+                          lit=5
+                        )
+                      ),
+                      body=StatementSequence(
+                        stmts=[
+                          ValueBindingStatement(
+                            binding=ValueBinding(
+                              name="z",
+                              type=int,
+                              value=NumberLiteralExpression(
+                                lit=10
+                              )
+                            ),
+                            body=StatementSequence(
+                              stmts=[
+                                GotoStatement(
+                                  label=x
+                                )
+                              ]
+                            )
+                          )
+                        ]
+                      )
+                    )
+                  ]
+                )
+              ]
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

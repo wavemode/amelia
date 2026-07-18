@@ -1,0 +1,9 @@
+let x = {
+  goto x
+  let y = 10
+  label x
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("This goto would illegally enter a new scope (at test_cases/sema/statements/goto/error_forward_past_init.am:2:3)")
+*/

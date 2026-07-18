@@ -10,13 +10,13 @@
 #include "function/data/function_signature.hpp"
 #include "function/data/function_type.hpp"
 #include "parser/data/node.hpp"
+#include "sema/data/module.hpp"
+#include "sema/data/module_analysis_context.hpp"
 #include "sema/interface/module_analysis_state.hpp"
 #include "statement/logic/sequence_exprs.hpp"
 #include "type/logic/analysis.hpp"
 #include "util/data/set.hpp"
 #include "util/data/text.hpp"
-#include "sema/data/module_analysis_context.hpp"
-#include "sema/data/module.hpp"
 
 namespace amelia {
 
@@ -458,7 +458,8 @@ void analyze_function_binding(IModuleAnalysisState &module_state, ValueBinding &
 Flex<Expression> analyze_function_body(
     IModuleAnalysisState &module_state, FunctionSignature &signature, NodeId function_body_node_id
 ) {
-  Option<FunctionSignature *> old_signature = module_state.current_context().current_function_signature;
+  Option<FunctionSignature *> old_signature = module_state.current_context()
+                                                  .current_function_signature;
   module_state.current_context().current_function_signature = &signature;
   for (const auto &param : signature.parameters) {
     auto binding = emplace_flex<ValueBinding>();
