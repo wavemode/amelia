@@ -8,6 +8,7 @@
 #include "sema/data/sema_result.hpp"
 #include "sema/data/type_error.hpp"
 #include "sema/interface/module_analysis_state.hpp"
+#include "sema/data/module_analysis_context.hpp"
 
 namespace amelia {
 
@@ -39,8 +40,8 @@ public:
     binding->id = new_binding_id;
     scope.active_bindings.push_back(binding);
     scope.active_binding_ids.set(name, new_binding_id);
-    if (m_binding_currently_analyzing.has_value()) {
-      m_binding_currently_analyzing.value()->child_bindings.push_back(binding);
+    if (m_context.binding_currently_analyzing.has_value()) {
+      m_context.binding_currently_analyzing.value()->child_bindings.push_back(binding);
     }
   }
 
@@ -86,32 +87,12 @@ public:
     return m_module_obj.ast.get_node(node_id);
   }
 
-  Option<FunctionSignature *> current_function_signature() const override {
-    return m_current_function_signature;
+  Module &current_module() override {
+    return m_module_obj;
   }
 
-  void set_current_function_signature(Option<FunctionSignature *> signature) override {
-    m_current_function_signature = signature;
-  }
-
-  String current_module_name() const override {
-    return m_module_obj.name;
-  }
-
-  Option<Binding *> binding_currently_analyzing() const override {
-    return m_binding_currently_analyzing;
-  }
-
-  void set_binding_currently_analyzing(Option<Binding *> binding) override {
-    m_binding_currently_analyzing = binding;
-  }
-
-  Option<NodeId> intro_decls_currently_analyzing() const override {
-    return m_intro_decls_currently_analyzing;
-  }
-
-  void set_intro_decls_currently_analyzing(Option<NodeId> node_id) override {
-    m_intro_decls_currently_analyzing = node_id;
+  ModuleAnalysisContext &current_context() override {
+    return m_context;
   }
 
 private:
@@ -122,9 +103,7 @@ private:
   }
 
   Module &m_module_obj;
-  Option<FunctionSignature *> m_current_function_signature;
-  Option<Binding *> m_binding_currently_analyzing;
-  Option<NodeId> m_intro_decls_currently_analyzing;
+  ModuleAnalysisContext m_context;
 };
 
 class SemaState {

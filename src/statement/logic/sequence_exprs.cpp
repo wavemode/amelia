@@ -19,6 +19,7 @@
 #include "statement/data/while_statement.hpp"
 #include "type/logic/analysis.hpp"
 #include "util/data/flex.hpp"
+#include "sema/data/module_analysis_context.hpp"
 #include "util/data/slice_utils.hpp"
 
 namespace amelia {
@@ -35,14 +36,14 @@ bool is_binding_node_type(NodeType node_type) {
 Flex<Expression> assign_current_function_return_value(
     IModuleAnalysisState &module_state, Flex<Expression> return_value
 ) {
-  if (!module_state.current_function_signature().has_value()) {
+  if (!module_state.current_context().current_function_signature.has_value()) {
     module_state.raise_type_error_at_node(
         return_value->node_id, "Return value not within function"
     );
   }
 
-  if (is_unknown_type(module_state.current_function_signature().value()->return_type)) {
-    module_state.current_function_signature()
+  if (is_unknown_type(module_state.current_context().current_function_signature.value()->return_type)) {
+    module_state.current_context().current_function_signature
         .value()
         ->return_type = return_value->type->remove_comptime_const_from_type();
     return return_value;
@@ -50,7 +51,7 @@ Flex<Expression> assign_current_function_return_value(
 
   return require_coerce(
       module_state,
-      module_state.current_function_signature().value()->return_type,
+      module_state.current_context().current_function_signature.value()->return_type,
       return_value,
       "Cannot convert expression of type '{1}' to expected return type '{2}'"
   );
@@ -235,7 +236,7 @@ Flex<Expression> build_stmt_while(IModuleAnalysisState &module_state, NodeId exp
   const auto &while_node = module_state.get_node(expr_node_id).as_WhileStmtNode();
 
   if (while_node.introductory_decls.size() > 0) {
-    auto intro_decls_currently_analyzing = module_state.intro_decls_currently_analyzing();
+    auto intro_decls_currently_analyzing = module_state.current_context().intro_decls_currently_analyzing;
     if (!intro_decls_currently_analyzing.has_value() ||
         intro_decls_currently_analyzing.value() != expr_node_id) {
       List<NodeId> decls;
@@ -247,11 +248,11 @@ Flex<Expression> build_stmt_while(IModuleAnalysisState &module_state, NodeId exp
         decls.push_back(while_node.introductory_decls[i]);
       }
       decls.push_back(expr_node_id);
-      module_state.set_intro_decls_currently_analyzing(expr_node_id);
+      module_state.current_context().intro_decls_currently_analyzing = expr_node_id;
       auto result = build_stmt_binding(
           module_state, decls[0], decls.data() + 1
       );
-      module_state.set_intro_decls_currently_analyzing(intro_decls_currently_analyzing);
+      module_state.current_context().intro_decls_currently_analyzing = intro_decls_currently_analyzing;
       return result;
     }
   }

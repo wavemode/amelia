@@ -14,6 +14,8 @@ class Node;
 struct Binding;
 class String;
 struct FunctionSignature;
+struct ModuleAnalysisContext;
+struct Module;
 
 using NodeId = int32_t;
 using BindingId = int32_t;
@@ -25,18 +27,8 @@ struct IModuleAnalysisState {
   virtual void push_binding(Flex<Binding> binding) = 0;
   virtual Binding &pop_binding() = 0;
   virtual size_t get_binding_stack_size() const = 0;
-
-  virtual Option<FunctionSignature *> current_function_signature() const = 0;
-  virtual void set_current_function_signature(Option<FunctionSignature *> signature) = 0;
-
-  virtual Option<Binding *> binding_currently_analyzing() const = 0;
-  virtual void set_binding_currently_analyzing(Option<Binding *> binding) = 0;
-
-  virtual Option<NodeId> intro_decls_currently_analyzing() const = 0;
-  virtual void set_intro_decls_currently_analyzing(Option<NodeId> node_id) = 0;
-
-  virtual String current_module_name() const = 0;
-
+  virtual ModuleAnalysisContext &current_context() = 0;
+  virtual Module &current_module() = 0;
   [[noreturn]] virtual void raise_type_error_at_node(NodeId node_id, String &&message) = 0;
 };
 
