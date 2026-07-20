@@ -199,7 +199,7 @@ void collect_top_level_bindings(IModuleAnalysisState &module_state, NodeId modul
       binding = emplace_flex<ModuleBinding>();
       break;
     }
-    binding->decl = decl_node_id;
+    binding->decl = current_binding_details.decl;
     binding->kind = current_binding_details.kind;
     binding->visibility = current_binding_details.visibility;
     binding->shadowed_binding_id = existing_binding_id;
@@ -216,12 +216,14 @@ void get_binding_details(
   case NodeType::LetDeclNode: {
     const auto &n = decl_node.as_LetDeclNode();
     current_binding_details.kind = BindingKind::Variable;
+    current_binding_details.decl = decl_node_id;
     get_binding_details(module_state, current_binding_details, n.target);
     break;
   }
   case NodeType::ConstDeclNode: {
     const auto &n = decl_node.as_ConstDeclNode();
     current_binding_details.kind = BindingKind::Constant;
+    current_binding_details.decl = decl_node_id;
     get_binding_details(module_state, current_binding_details, n.target);
     break;
   }
@@ -233,6 +235,7 @@ void get_binding_details(
   case NodeType::FunctionDeclNode: {
     const FunctionDeclNode &n = decl_node.as_FunctionDeclNode();
     current_binding_details.kind = BindingKind::Function;
+    current_binding_details.decl = decl_node_id;
     get_binding_details(module_state, current_binding_details, n.name);
     break;
   }
@@ -240,6 +243,17 @@ void get_binding_details(
     const TypeDeclNode &n = decl_node.as_TypeDeclNode();
     current_binding_details.kind = BindingKind::Type;
     get_binding_details(module_state, current_binding_details, n.name);
+    break;
+  }
+  case NodeType::VisibilityNode: {
+    const VisibilityNode &n = decl_node.as_VisibilityNode();
+    if (n.visibility != DeclarationVisibility::Local) {
+      module_state.raise_type_error_at_node(
+          decl_node_id, "Invalid declaration visibility modifier at top level"
+      );
+    }
+    current_binding_details.visibility = n.visibility;
+    get_binding_details(module_state, current_binding_details, n.decl);
     break;
   }
   default:

@@ -1,0 +1,37 @@
+local let x = 5
+local fun f() {}
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="local",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="f",
+            type=FunctionType(
+              name=f,
+              signatures=[
+                Signature(
+                  return_type=null
+                )
+              ]
+            ),
+            value=StatementSequence(),
+            visibility=Local
+          ),
+          ValueBinding(
+            name="x",
+            type=int,
+            value=NumberLiteralExpression(
+              lit=5
+            ),
+            visibility=Local
+          )
+        ]
+      )
+    )
+  ]
+)
+*/
