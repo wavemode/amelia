@@ -19,6 +19,7 @@ SemaResult(
             name="y",
             type=double,
             value=NativeTypeCastExpression(
+              type=double,
               expr=NumberLiteralExpression(
                 lit=42
               )

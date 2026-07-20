@@ -16,6 +16,7 @@ SemaResult(
             type=bitint[8],
             value=NativeBinaryOperationExpression(
               left=NativeTypeCastExpression(
+                type=bitint[8],
                 expr=IdentifierExpression(
                   name="x"
                 )
@@ -35,6 +36,7 @@ SemaResult(
               ),
               op_kind="+",
               right=NativeTypeCastExpression(
+                type=bitint[8],
                 expr=IdentifierExpression(
                   name="x"
                 )
@@ -45,6 +47,7 @@ SemaResult(
             name="x",
             type=bitint[4],
             value=NativeTypeCastExpression(
+              type=bitint[4],
               expr=NumberLiteralExpression(
                 lit=4
               )
@@ -54,6 +57,7 @@ SemaResult(
             name="y",
             type=bitint[8],
             value=NativeTypeCastExpression(
+              type=bitint[8],
               expr=NumberLiteralExpression(
                 lit=5
               )

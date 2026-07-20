@@ -1,0 +1,11 @@
+fun f() {
+  label x
+}
+
+fun g() {
+  goto x
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("Label 'x' not found in scope (at test_cases/sema/statements/goto/error_into_other_function.am:6:3)")
+*/

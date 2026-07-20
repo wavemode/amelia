@@ -1,0 +1,11 @@
+let x = {
+  if (5 > 6) {
+    7
+  } else {
+    8.0
+  }
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot coerce expression of type 'Const[8.0]' to expected type 'int' in else branch of if-expression (at test_cases/sema/statements/if/error_coerce_then.am:4:10)")
+*/

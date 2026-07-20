@@ -19,6 +19,7 @@ SemaResult(
             name="y",
             type=ubyte,
             value=NativeTypeCastExpression(
+              type=ubyte,
               expr=NumberLiteralExpression(
                 lit=42
               )

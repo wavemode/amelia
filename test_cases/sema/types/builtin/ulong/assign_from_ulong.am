@@ -19,6 +19,7 @@ SemaResult(
             name="y",
             type=ulong,
             value=NativeTypeCastExpression(
+              type=ulong,
               expr=NumberLiteralExpression(
                 lit=42
               )

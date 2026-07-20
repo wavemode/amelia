@@ -1,0 +1,54 @@
+let x = {
+  if (5 > 6) {
+    7
+  } else {
+    8
+  }
+}
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="with_else",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=int,
+            value=StatementSequence(
+              stmts=[
+                IfStatement(
+                  condition=NativeBinaryOperationExpression(
+                    left=NumberLiteralExpression(
+                      lit=5
+                    ),
+                    op_kind=">",
+                    right=NumberLiteralExpression(
+                      lit=6
+                    )
+                  ),
+                  then_branch=StatementSequence(
+                    stmts=[
+                      NumberLiteralExpression(
+                        lit=7
+                      )
+                    ]
+                  ),
+                  else_branch=StatementSequence(
+                    stmts=[
+                      NumberLiteralExpression(
+                        lit=8
+                      )
+                    ]
+                  )
+                )
+              ]
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

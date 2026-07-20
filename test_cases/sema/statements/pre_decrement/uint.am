@@ -28,6 +28,7 @@ SemaResult(
                     name="x",
                     type=uint,
                     value=NativeTypeCastExpression(
+                      type=uint,
                       expr=NumberLiteralExpression(
                         lit=0
                       )

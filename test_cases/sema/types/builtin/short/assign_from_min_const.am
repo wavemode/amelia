@@ -11,6 +11,7 @@ SemaResult(
             name="x",
             type=short,
             value=NativeTypeCastExpression(
+              type=short,
               expr=NativeUnaryOperationExpression(
                 op_kind="-",
                 operand=NumberLiteralExpression(

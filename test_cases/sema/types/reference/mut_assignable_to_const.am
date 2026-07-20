@@ -31,6 +31,7 @@ SemaResult(
             name="z",
             type=&const int,
             value=NativeTypeCastExpression(
+              type=&const int,
               expr=IdentifierExpression(
                 name="y"
               )

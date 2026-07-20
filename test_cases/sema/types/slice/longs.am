@@ -18,11 +18,13 @@ SemaResult(
             value=ArrayLiteralExpression(
               elements=[
                 NativeTypeCastExpression(
+                  type=long,
                   expr=NumberLiteralExpression(
                     lit=1
                   )
                 ),
                 NativeTypeCastExpression(
+                  type=long,
                   expr=NumberLiteralExpression(
                     lit=3
                   )
@@ -37,6 +39,7 @@ SemaResult(
             name="y",
             type=[]long,
             value=NativeTypeCastExpression(
+              type=[]long,
               expr=ReferenceExpression(
                 referent=IdentifierExpression(
                   name="x"

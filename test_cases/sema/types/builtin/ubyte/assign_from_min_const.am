@@ -12,6 +12,7 @@ SemaResult(
             name="x",
             type=ubyte,
             value=NativeTypeCastExpression(
+              type=ubyte,
               expr=IdentifierExpression(
                 name="y"
               )

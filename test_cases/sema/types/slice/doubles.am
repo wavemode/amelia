@@ -33,6 +33,7 @@ SemaResult(
             name="y",
             type=[]double,
             value=NativeTypeCastExpression(
+              type=[]double,
               expr=ReferenceExpression(
                 referent=IdentifierExpression(
                   name="x"

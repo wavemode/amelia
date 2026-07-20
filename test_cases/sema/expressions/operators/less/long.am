@@ -13,6 +13,7 @@ SemaResult(
             name="x",
             type=long,
             value=NativeTypeCastExpression(
+              type=long,
               expr=NumberLiteralExpression(
                 lit=1
               )
@@ -22,6 +23,7 @@ SemaResult(
             name="y",
             type=long,
             value=NativeTypeCastExpression(
+              type=long,
               expr=NumberLiteralExpression(
                 lit=2
               )

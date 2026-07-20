@@ -12,6 +12,7 @@ SemaResult(
             name="x",
             type=bitint[8],
             value=NativeTypeCastExpression(
+              type=bitint[8],
               expr=IdentifierExpression(
                 name="y"
               )

@@ -13,11 +13,13 @@ SemaResult(
             value=ArrayLiteralExpression(
               elements=[
                 NativeTypeCastExpression(
+                  type=long,
                   expr=NumberLiteralExpression(
                     lit=2
                   )
                 ),
                 NativeTypeCastExpression(
+                  type=long,
                   expr=NumberLiteralExpression(
                     lit=3
                   )

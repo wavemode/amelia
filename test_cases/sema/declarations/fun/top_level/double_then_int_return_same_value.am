@@ -29,6 +29,7 @@ SemaResult(
                 ),
                 ReturnStatement(
                   value=NativeTypeCastExpression(
+                    type=double,
                     expr=NumberLiteralExpression(
                       lit=5
                     )

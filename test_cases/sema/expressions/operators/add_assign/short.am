@@ -28,6 +28,7 @@ SemaResult(
                     name="x",
                     type=short,
                     value=NativeTypeCastExpression(
+                      type=short,
                       expr=NumberLiteralExpression(
                         lit=2
                       )
@@ -40,6 +41,7 @@ SemaResult(
                           name="y",
                           type=short,
                           value=NativeTypeCastExpression(
+                            type=short,
                             expr=NumberLiteralExpression(
                               lit=4
                             )

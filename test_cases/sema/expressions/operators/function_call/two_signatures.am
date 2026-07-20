@@ -28,6 +28,7 @@ SemaResult(
               ),
               arguments=[
                 NativeTypeCastExpression(
+                  type=float,
                   expr=IdentifierExpression(
                     name="z"
                   )

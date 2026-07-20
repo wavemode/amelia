@@ -20,6 +20,8 @@ struct ModuleAnalysisContext {
   Option<NodeId> intro_decls_currently_analyzing;
   Option<NodeId> loop_currently_analyzing;
 
+  bool need_value_of_stmt = false;
+
   uint32_t current_scope_level = 0;
   uint32_t max_scope_level = 0;
   Map<Text, uint32_t> labels_in_scope;

@@ -1,0 +1,57 @@
+let x = {
+  if (5 > 6) {
+    7.0
+  } else {
+    8
+  }
+}
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="coerce_else",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=double,
+            value=StatementSequence(
+              stmts=[
+                IfStatement(
+                  condition=NativeBinaryOperationExpression(
+                    left=NumberLiteralExpression(
+                      lit=5
+                    ),
+                    op_kind=">",
+                    right=NumberLiteralExpression(
+                      lit=6
+                    )
+                  ),
+                  then_branch=StatementSequence(
+                    stmts=[
+                      NumberLiteralExpression(
+                        lit=7.0
+                      )
+                    ]
+                  ),
+                  else_branch=NativeTypeCastExpression(
+                    type=double,
+                    expr=StatementSequence(
+                      stmts=[
+                        NumberLiteralExpression(
+                          lit=8
+                        )
+                      ]
+                    )
+                  )
+                )
+              ]
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

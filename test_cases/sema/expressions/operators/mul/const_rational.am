@@ -33,6 +33,7 @@ SemaResult(
               ),
               op_kind="*",
               right=NativeTypeCastExpression(
+                type=double,
                 expr=IdentifierExpression(
                   name="a"
                 )

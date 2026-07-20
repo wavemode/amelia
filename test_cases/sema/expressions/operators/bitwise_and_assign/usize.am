@@ -29,6 +29,7 @@ SemaResult(
                     name="x",
                     type=usize,
                     value=NativeTypeCastExpression(
+                      type=usize,
                       expr=NumberLiteralExpression(
                         lit=2
                       )
@@ -41,6 +42,7 @@ SemaResult(
                           name="y",
                           type=usize,
                           value=NativeTypeCastExpression(
+                            type=usize,
                             expr=NumberLiteralExpression(
                               lit=4
                             )

@@ -29,6 +29,7 @@ SemaResult(
                 ),
                 ReturnStatement(
                   value=NativeTypeCastExpression(
+                    type=bitint[512],
                     expr=NumberLiteralExpression(
                       lit=10
                     )

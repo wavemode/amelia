@@ -21,7 +21,9 @@ Flex<Type> Type::remove_comptime_const_from_type() const {
   return remove_comptime_const();
 }
 
-bool Type::unify_type(const Type &assignment_type) const {
+bool Type::unify_type(const Type &type) const {
+  const Type &assignment_type = type.resolve_type();
+
   if (this == &assignment_type) {
     return true;
   }
@@ -41,7 +43,9 @@ Option<Flex<Expression>> Type::coerce_expr(const Expression &expr) const {
   return coerce_expr(expr.type, expr);
 }
 
-Option<Flex<Expression>> Type::coerce_expr(const Type &expr_type, const Expression &expr) const {
+Option<Flex<Expression>> Type::coerce_expr(const Type &type, const Expression &expr) const {
+  const Type &expr_type = type.resolve_type();
+
   if (unify_type(expr_type)) {
     return expr.flex();
   }
@@ -53,7 +57,9 @@ Option<Flex<Expression>> Type::cast_expr(const Expression &expr) const {
   return cast_expr(expr.type, expr);
 }
 
-Option<Flex<Expression>> Type::cast_expr(const Type &expr_type, const Expression &expr) const {
+Option<Flex<Expression>> Type::cast_expr(const Type &type, const Expression &expr) const {
+  const Type &expr_type = type.resolve_type();
+
   if (unify_type(expr_type)) {
     return expr.flex();
   }

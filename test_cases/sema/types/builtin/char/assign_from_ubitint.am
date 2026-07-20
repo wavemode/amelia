@@ -12,6 +12,7 @@ SemaResult(
             name="x",
             type=char,
             value=NativeTypeCastExpression(
+              type=char,
               expr=IdentifierExpression(
                 name="y"
               )
@@ -21,6 +22,7 @@ SemaResult(
             name="y",
             type=ubitint[15],
             value=NativeTypeCastExpression(
+              type=ubitint[15],
               expr=NumberLiteralExpression(
                 lit=42
               )

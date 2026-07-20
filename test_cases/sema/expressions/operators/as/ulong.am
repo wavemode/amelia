@@ -19,6 +19,7 @@ SemaResult(
             name="z",
             type=ulong,
             value=NativeTypeCastExpression(
+              type=ulong,
               expr=IdentifierExpression(
                 name="x"
               )
