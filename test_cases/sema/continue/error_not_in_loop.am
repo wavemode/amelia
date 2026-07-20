@@ -1,0 +1,7 @@
+let x = {
+  continue
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("Continue statement not within loop (at test_cases/sema/continue/error_not_in_loop.am:2:3)")
+*/

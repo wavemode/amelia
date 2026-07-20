@@ -1,0 +1,37 @@
+let x = {
+  while (true) {
+    continue
+  }
+}
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="in_while",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=null,
+            value=StatementSequence(
+              stmts=[
+                WhileStatement(
+                  condition=BooleanLiteralExpression(
+                    value=true
+                  ),
+                  body=StatementSequence(
+                    stmts=[
+                      ContinueStatement()
+                    ]
+                  )
+                )
+              ]
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

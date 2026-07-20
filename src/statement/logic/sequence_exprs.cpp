@@ -21,6 +21,7 @@
 #include "statement/data/type_binding_statement.hpp"
 #include "statement/data/value_binding_statement.hpp"
 #include "statement/data/break_statement.hpp"
+#include "statement/data/continue_statement.hpp"
 #include "statement/data/while_statement.hpp"
 #include "type/logic/analysis.hpp"
 #include "util/data/flex.hpp"
@@ -375,6 +376,17 @@ Flex<Expression> build_break_statement(IModuleAnalysisState &module_state, NodeI
   return result;
 }
 
+Flex<Expression> build_continue_statement(IModuleAnalysisState &module_state, NodeId expr_node_id) {
+  auto &ctx = module_state.current_context();
+  if (!ctx.loop_currently_analyzing.has_value()) {
+    module_state.raise_type_error_at_node(expr_node_id, "Continue statement not within loop");
+  }
+  auto result = emplace_flex<ContinueStatement>();
+  result->node_id = expr_node_id;
+  result->type = NEVER_TYPE;
+  return result;
+}
+
 Flex<Expression> build_statement(IModuleAnalysisState &module_state, NodeId expr_node_id) {
   const auto &expr_node = module_state.get_node(expr_node_id);
   Flex<Expression> result;
@@ -429,6 +441,9 @@ Flex<Expression> build_statement(IModuleAnalysisState &module_state, NodeId expr
     break;
   case NodeType::BreakStmtNode:
     result = build_break_statement(module_state, expr_node_id);
+    break;
+  case NodeType::ContinueStmtNode:
+    result = build_continue_statement(module_state, expr_node_id);
     break;
   default:
     module_state.raise_type_error_at_node(
