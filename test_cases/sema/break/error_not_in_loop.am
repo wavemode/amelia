@@ -1,0 +1,7 @@
+let x = {
+  break
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("Break statement not within loop (at test_cases/sema/break/error_not_in_loop.am:2:3)")
+*/

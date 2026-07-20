@@ -20,6 +20,7 @@
 #include "statement/data/statement_sequence.hpp"
 #include "statement/data/type_binding_statement.hpp"
 #include "statement/data/value_binding_statement.hpp"
+#include "statement/data/break_statement.hpp"
 #include "statement/data/while_statement.hpp"
 #include "type/logic/analysis.hpp"
 #include "util/data/flex.hpp"
@@ -275,9 +276,10 @@ Flex<Expression> build_stmt_return(IModuleAnalysisState &module_state, NodeId ex
 
 Flex<Expression> build_stmt_while(IModuleAnalysisState &module_state, NodeId expr_node_id) {
   const auto &while_node = module_state.get_node(expr_node_id).as_WhileStmtNode();
+  auto &ctx = module_state.current_context();
 
   if (while_node.introductory_decls.size() > 0) {
-    auto intro_decls_currently_analyzing = module_state.current_context()
+    auto intro_decls_currently_analyzing = ctx
                                                .intro_decls_currently_analyzing;
     if (!intro_decls_currently_analyzing.has_value() ||
         intro_decls_currently_analyzing.value() != expr_node_id) {
@@ -290,9 +292,9 @@ Flex<Expression> build_stmt_while(IModuleAnalysisState &module_state, NodeId exp
         decls.push_back(while_node.introductory_decls[i]);
       }
       decls.push_back(expr_node_id);
-      module_state.current_context().intro_decls_currently_analyzing = expr_node_id;
+      ctx.intro_decls_currently_analyzing = expr_node_id;
       auto result = build_stmt_binding(module_state, decls[0], decls.data() + 1);
-      module_state.current_context()
+      ctx
           .intro_decls_currently_analyzing = intro_decls_currently_analyzing;
       return result;
     }
@@ -304,7 +306,9 @@ Flex<Expression> build_stmt_while(IModuleAnalysisState &module_state, NodeId exp
   result->condition = expect_expression_of_type(module_state, BOOL_TYPE, while_node.condition);
 
   auto old_scope = push_scope(module_state);
+  auto loop_currently_analyzing = ctx.loop_currently_analyzing.replace(expr_node_id);
   result->body = build_statement(module_state, while_node.body);
+  ctx.loop_currently_analyzing = loop_currently_analyzing;
   restore_scope(module_state, old_scope);
 
   return result;
@@ -360,6 +364,17 @@ Flex<Expression> build_goto_statement(IModuleAnalysisState &module_state, NodeId
   return goto_statement;
 }
 
+Flex<Expression> build_break_statement(IModuleAnalysisState &module_state, NodeId expr_node_id) {
+  auto &ctx = module_state.current_context();
+  if (!ctx.loop_currently_analyzing.has_value()) {
+    module_state.raise_type_error_at_node(expr_node_id, "Break statement not within loop");
+  }
+  auto result = emplace_flex<BreakStatement>();
+  result->node_id = expr_node_id;
+  result->type = NEVER_TYPE;
+  return result;
+}
+
 Flex<Expression> build_statement(IModuleAnalysisState &module_state, NodeId expr_node_id) {
   const auto &expr_node = module_state.get_node(expr_node_id);
   Flex<Expression> result;
@@ -411,6 +426,9 @@ Flex<Expression> build_statement(IModuleAnalysisState &module_state, NodeId expr
     break;
   case NodeType::GotoStmtNode:
     result = build_goto_statement(module_state, expr_node_id);
+    break;
+  case NodeType::BreakStmtNode:
+    result = build_break_statement(module_state, expr_node_id);
     break;
   default:
     module_state.raise_type_error_at_node(

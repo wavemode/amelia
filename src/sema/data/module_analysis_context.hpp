@@ -18,6 +18,7 @@ struct ModuleAnalysisContext {
   Option<FunctionSignature *> current_function_signature;
   Option<Binding *> binding_currently_analyzing;
   Option<NodeId> intro_decls_currently_analyzing;
+  Option<NodeId> loop_currently_analyzing;
 
   uint32_t current_scope_level = 0;
   uint32_t max_scope_level = 0;
