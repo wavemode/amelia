@@ -1,0 +1,13 @@
+fun f(
+  x : int,
+  y : float,
+) with (
+  a : long,
+  b : short,
+) [&z, &] -> int {
+
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("Invalid capture designator: universal designator must be the only designator (at test_cases/parser/declarations/fun/error_capture_universal_with_extra.am:7:3)")
+*/

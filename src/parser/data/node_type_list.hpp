@@ -530,14 +530,16 @@ enum class FunctionCaptureKind {
   Copy,
   Ref,
   ConstRef,
+  MoveRef,
 };
 
-struct FunctionSignatureCaptureAnnotationNode {
-  FunctionCaptureKind kind;
-  NodeId var;
+struct FunctionSignatureCaptureDesignatorNode {
+  Option<FunctionCaptureKind> kind;
+  Option<NodeId> var;
+  Option<NodeId> expr;
 };
 
-struct FunctionSignatureCaptureAnnotationListNode {
+struct FunctionSignatureCaptureDesignatorListNode {
   List<NodeId> captures;
 };
 
@@ -954,8 +956,8 @@ struct TypeFieldNode {};
   X(ReturnStmtNode)                                                                                \
   X(FunctionParameterNode)                                                                         \
   X(ImplicitParameterListNode)                                                                     \
-  X(FunctionSignatureCaptureAnnotationNode)                                                        \
-  X(FunctionSignatureCaptureAnnotationListNode)                                                    \
+  X(FunctionSignatureCaptureDesignatorNode)                                                        \
+  X(FunctionSignatureCaptureDesignatorListNode)                                                    \
   X(FunctionSignatureNode)                                                                         \
   X(FunctionBodyNode)                                                                              \
   X(FunctionDeclNode)                                                                              \

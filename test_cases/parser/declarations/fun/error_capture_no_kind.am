@@ -1,0 +1,13 @@
+fun f(
+  x : int,
+  y : float,
+) with (
+  a : long,
+  b : short,
+) [z] -> int {
+
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("Invalid capture designator: expected capture kind or '=' after identifier (at test_cases/parser/declarations/fun/error_capture_no_kind.am:7:4)")
+*/

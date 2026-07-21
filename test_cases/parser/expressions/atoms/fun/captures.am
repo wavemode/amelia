@@ -59,21 +59,21 @@ ModuleNode(
               )
             ]
           ),
-          capture_list=FunctionSignatureCaptureAnnotationListNode(
+          capture_list=FunctionSignatureCaptureDesignatorListNode(
             captures=[
-              FunctionSignatureCaptureAnnotationNode(
+              FunctionSignatureCaptureDesignatorNode(
                 kind=move,
                 var=IdentifierNode(
                   name="x"
                 )
               ),
-              FunctionSignatureCaptureAnnotationNode(
+              FunctionSignatureCaptureDesignatorNode(
                 kind=copy,
                 var=IdentifierNode(
                   name="y"
                 )
               ),
-              FunctionSignatureCaptureAnnotationNode(
+              FunctionSignatureCaptureDesignatorNode(
                 kind=ref,
                 var=IdentifierNode(
                   name="z"

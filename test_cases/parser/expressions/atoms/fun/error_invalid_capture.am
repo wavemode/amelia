@@ -9,5 +9,5 @@ let f = fun (
 }
 
 /* EXPECTED_OUTPUT:
-ERROR("Expected capture annotation to start with '&', 'move', or 'copy' (at test_cases/parser/expressions/atoms/fun/error_invalid_capture.am:7:4)")
+ERROR("Invalid capture designator: expected capture kind or '=' after identifier (at test_cases/parser/expressions/atoms/fun/error_invalid_capture.am:7:4)")
 */

@@ -1064,7 +1064,7 @@ public:
     Option<NodeId> generic_parameter_list = try_parse_generic_parameter_list();
     List<NodeId> parameters = parse_function_parameter_list();
     Option<NodeId> implicit_parameter_list = try_parse_implicit_parameter_list();
-    Option<NodeId> capture_list = try_parse_function_signature_capture_annotation_list();
+    Option<NodeId> capture_list = try_parse_function_signature_capture_designator_list();
     Option<NodeId> return_type = try_parse_function_return_type();
 
     return m_output.add_node(
@@ -1138,51 +1138,98 @@ public:
     return None();
   }
 
-  Option<NodeId> try_parse_function_signature_capture_annotation_list() {
+  Option<NodeId> try_parse_function_signature_capture_designator_list() {
     auto next_token = peek();
     if (next_token.type == TokenType::LEFT_BRACKET ||
         next_token.type == TokenType::LEFT_BRACKET_NO_W) {
       ++m_token_index; // consume the '[' token
-      List<NodeId> capture_annotations;
+      List<NodeId> capture_designators;
+      bool seen_universal = false;
       while (peek().type != TokenType::RIGHT_BRACKET) {
-        capture_annotations.push_back(parse_function_signature_capture_annotation());
+        capture_designators.push_back(parse_function_signature_capture_designator(seen_universal));
         if (peek().type == TokenType::COMMA) {
           ++m_token_index; // consume the ',' token
         }
       }
       ++m_token_index; // consume the ']' token
+
+      if (seen_universal && capture_designators.size() > 1) {
+        throw_parser_error_at_location(
+            next_token.loc,
+            "Invalid capture designator: universal designator must be the only designator"
+        );
+      }
+
       return Some(m_output.add_node(
           next_token.id,
           m_token_index,
-          FunctionSignatureCaptureAnnotationListNode{move(capture_annotations)}
+          FunctionSignatureCaptureDesignatorListNode{move(capture_designators)}
       ));
     }
     return None();
   }
 
-  NodeId parse_function_signature_capture_annotation() {
+  NodeId parse_function_signature_capture_designator(bool &was_universal) {
     auto start_token = peek();
-    FunctionCaptureKind kind;
-    auto token = next();
-    if (token.type == TokenType::AMPERSAND) {
-      if (peek().type == TokenType::KEYWORD_CONST) {
-        ++m_token_index; // consume the 'const' keyword
-        kind = FunctionCaptureKind::ConstRef;
-      } else {
-        kind = FunctionCaptureKind::Ref;
-      }
-    } else if (token.type == TokenType::KEYWORD_MOVE) {
-      kind = FunctionCaptureKind::Move;
-    } else if (token.type == TokenType::KEYWORD_COPY) {
+    Option<FunctionCaptureKind> kind;
+    Option<NodeId> variable;
+    Option<NodeId> expression;
+    if (start_token.type == TokenType::KEYWORD_COPY) {
+      ++m_token_index;
       kind = FunctionCaptureKind::Copy;
-    } else {
-      throw_parser_error(
-          token.id, "Expected capture annotation to start with '&', 'move', or 'copy'"
-      );
+    } else if (start_token.type == TokenType::KEYWORD_MOVE) {
+      ++m_token_index;
+      kind = FunctionCaptureKind::Move;
+    } else if (start_token.type == TokenType::AMPERSAND) {
+      ++m_token_index;
+      switch (peek().type) {
+      case TokenType::KEYWORD_MOVE:
+        ++m_token_index;
+        kind = FunctionCaptureKind::MoveRef;
+        break;
+      case TokenType::KEYWORD_CONST:
+        ++m_token_index;
+        kind = FunctionCaptureKind::ConstRef;
+        break;
+      default:
+        kind = FunctionCaptureKind::Ref;
+        break;
+      }
     }
-    NodeId var = expect_identifier("Expected variable name in function capture annotation");
+
+    auto next_token = peek();
+    if (is_identifier(next_token.type)) {
+      variable = parse_identifier();
+
+      if (peek().type == TokenType::ASSIGN) {
+        if (kind.has_value()) {
+          throw_parser_error_at_location(
+              start_token.loc,
+              "Invalid capture designator: cannot specify capture kind when using '='"
+          );
+        }
+
+        ++m_token_index; // consume the '=' token
+        expression = parse_expr();
+      } else if (!kind.has_value()) {
+        throw_parser_error_at_location(
+            start_token.loc,
+            "Invalid capture designator: expected capture kind or '=' after identifier"
+        );
+      }
+
+    } else if (!kind.has_value()) {
+      throw_parser_error_at_current_location(
+          "Invalid capture designator: expected identifier and/or capture kind"
+      );
+    } else {
+      was_universal = true;
+    }
+
     return m_output.add_node(
-        start_token.id, m_token_index, FunctionSignatureCaptureAnnotationNode{kind, var}
+        start_token.id,
+        m_token_index,
+        FunctionSignatureCaptureDesignatorNode{kind, variable, expression}
     );
   }
 
@@ -1669,8 +1716,9 @@ public:
       if (next_token.type == TokenType::DOT) {
         ++m_token_index; // consume the '.' operator
         auto next_type = peek().type;
-        if (!is_identifier_no_w(next_type) && next_type != TokenType::KEYWORD_OPERATOR &&
-            next_type != TokenType::KEYWORD_TYPE && next_type != TokenType::KEYWORD_SUPER) {
+        if (next_type == TokenType::KEYWORD_THIS_TYPE ||
+            (!is_identifier(next_type) && next_type != TokenType::KEYWORD_OPERATOR &&
+             next_type != TokenType::KEYWORD_TYPE && next_type != TokenType::KEYWORD_SUPER)) {
           throw_parser_error_at_current_location(
               "Expected identifier immediately after '.' in field access expression"
           );

@@ -1,0 +1,79 @@
+fun f(
+  x : int,
+  y : float,
+) with (
+  a : long,
+  b : short,
+) [&const] -> int {
+
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    FunctionDeclNode(
+      name=IdentifierNode(
+        name="f"
+      ),
+      signature=FunctionSignatureNode(
+        parameters=[
+          FunctionParameterNode(
+            variadic=false,
+            name=IdentifierNode(
+              name="x"
+            ),
+            type=BuiltinTypeNode(
+              kind=int
+            )
+          ),
+          FunctionParameterNode(
+            variadic=false,
+            name=IdentifierNode(
+              name="y"
+            ),
+            type=BuiltinTypeNode(
+              kind=float
+            )
+          )
+        ],
+        implicit_parameter_list=ImplicitParameterListNode(
+          parameters=[
+            FunctionParameterNode(
+              variadic=false,
+              name=IdentifierNode(
+                name="a"
+              ),
+              type=BuiltinTypeNode(
+                kind=long
+              )
+            ),
+            FunctionParameterNode(
+              variadic=false,
+              name=IdentifierNode(
+                name="b"
+              ),
+              type=BuiltinTypeNode(
+                kind=short
+              )
+            )
+          ]
+        ),
+        capture_list=FunctionSignatureCaptureDesignatorListNode(
+          captures=[
+            FunctionSignatureCaptureDesignatorNode(
+              kind=const_ref
+            )
+          ]
+        ),
+        return_type=BuiltinTypeNode(
+          kind=int
+        )
+      ),
+      body=FunctionBodyNode(
+        is_default=false,
+        is_deleted=false
+      )
+    )
+  ]
+)
+*/

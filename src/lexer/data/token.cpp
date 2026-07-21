@@ -20,7 +20,7 @@ String identifier_text(const Token &token, bool quoted, bool escaped) {
     Lexer::read_quoted_ident(token.contents).pretty_print(result, quoted, escaped);
     break;
   default:
-    throw SourceLocationError(token.location, "Expected identifier");
+    throw SourceLocationError(token.location, "Expected identifier in identifier_text()");
   }
   return result;
 }

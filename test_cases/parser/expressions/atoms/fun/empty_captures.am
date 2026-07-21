@@ -59,7 +59,7 @@ ModuleNode(
               )
             ]
           ),
-          capture_list=FunctionSignatureCaptureAnnotationListNode(),
+          capture_list=FunctionSignatureCaptureDesignatorListNode(),
           return_type=BuiltinTypeNode(
             kind=int
           )

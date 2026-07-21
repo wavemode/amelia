@@ -692,30 +692,36 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "parameters", n.parameters);
     break;
   }
-  case NodeType::FunctionSignatureCaptureAnnotationListNode: {
-    const auto &n = node.as_FunctionSignatureCaptureAnnotationListNode();
+  case NodeType::FunctionSignatureCaptureDesignatorListNode: {
+    const auto &n = node.as_FunctionSignatureCaptureDesignatorListNode();
     print_node_field(out, "captures", n.captures);
     break;
   }
-  case NodeType::FunctionSignatureCaptureAnnotationNode: {
-    const auto &n = node.as_FunctionSignatureCaptureAnnotationNode();
+  case NodeType::FunctionSignatureCaptureDesignatorNode: {
+    const auto &n = node.as_FunctionSignatureCaptureDesignatorNode();
     Text kind;
-    switch (n.kind) {
-    case FunctionCaptureKind::Copy:
-      kind = "copy";
-      break;
-    case FunctionCaptureKind::Move:
-      kind = "move";
-      break;
-    case FunctionCaptureKind::Ref:
-      kind = "ref";
-      break;
-    case FunctionCaptureKind::ConstRef:
-      kind = "const_ref";
-      break;
+    if (n.kind.has_value()) {
+      switch (n.kind.value()) {
+      case FunctionCaptureKind::Copy:
+        kind = "copy";
+        break;
+      case FunctionCaptureKind::Move:
+        kind = "move";
+        break;
+      case FunctionCaptureKind::Ref:
+        kind = "ref";
+        break;
+      case FunctionCaptureKind::ConstRef:
+        kind = "const_ref";
+        break;
+      case FunctionCaptureKind::MoveRef:
+        kind = "move_ref";
+        break;
+      }
+      print_text_field(out, "kind", kind);
     }
-    print_text_field(out, "kind", kind);
     print_node_field(out, "var", n.var);
+    print_node_field(out, "expr", n.expr);
     break;
   }
   case NodeType::FunctionDeclNode: {

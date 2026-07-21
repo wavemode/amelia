@@ -4,7 +4,7 @@ fun f(
 ) with (
   a : long,
   b : short,
-) [move x, copy y, &z, &const t] -> int {
+) [move x, copy y, &z, &const t, &move w, u = make_shared(move u)] -> int {
 
 }
 
@@ -58,30 +58,55 @@ ModuleNode(
             )
           ]
         ),
-        capture_list=FunctionSignatureCaptureAnnotationListNode(
+        capture_list=FunctionSignatureCaptureDesignatorListNode(
           captures=[
-            FunctionSignatureCaptureAnnotationNode(
+            FunctionSignatureCaptureDesignatorNode(
               kind=move,
               var=IdentifierNode(
                 name="x"
               )
             ),
-            FunctionSignatureCaptureAnnotationNode(
+            FunctionSignatureCaptureDesignatorNode(
               kind=copy,
               var=IdentifierNode(
                 name="y"
               )
             ),
-            FunctionSignatureCaptureAnnotationNode(
+            FunctionSignatureCaptureDesignatorNode(
               kind=ref,
               var=IdentifierNode(
                 name="z"
               )
             ),
-            FunctionSignatureCaptureAnnotationNode(
+            FunctionSignatureCaptureDesignatorNode(
               kind=const_ref,
               var=IdentifierNode(
                 name="t"
+              )
+            ),
+            FunctionSignatureCaptureDesignatorNode(
+              kind=move_ref,
+              var=IdentifierNode(
+                name="w"
+              )
+            ),
+            FunctionSignatureCaptureDesignatorNode(
+              var=IdentifierNode(
+                name="u"
+              ),
+              expr=FunctionCallExprNode(
+                callee=IdentifierNode(
+                  name="make_shared"
+                ),
+                args=[
+                  FunctionArgumentNode(
+                    expr=MoveExprNode(
+                      expr=IdentifierNode(
+                        name="u"
+                      )
+                    )
+                  )
+                ]
               )
             )
           ]

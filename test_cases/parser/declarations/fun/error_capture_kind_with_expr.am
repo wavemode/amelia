@@ -1,0 +1,13 @@
+fun f(
+  x : int,
+  y : float,
+) with (
+  a : long,
+  b : short,
+) [&z = 5] -> int {
+
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("Invalid capture designator: cannot specify capture kind when using '=' (at test_cases/parser/declarations/fun/error_capture_kind_with_expr.am:7:4)")
+*/
