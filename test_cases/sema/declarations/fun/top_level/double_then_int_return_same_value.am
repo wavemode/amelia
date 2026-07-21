@@ -13,25 +13,27 @@ SemaResult(
             name="f",
             type=FunctionType(
               name=f,
-              signatures=[
-                Signature(
-                  return_type=double
-                )
-              ]
-            ),
-            value=StatementSequence(
-              stmts=[
-                ReturnStatement(
-                  value=NumberLiteralExpression(
-                    lit=5.0
-                  )
-                ),
-                ReturnStatement(
-                  value=NativeTypeCastExpression(
-                    type=double,
-                    expr=NumberLiteralExpression(
-                      lit=5
-                    )
+              definitions=[
+                FunctionDefinition(
+                  signature=FunctionSignature(
+                    return_type=double
+                  ),
+                  body=StatementSequence(
+                    stmts=[
+                      ReturnStatement(
+                        value=NumberLiteralExpression(
+                          lit=5.0
+                        )
+                      ),
+                      ReturnStatement(
+                        value=NativeTypeCastExpression(
+                          type=double,
+                          expr=NumberLiteralExpression(
+                            lit=5
+                          )
+                        )
+                      )
+                    ]
                   )
                 )
               ]

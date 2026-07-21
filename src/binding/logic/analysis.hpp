@@ -9,6 +9,7 @@ template <typename T> class Flex;
 template <typename T> class Option;
 struct IModuleAnalysisState;
 struct FunctionParameter;
+struct FunctionDefinition;
 struct FunctionSignature;
 struct Expression;
 struct Binding;
@@ -44,7 +45,7 @@ FunctionParameter analyze_function_parameter(
     IModuleAnalysisState &module_state, NodeId parameter_node_id
 );
 
-FunctionSignature analyze_function_signature(
+Flex<FunctionSignature> analyze_function_signature(
     IModuleAnalysisState &module_state, NodeId signature_node_id
 );
 

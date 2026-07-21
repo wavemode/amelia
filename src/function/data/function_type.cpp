@@ -12,13 +12,13 @@ namespace amelia {
 
 Serialize FunctionType::serialize() const {
   Serialize result;
-  Serialize signatures_list;
-  for (const auto &signature : signatures) {
-    signatures_list.add_list_item(serialize_function_signature(signature));
+  Serialize definitions_list;
+  for (const auto &definition : definitions) {
+    definitions_list.add_list_item(serialize_function_definition(definition));
   }
   result.set_object_name("FunctionType");
   result.add_object_field("name", Serialize::literal(name));
-  result.add_object_field("signatures", move(signatures_list));
+  result.add_object_field("definitions", move(definitions_list));
   return result;
 }
 

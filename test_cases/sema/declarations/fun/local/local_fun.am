@@ -20,14 +20,16 @@ SemaResult(
                     name="f",
                     type=FunctionType(
                       name=f,
-                      signatures=[
-                        Signature(
-                          return_type=int
+                      definitions=[
+                        FunctionDefinition(
+                          signature=FunctionSignature(
+                            return_type=int
+                          ),
+                          body=NumberLiteralExpression(
+                            lit=10
+                          )
                         )
                       ]
-                    ),
-                    value=NumberLiteralExpression(
-                      lit=10
                     )
                   ),
                   body=StatementSequence(
@@ -35,9 +37,6 @@ SemaResult(
                       FunctionCallExpression(
                         callee=IdentifierExpression(
                           name="f"
-                        ),
-                        signature=Signature(
-                          return_type=int
                         ),
                         arguments=
                       )

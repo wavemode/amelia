@@ -16,22 +16,6 @@ SemaResult(
               callee=IdentifierExpression(
                 name="y"
               ),
-              signature=Signature(
-                parameters=[
-                  Parameter(
-                    name="y1",
-                    type=int,
-                    default_value=NumberLiteralExpression(
-                      lit=5
-                    )
-                  ),
-                  Parameter(
-                    name="y2",
-                    type=float
-                  )
-                ],
-                return_type=float
-              ),
               arguments=[
                 (default),
                 NativeTypeCastExpression(
@@ -47,40 +31,47 @@ SemaResult(
             name="y",
             type=FunctionType(
               name=y,
-              signatures=[
-                Signature(
-                  parameters=[
-                    Parameter(
-                      name="y1",
-                      type=int
-                    ),
-                    Parameter(
-                      name="y2",
-                      type=float
-                    )
-                  ],
-                  return_type=int
-                ),
-                Signature(
-                  parameters=[
-                    Parameter(
-                      name="y1",
-                      type=int,
-                      default_value=NumberLiteralExpression(
-                        lit=5
+              definitions=[
+                FunctionDefinition(
+                  signature=FunctionSignature(
+                    parameters=[
+                      FunctionParameter(
+                        name="y1",
+                        type=int
+                      ),
+                      FunctionParameter(
+                        name="y2",
+                        type=float
                       )
-                    ),
-                    Parameter(
-                      name="y2",
-                      type=float
-                    )
-                  ],
-                  return_type=float
+                    ],
+                    return_type=int
+                  ),
+                  body=IdentifierExpression(
+                    name="y1"
+                  )
+                ),
+                FunctionDefinition(
+                  signature=FunctionSignature(
+                    parameters=[
+                      FunctionParameter(
+                        name="y1",
+                        type=int,
+                        default_value=NumberLiteralExpression(
+                          lit=5
+                        )
+                      ),
+                      FunctionParameter(
+                        name="y2",
+                        type=float
+                      )
+                    ],
+                    return_type=float
+                  ),
+                  body=IdentifierExpression(
+                    name="y2"
+                  )
                 )
               ]
-            ),
-            value=IdentifierExpression(
-              name="y2"
             )
           ),
           ValueBinding(

@@ -18,23 +18,30 @@ SemaResult(
             name="f",
             type=FunctionType(
               name=f,
-              signatures=[
-                Signature(
-                  return_type=int
+              definitions=[
+                FunctionDefinition(
+                  signature=FunctionSignature(
+                    return_type=int
+                  ),
+                  body=NumberLiteralExpression(
+                    lit=5
+                  )
                 ),
-                Signature(
-                  parameters=[
-                    Parameter(
-                      name="x",
-                      type=float
-                    )
-                  ],
-                  return_type=float
+                FunctionDefinition(
+                  signature=FunctionSignature(
+                    parameters=[
+                      FunctionParameter(
+                        name="x",
+                        type=float
+                      )
+                    ],
+                    return_type=float
+                  ),
+                  body=IdentifierExpression(
+                    name="x"
+                  )
                 )
               ]
-            ),
-            value=IdentifierExpression(
-              name="x"
             )
           ),
           ValueBinding(
@@ -47,23 +54,30 @@ SemaResult(
                     name="f",
                     type=FunctionType(
                       name=f,
-                      signatures=[
-                        Signature(
-                          return_type=int
+                      definitions=[
+                        FunctionDefinition(
+                          signature=FunctionSignature(
+                            return_type=int
+                          ),
+                          body=NumberLiteralExpression(
+                            lit=10
+                          )
                         ),
-                        Signature(
-                          parameters=[
-                            Parameter(
-                              name="x",
-                              type=int
-                            )
-                          ],
-                          return_type=int
+                        FunctionDefinition(
+                          signature=FunctionSignature(
+                            parameters=[
+                              FunctionParameter(
+                                name="x",
+                                type=int
+                              )
+                            ],
+                            return_type=int
+                          ),
+                          body=IdentifierExpression(
+                            name="x"
+                          )
                         )
                       ]
-                    ),
-                    value=IdentifierExpression(
-                      name="x"
                     )
                   ),
                   body=StatementSequence(
@@ -71,15 +85,6 @@ SemaResult(
                       FunctionCallExpression(
                         callee=IdentifierExpression(
                           name="f"
-                        ),
-                        signature=Signature(
-                          parameters=[
-                            Parameter(
-                              name="x",
-                              type=int
-                            )
-                          ],
-                          return_type=int
                         ),
                         arguments=[
                           NumberLiteralExpression(

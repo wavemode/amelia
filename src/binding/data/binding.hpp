@@ -20,7 +20,7 @@ struct Binding {
   NodeId decl;
   String name;
   BindingKind kind;
-  DeclarationVisibility visibility;
+  DeclarationVisibility visibility = DeclarationVisibility::Default;
   Option<BindingId> id;
   Option<BindingId> shadowed_binding_id;
   List<Flex<Binding>> child_bindings;

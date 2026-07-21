@@ -15,21 +15,6 @@ SemaResult(
               callee=IdentifierExpression(
                 name="y"
               ),
-              signature=Signature(
-                parameters=[
-                  Parameter(
-                    name="t",
-                    type=float,
-                    default_value=NativeTypeCastExpression(
-                      type=float,
-                      expr=NumberLiteralExpression(
-                        lit=40
-                      )
-                    )
-                  )
-                ],
-                return_type=float
-              ),
               arguments=[
                 (default)
               ]
@@ -39,35 +24,42 @@ SemaResult(
             name="y",
             type=FunctionType(
               name=y,
-              signatures=[
-                Signature(
-                  parameters=[
-                    Parameter(
-                      name="y",
-                      type=int
-                    )
-                  ],
-                  return_type=int
+              definitions=[
+                FunctionDefinition(
+                  signature=FunctionSignature(
+                    parameters=[
+                      FunctionParameter(
+                        name="y",
+                        type=int
+                      )
+                    ],
+                    return_type=int
+                  ),
+                  body=IdentifierExpression(
+                    name="y"
+                  )
                 ),
-                Signature(
-                  parameters=[
-                    Parameter(
-                      name="t",
-                      type=float,
-                      default_value=NativeTypeCastExpression(
+                FunctionDefinition(
+                  signature=FunctionSignature(
+                    parameters=[
+                      FunctionParameter(
+                        name="t",
                         type=float,
-                        expr=NumberLiteralExpression(
-                          lit=40
+                        default_value=NativeTypeCastExpression(
+                          type=float,
+                          expr=NumberLiteralExpression(
+                            lit=40
+                          )
                         )
                       )
-                    )
-                  ],
-                  return_type=float
+                    ],
+                    return_type=float
+                  ),
+                  body=IdentifierExpression(
+                    name="t"
+                  )
                 )
               ]
-            ),
-            value=IdentifierExpression(
-              name="t"
             )
           )
         ]

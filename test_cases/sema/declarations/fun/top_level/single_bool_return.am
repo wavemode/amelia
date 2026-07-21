@@ -12,17 +12,19 @@ SemaResult(
             name="f",
             type=FunctionType(
               name=f,
-              signatures=[
-                Signature(
-                  return_type=bool
-                )
-              ]
-            ),
-            value=StatementSequence(
-              stmts=[
-                ReturnStatement(
-                  value=BooleanLiteralExpression(
-                    value=true
+              definitions=[
+                FunctionDefinition(
+                  signature=FunctionSignature(
+                    return_type=bool
+                  ),
+                  body=StatementSequence(
+                    stmts=[
+                      ReturnStatement(
+                        value=BooleanLiteralExpression(
+                          value=true
+                        )
+                      )
+                    ]
                   )
                 )
               ]

@@ -14,41 +14,43 @@ SemaResult(
             name="f",
             type=FunctionType(
               name=f,
-              signatures=[
-                Signature(
-                  return_type=null
-                )
-              ]
-            ),
-            value=StatementSequence(
-              stmts=[
-                ValueBindingStatement(
-                  binding=ValueBinding(
-                    name="x",
-                    type=bool,
-                    value=BooleanLiteralExpression(
-                      value=false
-                    )
+              definitions=[
+                FunctionDefinition(
+                  signature=FunctionSignature(
+                    return_type=null
                   ),
                   body=StatementSequence(
                     stmts=[
                       ValueBindingStatement(
                         binding=ValueBinding(
-                          name="y",
+                          name="x",
                           type=bool,
                           value=BooleanLiteralExpression(
-                            value=true
+                            value=false
                           )
                         ),
                         body=StatementSequence(
                           stmts=[
-                            NativeBinaryOperationExpression(
-                              left=IdentifierExpression(
-                                name="x"
+                            ValueBindingStatement(
+                              binding=ValueBinding(
+                                name="y",
+                                type=bool,
+                                value=BooleanLiteralExpression(
+                                  value=true
+                                )
                               ),
-                              op_kind="=",
-                              right=IdentifierExpression(
-                                name="y"
+                              body=StatementSequence(
+                                stmts=[
+                                  NativeBinaryOperationExpression(
+                                    left=IdentifierExpression(
+                                      name="x"
+                                    ),
+                                    op_kind="=",
+                                    right=IdentifierExpression(
+                                      name="y"
+                                    )
+                                  )
+                                ]
                               )
                             )
                           ]

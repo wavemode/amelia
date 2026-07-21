@@ -10,23 +10,25 @@ SemaResult(
             name="f",
             type=FunctionType(
               name=f,
-              signatures=[
-                Signature(
-                  parameters=[
-                    Parameter(
-                      name="x",
-                      type=int
-                    )
-                  ],
-                  return_type=int
-                )
-              ]
-            ),
-            value=StatementSequence(
-              stmts=[
-                ReturnStatement(
-                  value=IdentifierExpression(
-                    name="x"
+              definitions=[
+                FunctionDefinition(
+                  signature=FunctionSignature(
+                    parameters=[
+                      FunctionParameter(
+                        name="x",
+                        type=int
+                      )
+                    ],
+                    return_type=int
+                  ),
+                  body=StatementSequence(
+                    stmts=[
+                      ReturnStatement(
+                        value=IdentifierExpression(
+                          name="x"
+                        )
+                      )
+                    ]
                   )
                 )
               ]

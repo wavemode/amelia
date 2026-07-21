@@ -6,8 +6,8 @@
 #include "binding/data/value_binding.hpp"
 #include "builtin/data/builtin_type.hpp"
 #include "expr/logic/build.hpp"
+#include "function/data/function_definition.hpp"
 #include "function/data/function_parameter.hpp"
-#include "function/data/function_signature.hpp"
 #include "function/data/function_type.hpp"
 #include "literal/data/identifier_expression.hpp"
 #include "parser/data/node.hpp"
@@ -376,11 +376,11 @@ FunctionParameter analyze_function_parameter(
   return result;
 }
 
-FunctionSignature analyze_function_signature(
+Flex<FunctionSignature> analyze_function_signature(
     IModuleAnalysisState &module_state, NodeId signature_node_id
 ) {
   const auto &signature_node = module_state.get_node(signature_node_id).as_FunctionSignatureNode();
-  FunctionSignature result;
+  auto result = emplace_flex<FunctionSignature>();
   Set<Text> seen_param_names;
   for (NodeId parameter_node_id : signature_node.parameters) {
     auto param = analyze_function_parameter(module_state, parameter_node_id);
@@ -391,12 +391,12 @@ FunctionSignature analyze_function_signature(
       module_state.raise_type_error_at_node(parameter_node_id, move(error_message));
     }
     seen_param_names.add(param.name);
-    result.parameters.push_back(move(param));
+    result->parameters.push_back(move(param));
   }
   if (signature_node.return_type.has_value()) {
-    result.return_type = evaluate_type_expr(module_state, signature_node.return_type.value());
+    result->return_type = evaluate_type_expr(module_state, signature_node.return_type.value());
   } else {
-    result.return_type = UNKNOWN_TYPE;
+    result->return_type = UNKNOWN_TYPE;
   }
   return result;
 }
@@ -414,9 +414,10 @@ void analyze_function_binding(IModuleAnalysisState &module_state, ValueBinding &
   auto *current_binding = &binding;
   while (true) {
     const auto &decl_node = module_state.get_node(current_binding->decl).as_FunctionDeclNode();
-    function_type->signatures.push_back(
-        make_flex(analyze_function_signature(module_state, decl_node.signature))
-    );
+
+    auto function_definition = emplace_flex<FunctionDefinition>();
+    function_definition->signature = analyze_function_signature(module_state, decl_node.signature);
+    function_type->definitions.push_back(move(function_definition));
 
     if (!current_binding->shadowed_binding_id.has_value()) {
       break;
@@ -444,12 +445,12 @@ void analyze_function_binding(IModuleAnalysisState &module_state, ValueBinding &
 
     current_binding = static_cast<ValueBinding *>(&shadowed_binding);
   }
-  function_type->signatures.reverse();
+  function_type->definitions.reverse();
 
   binding.type = function_type;
 
   current_binding = &binding;
-  size_t signature_index = function_type->signatures.size();
+  size_t definition_index = function_type->definitions.size();
   while (true) {
     const auto &decl_node = module_state.get_node(current_binding->decl).as_FunctionDeclNode();
     if (!decl_node.body.has_value()) {
@@ -457,11 +458,15 @@ void analyze_function_binding(IModuleAnalysisState &module_state, ValueBinding &
           current_binding->decl, "not implemented (function declaration without body)"
       );
     }
-    current_binding->value = analyze_function_body(
-        module_state, function_type->signatures[signature_index - 1], decl_node.body.value()
+
+    function_type->definitions[definition_index - 1]->body = analyze_function_body(
+        module_state,
+        function_type->definitions[definition_index - 1]->signature,
+        decl_node.body.value()
     );
-    --signature_index;
-    if (signature_index > 0) {
+
+    --definition_index;
+    if (definition_index > 0) {
       auto &shadowed_binding = *module_state.get_binding_by_id(
           current_binding->shadowed_binding_id.value()
       );
@@ -475,13 +480,15 @@ void analyze_function_binding(IModuleAnalysisState &module_state, ValueBinding &
 Flex<Expression> analyze_function_body(
     IModuleAnalysisState &module_state, FunctionSignature &signature, NodeId function_body_node_id
 ) {
-  Option<FunctionSignature *> old_signature = module_state.analysis_context()
-                                                  .current_function_signature;
-  module_state.analysis_context().current_function_signature = &signature;
+  auto &ctx = module_state.analysis_context();
+  auto old_signature = ctx.current_function_signature;
+  ctx.current_function_signature = &signature;
+
   for (const auto &param : signature.parameters) {
     auto binding = emplace_flex<ValueBinding>();
     binding->name = param.name;
     binding->type = param.type->remove_comptime_const_from_type();
+    binding->kind = BindingKind::Variable;
     module_state.push_binding(move(binding));
   }
 
@@ -527,7 +534,7 @@ Flex<Expression> analyze_function_body(
   for (size_t i = 0; i < signature.parameters.size(); ++i) {
     module_state.pop_binding();
   }
-  module_state.analysis_context().current_function_signature = old_signature;
+  ctx.current_function_signature = old_signature;
 
   return result;
 }

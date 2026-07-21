@@ -14,47 +14,49 @@ SemaResult(
             name="f",
             type=FunctionType(
               name=f,
-              signatures=[
-                Signature(
-                  return_type=null
-                )
-              ]
-            ),
-            value=StatementSequence(
-              stmts=[
-                ValueBindingStatement(
-                  binding=ValueBinding(
-                    name="x",
-                    type=bitint[4],
-                    value=NativeTypeCastExpression(
-                      type=bitint[4],
-                      expr=NumberLiteralExpression(
-                        lit=0b101
-                      )
-                    )
+              definitions=[
+                FunctionDefinition(
+                  signature=FunctionSignature(
+                    return_type=null
                   ),
                   body=StatementSequence(
                     stmts=[
                       ValueBindingStatement(
                         binding=ValueBinding(
-                          name="y",
+                          name="x",
                           type=bitint[4],
                           value=NativeTypeCastExpression(
                             type=bitint[4],
                             expr=NumberLiteralExpression(
-                              lit=0b010
+                              lit=0b101
                             )
                           )
                         ),
                         body=StatementSequence(
                           stmts=[
-                            NativeBinaryOperationExpression(
-                              left=IdentifierExpression(
-                                name="x"
+                            ValueBindingStatement(
+                              binding=ValueBinding(
+                                name="y",
+                                type=bitint[4],
+                                value=NativeTypeCastExpression(
+                                  type=bitint[4],
+                                  expr=NumberLiteralExpression(
+                                    lit=0b010
+                                  )
+                                )
                               ),
-                              op_kind="+=",
-                              right=IdentifierExpression(
-                                name="y"
+                              body=StatementSequence(
+                                stmts=[
+                                  NativeBinaryOperationExpression(
+                                    left=IdentifierExpression(
+                                      name="x"
+                                    ),
+                                    op_kind="+=",
+                                    right=IdentifierExpression(
+                                      name="y"
+                                    )
+                                  )
+                                ]
                               )
                             )
                           ]

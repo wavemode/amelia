@@ -13,20 +13,19 @@ SemaResult(
             name="f",
             type=FunctionType(
               name=f,
-              signatures=[
-                Signature(
-                  return_type=never
+              definitions=[
+                FunctionDefinition(
+                  signature=FunctionSignature(
+                    return_type=never
+                  ),
+                  body=FunctionCallExpression(
+                    callee=IdentifierExpression(
+                      name="f"
+                    ),
+                    arguments=
+                  )
                 )
               ]
-            ),
-            value=FunctionCallExpression(
-              callee=IdentifierExpression(
-                name="f"
-              ),
-              signature=Signature(
-                return_type=never
-              ),
-              arguments=
             )
           ),
           ValueBinding(
@@ -42,9 +41,6 @@ SemaResult(
             value=FunctionCallExpression(
               callee=IdentifierExpression(
                 name="f"
-              ),
-              signature=Signature(
-                return_type=never
               ),
               arguments=
             )

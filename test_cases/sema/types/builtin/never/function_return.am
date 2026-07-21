@@ -12,23 +12,22 @@ SemaResult(
             name="f",
             type=FunctionType(
               name=f,
-              signatures=[
-                Signature(
-                  return_type=never
-                )
-              ]
-            ),
-            value=StatementSequence(
-              stmts=[
-                ReturnStatement(
-                  value=FunctionCallExpression(
-                    callee=IdentifierExpression(
-                      name="f"
-                    ),
-                    signature=Signature(
-                      return_type=never
-                    ),
-                    arguments=
+              definitions=[
+                FunctionDefinition(
+                  signature=FunctionSignature(
+                    return_type=never
+                  ),
+                  body=StatementSequence(
+                    stmts=[
+                      ReturnStatement(
+                        value=FunctionCallExpression(
+                          callee=IdentifierExpression(
+                            name="f"
+                          ),
+                          arguments=
+                        )
+                      )
+                    ]
                   )
                 )
               ]

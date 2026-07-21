@@ -14,17 +14,19 @@ SemaResult(
             name="f",
             type=FunctionType(
               name=f,
-              signatures=[
-                Signature(
-                  return_type=int
-                )
-              ]
-            ),
-            value=StatementSequence(
-              stmts=[
-                ReturnStatement(
-                  value=IdentifierExpression(
-                    name="x"
+              definitions=[
+                FunctionDefinition(
+                  signature=FunctionSignature(
+                    return_type=int
+                  ),
+                  body=StatementSequence(
+                    stmts=[
+                      ReturnStatement(
+                        value=IdentifierExpression(
+                          name="x"
+                        )
+                      )
+                    ]
                   )
                 )
               ]

@@ -14,50 +14,52 @@ SemaResult(
             name="f",
             type=FunctionType(
               name=f,
-              signatures=[
-                Signature(
-                  return_type=null
-                )
-              ]
-            ),
-            value=StatementSequence(
-              stmts=[
-                ValueBindingStatement(
-                  binding=ValueBinding(
-                    name="x",
-                    type=bitint[8],
-                    value=NativeTypeCastExpression(
-                      type=bitint[8],
-                      expr=NumberLiteralExpression(
-                        lit=2
-                      )
-                    )
+              definitions=[
+                FunctionDefinition(
+                  signature=FunctionSignature(
+                    return_type=null
                   ),
                   body=StatementSequence(
                     stmts=[
                       ValueBindingStatement(
                         binding=ValueBinding(
-                          name="y",
-                          type=bitint[4],
+                          name="x",
+                          type=bitint[8],
                           value=NativeTypeCastExpression(
-                            type=bitint[4],
+                            type=bitint[8],
                             expr=NumberLiteralExpression(
-                              lit=4
+                              lit=2
                             )
                           )
                         ),
                         body=StatementSequence(
                           stmts=[
-                            NativeBinaryOperationExpression(
-                              left=IdentifierExpression(
-                                name="x"
-                              ),
-                              op_kind="=",
-                              right=NativeTypeCastExpression(
-                                type=bitint[8],
-                                expr=IdentifierExpression(
-                                  name="y"
+                            ValueBindingStatement(
+                              binding=ValueBinding(
+                                name="y",
+                                type=bitint[4],
+                                value=NativeTypeCastExpression(
+                                  type=bitint[4],
+                                  expr=NumberLiteralExpression(
+                                    lit=4
+                                  )
                                 )
+                              ),
+                              body=StatementSequence(
+                                stmts=[
+                                  NativeBinaryOperationExpression(
+                                    left=IdentifierExpression(
+                                      name="x"
+                                    ),
+                                    op_kind="=",
+                                    right=NativeTypeCastExpression(
+                                      type=bitint[8],
+                                      expr=IdentifierExpression(
+                                        name="y"
+                                      )
+                                    )
+                                  )
+                                ]
                               )
                             )
                           ]

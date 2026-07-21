@@ -7,12 +7,12 @@ namespace amelia {
 
 Serialize serialize_function_signature(const FunctionSignature &signature) {
   Serialize result;
-  result.set_object_name("Signature");
+  result.set_object_name("FunctionSignature");
   if (signature.parameters.size() > 0) {
     Serialize parameters_list;
     for (const auto &parameter : signature.parameters) {
       Serialize parameter_ser;
-      parameter_ser.set_object_name("Parameter");
+      parameter_ser.set_object_name("FunctionParameter");
       parameter_ser.add_object_field("name", Serialize::quoted(parameter.name));
       parameter_ser.add_object_field("type", parameter.type->serialize());
       if (parameter.default_value.has_value()) {

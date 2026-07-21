@@ -14,36 +14,38 @@ SemaResult(
             name="f",
             type=FunctionType(
               name=f,
-              signatures=[
-                Signature(
-                  return_type=float
-                )
-              ]
-            ),
-            value=StatementSequence(
-              stmts=[
-                ValueBindingStatement(
-                  binding=ValueBinding(
-                    name="x",
-                    type=float,
-                    value=NativeTypeCastExpression(
-                      type=float,
-                      expr=NumberLiteralExpression(
-                        lit=0
-                      )
-                    )
+              definitions=[
+                FunctionDefinition(
+                  signature=FunctionSignature(
+                    return_type=float
                   ),
                   body=StatementSequence(
                     stmts=[
-                      NativeUnaryOperationExpression(
-                        op_kind="++",
-                        operand=IdentifierExpression(
-                          name="x"
-                        )
-                      ),
-                      ReturnStatement(
-                        value=IdentifierExpression(
-                          name="x"
+                      ValueBindingStatement(
+                        binding=ValueBinding(
+                          name="x",
+                          type=float,
+                          value=NativeTypeCastExpression(
+                            type=float,
+                            expr=NumberLiteralExpression(
+                              lit=0
+                            )
+                          )
+                        ),
+                        body=StatementSequence(
+                          stmts=[
+                            NativeUnaryOperationExpression(
+                              op_kind="++",
+                              operand=IdentifierExpression(
+                                name="x"
+                              )
+                            ),
+                            ReturnStatement(
+                              value=IdentifierExpression(
+                                name="x"
+                              )
+                            )
+                          ]
                         )
                       )
                     ]

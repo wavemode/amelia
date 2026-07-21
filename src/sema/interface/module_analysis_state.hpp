@@ -13,7 +13,6 @@ class Text;
 class Node;
 struct Binding;
 class String;
-struct FunctionSignature;
 struct ModuleAnalysisContext;
 struct Module;
 

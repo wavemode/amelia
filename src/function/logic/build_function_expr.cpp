@@ -90,7 +90,8 @@ Option<Flex<FunctionCallExpression>> resolve_function_call(
 start:
 
   List<Option<Flex<Expression>>> arguments;
-  for (FunctionSignature &signature : static_cast<FunctionType &>(*callee->type).signatures) {
+  for (FunctionDefinition &definition : static_cast<FunctionType &>(*callee->type).definitions) {
+    auto &signature = *definition.signature;
     arguments.clear();
 
     size_t pos_arg_index = 0;
@@ -140,7 +141,6 @@ start:
       result->type = signature.return_type.weak();
       result->callee = callee;
       result->arguments = move(arguments);
-      result->signature = &signature;
       return result;
     }
 

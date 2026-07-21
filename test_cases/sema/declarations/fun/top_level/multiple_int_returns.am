@@ -13,22 +13,24 @@ SemaResult(
             name="f",
             type=FunctionType(
               name=f,
-              signatures=[
-                Signature(
-                  return_type=int
-                )
-              ]
-            ),
-            value=StatementSequence(
-              stmts=[
-                ReturnStatement(
-                  value=NumberLiteralExpression(
-                    lit=5
-                  )
-                ),
-                ReturnStatement(
-                  value=NumberLiteralExpression(
-                    lit=10
+              definitions=[
+                FunctionDefinition(
+                  signature=FunctionSignature(
+                    return_type=int
+                  ),
+                  body=StatementSequence(
+                    stmts=[
+                      ReturnStatement(
+                        value=NumberLiteralExpression(
+                          lit=5
+                        )
+                      ),
+                      ReturnStatement(
+                        value=NumberLiteralExpression(
+                          lit=10
+                        )
+                      )
+                    ]
                   )
                 )
               ]

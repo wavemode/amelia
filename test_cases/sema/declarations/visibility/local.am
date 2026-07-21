@@ -11,13 +11,15 @@ SemaResult(
             name="f",
             type=FunctionType(
               name=f,
-              signatures=[
-                Signature(
-                  return_type=null
+              definitions=[
+                FunctionDefinition(
+                  signature=FunctionSignature(
+                    return_type=null
+                  ),
+                  body=StatementSequence()
                 )
               ]
             ),
-            value=StatementSequence(),
             visibility=Local
           ),
           ValueBinding(
