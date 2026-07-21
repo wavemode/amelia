@@ -176,6 +176,30 @@ Flex<ValueBinding> resolve_value_binding(
   }
 }
 
+Flex<ValueBinding> resolve_implicit_value_binding(
+    IModuleAnalysisState &module_state, NodeId node_id, Text name
+) {
+  Option<BindingId> binding_id = module_state.get_implicit_binding_id_by_name(name);
+  if (!binding_id.has_value()) {
+    String error_message = "Unknown implicit variable '";
+    error_message.append(name);
+    error_message.append("'");
+    module_state.raise_type_error_at_node(node_id, move(error_message));
+  }
+  Flex<Binding> binding = module_state.get_binding_by_id(binding_id.value());
+  analyze_binding(module_state, binding);
+  switch (binding->kind) {
+  case BindingKind::Constant:
+  case BindingKind::Variable:
+  case BindingKind::Function:
+    return binding.downcast<ValueBinding>();
+  default:
+    module_state.raise_type_error_at_node(
+        node_id, "not implemented (unknown binding kind in resolve_value_binding)"
+    );
+  }
+}
+
 void collect_top_level_bindings(IModuleAnalysisState &module_state, NodeId module_node_id) {
   const ModuleNode &module_node = module_state.get_node(module_node_id).as_ModuleNode();
   for (NodeId decl_node_id : module_node.decls) {

@@ -14,7 +14,8 @@ using BindingId = int32_t;
 
 struct Scope {
   Map<Text, BindingId> active_binding_ids;
-  List<Flex<Binding>> active_bindings;
+  Map<Text, BindingId> implicit_binding_ids;
+  List<Flex<Binding>> bindings;
 
   Serialize serialize() const;
 };

@@ -416,6 +416,8 @@ public:
       return parse_break_statement();
     case TokenType::AT:
       return parse_annotated_statement();
+    case TokenType::KEYWORD_WITH:
+      return parse_with_stmt();
     default:
       break;
     }
@@ -424,6 +426,21 @@ public:
       return decl.value();
     }
     return parse_expr_statement();
+  }
+
+  NodeId parse_with_stmt() {
+    auto with_token = next();
+    read_left_paren("Expected '(' after 'with' keyword in with statement");
+    List<NodeId> args;
+    while (peek().type != TokenType::RIGHT_PAREN) {
+      args.push_back(parse_function_call_argument());
+      if (peek().type == TokenType::COMMA) {
+        ++m_token_index; // consume the comma
+      }
+    }
+    read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after arguments in with statement");
+    NodeId body = parse_statement();
+    return m_output.add_node(with_token.id, m_token_index, WithStmtNode{move(args), body});
   }
 
   NodeId parse_annotated_statement() {
@@ -1878,11 +1895,21 @@ public:
       return parse_with_expr();
     case TokenType::KEYWORD_TYPEOF:
       return parse_typeof_expr();
+    case TokenType::KEYWORD_IMPLICIT:
+      return parse_implicit_expr();
     default:
       String err = "Expected expression, got token ";
       m_token_formatter.format_token(err, m_token_index);
       throw_parser_error_at_current_location(move(err));
     }
+  }
+
+  NodeId parse_implicit_expr() {
+    auto implicit_token = next();
+    NodeId expr = expect_identifier(
+        "Expected identifier after 'implicit' keyword in implicit expression"
+    );
+    return m_output.add_node(implicit_token.id, m_token_index, ImplicitExprNode{expr});
   }
 
   NodeId parse_type_expr() {

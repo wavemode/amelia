@@ -86,6 +86,7 @@ SemaResult(
                         callee=IdentifierExpression(
                           name="f"
                         ),
+                        signature_id=1,
                         arguments=[
                           NumberLiteralExpression(
                             lit=5

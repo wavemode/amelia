@@ -20,10 +20,10 @@ public:
 
   Flex<Binding> get_binding_by_id(BindingId binding_id) override {
     Scope &scope = *m_module_obj.scope;
-    if (binding_id < 0 || binding_id >= static_cast<BindingId>(scope.active_bindings.size())) {
+    if (binding_id < 0 || binding_id >= static_cast<BindingId>(scope.bindings.size())) {
       throw RuntimeError("Invalid binding ID");
     }
-    return scope.active_bindings[binding_id];
+    return scope.bindings[binding_id];
   }
 
   Option<BindingId> get_binding_id_by_name(Text name) override {
@@ -31,15 +31,31 @@ public:
     return scope.active_binding_ids.find(name);
   }
 
+  Option<BindingId> get_implicit_binding_id_by_name(Text name) override {
+    Scope &scope = *m_module_obj.scope;
+    return scope.implicit_binding_ids.find(name);
+  }
+
   void push_binding(Flex<Binding> binding) override {
     Scope &scope = *m_module_obj.scope;
     Text name = binding->name;
-    const Option<BindingId> existing_binding_id = scope.active_binding_ids.find(name);
-    BindingId new_binding_id = scope.active_bindings.size();
+    Option<BindingId> existing_binding_id;
+    if (binding->is_implicit) {
+      existing_binding_id = scope.implicit_binding_ids.find(name);
+    } else {
+      existing_binding_id = scope.active_binding_ids.find(name);
+    }
+    BindingId new_binding_id = scope.bindings.size();
     binding->shadowed_binding_id = existing_binding_id;
     binding->id = new_binding_id;
-    scope.active_bindings.push_back(binding);
-    scope.active_binding_ids.set(name, new_binding_id);
+    scope.bindings.push_back(binding);
+
+    if (binding->is_implicit) {
+      scope.implicit_binding_ids.set(name, new_binding_id);
+    } else {
+      scope.active_binding_ids.set(name, new_binding_id);
+    }
+
     if (m_context.binding_currently_analyzing.has_value()) {
       m_context.binding_currently_analyzing.value()->child_bindings.push_back(binding);
     }
@@ -47,24 +63,32 @@ public:
 
   Binding &pop_binding() override {
     Scope &scope = *m_module_obj.scope;
-    if (scope.active_bindings.size() == 0) {
+    if (scope.bindings.size() == 0) {
       throw RuntimeError("Attempted to pop binding from empty scope");
     }
-    Binding &binding = scope.active_bindings[scope.active_bindings.size() - 1];
+    Binding &binding = scope.bindings[scope.bindings.size() - 1];
     if (!is_binding_analyzed(*this, binding)) {
       // TODO: warn about unused and un-analyzed?
     }
-    if (!binding.shadowed_binding_id.has_value()) {
-      scope.active_binding_ids.remove(binding.name);
+    if (binding.is_implicit) {
+      if (!binding.shadowed_binding_id.has_value()) {
+        scope.implicit_binding_ids.remove(binding.name);
+      } else {
+        scope.implicit_binding_ids.set(binding.name, binding.shadowed_binding_id.value());
+      }
     } else {
-      scope.active_binding_ids.set(binding.name, binding.shadowed_binding_id.value());
+      if (!binding.shadowed_binding_id.has_value()) {
+        scope.active_binding_ids.remove(binding.name);
+      } else {
+        scope.active_binding_ids.set(binding.name, binding.shadowed_binding_id.value());
+      }
     }
-    scope.active_bindings.pop_back();
+    scope.bindings.pop_back();
     return binding;
   }
 
   size_t get_binding_stack_size() const override {
-    return m_module_obj.scope->active_bindings.size();
+    return m_module_obj.scope->bindings.size();
   }
 
   void analyze_module() {
@@ -76,9 +100,8 @@ public:
     }
     binding_names.sort();
     for (Text binding_name : binding_names) {
-      Binding
-          &binding = *m_module_obj.scope
-                          ->active_bindings[m_module_obj.scope->active_binding_ids[binding_name]];
+      Binding &binding = *m_module_obj.scope
+                              ->bindings[m_module_obj.scope->active_binding_ids[binding_name]];
       analyze_top_level_binding(*this, binding);
     }
   }

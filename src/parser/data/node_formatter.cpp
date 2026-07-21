@@ -107,6 +107,12 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "body", n.body);
     break;
   }
+  case NodeType::WithStmtNode: {
+    const auto &n = node.as_WithStmtNode();
+    print_node_field(out, "args", n.args);
+    print_node_field(out, "body", n.body);
+    break;
+  }
   case NodeType::AnonymousStructLiteralNode: {
     const auto &n = node.as_AnonymousStructLiteralNode();
     print_node_field(out, "entries", n.entries);
@@ -935,6 +941,11 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   case NodeType::ImplicitDeclNode: {
     const auto &n = node.as_ImplicitDeclNode();
     print_node_field(out, "decl", n.decl);
+    break;
+  }
+  case NodeType::ImplicitExprNode: {
+    const auto &n = node.as_ImplicitExprNode();
+    print_node_field(out, "name", n.name);
     break;
   }
   case NodeType::OpenDeclNode: {

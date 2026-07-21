@@ -21,6 +21,7 @@ struct Binding {
   String name;
   BindingKind kind;
   DeclarationVisibility visibility = DeclarationVisibility::Default;
+  bool is_implicit = false;
   Option<BindingId> id;
   Option<BindingId> shadowed_binding_id;
   List<Flex<Binding>> child_bindings;

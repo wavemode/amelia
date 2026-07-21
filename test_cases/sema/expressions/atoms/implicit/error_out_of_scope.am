@@ -1,0 +1,10 @@
+const x = {
+  with (a = 5) {
+    implicit a
+  }
+  implicit a
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("Unknown implicit variable 'a' (at test_cases/sema/expressions/atoms/implicit/error_out_of_scope.am:5:3)")
+*/

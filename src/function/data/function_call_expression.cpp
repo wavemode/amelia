@@ -1,5 +1,6 @@
 #include "function_call_expression.hpp"
 
+#include "util/data/integer.hpp"
 #include "util/data/option.hpp"
 #include "util/data/serialize.hpp"
 #include "util/data/string.hpp"
@@ -10,6 +11,7 @@ Serialize FunctionCallExpression::serialize() const {
   Serialize result;
   result.set_object_name("FunctionCallExpression");
   result.add_object_field("callee", callee->serialize());
+  result.add_object_field("signature_id", Integer(signature_id).serialize());
   Serialize args_ser;
   for (const auto &arg : arguments) {
     if (arg.has_value()) {

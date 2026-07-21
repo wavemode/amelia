@@ -130,4 +130,17 @@ Flex<Expression> build_expr_identifier(IModuleAnalysisState &module_state, NodeI
   return expr;
 }
 
+Flex<Expression> build_expr_implicit_identifier(
+    IModuleAnalysisState &module_state, NodeId node_id
+) {
+  const auto &implicit_node = module_state.get_node(node_id).as_ImplicitExprNode();
+  const auto &identifier_node = module_state.get_node(implicit_node.name).as_IdentifierNode();
+  auto expr = emplace_flex<IdentifierExpression>();
+  auto binding = resolve_implicit_value_binding(module_state, node_id, identifier_node.name);
+  expr->binding = binding.weak();
+  expr->type = binding->type.value().weak();
+  expr->node_id = node_id;
+  return expr;
+}
+
 } // namespace amelia

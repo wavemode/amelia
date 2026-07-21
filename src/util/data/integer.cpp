@@ -3,6 +3,7 @@
 #include "integer.hpp"
 
 #include "util/data/char_iterator.hpp"
+#include "util/data/serialize.hpp"
 #include "util/data/string.hpp"
 #include "util/data/text_utils.hpp"
 
@@ -300,6 +301,12 @@ void Integer::to_hex_string(AbstractString &output) const {
   for (size_t i = digits.size(); i > 0; --i) {
     output.append(digits[i - 1]);
   }
+}
+
+Serialize Integer::serialize() const {
+  String repr;
+  to_string(repr);
+  return Serialize::literal(repr);
 }
 
 void Integer::negate() {

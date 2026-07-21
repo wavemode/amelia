@@ -1,0 +1,9 @@
+const x = {
+  with (a = 5) {
+    a
+  }
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("Unknown variable 'a' (at test_cases/sema/expressions/atoms/implicit/error_var_implicit.am:3:5)")
+*/

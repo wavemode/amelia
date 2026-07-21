@@ -90,6 +90,7 @@ Option<Flex<FunctionCallExpression>> resolve_function_call(
 start:
 
   List<Option<Flex<Expression>>> arguments;
+  size_t signature_id = 0;
   for (FunctionDefinition &definition : static_cast<FunctionType &>(*callee->type).definitions) {
     auto &signature = *definition.signature;
     arguments.clear();
@@ -140,11 +141,13 @@ start:
       result->node_id = expr_node_id;
       result->type = signature.return_type.weak();
       result->callee = callee;
+      result->signature_id = signature_id;
       result->arguments = move(arguments);
       return result;
     }
 
-  fail:;
+  fail:
+    ++signature_id;
   }
 
   if (exact_match_only) {

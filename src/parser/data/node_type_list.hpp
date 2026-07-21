@@ -175,6 +175,11 @@ struct WithExprNode {
   NodeId body;
 };
 
+struct WithStmtNode {
+  List<NodeId> args;
+  NodeId body;
+};
+
 struct KeyValueEntryNode {
   NodeId key;
   NodeId value;
@@ -702,6 +707,10 @@ struct ImplicitDeclNode {
   NodeId decl;
 };
 
+struct ImplicitExprNode {
+  NodeId name;
+};
+
 struct OpenDeclNode {
   NodeId decl;
 };
@@ -843,6 +852,7 @@ struct TypeFieldNode {};
   X(ArrayExprNode)                                                                                 \
   X(BlockExprNode)                                                                                 \
   X(WithExprNode)                                                                                  \
+  X(WithStmtNode)                                                                                  \
   X(KeyValueEntryNode)                                                                             \
   X(AnonymousStructLiteralNode)                                                                    \
   X(AnonymousStructTypeNode)                                                                       \
@@ -995,6 +1005,7 @@ struct TypeFieldNode {};
   X(CopyCtorNameNode)                                                                              \
   X(MoveCtorNameNode)                                                                              \
   X(ImplicitDeclNode)                                                                              \
+  X(ImplicitExprNode)                                                                              \
   X(OpenDeclNode)                                                                                  \
   X(OverrideDeclNode)                                                                              \
   X(DefaultDeclNode)                                                                               \

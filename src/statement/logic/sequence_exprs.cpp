@@ -20,6 +20,7 @@
 #include "statement/data/goto_request.hpp"
 #include "statement/data/goto_statement.hpp"
 #include "statement/data/if_statement.hpp"
+#include "statement/data/implicit_value_binding_statement.hpp"
 #include "statement/data/label_statement.hpp"
 #include "statement/data/return_statement.hpp"
 #include "statement/data/statement_sequence.hpp"
@@ -243,6 +244,42 @@ Flex<Expression> build_stmt_var_decl(
   result->body = build_stmt_seq(module_state, expr_node_id, stmts);
   result->type = result->body->type;
   module_state.pop_binding();
+  return result;
+}
+
+Flex<Expression> build_stmt_implicit_var_decl(
+    IModuleAnalysisState &module_state, NodeId expr_node_id
+) {
+  const auto &with_node = module_state.get_node(expr_node_id).as_WithStmtNode();
+
+  auto result = emplace_flex<ImplicitValueBindingStatement>();
+  result->node_id = expr_node_id;
+
+  auto prior_binding_size = module_state.get_binding_stack_size();
+  for (NodeId arg : with_node.args) {
+    const auto &arg_node = module_state.get_node(arg).as_FunctionArgumentNode();
+    if (!arg_node.name.has_value()) {
+      module_state.raise_type_error_at_node(arg, "Implicit variable declarations must have a name");
+    }
+    const auto &arg_name = module_state.get_node(arg_node.name.value()).as_IdentifierNode();
+    auto binding = emplace_flex<ValueBinding>();
+    binding->decl = arg;
+    binding->name = arg_name.name;
+    binding->kind = BindingKind::Constant;
+    binding->is_implicit = true;
+    auto arg_value = build_expression(module_state, arg_node.expr);
+    binding->value = arg_value;
+    binding->type = arg_value->type;
+    result->bindings.push_back(binding);
+    module_state.push_binding(move(binding));
+  }
+
+  result->body = build_statement(module_state, with_node.body);
+  result->type = result->body->type;
+
+  while (module_state.get_binding_stack_size() > prior_binding_size) {
+    module_state.pop_binding();
+  }
   return result;
 }
 
@@ -784,6 +821,9 @@ Flex<Expression> build_statement(IModuleAnalysisState &module_state, NodeId expr
     break;
   case NodeType::WhenClauseNode:
     result = build_switch_when_clause(module_state, expr_node_id);
+    break;
+  case NodeType::WithStmtNode:
+    result = build_stmt_implicit_var_decl(module_state, expr_node_id);
     break;
   default:
     module_state.raise_type_error_at_node(

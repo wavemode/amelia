@@ -16,6 +16,7 @@ SemaResult(
               callee=IdentifierExpression(
                 name="y"
               ),
+              signature_id=1,
               arguments=[
                 NativeTypeCastExpression(
                   type=float,

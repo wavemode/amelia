@@ -7,6 +7,7 @@ namespace amelia {
 struct AbstractString;
 class String;
 class Text;
+class Serialize;
 
 class Integer {
 public:
@@ -45,6 +46,7 @@ public:
   void to_binary_string(AbstractString &output) const;
   void to_octal_string(AbstractString &output) const;
   void to_hex_string(AbstractString &output) const;
+  Serialize serialize() const;
 
   void negate();
 

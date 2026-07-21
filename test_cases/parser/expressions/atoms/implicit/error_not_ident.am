@@ -1,0 +1,5 @@
+let x = implicit 2
+
+/* EXPECTED_OUTPUT:
+ERROR("Expected identifier after 'implicit' keyword in implicit expression (at test_cases/parser/expressions/atoms/implicit/error_not_ident.am:1:18)")
+*/

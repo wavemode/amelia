@@ -24,6 +24,7 @@ SemaResult(
                           callee=IdentifierExpression(
                             name="f"
                           ),
+                          signature_id=0,
                           arguments=
                         )
                       )

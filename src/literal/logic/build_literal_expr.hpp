@@ -22,5 +22,6 @@ Flex<Expression> build_expr_tuple(
     IModuleAnalysisState &module_state, NodeId expr_node_id, ConstSlice<NodeId> expr_node_ids
 );
 Flex<Expression> build_expr_identifier(IModuleAnalysisState &module_state, NodeId node_id);
+Flex<Expression> build_expr_implicit_identifier(IModuleAnalysisState &module_state, NodeId node_id);
 
 } // namespace amelia

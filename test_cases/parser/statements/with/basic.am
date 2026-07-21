@@ -1,0 +1,36 @@
+let x = {
+  with(a = b) ++d
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclNode(
+      target=IdentifierNode(
+        name="x"
+      ),
+      expr=BlockExprNode(
+        stmts=[
+          WithStmtNode(
+            args=[
+              FunctionArgumentNode(
+                name=IdentifierNode(
+                  name="a"
+                ),
+                expr=IdentifierNode(
+                  name="b"
+                )
+              )
+            ],
+            body=PreIncrementStmtNode(
+              target=IdentifierNode(
+                name="d"
+              )
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

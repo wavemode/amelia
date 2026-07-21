@@ -18,7 +18,11 @@ struct TypeBinding;
 class Text;
 
 bool is_binding_analyzed(IModuleAnalysisState &module_state, const Binding &binding);
+
 Flex<ValueBinding> resolve_value_binding(
+    IModuleAnalysisState &module_state, NodeId node_id, Text name
+);
+Flex<ValueBinding> resolve_implicit_value_binding(
     IModuleAnalysisState &module_state, NodeId node_id, Text name
 );
 Flex<TypeBinding> resolve_type_binding(
@@ -36,10 +40,6 @@ void analyze_function_binding(IModuleAnalysisState &module_state, ValueBinding &
 void analyze_let_binding(IModuleAnalysisState &module_state, ValueBinding &binding);
 void analyze_const_binding(IModuleAnalysisState &module_state, ValueBinding &binding);
 void analyze_type_binding(IModuleAnalysisState &module_state, TypeBinding &binding);
-
-Flex<TypeBinding> resolve_type_binding(
-    IModuleAnalysisState &module_state, NodeId node_id, Text name
-);
 
 FunctionParameter analyze_function_parameter(
     IModuleAnalysisState &module_state, NodeId parameter_node_id

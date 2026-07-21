@@ -1,0 +1,18 @@
+let x = implicit y
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclNode(
+      target=IdentifierNode(
+        name="x"
+      ),
+      expr=ImplicitExprNode(
+        name=IdentifierNode(
+          name="y"
+        )
+      )
+    )
+  ]
+)
+*/

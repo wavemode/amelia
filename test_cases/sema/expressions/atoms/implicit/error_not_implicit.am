@@ -1,0 +1,6 @@
+let x = implicit y
+let y = 5
+
+/* EXPECTED_OUTPUT:
+ERROR("Unknown implicit variable 'y' (at test_cases/sema/expressions/atoms/implicit/error_not_implicit.am:1:9)")
+*/

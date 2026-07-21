@@ -40,6 +40,9 @@ Flex<Expression> build_expression(IModuleAnalysisState &module_state, NodeId exp
   case NodeType::IdentifierNode:
     result = build_expr_identifier(module_state, expr_node_id);
     break;
+  case NodeType::ImplicitExprNode:
+    result = build_expr_implicit_identifier(module_state, expr_node_id);
+    break;
   case NodeType::NegateExprNode:
   case NodeType::PositiveExprNode:
   case NodeType::NotExprNode:
