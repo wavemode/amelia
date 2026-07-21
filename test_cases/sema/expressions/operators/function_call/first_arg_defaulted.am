@@ -7,7 +7,6 @@ fun y(y1: int = 5, y2: float) = y2
 SemaResult(
   modules=[
     Module(
-      name="first_arg_defaulted",
       scope=Scope(
         bindings=[
           ValueBinding(

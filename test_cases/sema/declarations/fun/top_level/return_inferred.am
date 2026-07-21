@@ -8,7 +8,6 @@ const x = 10
 SemaResult(
   modules=[
     Module(
-      name="return_inferred",
       scope=Scope(
         bindings=[
           ValueBinding(

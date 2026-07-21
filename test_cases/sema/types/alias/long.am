@@ -7,7 +7,6 @@ const y : MyLong = -0x8000000000000000
 SemaResult(
   modules=[
     Module(
-      name="long",
       scope=Scope(
         bindings=[
           TypeBinding(

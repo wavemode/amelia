@@ -9,7 +9,6 @@ fun f() {
 SemaResult(
   modules=[
     Module(
-      name="usize",
       scope=Scope(
         bindings=[
           ValueBinding(

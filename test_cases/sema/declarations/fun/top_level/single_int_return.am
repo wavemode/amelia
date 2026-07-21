@@ -6,7 +6,6 @@ fun f() {
 SemaResult(
   modules=[
     Module(
-      name="single_int_return",
       scope=Scope(
         bindings=[
           ValueBinding(

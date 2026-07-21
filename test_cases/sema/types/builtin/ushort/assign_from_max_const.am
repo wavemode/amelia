@@ -4,7 +4,6 @@ const x : ushort = 65535
 SemaResult(
   modules=[
     Module(
-      name="assign_from_max_const",
       scope=Scope(
         bindings=[
           ValueBinding(

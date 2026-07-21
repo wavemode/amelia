@@ -7,7 +7,6 @@ fun y(y: int) = y
 SemaResult(
   modules=[
     Module(
-      name="two_signatures_exact_match",
       scope=Scope(
         bindings=[
           ValueBinding(

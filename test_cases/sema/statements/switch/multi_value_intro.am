@@ -10,7 +10,6 @@ let y = false
 SemaResult(
   modules=[
     Module(
-      name="multi_value_intro",
       scope=Scope(
         bindings=[
           ValueBinding(

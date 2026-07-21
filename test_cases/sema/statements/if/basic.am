@@ -9,7 +9,6 @@ let x = {
 SemaResult(
   modules=[
     Module(
-      name="basic",
       scope=Scope(
         bindings=[
           ValueBinding(

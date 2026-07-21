@@ -11,7 +11,6 @@ const b = z / a
 SemaResult(
   modules=[
     Module(
-      name="const_rational",
       scope=Scope(
         bindings=[
           ValueBinding(

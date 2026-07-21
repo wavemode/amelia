@@ -8,7 +8,6 @@ fun f() {
 SemaResult(
   modules=[
     Module(
-      name="bitint",
       scope=Scope(
         bindings=[
           ValueBinding(

@@ -6,7 +6,6 @@ fun f() -> never {
 SemaResult(
   modules=[
     Module(
-      name="function_return",
       scope=Scope(
         bindings=[
           ValueBinding(

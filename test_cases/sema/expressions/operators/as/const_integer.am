@@ -4,7 +4,6 @@ const x = 1234567 as int
 SemaResult(
   modules=[
     Module(
-      name="const_integer",
       scope=Scope(
         bindings=[
           ValueBinding(

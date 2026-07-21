@@ -4,7 +4,6 @@ const x = 5
 SemaResult(
   modules=[
     Module(
-      name="let_binding",
       scope=Scope(
         bindings=[
           ValueBinding(

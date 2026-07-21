@@ -4,7 +4,6 @@ const x = [...]long {2, 3, 0xFFFFFFFFF}
 SemaResult(
   modules=[
     Module(
-      name="longs",
       scope=Scope(
         bindings=[
           ValueBinding(

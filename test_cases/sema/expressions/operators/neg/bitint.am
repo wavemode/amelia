@@ -5,7 +5,6 @@ let z : bitint[4] = -x
 SemaResult(
   modules=[
     Module(
-      name="bitint",
       scope=Scope(
         bindings=[
           ValueBinding(

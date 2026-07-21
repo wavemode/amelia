@@ -5,7 +5,6 @@ const y = 'a'
 SemaResult(
   modules=[
     Module(
-      name="const_char_assign_same",
       scope=Scope(
         bindings=[
           ValueBinding(

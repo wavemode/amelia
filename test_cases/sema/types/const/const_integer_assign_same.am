@@ -5,7 +5,6 @@ const y = 5
 SemaResult(
   modules=[
     Module(
-      name="const_integer_assign_same",
       scope=Scope(
         bindings=[
           ValueBinding(

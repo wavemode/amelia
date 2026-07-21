@@ -7,7 +7,6 @@ const x = {
 SemaResult(
   modules=[
     Module(
-      name="ending_in_semicolon",
       scope=Scope(
         bindings=[
           ValueBinding(

@@ -5,7 +5,6 @@ const y = -128
 SemaResult(
   modules=[
     Module(
-      name="assign_from_min_const",
       scope=Scope(
         bindings=[
           ValueBinding(

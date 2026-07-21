@@ -6,7 +6,6 @@ const z = x >> y
 SemaResult(
   modules=[
     Module(
-      name="const_integer_negative",
       scope=Scope(
         bindings=[
           ValueBinding(

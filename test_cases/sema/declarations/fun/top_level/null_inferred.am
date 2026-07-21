@@ -8,7 +8,6 @@ const x : int = 10
 SemaResult(
   modules=[
     Module(
-      name="null_inferred",
       scope=Scope(
         bindings=[
           ValueBinding(

@@ -6,7 +6,6 @@ fun y(y: int) = y
 SemaResult(
   modules=[
     Module(
-      name="single_signature",
       scope=Scope(
         bindings=[
           ValueBinding(

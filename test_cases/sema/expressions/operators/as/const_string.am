@@ -4,7 +4,6 @@ const x = "hello" as &str
 SemaResult(
   modules=[
     Module(
-      name="const_string",
       scope=Scope(
         bindings=[
           ValueBinding(

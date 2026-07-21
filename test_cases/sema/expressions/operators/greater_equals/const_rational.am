@@ -8,7 +8,6 @@ const z3 : const true = x >= 'a'
 SemaResult(
   modules=[
     Module(
-      name="const_rational",
       scope=Scope(
         bindings=[
           ValueBinding(

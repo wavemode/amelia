@@ -6,7 +6,6 @@ let z : &move int = y
 SemaResult(
   modules=[
     Module(
-      name="trivial_mut_assignable_to_move",
       scope=Scope(
         bindings=[
           ValueBinding(

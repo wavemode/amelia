@@ -5,7 +5,6 @@ let z : bool = x as bool
 SemaResult(
   modules=[
     Module(
-      name="bool",
       scope=Scope(
         bindings=[
           ValueBinding(

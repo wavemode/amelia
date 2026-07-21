@@ -4,7 +4,6 @@ fun f(x : int) -> int = { return x }
 SemaResult(
   modules=[
     Module(
-      name="expr_return",
       scope=Scope(
         bindings=[
           ValueBinding(

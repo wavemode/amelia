@@ -4,7 +4,6 @@ fun f(x : int) = x
 SemaResult(
   modules=[
     Module(
-      name="expr_identity_inferred",
       scope=Scope(
         bindings=[
           ValueBinding(

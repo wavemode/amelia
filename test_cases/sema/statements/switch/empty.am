@@ -8,7 +8,6 @@ let y = false
 SemaResult(
   modules=[
     Module(
-      name="empty",
       scope=Scope(
         bindings=[
           ValueBinding(

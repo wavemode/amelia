@@ -5,7 +5,6 @@ const y : ubyte = 42
 SemaResult(
   modules=[
     Module(
-      name="assign_from_ubyte",
       scope=Scope(
         bindings=[
           ValueBinding(

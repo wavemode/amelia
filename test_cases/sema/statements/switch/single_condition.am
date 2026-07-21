@@ -10,7 +10,6 @@ let y = false
 SemaResult(
   modules=[
     Module(
-      name="single_condition",
       scope=Scope(
         bindings=[
           ValueBinding(

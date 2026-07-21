@@ -6,7 +6,6 @@ let z : &const int = y
 SemaResult(
   modules=[
     Module(
-      name="mut_assignable_to_const",
       scope=Scope(
         bindings=[
           ValueBinding(

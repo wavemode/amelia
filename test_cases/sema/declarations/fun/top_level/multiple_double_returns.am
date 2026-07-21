@@ -7,7 +7,6 @@ fun f() {
 SemaResult(
   modules=[
     Module(
-      name="multiple_double_returns",
       scope=Scope(
         bindings=[
           ValueBinding(

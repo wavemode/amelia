@@ -6,7 +6,6 @@ let z : ulong = x / y
 SemaResult(
   modules=[
     Module(
-      name="ulong",
       scope=Scope(
         bindings=[
           ValueBinding(

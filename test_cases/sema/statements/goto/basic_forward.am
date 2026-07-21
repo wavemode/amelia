@@ -6,7 +6,6 @@ let x = {
 SemaResult(
   modules=[
     Module(
-      name="basic_forward",
       scope=Scope(
         bindings=[
           ValueBinding(

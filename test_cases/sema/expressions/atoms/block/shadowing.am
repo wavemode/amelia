@@ -9,7 +9,6 @@ const z = y
 SemaResult(
   modules=[
     Module(
-      name="shadowing",
       scope=Scope(
         bindings=[
           ValueBinding(

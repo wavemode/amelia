@@ -7,7 +7,6 @@ fun f() {
 SemaResult(
   modules=[
     Module(
-      name="large_then_small_return",
       scope=Scope(
         bindings=[
           ValueBinding(

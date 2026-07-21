@@ -9,7 +9,6 @@ let y : []long = &x
 SemaResult(
   modules=[
     Module(
-      name="longs",
       scope=Scope(
         bindings=[
           ValueBinding(

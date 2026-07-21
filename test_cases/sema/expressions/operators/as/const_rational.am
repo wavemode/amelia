@@ -4,7 +4,6 @@ const x = 1234567.0 as double
 SemaResult(
   modules=[
     Module(
-      name="const_rational",
       scope=Scope(
         bindings=[
           ValueBinding(

@@ -7,7 +7,6 @@ const y = "hello"
 SemaResult(
   modules=[
     Module(
-      name="string",
       scope=Scope(
         bindings=[
           TypeBinding(

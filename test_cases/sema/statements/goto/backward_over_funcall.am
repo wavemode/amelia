@@ -10,7 +10,6 @@ fun f() {}
 SemaResult(
   modules=[
     Module(
-      name="backward_over_funcall",
       scope=Scope(
         bindings=[
           ValueBinding(

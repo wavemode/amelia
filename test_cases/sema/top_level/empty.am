@@ -2,7 +2,6 @@
 SemaResult(
   modules=[
     Module(
-      name="empty",
       scope=Scope()
     )
   ]

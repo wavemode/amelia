@@ -5,7 +5,6 @@ let y = &x
 SemaResult(
   modules=[
     Module(
-      name="mut",
       scope=Scope(
         bindings=[
           ValueBinding(

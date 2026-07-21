@@ -6,7 +6,6 @@ let z : uint = x - y
 SemaResult(
   modules=[
     Module(
-      name="uint",
       scope=Scope(
         bindings=[
           ValueBinding(

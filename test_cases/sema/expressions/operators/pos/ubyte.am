@@ -5,7 +5,6 @@ let z : ubyte = +x
 SemaResult(
   modules=[
     Module(
-      name="ubyte",
       scope=Scope(
         bindings=[
           ValueBinding(

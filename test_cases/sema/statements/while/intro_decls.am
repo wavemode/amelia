@@ -11,7 +11,6 @@ let x = {
 SemaResult(
   modules=[
     Module(
-      name="intro_decls",
       scope=Scope(
         bindings=[
           ValueBinding(

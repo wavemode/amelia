@@ -5,7 +5,6 @@ const y = 5.0
 SemaResult(
   modules=[
     Module(
-      name="const_rational_assign_same",
       scope=Scope(
         bindings=[
           ValueBinding(

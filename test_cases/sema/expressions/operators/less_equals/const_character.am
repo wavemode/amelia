@@ -8,7 +8,6 @@ const z3 : const true = x <= 97.9
 SemaResult(
   modules=[
     Module(
-      name="const_character",
       scope=Scope(
         bindings=[
           ValueBinding(

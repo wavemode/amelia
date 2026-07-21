@@ -5,7 +5,6 @@ const y = +x
 SemaResult(
   modules=[
     Module(
-      name="const_rational",
       scope=Scope(
         bindings=[
           ValueBinding(

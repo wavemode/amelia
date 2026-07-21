@@ -10,7 +10,6 @@ let x = {
 SemaResult(
   modules=[
     Module(
-      name="with_else",
       scope=Scope(
         bindings=[
           ValueBinding(

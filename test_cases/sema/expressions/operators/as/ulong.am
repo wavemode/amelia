@@ -5,7 +5,6 @@ let z = x as ulong
 SemaResult(
   modules=[
     Module(
-      name="ulong",
       scope=Scope(
         bindings=[
           ValueBinding(

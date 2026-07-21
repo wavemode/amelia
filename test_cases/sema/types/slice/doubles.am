@@ -9,7 +9,6 @@ let y : []double = &x
 SemaResult(
   modules=[
     Module(
-      name="doubles",
       scope=Scope(
         bindings=[
           ValueBinding(

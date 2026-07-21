@@ -5,7 +5,6 @@ const y = null
 SemaResult(
   modules=[
     Module(
-      name="assign_from_null",
       scope=Scope(
         bindings=[
           ValueBinding(

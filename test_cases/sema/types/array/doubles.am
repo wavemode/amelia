@@ -6,7 +6,6 @@ const z : float = 2.5
 SemaResult(
   modules=[
     Module(
-      name="doubles",
       scope=Scope(
         bindings=[
           ValueBinding(

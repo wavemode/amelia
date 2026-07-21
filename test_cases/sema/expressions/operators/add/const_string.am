@@ -9,7 +9,6 @@ const z4 : const true = z2 == z3
 SemaResult(
   modules=[
     Module(
-      name="const_string",
       scope=Scope(
         bindings=[
           ValueBinding(

@@ -4,7 +4,6 @@ const x = ~'a'
 SemaResult(
   modules=[
     Module(
-      name="const_character",
       scope=Scope(
         bindings=[
           ValueBinding(

@@ -6,7 +6,6 @@ let z : bitint[4] = x & y
 SemaResult(
   modules=[
     Module(
-      name="bitint",
       scope=Scope(
         bindings=[
           ValueBinding(

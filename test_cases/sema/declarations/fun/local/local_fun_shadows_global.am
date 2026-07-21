@@ -10,7 +10,6 @@ const x = {
 SemaResult(
   modules=[
     Module(
-      name="local_fun_shadows_global",
       scope=Scope(
         bindings=[
           ValueBinding(

@@ -7,7 +7,6 @@ fun f() -> never = f()
 SemaResult(
   modules=[
     Module(
-      name="assign_mut",
       scope=Scope(
         bindings=[
           ValueBinding(

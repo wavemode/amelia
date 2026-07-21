@@ -8,7 +8,6 @@ let rhs_promote = y + x
 SemaResult(
   modules=[
     Module(
-      name="promotion",
       scope=Scope(
         bindings=[
           ValueBinding(

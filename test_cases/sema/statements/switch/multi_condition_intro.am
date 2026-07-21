@@ -10,7 +10,6 @@ let x = {
 SemaResult(
   modules=[
     Module(
-      name="multi_condition_intro",
       scope=Scope(
         bindings=[
           ValueBinding(

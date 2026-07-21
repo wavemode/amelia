@@ -5,7 +5,6 @@ const z : const false = !x
 SemaResult(
   modules=[
     Module(
-      name="const_boolean",
       scope=Scope(
         bindings=[
           ValueBinding(

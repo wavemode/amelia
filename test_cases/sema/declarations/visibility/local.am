@@ -5,7 +5,6 @@ local fun f() {}
 SemaResult(
   modules=[
     Module(
-      name="local",
       scope=Scope(
         bindings=[
           ValueBinding(

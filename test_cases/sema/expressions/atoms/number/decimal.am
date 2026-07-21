@@ -5,7 +5,6 @@ const y = 10.1
 SemaResult(
   modules=[
     Module(
-      name="decimal",
       scope=Scope(
         bindings=[
           ValueBinding(

@@ -14,7 +14,6 @@ let x = {
 SemaResult(
   modules=[
     Module(
-      name="intro_decls_nested",
       scope=Scope(
         bindings=[
           ValueBinding(

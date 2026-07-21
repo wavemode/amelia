@@ -5,7 +5,6 @@ let z = x as null
 SemaResult(
   modules=[
     Module(
-      name="null",
       scope=Scope(
         bindings=[
           ValueBinding(

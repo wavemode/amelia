@@ -9,7 +9,6 @@ fun f() {
 SemaResult(
   modules=[
     Module(
-      name="long",
       scope=Scope(
         bindings=[
           ValueBinding(

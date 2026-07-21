@@ -5,7 +5,6 @@ let y = &const x
 SemaResult(
   modules=[
     Module(
-      name="const_to_const",
       scope=Scope(
         bindings=[
           ValueBinding(

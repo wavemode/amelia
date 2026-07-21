@@ -6,7 +6,6 @@ fun f(x : int) -> int {
 SemaResult(
   modules=[
     Module(
-      name="identity",
       scope=Scope(
         bindings=[
           ValueBinding(

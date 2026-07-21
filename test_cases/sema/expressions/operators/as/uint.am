@@ -5,7 +5,6 @@ let z : uint = x as uint
 SemaResult(
   modules=[
     Module(
-      name="uint",
       scope=Scope(
         bindings=[
           ValueBinding(

@@ -9,7 +9,6 @@ let y : []int = &x
 SemaResult(
   modules=[
     Module(
-      name="ints",
       scope=Scope(
         bindings=[
           ValueBinding(

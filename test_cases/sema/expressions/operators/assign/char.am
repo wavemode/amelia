@@ -8,7 +8,6 @@ fun f() {
 SemaResult(
   modules=[
     Module(
-      name="char",
       scope=Scope(
         bindings=[
           ValueBinding(

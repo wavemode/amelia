@@ -6,7 +6,6 @@ const z1 : const false = x != y
 SemaResult(
   modules=[
     Module(
-      name="const_string",
       scope=Scope(
         bindings=[
           ValueBinding(

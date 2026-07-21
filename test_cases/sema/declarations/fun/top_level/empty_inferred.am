@@ -4,7 +4,6 @@ fun f() {}
 SemaResult(
   modules=[
     Module(
-      name="empty_inferred",
       scope=Scope(
         bindings=[
           ValueBinding(

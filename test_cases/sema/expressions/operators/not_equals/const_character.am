@@ -8,7 +8,6 @@ const z3 : const false = x != 97.0
 SemaResult(
   modules=[
     Module(
-      name="const_character",
       scope=Scope(
         bindings=[
           ValueBinding(

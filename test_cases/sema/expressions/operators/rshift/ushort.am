@@ -6,7 +6,6 @@ let z : ushort = x >> y
 SemaResult(
   modules=[
     Module(
-      name="ushort",
       scope=Scope(
         bindings=[
           ValueBinding(

@@ -9,7 +9,6 @@ const b = z && a
 SemaResult(
   modules=[
     Module(
-      name="const_boolean",
       scope=Scope(
         bindings=[
           ValueBinding(

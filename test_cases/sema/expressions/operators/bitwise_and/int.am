@@ -6,7 +6,6 @@ let z : int = x & y
 SemaResult(
   modules=[
     Module(
-      name="int",
       scope=Scope(
         bindings=[
           ValueBinding(

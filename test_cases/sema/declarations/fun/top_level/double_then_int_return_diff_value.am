@@ -7,7 +7,6 @@ fun f() {
 SemaResult(
   modules=[
     Module(
-      name="double_then_int_return_diff_value",
       scope=Scope(
         bindings=[
           ValueBinding(

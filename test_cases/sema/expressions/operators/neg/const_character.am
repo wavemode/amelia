@@ -5,7 +5,6 @@ const z : const true = x == -97
 SemaResult(
   modules=[
     Module(
-      name="const_character",
       scope=Scope(
         bindings=[
           ValueBinding(

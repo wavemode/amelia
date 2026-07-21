@@ -12,7 +12,6 @@ let y = false
 SemaResult(
   modules=[
     Module(
-      name="when",
       scope=Scope(
         bindings=[
           ValueBinding(

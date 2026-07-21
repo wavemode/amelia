@@ -10,7 +10,6 @@ let x = {
 SemaResult(
   modules=[
     Module(
-      name="coerce_else",
       scope=Scope(
         bindings=[
           ValueBinding(

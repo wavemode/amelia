@@ -8,7 +8,6 @@ const x = {
 SemaResult(
   modules=[
     Module(
-      name="local_fun",
       scope=Scope(
         bindings=[
           ValueBinding(

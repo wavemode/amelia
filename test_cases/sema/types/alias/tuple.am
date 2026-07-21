@@ -7,7 +7,6 @@ const y = (0x7FFFFFFFFFFFFFFF, 3.14, "hello")
 SemaResult(
   modules=[
     Module(
-      name="tuple",
       scope=Scope(
         bindings=[
           TypeBinding(

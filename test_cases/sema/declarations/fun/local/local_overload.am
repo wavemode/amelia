@@ -9,7 +9,6 @@ const x = {
 SemaResult(
   modules=[
     Module(
-      name="local_overload",
       scope=Scope(
         bindings=[
           ValueBinding(

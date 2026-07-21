@@ -5,7 +5,6 @@ let y = &move x
 SemaResult(
   modules=[
     Module(
-      name="move",
       scope=Scope(
         bindings=[
           ValueBinding(

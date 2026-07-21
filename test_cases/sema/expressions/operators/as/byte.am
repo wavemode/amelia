@@ -5,7 +5,6 @@ let z = x as byte
 SemaResult(
   modules=[
     Module(
-      name="byte",
       scope=Scope(
         bindings=[
           ValueBinding(

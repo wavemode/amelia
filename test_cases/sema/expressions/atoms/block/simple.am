@@ -7,7 +7,6 @@ const x = {
 SemaResult(
   modules=[
     Module(
-      name="simple",
       scope=Scope(
         bindings=[
           ValueBinding(

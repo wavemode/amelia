@@ -5,7 +5,6 @@ const y = 0o10.1
 SemaResult(
   modules=[
     Module(
-      name="octal",
       scope=Scope(
         bindings=[
           ValueBinding(

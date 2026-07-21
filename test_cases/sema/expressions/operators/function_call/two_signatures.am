@@ -7,7 +7,6 @@ fun y(t: float) = t
 SemaResult(
   modules=[
     Module(
-      name="two_signatures",
       scope=Scope(
         bindings=[
           ValueBinding(

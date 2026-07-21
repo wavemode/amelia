@@ -5,7 +5,6 @@ const y = 0x10.1
 SemaResult(
   modules=[
     Module(
-      name="hexadecimal",
       scope=Scope(
         bindings=[
           ValueBinding(

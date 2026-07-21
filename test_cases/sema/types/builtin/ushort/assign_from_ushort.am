@@ -5,7 +5,6 @@ const y : ushort = 42
 SemaResult(
   modules=[
     Module(
-      name="assign_from_ushort",
       scope=Scope(
         bindings=[
           ValueBinding(
