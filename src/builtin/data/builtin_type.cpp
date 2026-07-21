@@ -756,4 +756,8 @@ bool is_usize_type(const Type &type) {
   return type.is<BuiltinType>() && type.as<BuiltinType>().builtin_kind == BuiltinKind::USize;
 }
 
+bool is_bool_type(const Type &type) {
+  return type.is<BuiltinType>() && type.as<BuiltinType>().builtin_kind == BuiltinKind::Bool;
+}
+
 } // namespace amelia

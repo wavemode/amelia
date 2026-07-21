@@ -63,5 +63,6 @@ bool is_null_type(const Type &type);
 bool is_float_type(const Type &type);
 bool is_double_type(const Type &type);
 bool is_usize_type(const Type &type);
+bool is_bool_type(const Type &type);
 
 } // namespace amelia

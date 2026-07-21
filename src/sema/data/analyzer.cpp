@@ -91,7 +91,7 @@ public:
     return m_module_obj;
   }
 
-  ModuleAnalysisContext &current_context() override {
+  ModuleAnalysisContext &analysis_context() override {
     return m_context;
   }
 

@@ -1,0 +1,75 @@
+let x = {
+  switch (y) {
+    case (const z = 5; z) "five"
+  }
+  null
+}
+const y = 4
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="single_condition_intro",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=null,
+            value=StatementSequence(
+              stmts=[
+                ValueBindingStatement(
+                  binding=ValueBinding(
+                    name="aM_switch_subject",
+                    type=Const[4],
+                    value=IdentifierExpression(
+                      name="y"
+                    )
+                  ),
+                  body=SwitchStatement(
+                    case_clauses=[
+                      ValueBindingStatement(
+                        binding=ValueBinding(
+                          name="z",
+                          type=Const[5],
+                          value=NumberLiteralExpression(
+                            lit=5
+                          )
+                        ),
+                        body=StatementSequence(
+                          stmts=[
+                            SwitchCaseClause(
+                              condition=NativeBinaryOperationExpression(
+                                left=IdentifierExpression(
+                                  name="aM_switch_subject"
+                                ),
+                                op_kind="==",
+                                right=IdentifierExpression(
+                                  name="z"
+                                )
+                              ),
+                              expr_body=StringLiteralExpression["five"]
+                            )
+                          ]
+                        )
+                      )
+                    ]
+                  )
+                ),
+                NullLiteralExpression()
+              ]
+            )
+          ),
+          ValueBinding(
+            name="y",
+            type=Const[4],
+            value=NumberLiteralExpression(
+              lit=4
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

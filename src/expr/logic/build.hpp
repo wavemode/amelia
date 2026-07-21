@@ -30,4 +30,8 @@ Flex<Expression> require_coerce(
     String &&error_message_template
 );
 
+bool require_branches_to_have_same_type(
+    Flex<Type> &result_type, Flex<Expression> &left, Flex<Expression> &right
+);
+
 } // namespace amelia

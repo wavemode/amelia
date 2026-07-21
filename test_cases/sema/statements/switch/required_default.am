@@ -1,0 +1,86 @@
+let x = {
+  switch (let y = 5 ; y) {
+    case (5) 1
+    case (6) 2
+    default  3
+  }
+}
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="required_default",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=int,
+            value=StatementSequence(
+              stmts=[
+                ValueBindingStatement(
+                  binding=ValueBinding(
+                    name="y",
+                    type=int,
+                    value=NumberLiteralExpression(
+                      lit=5
+                    )
+                  ),
+                  body=StatementSequence(
+                    stmts=[
+                      ValueBindingStatement(
+                        binding=ValueBinding(
+                          name="aM_switch_subject",
+                          type=int,
+                          value=IdentifierExpression(
+                            name="y"
+                          )
+                        ),
+                        body=SwitchStatement(
+                          case_clauses=[
+                            SwitchCaseClause(
+                              condition=NativeBinaryOperationExpression(
+                                left=IdentifierExpression(
+                                  name="aM_switch_subject"
+                                ),
+                                op_kind="==",
+                                right=NumberLiteralExpression(
+                                  lit=5
+                                )
+                              ),
+                              expr_body=NumberLiteralExpression(
+                                lit=1
+                              )
+                            ),
+                            SwitchCaseClause(
+                              condition=NativeBinaryOperationExpression(
+                                left=IdentifierExpression(
+                                  name="aM_switch_subject"
+                                ),
+                                op_kind="==",
+                                right=NumberLiteralExpression(
+                                  lit=6
+                                )
+                              ),
+                              expr_body=NumberLiteralExpression(
+                                lit=2
+                              )
+                            )
+                          ],
+                          default_body=NumberLiteralExpression(
+                            lit=3
+                          )
+                        )
+                      )
+                    ]
+                  )
+                )
+              ]
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

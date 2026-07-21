@@ -2,6 +2,7 @@ let x = {
   if (5 > 6) {
     7
   }
+  null
 }
 
 /* EXPECTED_OUTPUT:
@@ -33,7 +34,8 @@ SemaResult(
                       )
                     ]
                   )
-                )
+                ),
+                NullLiteralExpression()
               ]
             )
           )

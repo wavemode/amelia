@@ -1,6 +1,8 @@
 #include "type_conversion.hpp"
 
 #include "alias/data/alias_type.hpp"
+#include "builtin/data/builtin_type.hpp"
+#include "const/data/const_boolean_type.hpp"
 #include "expr/data/expression.hpp"
 #include "expr/logic/build.hpp"
 #include "parser/data/node.hpp"
@@ -39,6 +41,15 @@ Flex<Expression> native_type_cast(const Type &target_type, const Expression &exp
   coerce_expr->type = target_type.flex();
   coerce_expr->expr = expr.flex();
   return coerce_expr;
+}
+
+Option<Flex<Expression>> require_boolean_expr(const Expression &expr) {
+  auto expr_type = expr.type->resolve_type();
+  if (expr_type->is<ConstBooleanType>() || is_bool_type(expr_type)) {
+    return expr.flex();
+  }
+
+  return BOOL_TYPE->coerce_expr(expr);
 }
 
 } // namespace amelia

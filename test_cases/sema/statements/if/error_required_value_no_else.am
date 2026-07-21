@@ -1,0 +1,9 @@
+let x = {
+  if (5 > 6) {
+    7
+  }
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("Missing else branch in if-statement in expression position (at test_cases/sema/statements/if/error_required_value_no_else.am:2:3)")
+*/

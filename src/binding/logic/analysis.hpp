@@ -6,6 +6,7 @@ namespace amelia {
 
 using NodeId = int32_t;
 template <typename T> class Flex;
+template <typename T> class Option;
 struct IModuleAnalysisState;
 struct FunctionParameter;
 struct FunctionSignature;

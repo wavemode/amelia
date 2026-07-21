@@ -7,5 +7,5 @@ let x = {
 }
 
 /* EXPECTED_OUTPUT:
-ERROR("Cannot coerce expression of type 'Const[8.0]' to expected type 'int' in else branch of if-expression (at test_cases/sema/statements/if/error_coerce_then.am:4:10)")
+ERROR("Cannot coerce expression of type 'double' to expected type 'int' in else branch of if-statement in expression position (at test_cases/sema/statements/if/error_coerce_then.am:2:3)")
 */

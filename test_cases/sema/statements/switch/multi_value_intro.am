@@ -1,0 +1,87 @@
+let x = {
+  switch (y) {
+    case (const t = "something"; true, false) t
+  }
+  null
+}
+let y = false
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="multi_value_intro",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=null,
+            value=StatementSequence(
+              stmts=[
+                ValueBindingStatement(
+                  binding=ValueBinding(
+                    name="aM_switch_subject",
+                    type=bool,
+                    value=IdentifierExpression(
+                      name="y"
+                    )
+                  ),
+                  body=SwitchStatement(
+                    case_clauses=[
+                      ValueBindingStatement(
+                        binding=ValueBinding(
+                          name="t",
+                          type=Const["something"],
+                          value=StringLiteralExpression["something"]
+                        ),
+                        body=StatementSequence(
+                          stmts=[
+                            SwitchCaseClause(
+                              condition=NativeBinaryOperationExpression(
+                                left=NativeBinaryOperationExpression(
+                                  left=IdentifierExpression(
+                                    name="aM_switch_subject"
+                                  ),
+                                  op_kind="==",
+                                  right=BooleanLiteralExpression(
+                                    value=true
+                                  )
+                                ),
+                                op_kind="||",
+                                right=NativeBinaryOperationExpression(
+                                  left=IdentifierExpression(
+                                    name="aM_switch_subject"
+                                  ),
+                                  op_kind="==",
+                                  right=BooleanLiteralExpression(
+                                    value=false
+                                  )
+                                )
+                              ),
+                              expr_body=IdentifierExpression(
+                                name="t"
+                              )
+                            )
+                          ]
+                        )
+                      )
+                    ]
+                  )
+                ),
+                NullLiteralExpression()
+              ]
+            )
+          ),
+          ValueBinding(
+            name="y",
+            type=bool,
+            value=BooleanLiteralExpression(
+              value=false
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

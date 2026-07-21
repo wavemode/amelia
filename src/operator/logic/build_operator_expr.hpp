@@ -23,6 +23,17 @@ Flex<Expression> build_binary_operator_expression(
     IModuleAnalysisState &module_state, NodeId expr_node_id
 );
 
+Option<Flex<Expression>> perform_binary_op(
+    NodeId expr_node_id,
+    BinaryOperatorKind op_kind,
+    const Expression &left_expr,
+    const Expression &right_expr
+);
+
+Option<Flex<Expression>> perform_unary_op(
+    NodeId expr_node_id, UnaryOperatorKind op_kind, const Expression &operand_expr
+);
+
 Option<Flex<Expression>> perform_native_shift(
     NodeId expr_node_id,
     BinaryOperatorKind op_kind,

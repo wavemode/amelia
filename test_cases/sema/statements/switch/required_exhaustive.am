@@ -1,0 +1,82 @@
+let x = {
+  switch (let y = true ; y) {
+    case (true) 1
+    case (false) 2
+  }
+}
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="required_exhaustive",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=int,
+            value=StatementSequence(
+              stmts=[
+                ValueBindingStatement(
+                  binding=ValueBinding(
+                    name="y",
+                    type=bool,
+                    value=BooleanLiteralExpression(
+                      value=true
+                    )
+                  ),
+                  body=StatementSequence(
+                    stmts=[
+                      ValueBindingStatement(
+                        binding=ValueBinding(
+                          name="aM_switch_subject",
+                          type=bool,
+                          value=IdentifierExpression(
+                            name="y"
+                          )
+                        ),
+                        body=SwitchStatement(
+                          case_clauses=[
+                            SwitchCaseClause(
+                              condition=NativeBinaryOperationExpression(
+                                left=IdentifierExpression(
+                                  name="aM_switch_subject"
+                                ),
+                                op_kind="==",
+                                right=BooleanLiteralExpression(
+                                  value=true
+                                )
+                              ),
+                              expr_body=NumberLiteralExpression(
+                                lit=1
+                              )
+                            ),
+                            SwitchCaseClause(
+                              condition=NativeBinaryOperationExpression(
+                                left=IdentifierExpression(
+                                  name="aM_switch_subject"
+                                ),
+                                op_kind="==",
+                                right=BooleanLiteralExpression(
+                                  value=false
+                                )
+                              ),
+                              expr_body=NumberLiteralExpression(
+                                lit=2
+                              )
+                            )
+                          ]
+                        )
+                      )
+                    ]
+                  )
+                )
+              ]
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

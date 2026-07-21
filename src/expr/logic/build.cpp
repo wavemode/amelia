@@ -138,4 +138,40 @@ Flex<Expression> require_coerce(
   return unified_expr.value();
 }
 
+bool require_branches_to_have_same_type(
+    Flex<Type> &result_type, Flex<Expression> &left, Flex<Expression> &right
+) {
+  if (is_never_type(left->type)) {
+    result_type = right->type;
+    return true;
+  }
+
+  if (is_never_type(right->type)) {
+    result_type = left->type;
+    return true;
+  }
+
+  if (left->type->unify_type(right->type)) {
+    result_type = left->type;
+    return true;
+  }
+
+  auto left_type = left->type->remove_comptime_const_from_type();
+  auto right_type = right->type->remove_comptime_const_from_type();
+
+  if (left_type->unify_type(right_type)) {
+    result_type = left_type;
+    return true;
+  }
+
+  auto coerce_right = left_type->coerce_expr(right_type, right);
+  if (coerce_right.has_value()) {
+    right = coerce_right.value();
+    result_type = left->type;
+    return true;
+  }
+
+  return false;
+}
+
 } // namespace amelia

@@ -1,0 +1,50 @@
+let x = {
+  switch (let y = false; y) {}
+  null
+}
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="empty_intro",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=null,
+            value=StatementSequence(
+              stmts=[
+                ValueBindingStatement(
+                  binding=ValueBinding(
+                    name="y",
+                    type=bool,
+                    value=BooleanLiteralExpression(
+                      value=false
+                    )
+                  ),
+                  body=StatementSequence(
+                    stmts=[
+                      ValueBindingStatement(
+                        binding=ValueBinding(
+                          name="aM_switch_subject",
+                          type=bool,
+                          value=IdentifierExpression(
+                            name="y"
+                          )
+                        ),
+                        body=SwitchStatement()
+                      )
+                    ]
+                  )
+                ),
+                NullLiteralExpression()
+              ]
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

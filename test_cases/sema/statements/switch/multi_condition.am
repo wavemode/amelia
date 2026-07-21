@@ -1,0 +1,75 @@
+let x = {
+  switch (y) {
+    case (true) "true"
+    case (false) "false"
+  }
+  null
+}
+let y = false
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      name="multi_condition",
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="x",
+            type=null,
+            value=StatementSequence(
+              stmts=[
+                ValueBindingStatement(
+                  binding=ValueBinding(
+                    name="aM_switch_subject",
+                    type=bool,
+                    value=IdentifierExpression(
+                      name="y"
+                    )
+                  ),
+                  body=SwitchStatement(
+                    case_clauses=[
+                      SwitchCaseClause(
+                        condition=NativeBinaryOperationExpression(
+                          left=IdentifierExpression(
+                            name="aM_switch_subject"
+                          ),
+                          op_kind="==",
+                          right=BooleanLiteralExpression(
+                            value=true
+                          )
+                        ),
+                        expr_body=StringLiteralExpression["true"]
+                      ),
+                      SwitchCaseClause(
+                        condition=NativeBinaryOperationExpression(
+                          left=IdentifierExpression(
+                            name="aM_switch_subject"
+                          ),
+                          op_kind="==",
+                          right=BooleanLiteralExpression(
+                            value=false
+                          )
+                        ),
+                        expr_body=StringLiteralExpression["false"]
+                      )
+                    ]
+                  )
+                ),
+                NullLiteralExpression()
+              ]
+            )
+          ),
+          ValueBinding(
+            name="y",
+            type=bool,
+            value=BooleanLiteralExpression(
+              value=false
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

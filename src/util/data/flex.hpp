@@ -87,6 +87,10 @@ public:
     return m_object == nullptr || m_control_block == nullptr || m_control_block->strong_count == 0;
   }
 
+  uint64_t hash_code() const noexcept {
+    return bit_hash(static_cast<uintptr_t>(m_object));
+  }
+
   Flex<T> &operator=(const Flex<T> &other) noexcept {
     if (this != &other) {
       release();
@@ -146,11 +150,11 @@ public:
   }
 
   bool operator==(const Flex<T> &other) const noexcept {
-    return m_control_block == other.m_control_block && m_object == other.m_object;
+    return m_object == other.m_object;
   }
 
   bool operator!=(const Flex<T> &other) const noexcept {
-    return !(*this == other);
+    return m_object != other.m_object;
   }
 
   operator T &() {

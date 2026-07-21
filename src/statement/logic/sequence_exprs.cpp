@@ -4,9 +4,11 @@
 #include "binding/data/value_binding.hpp"
 #include "binding/logic/analysis.hpp"
 #include "builtin/data/builtin_type.hpp"
+#include "const/data/const_boolean_type.hpp"
 #include "expr/data/expression.hpp"
 #include "expr/logic/build.hpp"
 #include "function/data/function_signature.hpp"
+#include "literal/data/identifier_expression.hpp"
 #include "literal/data/null_literal_expression.hpp"
 #include "operator/logic/build_operator_expr.hpp"
 #include "parser/data/node.hpp"
@@ -21,10 +23,14 @@
 #include "statement/data/label_statement.hpp"
 #include "statement/data/return_statement.hpp"
 #include "statement/data/statement_sequence.hpp"
+#include "statement/data/switch_case_clause.hpp"
+#include "statement/data/switch_statement.hpp"
+#include "statement/data/switch_when_clause.hpp"
 #include "statement/data/type_binding_statement.hpp"
 #include "statement/data/value_binding_statement.hpp"
 #include "statement/data/while_statement.hpp"
 #include "type/logic/analysis.hpp"
+#include "type/logic/type_conversion.hpp"
 #include "util/data/flex.hpp"
 #include "util/data/slice_utils.hpp"
 
@@ -34,15 +40,15 @@ namespace {
 
 Flex<Expression> build_statement(IModuleAnalysisState &module_state, NodeId expr_node_id);
 
-uint32_t push_scope(IModuleAnalysisState &module_state) {
-  auto &ctx = module_state.current_context();
+uint32_t push_label_scope(IModuleAnalysisState &module_state) {
+  auto &ctx = module_state.analysis_context();
   uint32_t old_scope_level = ctx.current_scope_level;
   ctx.current_scope_level = ++ctx.max_scope_level;
   return old_scope_level;
 }
 
-void restore_scope(IModuleAnalysisState &module_state, uint32_t old_scope_level) {
-  auto &ctx = module_state.current_context();
+void restore_label_scope(IModuleAnalysisState &module_state, uint32_t old_scope_level) {
+  auto &ctx = module_state.analysis_context();
   ctx.current_scope_level = old_scope_level;
   if (old_scope_level == 0) {
     if (ctx.gotos_in_scope.size() > 0) {
@@ -58,7 +64,7 @@ void restore_scope(IModuleAnalysisState &module_state, uint32_t old_scope_level)
 }
 
 void perform_goto(IModuleAnalysisState &module_state, Text label_name) {
-  auto &ctx = module_state.current_context();
+  auto &ctx = module_state.analysis_context();
   auto label_scope_level = ctx.labels_in_scope.get(label_name);
   const auto &goto_request = ctx.gotos_in_scope.get(label_name);
 
@@ -79,29 +85,28 @@ bool is_binding_node_type(NodeType node_type) {
 Flex<Expression> assign_current_function_return_value(
     IModuleAnalysisState &module_state, Flex<Expression> return_value
 ) {
-  if (!module_state.current_context().current_function_signature.has_value()) {
+  auto &ctx = module_state.analysis_context();
+  if (!ctx.current_function_signature.has_value()) {
     module_state.raise_type_error_at_node(
         return_value->node_id, "Return value not within function"
     );
   }
 
-  if (is_unknown_type(module_state.current_context().current_function_signature.value()->return_type
-      )) {
-    module_state.current_context()
-        .current_function_signature.value()
-        ->return_type = return_value->type->remove_comptime_const_from_type();
+  if (is_unknown_type(ctx.current_function_signature.value()->return_type)) {
+    ctx.current_function_signature.value()->return_type = return_value->type
+                                                              ->remove_comptime_const_from_type();
     return return_value;
   }
 
   return require_coerce(
       module_state,
-      module_state.current_context().current_function_signature.value()->return_type,
+      ctx.current_function_signature.value()->return_type,
       return_value,
       "Cannot convert expression of type '{1}' to expected return type '{2}'"
   );
 }
 
-Flex<Expression> build_stmt_expression_statement(
+Flex<Expression> build_expression_statement(
     IModuleAnalysisState &module_state, NodeId expr_node_id
 ) {
   const auto &expr_stmt_node = module_state.get_node(expr_node_id).as_ExprStmtNode();
@@ -258,7 +263,7 @@ Flex<Expression> build_stmt_binding(
   }
 }
 
-Flex<Expression> build_stmt_return(IModuleAnalysisState &module_state, NodeId expr_node_id) {
+Flex<Expression> build_return_statement(IModuleAnalysisState &module_state, NodeId expr_node_id) {
   const auto &return_node = module_state.get_node(expr_node_id).as_ReturnStmtNode();
   auto result = emplace_flex<ReturnStatement>();
   result->node_id = expr_node_id;
@@ -276,14 +281,14 @@ Flex<Expression> build_stmt_return(IModuleAnalysisState &module_state, NodeId ex
   return result;
 }
 
-Option<Flex<Expression>> build_with_introductory_decls(
+Option<Flex<Expression>> build_stmt_with_introductory_decls(
     IModuleAnalysisState &module_state, NodeId expr_node_id, ConstSlice<NodeId> introductory_decls
 ) {
   if (introductory_decls.size() == 0) {
     return None();
   }
 
-  auto &ctx = module_state.current_context();
+  auto &ctx = module_state.analysis_context();
   auto intro_decls_currently_analyzing = ctx.intro_decls_currently_analyzing;
   if (intro_decls_currently_analyzing.has_value() &&
       intro_decls_currently_analyzing.value() == expr_node_id) {
@@ -306,9 +311,9 @@ Option<Flex<Expression>> build_with_introductory_decls(
 
 Flex<Expression> build_while_statement(IModuleAnalysisState &module_state, NodeId expr_node_id) {
   const auto &while_node = module_state.get_node(expr_node_id).as_WhileStmtNode();
-  auto &ctx = module_state.current_context();
+  auto &ctx = module_state.analysis_context();
 
-  auto intro = build_with_introductory_decls(
+  auto intro = build_stmt_with_introductory_decls(
       module_state, expr_node_id, while_node.introductory_decls.data()
   );
   if (intro.has_value()) {
@@ -320,58 +325,20 @@ Flex<Expression> build_while_statement(IModuleAnalysisState &module_state, NodeI
   result->type = NULL_TYPE;
   result->condition = expect_expression_of_type(module_state, BOOL_TYPE, while_node.condition);
 
-  auto old_scope = push_scope(module_state);
+  auto old_scope = push_label_scope(module_state);
   auto loop_currently_analyzing = ctx.loop_currently_analyzing.replace(expr_node_id);
   result->body = build_statement(module_state, while_node.body);
   ctx.loop_currently_analyzing = loop_currently_analyzing;
-  restore_scope(module_state, old_scope);
+  restore_label_scope(module_state, old_scope);
 
   return result;
 }
 
-void require_if_stmt_branches_to_have_same_type(
-    IModuleAnalysisState &module_state, Flex<Expression> if_stmt
-) {
-  auto &if_stmt_expr = if_stmt->as<IfStatement>();
-  if (!if_stmt_expr.else_branch.has_value()) {
-    if_stmt_expr.type = NULL_TYPE;
-  }
-
-  if (is_never_type(if_stmt_expr.then_branch->type)) {
-    if_stmt_expr.type = if_stmt_expr.else_branch.value()->type;
-  }
-
-  if (is_never_type(if_stmt_expr.else_branch.value()->type)) {
-    if_stmt_expr.type = if_stmt_expr.then_branch->type;
-  }
-
-  if (if_stmt_expr.then_branch->type->unify_type(if_stmt_expr.else_branch.value()->type)) {
-    if_stmt_expr.type = if_stmt_expr.then_branch->type;
-  }
-
-  auto then_type = if_stmt_expr.then_branch->type->remove_comptime_const_from_type();
-  auto else_type = if_stmt_expr.else_branch.value()->type->remove_comptime_const_from_type();
-
-  if (then_type->unify_type(else_type)) {
-    if_stmt_expr.type = then_type;
-  }
-
-  auto coerce_else = require_coerce(
-      module_state,
-      then_type,
-      if_stmt_expr.else_branch.value(),
-      "Cannot coerce expression of type '{1}' to expected type '{2}' in else branch of "
-      "if-expression"
-  );
-  if_stmt_expr.else_branch = coerce_else;
-  if_stmt_expr.type = if_stmt_expr.then_branch->type;
-}
-
 Flex<Expression> build_if_statement(IModuleAnalysisState &module_state, NodeId expr_node_id) {
   const auto &if_node = module_state.get_node(expr_node_id).as_IfStmtNode();
-  auto &ctx = module_state.current_context();
+  auto &ctx = module_state.analysis_context();
 
-  auto intro = build_with_introductory_decls(
+  auto intro = build_stmt_with_introductory_decls(
       module_state, expr_node_id, if_node.introductory_decls.data()
   );
   if (intro.has_value()) {
@@ -383,18 +350,297 @@ Flex<Expression> build_if_statement(IModuleAnalysisState &module_state, NodeId e
   result->type = NULL_TYPE;
   result->condition = expect_expression_of_type(module_state, BOOL_TYPE, if_node.condition);
 
-  auto old_scope = push_scope(module_state);
+  auto old_scope = push_label_scope(module_state);
   result->then_branch = build_statement(module_state, if_node.then_branch);
   if (if_node.else_branch.has_value()) {
     result->else_branch = build_statement(module_state, if_node.else_branch.value());
   }
-  restore_scope(module_state, old_scope);
+  restore_label_scope(module_state, old_scope);
 
-  if (ctx.need_value_of_stmt && result->else_branch.has_value()) {
-    require_if_stmt_branches_to_have_same_type(module_state, result);
+  if (ctx.require_value_of_stmt) {
+    if (result->else_branch.has_value()) {
+      if (!require_branches_to_have_same_type(
+              result->type, result->then_branch, result->else_branch.value()
+          )) {
+        String error_message("Cannot coerce expression of type '");
+        result->else_branch.value()->type->remove_comptime_const_from_type()->serialize().to_string(
+            error_message
+        );
+        error_message.append("' to expected type '");
+        result->then_branch->type->remove_comptime_const_from_type()->serialize().to_string(
+            error_message
+        );
+        error_message.append("' in else branch of if-statement in expression position");
+        module_state.raise_type_error_at_node(expr_node_id, move(error_message));
+      }
+    } else {
+      module_state.raise_type_error_at_node(
+          expr_node_id, "Missing else branch in if-statement in expression position"
+      );
+    }
   }
 
   return result;
+}
+
+Flex<Expression> coerce_switch_body(
+    IModuleAnalysisState &module_state, Option<Flex<Type>> expected_type, Flex<Expression> body_expr
+) {
+  if (expected_type.has_value()) {
+    auto result = expected_type.value()->resolve_type()->coerce_expr(body_expr);
+    if (!result.has_value()) {
+      result = expected_type.value()
+                   ->resolve_type()
+                   ->remove_comptime_const_from_type()
+                   ->coerce_expr(body_expr);
+    }
+    if (!result.has_value()) {
+      String error_message("Cannot coerce expression of type '");
+      body_expr->type->remove_comptime_const_from_type()->serialize().to_string(error_message);
+      error_message.append("' to expected type '");
+      expected_type.value()->remove_comptime_const_from_type()->serialize().to_string(error_message
+      );
+      error_message.append(" in body of switch-statement in expression position");
+      module_state.raise_type_error_at_node(body_expr->node_id, move(error_message));
+    }
+    return result.value();
+  } else {
+    return body_expr;
+  }
+}
+
+Flex<Expression> build_switch_when_clause(IModuleAnalysisState &module_state, NodeId when_node_id) {
+  const auto &when_clause_node = module_state.get_node(when_node_id).as_WhenClauseNode();
+
+  auto intro = build_stmt_with_introductory_decls(
+      module_state, when_node_id, when_clause_node.introductory_decls.data()
+  );
+  if (intro.has_value()) {
+    return intro.value();
+  }
+
+  auto &ctx = module_state.analysis_context();
+
+  auto condition_expr = build_expression(module_state, when_clause_node.condition);
+  auto condition = require_boolean_expr(condition_expr);
+  if (!condition.has_value()) {
+    String error_message("Condition expression of type '");
+    condition_expr->type->serialize().to_string(error_message);
+    error_message.append("' cannot be coerced to bool");
+    module_state.raise_type_error_at_node(when_node_id, move(error_message));
+  }
+
+  auto body_stmt = coerce_switch_body(
+      module_state,
+      ctx.switch_case_expected_type,
+      build_statement(module_state, ctx.switch_case_body_stmt_node_id.value())
+  );
+  auto result = emplace_flex<SwitchWhenClause>();
+  result->node_id = when_node_id;
+  result->condition = condition.value();
+  result->body = body_stmt;
+  result->type = body_stmt->type;
+  return result;
+}
+
+void add_value_to_case_clause_condition(
+    IModuleAnalysisState &module_state,
+    Flex<Expression> &condition,
+    const Expression &subject_expr,
+    Flex<Expression> value_expr
+) {
+  auto equality_expr = perform_binary_op(
+      value_expr->node_id, BinaryOperatorKind::Equals, subject_expr, value_expr
+  );
+  if (!equality_expr.has_value()) {
+    String error_message("Cannot compare expression of type '");
+    subject_expr.type->serialize().to_string(error_message);
+    error_message.append("' to expression of type '");
+    value_expr->type->serialize().to_string(error_message);
+    error_message.append("' in case clause of switch-statement");
+    module_state.raise_type_error_at_node(value_expr->node_id, move(error_message));
+  }
+
+  equality_expr = require_boolean_expr(equality_expr.value());
+  if (!equality_expr.has_value()) {
+    String error_message("Equality comparison of '");
+    subject_expr.type->serialize().to_string(error_message);
+    error_message.append("' and '");
+    value_expr->type->serialize().to_string(error_message);
+    error_message.append("' does not produce a boolean result");
+  }
+
+  if (condition.is_null()) {
+    condition = equality_expr.value();
+  } else {
+    condition = perform_binary_op(
+                    value_expr->node_id, BinaryOperatorKind::Or, condition, equality_expr.value()
+    )
+                    .value();
+  }
+}
+
+Flex<Expression> build_switch_case_clause(IModuleAnalysisState &module_state, NodeId case_node_id) {
+  const auto &case_clause_node = module_state.get_node(case_node_id).as_CaseClauseNode();
+  const auto &case_clause_header_node = module_state.get_node(case_clause_node.header)
+                                            .as_CaseClauseHeaderNode();
+
+  if (case_clause_header_node.introductory_decls.has_value()) {
+    auto intro = build_stmt_with_introductory_decls(
+        module_state, case_node_id, case_clause_header_node.introductory_decls.value().data()
+    );
+    if (intro.has_value()) {
+      return intro.value();
+    }
+  }
+
+  auto &ctx = module_state.analysis_context();
+
+  auto result = emplace_flex<SwitchCaseClause>();
+  result->node_id = case_node_id;
+
+  if (case_clause_header_node.exprs.has_value()) {
+    Flex<Expression> condition;
+    for (NodeId value_node_id : case_clause_header_node.exprs.value()) {
+      auto value_expr = build_expression(module_state, value_node_id);
+      add_value_to_case_clause_condition(
+          module_state, condition, ctx.switch_subject_expr.value(), value_expr
+      );
+      if (ctx.switch_case_value_exprs.has_value()) {
+        ctx.switch_case_value_exprs.value()->push_back(value_expr);
+      }
+    }
+    if (!condition.is_null()) {
+      result->condition = condition;
+    }
+  }
+
+  auto old_scope = push_label_scope(module_state);
+  auto old_switch_case_body_stmt_node_id = ctx.switch_case_body_stmt_node_id;
+  ctx.switch_case_body_stmt_node_id = case_clause_node.body;
+
+  if (case_clause_header_node.when_clause.has_value()) {
+    auto when_clause_expr = build_switch_when_clause(
+        module_state, case_clause_header_node.when_clause.value()
+    );
+    result->when_body = when_clause_expr;
+    result->type = when_clause_expr->type;
+  } else {
+    auto body_stmt = coerce_switch_body(
+        module_state,
+        ctx.switch_case_expected_type,
+        build_statement(module_state, case_clause_node.body)
+    );
+    result->expr_body = body_stmt;
+    result->type = body_stmt->type;
+  }
+
+  ctx.switch_case_body_stmt_node_id = old_switch_case_body_stmt_node_id;
+  restore_label_scope(module_state, old_scope);
+
+  return result;
+}
+
+bool are_case_values_exhaustive(
+    const Expression &subject_expr, ConstSlice<Flex<Expression>> value_expressions
+) {
+  if (is_bool_type(subject_expr.type)) {
+    bool has_true = false;
+    bool has_false = false;
+    for (const auto &value_expr : value_expressions) {
+      if (value_expr->type->is<ConstBooleanType>()) {
+        if (value_expr->type->as<ConstBooleanType>().value) {
+          has_true = true;
+        } else {
+          has_false = true;
+        }
+      }
+    }
+    return has_true && has_false;
+  }
+
+  // TODO: enums, sealed type tags, tuples
+
+  return false;
+}
+
+Flex<Expression> build_switch_statement(IModuleAnalysisState &module_state, NodeId expr_node_id) {
+  auto &switch_node = module_state.get_node(expr_node_id).as_SwitchStmtNode();
+
+  auto intro = build_stmt_with_introductory_decls(
+      module_state, expr_node_id, switch_node.introductory_decls.data()
+  );
+  if (intro.has_value()) {
+    return intro.value();
+  }
+
+  auto &ctx = module_state.analysis_context();
+
+  List<Flex<Expression>> case_values;
+
+  auto old_switch_case_expected_type = ctx.switch_case_expected_type;
+  auto old_switch_case_value_exprs = ctx.switch_case_value_exprs;
+  auto old_switch_subject_expr = ctx.switch_subject_expr;
+
+  ctx.switch_case_expected_type = None();
+  if (ctx.require_value_of_stmt) {
+    ctx.switch_case_value_exprs = &case_values;
+  }
+
+  auto subject_expr = build_expression(module_state, switch_node.expr);
+  auto subject_binding = emplace_flex<ValueBinding>();
+  subject_binding->decl = expr_node_id;
+  subject_binding->name = "aM_switch_subject";
+  subject_binding->kind = BindingKind::Constant;
+  subject_binding->visibility = DeclarationVisibility::Default;
+  subject_binding->value = subject_expr;
+  subject_binding->type = subject_expr->type;
+
+  auto subject_var_expr = emplace_flex<IdentifierExpression>();
+  subject_var_expr->node_id = switch_node.expr;
+  subject_var_expr->type = subject_expr->type;
+  subject_var_expr->binding = subject_binding;
+  ctx.switch_subject_expr = subject_var_expr;
+
+  auto result = emplace_flex<SwitchStatement>();
+  result->node_id = expr_node_id;
+  result->type = NULL_TYPE;
+
+  for (NodeId case_clause_node_id : switch_node.clauses) {
+    auto case_clause_expr = build_switch_case_clause(module_state, case_clause_node_id);
+    result->case_clauses.push_back(case_clause_expr);
+    if (ctx.require_value_of_stmt && !ctx.switch_case_expected_type.has_value()) {
+      ctx.switch_case_expected_type = case_clause_expr->type;
+      result->type = case_clause_expr->type;
+    }
+  }
+
+  if (switch_node.default_body.has_value()) {
+    result->default_body = coerce_switch_body(
+        module_state,
+        ctx.switch_case_expected_type,
+        build_statement(module_state, switch_node.default_body.value())
+    );
+  } else if (ctx.require_value_of_stmt) {
+    if (!are_case_values_exhaustive(
+            ctx.switch_subject_expr.value(), ctx.switch_case_value_exprs.value()->data()
+        )) {
+      module_state.raise_type_error_at_node(
+          expr_node_id,
+          "Missing default clause in non-exhaustive switch-statement in expression position"
+      );
+    }
+  }
+
+  ctx.switch_case_expected_type = old_switch_case_expected_type;
+  ctx.switch_case_value_exprs = old_switch_case_value_exprs;
+  ctx.switch_subject_expr = old_switch_subject_expr;
+
+  auto result_wrapper = emplace_flex<ValueBindingStatement>();
+  result_wrapper->binding = subject_binding;
+  result_wrapper->body = result;
+  result_wrapper->type = result->type;
+  return result_wrapper;
 }
 
 Flex<Expression> build_block_statement(IModuleAnalysisState &module_state, NodeId expr_node_id) {
@@ -406,7 +652,7 @@ Flex<Expression> build_label_statement(IModuleAnalysisState &module_state, NodeI
   const LabelStmtNode &label_stmt_node = module_state.get_node(expr_node_id).as_LabelStmtNode();
   const IdentifierNode &label_name_node = module_state.get_node(label_stmt_node.label)
                                               .as_IdentifierNode();
-  auto &ctx = module_state.current_context();
+  auto &ctx = module_state.analysis_context();
   if (ctx.labels_in_scope.has(label_name_node.name)) {
     String error_message = "Duplicate label name '";
     error_message.append(label_name_node.name);
@@ -431,7 +677,7 @@ Flex<Expression> build_goto_statement(IModuleAnalysisState &module_state, NodeId
   const GotoStmtNode &goto_stmt_node = module_state.get_node(expr_node_id).as_GotoStmtNode();
   const IdentifierNode &label_name_node = module_state.get_node(goto_stmt_node.label)
                                               .as_IdentifierNode();
-  auto &ctx = module_state.current_context();
+  auto &ctx = module_state.analysis_context();
 
   auto goto_statement = emplace_flex<GotoStatement>();
   goto_statement->node_id = expr_node_id;
@@ -448,7 +694,7 @@ Flex<Expression> build_goto_statement(IModuleAnalysisState &module_state, NodeId
 }
 
 Flex<Expression> build_break_statement(IModuleAnalysisState &module_state, NodeId expr_node_id) {
-  auto &ctx = module_state.current_context();
+  auto &ctx = module_state.analysis_context();
   if (!ctx.loop_currently_analyzing.has_value()) {
     module_state.raise_type_error_at_node(expr_node_id, "Break statement not within loop");
   }
@@ -459,7 +705,7 @@ Flex<Expression> build_break_statement(IModuleAnalysisState &module_state, NodeI
 }
 
 Flex<Expression> build_continue_statement(IModuleAnalysisState &module_state, NodeId expr_node_id) {
-  auto &ctx = module_state.current_context();
+  auto &ctx = module_state.analysis_context();
   if (!ctx.loop_currently_analyzing.has_value()) {
     module_state.raise_type_error_at_node(expr_node_id, "Continue statement not within loop");
   }
@@ -474,7 +720,7 @@ Flex<Expression> build_statement(IModuleAnalysisState &module_state, NodeId expr
   Flex<Expression> result;
   switch (expr_node.type()) {
   case NodeType::ExprStmtNode:
-    result = build_stmt_expression_statement(module_state, expr_node_id);
+    result = build_expression_statement(module_state, expr_node_id);
     break;
   case NodeType::EmptyStmtNode:
     result = emplace_flex<EmptyStatement>();
@@ -482,7 +728,7 @@ Flex<Expression> build_statement(IModuleAnalysisState &module_state, NodeId expr
     result->type = NULL_TYPE;
     break;
   case NodeType::ReturnStmtNode:
-    result = build_stmt_return(module_state, expr_node_id);
+    result = build_return_statement(module_state, expr_node_id);
     break;
   case NodeType::PreDecrementStmtNode:
   case NodeType::PostDecrementStmtNode:
@@ -530,6 +776,15 @@ Flex<Expression> build_statement(IModuleAnalysisState &module_state, NodeId expr
   case NodeType::IfStmtNode:
     result = build_if_statement(module_state, expr_node_id);
     break;
+  case NodeType::SwitchStmtNode:
+    result = build_switch_statement(module_state, expr_node_id);
+    break;
+  case NodeType::CaseClauseNode:
+    result = build_switch_case_clause(module_state, expr_node_id);
+    break;
+  case NodeType::WhenClauseNode:
+    result = build_switch_when_clause(module_state, expr_node_id);
+    break;
   default:
     module_state.raise_type_error_at_node(
         expr_node_id, "not implemented (unknown node type in build_statement)"
@@ -543,20 +798,20 @@ Flex<Expression> build_stmt_seq(
     IModuleAnalysisState &module_state,
     NodeId expr_node_id,
     ConstSlice<NodeId> stmts,
-    bool need_value
+    bool require_value_of_last_stmt
 ) {
-  auto &ctx = module_state.current_context();
-  bool need_value_of_stmt = ctx.need_value_of_stmt;
+  auto &ctx = module_state.analysis_context();
+  bool require_value_of_stmt = ctx.require_value_of_stmt;
 
-  auto old_scope = push_scope(module_state);
+  auto old_scope = push_label_scope(module_state);
   auto result = emplace_flex<StatementSequence>();
   result->type = NULL_TYPE;
   result->node_id = expr_node_id;
   for (size_t expr_index = 0; expr_index < stmts.size(); ++expr_index) {
     if (expr_index == stmts.size() - 1) {
-      ctx.need_value_of_stmt = need_value;
+      ctx.require_value_of_stmt = require_value_of_last_stmt;
     } else {
-      ctx.need_value_of_stmt = false;
+      ctx.require_value_of_stmt = false;
     }
 
     const auto &expr_node = module_state.get_node(stmts[expr_index]);
@@ -575,20 +830,18 @@ Flex<Expression> build_stmt_seq(
       }
     }
   }
-  restore_scope(module_state, old_scope);
-  ctx.need_value_of_stmt = need_value_of_stmt;
+  restore_label_scope(module_state, old_scope);
+  ctx.require_value_of_stmt = require_value_of_stmt;
   return result;
 }
 
 } // namespace
 
 Flex<Expression> build_stmt_seq(
-    IModuleAnalysisState &module_state,
-    NodeId expr_node_id,
-    ConstSlice<NodeId> stmts
+    IModuleAnalysisState &module_state, NodeId expr_node_id, ConstSlice<NodeId> stmts
 ) {
-  auto &ctx = module_state.current_context();
-  return build_stmt_seq(module_state, expr_node_id, stmts, ctx.need_value_of_stmt);
+  auto &ctx = module_state.analysis_context();
+  return build_stmt_seq(module_state, expr_node_id, stmts, ctx.require_value_of_stmt);
 }
 
 Flex<Expression> build_block_expression(IModuleAnalysisState &module_state, NodeId expr_node_id) {

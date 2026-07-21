@@ -1,0 +1,10 @@
+let x = {
+  switch (let y = 5 ; y) {
+    case (5) 1
+    case (6) 2
+  }
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("Missing default clause in non-exhaustive switch-statement in expression position (at test_cases/sema/statements/switch/error_required_nonexhaustive.am:2:3)")
+*/

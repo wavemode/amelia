@@ -9,6 +9,7 @@
 #include "function/data/function_parameter.hpp"
 #include "function/data/function_signature.hpp"
 #include "function/data/function_type.hpp"
+#include "literal/data/identifier_expression.hpp"
 #include "parser/data/node.hpp"
 #include "sema/data/module.hpp"
 #include "sema/data/module_analysis_context.hpp"
@@ -101,8 +102,9 @@ bool is_binding_analyzed(IModuleAnalysisState &module_state, const Binding &bind
 }
 
 void analyze_binding(IModuleAnalysisState &module_state, Binding &binding) {
-  auto old_binding_currently_analyzing = module_state.current_context().binding_currently_analyzing;
-  module_state.current_context().binding_currently_analyzing = &binding;
+  auto old_binding_currently_analyzing = module_state.analysis_context()
+                                             .binding_currently_analyzing;
+  module_state.analysis_context().binding_currently_analyzing = &binding;
 
   switch (binding.kind) {
   case BindingKind::Variable:
@@ -123,7 +125,7 @@ void analyze_binding(IModuleAnalysisState &module_state, Binding &binding) {
     );
   }
 
-  module_state.current_context().binding_currently_analyzing = old_binding_currently_analyzing;
+  module_state.analysis_context().binding_currently_analyzing = old_binding_currently_analyzing;
 }
 
 Flex<TypeBinding> resolve_type_binding(
@@ -242,6 +244,7 @@ void get_binding_details(
   case NodeType::TypeDeclNode: {
     const TypeDeclNode &n = decl_node.as_TypeDeclNode();
     current_binding_details.kind = BindingKind::Type;
+    current_binding_details.decl = decl_node_id;
     get_binding_details(module_state, current_binding_details, n.name);
     break;
   }
@@ -472,9 +475,9 @@ void analyze_function_binding(IModuleAnalysisState &module_state, ValueBinding &
 Flex<Expression> analyze_function_body(
     IModuleAnalysisState &module_state, FunctionSignature &signature, NodeId function_body_node_id
 ) {
-  Option<FunctionSignature *> old_signature = module_state.current_context()
+  Option<FunctionSignature *> old_signature = module_state.analysis_context()
                                                   .current_function_signature;
-  module_state.current_context().current_function_signature = &signature;
+  module_state.analysis_context().current_function_signature = &signature;
   for (const auto &param : signature.parameters) {
     auto binding = emplace_flex<ValueBinding>();
     binding->name = param.name;
@@ -524,7 +527,7 @@ Flex<Expression> analyze_function_body(
   for (size_t i = 0; i < signature.parameters.size(); ++i) {
     module_state.pop_binding();
   }
-  module_state.current_context().current_function_signature = old_signature;
+  module_state.analysis_context().current_function_signature = old_signature;
 
   return result;
 }

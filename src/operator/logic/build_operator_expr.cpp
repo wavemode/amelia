@@ -267,25 +267,42 @@ Flex<Expression> build_binary_operator_expression(
   }
 
   auto left_expr = build_expression(module_state, left_expr_node_id);
-  auto original_left_type = left_expr->type;
   auto right_expr = build_expression(module_state, right_expr_node_id);
-  auto original_right_type = right_expr->type;
 
   if (is_mutating_binary_op(op_kind)) {
     assert_mutable_operand(module_state, left_expr);
   }
 
-  auto left_type = left_expr->type;
-  auto right_type = right_expr->type;
+  auto result = perform_binary_op(expr_node_id, op_kind, left_expr, right_expr);
+
+  if (!result.has_value()) {
+    String error_message = "Cannot perform binary operation '";
+    serialize_binary_operator_kind(op_kind).to_string(error_message);
+    error_message.append("' on types '");
+    left_expr->type->serialize().to_string(error_message);
+    error_message.append("' and '");
+    right_expr->type->serialize().to_string(error_message);
+    error_message.append("'");
+    module_state.raise_type_error_at_node(expr_node_id, move(error_message));
+  }
+
+  return result.value();
+}
+
+Option<Flex<Expression>> perform_binary_op(
+    NodeId expr_node_id, BinaryOperatorKind op_kind, const Expression &left, const Expression &right
+) {
+  auto left_expr = left.flex();
+  auto right_expr = right.flex();
+  auto left_type = left_expr->type->resolve_type();
+  auto right_type = right_expr->type->resolve_type();
 
   auto result = left_type->perform_binary_op(
       expr_node_id, op_kind, left_expr, right_type, right_expr
   );
   if (!result.has_value()) {
-    left_expr->type = left_expr->type->remove_comptime_const_from_type();
-    right_expr->type = right_expr->type->remove_comptime_const_from_type();
-    left_type = left_expr->type;
-    right_type = right_expr->type;
+    left_type = left_type->remove_comptime_const_from_type();
+    right_type = right_type->remove_comptime_const_from_type();
 
     result = left_type->perform_binary_op(expr_node_id, op_kind, left_expr, right_type, right_expr);
   }
@@ -307,17 +324,104 @@ Flex<Expression> build_binary_operator_expression(
       }
     }
   }
+
+  if (result.has_value()) {
+    auto &result_value = result.value();
+    if (left_expr->type->unify_type(result_value->type)) {
+      result_value->type = left_expr->type;
+    } else if (right_expr->type->unify_type(result_value->type)) {
+      result_value->type = right_expr->type;
+    }
+  }
+
+  return result;
+}
+
+Flex<Expression> build_unary_operator_expression(
+    IModuleAnalysisState &module_state, NodeId expr_node_id
+) {
+  const Node &node = module_state.get_node(expr_node_id);
+  NodeId operand_node_id;
+  UnaryOperatorKind op_kind;
+  switch (node.type()) {
+#define X(NODE_TYPE)                                                                               \
+  case NodeType::NODE_TYPE: {                                                                      \
+    const NODE_TYPE &n = node.as_##NODE_TYPE();                                                    \
+    operand_node_id = n.expr;                                                                      \
+    op_kind = unary_op_kind_of_node_type(node.type());                                             \
+    break;                                                                                         \
+  }
+    FOR_EACH_UNARY_OP
+#undef X
+
+#define X(NODE_TYPE)                                                                               \
+  case NodeType::NODE_TYPE: {                                                                      \
+    const NODE_TYPE &n = node.as_##NODE_TYPE();                                                    \
+    operand_node_id = n.target;                                                                    \
+    op_kind = unary_op_kind_of_node_type(node.type());                                             \
+    break;                                                                                         \
+  }
+    FOR_EACH_INCREMENT_DECREMENT_OP
+#undef X
+
+  default:
+    throw RuntimeError(
+        "build_unary_operator_expression() called with a node type that is not a unary operator"
+    );
+  }
+
+  auto operand_expr = build_expression(module_state, operand_node_id);
+  auto original_operand_type = operand_expr->type;
+
+  if (is_mutating_unary_op(op_kind)) {
+    assert_mutable_operand(module_state, operand_expr);
+  }
+
+  auto result = perform_unary_op(expr_node_id, op_kind, operand_expr);
+
   if (!result.has_value()) {
-    String error_message = "Cannot perform binary operation '";
-    serialize_binary_operator_kind(op_kind).to_string(error_message);
-    error_message.append("' on types '");
-    original_left_type->serialize().to_string(error_message);
-    error_message.append("' and '");
-    original_right_type->serialize().to_string(error_message);
+    String error_message = "Cannot apply unary operator '";
+    serialize_unary_operator_kind(op_kind).to_string(error_message);
+    error_message.append("' to expression of type '");
+    original_operand_type->serialize().to_string(error_message);
     error_message.append("'");
     module_state.raise_type_error_at_node(expr_node_id, move(error_message));
   }
+
   return result.value();
+}
+
+Option<Flex<Expression>> perform_unary_op(
+    NodeId expr_node_id, UnaryOperatorKind op_kind, const Expression &operand
+) {
+  auto operand_expr = operand.flex();
+  auto result = operand_expr->type->perform_unary_op(expr_node_id, op_kind, operand_expr);
+  if (!result.has_value()) {
+    switch (op_kind) {
+    case UnaryOperatorKind::Negate:
+    case UnaryOperatorKind::Positive:
+    case UnaryOperatorKind::BitwiseNot:
+    case UnaryOperatorKind::Decrement:
+    case UnaryOperatorKind::Increment:
+      // TODO: attempt numeric coercion
+      break;
+    case UnaryOperatorKind::Not: {
+      auto coerced_operand = BOOL_TYPE->coerce_expr(operand_expr);
+      if (coerced_operand.has_value()) {
+        result = BOOL_TYPE->perform_unary_op(expr_node_id, op_kind, coerced_operand.value());
+      }
+    } break;
+    }
+  }
+
+  if (result.has_value()) {
+    auto &result_value = result.value();
+    if (operand_expr->type->unify_type(result_value->type)) {
+      result_value->type = operand_expr->type;
+    }
+  }
+
+  return result;
 }
 
 Option<Flex<Expression>> perform_native_shift(
@@ -373,76 +477,6 @@ Option<Flex<Expression>> perform_native_unary_op(
   result->type = result_type.flex();
   result->node_id = expr_node_id;
   return result;
-}
-
-Flex<Expression> build_unary_operator_expression(
-    IModuleAnalysisState &module_state, NodeId expr_node_id
-) {
-  const Node &node = module_state.get_node(expr_node_id);
-  NodeId operand_node_id;
-  UnaryOperatorKind op_kind;
-  switch (node.type()) {
-#define X(NODE_TYPE)                                                                               \
-  case NodeType::NODE_TYPE: {                                                                      \
-    const NODE_TYPE &n = node.as_##NODE_TYPE();                                                    \
-    operand_node_id = n.expr;                                                                      \
-    op_kind = unary_op_kind_of_node_type(node.type());                                             \
-    break;                                                                                         \
-  }
-    FOR_EACH_UNARY_OP
-#undef X
-
-#define X(NODE_TYPE)                                                                               \
-  case NodeType::NODE_TYPE: {                                                                      \
-    const NODE_TYPE &n = node.as_##NODE_TYPE();                                                    \
-    operand_node_id = n.target;                                                                    \
-    op_kind = unary_op_kind_of_node_type(node.type());                                             \
-    break;                                                                                         \
-  }
-    FOR_EACH_INCREMENT_DECREMENT_OP
-#undef X
-
-  default:
-    throw RuntimeError(
-        "build_unary_operator_expression() called with a node type that is not a unary operator"
-    );
-  }
-
-  auto operand_expr = build_expression(module_state, operand_node_id);
-
-  if (is_mutating_unary_op(op_kind)) {
-    assert_mutable_operand(module_state, operand_expr);
-  }
-
-  auto result = operand_expr->type->perform_unary_op(expr_node_id, op_kind, operand_expr);
-  if (!result.has_value()) {
-    switch (op_kind) {
-    case UnaryOperatorKind::Negate:
-    case UnaryOperatorKind::Positive:
-    case UnaryOperatorKind::BitwiseNot:
-    case UnaryOperatorKind::Decrement:
-    case UnaryOperatorKind::Increment:
-      // TODO: attempt numeric coercion
-      break;
-    case UnaryOperatorKind::Not: {
-      auto coerced_operand = BOOL_TYPE->coerce_expr(operand_expr);
-      if (coerced_operand.has_value()) {
-        result = BOOL_TYPE->perform_unary_op(expr_node_id, op_kind, coerced_operand.value());
-      }
-    } break;
-    }
-  }
-
-  if (!result.has_value()) {
-    String error_message = "Cannot apply unary operator '";
-    serialize_unary_operator_kind(op_kind).to_string(error_message);
-    error_message.append("' to expression of type '");
-    operand_expr->type->serialize().to_string(error_message);
-    error_message.append("'");
-    module_state.raise_type_error_at_node(expr_node_id, move(error_message));
-  }
-
-  return result.value();
 }
 
 } // namespace amelia
