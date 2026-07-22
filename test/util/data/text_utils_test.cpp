@@ -1,9 +1,9 @@
 #include <doctest.h>
 
-#include "util/data/text_utils.hpp"
+#include "util/data/char_iterator.hpp"
 #include "util/data/list.hpp"
 #include "util/data/string.hpp"
-#include "util/data/char_iterator.hpp"
+#include "util/data/text_utils.hpp"
 
 TEST_SUITE_BEGIN("TextUtils");
 

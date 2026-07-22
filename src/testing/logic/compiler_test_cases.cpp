@@ -82,9 +82,13 @@ void update_file_expected_output(
 void collect_test_cases(
     IFilesystemWalker &filesystem_walker,
     IFileLoader &file_loader,
+    IPrinter &printer,
     CompilerTestCaseCollection &output,
     Text root_directory
 ) {
+  printer.print("Collecting test cases from directory: ");
+  printer.println(root_directory);
+
   size_t num_files_before = output.paths.size();
   filesystem_walker.walk(output.paths, root_directory);
   for (size_t i = num_files_before; i < output.paths.size(); ++i) {

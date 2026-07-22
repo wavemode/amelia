@@ -15,7 +15,11 @@ struct AbstractString;
 class Text;
 
 void collect_test_cases(
-    IFilesystemWalker &, IFileLoader &, CompilerTestCaseCollection &output, Text root_directory
+    IFilesystemWalker &,
+    IFileLoader &,
+    IPrinter &,
+    CompilerTestCaseCollection &output,
+    Text root_directory
 );
 
 CompilerTestExecutionOutcome execute_collection(

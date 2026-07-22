@@ -1,10 +1,10 @@
 #include <doctest.h>
 
-#include "util/data/set.hpp"
-#include "sema/logic/load_module.hpp"
-#include "sema/data/sema_result.hpp"
 #include "sema/data/module_loader_context.hpp"
+#include "sema/data/sema_result.hpp"
+#include "sema/logic/load_module.hpp"
 #include "source/data/source_location_error.hpp"
+#include "util/data/set.hpp"
 #include "util/effect/file_loader.hpp"
 
 TEST_SUITE_BEGIN("load_module");
@@ -12,8 +12,7 @@ TEST_SUITE_BEGIN("load_module");
 using namespace amelia;
 
 TEST_CASE("target module is in second directory in path") {
-  ModuleLoaderContext ctx{Set<String>({"test/sema/logic/empty", "test/sema/logic/basic"})
-  };
+  ModuleLoaderContext ctx{Set<String>({"test/sema/logic/empty", "test/sema/logic/basic"})};
   FileLoader file_loader;
   SemaResult sema_result;
   load_module(file_loader, sema_result, "a", ctx);
@@ -23,9 +22,7 @@ TEST_CASE("target module is in second directory in path") {
 }
 
 TEST_CASE("imported module is in second directory in path") {
-  ModuleLoaderContext ctx{
-      Set<String>({"test/sema/logic/a_alone", "test/sema/logic/b_alone"})
-  };
+  ModuleLoaderContext ctx{Set<String>({"test/sema/logic/a_alone", "test/sema/logic/b_alone"})};
   FileLoader file_loader;
   SemaResult sema_result;
   load_module(file_loader, sema_result, "a", ctx);
@@ -50,9 +47,7 @@ TEST_CASE("imported module does not exist") {
 
 TEST_CASE("target module has the same name in different directories with same contents") {
   ModuleLoaderContext ctx{Set<String>(
-      {"test/sema/logic/a_alone",
-       "test/sema/logic/a_alone_dup",
-       "test/sema/logic/b_alone"}
+      {"test/sema/logic/a_alone", "test/sema/logic/a_alone_dup", "test/sema/logic/b_alone"}
   )};
   FileLoader file_loader;
   SemaResult sema_result;
@@ -79,9 +74,8 @@ TEST_CASE("imported module has the same name in different directories with same 
 }
 
 TEST_CASE("submodule has the same name in different directories with same contents") {
-  ModuleLoaderContext ctx{
-      Set<String>({"test/sema/logic/basic_sub", "test/sema/logic/basic_sub_dup"})
-  };
+  ModuleLoaderContext ctx{Set<String>({"test/sema/logic/basic_sub", "test/sema/logic/basic_sub_dup"}
+  )};
   FileLoader file_loader;
   SemaResult sema_result;
   load_module(file_loader, sema_result, "a", ctx);
@@ -93,9 +87,7 @@ TEST_CASE("submodule has the same name in different directories with same conten
 
 TEST_CASE("target module has the same name in different directories with different contents") {
   ModuleLoaderContext ctx{Set<String>(
-      {"test/sema/logic/a_alone",
-       "test/sema/logic/a_alone_diff",
-       "test/sema/logic/b_alone"}
+      {"test/sema/logic/a_alone", "test/sema/logic/a_alone_diff", "test/sema/logic/b_alone"}
   )};
   FileLoader file_loader;
   SemaResult sema_result;
@@ -135,16 +127,14 @@ TEST_CASE("single file declares two submodules with the same name") {
 }
 
 TEST_CASE("target module is both a submodule 'b::c' within a.am and 'c' within a/b.am") {
-  ModuleLoaderContext ctx{Set<String>({"test/sema/logic/duplicate_submodule_different_paths"})
-  };
+  ModuleLoaderContext ctx{Set<String>({"test/sema/logic/duplicate_submodule_different_paths"})};
   FileLoader file_loader;
   SemaResult sema_result;
   CHECK_THROWS_AS(load_module(file_loader, sema_result, "a::b::c", ctx), RuntimeError);
 }
 
 TEST_CASE("imported module is both a submodule 'b::c' within a.am and 'c' within a/b.am") {
-  ModuleLoaderContext ctx{Set<String>({"test/sema/logic/duplicate_submodule_different_paths"})
-  };
+  ModuleLoaderContext ctx{Set<String>({"test/sema/logic/duplicate_submodule_different_paths"})};
   FileLoader file_loader;
   SemaResult sema_result;
   CHECK_THROWS_AS(load_module(file_loader, sema_result, "d", ctx), SourceLocationError);

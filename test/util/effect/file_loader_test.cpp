@@ -1,7 +1,7 @@
 #include <doctest.h>
 
-#include "util/effect/file_loader.hpp"
 #include "util/data/string.hpp"
+#include "util/effect/file_loader.hpp"
 
 TEST_SUITE_BEGIN("FileLoader");
 

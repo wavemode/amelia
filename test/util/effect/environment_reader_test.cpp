@@ -2,8 +2,8 @@
 
 #include <doctest.h>
 
-#include "util/effect/environment_reader.hpp"
 #include "util/data/string.hpp"
+#include "util/effect/environment_reader.hpp"
 
 TEST_SUITE_BEGIN("EnvironmentReader");
 

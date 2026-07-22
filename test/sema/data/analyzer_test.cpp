@@ -1,15 +1,15 @@
 #include <doctest.h>
 
-#include "testing/logic/compiler_test_cases.hpp"
 #include "testing/data/compiler_test_case_collection.hpp"
 #include "testing/data/compiler_test_case_outcome.hpp"
+#include "testing/logic/compiler_test_cases.hpp"
+#include "testing/system/sema_test_case_runner.hpp"
 #include "util/data/text_utils.hpp"
+#include "util/effect/console_printer.hpp"
+#include "util/effect/environment_reader.hpp"
 #include "util/effect/file_loader.hpp"
 #include "util/effect/file_writer.hpp"
 #include "util/effect/filesystem_walker.hpp"
-#include "util/effect/console_printer.hpp"
-#include "util/effect/environment_reader.hpp"
-#include "testing/system/sema_test_case_runner.hpp"
 
 TEST_SUITE_BEGIN("Analyzer");
 
@@ -24,7 +24,9 @@ TEST_CASE("test suite") {
   EnvironmentReader env_reader;
 
   CompilerTestCaseCollection collection;
-  collect_test_cases(filesystem_walker, file_loader, collection, "test_cases/sema");
+  collect_test_cases(
+      filesystem_walker, file_loader, console_printer, collection, "test_cases/sema"
+  );
   auto outcome = execute_collection(
       sema_test_case_runner, file_writer, console_printer, env_reader, collection
   );

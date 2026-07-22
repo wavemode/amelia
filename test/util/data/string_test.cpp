@@ -2,9 +2,9 @@
 
 #include <doctest.h>
 
-#include "util/data/string.hpp"
 #include "util/data/char_iterator.hpp"
 #include "util/data/invalid_utf8_error.hpp"
+#include "util/data/string.hpp"
 
 TEST_SUITE_BEGIN("String");
 
