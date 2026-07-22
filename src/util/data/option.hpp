@@ -137,13 +137,11 @@ public:
     return old_value;
   }
 
-  Option<T> replace(T &&new_value) {
-    Option<T> old_value;
-    if (m_has_value) {
-      old_value = Some(move(*get()));
-    }
-    assign(move(new_value));
-    return old_value;
+  template <typename... Args> T &emplace(Args &&...args) {
+    destroy();
+    new (get()) T(amelia::forward<Args>(args)...);
+    m_has_value = true;
+    return *get();
   }
 
   void clear() {

@@ -419,7 +419,7 @@ Flex<FunctionSignature> analyze_function_signature(
   }
 
   if (signature_node.implicit_parameter_list.has_value()) {
-    result->implicit_parameters = List<FunctionParameter>();
+    result->implicit_parameters.emplace();
     const auto &implicit_param_list_node = module_state
                                                .get_node(
                                                    signature_node.implicit_parameter_list.value()

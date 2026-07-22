@@ -13,6 +13,9 @@ struct FunctionSignature {
   List<FunctionParameter> parameters;
   Option<List<FunctionParameter>> implicit_parameters;
   Flex<Type> return_type;
+
+  // TODO: variadic
+  // TODO: generic
 };
 
 Serialize serialize_function_signature(const FunctionSignature &signature);

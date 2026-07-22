@@ -11,11 +11,6 @@ namespace amelia {
 struct FunctionType : Type {
   String name;
   List<Flex<FunctionDefinition>> definitions;
-
-  // TODO: implicit params
-  // TODO: variadic
-  // TODO: generic
-
   Serialize serialize() const override;
 };
 
