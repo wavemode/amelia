@@ -1,0 +1,26 @@
+type A = int
+let x = A
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      scope=Scope(
+        bindings=[
+          TypeBinding(
+            name="A",
+            type=alias::A (aka int)
+          ),
+          ValueBinding(
+            name="x",
+            type=type[alias::A (aka int)],
+            value=IdentifierExpression(
+              name="A"
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

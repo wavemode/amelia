@@ -1,5 +1,6 @@
 #include "build_literal_expr.hpp"
 
+#include "binding/data/type_binding.hpp"
 #include "binding/data/value_binding.hpp"
 #include "binding/logic/analysis.hpp"
 #include "builtin/data/builtin_type.hpp"
@@ -18,6 +19,7 @@
 #include "literal/data/string_literal_expression.hpp"
 #include "parser/data/node.hpp"
 #include "sema/interface/module_analysis_state.hpp"
+#include "type/data/type_type.hpp"
 #include "util/data/flex.hpp"
 
 namespace amelia {
@@ -143,7 +145,10 @@ Flex<Expression> build_expr_identifier(IModuleAnalysisState &module_state, NodeI
     expr->type = binding.downcast<ValueBinding>()->type.value().weak();
     return expr;
   } else if (binding->kind == BindingKind::Type || binding->kind == BindingKind::Class) {
-    // TODO
+    auto expr_type = emplace_flex<TypeType>();
+    expr_type->referenced_type = binding.downcast<TypeBinding>()->type.value().weak();
+    expr->type = expr_type;
+    return expr;
   }
 
   throw RuntimeError("build_expr_identifier() called on a binding that is not a value binding");
