@@ -1,0 +1,11 @@
+fun f() {
+  return g()
+}
+
+fun g() with (x : int = 30) {
+  return implicit(x)
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("Implicit parameter 'x' cannot have a default value (at test_cases/sema/expressions/operators/function_call/error_implicit_default.am:5:15)")
+*/

@@ -432,6 +432,11 @@ Flex<FunctionSignature> analyze_function_signature(
         error_message.append(param.name);
         error_message.append("' in function signature");
         module_state.raise_type_error_at_node(parameter_node_id, move(error_message));
+      } else if (param.default_value.has_value()) {
+        String error_message = "Implicit parameter '";
+        error_message.append(param.name);
+        error_message.append("' cannot have a default value");
+        module_state.raise_type_error_at_node(parameter_node_id, move(error_message));
       }
       seen_param_names.add(param.name);
       result->implicit_parameters.value().push_back(move(param));

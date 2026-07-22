@@ -2,8 +2,8 @@ fun f() {
   return g()
 }
 
-fun g() with (x : int = 30) {
-  return implicit(x)
+fun g() {
+  return f()
 }
 
 /* EXPECTED_OUTPUT:
@@ -19,13 +19,7 @@ SemaResult(
               definitions=[
                 FunctionDefinition(
                   signature=FunctionSignature(
-                    implicit_parameters=[
-                      FunctionParameter(
-                        name="x",
-                        type=int
-                      )
-                    ],
-                    return_type=int
+                    return_type=null
                   ),
                   body=StatementSequence(
                     stmts=[
@@ -34,12 +28,7 @@ SemaResult(
                           callee=IdentifierExpression(
                             name="g"
                           ),
-                          signature_id=0,
-                          implicit_arguments={
-                            x=IdentifierExpression(
-                              name="x"
-                            )
-                          }
+                          signature_id=0
                         )
                       )
                     ]
@@ -55,22 +44,16 @@ SemaResult(
               definitions=[
                 FunctionDefinition(
                   signature=FunctionSignature(
-                    implicit_parameters=[
-                      FunctionParameter(
-                        name="x",
-                        type=int,
-                        default_value=NumberLiteralExpression(
-                          lit=30
-                        )
-                      )
-                    ],
-                    return_type=int
+                    return_type=null
                   ),
                   body=StatementSequence(
                     stmts=[
                       ReturnStatement(
-                        value=IdentifierExpression(
-                          name="x"
+                        value=FunctionCallExpression(
+                          callee=IdentifierExpression(
+                            name="f"
+                          ),
+                          signature_id=0
                         )
                       )
                     ]

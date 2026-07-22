@@ -1,14 +1,17 @@
 #pragma once
 
 #include "type/data/type.hpp"
+#include "util/data/map.hpp"
+#include "util/data/string.hpp"
+#include "util/data/flex.hpp"
 
 namespace amelia {
 
 struct ClassType : Type {
-  ClassType();
-  // TODO
+  Map<String, Flex<Type>> fields;
+  Map<String, Flex<Type>> static_fields;
+  Map<String, Flex<Type>> methods;
+  bool is_record;
 };
-
-bool is_class_type(const Type &type);
 
 } // namespace amelia

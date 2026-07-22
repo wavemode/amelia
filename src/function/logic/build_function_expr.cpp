@@ -246,12 +246,6 @@ start:
             continue;
           }
 
-          // check if the implicit param has a default value
-          if (param.default_value.has_value()) {
-            implicit_arguments.set(param.name, None());
-            continue;
-          }
-
           String error_message = "Missing implicit argument '";
           error_message.append(param.name);
           error_message.append("' of type '");
