@@ -122,12 +122,31 @@ Flex<Expression> build_expr_builtin_type(IModuleAnalysisState &module_state, Nod
 
 Flex<Expression> build_expr_identifier(IModuleAnalysisState &module_state, NodeId node_id) {
   const auto &identifier_node = module_state.get_node(node_id).as_IdentifierNode();
+  auto binding_id = module_state.get_binding_id_by_name(identifier_node.name);
+
+  if (!binding_id.has_value()) {
+    String error_message = "Identifier '";
+    error_message.append(identifier_node.name);
+    error_message.append("' not found in scope");
+    module_state.raise_type_error_at_node(node_id, move(error_message));
+  }
+
+  auto binding = module_state.get_binding_by_id(binding_id.value());
+  analyze_binding(module_state, binding);
+
   auto expr = emplace_flex<IdentifierExpression>();
-  auto binding = resolve_value_binding(module_state, node_id, identifier_node.name);
   expr->binding = binding.weak();
-  expr->type = binding->type.value().weak();
   expr->node_id = node_id;
-  return expr;
+
+  if (binding->kind == BindingKind::Variable || binding->kind == BindingKind::Constant ||
+      binding->kind == BindingKind::Function) {
+    expr->type = binding.downcast<ValueBinding>()->type.value().weak();
+    return expr;
+  } else if (binding->kind == BindingKind::Type || binding->kind == BindingKind::Class) {
+    // TODO
+  }
+
+  throw RuntimeError("build_expr_identifier() called on a binding that is not a value binding");
 }
 
 Flex<Expression> build_expr_implicit_identifier(
@@ -135,10 +154,21 @@ Flex<Expression> build_expr_implicit_identifier(
 ) {
   const auto &implicit_node = module_state.get_node(node_id).as_ImplicitExprNode();
   const auto &identifier_node = module_state.get_node(implicit_node.name).as_IdentifierNode();
+  auto binding_id = module_state.get_implicit_binding_id_by_name(identifier_node.name);
+
+  if (!binding_id.has_value()) {
+    String error_message = "Implicit identifier '";
+    error_message.append(identifier_node.name);
+    error_message.append("' not found in scope");
+    module_state.raise_type_error_at_node(node_id, move(error_message));
+  }
+
+  auto binding = module_state.get_binding_by_id(binding_id.value());
+  analyze_binding(module_state, binding);
+
   auto expr = emplace_flex<IdentifierExpression>();
-  auto binding = resolve_implicit_value_binding(module_state, node_id, identifier_node.name);
   expr->binding = binding.weak();
-  expr->type = binding->type.value().weak();
+  expr->type = binding.downcast<ValueBinding>()->type.value().weak();
   expr->node_id = node_id;
   return expr;
 }

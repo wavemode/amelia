@@ -23,7 +23,7 @@
             "env": {
                 // "AMELIA_UPDATE_TEST_CASES": "1",
                 "AMELIA_TEST_CASE_FILTER":
-                  "test_cases/sema/types/alias/string.am"
+                  "test_cases/sema/declarations/fun/top_level/error_null_inferred.am"
                 }
         }
     ]

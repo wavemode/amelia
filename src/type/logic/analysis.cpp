@@ -203,17 +203,37 @@ Flex<Type> evaluate_type_expr_builtin(const BuiltinTypeNode &builtin_type_node) 
   }
 }
 
+Flex<Type> evaluate_type_expr_ident(IModuleAnalysisState &module_state, NodeId identifier_node_id) {
+  const auto &identifier_node = module_state.get_node(identifier_node_id).as_IdentifierNode();
+  auto binding_id = module_state.get_binding_id_by_name(identifier_node.name);
+
+  if (!binding_id.has_value()) {
+    String error_message = "Type identifier '";
+    error_message.append(identifier_node.name);
+    error_message.append("' not found in scope");
+    module_state.raise_type_error_at_node(identifier_node_id, move(error_message));
+  }
+
+  auto binding = module_state.get_binding_by_id(binding_id.value());
+  analyze_binding(module_state, binding);
+
+  if (binding->kind != BindingKind::Type && binding->kind != BindingKind::Class) {
+    String error_message = "Identifier '";
+    error_message.append(identifier_node.name);
+    error_message.append("' is not a type binding");
+    module_state.raise_type_error_at_node(identifier_node_id, move(error_message));
+  }
+
+  return binding.downcast<TypeBinding>()->type.value().weak();
+}
+
 } // namespace
 
 Flex<Type> evaluate_type_expr(IModuleAnalysisState &module_state, NodeId type_expr_node_id) {
   const auto &type_expr_node = module_state.get_node(type_expr_node_id);
   switch (type_expr_node.type()) {
   case NodeType::IdentifierNode:
-    return resolve_type_binding(
-               module_state, type_expr_node_id, type_expr_node.as_IdentifierNode().name
-    )
-        ->type.value()
-        .weak();
+    return evaluate_type_expr_ident(module_state, type_expr_node_id);
   case NodeType::BuiltinTypeNode:
     return evaluate_type_expr_builtin(type_expr_node.as_BuiltinTypeNode());
   case NodeType::ConstTypeExprNode:

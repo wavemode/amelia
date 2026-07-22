@@ -19,16 +19,6 @@ class Text;
 
 bool is_binding_analyzed(IModuleAnalysisState &module_state, const Binding &binding);
 
-Flex<ValueBinding> resolve_value_binding(
-    IModuleAnalysisState &module_state, NodeId node_id, Text name
-);
-Flex<ValueBinding> resolve_implicit_value_binding(
-    IModuleAnalysisState &module_state, NodeId node_id, Text name
-);
-Flex<TypeBinding> resolve_type_binding(
-    IModuleAnalysisState &module_state, NodeId node_id, Text name
-);
-
 void get_binding_details(
     IModuleAnalysisState &module_state, Binding &current_binding_details, NodeId decl_node_id
 );

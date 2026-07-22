@@ -6,5 +6,5 @@ const x = {
 }
 
 /* EXPECTED_OUTPUT:
-ERROR("Unknown implicit variable 'a' (at test_cases/sema/expressions/atoms/implicit/error_out_of_scope.am:5:3)")
+ERROR("Implicit identifier 'a' not found in scope (at test_cases/sema/expressions/atoms/implicit/error_out_of_scope.am:5:3)")
 */
