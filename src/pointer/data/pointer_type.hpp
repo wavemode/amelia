@@ -10,13 +10,13 @@ struct PointerType : Type {
   bool is_const;
 
   bool is_resolved() const override;
-  Flex<Type> resolve() const override;
+  Flex<Type> internal_resolve() const override;
 
   bool is_comptime_const() const override;
-  Flex<Type> remove_comptime_const() const override;
+  Flex<Type> internal_remove_comptime_const() const override;
 
-  bool unify(const Type &assignment_type) const override;
-  Option<Flex<Expression>> coerce(const Type &assignment_type, const Expression &expr)
+  bool internal_unify(const Type &assignment_type) const override;
+  Option<Flex<Expression>> internal_coerce(const Type &assignment_type, const Expression &expr)
       const override;
 
   Serialize serialize() const override;

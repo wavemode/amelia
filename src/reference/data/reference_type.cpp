@@ -16,9 +16,9 @@ bool ReferenceType::is_resolved() const {
   return referent->is_resolved();
 }
 
-Flex<Type> ReferenceType::resolve() const {
+Flex<Type> ReferenceType::internal_resolve() const {
   auto resolved_ref = emplace_flex<ReferenceType>();
-  resolved_ref->referent = referent->resolve_type();
+  resolved_ref->referent = referent->resolve();
   resolved_ref->is_const = is_const;
   resolved_ref->is_move = is_move;
   return resolved_ref;
@@ -28,15 +28,15 @@ bool ReferenceType::is_comptime_const() const {
   return referent->is_comptime_const();
 }
 
-Flex<Type> ReferenceType::remove_comptime_const() const {
+Flex<Type> ReferenceType::internal_remove_comptime_const() const {
   auto result = emplace_flex<ReferenceType>();
-  result->referent = referent->remove_comptime_const_from_type();
+  result->referent = referent->remove_comptime_const();
   result->is_const = is_const;
   result->is_move = is_move;
   return result;
 }
 
-bool ReferenceType::unify(const Type &assignment_type) const {
+bool ReferenceType::internal_unify(const Type &assignment_type) const {
   if (assignment_type.is<ConstStringType>()) {
     return unify(STR_REF_TYPE);
   }
@@ -45,14 +45,15 @@ bool ReferenceType::unify(const Type &assignment_type) const {
     return false;
   }
   auto &assignment_type_ref = assignment_type.as<ReferenceType>();
-  if (!referent->unify_type(assignment_type_ref.referent)) {
+  if (!referent->unify(assignment_type_ref.referent)) {
     return false;
   }
   return is_const == assignment_type_ref.is_const && is_move == assignment_type_ref.is_move;
 }
 
-Option<Flex<Expression>> ReferenceType::coerce(const Type &assignment_type, const Expression &expr)
-    const {
+Option<Flex<Expression>> ReferenceType::internal_coerce(
+    const Type &assignment_type, const Expression &expr
+) const {
   if (assignment_type.is<ReferenceType>()) {
     auto &expr_ref_type = assignment_type.as<ReferenceType>();
     if (
@@ -66,7 +67,7 @@ Option<Flex<Expression>> ReferenceType::coerce(const Type &assignment_type, cons
       if (
             // References refer to the same type
             // TODO: compatible types
-            referent->unify_type(expr_ref_type.referent)
+            referent->unify(expr_ref_type.referent)
         ) {
         return native_type_cast(*this, expr);
       }

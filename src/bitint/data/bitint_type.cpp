@@ -14,7 +14,7 @@
 
 namespace amelia {
 
-bool BitIntType::unify(const Type &assignment_type) const {
+bool BitIntType::internal_unify(const Type &assignment_type) const {
   if (is_usize_type(assignment_type)) {
     return false;
   }
@@ -31,8 +31,9 @@ bool BitIntType::unify(const Type &assignment_type) const {
          min_value() == assignment_type.min_value();
 }
 
-Option<Flex<Expression>> BitIntType::coerce(const Type &assignment_type, const Expression &expr)
-    const {
+Option<Flex<Expression>> BitIntType::internal_coerce(
+    const Type &assignment_type, const Expression &expr
+) const {
   if (is_usize_type(assignment_type)) {
     return None();
   }
@@ -45,8 +46,9 @@ Option<Flex<Expression>> BitIntType::coerce(const Type &assignment_type, const E
   return None();
 }
 
-Option<Flex<Expression>> BitIntType::cast(const Type &assignment_type, const Expression &expr)
-    const {
+Option<Flex<Expression>> BitIntType::internal_cast(
+    const Type &assignment_type, const Expression &expr
+) const {
   if (assignment_type.has_native_numeric_repr()) {
     return native_type_cast(*this, expr);
   }

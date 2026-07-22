@@ -26,11 +26,11 @@ bool ConstCharacterType::is_comptime_const() const {
   return true;
 }
 
-Flex<Type> ConstCharacterType::remove_comptime_const() const {
+Flex<Type> ConstCharacterType::internal_remove_comptime_const() const {
   return CHAR_TYPE;
 }
 
-bool ConstCharacterType::unify(const Type &assignment_type) const {
+bool ConstCharacterType::internal_unify(const Type &assignment_type) const {
   return assignment_type.is<ConstCharacterType>() &&
          value == assignment_type.as<ConstCharacterType>().value;
 }

@@ -22,11 +22,11 @@ bool ConstRationalType::is_comptime_const() const {
   return true;
 }
 
-Flex<Type> ConstRationalType::remove_comptime_const() const {
+Flex<Type> ConstRationalType::internal_remove_comptime_const() const {
   return DOUBLE_TYPE;
 }
 
-bool ConstRationalType::unify(const Type &assignment_type) const {
+bool ConstRationalType::internal_unify(const Type &assignment_type) const {
   return assignment_type.is<ConstRationalType>() &&
          value == assignment_type.as<ConstRationalType>().value;
 }

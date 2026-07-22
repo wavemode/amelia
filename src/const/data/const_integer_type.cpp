@@ -25,7 +25,7 @@ bool ConstIntegerType::is_comptime_const() const {
   return true;
 }
 
-Flex<Type> ConstIntegerType::remove_comptime_const() const {
+Flex<Type> ConstIntegerType::internal_remove_comptime_const() const {
   auto bit_width = repr_bit_size();
   if (bit_width == 32) {
     return INT_TYPE;
@@ -39,7 +39,7 @@ Flex<Type> ConstIntegerType::remove_comptime_const() const {
   }
 }
 
-bool ConstIntegerType::unify(const Type &assignment_type) const {
+bool ConstIntegerType::internal_unify(const Type &assignment_type) const {
   return assignment_type.is<ConstIntegerType>() &&
          value == assignment_type.as<ConstIntegerType>().value;
 }

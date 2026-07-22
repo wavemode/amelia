@@ -310,7 +310,7 @@ void analyze_type_binding(IModuleAnalysisState &module_state, TypeBinding &bindi
     auto result = emplace_flex<AliasType>();
     result->name = binding.name;
     result->module_name = module_state.current_module().name;
-    result->target = type->resolve_type();
+    result->target = type->resolve();
     binding.type = result;
   } else {
     module_state.raise_type_error_at_node(
@@ -337,7 +337,7 @@ void analyze_let_binding(IModuleAnalysisState &module_state, ValueBinding &bindi
     binding.type = UNKNOWN_TYPE;
     if (decl_node.expr.has_value()) {
       binding.value = build_expression(module_state, decl_node.expr.value());
-      binding.type = binding.value.value()->type->remove_comptime_const_from_type();
+      binding.type = binding.value.value()->type->remove_comptime_const();
     }
   }
 }
@@ -574,7 +574,7 @@ Flex<Expression> analyze_function_body(
   if (function_body_node.expr.has_value()) {
     auto expr = build_expression(module_state, function_body_node.expr.value());
     if (is_unknown_type(signature.return_type)) {
-      signature.return_type = expr->type->remove_comptime_const_from_type();
+      signature.return_type = expr->type->remove_comptime_const();
       result = expr;
     } else {
       result = require_coerce(

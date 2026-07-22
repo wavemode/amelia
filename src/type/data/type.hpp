@@ -24,23 +24,26 @@ public:
   virtual bool is_comptime_const() const;
 
 protected:
-  virtual Flex<Type> resolve() const;
-  virtual Flex<Type> remove_comptime_const() const;
-  virtual bool unify(const Type &assignment_type) const;
-  virtual Option<Flex<Expression>> coerce(const Type &assignment_type, const Expression &expr)
-      const;
-  virtual Option<Flex<Expression>> cast(const Type &assignment_type, const Expression &expr) const;
+  virtual Flex<Type> internal_resolve() const;
+  virtual Flex<Type> internal_remove_comptime_const() const;
+  virtual bool internal_unify(const Type &assignment_type) const;
+  virtual Option<Flex<Expression>> internal_coerce(
+      const Type &assignment_type, const Expression &expr
+  ) const;
+  virtual Option<Flex<Expression>> internal_cast(
+      const Type &assignment_type, const Expression &expr
+  ) const;
 
   /// Conversion Helpers
 
 public:
-  Flex<Type> resolve_type() const;
-  Flex<Type> remove_comptime_const_from_type() const;
-  bool unify_type(const Type &assignment_type) const;
-  Option<Flex<Expression>> coerce_expr(const Expression &expr) const;
-  Option<Flex<Expression>> coerce_expr(const Type &expr_type, const Expression &expr) const;
-  Option<Flex<Expression>> cast_expr(const Expression &expr) const;
-  Option<Flex<Expression>> cast_expr(const Type &expr_type, const Expression &expr) const;
+  Flex<Type> resolve() const;
+  Flex<Type> remove_comptime_const() const;
+  bool unify(const Type &assignment_type) const;
+  Option<Flex<Expression>> coerce(const Expression &expr) const;
+  Option<Flex<Expression>> coerce(const Type &expr_type, const Expression &expr) const;
+  Option<Flex<Expression>> cast(const Expression &expr) const;
+  Option<Flex<Expression>> cast(const Type &expr_type, const Expression &expr) const;
 
   /// Numerics
 

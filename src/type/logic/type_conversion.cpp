@@ -19,7 +19,7 @@ Flex<Expression> build_type_cast_expression(
   const auto &as_node = module_state.get_node(expr_node_id).as_AsExprNode();
   auto expr = build_expression(module_state, as_node.expr);
   auto target_type = evaluate_type_expr(module_state, as_node.type);
-  auto result = target_type->cast_expr(expr->type, expr);
+  auto result = target_type->cast(expr->type, expr);
 
   if (!result.has_value()) {
     String error_message = "Cannot cast expression of type '";
@@ -44,12 +44,12 @@ Flex<Expression> native_type_cast(const Type &target_type, const Expression &exp
 }
 
 Option<Flex<Expression>> require_boolean_expr(const Expression &expr) {
-  auto expr_type = expr.type->resolve_type();
+  auto expr_type = expr.type->resolve();
   if (expr_type->is<ConstBooleanType>() || is_bool_type(expr_type)) {
     return expr.flex();
   }
 
-  return BOOL_TYPE->coerce_expr(expr);
+  return BOOL_TYPE->coerce(expr);
 }
 
 } // namespace amelia

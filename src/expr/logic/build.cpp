@@ -128,7 +128,7 @@ Flex<Expression> require_coerce(
     const Expression &expr,
     String &&error_message_template
 ) {
-  auto unified_expr = target_type.coerce_expr(expr.type, expr);
+  auto unified_expr = target_type.coerce(expr.type, expr);
   if (!unified_expr.has_value()) {
     String target_type_str;
     target_type.serialize().to_string(target_type_str);
@@ -154,20 +154,20 @@ bool require_branches_to_have_same_type(
     return true;
   }
 
-  if (left->type->unify_type(right->type)) {
+  if (left->type->unify(right->type)) {
     result_type = left->type;
     return true;
   }
 
-  auto left_type = left->type->remove_comptime_const_from_type();
-  auto right_type = right->type->remove_comptime_const_from_type();
+  auto left_type = left->type->remove_comptime_const();
+  auto right_type = right->type->remove_comptime_const();
 
-  if (left_type->unify_type(right_type)) {
+  if (left_type->unify(right_type)) {
     result_type = left_type;
     return true;
   }
 
-  auto coerce_right = left_type->coerce_expr(right_type, right);
+  auto coerce_right = left_type->coerce(right_type, right);
   if (coerce_right.has_value()) {
     right = coerce_right.value();
     result_type = left->type;

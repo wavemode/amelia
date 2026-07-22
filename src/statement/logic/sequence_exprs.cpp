@@ -94,8 +94,8 @@ Flex<Expression> assign_current_function_return_value(
   }
 
   if (is_unknown_type(ctx.current_function_signature.value()->return_type)) {
-    ctx.current_function_signature.value()->return_type = return_value->type
-                                                              ->remove_comptime_const_from_type();
+    ctx.current_function_signature.value()->return_type = return_value->type->remove_comptime_const(
+    );
     return return_value;
   }
 
@@ -234,7 +234,7 @@ Flex<Expression> build_stmt_var_decl(
     if (expr.has_value()) {
       binding->value = build_expression(module_state, expr.value());
       binding->type = is_const ? binding->value.value()->type
-                               : binding->value.value()->type->remove_comptime_const_from_type();
+                               : binding->value.value()->type->remove_comptime_const();
     }
   }
 
@@ -400,13 +400,11 @@ Flex<Expression> build_if_statement(IModuleAnalysisState &module_state, NodeId e
               result->type, result->then_branch, result->else_branch.value()
           )) {
         String error_message("Cannot coerce expression of type '");
-        result->else_branch.value()->type->remove_comptime_const_from_type()->serialize().to_string(
+        result->else_branch.value()->type->remove_comptime_const()->serialize().to_string(
             error_message
         );
         error_message.append("' to expected type '");
-        result->then_branch->type->remove_comptime_const_from_type()->serialize().to_string(
-            error_message
-        );
+        result->then_branch->type->remove_comptime_const()->serialize().to_string(error_message);
         error_message.append("' in else branch of if-statement in expression position");
         module_state.raise_type_error_at_node(expr_node_id, move(error_message));
       }
@@ -424,19 +422,15 @@ Flex<Expression> coerce_switch_body(
     IModuleAnalysisState &module_state, Option<Flex<Type>> expected_type, Flex<Expression> body_expr
 ) {
   if (expected_type.has_value()) {
-    auto result = expected_type.value()->resolve_type()->coerce_expr(body_expr);
+    auto result = expected_type.value()->resolve()->coerce(body_expr);
     if (!result.has_value()) {
-      result = expected_type.value()
-                   ->resolve_type()
-                   ->remove_comptime_const_from_type()
-                   ->coerce_expr(body_expr);
+      result = expected_type.value()->resolve()->remove_comptime_const()->coerce(body_expr);
     }
     if (!result.has_value()) {
       String error_message("Cannot coerce expression of type '");
-      body_expr->type->remove_comptime_const_from_type()->serialize().to_string(error_message);
+      body_expr->type->remove_comptime_const()->serialize().to_string(error_message);
       error_message.append("' to expected type '");
-      expected_type.value()->remove_comptime_const_from_type()->serialize().to_string(error_message
-      );
+      expected_type.value()->remove_comptime_const()->serialize().to_string(error_message);
       error_message.append(" in body of switch-statement in expression position");
       module_state.raise_type_error_at_node(body_expr->node_id, move(error_message));
     }

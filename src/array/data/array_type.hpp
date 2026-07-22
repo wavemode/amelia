@@ -13,14 +13,15 @@ struct ArrayType : Type {
   uint64_t size;
 
   bool is_resolved() const override;
-  Flex<Type> resolve() const override;
+  Flex<Type> internal_resolve() const override;
 
   bool is_comptime_const() const override;
-  Flex<Type> remove_comptime_const() const override;
+  Flex<Type> internal_remove_comptime_const() const override;
 
-  bool unify(const Type &assignment_type) const override;
+  bool internal_unify(const Type &assignment_type) const override;
 
-  Option<Flex<Expression>> cast(const Type &assignment_type, const Expression &expr) const override;
+  Option<Flex<Expression>> internal_cast(const Type &assignment_type, const Expression &expr)
+      const override;
 
   Serialize serialize() const override;
 };

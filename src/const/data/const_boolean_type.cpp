@@ -19,11 +19,11 @@ bool ConstBooleanType::is_comptime_const() const {
   return true;
 }
 
-Flex<Type> ConstBooleanType::remove_comptime_const() const {
+Flex<Type> ConstBooleanType::internal_remove_comptime_const() const {
   return BOOL_TYPE;
 }
 
-bool ConstBooleanType::unify(const Type &assignment_type) const {
+bool ConstBooleanType::internal_unify(const Type &assignment_type) const {
   return assignment_type.is<ConstBooleanType>() &&
          value == assignment_type.as<ConstBooleanType>().value;
 }

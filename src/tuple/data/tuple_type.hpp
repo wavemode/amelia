@@ -15,14 +15,15 @@ struct TupleType : Type {
   List<Flex<Type>> element_types;
 
   virtual bool is_resolved() const override;
-  virtual Flex<Type> resolve() const override;
+  virtual Flex<Type> internal_resolve() const override;
 
   virtual bool is_comptime_const() const override;
-  virtual Flex<Type> remove_comptime_const() const override;
+  virtual Flex<Type> internal_remove_comptime_const() const override;
 
-  virtual bool unify(const Type &assignment_type) const override;
-  virtual Option<Flex<Expression>> coerce(const Type &assignment_type, const Expression &expr)
-      const override;
+  virtual bool internal_unify(const Type &assignment_type) const override;
+  virtual Option<Flex<Expression>> internal_coerce(
+      const Type &assignment_type, const Expression &expr
+  ) const override;
 
   Serialize serialize() const override;
 

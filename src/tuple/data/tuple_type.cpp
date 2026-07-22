@@ -25,14 +25,14 @@ bool TupleType::is_resolved() const {
   return true;
 }
 
-Flex<Type> TupleType::resolve() const {
+Flex<Type> TupleType::internal_resolve() const {
   if (resolved_type_cached.has_value()) {
     return resolved_type_cached.value();
   }
 
   auto resolved_tuple = emplace_flex<TupleType>();
   for (const auto &element_type : element_types) {
-    resolved_tuple->element_types.push_back(element_type->resolve_type());
+    resolved_tuple->element_types.push_back(element_type->resolve());
   }
 
   resolved_type_cached = resolved_tuple;
@@ -55,21 +55,21 @@ bool TupleType::is_comptime_const() const {
   return true;
 }
 
-Flex<Type> TupleType::remove_comptime_const() const {
+Flex<Type> TupleType::internal_remove_comptime_const() const {
   if (remove_comptime_const_cached.has_value()) {
     return remove_comptime_const_cached.value();
   }
 
   auto new_tuple = emplace_flex<TupleType>();
   for (const auto &element_type : element_types) {
-    new_tuple->element_types.push_back(element_type->remove_comptime_const_from_type());
+    new_tuple->element_types.push_back(element_type->remove_comptime_const());
   }
 
   remove_comptime_const_cached = new_tuple;
   return new_tuple;
 }
 
-bool TupleType::unify(const Type &assignment_type) const {
+bool TupleType::internal_unify(const Type &assignment_type) const {
   if (!assignment_type.is<TupleType>()) {
     return false;
   }
@@ -80,7 +80,7 @@ bool TupleType::unify(const Type &assignment_type) const {
   }
 
   for (size_t i = 0; i < element_types.size(); ++i) {
-    if (!element_types[i]->unify_type(assignment_tuple.element_types[i])) {
+    if (!element_types[i]->unify(assignment_tuple.element_types[i])) {
       return false;
     }
   }
@@ -88,7 +88,7 @@ bool TupleType::unify(const Type &assignment_type) const {
   return true;
 }
 
-Option<Flex<Expression>> TupleType::coerce(const Type &, const Expression &) const {
+Option<Flex<Expression>> TupleType::internal_coerce(const Type &, const Expression &) const {
   return None(); // TODO: compatible tuples
 }
 

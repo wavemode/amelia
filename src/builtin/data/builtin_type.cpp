@@ -17,7 +17,7 @@
 
 namespace amelia {
 
-bool BuiltinType::unify(const Type &assignment_type) const {
+bool BuiltinType::internal_unify(const Type &assignment_type) const {
   if (assignment_type.is<BuiltinType>()) {
     return builtin_kind == assignment_type.as<BuiltinType>().builtin_kind;
   } else if (assignment_type.is<ConstIntegerType>() || assignment_type.is<BitIntType>()) {
@@ -32,8 +32,9 @@ bool BuiltinType::unify(const Type &assignment_type) const {
   return false;
 }
 
-Option<Flex<Expression>> BuiltinType::coerce(const Type &assignment_type, const Expression &expr)
-    const {
+Option<Flex<Expression>> BuiltinType::internal_coerce(
+    const Type &assignment_type, const Expression &expr
+) const {
   switch (builtin_kind) {
   case BuiltinKind::Byte:
   case BuiltinKind::UByte:
@@ -86,7 +87,8 @@ Option<Flex<Expression>> BuiltinType::coerce(const Type &assignment_type, const 
   }
 }
 
-Option<Flex<Expression>> BuiltinType::cast(const Type &source_type, const Expression &expr) const {
+Option<Flex<Expression>> BuiltinType::internal_cast(const Type &source_type, const Expression &expr)
+    const {
   if (builtin_kind != BuiltinKind::Char && has_native_numeric_repr() &&
       source_type.has_native_numeric_repr()) {
     return native_type_cast(*this, expr);

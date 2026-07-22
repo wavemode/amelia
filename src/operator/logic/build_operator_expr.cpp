@@ -294,21 +294,21 @@ Option<Flex<Expression>> perform_binary_op(
 ) {
   auto left_expr = left.flex();
   auto right_expr = right.flex();
-  auto left_type = left_expr->type->resolve_type();
-  auto right_type = right_expr->type->resolve_type();
+  auto left_type = left_expr->type->resolve();
+  auto right_type = right_expr->type->resolve();
 
   auto result = left_type->perform_binary_op(
       expr_node_id, op_kind, left_expr, right_type, right_expr
   );
   if (!result.has_value()) {
-    left_type = left_type->remove_comptime_const_from_type();
-    right_type = right_type->remove_comptime_const_from_type();
+    left_type = left_type->remove_comptime_const();
+    right_type = right_type->remove_comptime_const();
 
     result = left_type->perform_binary_op(expr_node_id, op_kind, left_expr, right_type, right_expr);
   }
   if (!is_non_promoting_binary_op(op_kind)) {
     if (!result.has_value()) {
-      auto try_convert_right = left_type->coerce_expr(right_type, right_expr);
+      auto try_convert_right = left_type->coerce(right_type, right_expr);
       if (try_convert_right.has_value()) {
         result = left_type->perform_binary_op(
             expr_node_id, op_kind, left_expr, left_type, move(try_convert_right.value())
@@ -316,7 +316,7 @@ Option<Flex<Expression>> perform_binary_op(
       }
     }
     if (!result.has_value() && !is_rhs_promoting_binary_op(op_kind)) {
-      auto try_convert_left = right_type->coerce_expr(left_type, left_expr);
+      auto try_convert_left = right_type->coerce(left_type, left_expr);
       if (try_convert_left.has_value()) {
         result = right_type->perform_binary_op(
             expr_node_id, op_kind, move(try_convert_left.value()), right_type, right_expr
@@ -327,9 +327,9 @@ Option<Flex<Expression>> perform_binary_op(
 
   if (result.has_value()) {
     auto &result_value = result.value();
-    if (left_expr->type->unify_type(result_value->type)) {
+    if (left_expr->type->unify(result_value->type)) {
       result_value->type = left_expr->type;
-    } else if (right_expr->type->unify_type(result_value->type)) {
+    } else if (right_expr->type->unify(result_value->type)) {
       result_value->type = right_expr->type;
     }
   }
@@ -406,7 +406,7 @@ Option<Flex<Expression>> perform_unary_op(
       // TODO: attempt numeric coercion
       break;
     case UnaryOperatorKind::Not: {
-      auto coerced_operand = BOOL_TYPE->coerce_expr(operand_expr);
+      auto coerced_operand = BOOL_TYPE->coerce(operand_expr);
       if (coerced_operand.has_value()) {
         result = BOOL_TYPE->perform_unary_op(expr_node_id, op_kind, coerced_operand.value());
       }
@@ -416,7 +416,7 @@ Option<Flex<Expression>> perform_unary_op(
 
   if (result.has_value()) {
     auto &result_value = result.value();
-    if (operand_expr->type->unify_type(result_value->type)) {
+    if (operand_expr->type->unify(result_value->type)) {
       result_value->type = operand_expr->type;
     }
   }
@@ -453,7 +453,7 @@ Option<Flex<Expression>> perform_native_binary_op(
     const Expression &right_expr,
     const Type &result_type
 ) {
-  if (!left_type.unify_type(right_type)) {
+  if (!left_type.unify(right_type)) {
     return None();
   }
   auto result = emplace_flex<NativeBinaryOperationExpression>();

@@ -108,10 +108,10 @@ start:
       if (pos_arg_index < pos_args.size()) {
         Option<Flex<Expression>> expr;
         if (exact_match_only) {
-          expr = param.type->unify_type(pos_args[pos_arg_index]->type) ? pos_args[pos_arg_index]
-                                                                       : Option<Flex<Expression>>();
+          expr = param.type->unify(pos_args[pos_arg_index]->type) ? pos_args[pos_arg_index]
+                                                                  : Option<Flex<Expression>>();
         } else {
-          expr = param.type->coerce_expr(pos_args[pos_arg_index]);
+          expr = param.type->coerce(pos_args[pos_arg_index]);
         }
         if (!expr.has_value()) {
           goto fail;
@@ -122,10 +122,10 @@ start:
         Option<Flex<Expression>> expr;
         if (exact_match_only) {
           auto arg_expr = named_args[param.name];
-          expr = param.type->unify_type(arg_expr->type) ? arg_expr : Option<Flex<Expression>>();
+          expr = param.type->unify(arg_expr->type) ? arg_expr : Option<Flex<Expression>>();
         } else {
           auto arg_expr = named_args[param.name];
-          expr = param.type->coerce_expr(arg_expr);
+          expr = param.type->coerce(arg_expr);
         }
         if (!expr.has_value()) {
           goto fail;
@@ -145,10 +145,10 @@ start:
           Option<Flex<Expression>> expr;
           if (exact_match_only) {
             auto arg_expr = named_args[param.name];
-            expr = param.type->unify_type(arg_expr->type) ? arg_expr : Option<Flex<Expression>>();
+            expr = param.type->unify(arg_expr->type) ? arg_expr : Option<Flex<Expression>>();
           } else {
             auto arg_expr = named_args[param.name];
-            expr = param.type->coerce_expr(arg_expr);
+            expr = param.type->coerce(arg_expr);
           }
           if (!expr.has_value()) {
             goto fail;
@@ -188,7 +188,7 @@ start:
             arg_expr->type = implicit_binding.downcast<ValueBinding>()->type.value().weak();
             arg_expr->binding = implicit_binding;
 
-            auto coerced_arg_expr = param.type->coerce_expr(arg_expr);
+            auto coerced_arg_expr = param.type->coerce(arg_expr);
             if (!coerced_arg_expr.has_value()) {
               String error_message = "Cannot coerce implicit argument '";
               error_message.append(param.name);
@@ -214,7 +214,7 @@ start:
               arg_expr->node_id = expr_node_id;
               arg_expr->binding = *arg_expr_binding.value();
               arg_expr->type = (*arg_expr_binding.value())->type.value().weak();
-              auto coerced_arg_expr = param.type->coerce_expr(arg_expr);
+              auto coerced_arg_expr = param.type->coerce(arg_expr);
               if (!coerced_arg_expr.has_value()) {
                 String error_message = "Cannot coerce implicit argument '";
                 error_message.append(param.name);

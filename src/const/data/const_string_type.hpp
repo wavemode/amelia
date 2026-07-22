@@ -13,9 +13,9 @@ struct ConstStringType : Type {
   String value;
 
   bool is_comptime_const() const override;
-  Flex<Type> remove_comptime_const() const override;
+  Flex<Type> internal_remove_comptime_const() const override;
 
-  bool unify(const Type &assignment_type) const override;
+  bool internal_unify(const Type &assignment_type) const override;
 
   Option<Flex<Expression>> perform_binary_op(
       NodeId expr_node_id,

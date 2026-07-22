@@ -10,9 +10,9 @@ struct ConstBooleanType : Type {
   bool value;
 
   bool is_comptime_const() const override;
-  Flex<Type> remove_comptime_const() const override;
+  Flex<Type> internal_remove_comptime_const() const override;
 
-  bool unify(const Type &assignment_type) const override;
+  bool internal_unify(const Type &assignment_type) const override;
 
   bool has_native_numeric_repr() const override;
 

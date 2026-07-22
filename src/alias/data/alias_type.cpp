@@ -9,7 +9,7 @@ bool AliasType::is_resolved() const {
   return false;
 }
 
-Flex<Type> AliasType::resolve() const {
+Flex<Type> AliasType::internal_resolve() const {
   return target;
 }
 
@@ -17,20 +17,21 @@ bool AliasType::is_comptime_const() const {
   return target->is_comptime_const();
 }
 
-Flex<Type> AliasType::remove_comptime_const() const {
-  return target->remove_comptime_const_from_type();
+Flex<Type> AliasType::internal_remove_comptime_const() const {
+  return target->remove_comptime_const();
 }
 
-bool AliasType::unify(const Type &assignment_type) const {
-  return target->unify_type(assignment_type);
+bool AliasType::internal_unify(const Type &assignment_type) const {
+  return target->unify(assignment_type);
 }
 
-Option<Flex<Expression>> AliasType::coerce(const Type &assignment_type, const Expression &expr)
-    const {
+Option<Flex<Expression>> AliasType::internal_coerce(
+    const Type &assignment_type, const Expression &expr
+) const {
   if (unify(assignment_type)) {
     return expr.flex();
   }
-  return target->coerce_expr(assignment_type, expr);
+  return target->coerce(assignment_type, expr);
 }
 
 Option<Flex<Expression>> AliasType::perform_binary_op(

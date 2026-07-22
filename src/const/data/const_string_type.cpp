@@ -23,11 +23,11 @@ bool ConstStringType::is_comptime_const() const {
   return true;
 }
 
-Flex<Type> ConstStringType::remove_comptime_const() const {
+Flex<Type> ConstStringType::internal_remove_comptime_const() const {
   return STR_REF_TYPE;
 }
 
-bool ConstStringType::unify(const Type &assignment_type) const {
+bool ConstStringType::internal_unify(const Type &assignment_type) const {
   return assignment_type.is<ConstStringType>() &&
          value == assignment_type.as<ConstStringType>().value;
 }
