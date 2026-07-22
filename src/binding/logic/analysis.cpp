@@ -419,6 +419,7 @@ Flex<FunctionSignature> analyze_function_signature(
   }
 
   if (signature_node.implicit_parameter_list.has_value()) {
+    result->implicit_parameters = List<FunctionParameter>();
     const auto &implicit_param_list_node = module_state
                                                .get_node(
                                                    signature_node.implicit_parameter_list.value()
@@ -433,9 +434,6 @@ Flex<FunctionSignature> analyze_function_signature(
         module_state.raise_type_error_at_node(parameter_node_id, move(error_message));
       }
       seen_param_names.add(param.name);
-      if (!result->implicit_parameters.has_value()) {
-        result->implicit_parameters = List<FunctionParameter>();
-      }
       result->implicit_parameters.value().push_back(move(param));
     }
   }

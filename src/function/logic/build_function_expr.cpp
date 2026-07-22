@@ -179,7 +179,7 @@ start:
             continue;
           }
 
-          // check for implicit param in current scope
+          // check for implicit param in current implicit scope
           auto implicit_binding_id = module_state.get_implicit_binding_id_by_name(param.name);
           if (implicit_binding_id.has_value()) {
             auto implicit_binding = module_state.get_binding_by_id(implicit_binding_id.value());

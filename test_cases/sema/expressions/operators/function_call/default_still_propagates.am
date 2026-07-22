@@ -1,0 +1,87 @@
+fun f() {
+  return g()
+}
+
+fun g() with (x : int = 30) {
+  return implicit(x)
+}
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="f",
+            type=FunctionType(
+              name=f,
+              definitions=[
+                FunctionDefinition(
+                  signature=FunctionSignature(
+                    implicit_parameters=[
+                      FunctionParameter(
+                        name="x",
+                        type=int
+                      )
+                    ],
+                    return_type=int
+                  ),
+                  body=StatementSequence(
+                    stmts=[
+                      ReturnStatement(
+                        value=FunctionCallExpression(
+                          callee=IdentifierExpression(
+                            name="g"
+                          ),
+                          signature_id=0,
+                          implicit_arguments={
+                            x=IdentifierExpression(
+                              name="x"
+                            )
+                          }
+                        )
+                      )
+                    ]
+                  )
+                )
+              ]
+            )
+          ),
+          ValueBinding(
+            name="g",
+            type=FunctionType(
+              name=g,
+              definitions=[
+                FunctionDefinition(
+                  signature=FunctionSignature(
+                    implicit_parameters=[
+                      FunctionParameter(
+                        name="x",
+                        type=int,
+                        default_value=NumberLiteralExpression(
+                          lit=30
+                        )
+                      )
+                    ],
+                    return_type=int
+                  ),
+                  body=StatementSequence(
+                    stmts=[
+                      ReturnStatement(
+                        value=IdentifierExpression(
+                          name="x"
+                        )
+                      )
+                    ]
+                  )
+                )
+              ]
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

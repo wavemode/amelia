@@ -1,0 +1,129 @@
+fun f() with (x : int) {
+  g()
+  h()
+}
+
+fun g() with (x : double) {
+  return implicit(x)
+}
+
+fun h() with (x : int) {
+  return implicit(x)
+}
+
+/* EXPECTED_OUTPUT:
+SemaResult(
+  modules=[
+    Module(
+      scope=Scope(
+        bindings=[
+          ValueBinding(
+            name="f",
+            type=FunctionType(
+              name=f,
+              definitions=[
+                FunctionDefinition(
+                  signature=FunctionSignature(
+                    implicit_parameters=[
+                      FunctionParameter(
+                        name="x",
+                        type=int
+                      )
+                    ],
+                    return_type=null
+                  ),
+                  body=StatementSequence(
+                    stmts=[
+                      FunctionCallExpression(
+                        callee=IdentifierExpression(
+                          name="g"
+                        ),
+                        signature_id=0,
+                        implicit_arguments={
+                          x=NativeTypeCastExpression(
+                            type=double,
+                            expr=IdentifierExpression(
+                              name="x"
+                            )
+                          )
+                        }
+                      ),
+                      FunctionCallExpression(
+                        callee=IdentifierExpression(
+                          name="h"
+                        ),
+                        signature_id=0,
+                        implicit_arguments={
+                          x=IdentifierExpression(
+                            name="x"
+                          )
+                        }
+                      )
+                    ]
+                  )
+                )
+              ]
+            )
+          ),
+          ValueBinding(
+            name="g",
+            type=FunctionType(
+              name=g,
+              definitions=[
+                FunctionDefinition(
+                  signature=FunctionSignature(
+                    implicit_parameters=[
+                      FunctionParameter(
+                        name="x",
+                        type=double
+                      )
+                    ],
+                    return_type=double
+                  ),
+                  body=StatementSequence(
+                    stmts=[
+                      ReturnStatement(
+                        value=IdentifierExpression(
+                          name="x"
+                        )
+                      )
+                    ]
+                  )
+                )
+              ]
+            )
+          ),
+          ValueBinding(
+            name="h",
+            type=FunctionType(
+              name=h,
+              definitions=[
+                FunctionDefinition(
+                  signature=FunctionSignature(
+                    implicit_parameters=[
+                      FunctionParameter(
+                        name="x",
+                        type=int
+                      )
+                    ],
+                    return_type=int
+                  ),
+                  body=StatementSequence(
+                    stmts=[
+                      ReturnStatement(
+                        value=IdentifierExpression(
+                          name="x"
+                        )
+                      )
+                    ]
+                  )
+                )
+              ]
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/

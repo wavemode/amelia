@@ -1,0 +1,9 @@
+fun f() {
+  return g(x=5)
+}
+
+fun g(x: int, x: int) = x
+
+/* EXPECTED_OUTPUT:
+ERROR("Duplicate parameter name 'x' in function signature (at test_cases/sema/expressions/operators/function_call/error_duplicate_param.am:5:15)")
+*/

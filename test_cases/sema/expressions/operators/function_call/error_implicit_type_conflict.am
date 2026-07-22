@@ -1,0 +1,16 @@
+fun f() {
+  g()
+  h()
+}
+
+fun g() with (x : double) {
+  return implicit(x)
+}
+
+fun h() with (x : int) {
+  return implicit(x)
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("Cannot coerce implicit argument 'x' from inferred type 'double' to expected type 'int' in call to function 'h' (at test_cases/sema/expressions/operators/function_call/error_implicit_type_conflict.am:3:3)")
+*/

@@ -1,0 +1,9 @@
+fun f() {
+  return g(x=5, x=6)
+}
+
+fun g(x: int) = x
+
+/* EXPECTED_OUTPUT:
+ERROR("Duplicate argument name 'x' in function call (at test_cases/sema/expressions/operators/function_call/error_duplicate_named.am:2:17)")
+*/
