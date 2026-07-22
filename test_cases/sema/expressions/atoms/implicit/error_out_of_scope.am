@@ -1,8 +1,8 @@
 const x = {
   with (a = 5) {
-    implicit a
+    implicit(a)
   }
-  implicit a
+  implicit(a)
 }
 
 /* EXPECTED_OUTPUT:

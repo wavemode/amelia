@@ -265,7 +265,7 @@ Flex<Expression> build_stmt_implicit_var_decl(
     auto binding = emplace_flex<ValueBinding>();
     binding->decl = arg;
     binding->name = arg_name.name;
-    binding->kind = BindingKind::Constant;
+    binding->kind = BindingKind::Variable;
     binding->is_implicit = true;
     auto arg_value = build_expression(module_state, arg_node.expr);
     binding->value = arg_value;

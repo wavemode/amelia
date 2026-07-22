@@ -1,4 +1,4 @@
-let x = implicit y
+let x = implicit (y)
 
 /* EXPECTED_OUTPUT:
 ModuleNode(

@@ -11,18 +11,17 @@ Serialize serialize_function_signature(const FunctionSignature &signature) {
   if (signature.parameters.size() > 0) {
     Serialize parameters_list;
     for (const auto &parameter : signature.parameters) {
-      Serialize parameter_ser;
-      parameter_ser.set_object_name("FunctionParameter");
-      parameter_ser.add_object_field("name", Serialize::quoted(parameter.name));
-      parameter_ser.add_object_field("type", parameter.type->serialize());
-      if (parameter.default_value.has_value()) {
-        parameter_ser.add_object_field(
-            "default_value", parameter.default_value.value()->serialize()
-        );
-      }
-      parameters_list.add_list_item(move(parameter_ser));
+      parameters_list.add_list_item(serialize_function_parameter(parameter));
     }
     result.add_object_field("parameters", move(parameters_list));
+  }
+  if (signature.implicit_parameters.has_value() &&
+      signature.implicit_parameters.value().size() > 0) {
+    Serialize implicit_parameters_list;
+    for (const auto &parameter : signature.implicit_parameters.value()) {
+      implicit_parameters_list.add_list_item(serialize_function_parameter(parameter));
+    }
+    result.add_object_field("implicit_parameters", move(implicit_parameters_list));
   }
   result.add_object_field("return_type", signature.return_type->serialize());
   return result;

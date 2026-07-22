@@ -142,7 +142,7 @@ Flex<TypeBinding> resolve_type_binding(
   analyze_binding(module_state, binding);
   switch (binding->kind) {
   case BindingKind::Type:
-    return binding.downcast<TypeBinding>();
+    return binding.downcast<TypeBinding>().weak();
   default: {
     String error_message = "Identifier '";
     error_message.append(name);
@@ -168,7 +168,7 @@ Flex<ValueBinding> resolve_value_binding(
   case BindingKind::Constant:
   case BindingKind::Variable:
   case BindingKind::Function:
-    return binding.downcast<ValueBinding>();
+    return binding.downcast<ValueBinding>().weak();
   default:
     module_state.raise_type_error_at_node(
         node_id, "not implemented (unknown binding kind in resolve_value_binding)"
@@ -192,7 +192,7 @@ Flex<ValueBinding> resolve_implicit_value_binding(
   case BindingKind::Constant:
   case BindingKind::Variable:
   case BindingKind::Function:
-    return binding.downcast<ValueBinding>();
+    return binding.downcast<ValueBinding>().weak();
   default:
     module_state.raise_type_error_at_node(
         node_id, "not implemented (unknown binding kind in resolve_value_binding)"
@@ -417,6 +417,29 @@ Flex<FunctionSignature> analyze_function_signature(
     seen_param_names.add(param.name);
     result->parameters.push_back(move(param));
   }
+
+  if (signature_node.implicit_parameter_list.has_value()) {
+    const auto &implicit_param_list_node = module_state
+                                               .get_node(
+                                                   signature_node.implicit_parameter_list.value()
+                                               )
+                                               .as_ImplicitParameterListNode();
+    for (NodeId parameter_node_id : implicit_param_list_node.parameters) {
+      auto param = analyze_function_parameter(module_state, parameter_node_id);
+      if (seen_param_names.has(param.name)) {
+        String error_message = "Duplicate parameter name '";
+        error_message.append(param.name);
+        error_message.append("' in function signature");
+        module_state.raise_type_error_at_node(parameter_node_id, move(error_message));
+      }
+      seen_param_names.add(param.name);
+      if (!result->implicit_parameters.has_value()) {
+        result->implicit_parameters = List<FunctionParameter>();
+      }
+      result->implicit_parameters.value().push_back(move(param));
+    }
+  }
+
   if (signature_node.return_type.has_value()) {
     result->return_type = evaluate_type_expr(module_state, signature_node.return_type.value());
   } else {
@@ -505,15 +528,34 @@ Flex<Expression> analyze_function_body(
     IModuleAnalysisState &module_state, FunctionSignature &signature, NodeId function_body_node_id
 ) {
   auto &ctx = module_state.analysis_context();
+
   auto old_signature = ctx.current_function_signature;
+  auto old_inferred_implicits = move(ctx.current_inferred_implicit_params);
+
   ctx.current_function_signature = &signature;
+  if (signature.implicit_parameters.has_value()) {
+    ctx.current_inferred_implicit_params = None();
+  } else {
+    ctx.current_inferred_implicit_params = emplace_flex<Map<Text, Flex<ValueBinding>>>();
+  }
 
   for (const auto &param : signature.parameters) {
     auto binding = emplace_flex<ValueBinding>();
     binding->name = param.name;
-    binding->type = param.type->remove_comptime_const_from_type();
+    binding->type = param.type;
     binding->kind = BindingKind::Variable;
     module_state.push_binding(move(binding));
+  }
+
+  if (signature.implicit_parameters.has_value()) {
+    for (const auto &param : signature.implicit_parameters.value()) {
+      auto binding = emplace_flex<ValueBinding>();
+      binding->name = param.name;
+      binding->type = param.type;
+      binding->kind = BindingKind::Variable;
+      binding->is_implicit = true;
+      module_state.push_binding(move(binding));
+    }
   }
 
   const auto &function_body_node = module_state.get_node(function_body_node_id)
@@ -558,7 +600,20 @@ Flex<Expression> analyze_function_body(
   for (size_t i = 0; i < signature.parameters.size(); ++i) {
     module_state.pop_binding();
   }
+  if (signature.implicit_parameters.has_value()) {
+    for (size_t i = 0; i < signature.implicit_parameters.value().size(); ++i) {
+      module_state.pop_binding();
+    }
+  } else {
+    signature.implicit_parameters = List<FunctionParameter>();
+    for (const auto &[name, value_binding] : *ctx.current_inferred_implicit_params.value()) {
+      auto &param = signature.implicit_parameters.value().emplace_back();
+      param.name = String(name);
+      param.type = value_binding->type.value();
+    }
+  }
   ctx.current_function_signature = old_signature;
+  ctx.current_inferred_implicit_params = move(old_inferred_implicits);
 
   return result;
 }

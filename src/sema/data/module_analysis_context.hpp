@@ -2,6 +2,7 @@
 
 #include <cstdint>
 
+#include "binding/data/value_binding.hpp"
 #include "expr/data/expression.hpp"
 #include "statement/data/goto_request.hpp"
 #include "type/data/type.hpp"
@@ -13,12 +14,12 @@ namespace amelia {
 
 template <typename T> class List;
 struct FunctionSignature;
-struct Binding;
 
 using NodeId = int32_t;
 
 struct ModuleAnalysisContext {
   Option<FunctionSignature *> current_function_signature;
+  Option<Flex<Map<Text, Flex<ValueBinding>>>> current_inferred_implicit_params;
   Option<Binding *> binding_currently_analyzing;
   Option<NodeId> intro_decls_currently_analyzing;
   Option<NodeId> loop_currently_analyzing;

@@ -1,12 +1,15 @@
 #include "build_function_expr.hpp"
 
+#include "binding/data/value_binding.hpp"
 #include "expr/data/expression.hpp"
 #include "expr/logic/build.hpp"
 #include "function/data/function_call_expression.hpp"
 #include "function/data/function_type.hpp"
+#include "literal/data/identifier_expression.hpp"
 #include "literal/logic/build_literal_expr.hpp"
 #include "operator/logic/build_operator_expr.hpp"
 #include "parser/data/node.hpp"
+#include "sema/data/module_analysis_context.hpp"
 #include "sema/interface/module_analysis_state.hpp"
 #include "statement/logic/sequence_exprs.hpp"
 #include "util/data/flex.hpp"
@@ -76,6 +79,8 @@ Option<Flex<FunctionCallExpression>> resolve_function_call(
     Slice<Flex<Expression>> pos_args,
     const Map<Text, Flex<Expression>> &named_args
 ) {
+  auto &ctx = module_state.analysis_context();
+
   if (!callee->type->is<FunctionType>()) {
     module_state.raise_type_error_at_node(
         expr_node_id, "not implemented (called expression is not a function)"
@@ -90,10 +95,12 @@ Option<Flex<FunctionCallExpression>> resolve_function_call(
 start:
 
   List<Option<Flex<Expression>>> arguments;
+  Map<Text, Option<Flex<Expression>>> implicit_arguments;
   size_t signature_id = 0;
-  for (FunctionDefinition &definition : static_cast<FunctionType &>(*callee->type).definitions) {
+  for (FunctionDefinition &definition : callee->type.downcast<FunctionType>()->definitions) {
     auto &signature = *definition.signature;
     arguments.clear();
+    implicit_arguments.clear();
 
     size_t pos_arg_index = 0;
     size_t used_named_args = 0;
@@ -132,6 +139,26 @@ start:
       }
     }
 
+    if (signature.implicit_parameters.has_value()) {
+      for (FunctionParameter &param : signature.implicit_parameters.value()) {
+        if (named_args.has(param.name)) {
+          Option<Flex<Expression>> expr;
+          if (exact_match_only) {
+            auto arg_expr = named_args[param.name];
+            expr = param.type->unify_type(arg_expr->type) ? arg_expr : Option<Flex<Expression>>();
+          } else {
+            auto arg_expr = named_args[param.name];
+            expr = param.type->coerce_expr(arg_expr);
+          }
+          if (!expr.has_value()) {
+            goto fail;
+          }
+          implicit_arguments.set(param.name, expr.value());
+          ++used_named_args;
+        }
+      }
+    }
+
     if (pos_arg_index < pos_args.size() || used_named_args < named_args.size()) {
       goto fail;
     }
@@ -143,6 +170,100 @@ start:
       result->callee = callee;
       result->signature_id = signature_id;
       result->arguments = move(arguments);
+
+      if (signature.implicit_parameters.has_value()) {
+        for (FunctionParameter &param : signature.implicit_parameters.value()) {
+
+          // check if implicit param was already passed explicitly as named argument
+          if (implicit_arguments.has(param.name)) {
+            continue;
+          }
+
+          // check for implicit param in current scope
+          auto implicit_binding_id = module_state.get_implicit_binding_id_by_name(param.name);
+          if (implicit_binding_id.has_value()) {
+            auto implicit_binding = module_state.get_binding_by_id(implicit_binding_id.value());
+            auto arg_expr = emplace_flex<IdentifierExpression>();
+            arg_expr->node_id = expr_node_id;
+            arg_expr->type = implicit_binding.downcast<ValueBinding>()->type.value().weak();
+            arg_expr->binding = implicit_binding;
+
+            auto coerced_arg_expr = param.type->coerce_expr(arg_expr);
+            if (!coerced_arg_expr.has_value()) {
+              String error_message = "Cannot coerce implicit argument '";
+              error_message.append(param.name);
+              error_message.append("' from type '");
+              arg_expr->type->serialize().to_string(error_message);
+              error_message.append("' to expected type '");
+              param.type->serialize().to_string(error_message);
+              error_message.append("' in call to function '");
+              error_message.append(callee->type.downcast<FunctionType>()->name);
+              error_message.append("'");
+              module_state.raise_type_error_at_node(expr_node_id, move(error_message));
+            }
+
+            implicit_arguments.set(param.name, coerced_arg_expr.value());
+            continue;
+          }
+
+          // check if we can add implicit param to function currently being analyzed
+          if (ctx.current_inferred_implicit_params.has_value()) {
+            auto arg_expr_binding = ctx.current_inferred_implicit_params.value()->find(param.name);
+            if (arg_expr_binding.has_value()) {
+              auto arg_expr = emplace_flex<IdentifierExpression>();
+              arg_expr->node_id = expr_node_id;
+              arg_expr->binding = *arg_expr_binding.value();
+              arg_expr->type = (*arg_expr_binding.value())->type.value().weak();
+              auto coerced_arg_expr = param.type->coerce_expr(arg_expr);
+              if (!coerced_arg_expr.has_value()) {
+                String error_message = "Cannot coerce implicit argument '";
+                error_message.append(param.name);
+                error_message.append("' from inferred type '");
+                arg_expr->type->serialize().to_string(error_message);
+                error_message.append("' to expected type '");
+                param.type->serialize().to_string(error_message);
+                error_message.append("' in call to function '");
+                error_message.append(callee->type.downcast<FunctionType>()->name);
+                error_message.append("'");
+                module_state.raise_type_error_at_node(expr_node_id, move(error_message));
+              }
+              implicit_arguments.set(param.name, coerced_arg_expr.value());
+            } else {
+              auto binding = emplace_flex<ValueBinding>();
+              binding->decl = expr_node_id;
+              binding->name = param.name;
+              binding->type = param.type.weak();
+              binding->kind = BindingKind::Variable;
+              binding->is_implicit = true;
+              ctx.current_inferred_implicit_params.value()->set(param.name, binding);
+
+              auto arg_expr = emplace_flex<IdentifierExpression>();
+              arg_expr->node_id = expr_node_id;
+              arg_expr->binding = binding;
+              arg_expr->type = binding->type.value().weak();
+              implicit_arguments.set(param.name, arg_expr);
+            }
+            continue;
+          }
+
+          // check if the implicit param has a default value
+          if (param.default_value.has_value()) {
+            implicit_arguments.set(param.name, None());
+            continue;
+          }
+
+          String error_message = "Missing implicit argument '";
+          error_message.append(param.name);
+          error_message.append("' of type '");
+          param.type->serialize().to_string(error_message);
+          error_message.append("' in call to function '");
+          error_message.append(callee->type.downcast<FunctionType>()->name);
+          error_message.append("'");
+          module_state.raise_type_error_at_node(expr_node_id, move(error_message));
+        }
+      }
+
+      result->implicit_arguments = move(implicit_arguments);
       return result;
     }
 

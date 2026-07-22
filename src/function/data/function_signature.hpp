@@ -11,6 +11,7 @@ namespace amelia {
 
 struct FunctionSignature {
   List<FunctionParameter> parameters;
+  Option<List<FunctionParameter>> implicit_parameters;
   Flex<Type> return_type;
 };
 

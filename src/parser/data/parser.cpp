@@ -1906,9 +1906,9 @@ public:
 
   NodeId parse_implicit_expr() {
     auto implicit_token = next();
-    NodeId expr = expect_identifier(
-        "Expected identifier after 'implicit' keyword in implicit expression"
-    );
+    read_left_paren("Expected '(' after 'implicit' keyword in implicit expression");
+    NodeId expr = expect_identifier("Expected identifier in implicit expression");
+    read_token_type(TokenType::RIGHT_PAREN, "Expected ')' after identifier in implicit expression");
     return m_output.add_node(implicit_token.id, m_token_index, ImplicitExprNode{expr});
   }
 

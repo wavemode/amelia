@@ -8,10 +8,14 @@
 
 namespace amelia {
 
+class Serialize;
+
 struct FunctionParameter {
   String name;
   Flex<Type> type;
   Option<Flex<Expression>> default_value;
 };
+
+Serialize serialize_function_parameter(const FunctionParameter &parameter);
 
 } // namespace amelia

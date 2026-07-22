@@ -1,6 +1,9 @@
 const x = {
-  with (a = 5) {
-    implicit(a)
+  with (
+    a = 5,
+    b = implicit(a)
+  ) {
+    implicit(b)
   }
 }
 
@@ -23,12 +26,19 @@ SemaResult(
                       value=NumberLiteralExpression(
                         lit=5
                       )
+                    ),
+                    ValueBinding(
+                      name="b",
+                      type=Const[5],
+                      value=IdentifierExpression(
+                        name="a"
+                      )
                     )
                   ],
                   body=StatementSequence(
                     stmts=[
                       IdentifierExpression(
-                        name="a"
+                        name="b"
                       )
                     ]
                   )
