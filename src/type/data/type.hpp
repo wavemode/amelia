@@ -19,10 +19,6 @@ struct Type : FlexFromThis<Type>, Dynamic {
 
   /// Conversions
 
-public:
-  virtual bool is_resolved() const;
-  virtual bool is_comptime_const() const;
-
 protected:
   virtual Flex<Type> internal_resolve() const;
   virtual Flex<Type> internal_remove_comptime_const() const;
@@ -71,6 +67,8 @@ public:
 
   /// Traits
 
+  virtual bool is_resolved() const;
+  virtual bool is_comptime_const() const;
   virtual bool is_trivial() const;
   virtual bool is_primitive() const;
 
