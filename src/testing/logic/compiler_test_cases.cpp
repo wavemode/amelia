@@ -18,6 +18,7 @@
 #include "testing/data/compiler_test_case.hpp"
 #include "testing/data/compiler_test_case_collection.hpp"
 #include "testing/data/compiler_test_case_outcome.hpp"
+#include "testing/data/compiler_test_execution_context.hpp"
 #include "testing/interface/test_case_runner.hpp"
 #include "util/data/serialize.hpp"
 #include "util/data/slice_utils.hpp"
@@ -117,80 +118,78 @@ void collect_test_cases(
   });
 }
 
-CompilerTestExecutionOutcome execute_collection(
+bool execute_test_case(
     ITestCaseRunner &test_case_runner,
     IFileWriter &file_writer,
     IPrinter &printer,
-    IEnvironmentReader &env_reader,
-    const CompilerTestCaseCollection &collection
+    CompilerTestExecutionOutcome &outcome,
+    const CompilerTestCase &test_case,
+    const CompilerTestExecutionContext &context
 ) {
-  bool update_test_cases = true;
-  String env_value;
-  env_reader.get_env(env_value, String("AMELIA_UPDATE_TEST_CASES"));
-  if (env_value == "" || env_value == "0") {
-    update_test_cases = false;
+  bool success = true;
+
+  if (context.verbose) {
+    printer.print("Executing test case: ");
+    printer.println(test_case.filename);
   }
 
-  bool verbose = true;
-  env_value.clear();
-  env_reader.get_env(env_value, String("AMELIA_TEST_VERBOSE"));
-  if (env_value == "" || env_value == "0") {
-    verbose = false;
-  }
-
-  size_t num_executed = 0;
-  size_t num_failed = 0;
-  size_t num_updated = 0;
-  for (const CompilerTestCase &test_case : collection.test_cases) {
-    if (verbose) {
-      printer.print("Executing test case: ");
+  ++outcome.count_executed;
+  // TODO: need more robust logic for deciding that something is supposed to error
+  bool should_error = TextUtils::contains(test_case.filename, "error_");
+  bool did_error = false;
+  String actual_output;
+  try {
+    test_case_runner.run_test_case(actual_output, test_case);
+    if (should_error) {
+      printer.print("Expected test case to raise an exception but it raised none: ");
       printer.println(test_case.filename);
     }
-
-    ++num_executed;
-    // TODO: need more robust logic for deciding that something is supposed to error
-    bool should_error = TextUtils::contains(test_case.filename, "error_");
-    bool did_error = false;
-    String actual_output;
-    try {
-      test_case_runner.run_test_case(actual_output, test_case);
-      if (should_error) {
-        printer.print("Expected test case to raise an exception but it raised none: ");
-        printer.println(test_case.filename);
-      }
-    } catch (const SourceLocationError &e) {
-      did_error = true;
-      if (!should_error) {
-        printer.print("Test case threw an unexpected exception: ");
-        printer.print(" (error message: \"");
-        printer.print(Text::from(e.what()));
-        printer.println("\")");
-      }
-      actual_output.append("ERROR(\"");
-      actual_output.append(Text::from(e.what()));
-      actual_output.append("\")\n");
+  } catch (const SourceLocationError &e) {
+    did_error = true;
+    if (!should_error) {
+      printer.print("Test case threw an unexpected exception: ");
+      printer.print(" (error message: \"");
+      printer.print(Text::from(e.what()));
+      printer.println("\")");
     }
+    actual_output.append("ERROR(\"");
+    actual_output.append(Text::from(e.what()));
+    actual_output.append("\")\n");
+  }
 
-    if (actual_output.text() != test_case.expected_output) {
-      if (update_test_cases && (should_error == did_error)) {
-        update_file_expected_output(
-            file_writer, test_case.filename, test_case.input, actual_output
-        );
-        printer.print("Updated expected output for: ");
-        printer.println(test_case.filename);
-        ++num_updated;
-      } else {
-        printer.print("Test case failed: ");
-        printer.println(test_case.filename);
-        ++num_failed;
-      }
+  if (actual_output.text() != test_case.expected_output) {
+    if (context.update_test_cases && (should_error == did_error)) {
+      update_file_expected_output(file_writer, test_case.filename, test_case.input, actual_output);
+      printer.print("Updated expected output for: ");
+      printer.println(test_case.filename);
+      ++outcome.count_updated;
+    } else {
+      printer.print("Test case failed: ");
+      printer.println(test_case.filename);
+      ++outcome.count_failed;
+      success = false;
     }
   }
-  return {
-      .count_executed = num_executed,
-      .count_failed = num_failed,
-      .count_updated = num_updated,
-  };
+
+  return success;
+}
+
+CompilerTestExecutionContext get_test_execution_context(IEnvironmentReader &env_reader) {
+  CompilerTestExecutionContext context;
+
+  String env_value;
+  env_reader.get_env(env_value, String("AMELIA_UPDATE_TEST_CASES"));
+  if (env_value != "" && env_value != "0") {
+    context.update_test_cases = true;
+  }
+
+  env_value.clear();
+  env_reader.get_env(env_value, String("AMELIA_TEST_VERBOSE"));
+  if (env_value != "" && env_value == "0") {
+    context.verbose = true;
+  }
+
+  return context;
 }
 
 bool execute_test_case(ITestCaseRunner &test_case_runner, CompilerTestCase test_case) {

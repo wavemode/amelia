@@ -12,6 +12,7 @@ struct CompilerTestCase;
 struct CompilerTestCaseCollection;
 struct CompilerTestExecutionOutcome;
 struct AbstractString;
+struct CompilerTestExecutionContext;
 class Text;
 
 void collect_test_cases(
@@ -23,13 +24,16 @@ void collect_test_cases(
     Text root_directory
 );
 
-CompilerTestExecutionOutcome execute_collection(
-    ITestCaseRunner &,
-    IFileWriter &,
-    IPrinter &,
-    IEnvironmentReader &,
-    const CompilerTestCaseCollection &collection
+bool execute_test_case(
+    ITestCaseRunner &test_case_runner,
+    IFileWriter &file_writer,
+    IPrinter &printer,
+    CompilerTestExecutionOutcome &outcome,
+    const CompilerTestCase &test_case,
+    const CompilerTestExecutionContext &context
 );
+
+CompilerTestExecutionContext get_test_execution_context(IEnvironmentReader &env_reader);
 
 bool execute_test_case(ITestCaseRunner &, CompilerTestCase test_case);
 
