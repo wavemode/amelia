@@ -83,9 +83,14 @@ void collect_test_cases(
     IFilesystemWalker &filesystem_walker,
     IFileLoader &file_loader,
     IPrinter &printer,
+    IEnvironmentReader &env_reader,
     CompilerTestCaseCollection &output,
     Text root_directory
 ) {
+  String test_case_filter;
+  env_reader.get_env(test_case_filter, String("AMELIA_TEST_CASE_FILTER"));
+  bool has_filter = test_case_filter != "";
+
   printer.print("Collecting test cases from directory: ");
   printer.println(root_directory);
 
@@ -94,6 +99,10 @@ void collect_test_cases(
   for (size_t i = num_files_before; i < output.paths.size(); ++i) {
     const String &path = output.paths[i];
     if (!TextUtils::ends_with(path, ".am")) {
+      continue;
+    }
+
+    if (has_filter && !TextUtils::contains(path, test_case_filter)) {
       continue;
     }
 
@@ -129,18 +138,10 @@ CompilerTestExecutionOutcome execute_collection(
     verbose = false;
   }
 
-  String test_case_filter;
-  env_reader.get_env(test_case_filter, String("AMELIA_TEST_CASE_FILTER"));
-  bool has_filter = test_case_filter != "";
-
   size_t num_executed = 0;
   size_t num_failed = 0;
   size_t num_updated = 0;
   for (const CompilerTestCase &test_case : collection.test_cases) {
-    if (has_filter && !TextUtils::contains(test_case.filename, test_case_filter)) {
-      continue;
-    }
-
     if (verbose) {
       printer.print("Executing test case: ");
       printer.println(test_case.filename);

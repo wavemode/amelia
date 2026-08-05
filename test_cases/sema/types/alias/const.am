@@ -10,11 +10,11 @@ SemaResult(
         bindings=[
           TypeBinding(
             name="MyFive",
-            type=const::MyFive (aka Const[5])
+            type=const::MyFive
           ),
           ValueBinding(
             name="x",
-            type=const::MyFive (aka Const[5]),
+            type=const::MyFive,
             value=NumberLiteralExpression(
               lit=5
             )

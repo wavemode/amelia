@@ -11,7 +11,7 @@ bool TypeType::internal_unify(const Type &assignment_type) const {
 }
 
 Serialize TypeType::serialize() const {
-  String repr("type[");
+  String repr("Type[");
   referenced_type->serialize().to_string(repr);
   repr.append("]");
   return Serialize::literal(move(repr));

@@ -62,9 +62,6 @@ Serialize AliasType::serialize() const {
   String repr(module_name);
   repr.append("::");
   repr.append(name);
-  repr.append(" (aka ");
-  target->serialize().to_string(repr);
-  repr.append(')');
   return Serialize::literal(repr);
 }
 

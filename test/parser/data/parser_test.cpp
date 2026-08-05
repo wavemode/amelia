@@ -25,7 +25,7 @@ TEST_CASE("test suite") {
 
   CompilerTestCaseCollection collection;
   collect_test_cases(
-      filesystem_walker, file_loader, console_printer, collection, "test_cases/parser"
+      filesystem_walker, file_loader, console_printer, env_reader, collection, "test_cases/parser"
   );
   auto outcome = execute_collection(
       parser_test_case_runner, file_writer, console_printer, env_reader, collection

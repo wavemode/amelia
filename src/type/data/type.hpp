@@ -30,8 +30,6 @@ protected:
       const Type &assignment_type, const Expression &expr
   ) const;
 
-  /// Conversion Helpers
-
 public:
   Flex<Type> resolve() const;
   Flex<Type> remove_comptime_const() const;

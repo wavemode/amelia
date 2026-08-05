@@ -11,18 +11,18 @@ SemaResult(
         bindings=[
           TypeBinding(
             name="MyLong",
-            type=long::MyLong (aka long)
+            type=long::MyLong
           ),
           ValueBinding(
             name="x",
-            type=long::MyLong (aka long),
+            type=long::MyLong,
             value=NumberLiteralExpression(
               lit=0x7FFFFFFFFFFFFFFF
             )
           ),
           ValueBinding(
             name="y",
-            type=long::MyLong (aka long),
+            type=long::MyLong,
             value=NativeUnaryOperationExpression(
               op_kind="-",
               operand=NumberLiteralExpression(

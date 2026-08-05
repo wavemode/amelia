@@ -12,21 +12,21 @@ SemaResult(
         bindings=[
           ValueBinding(
             name="x",
-            type=local::T (aka Const[5]),
+            type=local::T,
             value=StatementSequence(
               stmts=[
                 TypeBindingStatement(
                   name="T",
                   binding=TypeBinding(
                     name="T",
-                    type=local::T (aka Const[5])
+                    type=local::T
                   ),
                   body=StatementSequence(
                     stmts=[
                       ValueBindingStatement(
                         binding=ValueBinding(
                           name="y",
-                          type=local::T (aka Const[5]),
+                          type=local::T,
                           value=NumberLiteralExpression(
                             lit=5
                           )

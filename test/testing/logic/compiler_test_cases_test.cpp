@@ -17,11 +17,17 @@ using namespace amelia;
 TEST_CASE("collect_test_cases") {
   FileLoader file_loader;
   FilesystemWalker filesystem_walker;
+  EnvironmentReader env_reader;
   SilentPrinter silent_printer;
   CompilerTestCaseCollection collection;
 
   collect_test_cases(
-      filesystem_walker, file_loader, silent_printer, collection, "test/testing/logic/collect"
+      filesystem_walker,
+      file_loader,
+      silent_printer,
+      env_reader,
+      collection,
+      "test/testing/logic/collect"
   );
 
   REQUIRE(collection.test_cases.size() == 2);
@@ -47,7 +53,12 @@ TEST_CASE("execute_test_case") {
 
   CompilerTestCaseCollection collection;
   collect_test_cases(
-      filesystem_walker, file_loader, silent_printer, collection, "test/testing/logic/execute"
+      filesystem_walker,
+      file_loader,
+      silent_printer,
+      env_reader,
+      collection,
+      "test/testing/logic/execute"
   );
   REQUIRE(collection.test_cases.size() == 1);
   auto test_case = collection.test_cases[0];
@@ -59,7 +70,12 @@ TEST_CASE("execute_test_case") {
 
   CompilerTestCaseCollection collection2;
   collect_test_cases(
-      filesystem_walker, file_loader, silent_printer, collection2, "test/testing/logic/execute"
+      filesystem_walker,
+      file_loader,
+      silent_printer,
+      env_reader,
+      collection2,
+      "test/testing/logic/execute"
   );
   REQUIRE(collection2.test_cases.size() == 1);
   auto test_case2 = collection2.test_cases[0];

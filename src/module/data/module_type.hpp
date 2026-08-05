@@ -1,5 +1,5 @@
-#include "type/data/type.hpp"
 #include "binding/data/binding.hpp"
+#include "type/data/type.hpp"
 #include "util/data/flex.hpp"
 #include "util/data/list.hpp"
 #include "util/data/map.hpp"

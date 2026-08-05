@@ -9,11 +9,11 @@ SemaResult(
         bindings=[
           TypeBinding(
             name="A",
-            type=alias::A (aka int)
+            type=alias::A
           ),
           ValueBinding(
             name="x",
-            type=type[alias::A (aka int)],
+            type=Type[alias::A],
             value=IdentifierExpression(
               name="A"
             )

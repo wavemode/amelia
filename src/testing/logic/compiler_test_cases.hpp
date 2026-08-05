@@ -18,6 +18,7 @@ void collect_test_cases(
     IFilesystemWalker &,
     IFileLoader &,
     IPrinter &,
+    IEnvironmentReader &,
     CompilerTestCaseCollection &output,
     Text root_directory
 );
