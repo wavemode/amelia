@@ -58,3 +58,21 @@ TEST_CASE("test suite") {
 }
 
 TEST_SUITE_END();
+
+#include <string>
+#include <type_traits>
+
+// Non-standard-layout type (std::string contains non-standard layout internals/pointers/access
+// controls)
+struct NonStandard {
+  std::string text;
+};
+
+// Contains a field that is NOT standard-layout
+struct Container {
+  int x;
+  NonStandard field; // Breaks standard-layout rule
+};
+
+static_assert(std::is_standard_layout_v<NonStandard>);
+static_assert(std::is_standard_layout_v<Container>); // Container is NOT standard-layout
