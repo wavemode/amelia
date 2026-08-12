@@ -1,23 +1,20 @@
 #pragma once
 
-#include "binding/data/binding.hpp"
+#include <cstddef>
+
+#include "loader/data/source_file.hpp"
+#include "sema/data/binding_ref.hpp"
 #include "util/data/flex.hpp"
 #include "util/data/list.hpp"
 #include "util/data/map.hpp"
-#include "util/data/text.hpp"
+#include "util/data/string.hpp"
 
 namespace amelia {
 
-class Serialize;
-
-using BindingId = int32_t;
-
 struct Scope {
-  Map<Text, BindingId> active_binding_ids;
-  Map<Text, BindingId> implicit_binding_ids;
-  List<Flex<Binding>> bindings;
-
-  Serialize serialize() const;
+  Flex<SourceFile> source_file;
+  List<BindingRef> binding_refs;
+  Map<String, size_t> binding_ids;
 };
 
 } // namespace amelia

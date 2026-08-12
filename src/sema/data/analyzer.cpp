@@ -2,13 +2,13 @@
 
 #include "analyzer.hpp"
 
-#include "binding/logic/analysis.hpp"
 #include "sema/data/module.hpp"
 #include "sema/data/module_analysis_context.hpp"
 #include "sema/data/scope.hpp"
 #include "sema/data/sema_result.hpp"
 #include "sema/data/type_error.hpp"
 #include "sema/interface/module_analysis_state.hpp"
+#include "sema/logic/analysis.hpp"
 
 namespace amelia {
 

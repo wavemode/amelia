@@ -1,8 +1,5 @@
 #include "build_literal_expr.hpp"
 
-#include "binding/data/type_binding.hpp"
-#include "binding/data/value_binding.hpp"
-#include "binding/logic/analysis.hpp"
 #include "builtin/data/builtin_type.hpp"
 #include "const/data/const_boolean_type.hpp"
 #include "const/data/const_character_type.hpp"
@@ -18,7 +15,10 @@
 #include "literal/data/number_literal_expression.hpp"
 #include "literal/data/string_literal_expression.hpp"
 #include "parser/data/node.hpp"
+#include "sema/data/type_binding.hpp"
+#include "sema/data/value_binding.hpp"
 #include "sema/interface/module_analysis_state.hpp"
+#include "sema/logic/analysis.hpp"
 #include "type/data/type_type.hpp"
 #include "util/data/flex.hpp"
 

@@ -105,7 +105,7 @@ public:
   }
 
   uint64_t hash_code() const noexcept {
-    return bit_hash(static_cast<uintptr_t>(m_object));
+    return bit_hash(reinterpret_cast<uintptr_t>(m_object));
   }
 
   Flex<T> &operator=(const Flex<T> &other) noexcept {
@@ -236,7 +236,7 @@ private:
         }
       }
     } else if (m_object) {
-      // if we have an object but no ref-count, then this destructor is running due to an exception
+      // if we have an object but no refcount, then this destructor is running due to an exception
       // thrown after construction of the object but before construction of the control block
       delete m_object;
     }

@@ -11,7 +11,7 @@
 #include "parser/data/parser.hpp"
 #include "parser/data/parser_result.hpp"
 #include "sema/data/analyzer.hpp"
-#include "sema/data/module_loader_context.hpp"
+#include "sema/data/sema_context.hpp"
 #include "sema/data/sema_result.hpp"
 #include "sema/logic/load_module.hpp"
 #include "source/data/source_location_error.hpp"

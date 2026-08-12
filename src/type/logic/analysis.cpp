@@ -4,8 +4,6 @@
 
 #include "array/data/array_type.hpp"
 #include "array/logic/build_array_expr.hpp"
-#include "binding/data/type_binding.hpp"
-#include "binding/logic/analysis.hpp"
 #include "bitint/data/bitint_type.hpp"
 #include "builtin/data/builtin_type.hpp"
 #include "const/data/const_boolean_type.hpp"
@@ -18,7 +16,9 @@
 #include "parser/data/node.hpp"
 #include "pointer/data/pointer_type.hpp"
 #include "reference/data/reference_type.hpp"
+#include "sema/data/type_binding.hpp"
 #include "sema/interface/module_analysis_state.hpp"
+#include "sema/logic/analysis.hpp"
 #include "slice/data/slice_type.hpp"
 #include "tuple/data/tuple_type.hpp"
 #include "util/data/flex.hpp"

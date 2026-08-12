@@ -1,6 +1,6 @@
 #include "identifier_expression.hpp"
 
-#include "binding/data/binding.hpp"
+#include "sema/data/binding.hpp"
 #include "util/data/serialize.hpp"
 #include "util/data/string.hpp"
 

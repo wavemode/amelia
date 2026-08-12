@@ -1,6 +1,5 @@
 #include "build_function_expr.hpp"
 
-#include "binding/data/value_binding.hpp"
 #include "expr/data/expression.hpp"
 #include "expr/logic/build.hpp"
 #include "function/data/function_call_expression.hpp"
@@ -10,6 +9,7 @@
 #include "operator/logic/build_operator_expr.hpp"
 #include "parser/data/node.hpp"
 #include "sema/data/module_analysis_context.hpp"
+#include "sema/data/value_binding.hpp"
 #include "sema/interface/module_analysis_state.hpp"
 #include "statement/logic/sequence_exprs.hpp"
 #include "util/data/flex.hpp"

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "binding/data/value_binding.hpp"
 #include "expr/data/expression.hpp"
+#include "sema/data/value_binding.hpp"
 #include "util/data/flex.hpp"
 
 namespace amelia {

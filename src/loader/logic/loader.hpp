@@ -2,16 +2,16 @@
 
 namespace amelia {
 
+struct LoaderResult;
 struct IFileLoader;
-struct SemaResult;
-struct ModuleLoaderContext;
+struct LoaderContext;
 class String;
 
 void load_module(
     IFileLoader &file_loader,
-    SemaResult &sema_result,
+    LoaderResult &loader_result,
     const String &module_name,
-    const ModuleLoaderContext &ctx
+    const LoaderContext &ctx
 );
 
 } // namespace amelia

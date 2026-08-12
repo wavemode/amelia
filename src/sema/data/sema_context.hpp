@@ -2,8 +2,8 @@
 
 #include <cstdint>
 
-#include "binding/data/value_binding.hpp"
 #include "expr/data/expression.hpp"
+#include "sema/data/binding.hpp"
 #include "statement/data/goto_request.hpp"
 #include "type/data/type.hpp"
 #include "util/data/map.hpp"
@@ -17,9 +17,9 @@ struct FunctionSignature;
 
 using NodeId = int32_t;
 
-struct ModuleAnalysisContext {
+struct SemaContext {
   Option<FunctionSignature *> current_function_signature;
-  Option<Flex<Map<Text, Flex<ValueBinding>>>> current_inferred_implicit_params;
+  Option<Flex<Map<Text, Flex<Binding>>>> current_inferred_implicit_params;
   Option<Binding *> binding_currently_analyzing;
   Option<NodeId> intro_decls_currently_analyzing;
   Option<NodeId> loop_currently_analyzing;

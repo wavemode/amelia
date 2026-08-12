@@ -1,4 +1,4 @@
-#include "binding/data/binding.hpp"
+#include "sema/data/binding.hpp"
 #include "type/data/type.hpp"
 #include "util/data/flex.hpp"
 #include "util/data/list.hpp"

@@ -2,10 +2,10 @@
 
 #include <cstdint>
 
-#include "binding/data/binding_kind.hpp"
+#include "sema/data/binding_kind.hpp"
 #include "source/data/declaration_visibility.hpp"
+#include "type/data/type.hpp"
 #include "util/data/flex.hpp"
-#include "util/data/list.hpp"
 #include "util/data/option.hpp"
 #include "util/data/string.hpp"
 
@@ -13,18 +13,12 @@ namespace amelia {
 
 class Serialize;
 
-using BindingId = int32_t;
-using NodeId = int32_t;
-
 struct Binding {
-  NodeId decl;
   String name;
   BindingKind kind;
+  Flex<Type> type;
   DeclarationVisibility visibility = DeclarationVisibility::Default;
-  bool is_implicit = false;
-  Option<BindingId> id;
-  Option<BindingId> shadowed_binding_id;
-  List<Flex<Binding>> child_bindings;
+  Option<Flex<Binding>> shadowed_binding;
 
   Serialize serialize() const;
   virtual ~Binding() = default;

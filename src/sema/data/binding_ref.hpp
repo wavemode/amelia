@@ -1,13 +1,15 @@
 #pragma once
 
-#include "expr/data/expression.hpp"
 #include "sema/data/binding.hpp"
+#include "util/data/flex.hpp"
 
 namespace amelia {
 
-struct IdentifierExpression : Expression {
+struct Scope;
+
+struct BindingRef {
   Flex<Binding> binding;
-  Serialize serialize() const override;
+  Scope &scope;
 };
 
 } // namespace amelia

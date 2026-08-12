@@ -5,7 +5,7 @@
 
 namespace amelia {
 
-struct ModuleLoaderContext {
+struct LoaderContext {
   Set<String> module_path;
 };
 

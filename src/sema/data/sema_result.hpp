@@ -1,19 +1,16 @@
 #pragma once
 
+#include "module/data/module_type.hpp"
 #include "util/data/deque.hpp"
 #include "util/data/flex.hpp"
 #include "util/data/map.hpp"
-
-#include "sema/data/module.hpp"
-#include "sema/data/scope.hpp"
 
 namespace amelia {
 
 class Serialize;
 
 struct SemaResult {
-  Map<String, ModuleId> module_ids;
-  Deque<Module> modules;
+  Map<String, Flex<ModuleType>> modules;
 
   Serialize serialize();
 };
