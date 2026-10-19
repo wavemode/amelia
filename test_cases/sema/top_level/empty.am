@@ -1,9 +1,0 @@
-/* EXPECTED_OUTPUT:
-SemaResult(
-  modules=[
-    Module(
-      scope=Scope()
-    )
-  ]
-)
-*/

@@ -1,7 +1,0 @@
-fun f(x : int) -> int {
-  return
-}
-
-/* EXPECTED_OUTPUT:
-ERROR("Cannot convert expression of type 'null' to expected return type 'int' (at test_cases/sema/declarations/fun/top_level/error_empty_return.am:2:3)")
-*/

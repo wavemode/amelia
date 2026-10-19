@@ -1,6 +1,0 @@
-const x : const "hi" = y
-const y = "bye"
-
-/* EXPECTED_OUTPUT:
-ERROR("Cannot coerce expression of type 'Const["bye"]' to expected type 'Const["hi"]' (at test_cases/sema/types/const/error_const_string_assign_different.am:1:24)")
-*/

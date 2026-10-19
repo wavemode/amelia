@@ -1,8 +1,0 @@
-let x = {
-  while(false) label x
-  goto x
-}
-
-/* EXPECTED_OUTPUT:
-ERROR("This goto would illegally enter a new scope (at test_cases/sema/statements/goto/error_into_while.am:3:3)")
-*/

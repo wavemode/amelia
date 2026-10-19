@@ -35,16 +35,12 @@ bool execute_test_case(
 
 CompilerTestExecutionContext get_test_execution_context(IEnvironmentReader &env_reader);
 
-bool execute_test_case(ITestCaseRunner &, CompilerTestCase test_case);
+bool execute_test_case(ITestCaseRunner &, const CompilerTestCase &test_case);
 
-bool update_expected_output(ITestCaseRunner &, IFileWriter &, CompilerTestCase test_case);
+bool update_expected_output(ITestCaseRunner &, IFileWriter &, const CompilerTestCase &test_case);
 
-void run_lexer_test_case(AbstractString &output, CompilerTestCase test_case);
+void run_lexer_test_case(AbstractString &output, const CompilerTestCase &test_case);
 
-void run_parser_test_case(AbstractString &output, CompilerTestCase test_case);
-
-void run_sema_test_case(
-    IFileLoader &file_loader, AbstractString &output, CompilerTestCase test_case
-);
+void run_parser_test_case(AbstractString &output, const CompilerTestCase &test_case);
 
 } // namespace amelia

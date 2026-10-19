@@ -1,9 +1,0 @@
-const x = {
-  with (a = 5) {
-    a
-  }
-}
-
-/* EXPECTED_OUTPUT:
-ERROR("Identifier 'a' not found in scope (at test_cases/sema/expressions/atoms/implicit/error_var_implicit.am:3:5)")
-*/

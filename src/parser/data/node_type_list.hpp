@@ -10,7 +10,6 @@
 #include "lexer/data/token_type.hpp"
 #include "source/data/declaration_visibility.hpp"
 #include "source/data/number_literal.hpp"
-#include "util/data/integer.hpp"
 
 namespace amelia {
 

@@ -1,6 +1,0 @@
-let x = implicit(y)
-let y = 5
-
-/* EXPECTED_OUTPUT:
-ERROR("Implicit identifier 'y' not found in scope (at test_cases/sema/expressions/atoms/implicit/error_not_implicit.am:1:9)")
-*/

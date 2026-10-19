@@ -2,7 +2,6 @@
 
 #include "node_type.hpp"
 #include "node_type_list.hpp"
-#include "source/data/location.hpp"
 
 namespace amelia {
 

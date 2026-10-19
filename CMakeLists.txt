@@ -17,35 +17,35 @@ endif()
 file(GLOB_RECURSE SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 file(GLOB_RECURSE SOURCES_TEST "${CMAKE_CURRENT_SOURCE_DIR}/test/*.cpp")
 set(SOURCES_VENDOR
-    "${CMAKE_CURRENT_SOURCE_DIR}/vendor/sha2.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/vendor/xxhash.c"
+        "${CMAKE_CURRENT_SOURCE_DIR}/vendor/sha2.c"
+        "${CMAKE_CURRENT_SOURCE_DIR}/vendor/xxhash.c"
 )
 
 add_library(amelia_warnings INTERFACE)
 target_compile_options(
-    amelia_warnings INTERFACE
-    -Wall -Wextra -Wpedantic -Werror -Wimplicit-fallthrough
-    -Wno-error=unused-parameter
-    -Wno-error=unused-variable
-    -Wno-error=unused-function
-    -Wno-error=unused-but-set-variable
+        amelia_warnings INTERFACE
+        -Wall -Wextra -Wpedantic -Werror -Wimplicit-fallthrough
+        -Wno-error=unused-parameter
+        -Wno-error=unused-variable
+        -Wno-error=unused-function
+        -Wno-error=unused-but-set-variable
 )
 
 add_library(amelia_core
-    ${SOURCES}
-    ${SOURCES_VENDOR}
+        ${SOURCES}
+        ${SOURCES_VENDOR}
 )
 target_include_directories(amelia_core PUBLIC src vendor)
 target_compile_features(amelia_core PUBLIC cxx_std_20)
 target_link_libraries(amelia_core PRIVATE amelia_warnings)
 
 add_executable(amelia
-    src/main.cpp
+        src/main.cpp
 )
 target_link_libraries(amelia PRIVATE amelia_core)
 target_link_libraries(amelia PRIVATE amelia_warnings)
 
 add_executable(amelia_test
-    ${SOURCES_TEST}
+        ${SOURCES_TEST}
 )
 target_link_libraries(amelia_test PRIVATE amelia_core)

@@ -7,6 +7,7 @@
 #include "parser/data/node_type_list.hpp"
 #include "parser/data/parser_error.hpp"
 #include "parser/data/parser_result.hpp"
+#include "util/data/scoped_assigner.hpp"
 
 namespace amelia {
 
@@ -348,14 +349,15 @@ public:
     if (peek().type == TokenType::LEFT_BRACE) {
       ++m_token_index; // consume the '{' token
       List<NodeId> decls;
-      List<NodeId> old_submodules = move(m_submodules);
-      m_submodules.clear();
-      parse_top_level_decls(decls, TokenType::RIGHT_BRACE);
-      read_token_type(TokenType::RIGHT_BRACE, "Expected '}' to end module declaration");
-      auto result = m_output.add_node(
-          module_token.id, m_token_index, ModuleDeclNode{name, move(decls), move(m_submodules)}
-      );
-      m_submodules = move(old_submodules);
+      NodeId result;
+      {
+        TEMP_ASSIGN(m_submodules, List<NodeId>());
+        parse_top_level_decls(decls, TokenType::RIGHT_BRACE);
+        read_token_type(TokenType::RIGHT_BRACE, "Expected '}' to end module declaration");
+        result = m_output.add_node(
+            module_token.id, m_token_index, ModuleDeclNode{name, move(decls), move(m_submodules)}
+        );
+      }
       m_submodules.push_back(result);
       return result;
     } else {
