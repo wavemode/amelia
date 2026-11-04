@@ -11,7 +11,8 @@ namespace amelia {
 
 Text TextUtils::WHITESPACE_CHARS = " \t\n\r";
 
-void TextUtils::split(AbstractList<Text> &output, Text input, Text delimiter, int64_t max_splits) {
+void TextUtils::split(AbstractList<Text> &output, Text input, Text delimiter,
+                      int64_t max_splits) {
   if (delimiter.size() == 0) {
     for (CharIterator it = input.begin(); !it.at_end(); ++it) {
       output.push_back(slice(input, it, 1));
@@ -33,9 +34,8 @@ void TextUtils::split(AbstractList<Text> &output, Text input, Text delimiter, in
   output.push_back(substr(input, it, input.end()));
 }
 
-void TextUtils::split(
-    AbstractList<String> &output, Text input, Text delimiter, int64_t max_splits
-) {
+void TextUtils::split(AbstractList<String> &output, Text input, Text delimiter,
+                      int64_t max_splits) {
   List<Text> temp_output;
   split(temp_output, input, delimiter, max_splits);
   for (const Text &part : temp_output) {
@@ -43,7 +43,8 @@ void TextUtils::split(
   }
 }
 
-void TextUtils::join_into(AbstractString &output, ConstSlice<Text> parts, Text delimiter) {
+void TextUtils::join_into(AbstractString &output, ConstSlice<Text> parts,
+                          Text delimiter) {
   for (size_t i = 0; i < parts.size(); ++i) {
     output.append(parts[i]);
     if (i < parts.size() - 1) {
@@ -93,7 +94,8 @@ Text TextUtils::trim_right(Text input, Text chars) {
   }
   return substr(input, input.begin(), end_it);
 }
-void TextUtils::trim_right_into(AbstractString &output, Text input, Text chars) {
+void TextUtils::trim_right_into(AbstractString &output, Text input,
+                                Text chars) {
   output.append(trim_right(input, chars));
 }
 
@@ -172,7 +174,8 @@ int64_t TextUtils::find_byte(Text input, Text substring) {
   return result.data().ptr() - input.data().ptr();
 }
 
-CharIterator TextUtils::find_after(Text input, Text substring, CharIterator start) {
+CharIterator TextUtils::find_after(Text input, Text substring,
+                                   CharIterator start) {
   head(input, start); // error if the start iterator is out of bounds
   CharIterator start_iter = start;
   CharIterator current_iter = start_iter;
@@ -196,15 +199,18 @@ CharIterator TextUtils::find_after(Text input, Text substring, CharIterator star
   }
 }
 
-int64_t TextUtils::find_after_byte(Text input, Text substring, size_t index_start) {
-  CharIterator result = find_after(input, substring, input.begin().plus_bytes(index_start));
+int64_t TextUtils::find_after_byte(Text input, Text substring,
+                                   size_t index_start) {
+  CharIterator result =
+      find_after(input, substring, input.begin().plus_bytes(index_start));
   if (substring.size() > 0 && result.at_end()) {
     return -1;
   }
   return result.data().ptr() - input.data().ptr();
 }
 
-CharIterator TextUtils::find_before(Text input, Text substring, CharIterator end) {
+CharIterator TextUtils::find_before(Text input, Text substring,
+                                    CharIterator end) {
   if (substring.size() == 0)
     return end;
   CharIterator start_iter = input.begin();
@@ -232,8 +238,10 @@ CharIterator TextUtils::find_before(Text input, Text substring, CharIterator end
   }
 }
 
-int64_t TextUtils::find_before_byte(Text input, Text substring, size_t index_end) {
-  CharIterator result = find_before(input, substring, input.begin().plus_bytes(index_end));
+int64_t TextUtils::find_before_byte(Text input, Text substring,
+                                    size_t index_end) {
+  CharIterator result =
+      find_before(input, substring, input.begin().plus_bytes(index_end));
   if (substring.size() > 0 && result.at_end()) {
     return -1;
   }
@@ -259,7 +267,8 @@ int64_t TextUtils::find_char_byte(Text input, uint32_t code_point) {
   return it.data().ptr() - input.data().ptr();
 }
 
-CharIterator TextUtils::find_char_after(Text input, uint32_t code_point, CharIterator start) {
+CharIterator TextUtils::find_char_after(Text input, uint32_t code_point,
+                                        CharIterator start) {
   head(input, start); // error if the start iterator is out of bounds
   CharIterator it = start;
   while (!it.at_end()) {
@@ -270,15 +279,18 @@ CharIterator TextUtils::find_char_after(Text input, uint32_t code_point, CharIte
   }
   return it;
 }
-int64_t TextUtils::find_char_after_byte(Text input, uint32_t code_point, size_t index_start) {
-  CharIterator it = find_char_after(input, code_point, input.begin().plus_bytes(index_start));
+int64_t TextUtils::find_char_after_byte(Text input, uint32_t code_point,
+                                        size_t index_start) {
+  CharIterator it =
+      find_char_after(input, code_point, input.begin().plus_bytes(index_start));
   if (it.at_end()) {
     return -1;
   }
   return it.data().ptr() - input.data().ptr();
 }
 
-CharIterator TextUtils::find_char_before(Text input, uint32_t code_point, CharIterator end) {
+CharIterator TextUtils::find_char_before(Text input, uint32_t code_point,
+                                         CharIterator end) {
   CharIterator it = input.begin();
   CharIterator last_found = input.end();
   while (!it.at_end() && it != end) {
@@ -289,15 +301,18 @@ CharIterator TextUtils::find_char_before(Text input, uint32_t code_point, CharIt
   }
   return last_found;
 }
-int64_t TextUtils::find_char_before_byte(Text input, uint32_t code_point, size_t index_end) {
-  CharIterator it = find_char_before(input, code_point, input.begin().plus_bytes(index_end));
+int64_t TextUtils::find_char_before_byte(Text input, uint32_t code_point,
+                                         size_t index_end) {
+  CharIterator it =
+      find_char_before(input, code_point, input.begin().plus_bytes(index_end));
   if (it.at_end()) {
     return -1;
   }
   return it.data().ptr() - input.data().ptr();
 }
 
-void TextUtils::find_all(AbstractList<CharIterator> &output, Text input, Text substring) {
+void TextUtils::find_all(AbstractList<CharIterator> &output, Text input,
+                         Text substring) {
   CharIterator it = input.begin();
   while (!it.at_end()) {
     CharIterator found = find_after(input, substring, it);
@@ -305,10 +320,12 @@ void TextUtils::find_all(AbstractList<CharIterator> &output, Text input, Text su
       break;
     }
     output.push_back(found);
-    it = substring.size() == 0 ? found.plus(1) : found.plus_bytes(substring.size());
+    it = substring.size() == 0 ? found.plus(1)
+                               : found.plus_bytes(substring.size());
   }
 }
-void TextUtils::find_all_bytes(AbstractList<int64_t> &output, Text input, Text substring) {
+void TextUtils::find_all_bytes(AbstractList<int64_t> &output, Text input,
+                               Text substring) {
   CharIterator it = input.begin();
   while (!it.at_end()) {
     CharIterator found = find_after(input, substring, it);
@@ -316,13 +333,13 @@ void TextUtils::find_all_bytes(AbstractList<int64_t> &output, Text input, Text s
       break;
     }
     output.push_back(found.data().ptr() - input.data().ptr());
-    it = substring.size() == 0 ? found.plus(1) : found.plus_bytes(substring.size());
+    it = substring.size() == 0 ? found.plus(1)
+                               : found.plus_bytes(substring.size());
   }
 }
 
-void TextUtils::find_all_chars(
-    AbstractList<CharIterator> &output, Text input, uint32_t code_point
-) {
+void TextUtils::find_all_chars(AbstractList<CharIterator> &output, Text input,
+                               uint32_t code_point) {
   CharIterator it = input.begin();
   while (!it.at_end()) {
     CharIterator found = find_char_after(input, code_point, it);
@@ -334,9 +351,8 @@ void TextUtils::find_all_chars(
   }
 }
 
-void TextUtils::find_all_char_bytes(
-    AbstractList<int64_t> &output, Text input, uint32_t code_point
-) {
+void TextUtils::find_all_char_bytes(AbstractList<int64_t> &output, Text input,
+                                    uint32_t code_point) {
   CharIterator it = input.begin();
   while (!it.at_end()) {
     CharIterator found = find_char_after(input, code_point, it);
@@ -348,14 +364,14 @@ void TextUtils::find_all_char_bytes(
   }
 }
 
-void TextUtils::replace(AbstractString &text, Text search, Text replacement, int64_t count) {
+void TextUtils::replace(AbstractString &text, Text search, Text replacement,
+                        int64_t count) {
   String output;
   replace_into(output, text.text(), search, replacement, count);
   text.assign(output);
 }
-void TextUtils::replace_into(
-    AbstractString &output, Text input, Text search, Text replacement, int64_t count
-) {
+void TextUtils::replace_into(AbstractString &output, Text input, Text search,
+                             Text replacement, int64_t count) {
   CharIterator it = input.begin();
   int64_t replacements = 0;
   while (count == -1 || replacements < count) {
@@ -384,12 +400,12 @@ void TextUtils::replace_into(
   output.append(substr(input, it, input.end()));
 }
 
-void TextUtils::replace_all(AbstractString &text, Text search, Text replacement) {
+void TextUtils::replace_all(AbstractString &text, Text search,
+                            Text replacement) {
   replace(text, search, replacement, -1);
 }
-void TextUtils::replace_all_into(
-    AbstractString &output, Text input, Text search, Text replacement
-) {
+void TextUtils::replace_all_into(AbstractString &output, Text input,
+                                 Text search, Text replacement) {
   replace_into(output, input, search, replacement, -1);
 }
 
@@ -400,7 +416,8 @@ void TextUtils::pad_left(AbstractString &text, size_t total_length, Text pad) {
   text.assign(output);
 }
 
-void TextUtils::pad_left_into(AbstractString &output, Text input, size_t total_length, Text pad) {
+void TextUtils::pad_left_into(AbstractString &output, Text input,
+                              size_t total_length, Text pad) {
   size_t input_length = count_chars(input);
   size_t pad_length = count_chars(pad);
   if (input_length < total_length && pad_length > 0) {
@@ -422,7 +439,8 @@ void TextUtils::pad_right(AbstractString &text, size_t total_length, Text pad) {
   pad_right_into(output, text.text(), total_length, pad);
   text.assign(output);
 }
-void TextUtils::pad_right_into(AbstractString &output, Text input, size_t total_length, Text pad) {
+void TextUtils::pad_right_into(AbstractString &output, Text input,
+                               size_t total_length, Text pad) {
   size_t input_length = count_chars(input);
   size_t pad_length = count_chars(pad);
   output.append(input);
@@ -444,7 +462,8 @@ void TextUtils::remove(AbstractString &text, Text substring, int64_t count) {
   remove_into(output, text.text(), substring, count);
   text.assign(output);
 }
-void TextUtils::remove_into(AbstractString &output, Text input, Text substring, int64_t count) {
+void TextUtils::remove_into(AbstractString &output, Text input, Text substring,
+                            int64_t count) {
   replace_into(output, input, substring, "", count);
 }
 
@@ -453,7 +472,8 @@ void TextUtils::remove_all(AbstractString &text, Text substring) {
   remove_all_into(output, text.text(), substring);
   text.assign(output);
 }
-void TextUtils::remove_all_into(AbstractString &output, Text input, Text substring) {
+void TextUtils::remove_all_into(AbstractString &output, Text input,
+                                Text substring) {
   replace_into(output, input, substring, "", -1);
 }
 
@@ -511,17 +531,20 @@ Text TextUtils::slice(Text input, CharIterator char_start, size_t char_length) {
   return substr(input, char_start, char_end);
 }
 
-Text TextUtils::slice_bytes(Text input, size_t index_start, size_t byte_length) {
+Text TextUtils::slice_bytes(Text input, size_t index_start,
+                            size_t byte_length) {
   if (index_start >= input.size()) {
     index_start = input.size() - 1;
   }
   if (index_start + byte_length > input.size()) {
     byte_length = input.size() - index_start;
   }
-  return text_from_subslice(ConstSlice(input.data().ptr() + index_start, byte_length));
+  return text_from_subslice(
+      ConstSlice(input.data().ptr() + index_start, byte_length));
 }
 
-Text TextUtils::substr(Text input, CharIterator char_start, CharIterator char_end) {
+Text TextUtils::substr(Text input, CharIterator char_start,
+                       CharIterator char_end) {
   auto input_ptr = input.data().ptr();
   auto start_ptr = char_start.data().ptr();
   size_t start_offset = start_ptr - input_ptr;
@@ -543,7 +566,8 @@ Text TextUtils::substr_bytes(Text input, size_t index_start, size_t index_end) {
   if (index_start > index_end) {
     index_start = index_end;
   }
-  return text_from_subslice(ConstSlice(input.data().ptr() + index_start, index_end - index_start));
+  return text_from_subslice(
+      ConstSlice(input.data().ptr() + index_start, index_end - index_start));
 }
 
 Text TextUtils::head(Text input, CharIterator char_end) {
@@ -564,7 +588,8 @@ Text TextUtils::tail_bytes(Text input, size_t index_start) {
 
 void TextUtils::to_string(AbstractString &output, int64_t value) {
   char buffer[21];
-  int64_t chars_written = sprintf(buffer, "%lld", static_cast<long long>(value));
+  int64_t chars_written =
+      sprintf(buffer, "%lld", static_cast<long long>(value));
   if (chars_written < 0) {
     throw RuntimeError("Failed to convert integer to string");
   }
@@ -573,7 +598,8 @@ void TextUtils::to_string(AbstractString &output, int64_t value) {
 
 void TextUtils::to_string(AbstractString &output, uint64_t value) {
   char buffer[21];
-  int64_t chars_written = sprintf(buffer, "%llu", static_cast<unsigned long long>(value));
+  int64_t chars_written =
+      sprintf(buffer, "%llu", static_cast<unsigned long long>(value));
   if (chars_written < 0) {
     throw RuntimeError("Failed to convert unsigned integer to string");
   }
@@ -700,9 +726,7 @@ double TextUtils::read_double(Text input) {
   return result;
 }
 
-bool TextUtils::is_digit(uint32_t ch) {
-  return ch >= '0' && ch <= '9';
-}
+bool TextUtils::is_digit(uint32_t ch) { return ch >= '0' && ch <= '9'; }
 bool TextUtils::is_digit(Text input) {
   if (input.size() == 0) {
     return false;
@@ -730,9 +754,7 @@ bool TextUtils::is_alpha(Text input) {
   return true;
 }
 
-bool TextUtils::is_alnum(uint32_t ch) {
-  return is_alpha(ch) || is_digit(ch);
-}
+bool TextUtils::is_alnum(uint32_t ch) { return is_alpha(ch) || is_digit(ch); }
 bool TextUtils::is_alnum(Text input) {
   if (input.size() == 0) {
     return false;
@@ -745,9 +767,7 @@ bool TextUtils::is_alnum(Text input) {
   return true;
 }
 
-bool TextUtils::is_ascii(uint32_t ch) {
-  return ch <= 127;
-}
+bool TextUtils::is_ascii(uint32_t ch) { return ch <= 127; }
 bool TextUtils::is_ascii(Text input) {
   for (auto ch : input) {
     if (!is_ascii(ch)) {

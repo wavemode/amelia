@@ -9,7 +9,8 @@
 
 namespace amelia {
 
-void FileLoader::load_file(AbstractString &output, const AbstractString &file_path) {
+void FileLoader::load_file(AbstractString &output,
+                           const AbstractString &file_path) {
   std::ifstream file(file_path.c_str());
   if (!file) {
     String err("Failed to open file: ");
@@ -21,9 +22,9 @@ void FileLoader::load_file(AbstractString &output, const AbstractString &file_pa
   output.assign(Text::from(ss.str().c_str()));
 }
 
-Option<RuntimeError> FileLoader::try_load_file(
-    AbstractString &output, const AbstractString &file_path
-) {
+Option<RuntimeError>
+FileLoader::try_load_file(AbstractString &output,
+                          const AbstractString &file_path) {
   std::ifstream file(file_path.c_str());
   if (!file) {
     String err("Failed to open file: ");

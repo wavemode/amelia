@@ -16,22 +16,20 @@ template <typename T> class Option {
 public:
   Option() {}
 
-  Option(T value) {
-    initialize(move(value));
-  }
+  Option(T value) { initialize(move(value)); }
 
-  Option(Some<T> some) {
-    initialize(move(some.value));
-  }
+  Option(Some<T> some) { initialize(move(some.value)); }
 
   Option(None) {}
 
-  template <typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
+  template <typename U,
+            typename = std::enable_if_t<std::is_convertible_v<U, T>>>
   Option(U &&value) {
     initialize(static_cast<T>(std::forward<U>(value)));
   }
 
-  template <typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
+  template <typename U,
+            typename = std::enable_if_t<std::is_convertible_v<U, T>>>
   Option(Some<U> &&some) {
     initialize(static_cast<T>(std::forward<U>(some.value)));
   }
@@ -72,25 +70,23 @@ public:
     return *this;
   }
 
-  template <typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
+  template <typename U,
+            typename = std::enable_if_t<std::is_convertible_v<U, T>>>
   Option<T> &operator=(U &&value) {
     assign(static_cast<T>(std::forward<U>(value)));
     return *this;
   }
 
-  template <typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
+  template <typename U,
+            typename = std::enable_if_t<std::is_convertible_v<U, T>>>
   Option<T> &operator=(Some<U> &&some) {
     assign(static_cast<T>(std::forward<U>(some.value)));
     return *this;
   }
 
-  ~Option() {
-    destroy();
-  }
+  ~Option() { destroy(); }
 
-  bool has_value() const noexcept {
-    return m_has_value;
-  }
+  bool has_value() const noexcept { return m_has_value; }
 
   T &value() {
     if (!m_has_value) {
@@ -106,13 +102,9 @@ public:
     return *get();
   }
 
-  T &operator*() {
-    return value();
-  }
+  T &operator*() { return value(); }
 
-  const T &operator*() const {
-    return value();
-  }
+  const T &operator*() const { return value(); }
 
   T *operator->() {
     if (!m_has_value) {
@@ -144,11 +136,10 @@ public:
     return *get();
   }
 
-  void clear() {
-    destroy();
-  }
+  void clear() { destroy(); }
 
-  template <typename U, typename = std::enable_if_t<std::is_convertible_v<T, U>>>
+  template <typename U,
+            typename = std::enable_if_t<std::is_convertible_v<T, U>>>
   operator Option<U>() const {
     if (m_has_value) {
       return Some(static_cast<U>(value()));
@@ -166,9 +157,7 @@ public:
     return true;
   }
 
-  bool operator!=(const Option<T> &other) const {
-    return !(*this == other);
-  }
+  bool operator!=(const Option<T> &other) const { return !(*this == other); }
 
 private:
   union Container {
@@ -197,9 +186,7 @@ private:
     }
   }
 
-  T *get() {
-    return reinterpret_cast<T *>(&m_container.storage);
-  }
+  T *get() { return reinterpret_cast<T *>(&m_container.storage); }
   const T *get() const {
     return reinterpret_cast<const T *>(&m_container.storage);
   }

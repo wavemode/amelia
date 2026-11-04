@@ -11,7 +11,8 @@
 
 namespace amelia {
 
-CharIterator::CharIterator(ConstSliceIterator<char> str) noexcept : m_slice_iter(str) {}
+CharIterator::CharIterator(ConstSliceIterator<char> str) noexcept
+    : m_slice_iter(str) {}
 CharIterator::CharIterator(Text text) noexcept : m_slice_iter(text.data()) {}
 
 CharIterator &CharIterator::operator++() {
@@ -25,17 +26,13 @@ CharIterator CharIterator::operator++(int) {
   return temp;
 }
 
-CharIterator CharIterator::begin() const noexcept {
-  return *this;
-}
+CharIterator CharIterator::begin() const noexcept { return *this; }
 
 CharIterator CharIterator::end() const noexcept {
   return CharIterator(m_slice_iter.end());
 }
 
-uint32_t CharIterator::operator*() {
-  return peek();
-}
+uint32_t CharIterator::operator*() { return peek(); }
 
 uint32_t CharIterator::peek() {
   try {
@@ -61,9 +58,7 @@ ConstSlice<char> CharIterator::data() const noexcept {
   return ConstSlice(m_slice_iter);
 }
 
-Text CharIterator::text() const noexcept {
-  return Text(data());
-}
+Text CharIterator::text() const noexcept { return Text(data()); }
 
 CharIterator CharIterator::plus(size_t n) const {
   CharIterator iter = *this;
@@ -87,9 +82,7 @@ bool CharIterator::operator!=(const CharIterator &other) const noexcept {
   return !(*this == other);
 }
 
-bool CharIterator::at_end() const noexcept {
-  return m_slice_iter.size() == 0;
-}
+bool CharIterator::at_end() const noexcept { return m_slice_iter.size() == 0; }
 
 void CharIterator::validate(ConstSlice<char> str) {
   auto begin = str.begin();
@@ -120,7 +113,8 @@ signed char CharIterator::compare(ConstSlice<char> a, ConstSlice<char> b) {
     return a.size() == 0 ? 0 : 1;
   }
   int cmp = (a.ptr() == b.ptr()) ? 0
-                                 : std::memcmp(a.ptr(), b.ptr(), amelia::min(a.size(), b.size()));
+                                 : std::memcmp(a.ptr(), b.ptr(),
+                                               amelia::min(a.size(), b.size()));
   if (cmp == 0) {
     if (a.size() < b.size()) {
       return -1;

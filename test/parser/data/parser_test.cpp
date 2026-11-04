@@ -27,17 +27,18 @@ TEST_CASE("test suite") {
   EnvironmentReader env_reader;
 
   CompilerTestCaseCollection collection;
-  collect_test_cases(
-      filesystem_walker, file_loader, console_printer, env_reader, collection, "test_cases/parser"
-  );
+  collect_test_cases(filesystem_walker, file_loader, console_printer,
+                     env_reader, collection, "test_cases/parser");
 
-  CompilerTestExecutionContext execution_context = get_test_execution_context(env_reader);
+  CompilerTestExecutionContext execution_context =
+      get_test_execution_context(env_reader);
   CompilerTestExecutionOutcome outcome;
   for (const auto &test_case : collection.test_cases) {
-    INFO(std::string(test_case.filename.data().ptr(), test_case.filename.data().size()));
-    CHECK(execute_test_case(
-        parser_test_case_runner, file_writer, console_printer, outcome, test_case, execution_context
-    ));
+    INFO(std::string(test_case.filename.data().ptr(),
+                     test_case.filename.data().size()));
+    CHECK(execute_test_case(parser_test_case_runner, file_writer,
+                            console_printer, outcome, test_case,
+                            execution_context));
   }
 
   console_printer.print("Executed ");
@@ -62,8 +63,8 @@ TEST_SUITE_END();
 #include <string>
 #include <type_traits>
 
-// Non-standard-layout type (std::string contains non-standard layout internals/pointers/access
-// controls)
+// Non-standard-layout type (std::string contains non-standard layout
+// internals/pointers/access controls)
 struct NonStandard {
   std::string text;
 };
@@ -75,4 +76,5 @@ struct Container {
 };
 
 static_assert(std::is_standard_layout_v<NonStandard>);
-static_assert(std::is_standard_layout_v<Container>); // Container is NOT standard-layout
+static_assert(
+    std::is_standard_layout_v<Container>); // Container is NOT standard-layout

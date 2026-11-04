@@ -6,7 +6,8 @@ namespace amelia {
 
 class ParserTestCaseRunner : public ITestCaseRunner {
 public:
-  void run_test_case(AbstractString &output, CompilerTestCase test_case) override;
+  void run_test_case(AbstractString &output,
+                     CompilerTestCase test_case) override;
 };
 
 } // namespace amelia

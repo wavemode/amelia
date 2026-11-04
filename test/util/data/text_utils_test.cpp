@@ -132,29 +132,19 @@ TEST_CASE("join_into") {
 }
 
 TEST_CASE("trim") {
-  SUBCASE("basic trim") {
-    REQUIRE(TextUtils::trim("  abc  \n\r\t") == "abc");
-  }
+  SUBCASE("basic trim") { REQUIRE(TextUtils::trim("  abc  \n\r\t") == "abc"); }
 
   SUBCASE("trim with custom chars") {
     REQUIRE(TextUtils::trim("--abc--", "-") == "abc");
   }
 
-  SUBCASE("no chars to trim") {
-    REQUIRE(TextUtils::trim("abc") == "abc");
-  }
+  SUBCASE("no chars to trim") { REQUIRE(TextUtils::trim("abc") == "abc"); }
 
-  SUBCASE("all chars trimmed") {
-    REQUIRE(TextUtils::trim("   ", " ") == "");
-  }
+  SUBCASE("all chars trimmed") { REQUIRE(TextUtils::trim("   ", " ") == ""); }
 
-  SUBCASE("empty input") {
-    REQUIRE(TextUtils::trim("", " ") == "");
-  }
+  SUBCASE("empty input") { REQUIRE(TextUtils::trim("", " ") == ""); }
 
-  SUBCASE("empty chars") {
-    REQUIRE(TextUtils::trim("abc", "") == "abc");
-  }
+  SUBCASE("empty chars") { REQUIRE(TextUtils::trim("abc", "") == "abc"); }
 }
 
 TEST_CASE("trim_into") {
@@ -200,21 +190,15 @@ TEST_CASE("trim_left") {
     REQUIRE(TextUtils::trim_left("--abc--", "-") == "abc--");
   }
 
-  SUBCASE("no chars to trim") {
-    REQUIRE(TextUtils::trim_left("abc") == "abc");
-  }
+  SUBCASE("no chars to trim") { REQUIRE(TextUtils::trim_left("abc") == "abc"); }
 
   SUBCASE("all chars trimmed") {
     REQUIRE(TextUtils::trim_left("   ", " ") == "");
   }
 
-  SUBCASE("empty input") {
-    REQUIRE(TextUtils::trim_left("", " ") == "");
-  }
+  SUBCASE("empty input") { REQUIRE(TextUtils::trim_left("", " ") == ""); }
 
-  SUBCASE("empty chars") {
-    REQUIRE(TextUtils::trim_left("abc", "") == "abc");
-  }
+  SUBCASE("empty chars") { REQUIRE(TextUtils::trim_left("abc", "") == "abc"); }
 }
 
 TEST_CASE("trim_left_into") {
@@ -268,13 +252,9 @@ TEST_CASE("trim_right") {
     REQUIRE(TextUtils::trim_right("   ", " ") == "");
   }
 
-  SUBCASE("empty input") {
-    REQUIRE(TextUtils::trim_right("", " ") == "");
-  }
+  SUBCASE("empty input") { REQUIRE(TextUtils::trim_right("", " ") == ""); }
 
-  SUBCASE("empty chars") {
-    REQUIRE(TextUtils::trim_right("abc", "") == "abc");
-  }
+  SUBCASE("empty chars") { REQUIRE(TextUtils::trim_right("abc", "") == "abc"); }
 }
 
 TEST_CASE("trim_right_into") {
@@ -424,9 +404,7 @@ TEST_CASE("contains") {
     REQUIRE(TextUtils::contains("hello world", ""));
   }
 
-  SUBCASE("empty input") {
-    REQUIRE(!TextUtils::contains("", "abc"));
-  }
+  SUBCASE("empty input") { REQUIRE(!TextUtils::contains("", "abc")); }
 }
 
 TEST_CASE("starts_with") {
@@ -442,9 +420,7 @@ TEST_CASE("starts_with") {
     REQUIRE(TextUtils::starts_with("hello world", ""));
   }
 
-  SUBCASE("empty input") {
-    REQUIRE(!TextUtils::starts_with("", "abc"));
-  }
+  SUBCASE("empty input") { REQUIRE(!TextUtils::starts_with("", "abc")); }
 }
 
 TEST_CASE("ends_with") {
@@ -456,13 +432,9 @@ TEST_CASE("ends_with") {
     REQUIRE(!TextUtils::ends_with("hello world", "hello"));
   }
 
-  SUBCASE("empty suffix") {
-    REQUIRE(TextUtils::ends_with("hello world", ""));
-  }
+  SUBCASE("empty suffix") { REQUIRE(TextUtils::ends_with("hello world", "")); }
 
-  SUBCASE("empty input") {
-    REQUIRE(!TextUtils::ends_with("", "abc"));
-  }
+  SUBCASE("empty input") { REQUIRE(!TextUtils::ends_with("", "abc")); }
 }
 
 TEST_CASE("find") {
@@ -561,7 +533,8 @@ TEST_CASE("find_after") {
   SUBCASE("substring not present after iterator") {
     Text input = "hello world";
     Text substring = "hello";
-    CharIterator it = TextUtils::find_after(input, substring, input.begin().plus(5));
+    CharIterator it =
+        TextUtils::find_after(input, substring, input.begin().plus(5));
     REQUIRE(it.at_end());
   }
 }
@@ -608,7 +581,8 @@ TEST_CASE("find_before") {
   SUBCASE("substring not present before iterator") {
     Text input = "hello world";
     Text substring = "world";
-    CharIterator it = TextUtils::find_before(input, substring, input.begin().plus(10));
+    CharIterator it =
+        TextUtils::find_before(input, substring, input.begin().plus(10));
     REQUIRE(it.at_end());
   }
 
@@ -622,7 +596,8 @@ TEST_CASE("find_before") {
   SUBCASE("empty substring") {
     Text input = "hello world";
     Text substring = "";
-    CharIterator it = TextUtils::find_before(input, substring, input.begin().plus(5));
+    CharIterator it =
+        TextUtils::find_before(input, substring, input.begin().plus(5));
     REQUIRE(!it.at_end());
     REQUIRE(it.data().ptr() - input.data().ptr() == 5);
   }
@@ -632,14 +607,16 @@ TEST_CASE("find_before_byte") {
   SUBCASE("substring present") {
     Text input = "hello world";
     Text substring = "o";
-    int64_t byte_index = TextUtils::find_before_byte(input, substring, input.size());
+    int64_t byte_index =
+        TextUtils::find_before_byte(input, substring, input.size());
     REQUIRE(byte_index == 7);
   }
 
   SUBCASE("substring not present") {
     Text input = "hello world";
     Text substring = "helllo";
-    int64_t byte_index = TextUtils::find_before_byte(input, substring, input.size());
+    int64_t byte_index =
+        TextUtils::find_before_byte(input, substring, input.size());
     REQUIRE(byte_index == -1);
   }
 
@@ -747,7 +724,8 @@ TEST_CASE("find_char_after") {
   SUBCASE("char present") {
     Text input = "hello world";
     uint32_t code_point = 'o';
-    CharIterator it = TextUtils::find_char_after(input, code_point, input.begin());
+    CharIterator it =
+        TextUtils::find_char_after(input, code_point, input.begin());
     REQUIRE(!it.at_end());
     REQUIRE(it.peek() == 'o');
   }
@@ -755,7 +733,8 @@ TEST_CASE("find_char_after") {
   SUBCASE("char present after iterator") {
     Text input = "hello world";
     uint32_t code_point = 'o';
-    CharIterator it = TextUtils::find_char_after(input, code_point, input.begin().plus(5));
+    CharIterator it =
+        TextUtils::find_char_after(input, code_point, input.begin().plus(5));
     REQUIRE(!it.at_end());
     REQUIRE(it.peek() == 'o');
   }
@@ -763,7 +742,8 @@ TEST_CASE("find_char_after") {
   SUBCASE("char not present after iterator") {
     Text input = "hello world";
     uint32_t code_point = 'h';
-    CharIterator it = TextUtils::find_char_after(input, code_point, input.begin().plus(1));
+    CharIterator it =
+        TextUtils::find_char_after(input, code_point, input.begin().plus(1));
     REQUIRE(it.at_end());
   }
 }
@@ -795,7 +775,8 @@ TEST_CASE("find_char_before") {
   SUBCASE("char present") {
     Text input = "hello world";
     uint32_t code_point = 'o';
-    CharIterator it = TextUtils::find_char_before(input, code_point, input.end());
+    CharIterator it =
+        TextUtils::find_char_before(input, code_point, input.end());
     REQUIRE(!it.at_end());
     REQUIRE(it.peek() == 'o');
     // should have found the second 'o', not the first one
@@ -805,7 +786,8 @@ TEST_CASE("find_char_before") {
   SUBCASE("char present before iterator") {
     Text input = "hello world";
     uint32_t code_point = 'o';
-    CharIterator it = TextUtils::find_char_before(input, code_point, input.begin().plus(5));
+    CharIterator it =
+        TextUtils::find_char_before(input, code_point, input.begin().plus(5));
     REQUIRE(!it.at_end());
     REQUIRE(it.peek() == 'o');
     // should have found the first 'o', not the second one
@@ -815,7 +797,8 @@ TEST_CASE("find_char_before") {
   SUBCASE("char not present before iterator") {
     Text input = "hello world";
     uint32_t code_point = 'd';
-    CharIterator it = TextUtils::find_char_before(input, code_point, input.begin().plus(10));
+    CharIterator it =
+        TextUtils::find_char_before(input, code_point, input.begin().plus(10));
     REQUIRE(it.at_end());
   }
 }
@@ -824,7 +807,8 @@ TEST_CASE("find_char_before_byte") {
   SUBCASE("char present") {
     Text input = "hello world";
     uint32_t code_point = 'o';
-    int64_t byte_index = TextUtils::find_char_before_byte(input, code_point, input.size());
+    int64_t byte_index =
+        TextUtils::find_char_before_byte(input, code_point, input.size());
     REQUIRE(byte_index == 7);
   }
 
@@ -1013,22 +997,26 @@ TEST_CASE("replace_into") {
   String output;
 
   SUBCASE("basic replace_into") {
-    TextUtils::replace_into(output, "hello world, hello everyone", "hello", "hi", 1);
+    TextUtils::replace_into(output, "hello world, hello everyone", "hello",
+                            "hi", 1);
     REQUIRE(output == "hi world, hello everyone");
   }
 
   SUBCASE("replace_into with limit more than occurrences") {
-    TextUtils::replace_into(output, "hello world, hello everyone", "hello", "hi", 5);
+    TextUtils::replace_into(output, "hello world, hello everyone", "hello",
+                            "hi", 5);
     REQUIRE(output == "hi world, hi everyone");
   }
 
   SUBCASE("replace_into with limit zero") {
-    TextUtils::replace_into(output, "hello world, hello everyone", "hello", "hi", 0);
+    TextUtils::replace_into(output, "hello world, hello everyone", "hello",
+                            "hi", 0);
     REQUIRE(output == "hello world, hello everyone");
   }
 
   SUBCASE("replace_into with limit negative") {
-    TextUtils::replace_into(output, "hello world, hello everyone", "hello", "hi", -1);
+    TextUtils::replace_into(output, "hello world, hello everyone", "hello",
+                            "hi", -1);
     REQUIRE(output == "hi world, hi everyone");
   }
 }
@@ -1516,7 +1504,8 @@ TEST_CASE("substr_bytes") {
     Text input = "hello world";
     int64_t start_byte_index = 6;
     int64_t end_byte_index = 5;
-    REQUIRE(TextUtils::substr_bytes(input, start_byte_index, end_byte_index) == "");
+    REQUIRE(TextUtils::substr_bytes(input, start_byte_index, end_byte_index) ==
+            "");
   }
 }
 
@@ -1627,9 +1616,7 @@ TEST_CASE("is_digit - code point") {
 }
 
 TEST_CASE("is_digit - Text") {
-  SUBCASE("basic is_digit") {
-    REQUIRE(TextUtils::is_digit("12345"));
-  }
+  SUBCASE("basic is_digit") { REQUIRE(TextUtils::is_digit("12345")); }
 
   SUBCASE("is_digit with non-digit characters") {
     REQUIRE(!TextUtils::is_digit("123a5"));
@@ -1637,9 +1624,7 @@ TEST_CASE("is_digit - Text") {
     REQUIRE(!TextUtils::is_digit("-123"));
   }
 
-  SUBCASE("is_digit with empty string") {
-    REQUIRE(!TextUtils::is_digit(""));
-  }
+  SUBCASE("is_digit with empty string") { REQUIRE(!TextUtils::is_digit("")); }
 }
 
 TEST_CASE("is_alpha - code point") {
@@ -1669,9 +1654,7 @@ TEST_CASE("is_alpha - Text") {
     REQUIRE(!TextUtils::is_alpha("-Test"));
   }
 
-  SUBCASE("is_alpha with empty string") {
-    REQUIRE(!TextUtils::is_alpha(""));
-  }
+  SUBCASE("is_alpha with empty string") { REQUIRE(!TextUtils::is_alpha("")); }
 }
 
 TEST_CASE("is_alnum - code point") {
@@ -1701,9 +1684,7 @@ TEST_CASE("is_alnum - Text") {
     REQUIRE(!TextUtils::is_alnum("@World"));
   }
 
-  SUBCASE("is_alnum with empty string") {
-    REQUIRE(!TextUtils::is_alnum(""));
-  }
+  SUBCASE("is_alnum with empty string") { REQUIRE(!TextUtils::is_alnum("")); }
 }
 
 TEST_CASE("is_ascii - code point") {
@@ -1733,9 +1714,7 @@ TEST_CASE("is_ascii - Text") {
     REQUIRE(!TextUtils::is_ascii("测试"));
   }
 
-  SUBCASE("is_ascii with empty string") {
-    REQUIRE(TextUtils::is_ascii(""));
-  }
+  SUBCASE("is_ascii with empty string") { REQUIRE(TextUtils::is_ascii("")); }
 }
 
 TEST_CASE("count_chars") {
@@ -1771,7 +1750,8 @@ TEST_CASE("count") {
     Text input = "abc";
     Text substring = "";
     int64_t count = TextUtils::count(input, substring);
-    REQUIRE(count == 4); // counts the positions before, between, and after characters
+    REQUIRE(count ==
+            4); // counts the positions before, between, and after characters
   }
 
   SUBCASE("count with unicode") {

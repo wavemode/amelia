@@ -17,23 +17,25 @@ class CharIterator;
 struct TextUtils {
   static Text WHITESPACE_CHARS;
 
-  static void split(
-      AbstractList<Text> &output, Text input, Text delimiter, int64_t max_splits = -1
-  );
-  static void split(
-      AbstractList<String> &output, Text input, Text delimiter, int64_t max_splits = -1
-  );
+  static void split(AbstractList<Text> &output, Text input, Text delimiter,
+                    int64_t max_splits = -1);
+  static void split(AbstractList<String> &output, Text input, Text delimiter,
+                    int64_t max_splits = -1);
 
-  static void join_into(AbstractString &output, ConstSlice<Text> parts, Text delimiter);
+  static void join_into(AbstractString &output, ConstSlice<Text> parts,
+                        Text delimiter);
 
   static Text trim(Text input, Text chars = WHITESPACE_CHARS);
-  static void trim_into(AbstractString &output, Text input, Text chars = WHITESPACE_CHARS);
+  static void trim_into(AbstractString &output, Text input,
+                        Text chars = WHITESPACE_CHARS);
 
   static Text trim_left(Text input, Text chars = WHITESPACE_CHARS);
-  static void trim_left_into(AbstractString &output, Text input, Text chars = WHITESPACE_CHARS);
+  static void trim_left_into(AbstractString &output, Text input,
+                             Text chars = WHITESPACE_CHARS);
 
   static Text trim_right(Text input, Text chars = WHITESPACE_CHARS);
-  static void trim_right_into(AbstractString &output, Text input, Text chars = WHITESPACE_CHARS);
+  static void trim_right_into(AbstractString &output, Text input,
+                              Text chars = WHITESPACE_CHARS);
 
   static void to_lower(AbstractString &text);
   static void to_lower_into(AbstractString &output, Text input);
@@ -48,8 +50,10 @@ struct TextUtils {
   static CharIterator find(Text input, Text substring);
   static int64_t find_byte(Text input, Text substring);
 
-  static CharIterator find_after(Text input, Text substring, CharIterator start);
-  static int64_t find_after_byte(Text input, Text substring, size_t index_start);
+  static CharIterator find_after(Text input, Text substring,
+                                 CharIterator start);
+  static int64_t find_after_byte(Text input, Text substring,
+                                 size_t index_start);
 
   static CharIterator find_before(Text input, Text substring, CharIterator end);
   static int64_t find_before_byte(Text input, Text substring, size_t index_end);
@@ -57,41 +61,52 @@ struct TextUtils {
   static CharIterator find_char(Text input, uint32_t code_point);
   static int64_t find_char_byte(Text input, uint32_t code_point);
 
-  static CharIterator find_char_after(Text input, uint32_t code_point, CharIterator start);
-  static int64_t find_char_after_byte(Text input, uint32_t code_point, size_t index_start);
+  static CharIterator find_char_after(Text input, uint32_t code_point,
+                                      CharIterator start);
+  static int64_t find_char_after_byte(Text input, uint32_t code_point,
+                                      size_t index_start);
 
-  static CharIterator find_char_before(Text input, uint32_t code_point, CharIterator end);
-  static int64_t find_char_before_byte(Text input, uint32_t code_point, size_t index_end);
+  static CharIterator find_char_before(Text input, uint32_t code_point,
+                                       CharIterator end);
+  static int64_t find_char_before_byte(Text input, uint32_t code_point,
+                                       size_t index_end);
 
-  static void find_all(AbstractList<CharIterator> &output, Text input, Text substring);
-  static void find_all_bytes(AbstractList<int64_t> &output, Text input, Text substring);
+  static void find_all(AbstractList<CharIterator> &output, Text input,
+                       Text substring);
+  static void find_all_bytes(AbstractList<int64_t> &output, Text input,
+                             Text substring);
 
-  static void find_all_chars(AbstractList<CharIterator> &output, Text input, uint32_t code_point);
-  static void find_all_char_bytes(AbstractList<int64_t> &output, Text input, uint32_t code_point);
+  static void find_all_chars(AbstractList<CharIterator> &output, Text input,
+                             uint32_t code_point);
+  static void find_all_char_bytes(AbstractList<int64_t> &output, Text input,
+                                  uint32_t code_point);
 
-  static void replace(AbstractString &text, Text search, Text replacement, int64_t count = 1);
-  static void replace_into(
-      AbstractString &output, Text input, Text search, Text replacement, int64_t count = 1
-  );
+  static void replace(AbstractString &text, Text search, Text replacement,
+                      int64_t count = 1);
+  static void replace_into(AbstractString &output, Text input, Text search,
+                           Text replacement, int64_t count = 1);
 
   static void replace_all(AbstractString &text, Text search, Text replacement);
-  static void replace_all_into(AbstractString &output, Text input, Text search, Text replacement);
+  static void replace_all_into(AbstractString &output, Text input, Text search,
+                               Text replacement);
 
-  static void pad_left(AbstractString &text, size_t total_length, Text pad = " ");
-  static void pad_left_into(
-      AbstractString &output, Text input, size_t total_length, Text pad = " "
-  );
+  static void pad_left(AbstractString &text, size_t total_length,
+                       Text pad = " ");
+  static void pad_left_into(AbstractString &output, Text input,
+                            size_t total_length, Text pad = " ");
 
-  static void pad_right(AbstractString &text, size_t total_length, Text pad = " ");
-  static void pad_right_into(
-      AbstractString &output, Text input, size_t total_length, Text pad = " "
-  );
+  static void pad_right(AbstractString &text, size_t total_length,
+                        Text pad = " ");
+  static void pad_right_into(AbstractString &output, Text input,
+                             size_t total_length, Text pad = " ");
 
   static void remove(AbstractString &text, Text substring, int64_t count = 1);
-  static void remove_into(AbstractString &output, Text input, Text substring, int64_t count = 1);
+  static void remove_into(AbstractString &output, Text input, Text substring,
+                          int64_t count = 1);
 
   static void remove_all(AbstractString &text, Text substring);
-  static void remove_all_into(AbstractString &output, Text input, Text substring);
+  static void remove_all_into(AbstractString &output, Text input,
+                              Text substring);
 
   static void repeat(AbstractString &text, size_t count);
   static void repeat_into(AbstractString &output, Text input, size_t count);
@@ -103,7 +118,8 @@ struct TextUtils {
   static Text strip_suffix(Text input, Text suffix);
   static Text slice(Text input, CharIterator char_start, size_t char_length);
   static Text slice_bytes(Text input, size_t index_start, size_t byte_length);
-  static Text substr(Text input, CharIterator char_start, CharIterator char_end);
+  static Text substr(Text input, CharIterator char_start,
+                     CharIterator char_end);
   static Text substr_bytes(Text input, size_t index_start, size_t index_end);
   static Text head(Text input, CharIterator char_end);
   static Text head_bytes(Text input, size_t index_end);

@@ -191,9 +191,7 @@ TEST_CASE("pointers not invalidated by push_back or push_front") {
   REQUIRE(&deque[10002] == ptr3);
 }
 
-List<int> list_with(int i) {
-  return List<int>({i});
-}
+List<int> list_with(int i) { return List<int>({i}); }
 
 TEST_CASE("stress") {
   Deque<List<int>> deque;

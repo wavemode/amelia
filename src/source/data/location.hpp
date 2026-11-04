@@ -14,12 +14,11 @@ struct Location {
   uint32_t column;
 
   bool operator==(const Location &other) const {
-    return filename == other.filename && line == other.line && column == other.column;
+    return filename == other.filename && line == other.line &&
+           column == other.column;
   }
 
-  bool operator!=(const Location &other) const {
-    return !(*this == other);
-  }
+  bool operator!=(const Location &other) const { return !(*this == other); }
 };
 
 } // namespace amelia

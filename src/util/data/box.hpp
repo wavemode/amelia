@@ -16,21 +16,15 @@ public:
 
   Box(const Box<T> &other) = delete;
 
-  Box(Box<T> &&other) noexcept : m_obj(other.m_obj) {
-    other.m_obj = nullptr;
-  }
+  Box(Box<T> &&other) noexcept : m_obj(other.m_obj) { other.m_obj = nullptr; }
 
   template <typename U> Box(Box<U> &&other) noexcept : m_obj(other.m_obj) {
     other.m_obj = nullptr;
   }
 
-  ~Box() {
-    delete m_obj;
-  }
+  ~Box() { delete m_obj; }
 
-  bool is_null() const {
-    return m_obj == nullptr;
-  }
+  bool is_null() const { return m_obj == nullptr; }
 
   Box<T> &operator=(const Box<T> &other) = delete;
 
@@ -50,21 +44,13 @@ public:
     return *this;
   }
 
-  T &operator*() {
-    return *m_obj;
-  }
+  T &operator*() { return *m_obj; }
 
-  const T &operator*() const {
-    return *m_obj;
-  }
+  const T &operator*() const { return *m_obj; }
 
-  T *operator->() {
-    return m_obj;
-  }
+  T *operator->() { return m_obj; }
 
-  const T *operator->() const {
-    return m_obj;
-  }
+  const T *operator->() const { return m_obj; }
 
   template <typename U> friend class Box;
 

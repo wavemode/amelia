@@ -52,11 +52,14 @@ Rational::Rational(Text value) {
     m_numerator = Integer(digits);
     if (parts.size() == 2) {
       uint8_t base = 10;
-      if (TextUtils::starts_with(digits, "0b") || TextUtils::starts_with(digits, "0B")) {
+      if (TextUtils::starts_with(digits, "0b") ||
+          TextUtils::starts_with(digits, "0B")) {
         base = 2;
-      } else if (TextUtils::starts_with(digits, "0x") || TextUtils::starts_with(digits, "0X")) {
+      } else if (TextUtils::starts_with(digits, "0x") ||
+                 TextUtils::starts_with(digits, "0X")) {
         base = 16;
-      } else if (TextUtils::starts_with(digits, "0o") || TextUtils::starts_with(digits, "0O") ||
+      } else if (TextUtils::starts_with(digits, "0o") ||
+                 TextUtils::starts_with(digits, "0O") ||
                  (TextUtils::starts_with(digits, "0") && parts[0].size() > 1)) {
         base = 8;
       }
@@ -158,8 +161,8 @@ void Rational::to_fraction_string(AbstractString &output) const {
   m_denominator.to_string(output);
 }
 
-void Rational::to_decimal_string(AbstractString &output, size_t max_digits_after_decimal_point)
-    const {
+void Rational::to_decimal_string(AbstractString &output,
+                                 size_t max_digits_after_decimal_point) const {
   Rational abs_value = abs();
   Integer num = abs_value.numerator();
   Integer den = abs_value.denominator();
@@ -179,24 +182,22 @@ void Rational::to_decimal_string(AbstractString &output, size_t max_digits_after
   rounded.to_string(rounded_str);
 
   String padded_str;
-  for (size_t i = rounded_str.size(); i < max_digits_after_decimal_point + 1; ++i) {
+  for (size_t i = rounded_str.size(); i < max_digits_after_decimal_point + 1;
+       ++i) {
     padded_str.append('0');
   }
   padded_str.append(rounded_str);
-  output.append(
-      TextUtils::head_bytes(padded_str.text(), padded_str.size() - max_digits_after_decimal_point)
-  );
+  output.append(TextUtils::head_bytes(
+      padded_str.text(), padded_str.size() - max_digits_after_decimal_point));
   output.append(".");
   Text after_decimal = TextUtils::tail_bytes(
-      padded_str.text(), padded_str.size() - max_digits_after_decimal_point
-  );
+      padded_str.text(), padded_str.size() - max_digits_after_decimal_point);
   output.append(TextUtils::head_bytes(after_decimal, 1));
-  output.append(TextUtils::trim_right(TextUtils::tail_bytes(after_decimal, 1), "0"));
+  output.append(
+      TextUtils::trim_right(TextUtils::tail_bytes(after_decimal, 1), "0"));
 }
 
-void Rational::negate() {
-  m_numerator.negate();
-}
+void Rational::negate() { m_numerator.negate(); }
 
 Rational Rational::abs() const {
   if (m_numerator < Integer(0)) {
@@ -210,17 +211,11 @@ Rational Rational::pow(uint32_t exponent) const {
   return Rational(m_numerator.pow(exponent), m_denominator.pow(exponent));
 }
 
-Integer Rational::floor() const {
-  return m_numerator / m_denominator;
-}
+Integer Rational::floor() const { return m_numerator / m_denominator; }
 
-const Integer &Rational::numerator() const {
-  return m_numerator;
-}
+const Integer &Rational::numerator() const { return m_numerator; }
 
-const Integer &Rational::denominator() const {
-  return m_denominator;
-}
+const Integer &Rational::denominator() const { return m_denominator; }
 
 Rational Rational::operator+(const Rational &other) const {
   Rational lhs(*this);
@@ -237,11 +232,13 @@ Rational Rational::operator-(const Rational &other) const {
 }
 
 Rational Rational::operator*(const Rational &other) const {
-  return Rational(m_numerator * other.m_numerator, m_denominator * other.m_denominator);
+  return Rational(m_numerator * other.m_numerator,
+                  m_denominator * other.m_denominator);
 }
 
 Rational Rational::operator/(const Rational &other) const {
-  return Rational(m_numerator * other.m_denominator, m_denominator * other.m_numerator);
+  return Rational(m_numerator * other.m_denominator,
+                  m_denominator * other.m_numerator);
 }
 
 Rational Rational::operator%(const Rational &other) const {
@@ -252,9 +249,7 @@ Rational Rational::operator-() const {
   return Rational(-m_numerator, m_denominator);
 }
 
-Rational Rational::operator+() const {
-  return *this;
-}
+Rational Rational::operator+() const { return *this; }
 
 Rational &Rational::operator+=(const Rational &other) {
   Rational rhs(other);
@@ -309,7 +304,8 @@ Rational Rational::operator--(int) {
 }
 
 bool Rational::operator==(const Rational &other) const {
-  return m_numerator == other.m_numerator && m_denominator == other.m_denominator;
+  return m_numerator == other.m_numerator &&
+         m_denominator == other.m_denominator;
 }
 
 bool Rational::operator!=(const Rational &other) const {

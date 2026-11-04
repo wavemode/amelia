@@ -17,35 +17,27 @@ public:
 
   Slice(T *m_ptr, size_t m_len) noexcept : m_ptr(m_ptr), m_len(m_len) {}
 
-  template <size_t N> explicit Slice(T (&array)[N]) noexcept : m_ptr(array), m_len(N) {}
+  template <size_t N>
+  explicit Slice(T (&array)[N]) noexcept : m_ptr(array), m_len(N) {}
 
-  explicit Slice(SliceIterator<T> iter) noexcept : m_ptr(iter.ptr()), m_len(iter.size()) {}
+  explicit Slice(SliceIterator<T> iter) noexcept
+      : m_ptr(iter.ptr()), m_len(iter.size()) {}
 
-  SliceIterator<T> begin() {
-    return SliceIterator(*this);
-  }
+  SliceIterator<T> begin() { return SliceIterator(*this); }
   ConstSliceIterator<T> begin() const {
     return ConstSliceIterator(m_ptr, m_len);
   }
 
-  SliceIterator<T> end() {
-    return SliceIterator(m_ptr + m_len, 0);
-  }
+  SliceIterator<T> end() { return SliceIterator(m_ptr + m_len, 0); }
   ConstSliceIterator<T> end() const {
     return ConstSliceIterator(m_ptr + m_len, 0);
   }
 
-  T *ptr() noexcept {
-    return m_ptr;
-  }
+  T *ptr() noexcept { return m_ptr; }
 
-  const T *ptr() const noexcept {
-    return m_ptr;
-  }
+  const T *ptr() const noexcept { return m_ptr; }
 
-  size_t size() const noexcept {
-    return m_len;
-  }
+  size_t size() const noexcept { return m_len; }
 
   T &operator[](size_t index) {
     if (index >= m_len) {
@@ -76,9 +68,7 @@ public:
     return true;
   }
 
-  bool operator!=(const Slice<T> &other) const {
-    return !(*this == other);
-  }
+  bool operator!=(const Slice<T> &other) const { return !(*this == other); }
 
   Slice<T> operator+(size_t offset) {
     if (offset > m_len) {
@@ -119,35 +109,26 @@ template <typename T> class SliceIterator {
 public:
   SliceIterator() noexcept : m_ptr(nullptr), m_len(0) {}
 
-  SliceIterator(Slice<T> slice) noexcept : m_ptr(slice.ptr()), m_len(slice.size()) {}
+  SliceIterator(Slice<T> slice) noexcept
+      : m_ptr(slice.ptr()), m_len(slice.size()) {}
 
   SliceIterator(T *m_ptr, size_t m_len) noexcept : m_ptr(m_ptr), m_len(m_len) {}
 
-  T *ptr() noexcept {
-    return m_ptr;
-  }
+  T *ptr() noexcept { return m_ptr; }
 
-  size_t size() const noexcept {
-    return m_len;
-  }
+  size_t size() const noexcept { return m_len; }
 
-  SliceIterator<T> begin() {
-    return *this;
-  }
+  SliceIterator<T> begin() { return *this; }
   ConstSliceIterator<T> begin() const {
     return ConstSliceIterator(m_ptr, m_len);
   }
 
-  SliceIterator<T> end() {
-    return SliceIterator(m_ptr + m_len, 0);
-  }
+  SliceIterator<T> end() { return SliceIterator(m_ptr + m_len, 0); }
   ConstSliceIterator<T> end() const {
     return ConstSliceIterator(m_ptr + m_len, 0);
   }
 
-  T &peek() {
-    return **this;
-  }
+  T &peek() { return **this; }
 
   T &next() {
     T &value = peek();
@@ -155,9 +136,7 @@ public:
     return value;
   }
 
-  bool at_end() const noexcept {
-    return m_len == 0;
-  }
+  bool at_end() const noexcept { return m_len == 0; }
 
   T &operator[](size_t index) {
     if (index >= m_len) {
@@ -221,32 +200,30 @@ template <typename T> class ConstSlice {
 public:
   ConstSlice() noexcept : m_ptr(nullptr), m_len(0) {}
 
-  ConstSlice(const T *m_ptr, size_t m_len) noexcept : m_ptr(m_ptr), m_len(m_len) {}
+  ConstSlice(const T *m_ptr, size_t m_len) noexcept
+      : m_ptr(m_ptr), m_len(m_len) {}
 
-  ConstSlice(Slice<T> slice) noexcept : m_ptr(slice.ptr()), m_len(slice.size()) {}
+  ConstSlice(Slice<T> slice) noexcept
+      : m_ptr(slice.ptr()), m_len(slice.size()) {}
 
-  ConstSlice(const ConstSlice<const T> &slice) noexcept : m_ptr(slice.ptr()), m_len(slice.size()) {}
+  ConstSlice(const ConstSlice<const T> &slice) noexcept
+      : m_ptr(slice.ptr()), m_len(slice.size()) {}
 
-  template <size_t N> explicit ConstSlice(const T (&array)[N]) noexcept : m_ptr(array), m_len(N) {}
+  template <size_t N>
+  explicit ConstSlice(const T (&array)[N]) noexcept : m_ptr(array), m_len(N) {}
 
   explicit ConstSlice(ConstSliceIterator<T> iter) noexcept
       : m_ptr(iter.ptr()), m_len(iter.size()) {}
 
-  ConstSliceIterator<T> begin() const {
-    return *this;
-  }
+  ConstSliceIterator<T> begin() const { return *this; }
 
   ConstSliceIterator<T> end() const {
     return ConstSliceIterator(m_ptr + m_len, 0);
   }
 
-  const T *ptr() const noexcept {
-    return m_ptr;
-  }
+  const T *ptr() const noexcept { return m_ptr; }
 
-  size_t size() const noexcept {
-    return m_len;
-  }
+  size_t size() const noexcept { return m_len; }
 
   const T &operator[](size_t index) const {
     if (index >= m_len) {
@@ -297,9 +274,7 @@ public:
     return temp;
   }
 
-  operator Slice<const T>() const {
-    return Slice<const T>(m_ptr, m_len);
-  }
+  operator Slice<const T>() const { return Slice<const T>(m_ptr, m_len); }
 
 private:
   const T *m_ptr;
@@ -310,21 +285,21 @@ template <typename T> class ConstSliceIterator {
 public:
   ConstSliceIterator() noexcept : m_ptr(nullptr), m_len(0) {}
 
-  ConstSliceIterator(ConstSlice<T> slice) noexcept : m_ptr(slice.ptr()), m_len(slice.size()) {}
+  ConstSliceIterator(ConstSlice<T> slice) noexcept
+      : m_ptr(slice.ptr()), m_len(slice.size()) {}
 
-  ConstSliceIterator(Slice<T> slice) noexcept : m_ptr(slice.ptr()), m_len(slice.size()) {}
+  ConstSliceIterator(Slice<T> slice) noexcept
+      : m_ptr(slice.ptr()), m_len(slice.size()) {}
 
-  ConstSliceIterator(Slice<const T> slice) noexcept : m_ptr(slice.ptr()), m_len(slice.size()) {}
+  ConstSliceIterator(Slice<const T> slice) noexcept
+      : m_ptr(slice.ptr()), m_len(slice.size()) {}
 
-  ConstSliceIterator(const T *m_ptr, size_t m_len) noexcept : m_ptr(m_ptr), m_len(m_len) {}
+  ConstSliceIterator(const T *m_ptr, size_t m_len) noexcept
+      : m_ptr(m_ptr), m_len(m_len) {}
 
-  const T *ptr() const noexcept {
-    return m_ptr;
-  }
+  const T *ptr() const noexcept { return m_ptr; }
 
-  size_t size() const noexcept {
-    return m_len;
-  }
+  size_t size() const noexcept { return m_len; }
 
   ConstSliceIterator<T> begin() const {
     return ConstSliceIterator(m_ptr, m_len);
@@ -357,9 +332,7 @@ public:
     return *m_ptr;
   }
 
-  const T &peek() {
-    return **this;
-  }
+  const T &peek() { return **this; }
 
   const T &next() {
     const T &value = peek();
@@ -367,9 +340,7 @@ public:
     return value;
   }
 
-  bool at_end() const noexcept {
-    return m_len == 0;
-  }
+  bool at_end() const noexcept { return m_len == 0; }
 
   ConstSliceIterator<T> &operator+=(size_t offset) {
     *this = *this + offset;

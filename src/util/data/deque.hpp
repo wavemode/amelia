@@ -14,9 +14,8 @@ inline unsigned long long chunk_index(unsigned long long item_index) {
   return (63ULL - __builtin_clzll(item_index + 16ULL)) - 4ULL;
 }
 
-inline unsigned long long chunk_offset(
-    unsigned long long chunk_number, unsigned long long global_item_index
-) {
+inline unsigned long long chunk_offset(unsigned long long chunk_number,
+                                       unsigned long long global_item_index) {
   return global_item_index - ((16ULL << chunk_number) - 16ULL);
 }
 
@@ -42,13 +41,12 @@ struct chunk_manager {
     chunk_capacity = 0;
   }
 
-  void *get_chunk(size_t chunk_number) const {
-    return chunk_ptr[chunk_number];
-  }
+  void *get_chunk(size_t chunk_number) const { return chunk_ptr[chunk_number]; }
 
   void grow_chunk_capacity() {
     uint8_t new_capacity = chunk_capacity == 0 ? 4 : chunk_capacity * 2;
-    void **new_chunks = static_cast<void **>(std::malloc(sizeof(void *) * new_capacity));
+    void **new_chunks =
+        static_cast<void **>(std::malloc(sizeof(void *) * new_capacity));
     for (size_t i = 0; i < chunk_count; ++i) {
       new_chunks[i] = chunk_ptr[i];
     }
@@ -61,8 +59,10 @@ struct chunk_manager {
     if (chunk_count == chunk_capacity) {
       grow_chunk_capacity();
     }
-    size_t chunk_size = static_cast<size_t>(16) << static_cast<size_t>(chunk_count);
-    chunk_ptr[chunk_count] = static_cast<void *>(std::malloc(elem_size * chunk_size));
+    size_t chunk_size = static_cast<size_t>(16)
+                        << static_cast<size_t>(chunk_count);
+    chunk_ptr[chunk_count] =
+        static_cast<void *>(std::malloc(elem_size * chunk_size));
     ++chunk_count;
   }
 };
@@ -72,7 +72,8 @@ template <typename T> class DequeIterator;
 template <typename T> class ConstDequeIterator;
 
 /**
- * Similar to a std::deque, but each subsequent chunk is twice as large as the previous one.
+ * Similar to a std::deque, but each subsequent chunk is twice as large as the
+ * previous one.
  *
  * The initial chunk has a size of 16.
  */
@@ -86,13 +87,9 @@ public:
     }
   }
 
-  Deque(const Deque &other) {
-    clone(other);
-  }
+  Deque(const Deque &other) { clone(other); }
 
-  Deque(Deque &&other) noexcept {
-    move_from(move(other));
-  }
+  Deque(Deque &&other) noexcept { move_from(move(other)); }
 
   Deque &operator=(const Deque &other) {
     if (this != &other) {
@@ -181,17 +178,11 @@ public:
     return *get_item(m_start + static_cast<int64_t>(index));
   }
 
-  size_t size() const {
-    return m_size;
-  }
+  size_t size() const { return m_size; }
 
-  DequeIterator<T> begin() {
-    return DequeIterator<T>(*this, 0);
-  }
+  DequeIterator<T> begin() { return DequeIterator<T>(*this, 0); }
 
-  DequeIterator<T> end() {
-    return DequeIterator<T>(*this, m_size);
-  }
+  DequeIterator<T> end() { return DequeIterator<T>(*this, m_size); }
 
   ConstDequeIterator<T> begin() const {
     return ConstDequeIterator<T>(*this, 0);
@@ -201,13 +192,9 @@ public:
     return ConstDequeIterator<T>(*this, m_size);
   }
 
-  T &operator[](size_t index) {
-    return get(index);
-  }
+  T &operator[](size_t index) { return get(index); }
 
-  const T &operator[](size_t index) const {
-    return get(index);
-  }
+  const T &operator[](size_t index) const { return get(index); }
 
   bool operator==(const Deque &other) const {
     if (m_size != other.m_size) {
@@ -221,20 +208,21 @@ public:
     return true;
   }
 
-  bool operator!=(const Deque &other) const {
-    return !(*this == other);
-  }
+  bool operator!=(const Deque &other) const { return !(*this == other); }
 
 private:
   T *get_item(int64_t global_index) const {
     if (global_index >= 0) {
       unsigned long long chunk_number = internal::chunk_index(global_index);
       size_t offset = internal::chunk_offset(chunk_number, global_index);
-      return static_cast<T *>(m_positive_chunks.get_chunk(chunk_number)) + offset;
+      return static_cast<T *>(m_positive_chunks.get_chunk(chunk_number)) +
+             offset;
     } else {
-      unsigned long long chunk_number = internal::chunk_index(-1LL - global_index);
+      unsigned long long chunk_number =
+          internal::chunk_index(-1LL - global_index);
       size_t offset = internal::chunk_offset(chunk_number, -1LL - global_index);
-      return static_cast<T *>(m_negative_chunks.get_chunk(chunk_number)) + offset;
+      return static_cast<T *>(m_negative_chunks.get_chunk(chunk_number)) +
+             offset;
     }
   }
 
@@ -245,15 +233,18 @@ private:
         m_positive_chunks.add_chunk();
       }
       size_t offset = internal::chunk_offset(chunk_number, global_index);
-      T *item_ptr = static_cast<T *>(m_positive_chunks.get_chunk(chunk_number)) + offset;
+      T *item_ptr =
+          static_cast<T *>(m_positive_chunks.get_chunk(chunk_number)) + offset;
       return item_ptr;
     } else {
-      unsigned long long chunk_number = internal::chunk_index(-1LL - global_index);
+      unsigned long long chunk_number =
+          internal::chunk_index(-1LL - global_index);
       while (chunk_number >= m_negative_chunks.chunk_count) {
         m_negative_chunks.add_chunk();
       }
       size_t offset = internal::chunk_offset(chunk_number, -1LL - global_index);
-      T *item_ptr = static_cast<T *>(m_negative_chunks.get_chunk(chunk_number)) + offset;
+      T *item_ptr =
+          static_cast<T *>(m_negative_chunks.get_chunk(chunk_number)) + offset;
       return item_ptr;
     }
   }
@@ -293,11 +284,10 @@ private:
 
 template <typename T> class DequeIterator {
 public:
-  DequeIterator(Deque<T> &deque, size_t index) : m_deque(&deque), m_index(index) {}
+  DequeIterator(Deque<T> &deque, size_t index)
+      : m_deque(&deque), m_index(index) {}
 
-  T &peek() {
-    return m_deque->get(m_index);
-  }
+  T &peek() { return m_deque->get(m_index); }
 
   T &next() {
     if (at_end()) {
@@ -308,9 +298,7 @@ public:
     return item;
   }
 
-  bool at_end() const {
-    return m_index >= m_deque->size();
-  }
+  bool at_end() const { return m_index >= m_deque->size(); }
 
   bool operator==(const DequeIterator &other) const {
     return m_deque == other.m_deque && m_index == other.m_index;
@@ -331,13 +319,9 @@ public:
     return temp;
   }
 
-  T &operator*() {
-    return peek();
-  }
+  T &operator*() { return peek(); }
 
-  T *operator->() {
-    return &peek();
-  }
+  T *operator->() { return &peek(); }
 
 private:
   Deque<T> *m_deque;
@@ -346,24 +330,22 @@ private:
 
 template <typename T> class ConstDequeIterator {
 public:
-  ConstDequeIterator(const Deque<T> &deque, size_t index) : m_deque(&deque), m_index(index) {}
+  ConstDequeIterator(const Deque<T> &deque, size_t index)
+      : m_deque(&deque), m_index(index) {}
 
-  const T &peek() const {
-    return m_deque->get(m_index);
-  }
+  const T &peek() const { return m_deque->get(m_index); }
 
   const T &next() {
     if (at_end()) {
-      throw RuntimeError("Attempted to advance ConstDequeIterator past the end");
+      throw RuntimeError(
+          "Attempted to advance ConstDequeIterator past the end");
     }
     const T &item = peek();
     ++m_index;
     return item;
   }
 
-  bool at_end() const {
-    return m_index >= m_deque->size();
-  }
+  bool at_end() const { return m_index >= m_deque->size(); }
 
   bool operator==(const ConstDequeIterator &other) const {
     return m_deque == other.m_deque && m_index == other.m_index;
@@ -384,13 +366,9 @@ public:
     return temp;
   }
 
-  const T &operator*() const {
-    return peek();
-  }
+  const T &operator*() const { return peek(); }
 
-  const T *operator->() const {
-    return &peek();
-  }
+  const T *operator->() const { return &peek(); }
 
 private:
   const Deque<T> *m_deque;

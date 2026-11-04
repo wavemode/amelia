@@ -51,7 +51,8 @@ TEST_CASE("can be assigned from another String") {
 }
 
 TEST_CASE("can be constructed from a Slice of bytes") {
-  const char data[] = {'H', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l', 'd', '!'};
+  const char data[] = {'H', 'e', 'l', 'l', 'o', ',', ' ',
+                       'w', 'o', 'r', 'l', 'd', '!'};
   REQUIRE(sizeof(data) == 13);
 
   String str = String(ConstSlice(data));
@@ -62,7 +63,8 @@ TEST_CASE("can be constructed from a Slice of bytes") {
   REQUIRE(sizeof(data2) == 14);
   String str2 = String(ConstSlice(data2));
 
-  // String will actually have a NULL character at the end, since the Slice does.
+  // String will actually have a NULL character at the end, since the Slice
+  // does.
   REQUIRE(str2.size() == 14);
   REQUIRE(str2.c_str()[13] == '\0');
 }

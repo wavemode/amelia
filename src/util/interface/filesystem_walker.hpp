@@ -7,12 +7,9 @@ class Text;
 template <typename T> struct AbstractList;
 
 struct IFilesystemWalker {
-  virtual void walk(
-      AbstractList<String> &output,
-      Text root,
-      bool regular_files_only = true,
-      bool ignore_errors = true
-  ) = 0;
+  virtual void walk(AbstractList<String> &output, Text root,
+                    bool regular_files_only = true,
+                    bool ignore_errors = true) = 0;
 };
 
 } // namespace amelia

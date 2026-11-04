@@ -21,7 +21,8 @@ template <typename T> inline void swap(T &a, T &b) noexcept {
 }
 
 namespace internal {
-template <typename T> inline size_t partition(T *slice, size_t start, size_t end) {
+template <typename T>
+inline size_t partition(T *slice, size_t start, size_t end) {
   T &pivot = slice[end - 1];
   size_t i = start;
   for (size_t j = start; j < end - 1; ++j) {
@@ -88,36 +89,16 @@ template <typename T> inline uint64_t bit_hash(const T &value) {
 template <typename T> inline uint64_t hash(const T &value) {
   return value.hash_code();
 }
-inline uint64_t hash(char value) {
-  return bit_hash(value);
-}
-inline uint64_t hash(short value) {
-  return bit_hash(value);
-}
-inline uint64_t hash(int value) {
-  return bit_hash(value);
-}
-inline uint64_t hash(long value) {
-  return bit_hash(value);
-}
-inline uint64_t hash(long long value) {
-  return bit_hash(value);
-}
-inline uint64_t hash(unsigned char value) {
-  return bit_hash(value);
-}
-inline uint64_t hash(unsigned short value) {
-  return bit_hash(value);
-}
-inline uint64_t hash(unsigned int value) {
-  return bit_hash(value);
-}
-inline uint64_t hash(unsigned long value) {
-  return bit_hash(value);
-}
-inline uint64_t hash(unsigned long long value) {
-  return bit_hash(value);
-}
+inline uint64_t hash(char value) { return bit_hash(value); }
+inline uint64_t hash(short value) { return bit_hash(value); }
+inline uint64_t hash(int value) { return bit_hash(value); }
+inline uint64_t hash(long value) { return bit_hash(value); }
+inline uint64_t hash(long long value) { return bit_hash(value); }
+inline uint64_t hash(unsigned char value) { return bit_hash(value); }
+inline uint64_t hash(unsigned short value) { return bit_hash(value); }
+inline uint64_t hash(unsigned int value) { return bit_hash(value); }
+inline uint64_t hash(unsigned long value) { return bit_hash(value); }
+inline uint64_t hash(unsigned long long value) { return bit_hash(value); }
 
 template <typename T> struct remove_reference {
   using type = T;
@@ -131,23 +112,22 @@ template <typename T> struct remove_reference<T &&> {
   using type = T;
 };
 
-template <typename T> using remove_reference_t = typename remove_reference<T>::type;
+template <typename T>
+using remove_reference_t = typename remove_reference<T>::type;
 
-template <typename T> inline constexpr T &&forward(remove_reference_t<T> &param) noexcept {
+template <typename T>
+inline constexpr T &&forward(remove_reference_t<T> &param) noexcept {
   return static_cast<T &&>(param);
 }
 
-template <typename T> inline constexpr T &&forward(remove_reference_t<T> &&param) noexcept {
+template <typename T>
+inline constexpr T &&forward(remove_reference_t<T> &&param) noexcept {
   return static_cast<T &&>(param);
 }
 
-template <typename T> inline T max(T a, T b) {
-  return a > b ? a : b;
-}
+template <typename T> inline T max(T a, T b) { return a > b ? a : b; }
 
-template <typename T> inline T min(T a, T b) {
-  return a < b ? a : b;
-}
+template <typename T> inline T min(T a, T b) { return a < b ? a : b; }
 
 template <typename T> inline void sort(T *slice, size_t start, size_t end) {
   if (start >= end) {
@@ -187,7 +167,8 @@ struct Dynamic {
   template <typename T> T &as() {
     auto *ptr = dynamic_cast<T *>(this);
     if (!ptr) {
-      throw RuntimeError("as() called on a type that is not of the requested type");
+      throw RuntimeError(
+          "as() called on a type that is not of the requested type");
     }
     return *ptr;
   }
@@ -195,7 +176,8 @@ struct Dynamic {
   template <typename T> const T &as() const {
     const auto *ptr = dynamic_cast<const T *>(this);
     if (!ptr) {
-      throw RuntimeError("as() called on a type that is not of the requested type");
+      throw RuntimeError(
+          "as() called on a type that is not of the requested type");
     }
     return *ptr;
   }

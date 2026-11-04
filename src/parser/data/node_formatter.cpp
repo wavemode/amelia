@@ -1,8 +1,8 @@
 #include "node_formatter.hpp"
 
 #include "lexer/data/lexer.hpp"
-#include "parser/interfaces/abstract_node_repository.hpp"
 #include "parser/data/node.hpp"
+#include "parser/interfaces/abstract_node_repository.hpp"
 #include "util/data/integer.hpp"
 #include "util/data/serialize.hpp"
 #include "util/data/text_utils.hpp"
@@ -376,6 +376,12 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "type", n.type);
     break;
   }
+  case NodeType::IsExprNode: {
+    const auto &n = node.as_IsExprNode();
+    print_node_field(out, "expr", n.expr);
+    print_node_field(out, "type", n.type);
+    break;
+  }
   case NodeType::IndexingExprNode: {
     const auto &n = node.as_IndexingExprNode();
     print_node_field(out, "object", n.object);
@@ -436,114 +442,43 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "expr", n.expr);
     break;
   }
-  case NodeType::OperatorIdentAddNode: {
+  case NodeType::OperatorIdentAddNode:
+  case NodeType::OperatorIdentSubNode:
+  case NodeType::OperatorIdentStarNode:
+  case NodeType::OperatorIdentDivNode:
+  case NodeType::OperatorIdentModNode:
+  case NodeType::OperatorIdentIncNode:
+  case NodeType::OperatorIdentDecNode:
+  case NodeType::OperatorIdentEqNode:
+  case NodeType::OperatorIdentNeqNode:
+  case NodeType::OperatorIdentGtNode:
+  case NodeType::OperatorIdentLtNode:
+  case NodeType::OperatorIdentGteNode:
+  case NodeType::OperatorIdentLteNode:
+  case NodeType::OperatorIdentNotNode:
+  case NodeType::OperatorIdentAndNode:
+  case NodeType::OperatorIdentOrNode:
+  case NodeType::OperatorIdentBitwiseNotNode:
+  case NodeType::OperatorIdentAmpersandNode:
+  case NodeType::OperatorIdentBitwiseOrNode:
+  case NodeType::OperatorIdentBitwiseXorNode:
+  case NodeType::OperatorIdentLeftShiftNode:
+  case NodeType::OperatorIdentRightShiftNode:
+  case NodeType::OperatorIdentAssignNode:
+  case NodeType::OperatorIdentAddAssignNode:
+  case NodeType::OperatorIdentSubAssignNode:
+  case NodeType::OperatorIdentMulAssignNode:
+  case NodeType::OperatorIdentDivAssignNode:
+  case NodeType::OperatorIdentModAssignNode:
+  case NodeType::OperatorIdentBitwiseAndAssignNode:
+  case NodeType::OperatorIdentBitwiseOrAssignNode:
+  case NodeType::OperatorIdentBitwiseXorAssignNode:
+  case NodeType::OperatorIdentLeftShiftAssignNode:
+  case NodeType::OperatorIdentRightShiftAssignNode:
+  case NodeType::OperatorIdentIxNode:
+  case NodeType::OperatorIdentFuncallNode:
+  case NodeType::OperatorIdentIxAssignNode:
     break;
-  }
-  case NodeType::OperatorIdentSubNode: {
-    break;
-  }
-  case NodeType::OperatorIdentStarNode: {
-    break;
-  }
-  case NodeType::OperatorIdentDivNode: {
-    break;
-  }
-  case NodeType::OperatorIdentModNode: {
-    break;
-  }
-  case NodeType::OperatorIdentIncNode: {
-    break;
-  }
-  case NodeType::OperatorIdentDecNode: {
-    break;
-  }
-  case NodeType::OperatorIdentEqNode: {
-    break;
-  }
-  case NodeType::OperatorIdentNeqNode: {
-    break;
-  }
-  case NodeType::OperatorIdentGtNode: {
-    break;
-  }
-  case NodeType::OperatorIdentLtNode: {
-    break;
-  }
-  case NodeType::OperatorIdentGteNode: {
-    break;
-  }
-  case NodeType::OperatorIdentLteNode: {
-    break;
-  }
-  case NodeType::OperatorIdentNotNode: {
-    break;
-  }
-  case NodeType::OperatorIdentAndNode: {
-    break;
-  }
-  case NodeType::OperatorIdentOrNode: {
-    break;
-  }
-  case NodeType::OperatorIdentBitwiseNotNode: {
-    break;
-  }
-  case NodeType::OperatorIdentAmpersandNode: {
-    break;
-  }
-  case NodeType::OperatorIdentBitwiseOrNode: {
-    break;
-  }
-  case NodeType::OperatorIdentBitwiseXorNode: {
-    break;
-  }
-  case NodeType::OperatorIdentLeftShiftNode: {
-    break;
-  }
-  case NodeType::OperatorIdentRightShiftNode: {
-    break;
-  }
-  case NodeType::OperatorIdentAssignNode: {
-    break;
-  }
-  case NodeType::OperatorIdentAddAssignNode: {
-    break;
-  }
-  case NodeType::OperatorIdentSubAssignNode: {
-    break;
-  }
-  case NodeType::OperatorIdentMulAssignNode: {
-    break;
-  }
-  case NodeType::OperatorIdentDivAssignNode: {
-    break;
-  }
-  case NodeType::OperatorIdentModAssignNode: {
-    break;
-  }
-  case NodeType::OperatorIdentBitwiseAndAssignNode: {
-    break;
-  }
-  case NodeType::OperatorIdentBitwiseOrAssignNode: {
-    break;
-  }
-  case NodeType::OperatorIdentBitwiseXorAssignNode: {
-    break;
-  }
-  case NodeType::OperatorIdentLeftShiftAssignNode: {
-    break;
-  }
-  case NodeType::OperatorIdentRightShiftAssignNode: {
-    break;
-  }
-  case NodeType::OperatorIdentIxNode: {
-    break;
-  }
-  case NodeType::OperatorIdentFuncallNode: {
-    break;
-  }
-  case NodeType::OperatorIdentIxAssignNode: {
-    break;
-  }
   case NodeType::OperatorIdentAsNode: {
     const auto &n = node.as_OperatorIdentAsNode();
     print_node_field(out, "type", n.type);
@@ -1096,9 +1031,8 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   m_fields_printed = previous_fields_printed;
 }
 
-void NodeFormatter::print_node_field(
-    AbstractString &out, Text name, const List<NodeId> &nodes_value
-) {
+void NodeFormatter::print_node_field(AbstractString &out, Text name,
+                                     const List<NodeId> &nodes_value) {
   if (nodes_value.size() == 0)
     return;
   open_line(out);
@@ -1119,9 +1053,8 @@ void NodeFormatter::print_node_field(
   m_fields_printed = old_fields_printed;
 }
 
-void NodeFormatter::print_node_field(
-    AbstractString &out, Text name, const Option<List<NodeId>> &nodes
-) {
+void NodeFormatter::print_node_field(AbstractString &out, Text name,
+                                     const Option<List<NodeId>> &nodes) {
   if (!nodes.has_value() || nodes.value().size() == 0)
     return;
   open_line(out);
@@ -1143,7 +1076,8 @@ void NodeFormatter::print_node_field(
   m_fields_printed = old_fields_printed;
 }
 
-void NodeFormatter::print_node_field(AbstractString &out, Text name, Option<NodeId> node_id) {
+void NodeFormatter::print_node_field(AbstractString &out, Text name,
+                                     Option<NodeId> node_id) {
   if (!node_id.has_value()) {
     return;
   }
@@ -1152,21 +1086,24 @@ void NodeFormatter::print_node_field(AbstractString &out, Text name, Option<Node
   out.append('=');
   format_node(out, node_id.value());
 }
-void NodeFormatter::print_text_field(AbstractString &out, Text name, Text value) {
+void NodeFormatter::print_text_field(AbstractString &out, Text name,
+                                     Text value) {
   open_line(out);
   out.append(name);
   out.append('=');
   out.append(value);
 }
 
-void NodeFormatter::print_numeric_field(AbstractString &out, Text name, Integer value) {
+void NodeFormatter::print_numeric_field(AbstractString &out, Text name,
+                                        Integer value) {
   open_line(out);
   out.append(name);
   out.append('=');
   value.to_string(out);
 }
 
-void NodeFormatter::print_boolean_field(AbstractString &out, Text name, bool value) {
+void NodeFormatter::print_boolean_field(AbstractString &out, Text name,
+                                        bool value) {
   open_line(out);
   out.append(name);
   out.append('=');

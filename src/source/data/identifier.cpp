@@ -216,11 +216,10 @@ Identifier::Identifier(Text name) {
   }
 }
 
-Text Identifier::literal() const noexcept {
-  return m_name.text();
-}
+Text Identifier::literal() const noexcept { return m_name.text(); }
 
-void Identifier::pretty_print(AbstractString &out, bool quoted, bool escaped) const {
+void Identifier::pretty_print(AbstractString &out, bool quoted,
+                              bool escaped) const {
   Text name = m_name.text();
 
   if (!quoted && TextUtils::starts_with(name, "`")) {

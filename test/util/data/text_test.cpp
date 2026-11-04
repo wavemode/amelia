@@ -29,14 +29,16 @@ TEST_CASE("default construction") {
 }
 
 TEST_CASE("can be constructed from an array of characters") {
-  char arr[] = {'H', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l', 'd', '!'};
+  char arr[] = {'H', 'e', 'l', 'l', 'o', ',', ' ',
+                'w', 'o', 'r', 'l', 'd', '!'};
   Text text = arr;
   REQUIRE(text.size() == 13);
   REQUIRE(std::memcmp(text.data().ptr(), arr, 13) == 0);
 }
 
 TEST_CASE("can be constructed from a null-terminated array of characters") {
-  char arr[] = {'H', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l', 'd', '!', '\0'};
+  char arr[] = {'H', 'e', 'l', 'l', 'o', ',', ' ',
+                'w', 'o', 'r', 'l', 'd', '!', '\0'};
   Text text = arr;
   REQUIRE(text.size() == 13);
   REQUIRE(std::memcmp(text.data().ptr(), arr, 13) == 0);

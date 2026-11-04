@@ -15,32 +15,29 @@ struct AbstractString;
 struct CompilerTestExecutionContext;
 class Text;
 
-void collect_test_cases(
-    IFilesystemWalker &,
-    IFileLoader &,
-    IPrinter &,
-    IEnvironmentReader &,
-    CompilerTestCaseCollection &output,
-    Text root_directory
-);
+void collect_test_cases(IFilesystemWalker &, IFileLoader &, IPrinter &,
+                        IEnvironmentReader &,
+                        CompilerTestCaseCollection &output,
+                        Text root_directory);
 
-bool execute_test_case(
-    ITestCaseRunner &test_case_runner,
-    IFileWriter &file_writer,
-    IPrinter &printer,
-    CompilerTestExecutionOutcome &outcome,
-    const CompilerTestCase &test_case,
-    const CompilerTestExecutionContext &context
-);
+bool execute_test_case(ITestCaseRunner &test_case_runner,
+                       IFileWriter &file_writer, IPrinter &printer,
+                       CompilerTestExecutionOutcome &outcome,
+                       const CompilerTestCase &test_case,
+                       const CompilerTestExecutionContext &context);
 
-CompilerTestExecutionContext get_test_execution_context(IEnvironmentReader &env_reader);
+CompilerTestExecutionContext
+get_test_execution_context(IEnvironmentReader &env_reader);
 
 bool execute_test_case(ITestCaseRunner &, const CompilerTestCase &test_case);
 
-bool update_expected_output(ITestCaseRunner &, IFileWriter &, const CompilerTestCase &test_case);
+bool update_expected_output(ITestCaseRunner &, IFileWriter &,
+                            const CompilerTestCase &test_case);
 
-void run_lexer_test_case(AbstractString &output, const CompilerTestCase &test_case);
+void run_lexer_test_case(AbstractString &output,
+                         const CompilerTestCase &test_case);
 
-void run_parser_test_case(AbstractString &output, const CompilerTestCase &test_case);
+void run_parser_test_case(AbstractString &output,
+                          const CompilerTestCase &test_case);
 
 } // namespace amelia

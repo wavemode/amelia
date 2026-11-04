@@ -10,12 +10,8 @@ namespace amelia {
 
 namespace {
 
-void write_to_file(
-    const AbstractString &path,
-    const AbstractString &content,
-    bool overwrite,
-    bool create_directories
-) {
+void write_to_file(const AbstractString &path, const AbstractString &content,
+                   bool overwrite, bool create_directories) {
   std::filesystem::path p(path.c_str());
 
   if (create_directories) {
@@ -25,9 +21,8 @@ void write_to_file(
     }
   }
 
-  std::ofstream outfile(
-      p, overwrite ? (std::ios::out | std::ios::trunc) : (std::ios::out | std::ios::app)
-  );
+  std::ofstream outfile(p, overwrite ? (std::ios::out | std::ios::trunc)
+                                     : (std::ios::out | std::ios::app));
 
   if (outfile.is_open()) {
     outfile << content.c_str();
@@ -37,11 +32,13 @@ void write_to_file(
 
 } // namespace
 
-void FileWriter::write_file(const AbstractString &file_path, const AbstractString &contents) {
+void FileWriter::write_file(const AbstractString &file_path,
+                            const AbstractString &contents) {
   write_to_file(file_path, contents, true, true);
 }
 
-void FileWriter::append_file(const AbstractString &file_path, const AbstractString &contents) {
+void FileWriter::append_file(const AbstractString &file_path,
+                             const AbstractString &contents) {
   write_to_file(file_path, contents, false, true);
 }
 

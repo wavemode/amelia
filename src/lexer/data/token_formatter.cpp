@@ -24,7 +24,8 @@ void TokenFormatter::format_token(AbstractString &out, size_t token_id) const {
     out.append('"');
     break;
   case TokenType::CHAR_LITERAL: {
-    serialize_char_literal(Lexer::read_char_literal(token.contents)).to_string(out);
+    serialize_char_literal(Lexer::read_char_literal(token.contents))
+        .to_string(out);
     break;
   }
   case TokenType::IDENTIFIER:

@@ -7,29 +7,28 @@ namespace amelia {
 
 class Node {
 public:
-#define X(NODE_TYPE)                                                                               \
-  Node(TokenId start, TokenId end, NODE_TYPE node)                                                 \
-      : m_start(start), m_end(end), m_type(NodeType::NODE_TYPE), m_data(move(node)) {}             \
-                                                                                                   \
-  NODE_TYPE &as_##NODE_TYPE() {                                                                    \
-    if (m_type != NodeType::NODE_TYPE) {                                                           \
-      throw RuntimeError("Node type mismatch");                                                    \
-    }                                                                                              \
-    return m_data.data_##NODE_TYPE;                                                                \
-  }                                                                                                \
-                                                                                                   \
-  const NODE_TYPE &as_##NODE_TYPE() const {                                                        \
-    if (m_type != NodeType::NODE_TYPE) {                                                           \
-      throw RuntimeError("Node type mismatch");                                                    \
-    }                                                                                              \
-    return m_data.data_##NODE_TYPE;                                                                \
+#define X(NODE_TYPE)                                                           \
+  Node(TokenId start, TokenId end, NODE_TYPE node)                             \
+      : m_start(start), m_end(end), m_type(NodeType::NODE_TYPE),               \
+        m_data(move(node)) {}                                                  \
+                                                                               \
+  NODE_TYPE &as_##NODE_TYPE() {                                                \
+    if (m_type != NodeType::NODE_TYPE) {                                       \
+      throw RuntimeError("Node type mismatch");                                \
+    }                                                                          \
+    return m_data.data_##NODE_TYPE;                                            \
+  }                                                                            \
+                                                                               \
+  const NODE_TYPE &as_##NODE_TYPE() const {                                    \
+    if (m_type != NodeType::NODE_TYPE) {                                       \
+      throw RuntimeError("Node type mismatch");                                \
+    }                                                                          \
+    return m_data.data_##NODE_TYPE;                                            \
   }
   NODE_TYPE_LIST
 #undef X
 
-  ~Node() {
-    m_data.destroy(m_type);
-  }
+  ~Node() { m_data.destroy(m_type); }
 
   Node(const Node &other)
       : m_start(other.m_start), m_end(other.m_end), m_type(other.m_type),
@@ -39,17 +38,11 @@ public:
       : m_start(other.m_start), m_end(other.m_end), m_type(other.m_type),
         m_data(other.m_type, move(other.m_data)) {}
 
-  NodeType type() const {
-    return m_type;
-  }
+  NodeType type() const { return m_type; }
 
-  TokenId start_token() const {
-    return m_start;
-  }
+  TokenId start_token() const { return m_start; }
 
-  TokenId end_token() const {
-    return m_end;
-  }
+  TokenId end_token() const { return m_end; }
 
   Node &operator=(const Node &other) {
     if (this != &other) {
@@ -83,18 +76,18 @@ public:
 
 private:
   union NodeData {
-#define X(NODE_TYPE)                                                                               \
-  NODE_TYPE data_##NODE_TYPE;                                                                      \
-                                                                                                   \
+#define X(NODE_TYPE)                                                           \
+  NODE_TYPE data_##NODE_TYPE;                                                  \
+                                                                               \
   explicit NodeData(NODE_TYPE node) : data_##NODE_TYPE(move(node)) {}
     NODE_TYPE_LIST
 #undef X
 
     NodeData(NodeType type, const NodeData &other) {
       switch (type) {
-#define X(NODE_TYPE)                                                                               \
-  case NodeType::NODE_TYPE:                                                                        \
-    new (&data_##NODE_TYPE) NODE_TYPE(other.data_##NODE_TYPE);                                     \
+#define X(NODE_TYPE)                                                           \
+  case NodeType::NODE_TYPE:                                                    \
+    new (&data_##NODE_TYPE) NODE_TYPE(other.data_##NODE_TYPE);                 \
     break;
         NODE_TYPE_LIST
 #undef X
@@ -103,9 +96,9 @@ private:
 
     NodeData(NodeType type, NodeData &&other) {
       switch (type) {
-#define X(NODE_TYPE)                                                                               \
-  case NodeType::NODE_TYPE:                                                                        \
-    new (&data_##NODE_TYPE) NODE_TYPE(move(other.data_##NODE_TYPE));                               \
+#define X(NODE_TYPE)                                                           \
+  case NodeType::NODE_TYPE:                                                    \
+    new (&data_##NODE_TYPE) NODE_TYPE(move(other.data_##NODE_TYPE));           \
     break;
         NODE_TYPE_LIST
 #undef X
@@ -114,9 +107,9 @@ private:
 
     void assign(NodeType type, const NodeData &other) {
       switch (type) {
-#define X(NODE_TYPE)                                                                               \
-  case NodeType::NODE_TYPE:                                                                        \
-    data_##NODE_TYPE = other.data_##NODE_TYPE;                                                     \
+#define X(NODE_TYPE)                                                           \
+  case NodeType::NODE_TYPE:                                                    \
+    data_##NODE_TYPE = other.data_##NODE_TYPE;                                 \
     break;
         NODE_TYPE_LIST
 #undef X
@@ -125,9 +118,9 @@ private:
 
     void assign(NodeType type, NodeData &&other) {
       switch (type) {
-#define X(NODE_TYPE)                                                                               \
-  case NodeType::NODE_TYPE:                                                                        \
-    data_##NODE_TYPE = move(other.data_##NODE_TYPE);                                               \
+#define X(NODE_TYPE)                                                           \
+  case NodeType::NODE_TYPE:                                                    \
+    data_##NODE_TYPE = move(other.data_##NODE_TYPE);                           \
     break;
         NODE_TYPE_LIST
 #undef X
@@ -136,9 +129,9 @@ private:
 
     void destroy(NodeType type) noexcept {
       switch (type) {
-#define X(NODE_TYPE)                                                                               \
-  case NodeType::NODE_TYPE:                                                                        \
-    data_##NODE_TYPE.~NODE_TYPE();                                                                 \
+#define X(NODE_TYPE)                                                           \
+  case NodeType::NODE_TYPE:                                                    \
+    data_##NODE_TYPE.~NODE_TYPE();                                             \
     break;
         NODE_TYPE_LIST
 #undef X

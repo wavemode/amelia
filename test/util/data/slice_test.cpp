@@ -50,7 +50,8 @@ TEST_CASE("can construct from array") {
   REQUIRE(slice.size() == 14); // includes null terminator
   REQUIRE(String(slice) == "Hello, world!\0");
 
-  char data[] = {'H', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l', 'd', '!'};
+  char data[] = {'H', 'e', 'l', 'l', 'o', ',', ' ',
+                 'w', 'o', 'r', 'l', 'd', '!'};
   ConstSlice<char> slice2(data);
   REQUIRE(slice2.size() == 13);
   REQUIRE(String(slice2) == "Hello, world!");

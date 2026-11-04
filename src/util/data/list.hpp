@@ -20,16 +20,16 @@ public:
 
   List() noexcept = default;
 
-  explicit List(ConstSlice<T> slice) noexcept {
-    append(slice);
-  }
+  explicit List(ConstSlice<T> slice) noexcept { append(slice); }
 
-  template <size_t N> explicit List(const T (&array)[N]) noexcept : List(ConstSlice(array, N)) {}
+  template <size_t N>
+  explicit List(const T (&array)[N]) noexcept : List(ConstSlice(array, N)) {}
 
   List(const List<T> &other) noexcept : List(other.data()) {}
 
   List(List<T> &&other) noexcept
-      : m_buffer(other.m_buffer), m_size(other.m_size), m_capacity(other.m_capacity) {
+      : m_buffer(other.m_buffer), m_size(other.m_size),
+        m_capacity(other.m_capacity) {
     other.m_buffer = nullptr;
     other.m_size = 0;
     other.m_capacity = 0;
@@ -40,9 +40,7 @@ public:
     std::free(m_buffer);
   }
 
-  SliceIterator<T> begin() noexcept {
-    return SliceIterator(m_buffer, m_size);
-  }
+  SliceIterator<T> begin() noexcept { return SliceIterator(m_buffer, m_size); }
   ConstSliceIterator<T> begin() const noexcept {
     return ConstSliceIterator(m_buffer, m_size);
   }
@@ -54,16 +52,10 @@ public:
     return ConstSliceIterator(m_buffer + m_size, 0);
   }
 
-  Slice<T> data() noexcept {
-    return Slice(m_buffer, m_size);
-  }
-  ConstSlice<T> data() const noexcept {
-    return ConstSlice(m_buffer, m_size);
-  }
+  Slice<T> data() noexcept { return Slice(m_buffer, m_size); }
+  ConstSlice<T> data() const noexcept { return ConstSlice(m_buffer, m_size); }
 
-  size_t size() const noexcept override {
-    return m_size;
-  }
+  size_t size() const noexcept override { return m_size; }
 
   void push_back(T value) override {
     ensure_capacity(m_size + 1);
@@ -79,13 +71,9 @@ public:
     m_buffer[m_size].~T();
   }
 
-  void reserve(size_t new_capacity) {
-    ensure_capacity(new_capacity);
-  }
+  void reserve(size_t new_capacity) { ensure_capacity(new_capacity); }
 
-  size_t capacity() const {
-    return m_capacity;
-  }
+  size_t capacity() const { return m_capacity; }
 
   void clear() noexcept {
     while (m_size > 0) {
@@ -99,9 +87,7 @@ public:
     return m_buffer[m_size++];
   }
 
-  void append(ConstSlice<T> slice) override {
-    *this += slice;
-  }
+  void append(ConstSlice<T> slice) override { *this += slice; }
 
   void assign(ConstSlice<T> slice) override {
     clear();
@@ -117,13 +103,9 @@ public:
     return false;
   }
 
-  void reverse() noexcept {
-    amelia::reverse(m_buffer, m_size);
-  }
+  void reverse() noexcept { amelia::reverse(m_buffer, m_size); }
 
-  void sort() {
-    amelia::sort(m_buffer, 0, m_size);
-  }
+  void sort() { amelia::sort(m_buffer, 0, m_size); }
 
   template <typename Compare> void sort(Compare comp) {
     amelia::sort(m_buffer, 0, m_size, comp);
@@ -218,12 +200,8 @@ public:
     return true;
   }
 
-  bool operator!=(const List<T> &other) const {
-    return !(*this == other);
-  }
-  bool operator!=(ConstSlice<T> other) const {
-    return !(*this == other);
-  }
+  bool operator!=(const List<T> &other) const { return !(*this == other); }
+  bool operator!=(ConstSlice<T> other) const { return !(*this == other); }
 
   static List<T> from_owned(T *data, size_t size) {
     List<T> result;
@@ -244,7 +222,8 @@ private:
 
   void ensure_capacity(size_t new_capacity) noexcept {
     if (new_capacity > m_capacity) {
-      size_t new_cap = amelia::max(new_capacity, m_capacity == 0 ? 8 : (m_capacity * 2));
+      size_t new_cap =
+          amelia::max(new_capacity, m_capacity == 0 ? 8 : (m_capacity * 2));
       T *old_buffer = m_buffer;
       m_buffer = static_cast<T *>(std::malloc(new_cap * sizeof(T)));
       if (m_buffer == nullptr) {

@@ -1,4 +1,4 @@
-let w = x * y as z
+let w = x * y is z as w
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
@@ -12,11 +12,16 @@ ModuleNode(
           name="x"
         ),
         right=AsExprNode(
-          expr=IdentifierNode(
-            name="y"
+          expr=IsExprNode(
+            expr=IdentifierNode(
+              name="y"
+            ),
+            type=IdentifierNode(
+              name="z"
+            )
           ),
           type=IdentifierNode(
-            name="z"
+            name="w"
           )
         )
       )

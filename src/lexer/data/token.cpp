@@ -17,10 +17,12 @@ String identifier_text(const Token &token, bool quoted, bool escaped) {
     break;
   case TokenType::QUOTED_IDENTIFIER:
   case TokenType::QUOTED_IDENTIFIER_NO_W:
-    Lexer::read_quoted_ident(token.contents).pretty_print(result, quoted, escaped);
+    Lexer::read_quoted_ident(token.contents)
+        .pretty_print(result, quoted, escaped);
     break;
   default:
-    throw SourceLocationError(token.location, "Expected identifier in identifier_text()");
+    throw SourceLocationError(token.location,
+                              "Expected identifier in identifier_text()");
   }
   return result;
 }

@@ -12,9 +12,9 @@ enum class NodeType {
 
 inline void node_type_to_string(AbstractString &out, NodeType type) {
   switch (type) {
-#define X(NODE_TYPE)                                                                               \
-  case NodeType::NODE_TYPE:                                                                        \
-    out.append(#NODE_TYPE);                                                                        \
+#define X(NODE_TYPE)                                                           \
+  case NodeType::NODE_TYPE:                                                    \
+    out.append(#NODE_TYPE);                                                    \
     break;
     NODE_TYPE_LIST
 #undef X

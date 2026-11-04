@@ -26,29 +26,26 @@ namespace amelia {
 
 namespace {
 Text find_test_case_expected_output(const String &file_contents) {
-  const auto expected_output_section_start = TextUtils::find(
-      file_contents, COMPILER_TEST_CASE_EXPECTED_OUTPUT_HEADER
-  );
+  const auto expected_output_section_start =
+      TextUtils::find(file_contents, COMPILER_TEST_CASE_EXPECTED_OUTPUT_HEADER);
   if (expected_output_section_start.at_end()) {
     return {};
   }
   const auto text_start = expected_output_section_start.plus_bytes(
-      COMPILER_TEST_CASE_EXPECTED_OUTPUT_HEADER.size()
-  );
+      COMPILER_TEST_CASE_EXPECTED_OUTPUT_HEADER.size());
   const auto text_end = TextUtils::find_after(
-      file_contents, COMPILER_TEST_CASE_EXPECTED_OUTPUT_FOOTER, text_start
-  );
+      file_contents, COMPILER_TEST_CASE_EXPECTED_OUTPUT_FOOTER, text_start);
   if (text_end.at_end()) {
     return {};
   }
   return TextUtils::substr(file_contents, text_start, text_end);
 }
 
-void update_file_expected_output(
-    IFileWriter &file_writer, Text path, Text existing_contents, Text expected_output
-) {
+void update_file_expected_output(IFileWriter &file_writer, Text path,
+                                 Text existing_contents, Text expected_output) {
   String new_file_contents;
-  const auto header = TextUtils::find(existing_contents, COMPILER_TEST_CASE_EXPECTED_OUTPUT_HEADER);
+  const auto header = TextUtils::find(
+      existing_contents, COMPILER_TEST_CASE_EXPECTED_OUTPUT_HEADER);
 
   new_file_contents.append(TextUtils::head(existing_contents, header));
   new_file_contents.append(COMPILER_TEST_CASE_EXPECTED_OUTPUT_HEADER);
@@ -56,11 +53,11 @@ void update_file_expected_output(
   new_file_contents.append(COMPILER_TEST_CASE_EXPECTED_OUTPUT_FOOTER);
 
   const auto footer = TextUtils::find_after(
-      existing_contents, COMPILER_TEST_CASE_EXPECTED_OUTPUT_FOOTER, header
-  );
-  const auto tail_section = footer.at_end()
-                          ? footer
-                          : footer.plus_bytes(COMPILER_TEST_CASE_EXPECTED_OUTPUT_FOOTER.size());
+      existing_contents, COMPILER_TEST_CASE_EXPECTED_OUTPUT_FOOTER, header);
+  const auto tail_section =
+      footer.at_end()
+          ? footer
+          : footer.plus_bytes(COMPILER_TEST_CASE_EXPECTED_OUTPUT_FOOTER.size());
 
   auto tail_text = TextUtils::tail(existing_contents, tail_section);
   if (tail_text == "") {
@@ -73,14 +70,11 @@ void update_file_expected_output(
 
 } // namespace
 
-void collect_test_cases(
-    IFilesystemWalker &filesystem_walker,
-    IFileLoader &file_loader,
-    IPrinter &printer,
-    IEnvironmentReader &env_reader,
-    CompilerTestCaseCollection &output,
-    Text root_directory
-) {
+void collect_test_cases(IFilesystemWalker &filesystem_walker,
+                        IFileLoader &file_loader, IPrinter &printer,
+                        IEnvironmentReader &env_reader,
+                        CompilerTestCaseCollection &output,
+                        Text root_directory) {
   String test_case_filter;
   env_reader.get_env(test_case_filter, String("AMELIA_TEST_CASE_FILTER"));
   const bool has_filter = test_case_filter != "";
@@ -104,21 +98,20 @@ void collect_test_cases(
     file_loader.load_file(file_content, path);
 
     const Text expected_output = find_test_case_expected_output(file_content);
-    output.test_cases.push_back(CompilerTestCase{path, file_content, expected_output});
+    output.test_cases.push_back(
+        CompilerTestCase{path, file_content, expected_output});
   }
-  output.test_cases.sort([](const CompilerTestCase &a, const CompilerTestCase &b) {
-    return a.filename < b.filename;
-  });
+  output.test_cases.sort(
+      [](const CompilerTestCase &a, const CompilerTestCase &b) {
+        return a.filename < b.filename;
+      });
 }
 
-bool execute_test_case(
-    ITestCaseRunner &test_case_runner,
-    IFileWriter &file_writer,
-    IPrinter &printer,
-    CompilerTestExecutionOutcome &outcome,
-    const CompilerTestCase &test_case,
-    const CompilerTestExecutionContext &context
-) {
+bool execute_test_case(ITestCaseRunner &test_case_runner,
+                       IFileWriter &file_writer, IPrinter &printer,
+                       CompilerTestExecutionOutcome &outcome,
+                       const CompilerTestCase &test_case,
+                       const CompilerTestExecutionContext &context) {
   bool success = true;
 
   if (context.verbose) {
@@ -127,14 +120,16 @@ bool execute_test_case(
   }
 
   ++outcome.count_executed;
-  // TODO: need more robust logic for deciding that something is supposed to error
+  // TODO: need more robust logic for deciding that something is supposed to
+  // error
   bool should_error = TextUtils::contains(test_case.filename, "error_");
   bool did_error = false;
   String actual_output;
   try {
     test_case_runner.run_test_case(actual_output, test_case);
     if (should_error) {
-      printer.print("Expected test case to raise an exception but it raised none: ");
+      printer.print(
+          "Expected test case to raise an exception but it raised none: ");
       printer.println(test_case.filename);
     }
   } catch (const SourceLocationError &e) {
@@ -152,7 +147,8 @@ bool execute_test_case(
 
   if (actual_output.text() != test_case.expected_output) {
     if (context.update_test_cases && (should_error == did_error)) {
-      update_file_expected_output(file_writer, test_case.filename, test_case.input, actual_output);
+      update_file_expected_output(file_writer, test_case.filename,
+                                  test_case.input, actual_output);
       printer.print("Updated expected output for: ");
       printer.println(test_case.filename);
       ++outcome.count_updated;
@@ -167,7 +163,8 @@ bool execute_test_case(
   return success;
 }
 
-CompilerTestExecutionContext get_test_execution_context(IEnvironmentReader &env_reader) {
+CompilerTestExecutionContext
+get_test_execution_context(IEnvironmentReader &env_reader) {
   CompilerTestExecutionContext context;
 
   String env_value;
@@ -185,27 +182,30 @@ CompilerTestExecutionContext get_test_execution_context(IEnvironmentReader &env_
   return context;
 }
 
-bool execute_test_case(ITestCaseRunner &test_case_runner, const CompilerTestCase &test_case) {
+bool execute_test_case(ITestCaseRunner &test_case_runner,
+                       const CompilerTestCase &test_case) {
   String actual_output;
   test_case_runner.run_test_case(actual_output, test_case);
   return actual_output.text() != test_case.expected_output;
 }
 
-bool update_expected_output(
-    ITestCaseRunner &test_case_runner, IFileWriter &file_writer, const CompilerTestCase &test_case
-) {
+bool update_expected_output(ITestCaseRunner &test_case_runner,
+                            IFileWriter &file_writer,
+                            const CompilerTestCase &test_case) {
   String actual_output;
   test_case_runner.run_test_case(actual_output, test_case);
   if (actual_output.text() == test_case.expected_output) {
     return false;
   }
 
-  update_file_expected_output(file_writer, test_case.filename, test_case.input, actual_output);
+  update_file_expected_output(file_writer, test_case.filename, test_case.input,
+                              actual_output);
 
   return true;
 }
 
-void run_lexer_test_case(AbstractString &output, const CompilerTestCase &test_case) {
+void run_lexer_test_case(AbstractString &output,
+                         const CompilerTestCase &test_case) {
   LexerResult result;
   Lexer::tokenize(result, LexerContext{test_case.filename}, test_case.input);
   const TokenFormatter formatter(result);
@@ -216,9 +216,11 @@ void run_lexer_test_case(AbstractString &output, const CompilerTestCase &test_ca
   }
 }
 
-void run_parser_test_case(AbstractString &output, const CompilerTestCase &test_case) {
+void run_parser_test_case(AbstractString &output,
+                          const CompilerTestCase &test_case) {
   LexerResult lexer_result;
-  Lexer::tokenize(lexer_result, LexerContext{test_case.filename}, test_case.input);
+  Lexer::tokenize(lexer_result, LexerContext{test_case.filename},
+                  test_case.input);
   ParserResult parser_result;
   const NodeId root_node_id = Parser::parse_module(parser_result, lexer_result);
   NodeFormatter node_formatter(parser_result);

@@ -38,7 +38,8 @@ namespace internal {
 
 class SerializeState {
 public:
-  SerializeState(AbstractString &out) : m_out(out), m_items_printed(0), m_indent_level(0) {}
+  SerializeState(AbstractString &out)
+      : m_out(out), m_items_printed(0), m_indent_level(0) {}
 
   void serialize(const Serialize &obj) {
     switch (obj.m_kind) {
@@ -162,7 +163,8 @@ private:
 
 Serialize::Serialize() : m_kind(SerializeKind::Null), m_data(nullptr) {}
 
-Serialize::Serialize(const Serialize &other) : m_kind(other.m_kind), m_data(other.clone()) {}
+Serialize::Serialize(const Serialize &other)
+    : m_kind(other.m_kind), m_data(other.clone()) {}
 
 Serialize &Serialize::operator=(const Serialize &other) {
   if (this != &other) {
@@ -173,7 +175,8 @@ Serialize &Serialize::operator=(const Serialize &other) {
   return *this;
 }
 
-Serialize::Serialize(Serialize &&other) noexcept : m_kind(other.m_kind), m_data(other.m_data) {
+Serialize::Serialize(Serialize &&other) noexcept
+    : m_kind(other.m_kind), m_data(other.m_data) {
   other.m_kind = SerializeKind::Null;
   other.m_data = nullptr;
 }
@@ -189,9 +192,7 @@ Serialize &Serialize::operator=(Serialize &&other) noexcept {
   return *this;
 }
 
-Serialize::~Serialize() {
-  clear();
-}
+Serialize::~Serialize() { clear(); }
 
 Serialize Serialize::literal(String value) {
   Serialize result;
@@ -251,7 +252,8 @@ void Serialize::add_object_field(String field_name, Serialize field_value) {
   if (m_kind != SerializeKind::Object) {
     throw RuntimeError("Cannot add object field to a non-object Serialize");
   }
-  static_cast<SerializeObject *>(m_data)->fields.push_back({move(field_name), move(field_value)});
+  static_cast<SerializeObject *>(m_data)->fields.push_back(
+      {move(field_name), move(field_value)});
 }
 
 void Serialize::add_list_item(Serialize item) {

@@ -10,7 +10,8 @@ public:
 
   Text literal() const noexcept;
 
-  void pretty_print(AbstractString &out, bool quoted = true, bool escaped = true) const;
+  void pretty_print(AbstractString &out, bool quoted = true,
+                    bool escaped = true) const;
 
 private:
   String m_name;

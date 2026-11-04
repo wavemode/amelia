@@ -28,6 +28,7 @@ never
 throw
 import
 as
+is
 switch
 case
 class
@@ -106,6 +107,7 @@ KEYWORD_NEVER(never)
 KEYWORD_THROW(throw)
 KEYWORD_IMPORT(import)
 KEYWORD_AS(as)
+KEYWORD_IS(is)
 KEYWORD_SWITCH(switch)
 KEYWORD_CASE(case)
 KEYWORD_CLASS(class)

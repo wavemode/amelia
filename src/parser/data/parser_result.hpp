@@ -1,7 +1,7 @@
 #pragma once
 
-#include "parser/interfaces/abstract_node_repository.hpp"
 #include "parser/data/node.hpp"
+#include "parser/interfaces/abstract_node_repository.hpp"
 
 namespace amelia {
 
@@ -20,13 +20,9 @@ public:
     return id;
   }
 
-  Slice<Node> nodes() noexcept {
-    return m_nodes.data();
-  }
+  Slice<Node> nodes() noexcept { return m_nodes.data(); }
 
-  ConstSlice<Node> nodes() const noexcept {
-    return m_nodes.data();
-  }
+  ConstSlice<Node> nodes() const noexcept { return m_nodes.data(); }
 
 private:
   List<Node> m_nodes;

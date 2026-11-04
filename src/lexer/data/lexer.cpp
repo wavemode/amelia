@@ -44,6 +44,7 @@ const Map<Text, TokenType> RESERVED_WORDS = Map<Text, TokenType>({
     {"throw", TokenType::KEYWORD_THROW},
     {"import", TokenType::KEYWORD_IMPORT},
     {"as", TokenType::KEYWORD_AS},
+    {"is", TokenType::KEYWORD_IS},
     {"switch", TokenType::KEYWORD_SWITCH},
     {"case", TokenType::KEYWORD_CASE},
     {"class", TokenType::KEYWORD_CLASS},
@@ -107,14 +108,17 @@ bool is_word_continue(uint32_t cp) noexcept {
   return is_word_start(cp) || (cp >= '0' && cp <= '9');
 }
 
-/* TODO: should lex string, number and char literals without validation
- validation should be a semantic analysis concern */
+/*
+ * TODO: lex string, number and char literals without validation (validation
+ * should be a semantic analysis concern)
+ */
 
 class LexerState {
 public:
   LexerState(LexerResult &output, LexerContext ctx, Text file_contents) noexcept
       : m_ctx(ctx), m_line(1), m_column(1), m_file_contents(file_contents),
-        m_input_iter(file_contents.begin()), m_previous_char_was_whitespace(true), m_result(output),
+        m_input_iter(file_contents.begin()),
+        m_previous_char_was_whitespace(true), m_result(output),
         m_scratch_buffer() {}
 
   void read_file() {
@@ -198,14 +202,13 @@ public:
     }
   }
 
-  List<char> &read_quoted_ident(Location start_location) {
+  List<char> &read_quoted_ident(const Location &start_location) {
     m_scratch_buffer.clear();
     next();
     while (true) {
       if (at_end()) {
         throw_lexer_error_at_current_location(
-            "Unterminated quoted identifier - unexpected end of input"
-        );
+            "Unterminated quoted identifier - unexpected end of input");
       }
       auto ch = peek();
       switch (ch) {
@@ -216,8 +219,7 @@ public:
         next();
         if (at_end()) {
           throw_lexer_error_at_current_location(
-              "Unexpected end of input after backslash in quoted identifier"
-          );
+              "Unexpected end of input after backslash in quoted identifier");
         }
         switch (peek()) {
         case 'a':
@@ -296,8 +298,8 @@ public:
       } break;
       case '\r':
       case '\n':
-        throw_lexer_error_at_current_location("Unterminated quoted identifier - unexpected newline"
-        );
+        throw_lexer_error_at_current_location(
+            "Unterminated quoted identifier - unexpected newline");
       default:
         next();
         append_code_point_to_scratch_buffer(ch);
@@ -316,12 +318,11 @@ public:
     return m_scratch_buffer;
   }
 
-  uint32_t read_char_literal(Location start_location) {
+  uint32_t read_char_literal(const Location &start_location) {
     next();
     if (at_end()) {
       throw_lexer_error_at_current_location(
-          "Unterminated character literal - unexpected end of input"
-      );
+          "Unterminated character literal - unexpected end of input");
     }
     m_scratch_buffer.clear();
     bool used_buffer = false;
@@ -334,8 +335,7 @@ public:
       next();
       if (at_end()) {
         throw_lexer_error_at_current_location(
-            "Unexpected end of input after backslash in character literal"
-        );
+            "Unexpected end of input after backslash in character literal");
       }
       uint32_t ch = peek();
       switch (ch) {
@@ -391,8 +391,7 @@ public:
           next();
           if (at_end()) {
             throw_lexer_error_at_current_location(
-                "Unexpected end of input after backslash in character literal"
-            );
+                "Unexpected end of input after backslash in character literal");
           }
           auto following_char = next();
           if (following_char != 'x') {
@@ -424,18 +423,19 @@ public:
     }
     case '\r':
     case '\n':
-      throw_lexer_error_at_current_location("Unterminated character literal - unexpected newline");
+      throw_lexer_error_at_current_location(
+          "Unterminated character literal - unexpected newline");
     default:
       result = next();
       break;
     }
     if (at_end()) {
       throw_lexer_error_at_current_location(
-          "Unterminated character literal - unexpected end of input"
-      );
+          "Unterminated character literal - unexpected end of input");
     }
     if (peek() != '\'') {
-      throw_lexer_error_at_current_location("Expected closing single quote for character literal");
+      throw_lexer_error_at_current_location(
+          "Expected closing single quote for character literal");
     }
     next();
     if (used_buffer) {
@@ -444,8 +444,8 @@ public:
         result = iter.next();
         if (!iter.at_end()) {
           throw_lexer_error(
-              start_location, "Character literal contains more than one UTF-8 code point"
-          );
+              start_location,
+              "Character literal contains more than one UTF-8 code point");
         }
       } catch (InvalidUTF8Error &e) {
         String err;
@@ -458,15 +458,15 @@ public:
     return result;
   }
 
-  List<char> &read_quote(Location start_location) {
+  List<char> &read_quote(const Location &start_location) {
     return read_string(start_location, false);
   }
 
-  List<char> &read_raw_quote(Location start_location) {
+  List<char> &read_raw_quote(const Location &start_location) {
     return read_string(start_location, true);
   }
 
-  List<char> &read_string(Location start_location, bool is_raw) {
+  List<char> &read_string(const Location &start_location, bool is_raw) {
     try {
       return read_string_literal(start_location, is_raw);
     } catch (InvalidUTF8Error &e) {
@@ -477,7 +477,7 @@ public:
     }
   }
 
-  List<char> &read_string_literal(Location start_location, bool is_raw) {
+  List<char> &read_string_literal(const Location &start_location, bool is_raw) {
     m_scratch_buffer.clear();
     size_t quote_count = 0;
     while (!at_end() && peek() == '"') {
@@ -485,7 +485,8 @@ public:
       ++quote_count;
     }
     if (quote_count == 0) {
-      throw_lexer_error_at_current_location("Expected string literal to start with a quote");
+      throw_lexer_error_at_current_location(
+          "Expected string literal to start with a quote");
     }
     if (quote_count == 2 || quote_count == 6) {
       // empty string
@@ -494,24 +495,22 @@ public:
     }
     if (quote_count != 1 && quote_count != 3) {
       throw_lexer_error_at_current_location(
-          "Invalid string literal - expected either 1 or 3 quotes at the start"
-      );
+          "Invalid string literal - expected either 1 or 3 quotes at the "
+          "start");
     }
     bool multiline = quote_count == 3;
     size_t quotes_in_a_row = 0;
     while (true) {
       if (at_end()) {
         throw_lexer_error_at_current_location(
-            "Unterminated string literal - unexpected end of input"
-        );
+            "Unterminated string literal - unexpected end of input");
       }
       uint32_t ch = peek();
       if (ch == '\\' && !is_raw) {
         next();
         if (at_end()) {
           throw_lexer_error_at_current_location(
-              "Unexpected end of input after backslash in string literal"
-          );
+              "Unexpected end of input after backslash in string literal");
         }
         ch = peek();
         switch (ch) {
@@ -597,7 +596,8 @@ public:
         }
       } else {
         if (ch == '\n' && !multiline) {
-          throw_lexer_error_at_current_location("Unterminated string literal - unexpected newline");
+          throw_lexer_error_at_current_location(
+              "Unterminated string literal - unexpected newline");
         }
         while (quotes_in_a_row > 0) {
           append_code_point_to_scratch_buffer('"');
@@ -616,8 +616,7 @@ public:
     for (size_t i = 0; i < num_chars; ++i) {
       if (at_end()) {
         throw_lexer_error_at_current_location(
-            "Unexpected end of input in hexadecimal escape sequence"
-        );
+            "Unexpected end of input in hexadecimal escape sequence");
       }
       uint32_t ch = next();
       result <<= 4;
@@ -628,23 +627,24 @@ public:
       } else if (ch >= 'A' && ch <= 'F') {
         result |= (ch - 'A' + 10);
       } else {
-        throw_lexer_error_at_current_location("Invalid character in hexadecimal escape sequence");
+        throw_lexer_error_at_current_location(
+            "Invalid character in hexadecimal escape sequence");
       }
     }
     return result;
   }
 
-  void read_at(Location start_location) {
+  void read_at(const Location &start_location) {
     next();
     emit_token(TokenType::AT, start_location);
   }
 
-  void read_right_bracket(Location start_location) {
+  void read_right_bracket(const Location &start_location) {
     next();
     emit_token(TokenType::RIGHT_BRACKET, start_location);
   }
 
-  void read_left_bracket(Location start_location) {
+  void read_left_bracket(const Location &start_location) {
     next();
     if (previous_char_was_whitespace()) {
       emit_token(TokenType::LEFT_BRACKET, start_location);
@@ -653,12 +653,12 @@ public:
     }
   }
 
-  void read_right_paren(Location start_location) {
+  void read_right_paren(const Location &start_location) {
     next();
     emit_token(TokenType::RIGHT_PAREN, start_location);
   }
 
-  void read_left_paren(Location start_location) {
+  void read_left_paren(const Location &start_location) {
     next();
     if (previous_char_was_whitespace()) {
       emit_token(TokenType::LEFT_PAREN, start_location);
@@ -667,7 +667,7 @@ public:
     }
   }
 
-  void read_colon(Location start_location) {
+  void read_colon(const Location &start_location) {
     next();
     if (peek() == ':' && !previous_char_was_whitespace()) {
       next();
@@ -677,7 +677,7 @@ public:
     }
   }
 
-  void read_dot(Location start_location) {
+  void read_dot(const Location &start_location) {
     next();
     if (TextUtils::is_digit(peek())) {
       set_location(start_location);
@@ -688,14 +688,15 @@ public:
         next();
         emit_token(TokenType::ELLIPSIS, start_location);
       } else {
-        throw_lexer_error(start_location, "Unexpected token '..' - did you mean '...'?");
+        throw_lexer_error(start_location,
+                          "Unexpected token '..' - did you mean '...'?");
       }
     } else {
       emit_token(TokenType::DOT, start_location);
     }
   }
 
-  void read_question_mark(Location start_location) {
+  void read_question_mark(const Location &start_location) {
     if (previous_char_was_whitespace()) {
       throw_lexer_error(start_location, "Unexpected '?' after whitespace");
     }
@@ -703,27 +704,27 @@ public:
     emit_token(TokenType::QUESTION_NO_W, start_location);
   }
 
-  void read_comma(Location start_location) {
+  void read_comma(const Location &start_location) {
     next();
     emit_token(TokenType::COMMA, start_location);
   }
 
-  void read_semicolon(Location start_location) {
+  void read_semicolon(const Location &start_location) {
     next();
     emit_token(TokenType::SEMICOLON, start_location);
   }
 
-  void read_left_brace(Location start_location) {
+  void read_left_brace(const Location &start_location) {
     next();
     emit_token(TokenType::LEFT_BRACE, start_location);
   }
 
-  void read_right_brace(Location start_location) {
+  void read_right_brace(const Location &start_location) {
     next();
     emit_token(TokenType::RIGHT_BRACE, start_location);
   }
 
-  void read_less(Location start_location) {
+  void read_less(const Location &start_location) {
     next();
     if (peek() == '=') {
       next();
@@ -741,7 +742,7 @@ public:
     }
   }
 
-  void read_greater(Location start_location) {
+  void read_greater(const Location &start_location) {
     next();
     if (peek() == '=') {
       next();
@@ -759,12 +760,12 @@ public:
     }
   }
 
-  void read_tilde(Location start_location) {
+  void read_tilde(const Location &start_location) {
     next();
     emit_token(TokenType::TILDE, start_location);
   }
 
-  void read_exclamation(Location start_location) {
+  void read_exclamation(const Location &start_location) {
     next();
     if (peek() == '=') {
       next();
@@ -776,7 +777,7 @@ public:
     }
   }
 
-  void read_ampersand(Location start_location) {
+  void read_ampersand(const Location &start_location) {
     next();
     uint32_t next_cp = peek();
     if (next_cp == '&') {
@@ -795,7 +796,7 @@ public:
     }
   }
 
-  void read_pipe(Location start_location) {
+  void read_pipe(const Location &start_location) {
     next();
     uint32_t next_cp = peek();
     if (next_cp == '=') {
@@ -814,7 +815,7 @@ public:
     }
   }
 
-  void read_caret(Location start_location) {
+  void read_caret(const Location &start_location) {
     next();
     if (peek() == '=') {
       next();
@@ -824,7 +825,7 @@ public:
     }
   }
 
-  void read_percent(Location start_location) {
+  void read_percent(const Location &start_location) {
     next();
     if (peek() == '=') {
       next();
@@ -834,7 +835,7 @@ public:
     }
   }
 
-  void read_star(Location start_location) {
+  void read_star(const Location &start_location) {
     next();
     if (peek() == '=') {
       next();
@@ -844,10 +845,9 @@ public:
     }
   }
 
-  void read_minus(Location start_location) {
+  void read_minus(const Location &start_location) {
     next();
-    uint32_t next_cp = peek();
-    if (next_cp == '=') {
+    if (uint32_t next_cp = peek(); next_cp == '=') {
       next();
       emit_token(TokenType::MINUS_EQUAL, start_location);
     } else if (next_cp == '-') {
@@ -865,7 +865,7 @@ public:
     }
   }
 
-  void read_plus(Location start_location) {
+  void read_plus(const Location &start_location) {
     next();
     auto next_cp = peek();
     if (next_cp == '=') {
@@ -883,7 +883,7 @@ public:
     }
   }
 
-  NumberLiteral read_number(Location start_location) {
+  NumberLiteral read_number(const Location &start_location) {
     NumberLiteral result;
     result.has_decimal_point = false;
     uint8_t base = 10;
@@ -894,7 +894,8 @@ public:
     auto base_prefix_start = current_location();
 
     if (at_end()) {
-      throw SourceLocationError(start_location, "Expected number literal, but got empty input");
+      throw SourceLocationError(start_location,
+                                "Expected number literal, but got empty input");
     }
 
     if (peek() == '0') {
@@ -917,7 +918,8 @@ public:
       }
 
       if (base == 10) {
-        // this zero was not the beginning of a base prefix. go back to parsing the number normally.
+        // this zero was not the beginning of a base prefix. go back to parsing
+        // the number normally.
         set_location(base_prefix_start);
       } else {
         result.base_prefix = substr_after(base_prefix_start);
@@ -931,7 +933,8 @@ public:
       signed char digit_value = -1;
       if (ch == '_') {
         if (at_boundary || previous_char_was_underscore) {
-          throw_lexer_error_at_current_location("Underscore must separate successive digits");
+          throw_lexer_error_at_current_location(
+              "Underscore must separate successive digits");
         }
         previous_char_was_underscore = true;
         next();
@@ -971,7 +974,8 @@ public:
     }
 
     if (previous_char_was_underscore) {
-      throw_lexer_error_at_current_location("Underscore must separate successive digits");
+      throw_lexer_error_at_current_location(
+          "Underscore must separate successive digits");
     }
     at_boundary = true;
     previous_char_was_underscore = false;
@@ -982,7 +986,8 @@ public:
       result.has_decimal_point = true;
 
       if (assumed_octal) {
-        // a number with a leading zero is only assumed octal if it has no decimal point or exponent
+        // a number with a leading zero is only assumed octal if it has no
+        // decimal point or exponent
         result.base_prefix = Text();
         result.integer_digits = substr_after(base_prefix_start);
         assumed_octal = false;
@@ -996,7 +1001,8 @@ public:
         signed char digit_value = -1;
         if (ch == '_') {
           if (at_boundary || previous_char_was_underscore) {
-            throw_lexer_error_at_current_location("Underscore must separate successive digits");
+            throw_lexer_error_at_current_location(
+                "Underscore must separate successive digits");
           }
           previous_char_was_underscore = true;
           next();
@@ -1039,7 +1045,8 @@ public:
     }
 
     if (previous_char_was_underscore) {
-      throw_lexer_error_at_current_location("Underscore must separate successive digits");
+      throw_lexer_error_at_current_location(
+          "Underscore must separate successive digits");
     }
     at_boundary = true;
     previous_char_was_underscore = false;
@@ -1050,15 +1057,15 @@ public:
       if (ch == 'e' || ch == 'E') {
         if (base == 16) {
           throw_lexer_error_at_current_location(
-              "Hexadecimal literals must use 'p' or 'P' as the exponent prefix"
-          );
+              "Hexadecimal literals must use 'p' or 'P' as the exponent "
+              "prefix");
         }
         next();
       } else if (ch == 'p' || ch == 'P') {
         if (base != 16) {
           throw_lexer_error_at_current_location(
-              "Only hexadecimal literals may use 'p' or 'P' as the exponent prefix"
-          );
+              "Only hexadecimal literals may use 'p' or 'P' as the exponent "
+              "prefix");
         }
         next();
       }
@@ -1071,15 +1078,18 @@ public:
       }
 
       if (assumed_octal) {
-        // a number with a leading zero is only assumed octal if it has no decimal point or exponent
+        // a number with a leading zero is only assumed octal if it has no
+        // decimal point or exponent
         result.base_prefix = Text();
-        result.integer_digits = substr(base_prefix_start, exponent_prefix_start);
+        result.integer_digits =
+            substr(base_prefix_start, exponent_prefix_start);
         assumed_octal = false;
         base = 10;
       }
 
       if (base != 10 && base != 16) {
-        throw_lexer_error_at_current_location("Only base 10 or 16 literals may have an exponent");
+        throw_lexer_error_at_current_location(
+            "Only base 10 or 16 literals may have an exponent");
       }
 
       auto exponent_sign_start = current_location();
@@ -1097,7 +1107,8 @@ public:
         auto ch = peek();
         if (ch == '_') {
           if (at_boundary || previous_char_was_underscore) {
-            throw_lexer_error_at_current_location("Underscore must separate successive digits");
+            throw_lexer_error_at_current_location(
+                "Underscore must separate successive digits");
           }
           previous_char_was_underscore = true;
           next();
@@ -1119,17 +1130,22 @@ public:
     }
 
     if (previous_char_was_underscore) {
-      throw_lexer_error_at_current_location("Underscore must separate successive digits");
+      throw_lexer_error_at_current_location(
+          "Underscore must separate successive digits");
     }
 
-    if (result.integer_digits.size() == 0 && result.fractional_digits.size() == 0) {
-      throw_lexer_error_at_current_location("Number literal must have at least one digit");
+    if (result.integer_digits.size() == 0 &&
+        result.fractional_digits.size() == 0) {
+      throw_lexer_error_at_current_location(
+          "Number literal must have at least one digit");
     }
 
     if (!previous_char_was_whitespace() && result.base_prefix.size() == 0 &&
-        result.exponent_digits.size() == 0 && result.exponent_sign.size() == 0 &&
-        result.exponent_prefix.size() == 0 && result.integer_digits.size() == 0 &&
-        result.has_decimal_point && result.fractional_digits.size() > 0) {
+        result.exponent_digits.size() == 0 &&
+        result.exponent_sign.size() == 0 &&
+        result.exponent_prefix.size() == 0 &&
+        result.integer_digits.size() == 0 && result.has_decimal_point &&
+        result.fractional_digits.size() > 0) {
       emit_token(TokenType::NUMBER_FIELD, start_location);
     } else {
       emit_token(TokenType::NUMBER, start_location);
@@ -1137,7 +1153,7 @@ public:
     return result;
   }
 
-  void read_equal(Location start_location) {
+  void read_equal(const Location &start_location) {
     next();
     if (peek() == '=') {
       next();
@@ -1147,7 +1163,7 @@ public:
     }
   }
 
-  void read_slash(Location start_location) {
+  void read_slash(const Location &start_location) {
     next();
     uint32_t next_cp = peek();
     if (next_cp == '/') {
@@ -1182,7 +1198,7 @@ public:
     }
   }
 
-  void read_word(Location start_location) {
+  void read_word(const Location &start_location) {
     if (peek() == 'r') {
       next();
       if (peek() == '"') {
@@ -1214,16 +1230,12 @@ public:
     return m_previous_char_was_whitespace;
   }
 
-  Text substr_after(Location start) const {
+  Text substr_after(const Location &start) const {
     return TextUtils::substr(m_file_contents, start.position, m_input_iter);
   }
 
-  Text substr(Location start, Location end) const {
+  Text substr(const Location &start, const Location &end) const {
     return TextUtils::substr(m_file_contents, start.position, end.position);
-  }
-
-  Text peek_n(size_t n) const {
-    return TextUtils::slice(m_file_contents, m_input_iter, n);
   }
 
   uint32_t next() {
@@ -1240,32 +1252,29 @@ public:
     return cp;
   }
 
-  uint32_t peek() {
-    return m_input_iter.peek();
-  }
+  uint32_t peek() { return m_input_iter.peek(); }
 
-  bool at_end() const {
-    return m_input_iter.at_end();
-  }
+  bool at_end() const { return m_input_iter.at_end(); }
 
   Location current_location() const noexcept {
     return Location{m_ctx.filename, m_input_iter, m_line, m_column};
   }
 
-  void set_location(Location loc) {
+  void set_location(const Location &loc) {
     m_input_iter = loc.position;
     m_line = loc.line;
     m_column = loc.column;
   }
 
-  size_t emit_token(TokenType type, Location loc) {
+  size_t emit_token(TokenType type, const Location &loc) {
     return emit_token(type, loc, current_location());
   }
 
-  size_t emit_token(TokenType type, Location start, Location end) {
-    size_t token_id = m_result.add_token(
-        Token{type, start, TextUtils::substr(m_file_contents, start.position, end.position)}
-    );
+  size_t emit_token(TokenType type, const Location &start,
+                    const Location &end) {
+    size_t token_id = m_result.add_token(Token{
+        type, start,
+        TextUtils::substr(m_file_contents, start.position, end.position)});
     m_previous_char_was_whitespace = false;
     return token_id;
   }
@@ -1274,7 +1283,7 @@ public:
     throw_lexer_error(current_location(), move(message));
   }
 
-  [[noreturn]] void throw_lexer_error(Location loc, String message) {
+  [[noreturn]] void throw_lexer_error(const Location &loc, String message) {
     throw LexerError(loc, move(message));
   }
 
@@ -1314,7 +1323,8 @@ void Lexer::read_string_literal(AbstractString &out, Text input, bool escape) {
   LexerState state(result, LexerContext{"(anon)"}, input);
   auto start_location = state.current_location();
   if (input.size() == 0) {
-    throw SourceLocationError(start_location, "Expected string literal, but got empty input");
+    throw SourceLocationError(start_location,
+                              "Expected string literal, but got empty input");
   }
   Text text;
   switch (state.peek()) {
@@ -1324,14 +1334,14 @@ void Lexer::read_string_literal(AbstractString &out, Text input, bool escape) {
   case 'r':
     state.next();
     if (state.peek() != '"') {
-      throw SourceLocationError(start_location, "Expected '\"' after 'r' in raw string literal");
+      throw SourceLocationError(
+          start_location, "Expected '\"' after 'r' in raw string literal");
     }
     text = Text(state.read_raw_quote(start_location).data());
     break;
   default:
     throw SourceLocationError(
-        start_location, "Expected string literal to start with '\"' or 'r\"'"
-    );
+        start_location, "Expected string literal to start with '\"' or 'r\"'");
   }
   if (escape) {
     for (uint32_t cp : text) {
@@ -1386,10 +1396,12 @@ Identifier Lexer::read_quoted_ident(Text input) {
   LexerState state(result, LexerContext{"(anon)"}, input);
   auto start_location = state.current_location();
   if (input.size() == 0) {
-    throw SourceLocationError(start_location, "Expected quoted identifier, but got empty input");
+    throw SourceLocationError(
+        start_location, "Expected quoted identifier, but got empty input");
   }
   if (input.data()[0] != '`') {
-    throw SourceLocationError(start_location, "Expected quoted identifier to start with backtick");
+    throw SourceLocationError(
+        start_location, "Expected quoted identifier to start with backtick");
   }
   return Identifier(Text(state.read_quoted_ident(start_location).data()));
 }
@@ -1399,12 +1411,13 @@ uint32_t Lexer::read_char_literal(Text input) {
   LexerState state(result, LexerContext{"(anon)"}, input);
   auto start_location = state.current_location();
   if (input.size() == 0) {
-    throw SourceLocationError(start_location, "Expected character literal, but got empty input");
+    throw SourceLocationError(
+        start_location, "Expected character literal, but got empty input");
   }
   if (input.begin().peek() != '\'') {
     throw SourceLocationError(
-        start_location, "Expected character literal to start with single quote"
-    );
+        start_location,
+        "Expected character literal to start with single quote");
   }
   return state.read_char_literal(start_location);
 }
@@ -1414,7 +1427,8 @@ NumberLiteral Lexer::read_number_literal(Text input) {
   LexerState state(result, LexerContext{"(anon)"}, input);
   auto start_location = state.current_location();
   if (input.size() == 0) {
-    throw SourceLocationError(start_location, "Expected number literal, but got empty input");
+    throw SourceLocationError(start_location,
+                              "Expected number literal, but got empty input");
   }
   return state.read_number(start_location);
 }

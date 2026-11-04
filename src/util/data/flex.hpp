@@ -9,7 +9,8 @@ namespace amelia {
 
 namespace internal {
 struct ControlBlock {
-  uint32_t ref_counts[3] = {0, 0, UINT32_MAX}; // strong_count, weak_count, sentinel
+  uint32_t ref_counts[3] = {0, 0,
+                            UINT32_MAX}; // strong_count, weak_count, sentinel
 
   static uint32_t *make() {
     ControlBlock *block = new ControlBlock();
@@ -36,41 +37,45 @@ concept has_ref_count_field = requires(T obj) {
 
 template <typename T> struct FlexFromThis;
 
-/* Non-threadsafe reference-counted pointer that can be either strong or weak. */
+/* Non-threadsafe reference-counted pointer that can be either strong or weak.
+ */
 template <typename T> class Flex {
 public:
   Flex() noexcept {}
 
-  Flex(const Flex<T> &other) noexcept : m_object(other.m_object), m_ref_count(other.m_ref_count) {
+  Flex(const Flex<T> &other) noexcept
+      : m_object(other.m_object), m_ref_count(other.m_ref_count) {
     acquire();
   }
 
   template <typename U>
-  Flex(const Flex<U> &other) noexcept : m_object(other.m_object), m_ref_count(other.m_ref_count) {
+  Flex(const Flex<U> &other) noexcept
+      : m_object(other.m_object), m_ref_count(other.m_ref_count) {
     acquire();
   }
 
-  Flex(Flex<T> &&other) noexcept : m_object(other.m_object), m_ref_count(other.m_ref_count) {
+  Flex(Flex<T> &&other) noexcept
+      : m_object(other.m_object), m_ref_count(other.m_ref_count) {
     other.m_object = nullptr;
     other.m_ref_count = nullptr;
   }
 
   template <typename U>
-  Flex(Flex<U> &&other) noexcept : m_object(other.m_object), m_ref_count(other.m_ref_count) {
+  Flex(Flex<U> &&other) noexcept
+      : m_object(other.m_object), m_ref_count(other.m_ref_count) {
     other.m_object = nullptr;
     other.m_ref_count = nullptr;
   }
 
-  ~Flex() {
-    release();
-  }
+  ~Flex() { release(); }
 
   Flex<T> weak() const noexcept {
     Flex<T> result;
     result.m_object = m_object;
     result.m_ref_count = m_ref_count;
     if (is_strong()) {
-      // incrementing this pointer causes it to point to the weak count instead of the strong count
+      // incrementing this pointer causes it to point to the weak count instead
+      // of the strong count
       ++result.m_ref_count;
     }
     result.acquire();
@@ -82,7 +87,8 @@ public:
     result.m_object = m_object;
     result.m_ref_count = m_ref_count;
     if (!is_strong()) {
-      // decrementing this pointer causes it to point to the strong count instead of the weak count
+      // decrementing this pointer causes it to point to the strong count
+      // instead of the weak count
       --result.m_ref_count;
     }
     result.acquire();
@@ -148,21 +154,13 @@ public:
     return *this;
   }
 
-  T &operator*() {
-    return *get();
-  }
+  T &operator*() { return *get(); }
 
-  const T &operator*() const {
-    return *get();
-  }
+  const T &operator*() const { return *get(); }
 
-  T *operator->() {
-    return get();
-  }
+  T *operator->() { return get(); }
 
-  const T *operator->() const {
-    return get();
-  }
+  const T *operator->() const { return get(); }
 
   bool operator==(const Flex<T> &other) const noexcept {
     return m_object == other.m_object;
@@ -172,13 +170,9 @@ public:
     return m_object != other.m_object;
   }
 
-  operator T &() {
-    return *get();
-  }
+  operator T &() { return *get(); }
 
-  operator const T &() const {
-    return *get();
-  }
+  operator const T &() const { return *get(); }
 
   template <typename U> friend class Flex;
   template <typename U> friend struct FlexFromThis;
@@ -203,7 +197,8 @@ private:
   T *m_object = nullptr;
   uint32_t *m_ref_count = nullptr;
 
-  Flex(T *object, uint32_t *ref_count) : m_object(object), m_ref_count(ref_count) {}
+  Flex(T *object, uint32_t *ref_count)
+      : m_object(object), m_ref_count(ref_count) {}
 
   void acquire() noexcept {
     if (m_ref_count) {
@@ -228,9 +223,8 @@ private:
         }
       } else {
         if (
-          // if strong count is 0 and weak count is 1
-          *(m_ref_count - 1) == 0 && (*m_ref_count) == 1
-        ) {
+            // if strong count is 0 and weak count is 1
+            *(m_ref_count - 1) == 0 && (*m_ref_count) == 1) {
           internal::ControlBlock::destroy(m_ref_count);
           m_ref_count = nullptr;
         } else {
@@ -238,8 +232,9 @@ private:
         }
       }
     } else if (m_object) {
-      // if we have an object but no refcount, then this destructor is running due to an exception
-      // thrown after construction of the object but before construction of the control block
+      // if we have an object but no refcount, then this destructor is running
+      // due to an exception thrown after construction of the object but before
+      // construction of the control block
       delete m_object;
     }
   }
@@ -248,9 +243,8 @@ private:
     if (!m_object || !m_ref_count) {
       throw RuntimeError("Dereferencing null Flex");
     } else if (
-      // if the strong count is zero, then the object has already been deleted
-      !is_strong() && *(m_ref_count - 1) == 0
-    ) {
+        // if the strong count is zero, then the object has already been deleted
+        !is_strong() && *(m_ref_count - 1) == 0) {
       throw RuntimeError("Dereferencing expired weak Flex");
     }
     return m_object;
@@ -261,8 +255,9 @@ template <typename T> struct FlexFromThis {
 public:
   Flex<T> flex() const {
     if (!m_ref_count) {
-      throw RuntimeError("FlexFromThis::flex() called on an object that was not created with "
-                         "make_flex or emplace_flex");
+      throw RuntimeError(
+          "FlexFromThis::flex() called on an object that was not created with "
+          "make_flex or emplace_flex");
     }
     Flex<T> result;
     result.m_object = const_cast<T *>(static_cast<const T *>(this));

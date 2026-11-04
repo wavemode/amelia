@@ -5,7 +5,8 @@
 
 namespace amelia {
 
-void ParserTestCaseRunner::run_test_case(AbstractString &output, CompilerTestCase test_case) {
+void ParserTestCaseRunner::run_test_case(AbstractString &output,
+                                         CompilerTestCase test_case) {
   run_parser_test_case(output, test_case);
 }
 

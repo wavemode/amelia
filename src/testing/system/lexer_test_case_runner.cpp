@@ -5,7 +5,8 @@
 
 namespace amelia {
 
-void LexerTestCaseRunner::run_test_case(AbstractString &output, CompilerTestCase test_case) {
+void LexerTestCaseRunner::run_test_case(AbstractString &output,
+                                        CompilerTestCase test_case) {
   run_lexer_test_case(output, test_case);
 }
 

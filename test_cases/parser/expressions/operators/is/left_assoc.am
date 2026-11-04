@@ -1,0 +1,26 @@
+let w = x is y is z
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclNode(
+      target=IdentifierNode(
+        name="w"
+      ),
+      expr=IsExprNode(
+        expr=IsExprNode(
+          expr=IdentifierNode(
+            name="x"
+          ),
+          type=IdentifierNode(
+            name="y"
+          )
+        ),
+        type=IdentifierNode(
+          name="z"
+        )
+      )
+    )
+  ]
+)
+*/

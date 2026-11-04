@@ -11,9 +11,11 @@ RuntimeError::RuntimeError(const char *message) {
   m_message = buffer;
 }
 
-RuntimeError::RuntimeError(const RuntimeError &other) : RuntimeError(other.m_message) {}
+RuntimeError::RuntimeError(const RuntimeError &other)
+    : RuntimeError(other.m_message) {}
 
-RuntimeError::RuntimeError(RuntimeError &&other) noexcept : m_message(other.m_message) {
+RuntimeError::RuntimeError(RuntimeError &&other) noexcept
+    : m_message(other.m_message) {
   other.m_message = nullptr;
 }
 
@@ -37,12 +39,8 @@ RuntimeError &RuntimeError::operator=(RuntimeError &&other) noexcept {
   return *this;
 }
 
-const char *RuntimeError::what() const noexcept {
-  return m_message;
-}
+const char *RuntimeError::what() const noexcept { return m_message; }
 
-RuntimeError::~RuntimeError() noexcept {
-  delete[] m_message;
-}
+RuntimeError::~RuntimeError() noexcept { delete[] m_message; }
 
 } // namespace amelia

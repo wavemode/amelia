@@ -33,8 +33,8 @@ template <typename T> struct hash_set_table {
   }
 
   hash_set_table(hash_set_table &&other) noexcept
-      : elems(other.elems), table_size(other.table_size), remaining_elems(other.remaining_elems),
-        live_elems(other.live_elems) {
+      : elems(other.elems), table_size(other.table_size),
+        remaining_elems(other.remaining_elems), live_elems(other.live_elems) {
     other.elems = nullptr;
     other.table_size = 0;
     other.remaining_elems = 0;
@@ -90,8 +90,7 @@ template <typename T> struct hash_set_table {
     hash_set_table<T> new_table;
     new_table.table_size = table_size == 0 ? 16 : table_size * 2;
     new_table.elems = static_cast<hash_set_table_element<T> *>(
-        std::calloc(new_table.table_size, sizeof(hash_set_table_element<T>))
-    );
+        std::calloc(new_table.table_size, sizeof(hash_set_table_element<T>)));
     if (!new_table.elems) {
       std::abort();
     }
@@ -100,7 +99,8 @@ template <typename T> struct hash_set_table {
     for (size_t i = 0; i < table_size; ++i) {
       hash_set_table_element<T> &table_elem = elems[i];
       if (is_first_bit_set_to_1(table_elem.hash)) {
-        // this slot is in use, so we need to insert this element into the new table
+        // this slot is in use, so we need to insert this element into the new
+        // table
         new_table.put(move(table_elem.value));
       }
     }
@@ -124,7 +124,8 @@ template <typename T> struct hash_set_table {
 
       // this table element is in use
 
-      // check if the value of the table element matches the value we're inserting
+      // check if the value of the table element matches the value we're
+      // inserting
       uint64_t table_elem_hash = set_2_highest_bits_to_00(table_elem.hash);
       if (table_elem_hash == hash && table_elem.value == value) {
         // the values match, so we can simply return
@@ -133,13 +134,15 @@ template <typename T> struct hash_set_table {
 
       // the values don't match
 
-      // first, let's check the distance of the table element from its ideal position
+      // first, let's check the distance of the table element from its ideal
+      // position
       size_t table_elem_ideal_position = table_elem_hash % table_size;
-      size_t table_elem_distance_from_ideal = (table_size - (table_elem_ideal_position - index)) %
-                                              table_size;
+      size_t table_elem_distance_from_ideal =
+          (table_size - (table_elem_ideal_position - index)) % table_size;
 
-      // if we have probed farther from our ideal position than the table element did from its ideal
-      // position, let's just store the new element here, and find a new place for the table element
+      // if we have probed farther from our ideal position than the table
+      // element did from its ideal position, let's just store the new element
+      // here, and find a new place for the table element
       if (probe_length > table_elem_distance_from_ideal) {
         table_elem.hash = get_two_highest_bits(table_elem.hash) | hash;
         hash = table_elem_hash;
@@ -153,8 +156,9 @@ template <typename T> struct hash_set_table {
 
     // we found an empty slot, so we can insert the new element here
     if (is_second_bit_set_to_1(elems[index].hash)) {
-      // we are reusing a tombstone, so the second bit needs to be 1 and we need to not decrement
-      // the remaining_elems count (since we are not actually using up a new slot in the table)
+      // we are reusing a tombstone, so the second bit needs to be 1 and we need
+      // to not decrement the remaining_elems count (since we are not actually
+      // using up a new slot in the table)
       elems[index].hash = set_2_highest_bits_to_11(hash);
     } else {
       elems[index].hash = set_2_highest_bits_to_10(hash);
@@ -173,7 +177,8 @@ template <typename T> struct hash_set_table {
     size_t probe_length = 0;
     while (true) {
       hash_set_table_element<T> &table_elem = elems[index];
-      const uint64_t table_elem_hash = set_2_highest_bits_to_00(table_elem.hash);
+      const uint64_t table_elem_hash =
+          set_2_highest_bits_to_00(table_elem.hash);
 
       if (is_first_bit_set_to_1(table_elem.hash)) {
         if (table_elem_hash == hash && table_elem.value == value) {
@@ -181,20 +186,21 @@ template <typename T> struct hash_set_table {
         }
 
         if (!is_second_bit_set_to_1(table_elem.hash)) {
-          // This is not a reused tombstone, so (due to the fairness created in put() via swapping)
-          // this element's distance-from-ideal must be less than or equal to the
-          // distance-from-ideal of every other element in the table. If we've currently searched
-          // farther than that, then our value is not in the table.
+          // This is not a reused tombstone, so (due to the fairness created in
+          // put() via swapping) this element's distance-from-ideal must be less
+          // than or equal to the distance-from-ideal of every other element in
+          // the table. If we've currently searched farther than that, then our
+          // value is not in the table.
           size_t table_elem_ideal_position = table_elem_hash % table_size;
-          size_t table_elem_distance_from_ideal = (table_size - (table_elem_ideal_position - index)
-                                                  ) %
-                                                  table_size;
+          size_t table_elem_distance_from_ideal =
+              (table_size - (table_elem_ideal_position - index)) % table_size;
           if (probe_length > table_elem_distance_from_ideal) {
             return -1;
           }
         }
       } else if (!is_second_bit_set_to_1(table_elem.hash)) {
-        // we've reached an empty, never-used slot, so the value isn't in the table
+        // we've reached an empty, never-used slot, so the value isn't in the
+        // table
         return -1;
       }
       index = (index + 1) % table_size;
@@ -210,13 +216,12 @@ template <typename T> struct hash_set_table {
     hash_set_table_element<T> &table_elem = elems[index];
     --live_elems;
     table_elem.value.~T();
-    // leave behind a tombstone (first bit means unused, second bit means it was previously used)
+    // leave behind a tombstone (first bit means unused, second bit means it was
+    // previously used)
     table_elem.hash = set_2_highest_bits_to_01(table_elem.hash);
   }
 
-  bool has(const T &value) const {
-    return index_of(value) != -1;
-  }
+  bool has(const T &value) const { return index_of(value) != -1; }
 };
 
 } // namespace internal
@@ -233,16 +238,10 @@ public:
     }
   }
 
-  bool has(const T &key) const override {
-    return m_table.has(key);
-  }
-  size_t size() const noexcept override {
-    return m_table.live_elems;
-  }
+  bool has(const T &key) const override { return m_table.has(key); }
+  size_t size() const noexcept override { return m_table.live_elems; }
 
-  void add(T value) override {
-    m_table.put(move(value));
-  }
+  void add(T value) override { m_table.put(move(value)); }
 
   void add_all(Slice<T> values) {
     for (const T &value : values) {
@@ -257,21 +256,13 @@ public:
     values.clear();
   }
 
-  void remove(const T &key) override {
-    m_table.remove(key);
-  }
+  void remove(const T &key) override { m_table.remove(key); }
 
-  void clear() override {
-    m_table.clear();
-  }
+  void clear() override { m_table.clear(); }
 
-  SetIterator<T> begin() const {
-    return SetIterator<T>(*this);
-  }
+  SetIterator<T> begin() const { return SetIterator<T>(*this); }
 
-  SetIterator<T> end() const {
-    return SetIterator<T>(*this).end();
-  }
+  SetIterator<T> end() const { return SetIterator<T>(*this).end(); }
 
   bool operator==(const Set<T> &other) const {
     if (size() != other.size()) {
@@ -285,9 +276,7 @@ public:
     return true;
   }
 
-  bool operator!=(const Set<T> &other) const {
-    return !(*this == other);
-  }
+  bool operator!=(const Set<T> &other) const { return !(*this == other); }
 
   friend class SetIterator<T>;
 
@@ -298,7 +287,8 @@ private:
 template <typename T> class SetIterator {
 public:
   SetIterator(const Set<T> &set)
-      : SetIterator(set.m_table.elems, set.m_table.elems + set.m_table.table_size) {}
+      : SetIterator(set.m_table.elems,
+                    set.m_table.elems + set.m_table.table_size) {}
 
   const T &peek() {
     if (at_end()) {
@@ -318,29 +308,17 @@ public:
     return value;
   }
 
-  bool at_end() const noexcept {
-    return m_it == m_end;
-  }
+  bool at_end() const noexcept { return m_it == m_end; }
 
-  SetIterator<T> begin() {
-    return *this;
-  }
+  SetIterator<T> begin() { return *this; }
 
-  SetIterator<T> begin() const {
-    return *this;
-  }
+  SetIterator<T> begin() const { return *this; }
 
-  SetIterator<T> end() {
-    return SetIterator<T>(m_end, m_end);
-  }
+  SetIterator<T> end() { return SetIterator<T>(m_end, m_end); }
 
-  SetIterator<T> end() const {
-    return SetIterator<T>(m_end, m_end);
-  }
+  SetIterator<T> end() const { return SetIterator<T>(m_end, m_end); }
 
-  const T &operator*() {
-    return peek();
-  }
+  const T &operator*() { return peek(); }
 
   SetIterator<T> &operator++() {
     next();
@@ -353,13 +331,9 @@ public:
     return tmp;
   }
 
-  bool operator==(const SetIterator &other) const {
-    return m_it == other.m_it;
-  }
+  bool operator==(const SetIterator &other) const { return m_it == other.m_it; }
 
-  bool operator!=(const SetIterator &other) const {
-    return m_it != other.m_it;
-  }
+  bool operator!=(const SetIterator &other) const { return m_it != other.m_it; }
 
 private:
   SetIterator(void *begin, void *end) : m_it(begin), m_end(end) {
