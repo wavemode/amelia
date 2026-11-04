@@ -36,12 +36,8 @@ ModuleNode(
                         ),
                         FunctionArgumentNode(
                           expr=FieldAccessExprNode(
-                            object=ParenthesizedExprNode(
-                              exprs=[
-                                MoveExprNode(
-                                  expr=ThisLiteralNode()
-                                )
-                              ]
+                            object=MoveExprNode(
+                              expr=ThisLiteralNode()
                             ),
                             field=IdentifierNode(
                               name="age"

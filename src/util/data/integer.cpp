@@ -2,7 +2,6 @@
 
 #include "integer.hpp"
 
-#include "util/data/char_iterator.hpp"
 #include "util/data/serialize.hpp"
 #include "util/data/string.hpp"
 #include "util/data/text_utils.hpp"
@@ -15,7 +14,7 @@ namespace {
 
 Integer binary_string_to_integer(Text binary_string) {
   Integer result;
-  for (char c : binary_string) {
+  for (const char c : binary_string.data()) {
     if (c == '0') {
       result <<= 1;
     } else if (c == '1') {
@@ -33,7 +32,7 @@ Integer binary_string_to_integer(Text binary_string) {
 
 Integer octal_string_to_integer(Text octal_string) {
   Integer result;
-  for (char c : octal_string) {
+  for (const char c : octal_string.data()) {
     if (c >= '0' && c <= '7') {
       result <<= 3;
       result += (c - '0');
@@ -49,7 +48,7 @@ Integer octal_string_to_integer(Text octal_string) {
 
 Integer hexadecimal_string_to_integer(Text hexadecimal_string) {
   Integer result;
-  for (char c : hexadecimal_string) {
+  for (const char c : hexadecimal_string.data()) {
     if (c >= '0' && c <= '9') {
       result <<= 4;
       result += (c - '0');
@@ -105,6 +104,7 @@ Integer::Integer(Text text_value) : m_value(nullptr) {
     } else if (TextUtils::starts_with(text_value, "0") && text_value.size() > 1) {
       result = octal_string_to_integer(TextUtils::tail_bytes(text_value, 1));
     } else {
+      // TODO: simply implement decimal_string_to_integer
       String str_value(text_value);
       try {
         static_cast<cpp_int *>(result.m_value)->operator=(cpp_int(str_value.c_str()));
@@ -127,7 +127,7 @@ Integer::Integer(double value) : m_value(new cpp_int(value)) {}
 Integer::Integer(const Integer &other)
     : m_value(new cpp_int(*static_cast<cpp_int *>(other.m_value))) {}
 
-Integer::Integer(Integer &&other) : m_value(other.m_value) {
+Integer::Integer(Integer &&other) noexcept : m_value(other.m_value) {
   other.m_value = new cpp_int();
 }
 
@@ -138,7 +138,7 @@ Integer &Integer::operator=(const Integer &other) {
   return *this;
 }
 
-Integer &Integer::operator=(Integer &&other) {
+Integer &Integer::operator=(Integer &&other) noexcept {
   if (this != &other) {
     static_cast<cpp_int *>(m_value)->operator=(move(*static_cast<cpp_int *>(other.m_value)));
   }
@@ -258,7 +258,7 @@ void Integer::to_binary_string(AbstractString &output) const {
   }
   List<char> digits;
   do {
-    digits.push_back((value % 2).to_int8() + '0');
+    digits.push_back(static_cast<char>((value % 2).to_int8() + '0'));
     value /= 2;
   } while (value > 0);
   for (size_t i = digits.size(); i > 0; --i) {
@@ -274,7 +274,7 @@ void Integer::to_octal_string(AbstractString &output) const {
   }
   List<char> digits;
   do {
-    digits.push_back((value % 8).to_int8() + '0');
+    digits.push_back(static_cast<char>((value % 8).to_int8() + '0'));
     value /= 8;
   } while (value > 0);
   for (size_t i = digits.size(); i > 0; --i) {
@@ -292,9 +292,9 @@ void Integer::to_hex_string(AbstractString &output) const {
   do {
     int8_t digit = (value % 16).to_int8();
     if (digit < 10) {
-      digits.push_back(digit + '0');
+      digits.push_back(static_cast<char>(digit + '0'));
     } else {
-      digits.push_back(digit - 10 + 'A');
+      digits.push_back(static_cast<char>(digit - 10 + 'A'));
     }
     value /= 16;
   } while (value > 0);

@@ -26,9 +26,9 @@ public:
   explicit Integer(double value);
 
   Integer(const Integer &other);
-  Integer(Integer &&other);
+  Integer(Integer &&other) noexcept;
   Integer &operator=(const Integer &other);
-  Integer &operator=(Integer &&other);
+  Integer &operator=(Integer &&other) noexcept;
   ~Integer();
 
   int8_t to_int8() const;

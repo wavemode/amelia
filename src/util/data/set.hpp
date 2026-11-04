@@ -173,11 +173,11 @@ template <typename T> struct hash_set_table {
     size_t probe_length = 0;
     while (true) {
       hash_set_table_element<T> &table_elem = elems[index];
-      uint64_t table_elem_hash = set_2_highest_bits_to_00(table_elem.hash);
+      const uint64_t table_elem_hash = set_2_highest_bits_to_00(table_elem.hash);
 
       if (is_first_bit_set_to_1(table_elem.hash)) {
         if (table_elem_hash == hash && table_elem.value == value) {
-          return index;
+          return static_cast<int64_t>(index);
         }
 
         if (!is_second_bit_set_to_1(table_elem.hash)) {

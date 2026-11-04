@@ -70,6 +70,7 @@ public:
     result.m_object = m_object;
     result.m_ref_count = m_ref_count;
     if (is_strong()) {
+      // incrementing this pointer causes it to point to the weak count instead of the strong count
       ++result.m_ref_count;
     }
     result.acquire();
@@ -81,6 +82,7 @@ public:
     result.m_object = m_object;
     result.m_ref_count = m_ref_count;
     if (!is_strong()) {
+      // decrementing this pointer causes it to point to the strong count instead of the weak count
       --result.m_ref_count;
     }
     result.acquire();

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "parser/data/abstract_node_repository.hpp"
+#include "parser/interfaces/abstract_node_repository.hpp"
 #include "parser/data/node.hpp"
 
 namespace amelia {
@@ -15,7 +15,7 @@ public:
   }
 
   template <typename NT> NodeId add_node(TokenId start, TokenId end, NT node) {
-    NodeId id = m_nodes.size();
+    const auto id = static_cast<NodeId>(m_nodes.size());
     m_nodes.emplace_back(start, end, move(node));
     return id;
   }

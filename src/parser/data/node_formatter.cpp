@@ -1,12 +1,9 @@
 #include "node_formatter.hpp"
 
 #include "lexer/data/lexer.hpp"
-#include "lexer/data/token_formatter.hpp"
-#include "lexer/interface/token_repository.hpp"
-#include "parser/data/abstract_node_repository.hpp"
+#include "parser/interfaces/abstract_node_repository.hpp"
 #include "parser/data/node.hpp"
 #include "util/data/integer.hpp"
-#include "util/data/scoped_assigner.hpp"
 #include "util/data/serialize.hpp"
 #include "util/data/text_utils.hpp"
 
@@ -1107,7 +1104,8 @@ void NodeFormatter::print_node_field(
   open_line(out);
   out.append(name);
   out.append("=[");
-  TEMP_ASSIGN(m_fields_printed, 0);
+  const uint32_t old_fields_printed = m_fields_printed;
+  m_fields_printed = 0;
   m_current_indent += 2;
   for (size_t i = 0; i < nodes_value.size(); ++i) {
     open_line(out);
@@ -1118,6 +1116,7 @@ void NodeFormatter::print_node_field(
     open_line(out, false);
   }
   out.append(']');
+  m_fields_printed = old_fields_printed;
 }
 
 void NodeFormatter::print_node_field(
@@ -1129,7 +1128,8 @@ void NodeFormatter::print_node_field(
   out.append(name);
   out.append("=[");
   const auto &nodes_value = nodes.value();
-  TEMP_ASSIGN(m_fields_printed, 0);
+  const uint32_t old_fields_printed = m_fields_printed;
+  m_fields_printed = 0;
   m_current_indent += 2;
   for (size_t i = 0; i < nodes_value.size(); ++i) {
     open_line(out);
@@ -1140,6 +1140,7 @@ void NodeFormatter::print_node_field(
     open_line(out, false);
   }
   out.append(']');
+  m_fields_printed = old_fields_printed;
 }
 
 void NodeFormatter::print_node_field(AbstractString &out, Text name, Option<NodeId> node_id) {

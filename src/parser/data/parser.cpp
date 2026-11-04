@@ -7,7 +7,6 @@
 #include "parser/data/node_type_list.hpp"
 #include "parser/data/parser_error.hpp"
 #include "parser/data/parser_result.hpp"
-#include "util/data/scoped_assigner.hpp"
 
 namespace amelia {
 
@@ -351,12 +350,14 @@ public:
       List<NodeId> decls;
       NodeId result;
       {
-        TEMP_ASSIGN(m_submodules, List<NodeId>());
+        const auto old_submodules = move(m_submodules);
+        m_submodules = List<NodeId>();
         parse_top_level_decls(decls, TokenType::RIGHT_BRACE);
         read_token_type(TokenType::RIGHT_BRACE, "Expected '}' to end module declaration");
         result = m_output.add_node(
             module_token.id, m_token_index, ModuleDeclNode{name, move(decls), move(m_submodules)}
         );
+        m_submodules = move(old_submodules);
       }
       m_submodules.push_back(result);
       return result;
@@ -2553,6 +2554,9 @@ public:
     List<NodeId> exprs;
     parse_comma_separated_expr_list(exprs, TokenType::RIGHT_PAREN);
     ++m_token_index; // consume the right paren
+    if (exprs.size() == 1) {
+      return exprs[0];
+    }
     return m_output.add_node(open_paren.id, m_token_index, ParenthesizedExprNode{move(exprs)});
   }
 

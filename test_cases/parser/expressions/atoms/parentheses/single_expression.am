@@ -7,11 +7,7 @@ ModuleNode(
       target=IdentifierNode(
         name="x"
       ),
-      expr=ParenthesizedExprNode(
-        exprs=[
-          NumberLiteralNode(value=5)
-        ]
-      )
+      expr=NumberLiteralNode(value=5)
     )
   ]
 )
