@@ -84,6 +84,7 @@ using TokenId = int32_t;
   X(KEYWORD_LABEL)                                                             \
   X(KEYWORD_SUPER)                                                             \
   X(KEYWORD_ABSTRACT)                                                          \
+  X(DOLLAR)                                                                    \
   X(ELLIPSIS)                                                                  \
   X(ASSIGN)                                                                    \
   X(PLUS_EQUAL)                                                                \

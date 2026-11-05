@@ -183,6 +183,8 @@ public:
       read_right_bracket(start_location);
     } else if (cp == '@') {
       read_at(start_location);
+    } else if (cp == '$') {
+      read_dollar(start_location);
     } else if (cp == '"') {
       read_quote(start_location);
     } else if (cp == '\'') {
@@ -636,6 +638,11 @@ public:
   void read_at(const Location &start_location) {
     next();
     emit_token(TokenType::AT, start_location);
+  }
+
+  void read_dollar(const Location &start_location) {
+    next();
+    emit_token(TokenType::DOLLAR, start_location);
   }
 
   void read_right_bracket(const Location &start_location) {

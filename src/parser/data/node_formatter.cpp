@@ -355,6 +355,11 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "expr", n.expr);
     break;
   }
+  case NodeType::DollarSignExprNode: {
+    const auto &n = node.as_DollarSignExprNode();
+    print_node_field(out, "expr", n.expr);
+    break;
+  }
   case NodeType::FieldAccessExprNode: {
     const auto &n = node.as_FieldAccessExprNode();
     print_node_field(out, "object", n.object);

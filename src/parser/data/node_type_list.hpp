@@ -438,6 +438,10 @@ struct EllipsisExprNode {
   NodeId expr;
 };
 
+struct DollarSignExprNode {
+  NodeId expr;
+};
+
 struct FieldAccessExprNode {
   NodeId object;
   NodeId field;
@@ -895,6 +899,7 @@ struct TypeFieldNode {};
   X(PositiveExprNode)                                                          \
   X(NegateExprNode)                                                            \
   X(EllipsisExprNode)                                                          \
+  X(DollarSignExprNode)                                                        \
   X(FieldAccessExprNode)                                                       \
   X(NumericFieldAccessExprNode)                                                \
   X(AsExprNode)                                                                \

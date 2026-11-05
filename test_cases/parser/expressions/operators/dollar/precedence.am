@@ -1,0 +1,28 @@
+let x = $ y.z*w
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclNode(
+      target=IdentifierNode(
+        name="x"
+      ),
+      expr=MultiplyExprNode(
+        left=DollarSignExprNode(
+          expr=FieldAccessExprNode(
+            object=IdentifierNode(
+              name="y"
+            ),
+            field=IdentifierNode(
+              name="z"
+            )
+          )
+        ),
+        right=IdentifierNode(
+          name="w"
+        )
+      )
+    )
+  ]
+)
+*/

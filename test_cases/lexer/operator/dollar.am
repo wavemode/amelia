@@ -1,0 +1,7 @@
+$x
+
+/* EXPECTED_OUTPUT:
+DOLLAR($)
+IDENTIFIER_NO_W(x)
+END_OF_FILE()
+*/

@@ -1779,6 +1779,11 @@ public:
       NodeId expr = parse_descend_expr_prefix();
       return m_output.add_node(start_token.id, m_token_index,
                                EllipsisExprNode{expr});
+    } else if (start_token.type == TokenType::DOLLAR) {
+      ++m_token_index; // consume the '$' operator
+      NodeId expr = parse_descend_expr_prefix();
+      return m_output.add_node(start_token.id, m_token_index,
+                               DollarSignExprNode{expr});
     } else if (start_token.type == TokenType::KEYWORD_IMPL) {
       ++m_token_index; // consume the 'impl' keyword
       NodeId type_expr = parse_descend_expr_prefix();
