@@ -4,13 +4,19 @@ let x : const 5 = 5
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      type=ConstTypeExprNode(
-        expr=NumberLiteralNode(value=5)
-      ),
-      expr=NumberLiteralNode(value=5)
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            ),
+            type_annotation=ConstTypeExprNode(
+              expr=NumberLiteralNode(value=5)
+            )
+          ),
+          expr=NumberLiteralNode(value=5)
+        )
+      ]
     )
   ]
 )

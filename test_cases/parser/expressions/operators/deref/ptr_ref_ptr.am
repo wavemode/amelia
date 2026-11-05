@@ -4,26 +4,32 @@ let x : *&*&T
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      type=DerefExprNode(
-        is_const=false,
-        expr=RefExprNode(
-          is_const=false,
-          is_move=false,
-          expr=DerefExprNode(
-            is_const=false,
-            expr=RefExprNode(
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            ),
+            type_annotation=DerefExprNode(
               is_const=false,
-              is_move=false,
-              expr=IdentifierNode(
-                name="T"
+              expr=RefExprNode(
+                is_const=false,
+                is_move=false,
+                expr=DerefExprNode(
+                  is_const=false,
+                  expr=RefExprNode(
+                    is_const=false,
+                    is_move=false,
+                    expr=IdentifierNode(
+                      name="T"
+                    )
+                  )
+                )
               )
             )
           )
         )
-      )
+      ]
     )
   ]
 )

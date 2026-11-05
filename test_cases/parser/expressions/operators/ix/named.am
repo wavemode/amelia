@@ -4,24 +4,30 @@ let x : T[U=V]
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      type=IndexingExprNode(
-        object=IdentifierNode(
-          name="T"
-        ),
-        indices=[
-          IndexNode(
-            name=IdentifierNode(
-              name="U"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
             ),
-            value=IdentifierNode(
-              name="V"
+            type_annotation=IndexingExprNode(
+              object=IdentifierNode(
+                name="T"
+              ),
+              indices=[
+                IndexNode(
+                  name=IdentifierNode(
+                    name="U"
+                  ),
+                  value=IdentifierNode(
+                    name="V"
+                  )
+                )
+              ]
             )
           )
-        ]
-      )
+        )
+      ]
     )
   ]
 )

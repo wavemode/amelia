@@ -6,35 +6,41 @@ let z = {
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="z"
-      ),
-      expr=BlockExprNode(
-        stmts=[
-          ForInStmtNode(
-            vars=[
-              ForInVariableNode(
-                name=IdentifierNode(
-                  name="x"
-                ),
-                type=BuiltinTypeNode(
-                  kind=int
-                )
-              )
-            ],
-            iterable=IdentifierNode(
-              name="y"
-            ),
-            body=ExprStmtNode(
-              expr=FunctionCallExprNode(
-                callee=IdentifierNode(
-                  name="a"
-                )
-              )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="z"
             )
+          ),
+          expr=BlockExprNode(
+            stmts=[
+              ForInStmtNode(
+                vars=[
+                  ForInVariableNode(
+                    name=IdentifierNode(
+                      name="x"
+                    ),
+                    type=BuiltinTypeNode(
+                      kind=int
+                    )
+                  )
+                ],
+                iterable=IdentifierNode(
+                  name="y"
+                ),
+                body=ExprStmtNode(
+                  expr=FunctionCallExprNode(
+                    callee=IdentifierNode(
+                      name="a"
+                    )
+                  )
+                )
+              )
+            ]
           )
-        ]
-      )
+        )
+      ]
     )
   ]
 )

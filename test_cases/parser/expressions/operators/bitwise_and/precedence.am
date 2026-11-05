@@ -4,22 +4,28 @@ let w = x ^ y & z
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="w"
-      ),
-      expr=BitwiseXorExprNode(
-        left=IdentifierNode(
-          name="x"
-        ),
-        right=BitwiseAndExprNode(
-          left=IdentifierNode(
-            name="y"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="w"
+            )
           ),
-          right=IdentifierNode(
-            name="z"
+          expr=BitwiseXorExprNode(
+            left=IdentifierNode(
+              name="x"
+            ),
+            right=BitwiseAndExprNode(
+              left=IdentifierNode(
+                name="y"
+              ),
+              right=IdentifierNode(
+                name="z"
+              )
+            )
           )
         )
-      )
+      ]
     )
   ]
 )

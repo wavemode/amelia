@@ -4,16 +4,22 @@ let y : typeof(5 + 5) = 10
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="y"
-      ),
-      type=TypeOfExprNode(
-        expr=AddExprNode(
-          left=NumberLiteralNode(value=5),
-          right=NumberLiteralNode(value=5)
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="y"
+            ),
+            type_annotation=TypeOfExprNode(
+              expr=AddExprNode(
+                left=NumberLiteralNode(value=5),
+                right=NumberLiteralNode(value=5)
+              )
+            )
+          ),
+          expr=NumberLiteralNode(value=10)
         )
-      ),
-      expr=NumberLiteralNode(value=10)
+      ]
     )
   ]
 )

@@ -125,16 +125,22 @@ struct OperatorFunctionDeclNode {
   Option<NodeId> body;
 };
 
-struct LetDeclNode {
-  NodeId target;
-  Option<NodeId> type;
+struct IdentifierPatternNode {
+  NodeId identifier;
+  Option<NodeId> type_annotation;
+};
+
+struct InitializerNode {
+  NodeId pattern;
   Option<NodeId> expr;
 };
 
+struct LetDeclNode {
+  List<NodeId> inits;
+};
+
 struct ConstDeclNode {
-  NodeId target;
-  Option<NodeId> type;
-  Option<NodeId> expr;
+  List<NodeId> inits;
 };
 
 struct PreIncrementStmtNode {
@@ -849,6 +855,8 @@ struct TypeFieldNode {};
   X(ModuleNode)                                                                \
   X(IdentifierNode)                                                            \
   X(EmptyStmtNode)                                                             \
+  X(IdentifierPatternNode)                                                     \
+  X(InitializerNode)                                                           \
   X(LetDeclNode)                                                               \
   X(ConstDeclNode)                                                             \
   X(StringLiteralNode)                                                         \

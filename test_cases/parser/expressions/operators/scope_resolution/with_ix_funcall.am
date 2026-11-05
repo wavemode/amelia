@@ -4,28 +4,34 @@ let x = T[U]::V()
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      expr=FunctionCallExprNode(
-        callee=ScopeResolutionExprNode(
-          scope=IndexingExprNode(
-            object=IdentifierNode(
-              name="T"
-            ),
-            indices=[
-              IndexNode(
-                value=IdentifierNode(
-                  name="U"
-                )
-              )
-            ]
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            )
           ),
-          name=IdentifierNode(
-            name="V"
+          expr=FunctionCallExprNode(
+            callee=ScopeResolutionExprNode(
+              scope=IndexingExprNode(
+                object=IdentifierNode(
+                  name="T"
+                ),
+                indices=[
+                  IndexNode(
+                    value=IdentifierNode(
+                      name="U"
+                    )
+                  )
+                ]
+              ),
+              name=IdentifierNode(
+                name="V"
+              )
+            )
           )
         )
-      )
+      ]
     )
   ]
 )

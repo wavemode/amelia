@@ -7,25 +7,31 @@ let example = {
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="example"
-      ),
-      expr=BlockExprNode(
-        stmts=[
-          LeftShiftAssignStmtNode(
-            target=IdentifierNode(
-              name="x"
-            ),
-            expr=NumberLiteralNode(value=5)
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="example"
+            )
           ),
-          LeftShiftAssignStmtNode(
-            target=IdentifierNode(
-              name="y"
-            ),
-            expr=NumberLiteralNode(value=6)
+          expr=BlockExprNode(
+            stmts=[
+              LeftShiftAssignStmtNode(
+                target=IdentifierNode(
+                  name="x"
+                ),
+                expr=NumberLiteralNode(value=5)
+              ),
+              LeftShiftAssignStmtNode(
+                target=IdentifierNode(
+                  name="y"
+                ),
+                expr=NumberLiteralNode(value=6)
+              )
+            ]
           )
-        ]
-      )
+        )
+      ]
     )
   ]
 )

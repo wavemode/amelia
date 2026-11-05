@@ -4,22 +4,28 @@ let w = x as y as z
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="w"
-      ),
-      expr=AsExprNode(
-        expr=AsExprNode(
-          expr=IdentifierNode(
-            name="x"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="w"
+            )
           ),
-          type=IdentifierNode(
-            name="y"
+          expr=AsExprNode(
+            expr=AsExprNode(
+              expr=IdentifierNode(
+                name="x"
+              ),
+              type=IdentifierNode(
+                name="y"
+              )
+            ),
+            type=IdentifierNode(
+              name="z"
+            )
           )
-        ),
-        type=IdentifierNode(
-          name="z"
         )
-      )
+      ]
     )
   ]
 )

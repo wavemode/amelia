@@ -4,12 +4,18 @@ let c = '\xe6\x97\xa5'
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="c"
-      ),
-      expr=CharLiteralNode(
-        lit='\U000065E5'
-      )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="c"
+            )
+          ),
+          expr=CharLiteralNode(
+            lit='\U000065E5'
+          )
+        )
+      ]
     )
   ]
 )

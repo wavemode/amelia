@@ -4,12 +4,18 @@ const x : int
 ModuleNode(
   decls=[
     ConstDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      type=BuiltinTypeNode(
-        kind=int
-      )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            ),
+            type_annotation=BuiltinTypeNode(
+              kind=int
+            )
+          )
+        )
+      ]
     )
   ]
 )

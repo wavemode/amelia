@@ -4,12 +4,18 @@ let x = () -> 10
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      expr=LambdaExprNode(
-        body=NumberLiteralNode(value=10)
-      )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            )
+          ),
+          expr=LambdaExprNode(
+            body=NumberLiteralNode(value=10)
+          )
+        )
+      ]
     )
   ]
 )

@@ -1,0 +1,48 @@
+const x, y : int = 10, z = 10, t : float
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ConstDeclNode(
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            )
+          )
+        ),
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="y"
+            ),
+            type_annotation=BuiltinTypeNode(
+              kind=int
+            )
+          ),
+          expr=NumberLiteralNode(value=10)
+        ),
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="z"
+            )
+          ),
+          expr=NumberLiteralNode(value=10)
+        ),
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="t"
+            ),
+            type_annotation=BuiltinTypeNode(
+              kind=float
+            )
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

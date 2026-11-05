@@ -6,14 +6,20 @@ let example = {
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="example"
-      ),
-      expr=BlockExprNode(
-        stmts=[
-          BreakStmtNode()
-        ]
-      )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="example"
+            )
+          ),
+          expr=BlockExprNode(
+            stmts=[
+              BreakStmtNode()
+            ]
+          )
+        )
+      ]
     )
   ]
 )

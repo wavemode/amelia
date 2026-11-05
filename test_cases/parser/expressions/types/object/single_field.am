@@ -4,21 +4,27 @@ let x : { a: int }
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      type=AnonymousStructTypeNode(
-        entries=[
-          KeyValueEntryNode(
-            key=IdentifierNode(
-              name="a"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
             ),
-            value=BuiltinTypeNode(
-              kind=int
+            type_annotation=AnonymousStructTypeNode(
+              entries=[
+                KeyValueEntryNode(
+                  key=IdentifierNode(
+                    name="a"
+                  ),
+                  value=BuiltinTypeNode(
+                    kind=int
+                  )
+                )
+              ]
             )
           )
-        ]
-      )
+        )
+      ]
     )
   ]
 )

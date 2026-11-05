@@ -4,28 +4,34 @@ let x : impl T::U[V]
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      type=ImplTypeExprNode(
-        type=IndexingExprNode(
-          object=ScopeResolutionExprNode(
-            scope=IdentifierNode(
-              name="T"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
             ),
-            name=IdentifierNode(
-              name="U"
-            )
-          ),
-          indices=[
-            IndexNode(
-              value=IdentifierNode(
-                name="V"
+            type_annotation=ImplTypeExprNode(
+              type=IndexingExprNode(
+                object=ScopeResolutionExprNode(
+                  scope=IdentifierNode(
+                    name="T"
+                  ),
+                  name=IdentifierNode(
+                    name="U"
+                  )
+                ),
+                indices=[
+                  IndexNode(
+                    value=IdentifierNode(
+                      name="V"
+                    )
+                  )
+                ]
               )
             )
-          ]
+          )
         )
-      )
+      ]
     )
   ]
 )

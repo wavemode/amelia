@@ -4,14 +4,20 @@ let x = $ y
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      expr=DollarSignExprNode(
-        expr=IdentifierNode(
-          name="y"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            )
+          ),
+          expr=DollarSignExprNode(
+            expr=IdentifierNode(
+              name="y"
+            )
+          )
         )
-      )
+      ]
     )
   ]
 )

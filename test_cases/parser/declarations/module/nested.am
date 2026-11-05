@@ -18,12 +18,18 @@ ModuleNode(
           ),
           decls=[
             LetDeclNode(
-              target=IdentifierNode(
-                name="c"
-              ),
-              expr=IdentifierNode(
-                name="d"
-              )
+              inits=[
+                InitializerNode(
+                  pattern=IdentifierPatternNode(
+                    identifier=IdentifierNode(
+                      name="c"
+                    )
+                  ),
+                  expr=IdentifierNode(
+                    name="d"
+                  )
+                )
+              ]
             )
           ]
         )
@@ -35,12 +41,18 @@ ModuleNode(
           ),
           decls=[
             LetDeclNode(
-              target=IdentifierNode(
-                name="c"
-              ),
-              expr=IdentifierNode(
-                name="d"
-              )
+              inits=[
+                InitializerNode(
+                  pattern=IdentifierPatternNode(
+                    identifier=IdentifierNode(
+                      name="c"
+                    )
+                  ),
+                  expr=IdentifierNode(
+                    name="d"
+                  )
+                )
+              ]
             )
           ]
         )
@@ -59,12 +71,18 @@ ModuleNode(
           ),
           decls=[
             LetDeclNode(
-              target=IdentifierNode(
-                name="c"
-              ),
-              expr=IdentifierNode(
-                name="d"
-              )
+              inits=[
+                InitializerNode(
+                  pattern=IdentifierPatternNode(
+                    identifier=IdentifierNode(
+                      name="c"
+                    )
+                  ),
+                  expr=IdentifierNode(
+                    name="d"
+                  )
+                )
+              ]
             )
           ]
         )
@@ -76,12 +94,18 @@ ModuleNode(
           ),
           decls=[
             LetDeclNode(
-              target=IdentifierNode(
-                name="c"
-              ),
-              expr=IdentifierNode(
-                name="d"
-              )
+              inits=[
+                InitializerNode(
+                  pattern=IdentifierPatternNode(
+                    identifier=IdentifierNode(
+                      name="c"
+                    )
+                  ),
+                  expr=IdentifierNode(
+                    name="d"
+                  )
+                )
+              ]
             )
           ]
         )

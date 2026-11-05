@@ -4,16 +4,22 @@ let x : &const int
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      type=RefExprNode(
-        is_const=true,
-        is_move=false,
-        expr=BuiltinTypeNode(
-          kind=int
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            ),
+            type_annotation=RefExprNode(
+              is_const=true,
+              is_move=false,
+              expr=BuiltinTypeNode(
+                kind=int
+              )
+            )
+          )
         )
-      )
+      ]
     )
   ]
 )

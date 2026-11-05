@@ -16,7 +16,7 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   const Node &node = m_node_repo.get_node(node_id);
   node_type_to_string(out, node.type());
   out.append('(');
-  int previous_fields_printed = m_fields_printed;
+  uint32_t previous_fields_printed = m_fields_printed;
   m_fields_printed = 0;
   m_current_indent += 2;
   switch (node.type()) {
@@ -30,18 +30,26 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   case NodeType::EmptyStmtNode: {
     break;
   }
+  case NodeType::IdentifierPatternNode: {
+    const auto &n = node.as_IdentifierPatternNode();
+    print_node_field(out, "identifier", n.identifier);
+    print_node_field(out, "type_annotation", n.type_annotation);
+    break;
+  }
+  case NodeType::InitializerNode: {
+    const auto &n = node.as_InitializerNode();
+    print_node_field(out, "pattern", n.pattern);
+    print_node_field(out, "expr", n.expr);
+    break;
+  }
   case NodeType::LetDeclNode: {
     const auto &n = node.as_LetDeclNode();
-    print_node_field(out, "target", n.target);
-    print_node_field(out, "type", n.type);
-    print_node_field(out, "expr", n.expr);
+    print_node_field(out, "inits", n.inits);
     break;
   }
   case NodeType::ConstDeclNode: {
     const auto &n = node.as_ConstDeclNode();
-    print_node_field(out, "target", n.target);
-    print_node_field(out, "type", n.type);
-    print_node_field(out, "expr", n.expr);
+    print_node_field(out, "inits", n.inits);
     break;
   }
   case NodeType::StringLiteralNode: {

@@ -9,63 +9,75 @@ let example = {
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="example"
-      ),
-      expr=BlockExprNode(
-        stmts=[
-          SwitchStmtNode(
-            expr=IdentifierNode(
-              name="y"
-            ),
-            clauses=[
-              CaseClauseNode(
-                header=CaseClauseHeaderNode(
-                  exprs=[
-                    NumberLiteralNode(value=1)
-                  ]
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="example"
+            )
+          ),
+          expr=BlockExprNode(
+            stmts=[
+              SwitchStmtNode(
+                expr=IdentifierNode(
+                  name="y"
                 ),
-                body=PreIncrementStmtNode(
-                  target=IdentifierNode(
-                    name="x"
-                  )
-                )
-              ),
-              CaseClauseNode(
-                header=CaseClauseHeaderNode(
-                  exprs=[
-                    NumberLiteralNode(value=3)
-                  ],
-                  when_clause=WhenClauseNode(
-                    introductory_decls=[
-                      LetDeclNode(
-                        target=IdentifierNode(
-                          name="z"
-                        ),
-                        expr=NumberLiteralNode(value=5)
-                      ),
-                      EmptyStmtNode()
-                    ],
-                    condition=EqualsExprNode(
-                      left=IdentifierNode(
-                        name="z"
-                      ),
-                      right=IdentifierNode(
+                clauses=[
+                  CaseClauseNode(
+                    header=CaseClauseHeaderNode(
+                      exprs=[
+                        NumberLiteralNode(value=1)
+                      ]
+                    ),
+                    body=PreIncrementStmtNode(
+                      target=IdentifierNode(
+                        name="x"
+                      )
+                    )
+                  ),
+                  CaseClauseNode(
+                    header=CaseClauseHeaderNode(
+                      exprs=[
+                        NumberLiteralNode(value=3)
+                      ],
+                      when_clause=WhenClauseNode(
+                        introductory_decls=[
+                          LetDeclNode(
+                            inits=[
+                              InitializerNode(
+                                pattern=IdentifierPatternNode(
+                                  identifier=IdentifierNode(
+                                    name="z"
+                                  )
+                                ),
+                                expr=NumberLiteralNode(value=5)
+                              )
+                            ]
+                          ),
+                          EmptyStmtNode()
+                        ],
+                        condition=EqualsExprNode(
+                          left=IdentifierNode(
+                            name="z"
+                          ),
+                          right=IdentifierNode(
+                            name="y"
+                          )
+                        )
+                      )
+                    ),
+                    body=PreIncrementStmtNode(
+                      target=IdentifierNode(
                         name="y"
                       )
                     )
                   )
-                ),
-                body=PreIncrementStmtNode(
-                  target=IdentifierNode(
-                    name="y"
-                  )
-                )
+                ]
               )
             ]
           )
-        ]
-      )
+        )
+      ]
     )
   ]
 )

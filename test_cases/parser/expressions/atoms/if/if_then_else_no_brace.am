@@ -4,20 +4,26 @@ let w = if(x)y else z
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="w"
-      ),
-      expr=IfExprNode(
-        condition=IdentifierNode(
-          name="x"
-        ),
-        then_branch=IdentifierNode(
-          name="y"
-        ),
-        else_branch=IdentifierNode(
-          name="z"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="w"
+            )
+          ),
+          expr=IfExprNode(
+            condition=IdentifierNode(
+              name="x"
+            ),
+            then_branch=IdentifierNode(
+              name="y"
+            ),
+            else_branch=IdentifierNode(
+              name="z"
+            )
+          )
         )
-      )
+      ]
     )
   ]
 )

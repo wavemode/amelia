@@ -4,44 +4,50 @@ let x = [3]int {1, 2, 3}.map(x -> x + 1)
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      expr=FunctionCallExprNode(
-        callee=FieldAccessExprNode(
-          object=ArrayExprNode(
-            size=NumberLiteralNode(value=3),
-            type_expr=BuiltinTypeNode(
-              kind=int
-            ),
-            elements=[
-              NumberLiteralNode(value=1),
-              NumberLiteralNode(value=2),
-              NumberLiteralNode(value=3)
-            ]
-          ),
-          field=IdentifierNode(
-            name="map"
-          )
-        ),
-        args=[
-          FunctionArgumentNode(
-            expr=LambdaExprNode(
-              parameters=[
-                IdentifierNode(
-                  name="x"
-                )
-              ],
-              body=AddExprNode(
-                left=IdentifierNode(
-                  name="x"
-                ),
-                right=NumberLiteralNode(value=1)
-              )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
             )
+          ),
+          expr=FunctionCallExprNode(
+            callee=FieldAccessExprNode(
+              object=ArrayExprNode(
+                size=NumberLiteralNode(value=3),
+                type_expr=BuiltinTypeNode(
+                  kind=int
+                ),
+                elements=[
+                  NumberLiteralNode(value=1),
+                  NumberLiteralNode(value=2),
+                  NumberLiteralNode(value=3)
+                ]
+              ),
+              field=IdentifierNode(
+                name="map"
+              )
+            ),
+            args=[
+              FunctionArgumentNode(
+                expr=LambdaExprNode(
+                  parameters=[
+                    IdentifierNode(
+                      name="x"
+                    )
+                  ],
+                  body=AddExprNode(
+                    left=IdentifierNode(
+                      name="x"
+                    ),
+                    right=NumberLiteralNode(value=1)
+                  )
+                )
+              )
+            ]
           )
-        ]
-      )
+        )
+      ]
     )
   ]
 )

@@ -9,43 +9,49 @@ let z = {
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="z"
-      ),
-      expr=BlockExprNode(
-        stmts=[
-          ForInStmtNode(
-            vars=[
-              ForInVariableNode(
-                name=IdentifierNode(
-                  name="x"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="z"
+            )
+          ),
+          expr=BlockExprNode(
+            stmts=[
+              ForInStmtNode(
+                vars=[
+                  ForInVariableNode(
+                    name=IdentifierNode(
+                      name="x"
+                    )
+                  )
+                ],
+                iterable=IdentifierNode(
+                  name="y"
+                ),
+                body=BlockStmtNode(
+                  stmts=[
+                    ExprStmtNode(
+                      expr=FunctionCallExprNode(
+                        callee=IdentifierNode(
+                          name="z"
+                        )
+                      )
+                    ),
+                    ExprStmtNode(
+                      expr=FunctionCallExprNode(
+                        callee=IdentifierNode(
+                          name="t"
+                        )
+                      )
+                    )
+                  ]
                 )
               )
-            ],
-            iterable=IdentifierNode(
-              name="y"
-            ),
-            body=BlockStmtNode(
-              stmts=[
-                ExprStmtNode(
-                  expr=FunctionCallExprNode(
-                    callee=IdentifierNode(
-                      name="z"
-                    )
-                  )
-                ),
-                ExprStmtNode(
-                  expr=FunctionCallExprNode(
-                    callee=IdentifierNode(
-                      name="t"
-                    )
-                  )
-                )
-              ]
-            )
+            ]
           )
-        ]
-      )
+        )
+      ]
     )
   ]
 )

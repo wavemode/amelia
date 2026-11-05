@@ -6,22 +6,28 @@ let example = {
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="example"
-      ),
-      expr=BlockExprNode(
-        stmts=[
-          ReturnStmtNode(),
-          EmptyStmtNode(),
-          ExprStmtNode(
-            expr=FunctionCallExprNode(
-              callee=IdentifierNode(
-                name="f"
-              )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="example"
             )
+          ),
+          expr=BlockExprNode(
+            stmts=[
+              ReturnStmtNode(),
+              EmptyStmtNode(),
+              ExprStmtNode(
+                expr=FunctionCallExprNode(
+                  callee=IdentifierNode(
+                    name="f"
+                  )
+                )
+              )
+            ]
           )
-        ]
-      )
+        )
+      ]
     )
   ]
 )

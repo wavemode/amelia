@@ -2,12 +2,18 @@
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="c"
-      ),
-      expr=CharLiteralNode(
-        lit='\U00000034'
-      )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="c"
+            )
+          ),
+          expr=CharLiteralNode(
+            lit='\U00000034'
+          )
+        )
+      ]
     )
   ]
 )

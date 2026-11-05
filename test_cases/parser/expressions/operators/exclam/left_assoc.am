@@ -4,16 +4,22 @@ let w = x!!
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="w"
-      ),
-      expr=ExclamationMarkExprNode(
-        expr=ExclamationMarkExprNode(
-          expr=IdentifierNode(
-            name="x"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="w"
+            )
+          ),
+          expr=ExclamationMarkExprNode(
+            expr=ExclamationMarkExprNode(
+              expr=IdentifierNode(
+                name="x"
+              )
+            )
           )
         )
-      )
+      ]
     )
   ]
 )

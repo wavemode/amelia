@@ -10,33 +10,39 @@ let example = {
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="example"
-      ),
-      expr=BlockExprNode(
-        stmts=[
-          IfStmtNode(
-            condition=IdentifierNode(
-              name="x"
-            ),
-            then_branch=ExprStmtNode(
-              expr=IdentifierNode(
-                name="y"
-              )
-            ),
-            else_branch=IfStmtNode(
-              condition=IdentifierNode(
-                name="z"
-              ),
-              then_branch=ExprStmtNode(
-                expr=IdentifierNode(
-                  name="t"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="example"
+            )
+          ),
+          expr=BlockExprNode(
+            stmts=[
+              IfStmtNode(
+                condition=IdentifierNode(
+                  name="x"
+                ),
+                then_branch=ExprStmtNode(
+                  expr=IdentifierNode(
+                    name="y"
+                  )
+                ),
+                else_branch=IfStmtNode(
+                  condition=IdentifierNode(
+                    name="z"
+                  ),
+                  then_branch=ExprStmtNode(
+                    expr=IdentifierNode(
+                      name="t"
+                    )
+                  )
                 )
               )
-            )
+            ]
           )
-        ]
-      )
+        )
+      ]
     )
   ]
 )

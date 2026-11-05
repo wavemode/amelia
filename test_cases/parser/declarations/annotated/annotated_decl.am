@@ -23,10 +23,16 @@ ModuleNode(
         )
       ],
       stmt=LetDeclNode(
-        target=IdentifierNode(
-          name="x"
-        ),
-        expr=NumberLiteralNode(value=4)
+        inits=[
+          InitializerNode(
+            pattern=IdentifierPatternNode(
+              identifier=IdentifierNode(
+                name="x"
+              )
+            ),
+            expr=NumberLiteralNode(value=4)
+          )
+        ]
       )
     )
   ]

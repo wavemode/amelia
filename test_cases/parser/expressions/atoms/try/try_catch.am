@@ -4,27 +4,33 @@ let w = try x catch (y : z) t
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="w"
-      ),
-      expr=TryExprNode(
-        try_block=IdentifierNode(
-          name="x"
-        ),
-        catch_clauses=[
-          CatchClauseNode(
-            exc_type=IdentifierNode(
-              name="z"
-            ),
-            var=IdentifierNode(
-              name="y"
-            ),
-            body=IdentifierNode(
-              name="t"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="w"
             )
+          ),
+          expr=TryExprNode(
+            try_block=IdentifierNode(
+              name="x"
+            ),
+            catch_clauses=[
+              CatchClauseNode(
+                exc_type=IdentifierNode(
+                  name="z"
+                ),
+                var=IdentifierNode(
+                  name="y"
+                ),
+                body=IdentifierNode(
+                  name="t"
+                )
+              )
+            ]
           )
-        ]
-      )
+        )
+      ]
     )
   ]
 )

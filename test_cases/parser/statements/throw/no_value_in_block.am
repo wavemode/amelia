@@ -4,14 +4,20 @@ let example = { throw }
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="example"
-      ),
-      expr=BlockExprNode(
-        stmts=[
-          ThrowStmtNode()
-        ]
-      )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="example"
+            )
+          ),
+          expr=BlockExprNode(
+            stmts=[
+              ThrowStmtNode()
+            ]
+          )
+        )
+      ]
     )
   ]
 )

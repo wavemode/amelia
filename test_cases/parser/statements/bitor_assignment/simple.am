@@ -6,19 +6,25 @@ let z = {
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="z"
-      ),
-      expr=BlockExprNode(
-        stmts=[
-          BitwiseOrAssignStmtNode(
-            target=IdentifierNode(
-              name="x"
-            ),
-            expr=NumberLiteralNode(value=5)
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="z"
+            )
+          ),
+          expr=BlockExprNode(
+            stmts=[
+              BitwiseOrAssignStmtNode(
+                target=IdentifierNode(
+                  name="x"
+                ),
+                expr=NumberLiteralNode(value=5)
+              )
+            ]
           )
-        ]
-      )
+        )
+      ]
     )
   ]
 )

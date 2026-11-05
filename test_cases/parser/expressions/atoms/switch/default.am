@@ -8,34 +8,40 @@ let x = switch(y) {
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      expr=SwitchExprNode(
-        expr=IdentifierNode(
-          name="y"
-        ),
-        clauses=[
-          CaseClauseNode(
-            header=CaseClauseHeaderNode(
-              exprs=[
-                NumberLiteralNode(value=1)
-              ]
-            ),
-            body=NumberLiteralNode(value=2)
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            )
           ),
-          CaseClauseNode(
-            header=CaseClauseHeaderNode(
-              exprs=[
-                NumberLiteralNode(value=3),
-                NumberLiteralNode(value=4)
-              ]
+          expr=SwitchExprNode(
+            expr=IdentifierNode(
+              name="y"
             ),
-            body=NumberLiteralNode(value=5)
+            clauses=[
+              CaseClauseNode(
+                header=CaseClauseHeaderNode(
+                  exprs=[
+                    NumberLiteralNode(value=1)
+                  ]
+                ),
+                body=NumberLiteralNode(value=2)
+              ),
+              CaseClauseNode(
+                header=CaseClauseHeaderNode(
+                  exprs=[
+                    NumberLiteralNode(value=3),
+                    NumberLiteralNode(value=4)
+                  ]
+                ),
+                body=NumberLiteralNode(value=5)
+              )
+            ],
+            default_body=NumberLiteralNode(value=10)
           )
-        ],
-        default_body=NumberLiteralNode(value=10)
-      )
+        )
+      ]
     )
   ]
 )

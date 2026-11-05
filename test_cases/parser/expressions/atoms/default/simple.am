@@ -4,13 +4,19 @@ let a: int = default
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="a"
-      ),
-      type=BuiltinTypeNode(
-        kind=int
-      ),
-      expr=DefaultLiteralNode()
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="a"
+            ),
+            type_annotation=BuiltinTypeNode(
+              kind=int
+            )
+          ),
+          expr=DefaultLiteralNode()
+        )
+      ]
     )
   ]
 )

@@ -4,10 +4,16 @@ let x : This
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      type=ThisTypeNode()
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            ),
+            type_annotation=ThisTypeNode()
+          )
+        )
+      ]
     )
   ]
 )

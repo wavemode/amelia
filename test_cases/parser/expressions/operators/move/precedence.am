@@ -4,19 +4,25 @@ let x = move y * z
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      expr=MultiplyExprNode(
-        left=MoveExprNode(
-          expr=IdentifierNode(
-            name="y"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            )
+          ),
+          expr=MultiplyExprNode(
+            left=MoveExprNode(
+              expr=IdentifierNode(
+                name="y"
+              )
+            ),
+            right=IdentifierNode(
+              name="z"
+            )
           )
-        ),
-        right=IdentifierNode(
-          name="z"
         )
-      )
+      ]
     )
   ]
 )

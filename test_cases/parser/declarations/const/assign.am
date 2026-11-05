@@ -4,12 +4,18 @@ const x = y
 ModuleNode(
   decls=[
     ConstDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      expr=IdentifierNode(
-        name="y"
-      )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            )
+          ),
+          expr=IdentifierNode(
+            name="y"
+          )
+        )
+      ]
     )
   ]
 )

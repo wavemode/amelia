@@ -4,18 +4,24 @@ let x = async fun() {}
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      expr=AsyncExprNode(
-        expr=FunctionExprNode(
-          signature=FunctionSignatureNode(),
-          body=FunctionBodyNode(
-            is_default=false,
-            is_deleted=false
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            )
+          ),
+          expr=AsyncExprNode(
+            expr=FunctionExprNode(
+              signature=FunctionSignatureNode(),
+              body=FunctionBodyNode(
+                is_default=false,
+                is_deleted=false
+              )
+            )
           )
         )
-      )
+      ]
     )
   ]
 )

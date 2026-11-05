@@ -4,14 +4,20 @@ let x = { return }
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      expr=BlockExprNode(
-        stmts=[
-          ReturnStmtNode()
-        ]
-      )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            )
+          ),
+          expr=BlockExprNode(
+            stmts=[
+              ReturnStmtNode()
+            ]
+          )
+        )
+      ]
     )
   ]
 )

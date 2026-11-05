@@ -4,9 +4,15 @@ const x
 ModuleNode(
   decls=[
     ConstDeclNode(
-      target=IdentifierNode(
-        name="x"
-      )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            )
+          )
+        )
+      ]
     )
   ]
 )

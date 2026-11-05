@@ -4,57 +4,63 @@ let x : fun(List[int], List[int]) -> List[int]
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      type=FunctionExprNode(
-        signature=FunctionSignatureNode(
-          parameters=[
-            FunctionParameterNode(
-              variadic=false,
-              name=IndexingExprNode(
-                object=IdentifierNode(
-                  name="List"
-                ),
-                indices=[
-                  IndexNode(
-                    value=BuiltinTypeNode(
-                      kind=int
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            ),
+            type_annotation=FunctionExprNode(
+              signature=FunctionSignatureNode(
+                parameters=[
+                  FunctionParameterNode(
+                    variadic=false,
+                    name=IndexingExprNode(
+                      object=IdentifierNode(
+                        name="List"
+                      ),
+                      indices=[
+                        IndexNode(
+                          value=BuiltinTypeNode(
+                            kind=int
+                          )
+                        )
+                      ]
+                    )
+                  ),
+                  FunctionParameterNode(
+                    variadic=false,
+                    name=IndexingExprNode(
+                      object=IdentifierNode(
+                        name="List"
+                      ),
+                      indices=[
+                        IndexNode(
+                          value=BuiltinTypeNode(
+                            kind=int
+                          )
+                        )
+                      ]
                     )
                   )
-                ]
-              )
-            ),
-            FunctionParameterNode(
-              variadic=false,
-              name=IndexingExprNode(
-                object=IdentifierNode(
-                  name="List"
-                ),
-                indices=[
-                  IndexNode(
-                    value=BuiltinTypeNode(
-                      kind=int
+                ],
+                return_type=IndexingExprNode(
+                  object=IdentifierNode(
+                    name="List"
+                  ),
+                  indices=[
+                    IndexNode(
+                      value=BuiltinTypeNode(
+                        kind=int
+                      )
                     )
-                  )
-                ]
-              )
-            )
-          ],
-          return_type=IndexingExprNode(
-            object=IdentifierNode(
-              name="List"
-            ),
-            indices=[
-              IndexNode(
-                value=BuiltinTypeNode(
-                  kind=int
+                  ]
                 )
               )
-            ]
+            )
           )
         )
-      )
+      ]
     )
   ]
 )

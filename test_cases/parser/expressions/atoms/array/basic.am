@@ -4,20 +4,26 @@ let x = [...]int {1, 2, 3}
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      expr=ArrayExprNode(
-        infer_size=true,
-        type_expr=BuiltinTypeNode(
-          kind=int
-        ),
-        elements=[
-          NumberLiteralNode(value=1),
-          NumberLiteralNode(value=2),
-          NumberLiteralNode(value=3)
-        ]
-      )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            )
+          ),
+          expr=ArrayExprNode(
+            infer_size=true,
+            type_expr=BuiltinTypeNode(
+              kind=int
+            ),
+            elements=[
+              NumberLiteralNode(value=1),
+              NumberLiteralNode(value=2),
+              NumberLiteralNode(value=3)
+            ]
+          )
+        )
+      ]
     )
   ]
 )

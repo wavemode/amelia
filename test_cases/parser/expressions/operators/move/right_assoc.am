@@ -4,16 +4,22 @@ let w = move move x
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="w"
-      ),
-      expr=MoveExprNode(
-        expr=MoveExprNode(
-          expr=IdentifierNode(
-            name="x"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="w"
+            )
+          ),
+          expr=MoveExprNode(
+            expr=MoveExprNode(
+              expr=IdentifierNode(
+                name="x"
+              )
+            )
           )
         )
-      )
+      ]
     )
   ]
 )

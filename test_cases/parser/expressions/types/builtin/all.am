@@ -21,148 +21,256 @@ let x_never : never
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x_bool"
-      ),
-      type=BuiltinTypeNode(
-        kind=bool
-      )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x_bool"
+            ),
+            type_annotation=BuiltinTypeNode(
+              kind=bool
+            )
+          )
+        )
+      ]
     ),
     LetDeclNode(
-      target=IdentifierNode(
-        name="x_byte"
-      ),
-      type=BuiltinTypeNode(
-        kind=byte
-      )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x_byte"
+            ),
+            type_annotation=BuiltinTypeNode(
+              kind=byte
+            )
+          )
+        )
+      ]
     ),
     LetDeclNode(
-      target=IdentifierNode(
-        name="x_short"
-      ),
-      type=BuiltinTypeNode(
-        kind=short
-      )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x_short"
+            ),
+            type_annotation=BuiltinTypeNode(
+              kind=short
+            )
+          )
+        )
+      ]
     ),
     LetDeclNode(
-      target=IdentifierNode(
-        name="x_int"
-      ),
-      type=BuiltinTypeNode(
-        kind=int
-      )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x_int"
+            ),
+            type_annotation=BuiltinTypeNode(
+              kind=int
+            )
+          )
+        )
+      ]
     ),
     LetDeclNode(
-      target=IdentifierNode(
-        name="x_long"
-      ),
-      type=BuiltinTypeNode(
-        kind=long
-      )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x_long"
+            ),
+            type_annotation=BuiltinTypeNode(
+              kind=long
+            )
+          )
+        )
+      ]
     ),
     LetDeclNode(
-      target=IdentifierNode(
-        name="x_ubyte"
-      ),
-      type=BuiltinTypeNode(
-        kind=ubyte
-      )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x_ubyte"
+            ),
+            type_annotation=BuiltinTypeNode(
+              kind=ubyte
+            )
+          )
+        )
+      ]
     ),
     LetDeclNode(
-      target=IdentifierNode(
-        name="x_ushort"
-      ),
-      type=BuiltinTypeNode(
-        kind=ushort
-      )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x_ushort"
+            ),
+            type_annotation=BuiltinTypeNode(
+              kind=ushort
+            )
+          )
+        )
+      ]
     ),
     LetDeclNode(
-      target=IdentifierNode(
-        name="x_uint"
-      ),
-      type=BuiltinTypeNode(
-        kind=uint
-      )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x_uint"
+            ),
+            type_annotation=BuiltinTypeNode(
+              kind=uint
+            )
+          )
+        )
+      ]
     ),
     LetDeclNode(
-      target=IdentifierNode(
-        name="x_ulong"
-      ),
-      type=BuiltinTypeNode(
-        kind=ulong
-      )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x_ulong"
+            ),
+            type_annotation=BuiltinTypeNode(
+              kind=ulong
+            )
+          )
+        )
+      ]
     ),
     LetDeclNode(
-      target=IdentifierNode(
-        name="x_usize"
-      ),
-      type=BuiltinTypeNode(
-        kind=usize
-      )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x_usize"
+            ),
+            type_annotation=BuiltinTypeNode(
+              kind=usize
+            )
+          )
+        )
+      ]
     ),
     LetDeclNode(
-      target=IdentifierNode(
-        name="x_float"
-      ),
-      type=BuiltinTypeNode(
-        kind=float
-      )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x_float"
+            ),
+            type_annotation=BuiltinTypeNode(
+              kind=float
+            )
+          )
+        )
+      ]
     ),
     LetDeclNode(
-      target=IdentifierNode(
-        name="x_double"
-      ),
-      type=BuiltinTypeNode(
-        kind=double
-      )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x_double"
+            ),
+            type_annotation=BuiltinTypeNode(
+              kind=double
+            )
+          )
+        )
+      ]
     ),
     LetDeclNode(
-      target=IdentifierNode(
-        name="x_bitint"
-      ),
-      type=BitIntTypeNode(
-        is_signed=true
-      )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x_bitint"
+            ),
+            type_annotation=BitIntTypeNode(
+              is_signed=true
+            )
+          )
+        )
+      ]
     ),
     LetDeclNode(
-      target=IdentifierNode(
-        name="x_ubitint"
-      ),
-      type=BitIntTypeNode(
-        is_signed=false
-      )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x_ubitint"
+            ),
+            type_annotation=BitIntTypeNode(
+              is_signed=false
+            )
+          )
+        )
+      ]
     ),
     LetDeclNode(
-      target=IdentifierNode(
-        name="x_char"
-      ),
-      type=BuiltinTypeNode(
-        kind=char
-      )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x_char"
+            ),
+            type_annotation=BuiltinTypeNode(
+              kind=char
+            )
+          )
+        )
+      ]
     ),
     LetDeclNode(
-      target=IdentifierNode(
-        name="x_text"
-      ),
-      type=BuiltinTypeNode(
-        kind=text
-      )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x_text"
+            ),
+            type_annotation=BuiltinTypeNode(
+              kind=text
+            )
+          )
+        )
+      ]
     ),
     LetDeclNode(
-      target=IdentifierNode(
-        name="x_null"
-      ),
-      type=BuiltinTypeNode(
-        kind=null
-      )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x_null"
+            ),
+            type_annotation=BuiltinTypeNode(
+              kind=null
+            )
+          )
+        )
+      ]
     ),
     LetDeclNode(
-      target=IdentifierNode(
-        name="x_never"
-      ),
-      type=BuiltinTypeNode(
-        kind=never
-      )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x_never"
+            ),
+            type_annotation=BuiltinTypeNode(
+              kind=never
+            )
+          )
+        )
+      ]
     )
   ]
 )

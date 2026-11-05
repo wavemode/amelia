@@ -4,17 +4,23 @@ let x = y <= z
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      expr=LessEqualsExprNode(
-        left=IdentifierNode(
-          name="y"
-        ),
-        right=IdentifierNode(
-          name="z"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            )
+          ),
+          expr=LessEqualsExprNode(
+            left=IdentifierNode(
+              name="y"
+            ),
+            right=IdentifierNode(
+              name="z"
+            )
+          )
         )
-      )
+      ]
     )
   ]
 )

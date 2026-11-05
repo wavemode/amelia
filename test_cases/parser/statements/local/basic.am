@@ -6,10 +6,16 @@ ModuleNode(
     VisibilityNode(
       visibility=local,
       decl=ConstDeclNode(
-        target=IdentifierNode(
-          name="x"
-        ),
-        expr=NumberLiteralNode(value=10)
+        inits=[
+          InitializerNode(
+            pattern=IdentifierPatternNode(
+              identifier=IdentifierNode(
+                name="x"
+              )
+            ),
+            expr=NumberLiteralNode(value=10)
+          )
+        ]
       )
     )
   ]

@@ -4,24 +4,30 @@ let x = with(a = b) d
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      expr=WithExprNode(
-        args=[
-          FunctionArgumentNode(
-            name=IdentifierNode(
-              name="a"
-            ),
-            expr=IdentifierNode(
-              name="b"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            )
+          ),
+          expr=WithExprNode(
+            args=[
+              FunctionArgumentNode(
+                name=IdentifierNode(
+                  name="a"
+                ),
+                expr=IdentifierNode(
+                  name="b"
+                )
+              )
+            ],
+            body=IdentifierNode(
+              name="d"
             )
           )
-        ],
-        body=IdentifierNode(
-          name="d"
         )
-      )
+      ]
     )
   ]
 )

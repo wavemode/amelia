@@ -12,50 +12,56 @@ let example = {
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="example"
-      ),
-      expr=BlockExprNode(
-        stmts=[
-          IfStmtNode(
-            condition=IdentifierNode(
-              name="x"
-            ),
-            then_branch=BlockStmtNode(
-              stmts=[
-                ExprStmtNode(
-                  expr=IdentifierNode(
-                    name="y"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="example"
+            )
+          ),
+          expr=BlockExprNode(
+            stmts=[
+              IfStmtNode(
+                condition=IdentifierNode(
+                  name="x"
+                ),
+                then_branch=BlockStmtNode(
+                  stmts=[
+                    ExprStmtNode(
+                      expr=IdentifierNode(
+                        name="y"
+                      )
+                    )
+                  ]
+                ),
+                else_branch=IfStmtNode(
+                  condition=IdentifierNode(
+                    name="z"
+                  ),
+                  then_branch=BlockStmtNode(
+                    stmts=[
+                      ExprStmtNode(
+                        expr=IdentifierNode(
+                          name="t"
+                        )
+                      )
+                    ]
+                  ),
+                  else_branch=BlockStmtNode(
+                    stmts=[
+                      ExprStmtNode(
+                        expr=IdentifierNode(
+                          name="u"
+                        )
+                      )
+                    ]
                   )
                 )
-              ]
-            ),
-            else_branch=IfStmtNode(
-              condition=IdentifierNode(
-                name="z"
-              ),
-              then_branch=BlockStmtNode(
-                stmts=[
-                  ExprStmtNode(
-                    expr=IdentifierNode(
-                      name="t"
-                    )
-                  )
-                ]
-              ),
-              else_branch=BlockStmtNode(
-                stmts=[
-                  ExprStmtNode(
-                    expr=IdentifierNode(
-                      name="u"
-                    )
-                  )
-                ]
               )
-            )
+            ]
           )
-        ]
-      )
+        )
+      ]
     )
   ]
 )

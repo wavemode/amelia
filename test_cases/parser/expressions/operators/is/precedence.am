@@ -4,27 +4,33 @@ let w = x * y as z is w
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="w"
-      ),
-      expr=MultiplyExprNode(
-        left=IdentifierNode(
-          name="x"
-        ),
-        right=IsExprNode(
-          expr=AsExprNode(
-            expr=IdentifierNode(
-              name="y"
-            ),
-            type=IdentifierNode(
-              name="z"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="w"
             )
           ),
-          type=IdentifierNode(
-            name="w"
+          expr=MultiplyExprNode(
+            left=IdentifierNode(
+              name="x"
+            ),
+            right=IsExprNode(
+              expr=AsExprNode(
+                expr=IdentifierNode(
+                  name="y"
+                ),
+                type=IdentifierNode(
+                  name="z"
+                )
+              ),
+              type=IdentifierNode(
+                name="w"
+              )
+            )
           )
         )
-      )
+      ]
     )
   ]
 )

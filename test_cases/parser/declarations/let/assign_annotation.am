@@ -4,13 +4,19 @@ let x : int = 5
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      type=BuiltinTypeNode(
-        kind=int
-      ),
-      expr=NumberLiteralNode(value=5)
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            ),
+            type_annotation=BuiltinTypeNode(
+              kind=int
+            )
+          ),
+          expr=NumberLiteralNode(value=5)
+        )
+      ]
     )
   ]
 )

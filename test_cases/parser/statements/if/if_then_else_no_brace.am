@@ -10,33 +10,39 @@ let a = {
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="a"
-      ),
-      expr=BlockExprNode(
-        stmts=[
-          IfStmtNode(
-            condition=IdentifierNode(
-              name="x"
-            ),
-            then_branch=ExprStmtNode(
-              expr=FunctionCallExprNode(
-                callee=IdentifierNode(
-                  name="y"
-                )
-              )
-            ),
-            else_branch=ExprStmtNode(
-              expr=FunctionCallExprNode(
-                callee=IdentifierNode(
-                  name="z"
-                )
-              )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="a"
             )
           ),
-          EmptyStmtNode()
-        ]
-      )
+          expr=BlockExprNode(
+            stmts=[
+              IfStmtNode(
+                condition=IdentifierNode(
+                  name="x"
+                ),
+                then_branch=ExprStmtNode(
+                  expr=FunctionCallExprNode(
+                    callee=IdentifierNode(
+                      name="y"
+                    )
+                  )
+                ),
+                else_branch=ExprStmtNode(
+                  expr=FunctionCallExprNode(
+                    callee=IdentifierNode(
+                      name="z"
+                    )
+                  )
+                )
+              ),
+              EmptyStmtNode()
+            ]
+          )
+        )
+      ]
     )
   ]
 )

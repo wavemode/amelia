@@ -4,20 +4,26 @@ let x = *y*z
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      expr=MultiplyExprNode(
-        left=DerefExprNode(
-          is_const=false,
-          expr=IdentifierNode(
-            name="y"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            )
+          ),
+          expr=MultiplyExprNode(
+            left=DerefExprNode(
+              is_const=false,
+              expr=IdentifierNode(
+                name="y"
+              )
+            ),
+            right=IdentifierNode(
+              name="z"
+            )
           )
-        ),
-        right=IdentifierNode(
-          name="z"
         )
-      )
+      ]
     )
   ]
 )

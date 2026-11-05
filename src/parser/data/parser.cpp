@@ -1419,38 +1419,63 @@ public:
                              PreDecrementStmtNode{operand});
   }
 
-  NodeId parse_const_decl() {
-    auto const_token = next();
-    NodeId target = parse_expr();
-    Option<NodeId> type_annotation;
-    Option<NodeId> expr;
-    if (peek().type == TokenType::COLON) {
-      ++m_token_index; // consume the ':' token
-      type_annotation = parse_type_expr();
+  NodeId parse_initializer_pattern() {
+    auto start_token = peek();
+    switch (start_token.type) {
+    case TokenType::IDENTIFIER:
+    case TokenType::IDENTIFIER_NO_W:
+    case TokenType::QUOTED_IDENTIFIER:
+    case TokenType::QUOTED_IDENTIFIER_NO_W: {
+      NodeId identifier = parse_identifier();
+      Option<NodeId> type_annotation;
+      if (peek().type == TokenType::COLON) {
+        ++m_token_index; // skip ':'
+        type_annotation = parse_type_expr();
+      }
+      return m_output.add_node(
+          start_token.id, m_token_index,
+          IdentifierPatternNode{identifier, type_annotation});
     }
+    default: {
+      throw_parser_error_at_current_location("Expected initializer pattern");
+    }
+    }
+  }
+
+  NodeId parse_initializer() {
+    auto start_token = peek();
+    NodeId pattern = parse_initializer_pattern();
+    Option<NodeId> expr;
     if (peek().type == TokenType::ASSIGN) {
-      ++m_token_index; // consume the '=' token
+      ++m_token_index; // skip '='
       expr = parse_expr();
     }
+    return m_output.add_node(start_token.id, m_token_index,
+                             InitializerNode{pattern, expr});
+  }
+
+  void parse_initializer_list(List<NodeId> &inits) {
+    while (true) {
+      inits.push_back(parse_initializer());
+      if (peek().type != TokenType::COMMA)
+        break;
+      ++m_token_index; // skip comma
+    }
+  }
+
+  NodeId parse_const_decl() {
+    auto const_token = next();
+    List<NodeId> inits;
+    parse_initializer_list(inits);
     return m_output.add_node(const_token.id, m_token_index,
-                             ConstDeclNode{target, type_annotation, expr});
+                             ConstDeclNode{inits});
   }
 
   NodeId parse_let_decl() {
     auto let_token = next();
-    NodeId target = parse_expr();
-    Option<NodeId> type_annotation;
-    Option<NodeId> expr;
-    if (peek().type == TokenType::COLON) {
-      ++m_token_index; // consume the ':' token
-      type_annotation = parse_type_expr();
-    }
-    if (peek().type == TokenType::ASSIGN) {
-      ++m_token_index; // consume the '=' token
-      expr = parse_expr();
-    }
-    return m_output.add_node(let_token.id, m_token_index,
-                             LetDeclNode{target, type_annotation, expr});
+    List<NodeId> inits;
+    parse_initializer_list(inits);
+    return m_output.add_node(let_token.id, m_token_index, LetDeclNode{inits});
   }
 
   NodeId parse_expr_statement() {

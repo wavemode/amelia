@@ -4,24 +4,30 @@ let x = y(`a`=z)
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      expr=FunctionCallExprNode(
-        callee=IdentifierNode(
-          name="y"
-        ),
-        args=[
-          FunctionArgumentNode(
-            name=IdentifierNode(
-              name="a"
-            ),
-            expr=IdentifierNode(
-              name="z"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
             )
+          ),
+          expr=FunctionCallExprNode(
+            callee=IdentifierNode(
+              name="y"
+            ),
+            args=[
+              FunctionArgumentNode(
+                name=IdentifierNode(
+                  name="a"
+                ),
+                expr=IdentifierNode(
+                  name="z"
+                )
+              )
+            ]
           )
-        ]
-      )
+        )
+      ]
     )
   ]
 )

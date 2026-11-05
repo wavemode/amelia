@@ -7,15 +7,21 @@ let z = {
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="z"
-      ),
-      expr=BlockExprNode(
-        stmts=[
-          ContinueStmtNode(),
-          ContinueStmtNode()
-        ]
-      )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="z"
+            )
+          ),
+          expr=BlockExprNode(
+            stmts=[
+              ContinueStmtNode(),
+              ContinueStmtNode()
+            ]
+          )
+        )
+      ]
     )
   ]
 )

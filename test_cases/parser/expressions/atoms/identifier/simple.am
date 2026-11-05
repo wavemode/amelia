@@ -4,12 +4,18 @@ let x = a
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      expr=IdentifierNode(
-        name="a"
-      )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            )
+          ),
+          expr=IdentifierNode(
+            name="a"
+          )
+        )
+      ]
     )
   ]
 )

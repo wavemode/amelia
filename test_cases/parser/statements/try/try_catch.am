@@ -6,35 +6,41 @@ let example = {
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="example"
-      ),
-      expr=BlockExprNode(
-        stmts=[
-          TryStmtNode(
-            try_block=PreIncrementStmtNode(
-              target=IdentifierNode(
-                name="x"
-              )
-            ),
-            catch_clauses=[
-              CatchClauseNode(
-                exc_type=IdentifierNode(
-                  name="z"
-                ),
-                var=IdentifierNode(
-                  name="y"
-                ),
-                body=PreIncrementStmtNode(
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="example"
+            )
+          ),
+          expr=BlockExprNode(
+            stmts=[
+              TryStmtNode(
+                try_block=PreIncrementStmtNode(
                   target=IdentifierNode(
-                    name="t"
+                    name="x"
                   )
-                )
+                ),
+                catch_clauses=[
+                  CatchClauseNode(
+                    exc_type=IdentifierNode(
+                      name="z"
+                    ),
+                    var=IdentifierNode(
+                      name="y"
+                    ),
+                    body=PreIncrementStmtNode(
+                      target=IdentifierNode(
+                        name="t"
+                      )
+                    )
+                  )
+                ]
               )
             ]
           )
-        ]
-      )
+        )
+      ]
     )
   ]
 )

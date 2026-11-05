@@ -4,39 +4,45 @@ let f = fun (x : int = 4, y : float = 10.0) {}
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="f"
-      ),
-      expr=FunctionExprNode(
-        signature=FunctionSignatureNode(
-          parameters=[
-            FunctionParameterNode(
-              variadic=false,
-              name=IdentifierNode(
-                name="x"
-              ),
-              type=BuiltinTypeNode(
-                kind=int
-              ),
-              default_value=NumberLiteralNode(value=4)
-            ),
-            FunctionParameterNode(
-              variadic=false,
-              name=IdentifierNode(
-                name="y"
-              ),
-              type=BuiltinTypeNode(
-                kind=float
-              ),
-              default_value=NumberLiteralNode(value=10.0)
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="f"
             )
-          ]
-        ),
-        body=FunctionBodyNode(
-          is_default=false,
-          is_deleted=false
+          ),
+          expr=FunctionExprNode(
+            signature=FunctionSignatureNode(
+              parameters=[
+                FunctionParameterNode(
+                  variadic=false,
+                  name=IdentifierNode(
+                    name="x"
+                  ),
+                  type=BuiltinTypeNode(
+                    kind=int
+                  ),
+                  default_value=NumberLiteralNode(value=4)
+                ),
+                FunctionParameterNode(
+                  variadic=false,
+                  name=IdentifierNode(
+                    name="y"
+                  ),
+                  type=BuiltinTypeNode(
+                    kind=float
+                  ),
+                  default_value=NumberLiteralNode(value=10.0)
+                )
+              ]
+            ),
+            body=FunctionBodyNode(
+              is_default=false,
+              is_deleted=false
+            )
+          )
         )
-      )
+      ]
     )
   ]
 )

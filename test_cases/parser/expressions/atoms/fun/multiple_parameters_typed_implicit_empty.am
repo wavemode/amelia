@@ -4,38 +4,44 @@ let f = fun (x : int, y : float) with () {}
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="f"
-      ),
-      expr=FunctionExprNode(
-        signature=FunctionSignatureNode(
-          parameters=[
-            FunctionParameterNode(
-              variadic=false,
-              name=IdentifierNode(
-                name="x"
-              ),
-              type=BuiltinTypeNode(
-                kind=int
-              )
-            ),
-            FunctionParameterNode(
-              variadic=false,
-              name=IdentifierNode(
-                name="y"
-              ),
-              type=BuiltinTypeNode(
-                kind=float
-              )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="f"
             )
-          ],
-          implicit_parameter_list=ImplicitParameterListNode()
-        ),
-        body=FunctionBodyNode(
-          is_default=false,
-          is_deleted=false
+          ),
+          expr=FunctionExprNode(
+            signature=FunctionSignatureNode(
+              parameters=[
+                FunctionParameterNode(
+                  variadic=false,
+                  name=IdentifierNode(
+                    name="x"
+                  ),
+                  type=BuiltinTypeNode(
+                    kind=int
+                  )
+                ),
+                FunctionParameterNode(
+                  variadic=false,
+                  name=IdentifierNode(
+                    name="y"
+                  ),
+                  type=BuiltinTypeNode(
+                    kind=float
+                  )
+                )
+              ],
+              implicit_parameter_list=ImplicitParameterListNode()
+            ),
+            body=FunctionBodyNode(
+              is_default=false,
+              is_deleted=false
+            )
+          )
         )
-      )
+      ]
     )
   ]
 )

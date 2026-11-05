@@ -6,52 +6,58 @@ let z = {
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="z"
-      ),
-      expr=BlockExprNode(
-        stmts=[
-          ForInStmtNode(
-            vars=[
-              ForInVariableNode(
-                name=IdentifierNode(
-                  name="x"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="z"
+            )
+          ),
+          expr=BlockExprNode(
+            stmts=[
+              ForInStmtNode(
+                vars=[
+                  ForInVariableNode(
+                    name=IdentifierNode(
+                      name="x"
+                    ),
+                    type=RefExprNode(
+                      is_const=false,
+                      is_move=false,
+                      expr=BuiltinTypeNode(
+                        kind=int
+                      )
+                    )
+                  ),
+                  ForInVariableNode(
+                    name=IdentifierNode(
+                      name="y"
+                    ),
+                    type=RefExprNode(
+                      is_const=false,
+                      is_move=false,
+                      expr=IdentifierNode(
+                        name="String"
+                      )
+                    )
+                  )
+                ],
+                iterable=IdentifierNode(
+                  name="z"
                 ),
-                type=RefExprNode(
-                  is_const=false,
-                  is_move=false,
-                  expr=BuiltinTypeNode(
-                    kind=int
+                body=ExprStmtNode(
+                  expr=FunctionCallExprNode(
+                    callee=IdentifierNode(
+                      name="w"
+                    )
                   )
                 )
               ),
-              ForInVariableNode(
-                name=IdentifierNode(
-                  name="y"
-                ),
-                type=RefExprNode(
-                  is_const=false,
-                  is_move=false,
-                  expr=IdentifierNode(
-                    name="String"
-                  )
-                )
-              )
-            ],
-            iterable=IdentifierNode(
-              name="z"
-            ),
-            body=ExprStmtNode(
-              expr=FunctionCallExprNode(
-                callee=IdentifierNode(
-                  name="w"
-                )
-              )
-            )
-          ),
-          EmptyStmtNode()
-        ]
-      )
+              EmptyStmtNode()
+            ]
+          )
+        )
+      ]
     )
   ]
 )

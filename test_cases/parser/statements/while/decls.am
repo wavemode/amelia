@@ -10,45 +10,63 @@ let example = {
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="example"
-      ),
-      expr=BlockExprNode(
-        stmts=[
-          WhileStmtNode(
-            introductory_decls=[
-              LetDeclNode(
-                target=IdentifierNode(
-                  name="w"
-                ),
-                expr=NumberLiteralNode(value=10)
-              ),
-              ConstDeclNode(
-                target=IdentifierNode(
-                  name="x"
-                ),
-                expr=AddExprNode(
-                  left=IdentifierNode(
-                    name="w"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="example"
+            )
+          ),
+          expr=BlockExprNode(
+            stmts=[
+              WhileStmtNode(
+                introductory_decls=[
+                  LetDeclNode(
+                    inits=[
+                      InitializerNode(
+                        pattern=IdentifierPatternNode(
+                          identifier=IdentifierNode(
+                            name="w"
+                          )
+                        ),
+                        expr=NumberLiteralNode(value=10)
+                      )
+                    ]
                   ),
-                  right=NumberLiteralNode(value=5)
+                  ConstDeclNode(
+                    inits=[
+                      InitializerNode(
+                        pattern=IdentifierPatternNode(
+                          identifier=IdentifierNode(
+                            name="x"
+                          )
+                        ),
+                        expr=AddExprNode(
+                          left=IdentifierNode(
+                            name="w"
+                          ),
+                          right=NumberLiteralNode(value=5)
+                        )
+                      )
+                    ]
+                  )
+                ],
+                condition=GreaterExprNode(
+                  left=IdentifierNode(
+                    name="x"
+                  ),
+                  right=NumberLiteralNode(value=20)
+                ),
+                body=ExprStmtNode(
+                  expr=IdentifierNode(
+                    name="z"
+                  )
                 )
               )
-            ],
-            condition=GreaterExprNode(
-              left=IdentifierNode(
-                name="x"
-              ),
-              right=NumberLiteralNode(value=20)
-            ),
-            body=ExprStmtNode(
-              expr=IdentifierNode(
-                name="z"
-              )
-            )
+            ]
           )
-        ]
-      )
+        )
+      ]
     )
   ]
 )

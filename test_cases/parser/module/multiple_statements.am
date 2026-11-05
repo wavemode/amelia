@@ -5,20 +5,32 @@ const a = b
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      expr=IdentifierNode(
-        name="y"
-      )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            )
+          ),
+          expr=IdentifierNode(
+            name="y"
+          )
+        )
+      ]
     ),
     ConstDeclNode(
-      target=IdentifierNode(
-        name="a"
-      ),
-      expr=IdentifierNode(
-        name="b"
-      )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="a"
+            )
+          ),
+          expr=IdentifierNode(
+            name="b"
+          )
+        )
+      ]
     )
   ]
 )

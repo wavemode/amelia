@@ -4,25 +4,31 @@ let f = fun(x) {}
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="f"
-      ),
-      expr=FunctionExprNode(
-        signature=FunctionSignatureNode(
-          parameters=[
-            FunctionParameterNode(
-              variadic=false,
-              name=IdentifierNode(
-                name="x"
-              )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="f"
             )
-          ]
-        ),
-        body=FunctionBodyNode(
-          is_default=false,
-          is_deleted=false
+          ),
+          expr=FunctionExprNode(
+            signature=FunctionSignatureNode(
+              parameters=[
+                FunctionParameterNode(
+                  variadic=false,
+                  name=IdentifierNode(
+                    name="x"
+                  )
+                )
+              ]
+            ),
+            body=FunctionBodyNode(
+              is_default=false,
+              is_deleted=false
+            )
+          )
         )
-      )
+      ]
     )
   ]
 )

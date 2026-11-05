@@ -4,21 +4,27 @@ let x = { .y = z }
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      expr=AnonymousStructLiteralNode(
-        entries=[
-          KeyValueEntryNode(
-            key=IdentifierNode(
-              name="y"
-            ),
-            value=IdentifierNode(
-              name="z"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
             )
+          ),
+          expr=AnonymousStructLiteralNode(
+            entries=[
+              KeyValueEntryNode(
+                key=IdentifierNode(
+                  name="y"
+                ),
+                value=IdentifierNode(
+                  name="z"
+                )
+              )
+            ]
           )
-        ]
-      )
+        )
+      ]
     )
   ]
 )

@@ -4,29 +4,35 @@ let x : { `a`: int, b: float }
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      type=AnonymousStructTypeNode(
-        entries=[
-          KeyValueEntryNode(
-            key=IdentifierNode(
-              name="a"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
             ),
-            value=BuiltinTypeNode(
-              kind=int
-            )
-          ),
-          KeyValueEntryNode(
-            key=IdentifierNode(
-              name="b"
-            ),
-            value=BuiltinTypeNode(
-              kind=float
+            type_annotation=AnonymousStructTypeNode(
+              entries=[
+                KeyValueEntryNode(
+                  key=IdentifierNode(
+                    name="a"
+                  ),
+                  value=BuiltinTypeNode(
+                    kind=int
+                  )
+                ),
+                KeyValueEntryNode(
+                  key=IdentifierNode(
+                    name="b"
+                  ),
+                  value=BuiltinTypeNode(
+                    kind=float
+                  )
+                )
+              ]
             )
           )
-        ]
-      )
+        )
+      ]
     )
   ]
 )

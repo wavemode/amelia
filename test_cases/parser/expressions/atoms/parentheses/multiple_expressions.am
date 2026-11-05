@@ -8,18 +8,24 @@ let x = (
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      expr=ParenthesizedExprNode(
-        exprs=[
-          NumberLiteralNode(value=5),
-          StringLiteralNode(
-            lit="hello"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            )
           ),
-          NumberLiteralNode(value=6.7)
-        ]
-      )
+          expr=ParenthesizedExprNode(
+            exprs=[
+              NumberLiteralNode(value=5),
+              StringLiteralNode(
+                lit="hello"
+              ),
+              NumberLiteralNode(value=6.7)
+            ]
+          )
+        )
+      ]
     )
   ]
 )

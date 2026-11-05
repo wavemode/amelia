@@ -4,23 +4,29 @@ let x = !y[z]
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      expr=NotExprNode(
-        expr=IndexingExprNode(
-          object=IdentifierNode(
-            name="y"
-          ),
-          indices=[
-            IndexNode(
-              value=IdentifierNode(
-                name="z"
-              )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
             )
-          ]
+          ),
+          expr=NotExprNode(
+            expr=IndexingExprNode(
+              object=IdentifierNode(
+                name="y"
+              ),
+              indices=[
+                IndexNode(
+                  value=IdentifierNode(
+                    name="z"
+                  )
+                )
+              ]
+            )
+          )
         )
-      )
+      ]
     )
   ]
 )

@@ -4,39 +4,45 @@ let z = (x : int, y: float) -> x + y
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="z"
-      ),
-      expr=LambdaExprNode(
-        parameters=[
-          FunctionParameterNode(
-            variadic=false,
-            name=IdentifierNode(
-              name="x"
-            ),
-            type=BuiltinTypeNode(
-              kind=int
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="z"
             )
           ),
-          FunctionParameterNode(
-            variadic=false,
-            name=IdentifierNode(
-              name="y"
-            ),
-            type=BuiltinTypeNode(
-              kind=float
+          expr=LambdaExprNode(
+            parameters=[
+              FunctionParameterNode(
+                variadic=false,
+                name=IdentifierNode(
+                  name="x"
+                ),
+                type=BuiltinTypeNode(
+                  kind=int
+                )
+              ),
+              FunctionParameterNode(
+                variadic=false,
+                name=IdentifierNode(
+                  name="y"
+                ),
+                type=BuiltinTypeNode(
+                  kind=float
+                )
+              )
+            ],
+            body=AddExprNode(
+              left=IdentifierNode(
+                name="x"
+              ),
+              right=IdentifierNode(
+                name="y"
+              )
             )
-          )
-        ],
-        body=AddExprNode(
-          left=IdentifierNode(
-            name="x"
-          ),
-          right=IdentifierNode(
-            name="y"
           )
         )
-      )
+      ]
     )
   ]
 )

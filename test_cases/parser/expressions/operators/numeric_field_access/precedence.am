@@ -4,17 +4,23 @@ let x = !y.0
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      expr=NotExprNode(
-        expr=NumericFieldAccessExprNode(
-          object=IdentifierNode(
-            name="y"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            )
           ),
-          field="0"
+          expr=NotExprNode(
+            expr=NumericFieldAccessExprNode(
+              object=IdentifierNode(
+                name="y"
+              ),
+              field="0"
+            )
+          )
         )
-      )
+      ]
     )
   ]
 )

@@ -4,15 +4,21 @@ let x : [4]int
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      type=ArrayExprNode(
-        size=NumberLiteralNode(value=4),
-        type_expr=BuiltinTypeNode(
-          kind=int
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            ),
+            type_annotation=ArrayExprNode(
+              size=NumberLiteralNode(value=4),
+              type_expr=BuiltinTypeNode(
+                kind=int
+              )
+            )
+          )
         )
-      )
+      ]
     )
   ]
 )

@@ -4,16 +4,22 @@ let x = implicit(f)()
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      expr=FunctionCallExprNode(
-        callee=ImplicitExprNode(
-          name=IdentifierNode(
-            name="f"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            )
+          ),
+          expr=FunctionCallExprNode(
+            callee=ImplicitExprNode(
+              name=IdentifierNode(
+                name="f"
+              )
+            )
           )
         )
-      )
+      ]
     )
   ]
 )

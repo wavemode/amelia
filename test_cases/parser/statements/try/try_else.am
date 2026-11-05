@@ -12,28 +12,58 @@ let example = {
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="example"
-      ),
-      expr=BlockExprNode(
-        stmts=[
-          TryStmtNode(
-            try_block=BlockStmtNode(
-              stmts=[
-                LetDeclNode(
-                  target=IdentifierNode(
-                    name="x"
-                  ),
-                  expr=NumberLiteralNode(value=10)
-                )
-              ]
-            ),
-            catch_clauses=[
-              CatchClauseNode(
-                exc_type=IdentifierNode(
-                  name="e"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="example"
+            )
+          ),
+          expr=BlockExprNode(
+            stmts=[
+              TryStmtNode(
+                try_block=BlockStmtNode(
+                  stmts=[
+                    LetDeclNode(
+                      inits=[
+                        InitializerNode(
+                          pattern=IdentifierPatternNode(
+                            identifier=IdentifierNode(
+                              name="x"
+                            )
+                          ),
+                          expr=NumberLiteralNode(value=10)
+                        )
+                      ]
+                    )
+                  ]
                 ),
-                body=BlockStmtNode(
+                catch_clauses=[
+                  CatchClauseNode(
+                    exc_type=IdentifierNode(
+                      name="e"
+                    ),
+                    body=BlockStmtNode(
+                      stmts=[
+                        ExprStmtNode(
+                          expr=FunctionCallExprNode(
+                            callee=IdentifierNode(
+                              name="println"
+                            ),
+                            args=[
+                              FunctionArgumentNode(
+                                expr=StringLiteralNode(
+                                  lit="error"
+                                )
+                              )
+                            ]
+                          )
+                        )
+                      ]
+                    )
+                  )
+                ],
+                else_branch=BlockStmtNode(
                   stmts=[
                     ExprStmtNode(
                       expr=FunctionCallExprNode(
@@ -42,8 +72,8 @@ ModuleNode(
                         ),
                         args=[
                           FunctionArgumentNode(
-                            expr=StringLiteralNode(
-                              lit="error"
+                            expr=IdentifierNode(
+                              name="x"
                             )
                           )
                         ]
@@ -52,28 +82,10 @@ ModuleNode(
                   ]
                 )
               )
-            ],
-            else_branch=BlockStmtNode(
-              stmts=[
-                ExprStmtNode(
-                  expr=FunctionCallExprNode(
-                    callee=IdentifierNode(
-                      name="println"
-                    ),
-                    args=[
-                      FunctionArgumentNode(
-                        expr=IdentifierNode(
-                          name="x"
-                        )
-                      )
-                    ]
-                  )
-                )
-              ]
-            )
+            ]
           )
-        ]
-      )
+        )
+      ]
     )
   ]
 )

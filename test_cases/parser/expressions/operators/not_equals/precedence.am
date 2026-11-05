@@ -4,22 +4,28 @@ let w = x & y != z
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="w"
-      ),
-      expr=BitwiseAndExprNode(
-        left=IdentifierNode(
-          name="x"
-        ),
-        right=NotEqualsExprNode(
-          left=IdentifierNode(
-            name="y"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="w"
+            )
           ),
-          right=IdentifierNode(
-            name="z"
+          expr=BitwiseAndExprNode(
+            left=IdentifierNode(
+              name="x"
+            ),
+            right=NotEqualsExprNode(
+              left=IdentifierNode(
+                name="y"
+              ),
+              right=IdentifierNode(
+                name="z"
+              )
+            )
           )
         )
-      )
+      ]
     )
   ]
 )

@@ -6,30 +6,36 @@ let x = {
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      expr=BlockExprNode(
-        stmts=[
-          WithStmtNode(
-            args=[
-              FunctionArgumentNode(
-                name=IdentifierNode(
-                  name="a"
-                ),
-                expr=IdentifierNode(
-                  name="b"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            )
+          ),
+          expr=BlockExprNode(
+            stmts=[
+              WithStmtNode(
+                args=[
+                  FunctionArgumentNode(
+                    name=IdentifierNode(
+                      name="a"
+                    ),
+                    expr=IdentifierNode(
+                      name="b"
+                    )
+                  )
+                ],
+                body=PreIncrementStmtNode(
+                  target=IdentifierNode(
+                    name="d"
+                  )
                 )
               )
-            ],
-            body=PreIncrementStmtNode(
-              target=IdentifierNode(
-                name="d"
-              )
-            )
+            ]
           )
-        ]
-      )
+        )
+      ]
     )
   ]
 )

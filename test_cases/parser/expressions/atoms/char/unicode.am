@@ -4,15 +4,21 @@ let c : char = '日'
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="c"
-      ),
-      type=BuiltinTypeNode(
-        kind=char
-      ),
-      expr=CharLiteralNode(
-        lit='\U000065E5'
-      )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="c"
+            ),
+            type_annotation=BuiltinTypeNode(
+              kind=char
+            )
+          ),
+          expr=CharLiteralNode(
+            lit='\U000065E5'
+          )
+        )
+      ]
     )
   ]
 )

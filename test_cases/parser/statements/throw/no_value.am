@@ -7,19 +7,25 @@ let example = {
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="example"
-      ),
-      expr=BlockExprNode(
-        stmts=[
-          ThrowStmtNode(),
-          ExprStmtNode(
-            expr=IdentifierNode(
-              name="x"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="example"
             )
+          ),
+          expr=BlockExprNode(
+            stmts=[
+              ThrowStmtNode(),
+              ExprStmtNode(
+                expr=IdentifierNode(
+                  name="x"
+                )
+              )
+            ]
           )
-        ]
-      )
+        )
+      ]
     )
   ]
 )

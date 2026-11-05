@@ -9,36 +9,42 @@ let example = {
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="example"
-      ),
-      expr=BlockExprNode(
-        stmts=[
-          WhileStmtNode(
-            condition=IdentifierNode(
-              name="x"
-            ),
-            body=BlockStmtNode(
-              stmts=[
-                ExprStmtNode(
-                  expr=FunctionCallExprNode(
-                    callee=IdentifierNode(
-                      name="z"
-                    )
-                  )
-                ),
-                ExprStmtNode(
-                  expr=FunctionCallExprNode(
-                    callee=IdentifierNode(
-                      name="t"
-                    )
-                  )
-                )
-              ]
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="example"
             )
+          ),
+          expr=BlockExprNode(
+            stmts=[
+              WhileStmtNode(
+                condition=IdentifierNode(
+                  name="x"
+                ),
+                body=BlockStmtNode(
+                  stmts=[
+                    ExprStmtNode(
+                      expr=FunctionCallExprNode(
+                        callee=IdentifierNode(
+                          name="z"
+                        )
+                      )
+                    ),
+                    ExprStmtNode(
+                      expr=FunctionCallExprNode(
+                        callee=IdentifierNode(
+                          name="t"
+                        )
+                      )
+                    )
+                  ]
+                )
+              )
+            ]
           )
-        ]
-      )
+        )
+      ]
     )
   ]
 )

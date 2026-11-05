@@ -7,25 +7,31 @@ let z = {
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="z"
-      ),
-      expr=BlockExprNode(
-        stmts=[
-          BitwiseXorAssignStmtNode(
-            target=IdentifierNode(
-              name="x"
-            ),
-            expr=NumberLiteralNode(value=5)
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="z"
+            )
           ),
-          BitwiseXorAssignStmtNode(
-            target=IdentifierNode(
-              name="y"
-            ),
-            expr=NumberLiteralNode(value=6)
+          expr=BlockExprNode(
+            stmts=[
+              BitwiseXorAssignStmtNode(
+                target=IdentifierNode(
+                  name="x"
+                ),
+                expr=NumberLiteralNode(value=5)
+              ),
+              BitwiseXorAssignStmtNode(
+                target=IdentifierNode(
+                  name="y"
+                ),
+                expr=NumberLiteralNode(value=6)
+              )
+            ]
           )
-        ]
-      )
+        )
+      ]
     )
   ]
 )

@@ -4,24 +4,30 @@ let x = $ y.z*w
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      expr=MultiplyExprNode(
-        left=DollarSignExprNode(
-          expr=FieldAccessExprNode(
-            object=IdentifierNode(
-              name="y"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            )
+          ),
+          expr=MultiplyExprNode(
+            left=DollarSignExprNode(
+              expr=FieldAccessExprNode(
+                object=IdentifierNode(
+                  name="y"
+                ),
+                field=IdentifierNode(
+                  name="z"
+                )
+              )
             ),
-            field=IdentifierNode(
-              name="z"
+            right=IdentifierNode(
+              name="w"
             )
           )
-        ),
-        right=IdentifierNode(
-          name="w"
         )
-      )
+      ]
     )
   ]
 )

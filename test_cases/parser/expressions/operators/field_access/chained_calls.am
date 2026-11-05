@@ -8,33 +8,39 @@ let x = a
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      expr=FunctionCallExprNode(
-        callee=FieldAccessExprNode(
-          object=FunctionCallExprNode(
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            )
+          ),
+          expr=FunctionCallExprNode(
             callee=FieldAccessExprNode(
               object=FunctionCallExprNode(
                 callee=FieldAccessExprNode(
-                  object=IdentifierNode(
-                    name="a"
+                  object=FunctionCallExprNode(
+                    callee=FieldAccessExprNode(
+                      object=IdentifierNode(
+                        name="a"
+                      ),
+                      field=IdentifierNode(
+                        name="b"
+                      )
+                    )
                   ),
                   field=IdentifierNode(
-                    name="b"
+                    name="c"
                   )
                 )
               ),
               field=IdentifierNode(
-                name="c"
+                name="d"
               )
             )
-          ),
-          field=IdentifierNode(
-            name="d"
           )
         )
-      )
+      ]
     )
   ]
 )

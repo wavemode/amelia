@@ -4,12 +4,18 @@ let x = "hello, world!"
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      expr=StringLiteralNode(
-        lit="hello, world!"
-      )
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            )
+          ),
+          expr=StringLiteralNode(
+            lit="hello, world!"
+          )
+        )
+      ]
     )
   ]
 )

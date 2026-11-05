@@ -9,42 +9,60 @@ else z
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="a"
-      ),
-      expr=IfExprNode(
-        introductory_decls=[
-          LetDeclNode(
-            target=IdentifierNode(
-              name="w"
-            ),
-            expr=NumberLiteralNode(value=10)
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="a"
+            )
           ),
-          ConstDeclNode(
-            target=IdentifierNode(
-              name="x"
-            ),
-            expr=AddExprNode(
-              left=IdentifierNode(
-                name="w"
+          expr=IfExprNode(
+            introductory_decls=[
+              LetDeclNode(
+                inits=[
+                  InitializerNode(
+                    pattern=IdentifierPatternNode(
+                      identifier=IdentifierNode(
+                        name="w"
+                      )
+                    ),
+                    expr=NumberLiteralNode(value=10)
+                  )
+                ]
               ),
-              right=NumberLiteralNode(value=5)
+              ConstDeclNode(
+                inits=[
+                  InitializerNode(
+                    pattern=IdentifierPatternNode(
+                      identifier=IdentifierNode(
+                        name="x"
+                      )
+                    ),
+                    expr=AddExprNode(
+                      left=IdentifierNode(
+                        name="w"
+                      ),
+                      right=NumberLiteralNode(value=5)
+                    )
+                  )
+                ]
+              )
+            ],
+            condition=GreaterExprNode(
+              left=IdentifierNode(
+                name="x"
+              ),
+              right=NumberLiteralNode(value=10)
+            ),
+            then_branch=IdentifierNode(
+              name="y"
+            ),
+            else_branch=IdentifierNode(
+              name="z"
             )
           )
-        ],
-        condition=GreaterExprNode(
-          left=IdentifierNode(
-            name="x"
-          ),
-          right=NumberLiteralNode(value=10)
-        ),
-        then_branch=IdentifierNode(
-          name="y"
-        ),
-        else_branch=IdentifierNode(
-          name="z"
         )
-      )
+      ]
     )
   ]
 )

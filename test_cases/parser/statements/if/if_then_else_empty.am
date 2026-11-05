@@ -6,20 +6,26 @@ let a = {
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="a"
-      ),
-      expr=BlockExprNode(
-        stmts=[
-          IfStmtNode(
-            condition=IdentifierNode(
-              name="x"
-            ),
-            then_branch=EmptyStmtNode(),
-            else_branch=EmptyStmtNode()
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="a"
+            )
+          ),
+          expr=BlockExprNode(
+            stmts=[
+              IfStmtNode(
+                condition=IdentifierNode(
+                  name="x"
+                ),
+                then_branch=EmptyStmtNode(),
+                else_branch=EmptyStmtNode()
+              )
+            ]
           )
-        ]
-      )
+        )
+      ]
     )
   ]
 )

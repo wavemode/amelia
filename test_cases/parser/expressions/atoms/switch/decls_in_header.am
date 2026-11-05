@@ -11,53 +11,71 @@ let x = switch(
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      expr=SwitchExprNode(
-        introductory_decls=[
-          LetDeclNode(
-            target=IdentifierNode(
-              name="z"
-            ),
-            expr=NumberLiteralNode(value=10)
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            )
           ),
-          ConstDeclNode(
-            target=IdentifierNode(
+          expr=SwitchExprNode(
+            introductory_decls=[
+              LetDeclNode(
+                inits=[
+                  InitializerNode(
+                    pattern=IdentifierPatternNode(
+                      identifier=IdentifierNode(
+                        name="z"
+                      )
+                    ),
+                    expr=NumberLiteralNode(value=10)
+                  )
+                ]
+              ),
+              ConstDeclNode(
+                inits=[
+                  InitializerNode(
+                    pattern=IdentifierPatternNode(
+                      identifier=IdentifierNode(
+                        name="y"
+                      )
+                    ),
+                    expr=AddExprNode(
+                      left=IdentifierNode(
+                        name="x"
+                      ),
+                      right=IdentifierNode(
+                        name="z"
+                      )
+                    )
+                  )
+                ]
+              )
+            ],
+            expr=IdentifierNode(
               name="y"
             ),
-            expr=AddExprNode(
-              left=IdentifierNode(
-                name="x"
+            clauses=[
+              CaseClauseNode(
+                header=CaseClauseHeaderNode(
+                  exprs=[
+                    NumberLiteralNode(value=1)
+                  ]
+                ),
+                body=NumberLiteralNode(value=2)
               ),
-              right=IdentifierNode(
-                name="z"
+              CaseClauseNode(
+                header=CaseClauseHeaderNode(
+                  exprs=[
+                    NumberLiteralNode(value=3)
+                  ]
+                ),
+                body=NumberLiteralNode(value=4)
               )
-            )
+            ]
           )
-        ],
-        expr=IdentifierNode(
-          name="y"
-        ),
-        clauses=[
-          CaseClauseNode(
-            header=CaseClauseHeaderNode(
-              exprs=[
-                NumberLiteralNode(value=1)
-              ]
-            ),
-            body=NumberLiteralNode(value=2)
-          ),
-          CaseClauseNode(
-            header=CaseClauseHeaderNode(
-              exprs=[
-                NumberLiteralNode(value=3)
-              ]
-            ),
-            body=NumberLiteralNode(value=4)
-          )
-        ]
-      )
+        )
+      ]
     )
   ]
 )

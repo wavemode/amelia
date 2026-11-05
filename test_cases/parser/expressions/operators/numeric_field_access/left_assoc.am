@@ -4,18 +4,24 @@ let w = x.0.1
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="w"
-      ),
-      expr=NumericFieldAccessExprNode(
-        object=NumericFieldAccessExprNode(
-          object=IdentifierNode(
-            name="x"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="w"
+            )
           ),
-          field="0"
-        ),
-        field="1"
-      )
+          expr=NumericFieldAccessExprNode(
+            object=NumericFieldAccessExprNode(
+              object=IdentifierNode(
+                name="x"
+              ),
+              field="0"
+            ),
+            field="1"
+          )
+        )
+      ]
     )
   ]
 )

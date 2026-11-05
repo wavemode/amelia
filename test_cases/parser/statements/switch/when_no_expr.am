@@ -9,57 +9,63 @@ let example = {
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="example"
-      ),
-      expr=BlockExprNode(
-        stmts=[
-          SwitchStmtNode(
-            expr=IdentifierNode(
-              name="y"
-            ),
-            clauses=[
-              CaseClauseNode(
-                header=CaseClauseHeaderNode(
-                  exprs=[
-                    NumberLiteralNode(value=1)
-                  ]
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="example"
+            )
+          ),
+          expr=BlockExprNode(
+            stmts=[
+              SwitchStmtNode(
+                expr=IdentifierNode(
+                  name="y"
                 ),
-                body=PreIncrementStmtNode(
-                  target=IdentifierNode(
-                    name="y"
-                  )
-                )
-              ),
-              CaseClauseNode(
-                header=CaseClauseHeaderNode(
-                  when_clause=WhenClauseNode(
-                    condition=AndExprNode(
-                      left=LessExprNode(
-                        left=IdentifierNode(
-                          name="y"
-                        ),
-                        right=NumberLiteralNode(value=10)
-                      ),
-                      right=GreaterExprNode(
-                        left=IdentifierNode(
-                          name="y"
-                        ),
-                        right=NumberLiteralNode(value=3)
+                clauses=[
+                  CaseClauseNode(
+                    header=CaseClauseHeaderNode(
+                      exprs=[
+                        NumberLiteralNode(value=1)
+                      ]
+                    ),
+                    body=PreIncrementStmtNode(
+                      target=IdentifierNode(
+                        name="y"
+                      )
+                    )
+                  ),
+                  CaseClauseNode(
+                    header=CaseClauseHeaderNode(
+                      when_clause=WhenClauseNode(
+                        condition=AndExprNode(
+                          left=LessExprNode(
+                            left=IdentifierNode(
+                              name="y"
+                            ),
+                            right=NumberLiteralNode(value=10)
+                          ),
+                          right=GreaterExprNode(
+                            left=IdentifierNode(
+                              name="y"
+                            ),
+                            right=NumberLiteralNode(value=3)
+                          )
+                        )
+                      )
+                    ),
+                    body=PreDecrementStmtNode(
+                      target=IdentifierNode(
+                        name="y"
                       )
                     )
                   )
-                ),
-                body=PreDecrementStmtNode(
-                  target=IdentifierNode(
-                    name="y"
-                  )
-                )
+                ]
               )
             ]
           )
-        ]
-      )
+        )
+      ]
     )
   ]
 )

@@ -4,14 +4,20 @@ let x : []T
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      type=ArrayExprNode(
-        type_expr=IdentifierNode(
-          name="T"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            ),
+            type_annotation=ArrayExprNode(
+              type_expr=IdentifierNode(
+                name="T"
+              )
+            )
+          )
         )
-      )
+      ]
     )
   ]
 )

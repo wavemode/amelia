@@ -4,31 +4,37 @@ let w = x(y=5)(z)
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="w"
-      ),
-      expr=FunctionCallExprNode(
-        callee=FunctionCallExprNode(
-          callee=IdentifierNode(
-            name="x"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="w"
+            )
           ),
-          args=[
-            FunctionArgumentNode(
-              name=IdentifierNode(
-                name="y"
+          expr=FunctionCallExprNode(
+            callee=FunctionCallExprNode(
+              callee=IdentifierNode(
+                name="x"
               ),
-              expr=NumberLiteralNode(value=5)
-            )
-          ]
-        ),
-        args=[
-          FunctionArgumentNode(
-            expr=IdentifierNode(
-              name="z"
-            )
+              args=[
+                FunctionArgumentNode(
+                  name=IdentifierNode(
+                    name="y"
+                  ),
+                  expr=NumberLiteralNode(value=5)
+                )
+              ]
+            ),
+            args=[
+              FunctionArgumentNode(
+                expr=IdentifierNode(
+                  name="z"
+                )
+              )
+            ]
           )
-        ]
-      )
+        )
+      ]
     )
   ]
 )

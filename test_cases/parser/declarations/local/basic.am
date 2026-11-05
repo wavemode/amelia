@@ -6,13 +6,19 @@ ModuleNode(
     VisibilityNode(
       visibility=local,
       decl=ConstDeclNode(
-        target=IdentifierNode(
-          name="x"
-        ),
-        type=BuiltinTypeNode(
-          kind=int
-        ),
-        expr=NumberLiteralNode(value=40)
+        inits=[
+          InitializerNode(
+            pattern=IdentifierPatternNode(
+              identifier=IdentifierNode(
+                name="x"
+              ),
+              type_annotation=BuiltinTypeNode(
+                kind=int
+              )
+            ),
+            expr=NumberLiteralNode(value=40)
+          )
+        ]
       )
     )
   ]

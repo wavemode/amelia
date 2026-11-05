@@ -8,30 +8,48 @@ let x = {
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      expr=BlockExprNode(
-        stmts=[
-          LetDeclNode(
-            target=IdentifierNode(
-              name="y"
-            ),
-            expr=NumberLiteralNode(value=1)
-          ),
-          LetDeclNode(
-            target=IdentifierNode(
-              name="a"
-            ),
-            expr=NumberLiteralNode(value=2)
-          ),
-          ExprStmtNode(
-            expr=IdentifierNode(
-              name="a"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
             )
+          ),
+          expr=BlockExprNode(
+            stmts=[
+              LetDeclNode(
+                inits=[
+                  InitializerNode(
+                    pattern=IdentifierPatternNode(
+                      identifier=IdentifierNode(
+                        name="y"
+                      )
+                    ),
+                    expr=NumberLiteralNode(value=1)
+                  )
+                ]
+              ),
+              LetDeclNode(
+                inits=[
+                  InitializerNode(
+                    pattern=IdentifierPatternNode(
+                      identifier=IdentifierNode(
+                        name="a"
+                      )
+                    ),
+                    expr=NumberLiteralNode(value=2)
+                  )
+                ]
+              ),
+              ExprStmtNode(
+                expr=IdentifierNode(
+                  name="a"
+                )
+              )
+            ]
           )
-        ]
-      )
+        )
+      ]
     )
   ]
 )

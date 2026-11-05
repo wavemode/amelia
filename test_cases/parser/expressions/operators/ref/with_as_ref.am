@@ -4,25 +4,31 @@ let x = &y as &T
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      expr=AsExprNode(
-        expr=RefExprNode(
-          is_const=false,
-          is_move=false,
-          expr=IdentifierNode(
-            name="y"
-          )
-        ),
-        type=RefExprNode(
-          is_const=false,
-          is_move=false,
-          expr=IdentifierNode(
-            name="T"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            )
+          ),
+          expr=AsExprNode(
+            expr=RefExprNode(
+              is_const=false,
+              is_move=false,
+              expr=IdentifierNode(
+                name="y"
+              )
+            ),
+            type=RefExprNode(
+              is_const=false,
+              is_move=false,
+              expr=IdentifierNode(
+                name="T"
+              )
+            )
           )
         )
-      )
+      ]
     )
   ]
 )

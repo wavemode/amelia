@@ -9,45 +9,51 @@ let example = {
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="example"
-      ),
-      expr=BlockExprNode(
-        stmts=[
-          SwitchStmtNode(
-            expr=IdentifierNode(
-              name="y"
-            ),
-            clauses=[
-              CaseClauseNode(
-                header=CaseClauseHeaderNode(
-                  exprs=[
-                    NumberLiteralNode(value=1)
-                  ]
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="example"
+            )
+          ),
+          expr=BlockExprNode(
+            stmts=[
+              SwitchStmtNode(
+                expr=IdentifierNode(
+                  name="y"
                 ),
-                body=PreIncrementStmtNode(
-                  target=IdentifierNode(
-                    name="x"
+                clauses=[
+                  CaseClauseNode(
+                    header=CaseClauseHeaderNode(
+                      exprs=[
+                        NumberLiteralNode(value=1)
+                      ]
+                    ),
+                    body=PreIncrementStmtNode(
+                      target=IdentifierNode(
+                        name="x"
+                      )
+                    )
+                  ),
+                  CaseClauseNode(
+                    header=CaseClauseHeaderNode(
+                      exprs=[
+                        NumberLiteralNode(value=3),
+                        NumberLiteralNode(value=4)
+                      ]
+                    ),
+                    body=PreIncrementStmtNode(
+                      target=IdentifierNode(
+                        name="y"
+                      )
+                    )
                   )
-                )
-              ),
-              CaseClauseNode(
-                header=CaseClauseHeaderNode(
-                  exprs=[
-                    NumberLiteralNode(value=3),
-                    NumberLiteralNode(value=4)
-                  ]
-                ),
-                body=PreIncrementStmtNode(
-                  target=IdentifierNode(
-                    name="y"
-                  )
-                )
+                ]
               )
             ]
           )
-        ]
-      )
+        )
+      ]
     )
   ]
 )

@@ -4,10 +4,16 @@ let x = {}
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="x"
-      ),
-      expr=AnonymousStructLiteralNode()
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            )
+          ),
+          expr=AnonymousStructLiteralNode()
+        )
+      ]
     )
   ]
 )

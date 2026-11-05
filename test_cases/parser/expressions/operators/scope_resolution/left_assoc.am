@@ -4,22 +4,28 @@ let w = x::y::z
 ModuleNode(
   decls=[
     LetDeclNode(
-      target=IdentifierNode(
-        name="w"
-      ),
-      expr=ScopeResolutionExprNode(
-        scope=ScopeResolutionExprNode(
-          scope=IdentifierNode(
-            name="x"
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="w"
+            )
           ),
-          name=IdentifierNode(
-            name="y"
+          expr=ScopeResolutionExprNode(
+            scope=ScopeResolutionExprNode(
+              scope=IdentifierNode(
+                name="x"
+              ),
+              name=IdentifierNode(
+                name="y"
+              )
+            ),
+            name=IdentifierNode(
+              name="z"
+            )
           )
-        ),
-        name=IdentifierNode(
-          name="z"
         )
-      )
+      ]
     )
   ]
 )
