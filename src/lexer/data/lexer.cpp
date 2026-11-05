@@ -54,7 +54,6 @@ const Map<Text, TokenType> RESERVED_WORDS = Map<Text, TokenType>({
     {"type", TokenType::KEYWORD_TYPE},
     {"typeof", TokenType::KEYWORD_TYPEOF},
     {"concept", TokenType::KEYWORD_CONCEPT},
-    {"auto", TokenType::KEYWORD_AUTO},
     {"let", TokenType::KEYWORD_LET},
     {"const", TokenType::KEYWORD_CONST},
     {"impl", TokenType::KEYWORD_IMPL},

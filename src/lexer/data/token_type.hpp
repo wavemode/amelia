@@ -29,7 +29,6 @@ using TokenId = int32_t;
   X(KEYWORD_TYPE)                                                              \
   X(KEYWORD_TYPEOF)                                                            \
   X(KEYWORD_CONCEPT)                                                           \
-  X(KEYWORD_AUTO)                                                              \
   X(KEYWORD_LET)                                                               \
   X(KEYWORD_CONST)                                                             \
   X(KEYWORD_IMPL)                                                              \

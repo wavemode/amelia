@@ -37,7 +37,6 @@ record
 sealed
 type
 concept
-auto
 let
 const
 impl
@@ -116,7 +115,6 @@ KEYWORD_RECORD(record)
 KEYWORD_SEALED(sealed)
 KEYWORD_TYPE(type)
 KEYWORD_CONCEPT(concept)
-KEYWORD_AUTO(auto)
 KEYWORD_LET(let)
 KEYWORD_CONST(const)
 KEYWORD_IMPL(impl)

@@ -757,8 +757,6 @@ struct BitIntTypeNode {
   bool is_signed;
 };
 
-struct AutoTypeNode {};
-
 struct ImportDeclNode {
   NodeId path;
   Option<List<NodeId>> items;
@@ -1017,7 +1015,6 @@ struct TypeFieldNode {};
   X(DefaultLiteralNode)                                                        \
   X(BuiltinTypeNode)                                                           \
   X(BitIntTypeNode)                                                            \
-  X(AutoTypeNode)                                                              \
   X(ImportDeclNode)                                                            \
   X(ImportItemNode)                                                            \
   X(ImportItemWildcardNode)                                                    \

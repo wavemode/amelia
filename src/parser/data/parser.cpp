@@ -1973,8 +1973,6 @@ public:
     case TokenType::KEYWORD_BITINT:
     case TokenType::KEYWORD_UBITINT:
       return parse_bitint_type();
-    case TokenType::KEYWORD_AUTO:
-      return parse_auto_type();
     case TokenType::KEYWORD_WITH:
       return parse_with_expr();
     case TokenType::KEYWORD_TYPEOF:
@@ -2148,8 +2146,6 @@ public:
     case TokenType::KEYWORD_BITINT:
     case TokenType::KEYWORD_UBITINT:
       return parse_bitint_type();
-    case TokenType::KEYWORD_AUTO:
-      return parse_auto_type();
     case TokenType::KEYWORD_TYPEOF:
       return parse_typeof_expr();
     default:
@@ -2245,11 +2241,6 @@ public:
     NodeId body = parse_expr();
     return m_output.add_node(with_token.id, m_token_index,
                              WithExprNode{move(args), body});
-  }
-
-  NodeId parse_auto_type() {
-    auto auto_token = next();
-    return m_output.add_node(auto_token.id, m_token_index, AutoTypeNode{});
   }
 
   NodeId parse_builtin_type() {

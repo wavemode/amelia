@@ -911,9 +911,6 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_boolean_field(out, "is_signed", n.is_signed);
     break;
   }
-  case NodeType::AutoTypeNode: {
-    break;
-  }
   case NodeType::ImportDeclNode: {
     const auto &n = node.as_ImportDeclNode();
     print_node_field(out, "path", n.path);
