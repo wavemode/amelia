@@ -1,0 +1,43 @@
+const [ a, b : int, [c] ] = d
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ConstDeclNode(
+      inits=[
+        InitializerNode(
+          pattern=ArrayPatternNode(
+            elements=[
+              IdentifierPatternNode(
+                identifier=IdentifierNode(
+                  name="a"
+                )
+              ),
+              IdentifierPatternNode(
+                identifier=IdentifierNode(
+                  name="b"
+                ),
+                type_annotation=BuiltinTypeNode(
+                  kind=int
+                )
+              ),
+              ArrayPatternNode(
+                elements=[
+                  IdentifierPatternNode(
+                    identifier=IdentifierNode(
+                      name="c"
+                    )
+                  )
+                ]
+              )
+            ]
+          ),
+          expr=IdentifierNode(
+            name="d"
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

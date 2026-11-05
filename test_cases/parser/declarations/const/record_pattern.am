@@ -1,0 +1,53 @@
+const { a, b : int, c : int = d, } = e
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ConstDeclNode(
+      inits=[
+        InitializerNode(
+          pattern=StructPatternNode(
+            elements=[
+              StructFieldPatternNode(
+                field=IdentifierPatternNode(
+                  identifier=IdentifierNode(
+                    name="a"
+                  )
+                )
+              ),
+              StructFieldPatternNode(
+                field=IdentifierPatternNode(
+                  identifier=IdentifierNode(
+                    name="b"
+                  ),
+                  type_annotation=BuiltinTypeNode(
+                    kind=int
+                  )
+                )
+              ),
+              StructFieldPatternNode(
+                pattern=IdentifierPatternNode(
+                  identifier=IdentifierNode(
+                    name="c"
+                  ),
+                  type_annotation=BuiltinTypeNode(
+                    kind=int
+                  )
+                ),
+                field=IdentifierPatternNode(
+                  identifier=IdentifierNode(
+                    name="d"
+                  )
+                )
+              )
+            ]
+          ),
+          expr=IdentifierNode(
+            name="e"
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

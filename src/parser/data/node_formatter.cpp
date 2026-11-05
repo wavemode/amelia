@@ -36,6 +36,27 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "type_annotation", n.type_annotation);
     break;
   }
+  case NodeType::ArrayPatternNode: {
+    const auto &n = node.as_ArrayPatternNode();
+    print_node_field(out, "elements", n.elements);
+    break;
+  }
+  case NodeType::TuplePatternNode: {
+    const auto &n = node.as_TuplePatternNode();
+    print_node_field(out, "elements", n.elements);
+    break;
+  }
+  case NodeType::StructFieldPatternNode: {
+    const auto &n = node.as_StructFieldPatternNode();
+    print_node_field(out, "pattern", n.pattern);
+    print_node_field(out, "field", n.field);
+    break;
+  }
+  case NodeType::StructPatternNode: {
+    const auto &n = node.as_StructPatternNode();
+    print_node_field(out, "elements", n.elements);
+    break;
+  }
   case NodeType::InitializerNode: {
     const auto &n = node.as_InitializerNode();
     print_node_field(out, "pattern", n.pattern);

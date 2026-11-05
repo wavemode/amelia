@@ -12,10 +12,14 @@ namespace amelia {
 
 namespace {
 
-bool is_identifier(TokenType type) {
+bool is_user_defined_identifier(TokenType type) {
   return type == TokenType::IDENTIFIER || type == TokenType::IDENTIFIER_NO_W ||
          type == TokenType::QUOTED_IDENTIFIER ||
-         type == TokenType::QUOTED_IDENTIFIER_NO_W ||
+         type == TokenType::QUOTED_IDENTIFIER_NO_W;
+}
+
+bool is_identifier(TokenType type) {
+  return is_user_defined_identifier(type) ||
          type == TokenType::KEYWORD_THIS_TYPE;
 }
 
@@ -1419,26 +1423,117 @@ public:
                              PreDecrementStmtNode{operand});
   }
 
-  NodeId parse_initializer_pattern() {
+  NodeId parse_identifier_pattern() {
     auto start_token = peek();
-    switch (start_token.type) {
+    NodeId identifier = parse_identifier();
+    Option<NodeId> type_annotation;
+    if (peek().type == TokenType::COLON) {
+      ++m_token_index; // skip ':'
+      type_annotation = parse_type_expr();
+    }
+    return m_output.add_node(
+        start_token.id, m_token_index,
+        IdentifierPatternNode{identifier, type_annotation});
+  }
+
+  NodeId parse_tuple_pattern() {
+    auto start_token = peek();
+    ++m_token_index; // skip '('
+    List<NodeId> elements;
+    while (peek().type != TokenType::RIGHT_PAREN) {
+      elements.push_back(parse_initializer_pattern());
+      if (peek().type == TokenType::COMMA)
+        ++m_token_index;
+    }
+    ++m_token_index; // skip ')'
+    return m_output.add_node(start_token.id, m_token_index,
+                             TuplePatternNode{move(elements)});
+  }
+
+  NodeId parse_array_pattern() {
+    auto start_token = peek();
+    ++m_token_index; // skip '['
+    List<NodeId> elements;
+    while (peek().type != TokenType::RIGHT_BRACKET) {
+      elements.push_back(parse_initializer_pattern());
+      if (peek().type == TokenType::COMMA)
+        ++m_token_index;
+    }
+    ++m_token_index; // skip ']'
+    return m_output.add_node(start_token.id, m_token_index,
+                             ArrayPatternNode{move(elements)});
+  }
+
+  NodeId parse_struct_pattern_field_name() {
+    auto start_token = peek();
+    if (!is_user_defined_identifier(peek().type)) {
+      throw_parser_error_at_current_location(
+          "Expected struct pattern field name");
+    }
+    NodeId identifier = parse_identifier();
+    if (peek().type == TokenType::COLON) {
+      throw_parser_error_at_current_location(
+          "Invalid type annotation on right-hand side of struct field pattern");
+    }
+    return m_output.add_node(start_token.id, m_token_index,
+                             IdentifierPatternNode{identifier, None()});
+  }
+
+  NodeId parse_struct_pattern() {
+    auto start_token = peek();
+    ++m_token_index; // skip '{'
+    List<NodeId> elements;
+    auto next_token = peek();
+    while (next_token.type != TokenType::RIGHT_BRACE) {
+      Option<NodeId> pattern;
+      NodeId field;
+      if (is_user_defined_identifier(next_token.type)) {
+        field = parse_identifier_pattern();
+        if (peek().type == TokenType::ASSIGN) {
+          ++m_token_index; // skip '='
+          pattern = field;
+          field = parse_struct_pattern_field_name();
+        }
+      } else {
+        pattern = parse_initializer_pattern();
+        if (peek().type != TokenType::ASSIGN) {
+          throw_parser_error_at_current_location(
+              "Expected '=' after pattern in struct field");
+        }
+        ++m_token_index; // skip '='
+        field = parse_struct_pattern_field_name();
+      }
+
+      elements.push_back(
+          m_output.add_node(start_token.id, m_token_index,
+                            StructFieldPatternNode{pattern, field}));
+
+      if (peek().type == TokenType::COMMA)
+        ++m_token_index;
+      next_token = peek();
+    }
+    ++m_token_index; // skip '}'
+    return m_output.add_node(start_token.id, m_token_index,
+                             StructPatternNode{move(elements)});
+  }
+
+  NodeId parse_initializer_pattern() {
+    switch (peek().type) {
     case TokenType::IDENTIFIER:
     case TokenType::IDENTIFIER_NO_W:
     case TokenType::QUOTED_IDENTIFIER:
-    case TokenType::QUOTED_IDENTIFIER_NO_W: {
-      NodeId identifier = parse_identifier();
-      Option<NodeId> type_annotation;
-      if (peek().type == TokenType::COLON) {
-        ++m_token_index; // skip ':'
-        type_annotation = parse_type_expr();
-      }
-      return m_output.add_node(
-          start_token.id, m_token_index,
-          IdentifierPatternNode{identifier, type_annotation});
-    }
-    default: {
+    case TokenType::QUOTED_IDENTIFIER_NO_W:
+      return parse_identifier_pattern();
+    case TokenType::LEFT_PAREN:
+    case TokenType::LEFT_PAREN_NO_W:
+      return parse_tuple_pattern();
+    case TokenType::LEFT_BRACKET:
+    case TokenType::LEFT_BRACKET_NO_W:
+      return parse_array_pattern();
+    case TokenType::LEFT_BRACE:
+      return parse_struct_pattern();
+    default:
       throw_parser_error_at_current_location("Expected initializer pattern");
-    }
     }
   }
 
@@ -1468,14 +1563,15 @@ public:
     List<NodeId> inits;
     parse_initializer_list(inits);
     return m_output.add_node(const_token.id, m_token_index,
-                             ConstDeclNode{inits});
+                             ConstDeclNode{move(inits)});
   }
 
   NodeId parse_let_decl() {
     auto let_token = next();
     List<NodeId> inits;
     parse_initializer_list(inits);
-    return m_output.add_node(let_token.id, m_token_index, LetDeclNode{inits});
+    return m_output.add_node(let_token.id, m_token_index,
+                             LetDeclNode{move(inits)});
   }
 
   NodeId parse_expr_statement() {

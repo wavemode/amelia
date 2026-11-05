@@ -130,6 +130,23 @@ struct IdentifierPatternNode {
   Option<NodeId> type_annotation;
 };
 
+struct ArrayPatternNode {
+  List<NodeId> elements;
+};
+
+struct TuplePatternNode {
+  List<NodeId> elements;
+};
+
+struct StructFieldPatternNode {
+  Option<NodeId> pattern;
+  NodeId field;
+};
+
+struct StructPatternNode {
+  List<NodeId> elements;
+};
+
 struct InitializerNode {
   NodeId pattern;
   Option<NodeId> expr;
@@ -856,6 +873,10 @@ struct TypeFieldNode {};
   X(IdentifierNode)                                                            \
   X(EmptyStmtNode)                                                             \
   X(IdentifierPatternNode)                                                     \
+  X(ArrayPatternNode)                                                          \
+  X(TuplePatternNode)                                                          \
+  X(StructFieldPatternNode)                                                    \
+  X(StructPatternNode)                                                         \
   X(InitializerNode)                                                           \
   X(LetDeclNode)                                                               \
   X(ConstDeclNode)                                                             \
