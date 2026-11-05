@@ -51,7 +51,7 @@ using TokenId = int32_t;
   X(KEYWORD_FLOAT)                                                             \
   X(KEYWORD_DOUBLE)                                                            \
   X(KEYWORD_CHAR)                                                              \
-  X(KEYWORD_STR)                                                               \
+  X(KEYWORD_TEXT)                                                              \
   X(KEYWORD_BITINT)                                                            \
   X(KEYWORD_UBITINT)                                                           \
   X(KEYWORD_NULL)                                                              \

@@ -20,7 +20,7 @@ enum class BuiltinKind : uint8_t {
   Double,
   Bool,
   Char,
-  Str,
+  Text,
   Null,
   Never,
   Unknown,

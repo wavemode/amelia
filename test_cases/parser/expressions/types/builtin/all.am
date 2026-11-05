@@ -13,7 +13,7 @@ let x_double : double
 let x_bitint : bitint
 let x_ubitint : ubitint
 let x_char : char
-let x_str : str
+let x_text : text
 let x_null : null
 let x_never : never
 
@@ -142,10 +142,10 @@ ModuleNode(
     ),
     LetDeclNode(
       target=IdentifierNode(
-        name="x_str"
+        name="x_text"
       ),
       type=BuiltinTypeNode(
-        kind=str
+        kind=text
       )
     ),
     LetDeclNode(

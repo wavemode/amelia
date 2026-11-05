@@ -38,7 +38,7 @@ const Map<Text, TokenType> RESERVED_WORDS = Map<Text, TokenType>({
     {"bitint", TokenType::KEYWORD_BITINT},
     {"ubitint", TokenType::KEYWORD_UBITINT},
     {"char", TokenType::KEYWORD_CHAR},
-    {"str", TokenType::KEYWORD_STR},
+    {"text", TokenType::KEYWORD_TEXT},
     {"null", TokenType::KEYWORD_NULL},
     {"never", TokenType::KEYWORD_NEVER},
     {"throw", TokenType::KEYWORD_THROW},

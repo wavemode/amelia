@@ -47,8 +47,8 @@ Serialize serialize_builtin_kind(BuiltinKind kind) {
   case BuiltinKind::Char:
     result.append("char");
     break;
-  case BuiltinKind::Str:
-    result.append("str");
+  case BuiltinKind::Text:
+    result.append("text");
     break;
   case BuiltinKind::Null:
     result.append("null");

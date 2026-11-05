@@ -1898,7 +1898,8 @@ public:
         left = m_output.add_node(start_token.id, m_token_index,
                                  ExclamationMarkExprNode{left});
       } else {
-        throw RuntimeError("unreachable");
+        throw RuntimeError(
+            "parse_descend_expr_postfix: unknown next token type");
       }
       next_token = peek();
     }
@@ -1966,7 +1967,7 @@ public:
     case TokenType::KEYWORD_FLOAT:
     case TokenType::KEYWORD_DOUBLE:
     case TokenType::KEYWORD_CHAR:
-    case TokenType::KEYWORD_STR:
+    case TokenType::KEYWORD_TEXT:
     case TokenType::KEYWORD_NULL:
     case TokenType::KEYWORD_NEVER:
       return parse_builtin_type();
@@ -2101,7 +2102,8 @@ public:
             start_token.id, m_token_index,
             ScopeResolutionExprNode{left, parse_identifier()});
       } else {
-        throw RuntimeError("unreachable");
+        throw RuntimeError(
+            "parse_descend_type_expr_postfix: unknown next token type");
       }
       next_token = peek();
     }
@@ -2139,7 +2141,7 @@ public:
     case TokenType::KEYWORD_FLOAT:
     case TokenType::KEYWORD_DOUBLE:
     case TokenType::KEYWORD_CHAR:
-    case TokenType::KEYWORD_STR:
+    case TokenType::KEYWORD_TEXT:
     case TokenType::KEYWORD_NULL:
     case TokenType::KEYWORD_NEVER:
       return parse_builtin_type();
@@ -2286,8 +2288,8 @@ public:
     case TokenType::KEYWORD_CHAR:
       kind = BuiltinKind::Char;
       break;
-    case TokenType::KEYWORD_STR:
-      kind = BuiltinKind::Str;
+    case TokenType::KEYWORD_TEXT:
+      kind = BuiltinKind::Text;
       break;
     case TokenType::KEYWORD_NULL:
       kind = BuiltinKind::Null;
@@ -2296,7 +2298,7 @@ public:
       kind = BuiltinKind::Never;
       break;
     default:
-      throw RuntimeError("unreachable");
+      throw RuntimeError("parse_builtin_type: unknown builtin type");
     }
     return m_output.add_node(type_token.id, m_token_index,
                              BuiltinTypeNode{kind});
