@@ -520,14 +520,9 @@ struct ThrowStmtNode {
 
 struct ForInStmtNode {
   List<NodeId> introductory_decls;
-  List<NodeId> vars;
+  NodeId pattern;
   NodeId iterable;
   NodeId body;
-};
-
-struct ForInVariableNode {
-  NodeId name;
-  Option<NodeId> type;
 };
 
 struct WhileStmtNode {
@@ -995,7 +990,6 @@ struct TypeFieldNode {};
   X(BitwiseOrAssignStmtNode)                                                   \
   X(BitwiseXorAssignStmtNode)                                                  \
   X(ForInStmtNode)                                                             \
-  X(ForInVariableNode)                                                         \
   X(WhileStmtNode)                                                             \
   X(LabelStmtNode)                                                             \
   X(GotoStmtNode)                                                              \

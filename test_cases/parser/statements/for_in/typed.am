@@ -16,16 +16,14 @@ ModuleNode(
           expr=BlockExprNode(
             stmts=[
               ForInStmtNode(
-                vars=[
-                  ForInVariableNode(
-                    name=IdentifierNode(
-                      name="x"
-                    ),
-                    type=BuiltinTypeNode(
-                      kind=int
-                    )
+                pattern=IdentifierPatternNode(
+                  identifier=IdentifierNode(
+                    name="x"
+                  ),
+                  type_annotation=BuiltinTypeNode(
+                    kind=int
                   )
-                ],
+                ),
                 iterable=IdentifierNode(
                   name="y"
                 ),

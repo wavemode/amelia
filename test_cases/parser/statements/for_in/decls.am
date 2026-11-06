@@ -83,13 +83,11 @@ ModuleNode(
                     ]
                   )
                 ],
-                vars=[
-                  ForInVariableNode(
-                    name=IdentifierNode(
-                      name="x"
-                    )
+                pattern=IdentifierPatternNode(
+                  identifier=IdentifierNode(
+                    name="x"
                   )
-                ],
+                ),
                 iterable=IdentifierNode(
                   name="y"
                 ),

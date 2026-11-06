@@ -1,0 +1,66 @@
+let z = {
+  for ([x : &int, y : &String] in z) w();
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclNode(
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="z"
+            )
+          ),
+          expr=BlockExprNode(
+            stmts=[
+              ForInStmtNode(
+                pattern=ArrayPatternNode(
+                  elements=[
+                    IdentifierPatternNode(
+                      identifier=IdentifierNode(
+                        name="x"
+                      ),
+                      type_annotation=RefExprNode(
+                        is_const=false,
+                        is_move=false,
+                        expr=BuiltinTypeNode(
+                          kind=int
+                        )
+                      )
+                    ),
+                    IdentifierPatternNode(
+                      identifier=IdentifierNode(
+                        name="y"
+                      ),
+                      type_annotation=RefExprNode(
+                        is_const=false,
+                        is_move=false,
+                        expr=IdentifierNode(
+                          name="String"
+                        )
+                      )
+                    )
+                  ]
+                ),
+                iterable=IdentifierNode(
+                  name="z"
+                ),
+                body=ExprStmtNode(
+                  expr=FunctionCallExprNode(
+                    callee=IdentifierNode(
+                      name="w"
+                    )
+                  )
+                )
+              ),
+              EmptyStmtNode()
+            ]
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

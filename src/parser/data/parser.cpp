@@ -1330,13 +1330,8 @@ public:
     auto for_token = next();
     read_left_paren("Expected '(' after 'for' keyword in for-in statement");
     auto introductory_decls = parse_introductory_decls();
-    List<NodeId> vars;
-    vars.push_back(parse_for_in_variable());
-    enforce_separator_after_introductory_decls(introductory_decls, vars[0]);
-    while (peek().type == TokenType::COMMA) {
-      ++m_token_index; // consume the ',' token
-      vars.push_back(parse_for_in_variable());
-    }
+    NodeId pattern = parse_initializer_pattern();
+    enforce_separator_after_introductory_decls(introductory_decls, pattern);
     read_token_type(TokenType::KEYWORD_IN,
                     "Expected 'in' keyword in for-in statement");
     NodeId iterable = parse_expr();
@@ -1345,23 +1340,7 @@ public:
     NodeId body = parse_statement();
     return m_output.add_node(
         for_token.id, m_token_index,
-        ForInStmtNode{move(introductory_decls), move(vars), iterable, body});
-  }
-
-  NodeId parse_for_in_variable() {
-    auto name_token = peek();
-    if (!is_identifier(name_token.type)) {
-      throw_parser_error_at_current_location(
-          "Expected variable name in for-in statement");
-    }
-    NodeId name = parse_identifier();
-    Option<NodeId> type_annotation;
-    if (peek().type == TokenType::COLON) {
-      ++m_token_index; // consume the ':' token
-      type_annotation = parse_type_expr();
-    }
-    return m_output.add_node(name_token.id, m_token_index,
-                             ForInVariableNode{name, type_annotation});
+        ForInStmtNode{move(introductory_decls), pattern, iterable, body});
   }
 
   NodeId parse_throw_statement() {

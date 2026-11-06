@@ -14,7 +14,7 @@ template <typename T> class Option;
 
 class NodeFormatter {
 public:
-  NodeFormatter(const AbstractNodeRepository &node_repo);
+  explicit NodeFormatter(const AbstractNodeRepository &node_repo);
 
   void format_node(AbstractString &out, NodeId node_id);
 
@@ -29,7 +29,8 @@ private:
 
   void print_text_field(AbstractString &out, Text name, Text value);
 
-  void print_numeric_field(AbstractString &out, Text name, Integer value);
+  void print_numeric_field(AbstractString &out, Text name,
+                           const Integer &value);
 
   void print_boolean_field(AbstractString &out, Text name, bool value);
 

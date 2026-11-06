@@ -512,6 +512,11 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   case NodeType::OperatorIdentIxNode:
   case NodeType::OperatorIdentFuncallNode:
   case NodeType::OperatorIdentIxAssignNode:
+  case NodeType::ThisLiteralNode:
+  case NodeType::SuperLiteralNode:
+  case NodeType::ThisTypeNode:
+  case NodeType::CopyCtorNameNode:
+  case NodeType::MoveCtorNameNode:
     break;
   case NodeType::OperatorIdentAsNode: {
     const auto &n = node.as_OperatorIdentAsNode();
@@ -599,15 +604,9 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   case NodeType::ForInStmtNode: {
     const auto &n = node.as_ForInStmtNode();
     print_node_field(out, "introductory_decls", n.introductory_decls);
-    print_node_field(out, "vars", n.vars);
+    print_node_field(out, "pattern", n.pattern);
     print_node_field(out, "iterable", n.iterable);
     print_node_field(out, "body", n.body);
-    break;
-  }
-  case NodeType::ForInVariableNode: {
-    const auto &n = node.as_ForInVariableNode();
-    print_node_field(out, "name", n.name);
-    print_node_field(out, "type", n.type);
     break;
   }
   case NodeType::WhileStmtNode: {
@@ -672,8 +671,8 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   }
   case NodeType::FunctionSignatureCaptureDesignatorNode: {
     const auto &n = node.as_FunctionSignatureCaptureDesignatorNode();
-    Text kind;
     if (n.kind.has_value()) {
+      Text kind;
       switch (n.kind.value()) {
       case FunctionCaptureKind::Copy:
         kind = "copy";
@@ -841,15 +840,6 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_boolean_field(out, "value", n.value);
     break;
   }
-  case NodeType::ThisLiteralNode: {
-    break;
-  }
-  case NodeType::SuperLiteralNode: {
-    break;
-  }
-  case NodeType::ThisTypeNode: {
-    break;
-  }
   case NodeType::ClassConstructorNode: {
     const auto &n = node.as_ClassConstructorNode();
     print_node_field(out, "name", n.name);
@@ -897,12 +887,6 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   case NodeType::MoveExprNode: {
     const auto &n = node.as_MoveExprNode();
     print_node_field(out, "expr", n.expr);
-    break;
-  }
-  case NodeType::CopyCtorNameNode: {
-    break;
-  }
-  case NodeType::MoveCtorNameNode: {
     break;
   }
   case NodeType::ImplicitDeclNode: {
@@ -1126,7 +1110,7 @@ void NodeFormatter::print_text_field(AbstractString &out, Text name,
 }
 
 void NodeFormatter::print_numeric_field(AbstractString &out, Text name,
-                                        Integer value) {
+                                        const Integer &value) {
   open_line(out);
   out.append(name);
   out.append('=');

@@ -1,5 +1,5 @@
 let z = {
-  for (x, y in z) w();
+  for ((x, y) in z) w();
 }
 
 /* EXPECTED_OUTPUT:
@@ -16,18 +16,20 @@ ModuleNode(
           expr=BlockExprNode(
             stmts=[
               ForInStmtNode(
-                vars=[
-                  ForInVariableNode(
-                    name=IdentifierNode(
-                      name="x"
+                pattern=TuplePatternNode(
+                  elements=[
+                    IdentifierPatternNode(
+                      identifier=IdentifierNode(
+                        name="x"
+                      )
+                    ),
+                    IdentifierPatternNode(
+                      identifier=IdentifierNode(
+                        name="y"
+                      )
                     )
-                  ),
-                  ForInVariableNode(
-                    name=IdentifierNode(
-                      name="y"
-                    )
-                  )
-                ],
+                  ]
+                ),
                 iterable=IdentifierNode(
                   name="z"
                 ),
