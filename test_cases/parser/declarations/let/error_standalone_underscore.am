@@ -1,0 +1,5 @@
+let _
+
+/* EXPECTED_OUTPUT:
+ERROR("Expected assignment after pattern (at test_cases/parser/declarations/let/error_standalone_underscore.am:6:1)")
+*/

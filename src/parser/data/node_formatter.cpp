@@ -27,9 +27,6 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_text_field(out, "name", name);
     break;
   }
-  case NodeType::EmptyStmtNode: {
-    break;
-  }
   case NodeType::IdentifierPatternNode: {
     const auto &n = node.as_IdentifierPatternNode();
     print_node_field(out, "identifier", n.identifier);
@@ -476,6 +473,8 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "expr", n.expr);
     break;
   }
+  case NodeType::EmptyStmtNode:
+  case NodeType::UnderscorePatternNode:
   case NodeType::OperatorIdentAddNode:
   case NodeType::OperatorIdentSubNode:
   case NodeType::OperatorIdentStarNode:

@@ -74,6 +74,7 @@ in
 label
 super
 abstract
+_
 
 /* EXPECTED_OUTPUT:
 KEYWORD_FUN(fun)
@@ -152,5 +153,6 @@ KEYWORD_IN(in)
 KEYWORD_LABEL(label)
 KEYWORD_SUPER(super)
 KEYWORD_ABSTRACT(abstract)
+KEYWORD_UNDERSCORE(_)
 END_OF_FILE()
 */

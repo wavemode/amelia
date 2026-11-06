@@ -91,6 +91,7 @@ const Map<Text, TokenType> RESERVED_WORDS = Map<Text, TokenType>({
     {"label", TokenType::KEYWORD_LABEL},
     {"super", TokenType::KEYWORD_SUPER},
     {"abstract", TokenType::KEYWORD_ABSTRACT},
+    {"_", TokenType::KEYWORD_UNDERSCORE},
 });
 
 namespace {

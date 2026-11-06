@@ -1,4 +1,4 @@
-let [ a, b : int, [c] ] = d
+let [ a, b : int, [c], _, e ] = d
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
@@ -29,6 +29,12 @@ ModuleNode(
                     )
                   )
                 ]
+              ),
+              UnderscorePatternNode(),
+              IdentifierPatternNode(
+                identifier=IdentifierNode(
+                  name="e"
+                )
               )
             ]
           ),

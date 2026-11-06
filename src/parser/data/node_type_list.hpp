@@ -125,6 +125,8 @@ struct OperatorFunctionDeclNode {
   Option<NodeId> body;
 };
 
+struct UnderscorePatternNode {};
+
 struct IdentifierPatternNode {
   NodeId identifier;
   Option<NodeId> type_annotation;
@@ -867,6 +869,7 @@ struct TypeFieldNode {};
   X(ModuleNode)                                                                \
   X(IdentifierNode)                                                            \
   X(EmptyStmtNode)                                                             \
+  X(UnderscorePatternNode)                                                     \
   X(IdentifierPatternNode)                                                     \
   X(ArrayPatternNode)                                                          \
   X(TuplePatternNode)                                                          \

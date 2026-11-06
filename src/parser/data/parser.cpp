@@ -1402,6 +1402,12 @@ public:
                              PreDecrementStmtNode{operand});
   }
 
+  NodeId parse_underscore_pattern() {
+    auto start_token = next();
+    return m_output.add_node(start_token.id, m_token_index,
+                             UnderscorePatternNode());
+  }
+
   NodeId parse_identifier_pattern() {
     auto start_token = peek();
     NodeId identifier = parse_identifier();
@@ -1498,6 +1504,8 @@ public:
 
   NodeId parse_initializer_pattern() {
     switch (peek().type) {
+    case TokenType::KEYWORD_UNDERSCORE:
+      return parse_underscore_pattern();
     case TokenType::IDENTIFIER:
     case TokenType::IDENTIFIER_NO_W:
     case TokenType::QUOTED_IDENTIFIER:
@@ -1518,12 +1526,23 @@ public:
 
   NodeId parse_initializer() {
     auto start_token = peek();
+    bool is_identifier = is_user_defined_identifier(start_token.type);
+
     NodeId pattern = parse_initializer_pattern();
+    if (peek().type == TokenType::COLON) {
+      throw_parser_error_at_current_location(
+          "Unexpected type annotation after pattern");
+    }
+
     Option<NodeId> expr;
     if (peek().type == TokenType::ASSIGN) {
       ++m_token_index; // skip '='
       expr = parse_expr();
+    } else if (!is_identifier) {
+      throw_parser_error_at_current_location(
+          "Expected assignment after pattern");
     }
+
     return m_output.add_node(start_token.id, m_token_index,
                              InitializerNode{pattern, expr});
   }
