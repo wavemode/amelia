@@ -1,0 +1,67 @@
+fun f() {
+    when (y) {
+        5 =>    z = 10;
+        10 =>   z = 20;
+        else => z = 30;
+    }
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    FunctionDeclNode(
+      name=IdentifierNode(
+        name="f"
+      ),
+      signature=FunctionSignatureNode(),
+      body=FunctionBodyNode(
+        stmts=[
+          WhenExprNode(
+            expr=IdentifierNode(
+              name="y"
+            ),
+            clauses=[
+              WhenClauseNode(
+                items=[
+                  WhenClauseItemNode(
+                    is=false,
+                    expr=NumberLiteralNode(value=5)
+                  )
+                ],
+                body=AssignmentStmtNode(
+                  target=IdentifierNode(
+                    name="z"
+                  ),
+                  expr=NumberLiteralNode(value=10)
+                )
+              ),
+              WhenClauseNode(
+                items=[
+                  WhenClauseItemNode(
+                    is=false,
+                    expr=NumberLiteralNode(value=10)
+                  )
+                ],
+                body=AssignmentStmtNode(
+                  target=IdentifierNode(
+                    name="z"
+                  ),
+                  expr=NumberLiteralNode(value=20)
+                )
+              )
+            ],
+            else_expr=AssignmentStmtNode(
+              target=IdentifierNode(
+                name="z"
+              ),
+              expr=NumberLiteralNode(value=30)
+            )
+          )
+        ],
+        is_default=false,
+        is_deleted=false
+      )
+    )
+  ]
+)
+*/

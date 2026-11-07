@@ -1,0 +1,49 @@
+let x = when (y) {
+    5 => 10;
+    10 => 20;
+    else => 30;
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclNode(
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            )
+          ),
+          expr=WhenExprNode(
+            expr=IdentifierNode(
+              name="y"
+            ),
+            clauses=[
+              WhenClauseNode(
+                items=[
+                  WhenClauseItemNode(
+                    is=false,
+                    expr=NumberLiteralNode(value=5)
+                  )
+                ],
+                body=NumberLiteralNode(value=10)
+              ),
+              WhenClauseNode(
+                items=[
+                  WhenClauseItemNode(
+                    is=false,
+                    expr=NumberLiteralNode(value=10)
+                  )
+                ],
+                body=NumberLiteralNode(value=20)
+              )
+            ],
+            else_expr=NumberLiteralNode(value=30)
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

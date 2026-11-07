@@ -41,6 +41,30 @@ public:
       : m_output(output), m_input(input), m_token_index(0),
         m_token_formatter(input), m_imports(), m_submodules() {}
 
+#define COMMA_SEPARATED_UNTIL(TOKEN_TYPE, CODE)                                \
+  while (peek().type != TOKEN_TYPE) {                                          \
+    CODE;                                                                      \
+    if (peek().type == TokenType::COMMA) {                                     \
+      ++m_token_index;                                                         \
+    } else {                                                                   \
+      break;                                                                   \
+    }                                                                          \
+  }                                                                            \
+  read_token_type(TOKEN_TYPE, "Expected comma between successive items");
+
+#define COMMA_OR_SEMICOLON_SEPARATED_UNTIL(TOKEN_TYPE, CODE)                   \
+  while (peek().type != TOKEN_TYPE) {                                          \
+    CODE;                                                                      \
+    if (peek().type == TokenType::COMMA ||                                     \
+        peek().type == TokenType::SEMICOLON) {                                 \
+      ++m_token_index;                                                         \
+    } else {                                                                   \
+      break;                                                                   \
+    }                                                                          \
+  }                                                                            \
+  read_token_type(TOKEN_TYPE,                                                  \
+                  "Expected comma or semicolon between successive items");
+
   NodeId parse_module() {
     List<NodeId> decls;
     m_imports.clear();
@@ -187,14 +211,8 @@ public:
         start_token.type == TokenType::LEFT_PAREN_NO_W) {
       ++m_token_index; // consume the '(' token
       List<NodeId> items;
-      while (peek().type != TokenType::RIGHT_PAREN) {
-        items.push_back(parse_import_item());
-        if (peek().type == TokenType::COMMA) {
-          ++m_token_index; // consume the ',' token
-        }
-      }
-      read_token_type(TokenType::RIGHT_PAREN,
-                      "Expected ')' to end import item list");
+      COMMA_SEPARATED_UNTIL(TokenType::RIGHT_PAREN,
+                            items.push_back(parse_import_item()));
       result = move(items);
     }
     return result;
@@ -310,14 +328,8 @@ public:
     read_token_type(TokenType::LEFT_BRACE,
                     "Expected '{' to begin enum declaration");
     List<NodeId> variants;
-    while (peek().type != TokenType::RIGHT_BRACE) {
-      variants.push_back(parse_enum_variant());
-      if (peek().type == TokenType::COMMA) {
-        ++m_token_index; // consume the ',' token
-      }
-    }
-    read_token_type(TokenType::RIGHT_BRACE,
-                    "Expected '}' to end enum declaration");
+    COMMA_SEPARATED_UNTIL(TokenType::RIGHT_BRACE,
+                          variants.push_back(parse_enum_variant()));
     return m_output.add_node(
         enum_token.id, m_token_index,
         EnumDeclNode{name, repr_type, base_types, move(variants)});
@@ -420,8 +432,8 @@ public:
       return parse_block_statement();
     case TokenType::KEYWORD_IF:
       return parse_if_statement();
-    case TokenType::KEYWORD_SWITCH:
-      return parse_switch_statement();
+    case TokenType::KEYWORD_WHEN:
+      return parse_when(true);
     case TokenType::KEYWORD_TRY:
       return parse_try_statement();
     case TokenType::KEYWORD_THROW:
@@ -458,14 +470,8 @@ public:
     auto with_token = next();
     read_left_paren("Expected '(' after 'with' keyword in with statement");
     List<NodeId> args;
-    while (peek().type != TokenType::RIGHT_PAREN) {
-      args.push_back(parse_function_call_argument());
-      if (peek().type == TokenType::COMMA) {
-        ++m_token_index; // consume the comma
-      }
-    }
-    read_token_type(TokenType::RIGHT_PAREN,
-                    "Expected ')' after arguments in with statement");
+    COMMA_SEPARATED_UNTIL(TokenType::RIGHT_PAREN,
+                          args.push_back(parse_function_call_argument()));
     NodeId body = parse_statement();
     return m_output.add_node(with_token.id, m_token_index,
                              WithStmtNode{move(args), body});
@@ -493,14 +499,9 @@ public:
     if (peek().type == TokenType::LEFT_PAREN_NO_W) {
       ++m_token_index; // consume the '(' token
       List<NodeId> args_list;
-      while (peek().type != TokenType::RIGHT_PAREN) {
-        args_list.push_back(parse_function_call_argument());
-        if (peek().type == TokenType::COMMA) {
-          ++m_token_index; // consume the comma
-        }
-      }
-      read_token_type(TokenType::RIGHT_PAREN,
-                      "Expected ')' after annotation arguments");
+      COMMA_SEPARATED_UNTIL(
+          TokenType::RIGHT_PAREN,
+          args_list.push_back(parse_function_call_argument()));
       return Some(move(args_list));
     }
     return None();
@@ -603,16 +604,8 @@ public:
         start_token.type == TokenType::LEFT_PAREN_NO_W) {
       ++m_token_index; // consume the '(' token
       List<NodeId> decls;
-      while (peek().type != TokenType::RIGHT_PAREN) {
-        decls.push_back(parse_class_header_decl());
-        if (peek().type == TokenType::COMMA) {
-          ++m_token_index; // consume the ',' token
-        } else {
-          break;
-        }
-      }
-      read_token_type(TokenType::RIGHT_PAREN,
-                      "Expected ')' to end class header decls");
+      COMMA_SEPARATED_UNTIL(TokenType::RIGHT_PAREN,
+                            decls.push_back(parse_class_header_decl()));
       result = m_output.add_node(start_token.id, m_token_index,
                                  ClassHeaderDeclsNode{move(decls)});
     }
@@ -885,14 +878,9 @@ public:
           start_token.type == TokenType::LEFT_BRACKET) {
         ++m_token_index;
         parameters = List<NodeId>{};
-        do {
-          parameters.value().push_back(parse_generic_parameter());
-          if (peek().type == TokenType::COMMA) {
-            ++m_token_index; // consume the comma
-          }
-        } while (peek().type != TokenType::RIGHT_BRACKET);
-        read_token_type(TokenType::RIGHT_BRACKET,
-                        "Expected ']' to end generic parameter list");
+        COMMA_SEPARATED_UNTIL(
+            TokenType::RIGHT_BRACKET,
+            parameters.value().push_back(parse_generic_parameter()));
       }
 
       Option<List<NodeId>> additional_constraints;
@@ -900,15 +888,8 @@ public:
         ++m_token_index; // consume the 'when' keyword
         read_left_paren("Expected '(' after 'when' in generic parameter list");
         List<NodeId> constraints;
-        do {
-          constraints.push_back(parse_type_constraint());
-          if (peek().type == TokenType::COMMA) {
-            ++m_token_index; // consume the comma
-          }
-        } while (peek().type != TokenType::RIGHT_PAREN);
-        read_token_type(TokenType::RIGHT_PAREN,
-                        "Expected ')' to end additional constraints in generic "
-                        "parameter list");
+        COMMA_SEPARATED_UNTIL(TokenType::RIGHT_PAREN,
+                              constraints.push_back(parse_type_constraint()));
         additional_constraints = move(constraints);
       }
 
@@ -990,42 +971,6 @@ public:
     NodeId body = parse_statement();
     return m_output.add_node(catch_token.id, m_token_index,
                              CatchClauseNode{exc_type, var, body});
-  }
-
-  NodeId parse_switch_statement() {
-    auto switch_token = next();
-    read_left_paren("Expected '(' after 'switch'");
-    auto introductory_decls = parse_introductory_decls();
-    NodeId expr = parse_expr();
-    enforce_separator_after_introductory_decls(introductory_decls, expr);
-    read_token_type(TokenType::RIGHT_PAREN,
-                    "Expected ')' after switch statement");
-    read_token_type(TokenType::LEFT_BRACE,
-                    "Expected '{' to start switch statement body");
-    List<NodeId> clauses;
-    while (peek().type == TokenType::KEYWORD_CASE) {
-      clauses.push_back(parse_switch_statement_case_clause());
-    }
-
-    Option<NodeId> default_body;
-    if (peek().type == TokenType::KEYWORD_DEFAULT) {
-      ++m_token_index; // consume the 'default' keyword
-      default_body = parse_statement();
-    }
-
-    read_token_type(TokenType::RIGHT_BRACE,
-                    "Expected '}' to end switch statement body");
-    return m_output.add_node(switch_token.id, m_token_index,
-                             SwitchStmtNode{move(introductory_decls), expr,
-                                            move(clauses), default_body});
-  }
-
-  NodeId parse_switch_statement_case_clause() {
-    auto case_token = next();
-    NodeId header = parse_case_clause_header();
-    NodeId body = parse_statement();
-    return m_output.add_node(case_token.id, m_token_index,
-                             CaseClauseNode{header, body});
   }
 
   NodeId parse_type_decl() {
@@ -1137,13 +1082,8 @@ public:
   List<NodeId> parse_function_parameter_list() {
     read_left_paren("Expected '(' at the beginning of function parameter list");
     List<NodeId> parameters;
-    while (peek().type != TokenType::RIGHT_PAREN) {
-      parameters.push_back(parse_function_parameter());
-      if (peek().type == TokenType::COMMA) {
-        ++m_token_index; // consume the ',' token
-      }
-    }
-    ++m_token_index; // consume the ')' token
+    COMMA_SEPARATED_UNTIL(TokenType::RIGHT_PAREN,
+                          parameters.push_back(parse_function_parameter()));
     return parameters;
   }
 
@@ -1179,13 +1119,9 @@ public:
       read_left_paren(
           "Expected '(' after 'with' keyword in function signature");
       List<NodeId> implicit_parameters;
-      while (peek().type != TokenType::RIGHT_PAREN) {
-        implicit_parameters.push_back(parse_function_parameter());
-        if (peek().type == TokenType::COMMA) {
-          ++m_token_index; // consume the ',' token
-        }
-      }
-      ++m_token_index; // consume the ')' token
+      COMMA_SEPARATED_UNTIL(
+          TokenType::RIGHT_PAREN,
+          implicit_parameters.push_back(parse_function_parameter()));
       return Some(m_output.add_node(
           next_token.id, m_token_index,
           ImplicitParameterListNode{move(implicit_parameters)}));
@@ -1200,15 +1136,10 @@ public:
       ++m_token_index; // consume the '[' token
       List<NodeId> capture_designators;
       bool seen_universal = false;
-      while (peek().type != TokenType::RIGHT_BRACKET) {
-        capture_designators.push_back(
-            parse_function_signature_capture_designator(seen_universal));
-        if (peek().type == TokenType::COMMA) {
-          ++m_token_index; // consume the ',' token
-        }
-      }
-      ++m_token_index; // consume the ']' token
-
+      COMMA_SEPARATED_UNTIL(
+          TokenType::RIGHT_BRACKET,
+          capture_designators.push_back(
+              parse_function_signature_capture_designator(seen_universal)));
       if (seen_universal && capture_designators.size() > 1) {
         throw_parser_error_at_location(
             next_token.loc, "Invalid capture designator: universal designator "
@@ -1425,12 +1356,8 @@ public:
     auto start_token = peek();
     ++m_token_index; // skip '('
     List<NodeId> elements;
-    while (peek().type != TokenType::RIGHT_PAREN) {
-      elements.push_back(parse_initializer_pattern());
-      if (peek().type == TokenType::COMMA)
-        ++m_token_index;
-    }
-    ++m_token_index; // skip ')'
+    COMMA_SEPARATED_UNTIL(TokenType::RIGHT_PAREN,
+                          elements.push_back(parse_initializer_pattern()));
     return m_output.add_node(start_token.id, m_token_index,
                              TuplePatternNode{move(elements)});
   }
@@ -1439,12 +1366,8 @@ public:
     auto start_token = peek();
     ++m_token_index; // skip '['
     List<NodeId> elements;
-    while (peek().type != TokenType::RIGHT_BRACKET) {
-      elements.push_back(parse_initializer_pattern());
-      if (peek().type == TokenType::COMMA)
-        ++m_token_index;
-    }
-    ++m_token_index; // skip ']'
+    COMMA_SEPARATED_UNTIL(TokenType::RIGHT_BRACKET,
+                          elements.push_back(parse_initializer_pattern()));
     return m_output.add_node(start_token.id, m_token_index,
                              ArrayPatternNode{move(elements)});
   }
@@ -1468,11 +1391,10 @@ public:
     auto start_token = peek();
     ++m_token_index; // skip '{'
     List<NodeId> elements;
-    auto next_token = peek();
-    while (next_token.type != TokenType::RIGHT_BRACE) {
+    COMMA_SEPARATED_UNTIL(TokenType::RIGHT_BRACE, {
       Option<NodeId> pattern;
       NodeId field;
-      if (is_user_defined_identifier(next_token.type)) {
+      if (is_user_defined_identifier(peek().type)) {
         field = parse_identifier_pattern();
         if (peek().type == TokenType::ASSIGN) {
           ++m_token_index; // skip '='
@@ -1492,12 +1414,7 @@ public:
       elements.push_back(
           m_output.add_node(start_token.id, m_token_index,
                             StructFieldPatternNode{pattern, field}));
-
-      if (peek().type == TokenType::COMMA)
-        ++m_token_index;
-      next_token = peek();
-    }
-    ++m_token_index; // skip '}'
+    });
     return m_output.add_node(start_token.id, m_token_index,
                              StructPatternNode{move(elements)});
   }
@@ -1972,33 +1889,25 @@ public:
       } else if (next_token.type == TokenType::LEFT_BRACKET_NO_W) {
         ++m_token_index; // consume the '[' operator
         List<NodeId> indices;
-        while (peek().type != TokenType::RIGHT_BRACKET) {
+        COMMA_SEPARATED_UNTIL(TokenType::RIGHT_BRACKET, {
           auto index_start_token = peek();
           Option<NodeId> name;
-          if (is_identifier(peek().type) && peek(1).type == TokenType::ASSIGN) {
+          if (is_user_defined_identifier(peek().type) &&
+              peek(1).type == TokenType::ASSIGN) {
             name = parse_identifier();
             ++m_token_index; // consume the '=' token
           }
           NodeId value = parse_expr();
-          if (peek().type == TokenType::COMMA) {
-            ++m_token_index; // consume the comma
-          }
           indices.push_back(m_output.add_node(
               index_start_token.id, m_token_index, IndexNode{name, value}));
-        }
-        ++m_token_index; // consume the ']' token
+        });
         left = m_output.add_node(start_token.id, m_token_index,
                                  IndexingExprNode{left, move(indices)});
       } else if (next_token.type == TokenType::LEFT_PAREN_NO_W) {
         ++m_token_index; // consume the '(' operator
         List<NodeId> args;
-        while (peek().type != TokenType::RIGHT_PAREN) {
-          args.push_back(parse_function_call_argument());
-          if (peek().type == TokenType::COMMA) {
-            ++m_token_index; // consume the comma
-          }
-        }
-        ++m_token_index; // consume the ')' operator
+        COMMA_SEPARATED_UNTIL(TokenType::RIGHT_PAREN,
+                              args.push_back(parse_function_call_argument()));
         left = m_output.add_node(start_token.id, m_token_index,
                                  FunctionCallExprNode{left, move(args)});
       } else if (next_token.type == TokenType::DOUBLE_COLON_NO_W) {
@@ -2065,8 +1974,8 @@ public:
       return parse_if_expr();
     case TokenType::KEYWORD_TRY:
       return parse_try_expr();
-    case TokenType::KEYWORD_SWITCH:
-      return parse_switch_expr();
+    case TokenType::KEYWORD_WHEN:
+      return parse_when(false);
     case TokenType::KEYWORD_FUN:
       return parse_function_expr();
     case TokenType::KEYWORD_TRUE:
@@ -2109,6 +2018,72 @@ public:
       m_token_formatter.format_token(err, m_token_index);
       throw_parser_error_at_current_location(move(err));
     }
+  }
+
+  NodeId parse_when_clause_item() {
+    auto start_token = peek();
+    bool is = false;
+    if (start_token.type == TokenType::KEYWORD_IS) {
+      ++m_token_index; // skip 'is'
+      is = true;
+    }
+    auto expr = parse_expr();
+    return m_output.add_node(start_token.id, m_token_index,
+                             WhenClauseItemNode{is, expr});
+  }
+
+  NodeId parse_when_clause(bool stmt) {
+    auto start_token = peek();
+    List<NodeId> items;
+    COMMA_SEPARATED_UNTIL(TokenType::FAT_ARROW,
+                          items.push_back(parse_when_clause_item()));
+    NodeId body;
+    if (stmt) {
+      body = parse_statement();
+    } else {
+      body = parse_expr();
+    }
+    return m_output.add_node(start_token.id, m_token_index,
+                             WhenClauseNode{move(items), body});
+  }
+
+  NodeId parse_when(bool stmt) {
+    auto when_token = next();
+    read_left_paren("Expected '(' after 'when' keyword");
+    List<NodeId> introductory_decls = parse_introductory_decls();
+    auto expr = parse_expr();
+    read_token_type(TokenType::RIGHT_PAREN,
+                    "Expected ')' after 'when' subject");
+    read_token_type(TokenType::LEFT_BRACE, "Expected '{' after 'when' header");
+    List<NodeId> clauses;
+    Option<NodeId> else_body;
+    bool saw_else = false;
+    COMMA_OR_SEMICOLON_SEPARATED_UNTIL(TokenType::RIGHT_BRACE, {
+      if (peek().type == TokenType::KEYWORD_ELSE) {
+        ++m_token_index;
+        read_token_type(TokenType::FAT_ARROW,
+                        "Expected '=>' after 'else' in 'when' block");
+        if (stmt) {
+          else_body = parse_statement();
+        } else {
+          else_body = parse_expr();
+        }
+        saw_else = true;
+      } else {
+        if (saw_else) {
+          throw_parser_error_at_current_location(
+              "'else' clause must be final clause in 'when' block");
+        }
+        clauses.push_back(parse_when_clause(stmt));
+        if (clauses.size() > 1) {
+          enforce_statement_separator(clauses[clauses.size() - 2],
+                                      clauses[clauses.size() - 1]);
+        }
+      }
+    });
+    return m_output.add_node(
+        when_token.id, m_token_index,
+        WhenExprNode{move(introductory_decls), expr, move(clauses), else_body});
   }
 
   NodeId parse_implicit_expr() {
@@ -2196,7 +2171,7 @@ public:
       if (next_token.type == TokenType::LEFT_BRACKET_NO_W) {
         ++m_token_index; // consume the '[' operator
         List<NodeId> indices;
-        while (peek().type != TokenType::RIGHT_BRACKET) {
+        COMMA_SEPARATED_UNTIL(TokenType::RIGHT_BRACKET, {
           auto index_start_token = peek();
           Option<NodeId> name;
           if (is_identifier(peek().type) && peek(1).type == TokenType::ASSIGN) {
@@ -2204,13 +2179,9 @@ public:
             ++m_token_index; // consume the '=' token
           }
           NodeId value = parse_expr();
-          if (peek().type == TokenType::COMMA) {
-            ++m_token_index; // consume the comma
-          }
           indices.push_back(m_output.add_node(
               index_start_token.id, m_token_index, IndexNode{name, value}));
-        }
-        ++m_token_index; // consume the ']' token
+        });
         left = m_output.add_node(start_token.id, m_token_index,
                                  IndexingExprNode{left, move(indices)});
       } else if (next_token.type == TokenType::DOUBLE_COLON_NO_W) {
@@ -2325,9 +2296,8 @@ public:
     if (peek().type == TokenType::LEFT_BRACE) {
       ++m_token_index; // consume the '{' operator
       elements = List<NodeId>();
-      parse_comma_separated_expr_list(elements.value(), TokenType::RIGHT_BRACE);
-      read_token_type(TokenType::RIGHT_BRACE,
-                      "Expected '}' after array elements");
+      COMMA_SEPARATED_UNTIL(TokenType::RIGHT_BRACE,
+                            elements.value().push_back(parse_expr()));
     }
 
     return m_output.add_node(
@@ -2356,14 +2326,8 @@ public:
     auto with_token = next();
     read_left_paren("Expected '(' after 'with' keyword in with expression");
     List<NodeId> args;
-    while (peek().type != TokenType::RIGHT_PAREN) {
-      args.push_back(parse_function_call_argument());
-      if (peek().type == TokenType::COMMA) {
-        ++m_token_index; // consume the comma
-      }
-    }
-    read_token_type(TokenType::RIGHT_PAREN,
-                    "Expected ')' after arguments in with expression");
+    COMMA_SEPARATED_UNTIL(TokenType::RIGHT_PAREN,
+                          args.push_back(parse_function_call_argument()));
     NodeId body = parse_expr();
     return m_output.add_node(with_token.id, m_token_index,
                              WithExprNode{move(args), body});
@@ -2640,91 +2604,6 @@ public:
                              OperatorIdentifierNode{operator_node});
   }
 
-  NodeId parse_switch_expr() {
-    auto switch_token = next();
-    read_left_paren("Expected '(' after 'switch'");
-    auto introductory_decls = parse_introductory_decls();
-    NodeId expr = parse_expr();
-    enforce_separator_after_introductory_decls(introductory_decls, expr);
-    read_token_type(TokenType::RIGHT_PAREN,
-                    "Expected ')' after switch expression");
-    read_token_type(TokenType::LEFT_BRACE,
-                    "Expected '{' to start switch expr body");
-    List<NodeId> clauses;
-    while (peek().type == TokenType::KEYWORD_CASE) {
-      clauses.push_back(parse_switch_expr_case_clause());
-    }
-    Option<NodeId> default_body;
-    if (peek().type == TokenType::KEYWORD_DEFAULT) {
-      ++m_token_index; // consume the 'default' keyword
-      default_body = parse_expr();
-    }
-    read_token_type(TokenType::RIGHT_BRACE,
-                    "Expected '}' to end switch expr body");
-    return m_output.add_node(switch_token.id, m_token_index,
-                             SwitchExprNode{move(introductory_decls), expr,
-                                            move(clauses), default_body});
-  }
-
-  NodeId parse_switch_expr_case_clause() {
-    auto case_token = next();
-    NodeId header = parse_case_clause_header();
-    NodeId body = parse_expr();
-    return m_output.add_node(case_token.id, m_token_index,
-                             CaseClauseNode{header, body});
-  }
-
-  NodeId parse_case_clause_header() {
-    auto start_token = peek();
-    Option<List<NodeId>> introductory_decls;
-    Option<List<NodeId>> exprs;
-
-    if (start_token.type == TokenType::LEFT_PAREN ||
-        start_token.type == TokenType::LEFT_PAREN_NO_W) {
-      ++m_token_index; // consume the left paren
-      introductory_decls = parse_introductory_decls();
-      exprs = List<NodeId>();
-      do {
-        exprs.value().push_back(parse_expr());
-        if (peek().type == TokenType::COMMA) {
-          ++m_token_index; // consume the comma
-        }
-      } while (peek().type != TokenType::RIGHT_PAREN);
-      enforce_separator_after_introductory_decls(introductory_decls.value(),
-                                                 exprs.value()[0]);
-      ++m_token_index; // consume the right paren
-    }
-
-    Option<NodeId> when_clause = try_parse_when_clause();
-
-    if (!introductory_decls.has_value() && !exprs.has_value() &&
-        !when_clause.has_value()) {
-      throw_parser_error(start_token.id, "Expected case clause header");
-    }
-
-    return m_output.add_node(start_token.id, m_token_index,
-                             CaseClauseHeaderNode{move(introductory_decls),
-                                                  move(exprs), when_clause});
-  }
-
-  Option<NodeId> try_parse_when_clause() {
-    Option<NodeId> when_clause;
-    auto start_token = peek();
-    if (start_token.type == TokenType::KEYWORD_WHEN) {
-      ++m_token_index; // consume the 'when' keyword
-      read_left_paren("Expected '(' after 'when' in case clause");
-      auto introductory_decls = parse_introductory_decls();
-      NodeId condition = parse_expr();
-      enforce_separator_after_introductory_decls(introductory_decls, condition);
-      when_clause = m_output.add_node(
-          start_token.id, m_token_index,
-          WhenClauseNode{move(introductory_decls), condition});
-      read_token_type(TokenType::RIGHT_PAREN,
-                      "Expected ')' after condition in 'when' clause");
-    }
-    return when_clause;
-  }
-
   NodeId parse_try_expr() {
     auto try_token = next();
     NodeId try_block = parse_expr();
@@ -2778,8 +2657,8 @@ public:
   NodeId parse_parenthesized_expr() {
     auto open_paren = next();
     List<NodeId> exprs;
-    parse_comma_separated_expr_list(exprs, TokenType::RIGHT_PAREN);
-    ++m_token_index; // consume the right paren
+    COMMA_SEPARATED_UNTIL(TokenType::RIGHT_PAREN,
+                          exprs.push_back(parse_expr()));
     if (exprs.size() == 1) {
       return exprs[0];
     }
@@ -2819,7 +2698,7 @@ public:
   NodeId parse_object_literal() {
     auto open_brace = next();
     List<NodeId> entries;
-    while (peek().type != TokenType::RIGHT_BRACE) {
+    COMMA_SEPARATED_UNTIL(TokenType::RIGHT_BRACE, {
       read_dot("Expected dot before field name in object literal");
       auto field_token = peek();
       auto field = expect_identifier(
@@ -2829,11 +2708,7 @@ public:
       NodeId value = parse_expr();
       entries.push_back(m_output.add_node(field_token.id, m_token_index,
                                           KeyValueEntryNode{field, value}));
-      if (peek().type == TokenType::COMMA) {
-        ++m_token_index; // consume the comma
-      }
-    }
-    ++m_token_index; // consume the right brace
+    });
     return m_output.add_node(open_brace.id, m_token_index,
                              AnonymousStructLiteralNode{move(entries)});
   }
@@ -2841,7 +2716,7 @@ public:
   NodeId parse_object_type() {
     auto open_brace = next();
     List<NodeId> entries;
-    while (peek().type != TokenType::RIGHT_BRACE) {
+    COMMA_SEPARATED_UNTIL(TokenType::RIGHT_BRACE, {
       auto field_token = peek();
       auto field = expect_identifier("Expected field name in object literal");
       read_token_type(TokenType::COLON,
@@ -2849,23 +2724,9 @@ public:
       NodeId type = parse_expr();
       entries.push_back(m_output.add_node(field_token.id, m_token_index,
                                           KeyValueEntryNode{field, type}));
-      if (peek().type == TokenType::COMMA) {
-        ++m_token_index; // consume the comma
-      }
-    }
-    ++m_token_index; // consume the right brace
+    });
     return m_output.add_node(open_brace.id, m_token_index,
                              AnonymousStructTypeNode{move(entries)});
-  }
-
-  void parse_comma_separated_expr_list(List<NodeId> &exprs,
-                                       TokenType terminator) {
-    while (peek().type != terminator) {
-      exprs.push_back(parse_expr());
-      if (peek().type == TokenType::COMMA) {
-        ++m_token_index;
-      }
-    }
   }
 
   NodeId parse_string_literal() {
@@ -2992,16 +2853,6 @@ private:
     auto token = peek();
     if (token.type != TokenType::LEFT_PAREN &&
         token.type != TokenType::LEFT_PAREN_NO_W) {
-      throw_parser_error(token.id, String(error_message));
-    }
-    ++m_token_index;
-    return token;
-  }
-
-  TokenWithId read_left_bracket(Text error_message) {
-    auto token = peek();
-    if (token.type != TokenType::LEFT_BRACKET &&
-        token.type != TokenType::LEFT_BRACKET_NO_W) {
       throw_parser_error(token.id, String(error_message));
     }
     ++m_token_index;

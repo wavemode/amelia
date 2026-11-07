@@ -308,34 +308,28 @@ struct TryStmtNode {
   Option<NodeId> else_branch;
 };
 
-struct CaseClauseNode {
-  NodeId header;
-  NodeId body;
-};
-
-struct CaseClauseHeaderNode {
-  Option<List<NodeId>> introductory_decls;
-  Option<List<NodeId>> exprs;
-  Option<NodeId> when_clause;
+struct WhenClauseItemNode {
+  bool is;
+  NodeId expr;
 };
 
 struct WhenClauseNode {
-  List<NodeId> introductory_decls;
-  NodeId condition;
+  List<NodeId> items;
+  NodeId body;
 };
 
-struct SwitchExprNode {
+struct WhenExprNode {
   List<NodeId> introductory_decls;
   NodeId expr;
   List<NodeId> clauses;
-  Option<NodeId> default_body;
+  Option<NodeId> else_expr;
 };
 
-struct SwitchStmtNode {
+struct WhenStmtNode {
   List<NodeId> introductory_decls;
   NodeId expr;
   List<NodeId> clauses;
-  Option<NodeId> default_body;
+  Option<NodeId> else_stmt;
 };
 
 struct OrExprNode {
@@ -895,11 +889,10 @@ struct TypeFieldNode {};
   X(CatchClauseNode)                                                           \
   X(TryExprNode)                                                               \
   X(TryStmtNode)                                                               \
-  X(CaseClauseNode)                                                            \
-  X(CaseClauseHeaderNode)                                                      \
+  X(WhenClauseItemNode)                                                        \
   X(WhenClauseNode)                                                            \
-  X(SwitchExprNode)                                                            \
-  X(SwitchStmtNode)                                                            \
+  X(WhenExprNode)                                                              \
+  X(WhenStmtNode)                                                              \
   X(OrExprNode)                                                                \
   X(AndExprNode)                                                               \
   X(BitwiseOrExprNode)                                                         \

@@ -29,8 +29,6 @@ throw
 import
 as
 is
-switch
-case
 class
 union
 record
@@ -108,8 +106,6 @@ KEYWORD_THROW(throw)
 KEYWORD_IMPORT(import)
 KEYWORD_AS(as)
 KEYWORD_IS(is)
-KEYWORD_SWITCH(switch)
-KEYWORD_CASE(case)
 KEYWORD_CLASS(class)
 KEYWORD_UNION(union)
 KEYWORD_RECORD(record)

@@ -37,6 +37,7 @@
 <<=
 >>
 >>=
+=>
 
 /* EXPECTED_OUTPUT:
 ASSIGN(=)
@@ -78,5 +79,6 @@ LSHIFT(<<)
 LSHIFT_EQUAL(<<=)
 RSHIFT(>>)
 RSHIFT_EQUAL(>>=)
+FAT_ARROW(=>)
 END_OF_FILE()
 */

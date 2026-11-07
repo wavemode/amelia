@@ -1,0 +1,85 @@
+fun f() {
+    when (y) {
+        1, 2, 3 =>           z = 10;
+        is int, is float =>  z = "huh?";
+        else =>              z = 30;
+    }
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    FunctionDeclNode(
+      name=IdentifierNode(
+        name="f"
+      ),
+      signature=FunctionSignatureNode(),
+      body=FunctionBodyNode(
+        stmts=[
+          WhenExprNode(
+            expr=IdentifierNode(
+              name="y"
+            ),
+            clauses=[
+              WhenClauseNode(
+                items=[
+                  WhenClauseItemNode(
+                    is=false,
+                    expr=NumberLiteralNode(value=1)
+                  ),
+                  WhenClauseItemNode(
+                    is=false,
+                    expr=NumberLiteralNode(value=2)
+                  ),
+                  WhenClauseItemNode(
+                    is=false,
+                    expr=NumberLiteralNode(value=3)
+                  )
+                ],
+                body=AssignmentStmtNode(
+                  target=IdentifierNode(
+                    name="z"
+                  ),
+                  expr=NumberLiteralNode(value=10)
+                )
+              ),
+              WhenClauseNode(
+                items=[
+                  WhenClauseItemNode(
+                    is=true,
+                    expr=BuiltinTypeNode(
+                      kind=int
+                    )
+                  ),
+                  WhenClauseItemNode(
+                    is=true,
+                    expr=BuiltinTypeNode(
+                      kind=float
+                    )
+                  )
+                ],
+                body=AssignmentStmtNode(
+                  target=IdentifierNode(
+                    name="z"
+                  ),
+                  expr=StringLiteralNode(
+                    lit="huh?"
+                  )
+                )
+              )
+            ],
+            else_expr=AssignmentStmtNode(
+              target=IdentifierNode(
+                name="z"
+              ),
+              expr=NumberLiteralNode(value=30)
+            )
+          )
+        ],
+        is_default=false,
+        is_deleted=false
+      )
+    )
+  ]
+)
+*/

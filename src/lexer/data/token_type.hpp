@@ -20,8 +20,6 @@ using TokenId = int32_t;
   X(KEYWORD_IMPORT)                                                            \
   X(KEYWORD_AS)                                                                \
   X(KEYWORD_IS)                                                                \
-  X(KEYWORD_SWITCH)                                                            \
-  X(KEYWORD_CASE)                                                              \
   X(KEYWORD_CLASS)                                                             \
   X(KEYWORD_UNION)                                                             \
   X(KEYWORD_RECORD)                                                            \
@@ -135,6 +133,7 @@ using TokenId = int32_t;
   X(LEFT_BRACKET)                                                              \
   X(RIGHT_BRACKET)                                                             \
   X(ARROW)                                                                     \
+  X(FAT_ARROW)                                                                 \
   X(LEFT_BRACE)                                                                \
   X(RIGHT_BRACE)                                                               \
   X(SEMICOLON)                                                                 \

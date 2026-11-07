@@ -195,39 +195,32 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "else_branch", n.else_branch);
     break;
   }
-  case NodeType::CaseClauseNode: {
-    const auto &n = node.as_CaseClauseNode();
-    print_node_field(out, "header", n.header);
-    print_node_field(out, "body", n.body);
-    break;
-  }
-  case NodeType::CaseClauseHeaderNode: {
-    const auto &n = node.as_CaseClauseHeaderNode();
-    print_node_field(out, "introductory_decls", n.introductory_decls);
-    print_node_field(out, "exprs", n.exprs);
-    print_node_field(out, "when_clause", n.when_clause);
+  case NodeType::WhenClauseItemNode: {
+    const auto &n = node.as_WhenClauseItemNode();
+    print_boolean_field(out, "is", n.is);
+    print_node_field(out, "expr", n.expr);
     break;
   }
   case NodeType::WhenClauseNode: {
     const auto &n = node.as_WhenClauseNode();
-    print_node_field(out, "introductory_decls", n.introductory_decls);
-    print_node_field(out, "condition", n.condition);
+    print_node_field(out, "items", n.items);
+    print_node_field(out, "body", n.body);
     break;
   }
-  case NodeType::SwitchExprNode: {
-    const auto &n = node.as_SwitchExprNode();
+  case NodeType::WhenExprNode: {
+    const auto &n = node.as_WhenExprNode();
     print_node_field(out, "introductory_decls", n.introductory_decls);
     print_node_field(out, "expr", n.expr);
     print_node_field(out, "clauses", n.clauses);
-    print_node_field(out, "default_body", n.default_body);
+    print_node_field(out, "else_expr", n.else_expr);
     break;
   }
-  case NodeType::SwitchStmtNode: {
-    const auto &n = node.as_SwitchStmtNode();
+  case NodeType::WhenStmtNode: {
+    const auto &n = node.as_WhenStmtNode();
     print_node_field(out, "introductory_decls", n.introductory_decls);
     print_node_field(out, "expr", n.expr);
     print_node_field(out, "clauses", n.clauses);
-    print_node_field(out, "default_body", n.default_body);
+    print_node_field(out, "else_stmt", n.else_stmt);
     break;
   }
   case NodeType::OrExprNode: {

@@ -45,8 +45,6 @@ const Map<Text, TokenType> RESERVED_WORDS = Map<Text, TokenType>({
     {"import", TokenType::KEYWORD_IMPORT},
     {"as", TokenType::KEYWORD_AS},
     {"is", TokenType::KEYWORD_IS},
-    {"switch", TokenType::KEYWORD_SWITCH},
-    {"case", TokenType::KEYWORD_CASE},
     {"class", TokenType::KEYWORD_CLASS},
     {"union", TokenType::KEYWORD_UNION},
     {"record", TokenType::KEYWORD_RECORD},
@@ -1162,9 +1160,13 @@ public:
 
   void read_equal(const Location &start_location) {
     next();
-    if (peek() == '=') {
+    auto next_cp = peek();
+    if (next_cp == '=') {
       next();
       emit_token(TokenType::EQUAL, start_location);
+    } else if (next_cp == '>') {
+      next();
+      emit_token(TokenType::FAT_ARROW, start_location);
     } else {
       emit_token(TokenType::ASSIGN, start_location);
     }

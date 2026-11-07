@@ -1,0 +1,67 @@
+let x = when (y) {
+    1, 2, 3 => 10,
+    is int, is float => "huh?",
+    else => 30
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclNode(
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              name="x"
+            )
+          ),
+          expr=WhenExprNode(
+            expr=IdentifierNode(
+              name="y"
+            ),
+            clauses=[
+              WhenClauseNode(
+                items=[
+                  WhenClauseItemNode(
+                    is=false,
+                    expr=NumberLiteralNode(value=1)
+                  ),
+                  WhenClauseItemNode(
+                    is=false,
+                    expr=NumberLiteralNode(value=2)
+                  ),
+                  WhenClauseItemNode(
+                    is=false,
+                    expr=NumberLiteralNode(value=3)
+                  )
+                ],
+                body=NumberLiteralNode(value=10)
+              ),
+              WhenClauseNode(
+                items=[
+                  WhenClauseItemNode(
+                    is=true,
+                    expr=BuiltinTypeNode(
+                      kind=int
+                    )
+                  ),
+                  WhenClauseItemNode(
+                    is=true,
+                    expr=BuiltinTypeNode(
+                      kind=float
+                    )
+                  )
+                ],
+                body=StringLiteralNode(
+                  lit="huh?"
+                )
+              )
+            ],
+            else_expr=NumberLiteralNode(value=30)
+          )
+        )
+      ]
+    )
+  ]
+)
+*/
