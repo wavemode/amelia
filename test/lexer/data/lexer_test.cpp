@@ -28,7 +28,7 @@ TEST_CASE("test suite") {
 
   CompilerTestCaseCollection collection;
   collect_test_cases(filesystem_walker, file_loader, console_printer,
-                     env_reader, collection, "test_cases/lexer");
+                     env_reader, collection, "test/test_cases/lexer");
 
   CompilerTestExecutionContext execution_context =
       get_test_execution_context(env_reader);

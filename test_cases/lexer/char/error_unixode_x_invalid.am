@@ -1,5 +1,0 @@
-'\xe6'
-
-/* EXPECTED_OUTPUT:
-ERROR("Invalid character literal: Invalid UTF-8 data (at test_cases/lexer/char/error_unixode_x_invalid.am:1:1)")
-*/

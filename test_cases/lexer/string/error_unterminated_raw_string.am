@@ -1,5 +1,0 @@
-/* EXPECTED_OUTPUT:
-ERROR("Unterminated string literal - unexpected end of input (at test_cases/lexer/string/error_unterminated_raw_string.am:5:8)")
-*/
-
-r"hello

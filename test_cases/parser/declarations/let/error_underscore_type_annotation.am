@@ -1,5 +1,0 @@
-let _ : int = 5
-
-/* EXPECTED_OUTPUT:
-ERROR("Unexpected type annotation after pattern (at test_cases/parser/declarations/let/error_underscore_type_annotation.am:1:7)")
-*/

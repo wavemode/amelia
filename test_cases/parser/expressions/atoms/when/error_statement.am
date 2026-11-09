@@ -1,7 +1,0 @@
-let x = when (y) {
-    5 => z = 20
-}
-
-/* EXPECTED_OUTPUT:
-ERROR("Expected comma or semicolon between successive items (at test_cases/parser/expressions/atoms/when/error_statement.am:2:12)")
-*/

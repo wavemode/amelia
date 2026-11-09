@@ -1,0 +1,7 @@
+let z = {
+  for (x) a()
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("Expected 'in' keyword in for-in statement (at test/test_cases/parser/statements/for_in/error_missing_in.am:2:9)")
+*/
