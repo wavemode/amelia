@@ -2015,7 +2015,7 @@ public:
     case TokenType::KEYWORD_FLOAT:
     case TokenType::KEYWORD_DOUBLE:
     case TokenType::KEYWORD_CHAR:
-    case TokenType::KEYWORD_TEXT:
+    case TokenType::KEYWORD_STR:
     case TokenType::KEYWORD_NULL:
     case TokenType::KEYWORD_NEVER:
       return parse_builtin_type();
@@ -2259,7 +2259,7 @@ public:
     case TokenType::KEYWORD_FLOAT:
     case TokenType::KEYWORD_DOUBLE:
     case TokenType::KEYWORD_CHAR:
-    case TokenType::KEYWORD_TEXT:
+    case TokenType::KEYWORD_STR:
     case TokenType::KEYWORD_NULL:
     case TokenType::KEYWORD_NEVER:
       return parse_builtin_type();
@@ -2409,7 +2409,7 @@ public:
     case TokenType::KEYWORD_CHAR:
       kind = BuiltinKind::Char;
       break;
-    case TokenType::KEYWORD_TEXT:
+    case TokenType::KEYWORD_STR:
       kind = BuiltinKind::Text;
       break;
     case TokenType::KEYWORD_NULL:

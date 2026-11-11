@@ -22,7 +22,7 @@ double
 bitint
 ubitint
 char
-text
+str
 null
 never
 throw
@@ -97,7 +97,7 @@ KEYWORD_DOUBLE(double)
 KEYWORD_BITINT(bitint)
 KEYWORD_UBITINT(ubitint)
 KEYWORD_CHAR(char)
-KEYWORD_TEXT(text)
+KEYWORD_STR(str)
 KEYWORD_NULL(null)
 KEYWORD_NEVER(never)
 KEYWORD_THROW(throw)
