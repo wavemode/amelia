@@ -1,4 +1,4 @@
-class A[T] when (Move[T], A : T) {}
+class A[T] when [Move[T], A : T] {}
 
 /* EXPECTED_OUTPUT:
 ModuleNode(

@@ -1,4 +1,4 @@
-let f = fun (x : int, y : float) with (a : long, b : short) {}
+let f = fun (x : int, y : float) with (a, b) {}
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
@@ -38,25 +38,13 @@ ModuleNode(
               ],
               implicit_parameter_list=ImplicitParameterListNode(
                 parameters=[
-                  FunctionParameterNode(
-                    variadic=false,
-                    name=IdentifierNode(
-                      raw=false,
-                      contents="a"
-                    ),
-                    type=BuiltinTypeNode(
-                      kind=long
-                    )
+                  IdentifierNode(
+                    raw=false,
+                    contents="a"
                   ),
-                  FunctionParameterNode(
-                    variadic=false,
-                    name=IdentifierNode(
-                      raw=false,
-                      contents="b"
-                    ),
-                    type=BuiltinTypeNode(
-                      kind=short
-                    )
+                  IdentifierNode(
+                    raw=false,
+                    contents="b"
                   )
                 ]
               )

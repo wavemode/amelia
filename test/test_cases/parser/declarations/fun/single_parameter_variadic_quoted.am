@@ -1,4 +1,4 @@
-fun f(...`x`) {}
+fun f(...r`\`) {}
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
@@ -13,8 +13,8 @@ ModuleNode(
           FunctionParameterNode(
             variadic=true,
             name=IdentifierNode(
-              raw=false,
-              contents="x"
+              raw=true,
+              contents="\"
             )
           )
         ]

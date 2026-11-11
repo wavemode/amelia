@@ -894,9 +894,10 @@ public:
       Option<List<NodeId>> additional_constraints;
       if (peek().type == TokenType::KEYWORD_WHEN) {
         ++m_token_index; // consume the 'when' keyword
-        read_left_paren("Expected '(' after 'when' in generic parameter list");
+        read_left_bracket(
+            "Expected '[' after 'when' in generic parameter list");
         List<NodeId> constraints;
-        COMMA_SEPARATED_UNTIL(TokenType::RIGHT_PAREN,
+        COMMA_SEPARATED_UNTIL(TokenType::RIGHT_BRACKET,
                               constraints.push_back(parse_type_constraint()));
         additional_constraints = move(constraints);
       }
@@ -1124,12 +1125,10 @@ public:
     auto next_token = peek();
     if (next_token.type == TokenType::KEYWORD_WITH) {
       ++m_token_index; // consume the 'with' keyword
-      read_left_paren(
-          "Expected '(' after 'with' keyword in function signature");
+      read_left_paren("Expected '(' to begin implicit parameter list");
       List<NodeId> implicit_parameters;
-      COMMA_SEPARATED_UNTIL(
-          TokenType::RIGHT_PAREN,
-          implicit_parameters.push_back(parse_function_parameter()));
+      COMMA_SEPARATED_UNTIL(TokenType::RIGHT_PAREN,
+                            implicit_parameters.push_back(parse_expr()));
       return Some(m_output.add_node(
           next_token.id, m_token_index,
           ImplicitParameterListNode{move(implicit_parameters)}));
@@ -2931,6 +2930,16 @@ private:
     auto token = peek();
     if (token.type != TokenType::LEFT_PAREN &&
         token.type != TokenType::LEFT_PAREN_NO_W) {
+      throw_parser_error(token.id, String(error_message));
+    }
+    ++m_token_index;
+    return token;
+  }
+
+  TokenWithId read_left_bracket(Text error_message) {
+    auto token = peek();
+    if (token.type != TokenType::LEFT_BRACKET &&
+        token.type != TokenType::LEFT_BRACKET_NO_W) {
       throw_parser_error(token.id, String(error_message));
     }
     ++m_token_index;

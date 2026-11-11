@@ -2,8 +2,8 @@ fun f(
   x : int,
   y : float,
 ) with (
-  a : long,
-  b : short,
+  a,
+  b,
 ) [&z = 5] -> int {
 
 }

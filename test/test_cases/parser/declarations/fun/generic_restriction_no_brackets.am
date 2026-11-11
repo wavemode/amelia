@@ -1,4 +1,4 @@
-fun f when (int : int) (x : int) -> int {}
+fun f when [int : int] (x : int) -> int {}
 
 /* EXPECTED_OUTPUT:
 ModuleNode(

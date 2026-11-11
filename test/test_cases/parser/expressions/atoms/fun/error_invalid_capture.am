@@ -9,5 +9,5 @@ let f = fun (
 }
 
 /* EXPECTED_OUTPUT:
-ERROR("Invalid capture designator: expected capture kind or '=' after identifier (at test/test_cases/parser/expressions/atoms/fun/error_invalid_capture.am:7:4)")
+ERROR("Expected comma between successive items (at test/test_cases/parser/expressions/atoms/fun/error_invalid_capture.am:5:5)")
 */

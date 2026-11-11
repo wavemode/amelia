@@ -2,8 +2,8 @@ fun f(
   x : int,
   y : float,
 ) with (
-  a : long,
-  b : short,
+  a,
+  b,
 ) [move x, copy y, &z, &const t, &move w, u = make_shared(move u)] -> int {
 
 }
@@ -41,25 +41,13 @@ ModuleNode(
         ],
         implicit_parameter_list=ImplicitParameterListNode(
           parameters=[
-            FunctionParameterNode(
-              variadic=false,
-              name=IdentifierNode(
-                raw=false,
-                contents="a"
-              ),
-              type=BuiltinTypeNode(
-                kind=long
-              )
+            IdentifierNode(
+              raw=false,
+              contents="a"
             ),
-            FunctionParameterNode(
-              variadic=false,
-              name=IdentifierNode(
-                raw=false,
-                contents="b"
-              ),
-              type=BuiltinTypeNode(
-                kind=short
-              )
+            IdentifierNode(
+              raw=false,
+              contents="b"
             )
           ]
         ),

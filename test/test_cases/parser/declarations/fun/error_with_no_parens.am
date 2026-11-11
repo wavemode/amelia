@@ -1,5 +1,5 @@
 fun f(x : int, y : float) with {}
 
 /* EXPECTED_OUTPUT:
-ERROR("Expected '(' after 'with' keyword in function signature (at test/test_cases/parser/declarations/fun/error_with_no_parens.am:1:32)")
+ERROR("Expected '(' to begin implicit parameter list (at test/test_cases/parser/declarations/fun/error_with_no_parens.am:1:32)")
 */

@@ -1,4 +1,4 @@
-concept A with (x: int) {}
+concept A with (x) {}
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
@@ -10,15 +10,9 @@ ModuleNode(
       ),
       implicit_parameter_list=ImplicitParameterListNode(
         parameters=[
-          FunctionParameterNode(
-            variadic=false,
-            name=IdentifierNode(
-              raw=false,
-              contents="x"
-            ),
-            type=BuiltinTypeNode(
-              kind=int
-            )
+          IdentifierNode(
+            raw=false,
+            contents="x"
           )
         ]
       ),
