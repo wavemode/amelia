@@ -1,0 +1,40 @@
+let x = (
+    "hello, "
+    "world"
+    "!"
+)
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclNode(
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              raw=false,
+              contents="x"
+            )
+          ),
+          expr=StringLiteralSeriesNode(
+            literals=[
+              StringLiteralNode(
+                raw=false,
+                contents="hello, "
+              ),
+              StringLiteralNode(
+                raw=false,
+                contents="world"
+              ),
+              StringLiteralNode(
+                raw=false,
+                contents="!"
+              )
+            ]
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

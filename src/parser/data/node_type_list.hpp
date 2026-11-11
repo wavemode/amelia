@@ -32,6 +32,10 @@ struct StringLiteralNode {
   String contents;
 };
 
+struct StringLiteralSeriesNode {
+  List<NodeId> literals;
+};
+
 struct CharLiteralNode {
   String contents;
 };
@@ -874,6 +878,7 @@ struct TypeFieldNode {};
   X(LetDeclNode)                                                               \
   X(ConstDeclNode)                                                             \
   X(StringLiteralNode)                                                         \
+  X(StringLiteralSeriesNode)                                                   \
   X(CharLiteralNode)                                                           \
   X(NumberLiteralNode)                                                         \
   X(ParenthesizedExprNode)                                                     \

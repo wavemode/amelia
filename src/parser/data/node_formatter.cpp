@@ -79,6 +79,11 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_text_field(out, "contents", s.text());
     break;
   }
+  case NodeType::StringLiteralSeriesNode: {
+    const auto &n = node.as_StringLiteralSeriesNode();
+    print_node_field(out, "literals", n.literals);
+    break;
+  }
   case NodeType::CharLiteralNode: {
     const auto &n = node.as_CharLiteralNode();
     String s;

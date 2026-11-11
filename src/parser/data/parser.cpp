@@ -2736,6 +2736,30 @@ public:
   }
 
   NodeId parse_string_literal() {
+    auto start_token = peek();
+    List<NodeId> literals;
+    while (true) {
+      switch (peek().type) {
+      case TokenType::STRING_LITERAL:
+      case TokenType::RAW_STRING_LITERAL:
+      case TokenType::MULTILINE_STRING_LITERAL:
+      case TokenType::RAW_MULTILINE_STRING_LITERAL:
+        literals.push_back(parse_single_string_literal());
+        break;
+      default:
+        goto end;
+      }
+    }
+  end:
+    if (literals.size() == 1) {
+      return literals[0];
+    } else {
+      return m_output.add_node(start_token.id, m_token_index,
+                               StringLiteralSeriesNode{move(literals)});
+    }
+  }
+
+  NodeId parse_single_string_literal() {
     auto token = next();
     bool raw = token.type == TokenType::RAW_STRING_LITERAL ||
                token.type == TokenType::RAW_MULTILINE_STRING_LITERAL;
