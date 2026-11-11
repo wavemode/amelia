@@ -476,11 +476,6 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "target", n.target);
     break;
   }
-  case NodeType::BlockStmtNode: {
-    const auto &n = node.as_BlockStmtNode();
-    print_node_field(out, "stmts", n.stmts);
-    break;
-  }
   case NodeType::ThrowStmtNode: {
     const auto &n = node.as_ThrowStmtNode();
     print_node_field(out, "expr", n.expr);

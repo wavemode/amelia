@@ -27,19 +27,21 @@ ModuleNode(
                 raw=false,
                 contents="y"
               ),
-              body=BlockStmtNode(
-                stmts=[
-                  AddAssignStmtNode(
-                    target=IdentifierNode(
-                      raw=false,
-                      contents="z"
-                    ),
-                    expr=IdentifierNode(
-                      raw=false,
-                      contents="x"
+              body=ExprStmtNode(
+                expr=BlockExprNode(
+                  stmts=[
+                    AddAssignStmtNode(
+                      target=IdentifierNode(
+                        raw=false,
+                        contents="z"
+                      ),
+                      expr=IdentifierNode(
+                        raw=false,
+                        contents="x"
+                      )
                     )
-                  )
-                ]
+                  ]
+                )
               )
             )
           )

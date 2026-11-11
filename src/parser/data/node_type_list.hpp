@@ -524,10 +524,6 @@ struct ScopeResolutionExprNode {
   NodeId name;
 };
 
-struct BlockStmtNode {
-  List<NodeId> stmts;
-};
-
 struct ThrowStmtNode {
   Option<NodeId> expr;
 };
@@ -936,7 +932,6 @@ struct TypeFieldNode {};
   X(PostIncrementStmtNode)                                                     \
   X(PreDecrementStmtNode)                                                      \
   X(PostDecrementStmtNode)                                                     \
-  X(BlockStmtNode)                                                             \
   X(ThrowStmtNode)                                                             \
   X(OperatorIdentAddNode)                                                      \
   X(OperatorIdentSubNode)                                                      \

@@ -27,18 +27,20 @@ ModuleNode(
                   contents="10"
                 )
               ),
-              then_branch=BlockStmtNode(
-                stmts=[
-                  AssignmentStmtNode(
-                    target=IdentifierNode(
-                      raw=false,
-                      contents="y"
-                    ),
-                    expr=NumberLiteralNode(
-                      contents="5"
+              then_branch=ExprStmtNode(
+                expr=BlockExprNode(
+                  stmts=[
+                    AssignmentStmtNode(
+                      target=IdentifierNode(
+                        raw=false,
+                        contents="y"
+                      ),
+                      expr=NumberLiteralNode(
+                        contents="5"
+                      )
                     )
-                  )
-                ]
+                  ]
+                )
               )
             )
           )

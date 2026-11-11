@@ -30,25 +30,27 @@ ModuleNode(
                   raw=false,
                   contents="y"
                 ),
-                body=BlockStmtNode(
-                  stmts=[
-                    ExprStmtNode(
-                      expr=FunctionCallExprNode(
-                        callee=IdentifierNode(
-                          raw=false,
-                          contents="z"
+                body=ExprStmtNode(
+                  expr=BlockExprNode(
+                    stmts=[
+                      ExprStmtNode(
+                        expr=FunctionCallExprNode(
+                          callee=IdentifierNode(
+                            raw=false,
+                            contents="z"
+                          )
+                        )
+                      ),
+                      ExprStmtNode(
+                        expr=FunctionCallExprNode(
+                          callee=IdentifierNode(
+                            raw=false,
+                            contents="t"
+                          )
                         )
                       )
-                    ),
-                    ExprStmtNode(
-                      expr=FunctionCallExprNode(
-                        callee=IdentifierNode(
-                          raw=false,
-                          contents="t"
-                        )
-                      )
-                    )
-                  ]
+                    ]
+                  )
                 )
               )
             ]

@@ -426,8 +426,6 @@ public:
     case TokenType::DOUBLE_MINUS:
     case TokenType::DOUBLE_MINUS_NO_W:
       return parse_pre_decrement_statement();
-    case TokenType::LEFT_BRACE:
-      return parse_block_statement();
     case TokenType::KEYWORD_IF:
       return parse_if_statement();
     case TokenType::KEYWORD_WHEN:
@@ -1312,18 +1310,6 @@ public:
     return m_output.add_node(if_token.id, m_token_index,
                              IfStmtNode{move(introductory_decls), condition,
                                         then_branch, else_branch});
-  }
-
-  NodeId parse_block_statement() {
-    auto left_brace_token =
-        read_token_type(TokenType::LEFT_BRACE,
-                        "Expected '{' at the beginning of block statement");
-    List<NodeId> stmts;
-    parse_statements(stmts, TokenType::RIGHT_BRACE);
-    read_token_type(TokenType::RIGHT_BRACE,
-                    "Expected '}' at the end of block statement");
-    return m_output.add_node(left_brace_token.id, m_token_index,
-                             BlockStmtNode{move(stmts)});
   }
 
   NodeId parse_pre_increment_statement() {

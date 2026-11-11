@@ -23,24 +23,26 @@ ModuleNode(
           expr=BlockExprNode(
             stmts=[
               TryStmtNode(
-                try_block=BlockStmtNode(
-                  stmts=[
-                    LetDeclNode(
-                      inits=[
-                        InitializerNode(
-                          pattern=IdentifierPatternNode(
-                            identifier=IdentifierNode(
-                              raw=false,
-                              contents="x"
+                try_block=ExprStmtNode(
+                  expr=BlockExprNode(
+                    stmts=[
+                      LetDeclNode(
+                        inits=[
+                          InitializerNode(
+                            pattern=IdentifierPatternNode(
+                              identifier=IdentifierNode(
+                                raw=false,
+                                contents="x"
+                              )
+                            ),
+                            expr=NumberLiteralNode(
+                              contents="10"
                             )
-                          ),
-                          expr=NumberLiteralNode(
-                            contents="10"
                           )
-                        )
-                      ]
-                    )
-                  ]
+                        ]
+                      )
+                    ]
+                  )
                 ),
                 catch_clauses=[
                   CatchClauseNode(
@@ -48,47 +50,51 @@ ModuleNode(
                       raw=false,
                       contents="e"
                     ),
-                    body=BlockStmtNode(
-                      stmts=[
-                        ExprStmtNode(
-                          expr=FunctionCallExprNode(
-                            callee=IdentifierNode(
-                              raw=false,
-                              contents="println"
-                            ),
-                            args=[
-                              FunctionArgumentNode(
-                                expr=StringLiteralNode(
-                                  raw=false,
-                                  contents="error"
+                    body=ExprStmtNode(
+                      expr=BlockExprNode(
+                        stmts=[
+                          ExprStmtNode(
+                            expr=FunctionCallExprNode(
+                              callee=IdentifierNode(
+                                raw=false,
+                                contents="println"
+                              ),
+                              args=[
+                                FunctionArgumentNode(
+                                  expr=StringLiteralNode(
+                                    raw=false,
+                                    contents="error"
+                                  )
                                 )
-                              )
-                            ]
-                          )
-                        )
-                      ]
-                    )
-                  )
-                ],
-                else_branch=BlockStmtNode(
-                  stmts=[
-                    ExprStmtNode(
-                      expr=FunctionCallExprNode(
-                        callee=IdentifierNode(
-                          raw=false,
-                          contents="println"
-                        ),
-                        args=[
-                          FunctionArgumentNode(
-                            expr=IdentifierNode(
-                              raw=false,
-                              contents="x"
+                              ]
                             )
                           )
                         ]
                       )
                     )
-                  ]
+                  )
+                ],
+                else_branch=ExprStmtNode(
+                  expr=BlockExprNode(
+                    stmts=[
+                      ExprStmtNode(
+                        expr=FunctionCallExprNode(
+                          callee=IdentifierNode(
+                            raw=false,
+                            contents="println"
+                          ),
+                          args=[
+                            FunctionArgumentNode(
+                              expr=IdentifierNode(
+                                raw=false,
+                                contents="x"
+                              )
+                            )
+                          ]
+                        )
+                      )
+                    ]
+                  )
                 )
               )
             ]

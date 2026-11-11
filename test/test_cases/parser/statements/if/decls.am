@@ -86,25 +86,29 @@ ModuleNode(
                     contents="10"
                   )
                 ),
-                then_branch=BlockStmtNode(
-                  stmts=[
-                    PreIncrementStmtNode(
-                      target=IdentifierNode(
-                        raw=false,
-                        contents="y"
+                then_branch=ExprStmtNode(
+                  expr=BlockExprNode(
+                    stmts=[
+                      PreIncrementStmtNode(
+                        target=IdentifierNode(
+                          raw=false,
+                          contents="y"
+                        )
                       )
-                    )
-                  ]
+                    ]
+                  )
                 ),
-                else_branch=BlockStmtNode(
-                  stmts=[
-                    PreIncrementStmtNode(
-                      target=IdentifierNode(
-                        raw=false,
-                        contents="z"
+                else_branch=ExprStmtNode(
+                  expr=BlockExprNode(
+                    stmts=[
+                      PreIncrementStmtNode(
+                        target=IdentifierNode(
+                          raw=false,
+                          contents="z"
+                        )
                       )
-                    )
-                  ]
+                    ]
+                  )
                 )
               )
             ]

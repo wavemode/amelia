@@ -25,30 +25,34 @@ ModuleNode(
                   raw=false,
                   contents="x"
                 ),
-                then_branch=BlockStmtNode(
-                  stmts=[
-                    ExprStmtNode(
-                      expr=IdentifierNode(
-                        raw=false,
-                        contents="y"
+                then_branch=ExprStmtNode(
+                  expr=BlockExprNode(
+                    stmts=[
+                      ExprStmtNode(
+                        expr=IdentifierNode(
+                          raw=false,
+                          contents="y"
+                        )
                       )
-                    )
-                  ]
+                    ]
+                  )
                 ),
                 else_branch=IfStmtNode(
                   condition=IdentifierNode(
                     raw=false,
                     contents="z"
                   ),
-                  then_branch=BlockStmtNode(
-                    stmts=[
-                      ExprStmtNode(
-                        expr=IdentifierNode(
-                          raw=false,
-                          contents="t"
+                  then_branch=ExprStmtNode(
+                    expr=BlockExprNode(
+                      stmts=[
+                        ExprStmtNode(
+                          expr=IdentifierNode(
+                            raw=false,
+                            contents="t"
+                          )
                         )
-                      )
-                    ]
+                      ]
+                    )
                   )
                 )
               )
