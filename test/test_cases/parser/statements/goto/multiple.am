@@ -12,7 +12,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=z
+              contents="z"
             )
           ),
           expr=BlockExprNode(
@@ -20,13 +20,13 @@ ModuleNode(
               GotoStmtNode(
                 label=IdentifierNode(
                   raw=false,
-                  contents=x
+                  contents="x"
                 )
               ),
               GotoStmtNode(
                 label=IdentifierNode(
                   raw=false,
-                  contents=y
+                  contents="y"
                 )
               )
             ]

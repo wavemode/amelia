@@ -7,11 +7,11 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=c
+              contents="c"
             )
           ),
           expr=CharLiteralNode(
-            contents=4'
+            contents="4"'
           )
         )
       ]

@@ -9,19 +9,19 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x
+              contents="x"
             )
           ),
           expr=IndexingExprNode(
             object=IdentifierNode(
               raw=false,
-              contents=y
+              contents="y"
             ),
             indices=[
               IndexNode(
                 value=IdentifierNode(
                   raw=false,
-                  contents=z
+                  contents="z"
                 )
               )
             ]

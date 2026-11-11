@@ -23,7 +23,9 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   case NodeType::IdentifierNode: {
     const auto &n = node.as_IdentifierNode();
     print_boolean_field(out, "raw", n.raw);
-    print_text_field(out, "contents", n.contents);
+    String s;
+    Serialize::literal(n.contents).quoted().to_string(s);
+    print_text_field(out, "contents", s.text());
     break;
   }
   case NodeType::IdentifierPatternNode: {
@@ -72,18 +74,24 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   case NodeType::StringLiteralNode: {
     const auto &n = node.as_StringLiteralNode();
     print_boolean_field(out, "raw", n.raw);
-    print_text_field(out, "contents", n.contents);
+    String s;
+    Serialize::literal(n.contents).quoted().to_string(s);
+    print_text_field(out, "contents", s.text());
     break;
   }
   case NodeType::CharLiteralNode: {
     const auto &n = node.as_CharLiteralNode();
-    print_text_field(out, "contents", n.contents);
+    String s;
+    Serialize::literal(n.contents).quoted().to_string(s);
+    print_text_field(out, "contents", s.text());
     out.append('\'');
     break;
   }
   case NodeType::NumberLiteralNode: {
     const auto &n = node.as_NumberLiteralNode();
-    print_text_field(out, "contents", n.contents);
+    String s;
+    Serialize::literal(n.contents).quoted().to_string(s);
+    print_text_field(out, "contents", s.text());
     break;
   }
   case NodeType::ParenthesizedExprNode: {

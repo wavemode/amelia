@@ -9,13 +9,13 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x
+              contents="x"
             )
           ),
           expr=QuestionMarkExprNode(
             expr=IdentifierNode(
               raw=false,
-              contents=y
+              contents="y"
             )
           )
         )

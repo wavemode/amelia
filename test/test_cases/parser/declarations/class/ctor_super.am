@@ -14,13 +14,13 @@ ModuleNode(
     ClassDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=A
+        contents="A"
       ),
       base_class_list=BaseTypeListNode(
         base_classes=[
           IdentifierNode(
             raw=false,
-            contents=B
+            contents="B"
           )
         ]
       ),
@@ -29,7 +29,7 @@ ModuleNode(
           ClassConstructorNode(
             name=IdentifierNode(
               raw=false,
-              contents=A
+              contents="A"
             ),
             signature=FunctionSignatureNode(),
             body=FunctionBodyNode(
@@ -47,7 +47,7 @@ ModuleNode(
           ClassConstructorNode(
             name=IdentifierNode(
               raw=false,
-              contents=A
+              contents="A"
             ),
             signature=FunctionSignatureNode(
               parameters=[
@@ -55,7 +55,7 @@ ModuleNode(
                   variadic=false,
                   name=IdentifierNode(
                     raw=false,
-                    contents=a
+                    contents="a"
                   ),
                   type=BuiltinTypeNode(
                     kind=int
@@ -73,7 +73,7 @@ ModuleNode(
                         IndexNode(
                           value=IdentifierNode(
                             raw=false,
-                            contents=B
+                            contents="B"
                           )
                         )
                       ]
@@ -82,7 +82,7 @@ ModuleNode(
                       FunctionArgumentNode(
                         expr=IdentifierNode(
                           raw=false,
-                          contents=a
+                          contents="a"
                         )
                       )
                     ]

@@ -10,12 +10,12 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x
+              contents="x"
             )
           ),
           expr=IdentifierNode(
             raw=false,
-            contents=y
+            contents="y"
           )
         )
       ]
@@ -26,12 +26,12 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=a
+              contents="a"
             )
           ),
           expr=IdentifierNode(
             raw=false,
-            contents=b
+            contents="b"
           )
         )
       ]

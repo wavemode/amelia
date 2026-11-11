@@ -6,14 +6,14 @@ ModuleNode(
     ConceptDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=A
+        contents="A"
       ),
       body=ClassBodyNode(
         decls=[
           ClassFieldNode(
             name=IdentifierNode(
               raw=false,
-              contents=a
+              contents="a"
             ),
             type=BuiltinTypeNode(
               kind=int
@@ -23,11 +23,11 @@ ModuleNode(
           ClassFieldNode(
             name=IdentifierNode(
               raw=false,
-              contents=b
+              contents="b"
             ),
             type=IdentifierNode(
               raw=false,
-              contents=String
+              contents="String"
             )
           )
         ]

@@ -9,14 +9,14 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=c
+              contents="c"
             ),
             type_annotation=BuiltinTypeNode(
               kind=char
             )
           ),
           expr=CharLiteralNode(
-            contents=日'
+            contents="日"'
           )
         )
       ]

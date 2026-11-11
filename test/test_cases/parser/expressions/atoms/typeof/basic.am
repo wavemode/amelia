@@ -9,21 +9,21 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=y
+              contents="y"
             ),
             type_annotation=TypeOfExprNode(
               expr=AddExprNode(
                 left=NumberLiteralNode(
-                  contents=5
+                  contents="5"
                 ),
                 right=NumberLiteralNode(
-                  contents=5
+                  contents="5"
                 )
               )
             )
           ),
           expr=NumberLiteralNode(
-            contents=10
+            contents="10"
           )
         )
       ]

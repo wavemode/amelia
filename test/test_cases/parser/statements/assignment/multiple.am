@@ -12,7 +12,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=z
+              contents="z"
             )
           ),
           expr=BlockExprNode(
@@ -20,19 +20,19 @@ ModuleNode(
               AssignmentStmtNode(
                 target=IdentifierNode(
                   raw=false,
-                  contents=x
+                  contents="x"
                 ),
                 expr=NumberLiteralNode(
-                  contents=5
+                  contents="5"
                 )
               ),
               AssignmentStmtNode(
                 target=IdentifierNode(
                   raw=false,
-                  contents=y
+                  contents="y"
                 ),
                 expr=NumberLiteralNode(
-                  contents=6
+                  contents="6"
                 )
               )
             ]

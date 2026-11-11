@@ -11,7 +11,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=a
+              contents="a"
             )
           ),
           expr=BlockExprNode(
@@ -19,7 +19,7 @@ ModuleNode(
               IfStmtNode(
                 condition=IdentifierNode(
                   raw=false,
-                  contents=x
+                  contents="x"
                 ),
                 then_branch=EmptyStmtNode(),
                 else_branch=EmptyStmtNode()

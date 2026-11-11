@@ -8,7 +8,7 @@ ModuleNode(
     FunctionDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=f
+        contents="f"
       ),
       signature=FunctionSignatureNode(),
       body=FunctionBodyNode(
@@ -16,7 +16,7 @@ ModuleNode(
           WhenExprNode(
             expr=IdentifierNode(
               raw=false,
-              contents=y
+              contents="y"
             )
           )
         ],

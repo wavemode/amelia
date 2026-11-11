@@ -6,13 +6,13 @@ ModuleNode(
     ConceptDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=A
+        contents="A"
       ),
       base_concept_list=BaseTypeListNode(
         base_classes=[
           IdentifierNode(
             raw=false,
-            contents=B
+            contents="B"
           )
         ]
       ),

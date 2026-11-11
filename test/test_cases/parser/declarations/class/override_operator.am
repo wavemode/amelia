@@ -12,7 +12,7 @@ ModuleNode(
     ClassDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=A
+        contents="A"
       ),
       body=ClassBodyNode(
         decls=[
@@ -27,7 +27,7 @@ ModuleNode(
                     variadic=false,
                     name=IdentifierNode(
                       raw=false,
-                      contents=other
+                      contents="other"
                     )
                   )
                 ]
@@ -39,17 +39,17 @@ ModuleNode(
                       object=ThisLiteralNode(),
                       field=IdentifierNode(
                         raw=false,
-                        contents=a
+                        contents="a"
                       )
                     ),
                     expr=FieldAccessExprNode(
                       object=IdentifierNode(
                         raw=false,
-                        contents=other
+                        contents="other"
                       ),
                       field=IdentifierNode(
                         raw=false,
-                        contents=a
+                        contents="a"
                       )
                     )
                   )
@@ -62,7 +62,7 @@ ModuleNode(
           ClassFieldNode(
             name=IdentifierNode(
               raw=false,
-              contents=a
+              contents="a"
             ),
             type=BuiltinTypeNode(
               kind=int

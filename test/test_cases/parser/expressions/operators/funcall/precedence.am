@@ -9,20 +9,20 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x
+              contents="x"
             )
           ),
           expr=NotExprNode(
             expr=FunctionCallExprNode(
               callee=IdentifierNode(
                 raw=false,
-                contents=y
+                contents="y"
               ),
               args=[
                 FunctionArgumentNode(
                   expr=IdentifierNode(
                     raw=false,
-                    contents=z
+                    contents="z"
                   )
                 )
               ]

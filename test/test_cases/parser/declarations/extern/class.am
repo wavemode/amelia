@@ -7,7 +7,7 @@ ModuleNode(
       decl=ClassDeclNode(
         name=IdentifierNode(
           raw=false,
-          contents=A
+          contents="A"
         ),
         body=ClassBodyNode()
       )

@@ -10,7 +10,7 @@ ModuleNode(
     FunctionDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=f
+        contents="f"
       ),
       signature=FunctionSignatureNode(),
       body=FunctionBodyNode(
@@ -18,7 +18,7 @@ ModuleNode(
           WhenExprNode(
             expr=IdentifierNode(
               raw=false,
-              contents=y
+              contents="y"
             ),
             clauses=[
               WhenClauseNode(
@@ -26,17 +26,17 @@ ModuleNode(
                   WhenClauseItemNode(
                     is=false,
                     expr=NumberLiteralNode(
-                      contents=5
+                      contents="5"
                     )
                   )
                 ],
                 body=AssignmentStmtNode(
                   target=IdentifierNode(
                     raw=false,
-                    contents=z
+                    contents="z"
                   ),
                   expr=NumberLiteralNode(
-                    contents=20
+                    contents="20"
                   )
                 )
               )

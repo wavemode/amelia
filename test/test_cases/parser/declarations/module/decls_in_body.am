@@ -8,18 +8,18 @@ ModuleNode(
     ModuleDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=a
+        contents="a"
       ),
       decls=[
         FunctionDeclNode(
           name=IdentifierNode(
             raw=false,
-            contents=f
+            contents="f"
           ),
           signature=FunctionSignatureNode(),
           body=FunctionBodyNode(
             expr=NumberLiteralNode(
-              contents=10
+              contents="10"
             ),
             is_default=false,
             is_deleted=false
@@ -32,18 +32,18 @@ ModuleNode(
     ModuleDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=a
+        contents="a"
       ),
       decls=[
         FunctionDeclNode(
           name=IdentifierNode(
             raw=false,
-            contents=f
+            contents="f"
           ),
           signature=FunctionSignatureNode(),
           body=FunctionBodyNode(
             expr=NumberLiteralNode(
-              contents=10
+              contents="10"
             ),
             is_default=false,
             is_deleted=false

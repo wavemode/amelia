@@ -8,11 +8,11 @@ ModuleNode(
       scope=ScopeResolutionExprNode(
         scope=IdentifierNode(
           raw=false,
-          contents=a
+          contents="a"
         ),
         name=IdentifierNode(
           raw=false,
-          contents=b
+          contents="b"
         )
       ),
       decl=ConstDeclNode(
@@ -21,14 +21,14 @@ ModuleNode(
             pattern=IdentifierPatternNode(
               identifier=IdentifierNode(
                 raw=false,
-                contents=x
+                contents="x"
               ),
               type_annotation=BuiltinTypeNode(
                 kind=int
               )
             ),
             expr=NumberLiteralNode(
-              contents=40
+              contents="40"
             )
           )
         ]

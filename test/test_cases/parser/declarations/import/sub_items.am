@@ -7,55 +7,55 @@ ModuleNode(
       path=ScopeResolutionExprNode(
         scope=IdentifierNode(
           raw=false,
-          contents=a
+          contents="a"
         ),
         name=IdentifierNode(
           raw=false,
-          contents=b
+          contents="b"
         )
       ),
       items=[
         ImportItemNode(
           name=IdentifierNode(
             raw=false,
-            contents=c
+            contents="c"
           ),
           sub_items=[
             ImportItemNode(
               name=IdentifierNode(
                 raw=false,
-                contents=d
+                contents="d"
               ),
               sub_items=[
                 ImportItemNode(
                   name=IdentifierNode(
                     raw=false,
-                    contents=e
+                    contents="e"
                   ),
                   sub_items=[
                     ImportItemWildcardNode()
                   ],
                   alias=IdentifierNode(
                     raw=false,
-                    contents=f
+                    contents="f"
                   )
                 )
               ],
               alias=IdentifierNode(
                 raw=false,
-                contents=g
+                contents="g"
               )
             )
           ],
           alias=IdentifierNode(
             raw=false,
-            contents=h
+            contents="h"
           )
         )
       ],
       alias=IdentifierNode(
         raw=false,
-        contents=i
+        contents="i"
       )
     )
   ],
@@ -64,55 +64,55 @@ ModuleNode(
       path=ScopeResolutionExprNode(
         scope=IdentifierNode(
           raw=false,
-          contents=a
+          contents="a"
         ),
         name=IdentifierNode(
           raw=false,
-          contents=b
+          contents="b"
         )
       ),
       items=[
         ImportItemNode(
           name=IdentifierNode(
             raw=false,
-            contents=c
+            contents="c"
           ),
           sub_items=[
             ImportItemNode(
               name=IdentifierNode(
                 raw=false,
-                contents=d
+                contents="d"
               ),
               sub_items=[
                 ImportItemNode(
                   name=IdentifierNode(
                     raw=false,
-                    contents=e
+                    contents="e"
                   ),
                   sub_items=[
                     ImportItemWildcardNode()
                   ],
                   alias=IdentifierNode(
                     raw=false,
-                    contents=f
+                    contents="f"
                   )
                 )
               ],
               alias=IdentifierNode(
                 raw=false,
-                contents=g
+                contents="g"
               )
             )
           ],
           alias=IdentifierNode(
             raw=false,
-            contents=h
+            contents="h"
           )
         )
       ],
       alias=IdentifierNode(
         raw=false,
-        contents=i
+        contents="i"
       )
     )
   ]

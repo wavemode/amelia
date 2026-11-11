@@ -9,14 +9,14 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x
+              contents="x"
             ),
             type_annotation=AnonymousStructTypeNode(
               entries=[
                 KeyValueEntryNode(
                   key=IdentifierNode(
                     raw=false,
-                    contents=a
+                    contents="a"
                   ),
                   value=BuiltinTypeNode(
                     kind=int

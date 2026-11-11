@@ -9,13 +9,13 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x
+              contents="x"
             ),
             type_annotation=ArrayExprNode(
               type_expr=ArrayExprNode(
                 type_expr=IdentifierNode(
                   raw=false,
-                  contents=T
+                  contents="T"
                 )
               )
             )

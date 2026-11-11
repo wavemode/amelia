@@ -11,7 +11,7 @@ ModuleNode(
     ClassDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=A
+        contents="A"
       ),
       body=ClassBodyNode(
         decls=[
@@ -19,7 +19,7 @@ ModuleNode(
             decl=ClassConstructorNode(
               name=IdentifierNode(
                 raw=false,
-                contents=A
+                contents="A"
               ),
               signature=FunctionSignatureNode(),
               body=FunctionBodyNode(
@@ -29,11 +29,11 @@ ModuleNode(
                       object=ThisLiteralNode(),
                       field=IdentifierNode(
                         raw=false,
-                        contents=a
+                        contents="a"
                       )
                     ),
                     expr=NumberLiteralNode(
-                      contents=10
+                      contents="10"
                     )
                   )
                 ],
@@ -45,7 +45,7 @@ ModuleNode(
           ClassFieldNode(
             name=IdentifierNode(
               raw=false,
-              contents=a
+              contents="a"
             ),
             type=BuiltinTypeNode(
               kind=int

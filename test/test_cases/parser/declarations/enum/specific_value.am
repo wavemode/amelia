@@ -8,16 +8,16 @@ ModuleNode(
     EnumDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=A
+        contents="A"
       ),
       variants=[
         EnumVariantNode(
           name=IdentifierNode(
             raw=false,
-            contents=FirstOption
+            contents="FirstOption"
           ),
           value=NumberLiteralNode(
-            contents=1
+            contents="1"
           )
         )
       ]

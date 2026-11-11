@@ -9,7 +9,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x
+              contents="x"
             )
           ),
           expr=AsExprNode(
@@ -18,7 +18,7 @@ ModuleNode(
               is_move=false,
               expr=IdentifierNode(
                 raw=false,
-                contents=y
+                contents="y"
               )
             ),
             type=RefExprNode(
@@ -26,7 +26,7 @@ ModuleNode(
               is_move=false,
               expr=IdentifierNode(
                 raw=false,
-                contents=T
+                contents="T"
               )
             )
           )

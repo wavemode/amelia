@@ -11,7 +11,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=example
+              contents="example"
             )
           ),
           expr=BlockExprNode(
@@ -22,7 +22,7 @@ ModuleNode(
                 expr=FunctionCallExprNode(
                   callee=IdentifierNode(
                     raw=false,
-                    contents=f
+                    contents="f"
                   )
                 )
               )

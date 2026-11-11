@@ -9,27 +9,27 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x
+              contents="x"
             )
           ),
           expr=ScopeResolutionExprNode(
             scope=IndexingExprNode(
               object=IdentifierNode(
                 raw=false,
-                contents=T
+                contents="T"
               ),
               indices=[
                 IndexNode(
                   value=IdentifierNode(
                     raw=false,
-                    contents=U
+                    contents="U"
                   )
                 )
               ]
             ),
             name=IdentifierNode(
               raw=false,
-              contents=V
+              contents="V"
             )
           )
         )

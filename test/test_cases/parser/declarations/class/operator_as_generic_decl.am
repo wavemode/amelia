@@ -8,7 +8,7 @@ ModuleNode(
     ClassDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=A
+        contents="A"
       ),
       body=ClassBodyNode(
         decls=[
@@ -17,7 +17,7 @@ ModuleNode(
               op=OperatorIdentAsNode(
                 type=IdentifierNode(
                   raw=false,
-                  contents=T
+                  contents="T"
                 )
               )
             ),
@@ -28,7 +28,7 @@ ModuleNode(
                     is_const=false,
                     name=IdentifierNode(
                       raw=false,
-                      contents=T
+                      contents="T"
                     )
                   )
                 ]
@@ -38,7 +38,7 @@ ModuleNode(
               expr=FunctionCallExprNode(
                 callee=IdentifierNode(
                   raw=false,
-                  contents=T
+                  contents="T"
                 )
               ),
               is_default=false,

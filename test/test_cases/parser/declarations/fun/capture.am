@@ -14,7 +14,7 @@ ModuleNode(
     FunctionDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=f
+        contents="f"
       ),
       signature=FunctionSignatureNode(
         parameters=[
@@ -22,7 +22,7 @@ ModuleNode(
             variadic=false,
             name=IdentifierNode(
               raw=false,
-              contents=x
+              contents="x"
             ),
             type=BuiltinTypeNode(
               kind=int
@@ -32,7 +32,7 @@ ModuleNode(
             variadic=false,
             name=IdentifierNode(
               raw=false,
-              contents=y
+              contents="y"
             ),
             type=BuiltinTypeNode(
               kind=float
@@ -45,7 +45,7 @@ ModuleNode(
               variadic=false,
               name=IdentifierNode(
                 raw=false,
-                contents=a
+                contents="a"
               ),
               type=BuiltinTypeNode(
                 kind=long
@@ -55,7 +55,7 @@ ModuleNode(
               variadic=false,
               name=IdentifierNode(
                 raw=false,
-                contents=b
+                contents="b"
               ),
               type=BuiltinTypeNode(
                 kind=short
@@ -69,53 +69,53 @@ ModuleNode(
               kind=move,
               var=IdentifierNode(
                 raw=false,
-                contents=x
+                contents="x"
               )
             ),
             FunctionSignatureCaptureDesignatorNode(
               kind=copy,
               var=IdentifierNode(
                 raw=false,
-                contents=y
+                contents="y"
               )
             ),
             FunctionSignatureCaptureDesignatorNode(
               kind=ref,
               var=IdentifierNode(
                 raw=false,
-                contents=z
+                contents="z"
               )
             ),
             FunctionSignatureCaptureDesignatorNode(
               kind=const_ref,
               var=IdentifierNode(
                 raw=false,
-                contents=t
+                contents="t"
               )
             ),
             FunctionSignatureCaptureDesignatorNode(
               kind=move_ref,
               var=IdentifierNode(
                 raw=false,
-                contents=w
+                contents="w"
               )
             ),
             FunctionSignatureCaptureDesignatorNode(
               var=IdentifierNode(
                 raw=false,
-                contents=u
+                contents="u"
               ),
               expr=FunctionCallExprNode(
                 callee=IdentifierNode(
                   raw=false,
-                  contents=make_shared
+                  contents="make_shared"
                 ),
                 args=[
                   FunctionArgumentNode(
                     expr=MoveExprNode(
                       expr=IdentifierNode(
                         raw=false,
-                        contents=u
+                        contents="u"
                       )
                     )
                   )

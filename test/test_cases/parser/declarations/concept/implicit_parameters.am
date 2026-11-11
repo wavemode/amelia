@@ -6,7 +6,7 @@ ModuleNode(
     ConceptDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=A
+        contents="A"
       ),
       implicit_parameter_list=ImplicitParameterListNode(
         parameters=[
@@ -14,7 +14,7 @@ ModuleNode(
             variadic=false,
             name=IdentifierNode(
               raw=false,
-              contents=x
+              contents="x"
             ),
             type=BuiltinTypeNode(
               kind=int

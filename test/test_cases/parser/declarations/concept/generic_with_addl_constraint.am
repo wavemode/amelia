@@ -6,7 +6,7 @@ ModuleNode(
     ConceptDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=A
+        contents="A"
       ),
       generic_parameter_list=GenericParameterListNode(
         parameters=[
@@ -14,7 +14,7 @@ ModuleNode(
             is_const=false,
             name=IdentifierNode(
               raw=false,
-              contents=T
+              contents="T"
             )
           )
         ],
@@ -22,11 +22,11 @@ ModuleNode(
           TypeConstraintNode(
             type=IdentifierNode(
               raw=false,
-              contents=T
+              contents="T"
             ),
             constraint=IdentifierNode(
               raw=false,
-              contents=Movable
+              contents="Movable"
             )
           )
         ]

@@ -6,7 +6,7 @@ ModuleNode(
     ClassDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=A
+        contents="A"
       ),
       generic_parameter_list=GenericParameterListNode(
         parameters=[
@@ -14,13 +14,13 @@ ModuleNode(
             is_const=true,
             name=IdentifierNode(
               raw=false,
-              contents=T
+              contents="T"
             ),
             constraint=BuiltinTypeNode(
               kind=int
             ),
             default_value=NumberLiteralNode(
-              contents=10
+              contents="10"
             )
           )
         ]

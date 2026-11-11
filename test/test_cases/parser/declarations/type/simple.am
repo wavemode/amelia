@@ -6,7 +6,7 @@ ModuleNode(
     TypeDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=A
+        contents="A"
       ),
       type_expr=BuiltinTypeNode(
         kind=int

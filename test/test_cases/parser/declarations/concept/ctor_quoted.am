@@ -8,14 +8,14 @@ ModuleNode(
     ConceptDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=A
+        contents="A"
       ),
       body=ClassBodyNode(
         decls=[
           ClassConstructorNode(
             name=IdentifierNode(
               raw=false,
-              contents=A
+              contents="A"
             ),
             signature=FunctionSignatureNode()
           )

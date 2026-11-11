@@ -7,11 +7,11 @@ ModuleNode(
       path=ScopeResolutionExprNode(
         scope=IdentifierNode(
           raw=false,
-          contents=a
+          contents="a"
         ),
         name=IdentifierNode(
           raw=false,
-          contents=b
+          contents="b"
         )
       ),
       items=[
@@ -24,11 +24,11 @@ ModuleNode(
       path=ScopeResolutionExprNode(
         scope=IdentifierNode(
           raw=false,
-          contents=a
+          contents="a"
         ),
         name=IdentifierNode(
           raw=false,
-          contents=b
+          contents="b"
         )
       ),
       items=[

@@ -8,16 +8,16 @@ ModuleNode(
         scope=ScopeResolutionExprNode(
           scope=IdentifierNode(
             raw=false,
-            contents=A
+            contents="A"
           ),
           name=IdentifierNode(
             raw=false,
-            contents=B
+            contents="B"
           )
         ),
         name=IdentifierNode(
           raw=false,
-          contents=c
+          contents="c"
         )
       ),
       signature=FunctionSignatureNode(),

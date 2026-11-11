@@ -8,14 +8,14 @@ ModuleNode(
     UnionDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=A
+        contents="A"
       ),
       body=ClassBodyNode(
         decls=[
           ClassFieldNode(
             name=IdentifierNode(
               raw=false,
-              contents=a
+              contents="a"
             ),
             type=BuiltinTypeNode(
               kind=int

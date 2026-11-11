@@ -6,7 +6,7 @@ ModuleNode(
     ClassDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=A
+        contents="A"
       ),
       generic_parameter_list=GenericParameterListNode(
         parameters=[
@@ -14,7 +14,7 @@ ModuleNode(
             is_const=false,
             name=IdentifierNode(
               raw=false,
-              contents=T
+              contents="T"
             )
           )
         ]

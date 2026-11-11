@@ -9,15 +9,15 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x
+              contents="x"
             ),
             type_annotation=ArrayExprNode(
               size=NumberLiteralNode(
-                contents=4
+                contents="4"
               ),
               type_expr=ArrayExprNode(
                 size=NumberLiteralNode(
-                  contents=3
+                  contents="3"
                 ),
                 type_expr=BuiltinTypeNode(
                   kind=int

@@ -6,17 +6,17 @@ ModuleNode(
     EnumDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=A
+        contents="A"
       ),
       base_type_list=BaseTypeListNode(
         base_classes=[
           IdentifierNode(
             raw=false,
-            contents=B
+            contents="B"
           ),
           IdentifierNode(
             raw=false,
-            contents=C
+            contents="C"
           )
         ]
       )

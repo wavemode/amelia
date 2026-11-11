@@ -7,25 +7,25 @@ ModuleNode(
     AnnotationNode(
       name=IdentifierNode(
         raw=false,
-        contents=anno
+        contents="anno"
       ),
       args=[
         FunctionArgumentNode(
           name=IdentifierNode(
             raw=false,
-            contents=a
+            contents="a"
           ),
           expr=NumberLiteralNode(
-            contents=1
+            contents="1"
           )
         ),
         FunctionArgumentNode(
           name=IdentifierNode(
             raw=false,
-            contents=b
+            contents="b"
           ),
           expr=NumberLiteralNode(
-            contents=2
+            contents="2"
           )
         )
       ],
@@ -35,11 +35,11 @@ ModuleNode(
             pattern=IdentifierPatternNode(
               identifier=IdentifierNode(
                 raw=false,
-                contents=x
+                contents="x"
               )
             ),
             expr=NumberLiteralNode(
-              contents=4
+              contents="4"
             )
           )
         ]

@@ -9,7 +9,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x
+              contents="x"
             )
           ),
           expr=MultiplyExprNode(
@@ -17,17 +17,17 @@ ModuleNode(
               expr=FieldAccessExprNode(
                 object=IdentifierNode(
                   raw=false,
-                  contents=y
+                  contents="y"
                 ),
                 field=IdentifierNode(
                   raw=false,
-                  contents=z
+                  contents="z"
                 )
               )
             ),
             right=IdentifierNode(
               raw=false,
-              contents=w
+              contents="w"
             )
           )
         )

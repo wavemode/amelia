@@ -7,7 +7,7 @@ ModuleNode(
       decl=ClassDeclNode(
         name=IdentifierNode(
           raw=false,
-          contents=A
+          contents="A"
         ),
         header_decls=ClassHeaderDeclsNode(
           decls=[
@@ -20,7 +20,7 @@ ModuleNode(
               type=IndexingExprNode(
                 object=IdentifierNode(
                   raw=false,
-                  contents=list
+                  contents="list"
                 ),
                 indices=[
                   IndexNode(

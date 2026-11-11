@@ -6,7 +6,7 @@ ModuleNode(
     FunctionDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=f
+        contents="f"
       ),
       signature=FunctionSignatureNode(
         parameters=[
@@ -14,26 +14,26 @@ ModuleNode(
             variadic=false,
             name=IdentifierNode(
               raw=false,
-              contents=x
+              contents="x"
             ),
             type=BuiltinTypeNode(
               kind=int
             ),
             default_value=NumberLiteralNode(
-              contents=4
+              contents="4"
             )
           ),
           FunctionParameterNode(
             variadic=false,
             name=IdentifierNode(
               raw=false,
-              contents=y
+              contents="y"
             ),
             type=BuiltinTypeNode(
               kind=float
             ),
             default_value=NumberLiteralNode(
-              contents=10.0
+              contents="10.0"
             )
           )
         ]

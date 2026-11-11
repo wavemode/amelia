@@ -6,7 +6,7 @@ ModuleNode(
     FunctionDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=f
+        contents="f"
       ),
       signature=FunctionSignatureNode(
         parameters=[
@@ -14,7 +14,7 @@ ModuleNode(
             variadic=true,
             name=IdentifierNode(
               raw=false,
-              contents=x
+              contents="x"
             )
           )
         ]

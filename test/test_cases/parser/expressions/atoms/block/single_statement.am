@@ -11,7 +11,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x
+              contents="x"
             )
           ),
           expr=BlockExprNode(
@@ -22,11 +22,11 @@ ModuleNode(
                     pattern=IdentifierPatternNode(
                       identifier=IdentifierNode(
                         raw=false,
-                        contents=y
+                        contents="y"
                       )
                     ),
                     expr=NumberLiteralNode(
-                      contents=1
+                      contents="1"
                     )
                   )
                 ]

@@ -9,16 +9,16 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x
+              contents="x"
             ),
             type_annotation=ConstTypeExprNode(
               expr=NumberLiteralNode(
-                contents=5
+                contents="5"
               )
             )
           ),
           expr=NumberLiteralNode(
-            contents=5
+            contents="5"
           )
         )
       ]

@@ -26,7 +26,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x_bool
+              contents="x_bool"
             ),
             type_annotation=BuiltinTypeNode(
               kind=bool
@@ -41,7 +41,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x_byte
+              contents="x_byte"
             ),
             type_annotation=BuiltinTypeNode(
               kind=byte
@@ -56,7 +56,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x_short
+              contents="x_short"
             ),
             type_annotation=BuiltinTypeNode(
               kind=short
@@ -71,7 +71,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x_int
+              contents="x_int"
             ),
             type_annotation=BuiltinTypeNode(
               kind=int
@@ -86,7 +86,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x_long
+              contents="x_long"
             ),
             type_annotation=BuiltinTypeNode(
               kind=long
@@ -101,7 +101,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x_ubyte
+              contents="x_ubyte"
             ),
             type_annotation=BuiltinTypeNode(
               kind=ubyte
@@ -116,7 +116,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x_ushort
+              contents="x_ushort"
             ),
             type_annotation=BuiltinTypeNode(
               kind=ushort
@@ -131,7 +131,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x_uint
+              contents="x_uint"
             ),
             type_annotation=BuiltinTypeNode(
               kind=uint
@@ -146,7 +146,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x_ulong
+              contents="x_ulong"
             ),
             type_annotation=BuiltinTypeNode(
               kind=ulong
@@ -161,7 +161,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x_usize
+              contents="x_usize"
             ),
             type_annotation=BuiltinTypeNode(
               kind=usize
@@ -176,7 +176,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x_float
+              contents="x_float"
             ),
             type_annotation=BuiltinTypeNode(
               kind=float
@@ -191,7 +191,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x_double
+              contents="x_double"
             ),
             type_annotation=BuiltinTypeNode(
               kind=double
@@ -206,7 +206,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x_bitint
+              contents="x_bitint"
             ),
             type_annotation=BitIntTypeNode(
               is_signed=true
@@ -221,7 +221,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x_ubitint
+              contents="x_ubitint"
             ),
             type_annotation=BitIntTypeNode(
               is_signed=false
@@ -236,7 +236,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x_char
+              contents="x_char"
             ),
             type_annotation=BuiltinTypeNode(
               kind=char
@@ -251,7 +251,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x_text
+              contents="x_text"
             ),
             type_annotation=BuiltinTypeNode(
               kind=text
@@ -266,7 +266,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x_null
+              contents="x_null"
             ),
             type_annotation=BuiltinTypeNode(
               kind=null
@@ -281,7 +281,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x_never
+              contents="x_never"
             ),
             type_annotation=BuiltinTypeNode(
               kind=never

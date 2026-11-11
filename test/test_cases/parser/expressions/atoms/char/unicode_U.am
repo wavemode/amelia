@@ -9,11 +9,11 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=c
+              contents="c"
             )
           ),
           expr=CharLiteralNode(
-            contents=\U000065e5'
+            contents="\U000065e5"'
           )
         )
       ]

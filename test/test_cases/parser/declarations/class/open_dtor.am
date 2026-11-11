@@ -8,7 +8,7 @@ ModuleNode(
     ClassDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=A
+        contents="A"
       ),
       body=ClassBodyNode(
         decls=[
@@ -16,7 +16,7 @@ ModuleNode(
             decl=ClassDestructorNode(
               name=IdentifierNode(
                 raw=false,
-                contents=A
+                contents="A"
               ),
               signature=FunctionSignatureNode(),
               body=FunctionBodyNode(

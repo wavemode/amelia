@@ -10,7 +10,7 @@ ModuleNode(
     ClassDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=A
+        contents="A"
       ),
       body=ClassBodyNode(
         decls=[
@@ -28,7 +28,7 @@ ModuleNode(
                 object=ThisLiteralNode(),
                 field=IdentifierNode(
                   raw=false,
-                  contents=a
+                  contents="a"
                 )
               ),
               is_default=false,
@@ -38,7 +38,7 @@ ModuleNode(
           ClassFieldNode(
             name=IdentifierNode(
               raw=false,
-              contents=a
+              contents="a"
             ),
             type=BuiltinTypeNode(
               kind=int

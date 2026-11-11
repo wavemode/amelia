@@ -9,23 +9,23 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=w
+              contents="w"
             )
           ),
           expr=IsExprNode(
             expr=IsExprNode(
               expr=IdentifierNode(
                 raw=false,
-                contents=x
+                contents="x"
               ),
               type=IdentifierNode(
                 raw=false,
-                contents=y
+                contents="y"
               )
             ),
             type=IdentifierNode(
               raw=false,
-              contents=z
+              contents="z"
             )
           )
         )

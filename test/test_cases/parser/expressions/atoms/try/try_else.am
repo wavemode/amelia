@@ -9,33 +9,33 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=w
+              contents="w"
             )
           ),
           expr=TryExprNode(
             try_block=IdentifierNode(
               raw=false,
-              contents=x
+              contents="x"
             ),
             catch_clauses=[
               CatchClauseNode(
                 exc_type=IdentifierNode(
                   raw=false,
-                  contents=z
+                  contents="z"
                 ),
                 var=IdentifierNode(
                   raw=false,
-                  contents=y
+                  contents="y"
                 ),
                 body=IdentifierNode(
                   raw=false,
-                  contents=t
+                  contents="t"
                 )
               )
             ],
             else_branch=IdentifierNode(
               raw=false,
-              contents=v
+              contents="v"
             )
           )
         )

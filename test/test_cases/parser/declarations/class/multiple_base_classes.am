@@ -6,24 +6,24 @@ ModuleNode(
     ClassDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=A
+        contents="A"
       ),
       base_class_list=BaseTypeListNode(
         base_classes=[
           IdentifierNode(
             raw=false,
-            contents=B
+            contents="B"
           ),
           IndexingExprNode(
             object=IdentifierNode(
               raw=false,
-              contents=C
+              contents="C"
             ),
             indices=[
               IndexNode(
                 value=IdentifierNode(
                   raw=false,
-                  contents=D
+                  contents="D"
                 )
               )
             ]

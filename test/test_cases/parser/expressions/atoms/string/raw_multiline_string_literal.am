@@ -11,14 +11,14 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x
+              contents="x"
             )
           ),
           expr=StringLiteralNode(
             raw=true,
-            contents=
+            contents="
 hello, world\!
-
+"
           )
         )
       ]

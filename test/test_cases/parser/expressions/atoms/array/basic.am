@@ -9,7 +9,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x
+              contents="x"
             )
           ),
           expr=ArrayExprNode(
@@ -19,13 +19,13 @@ ModuleNode(
             ),
             elements=[
               NumberLiteralNode(
-                contents=1
+                contents="1"
               ),
               NumberLiteralNode(
-                contents=2
+                contents="2"
               ),
               NumberLiteralNode(
-                contents=3
+                contents="3"
               )
             ]
           )

@@ -6,7 +6,7 @@ ModuleNode(
     ImportDeclNode(
       path=IdentifierNode(
         raw=false,
-        contents=abc
+        contents="abc"
       )
     )
   ],
@@ -14,7 +14,7 @@ ModuleNode(
     ImportDeclNode(
       path=IdentifierNode(
         raw=false,
-        contents=abc
+        contents="abc"
       )
     )
   ]

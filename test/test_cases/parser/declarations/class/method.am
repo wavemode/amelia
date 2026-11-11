@@ -12,14 +12,14 @@ ModuleNode(
     ClassDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=A
+        contents="A"
       ),
       body=ClassBodyNode(
         decls=[
           FunctionDeclNode(
             name=IdentifierNode(
               raw=false,
-              contents=say_age
+              contents="say_age"
             ),
             signature=FunctionSignatureNode(),
             body=FunctionBodyNode(
@@ -28,13 +28,13 @@ ModuleNode(
                   expr=FunctionCallExprNode(
                     callee=IdentifierNode(
                       raw=false,
-                      contents=println
+                      contents="println"
                     ),
                     args=[
                       FunctionArgumentNode(
                         expr=StringLiteralNode(
                           raw=false,
-                          contents=I am 
+                          contents="I am "
                         )
                       ),
                       FunctionArgumentNode(
@@ -42,14 +42,14 @@ ModuleNode(
                           object=ThisLiteralNode(),
                           field=IdentifierNode(
                             raw=false,
-                            contents=age
+                            contents="age"
                           )
                         )
                       ),
                       FunctionArgumentNode(
                         expr=StringLiteralNode(
                           raw=false,
-                          contents= years old
+                          contents=" years old"
                         )
                       )
                     ]
@@ -63,7 +63,7 @@ ModuleNode(
           ClassFieldNode(
             name=IdentifierNode(
               raw=false,
-              contents=age
+              contents="age"
             ),
             type=BuiltinTypeNode(
               kind=int

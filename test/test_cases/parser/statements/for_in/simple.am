@@ -11,7 +11,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=z
+              contents="z"
             )
           ),
           expr=BlockExprNode(
@@ -20,18 +20,18 @@ ModuleNode(
                 pattern=IdentifierPatternNode(
                   identifier=IdentifierNode(
                     raw=false,
-                    contents=x
+                    contents="x"
                   )
                 ),
                 iterable=IdentifierNode(
                   raw=false,
-                  contents=y
+                  contents="y"
                 ),
                 body=ExprStmtNode(
                   expr=FunctionCallExprNode(
                     callee=IdentifierNode(
                       raw=false,
-                      contents=a
+                      contents="a"
                     )
                   )
                 )

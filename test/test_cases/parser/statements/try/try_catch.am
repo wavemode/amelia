@@ -11,7 +11,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=example
+              contents="example"
             )
           ),
           expr=BlockExprNode(
@@ -20,23 +20,23 @@ ModuleNode(
                 try_block=PreIncrementStmtNode(
                   target=IdentifierNode(
                     raw=false,
-                    contents=x
+                    contents="x"
                   )
                 ),
                 catch_clauses=[
                   CatchClauseNode(
                     exc_type=IdentifierNode(
                       raw=false,
-                      contents=z
+                      contents="z"
                     ),
                     var=IdentifierNode(
                       raw=false,
-                      contents=y
+                      contents="y"
                     ),
                     body=PreIncrementStmtNode(
                       target=IdentifierNode(
                         raw=false,
-                        contents=t
+                        contents="t"
                       )
                     )
                   )

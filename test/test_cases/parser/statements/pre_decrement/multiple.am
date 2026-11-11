@@ -12,7 +12,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=example
+              contents="example"
             )
           ),
           expr=BlockExprNode(
@@ -20,13 +20,13 @@ ModuleNode(
               PreDecrementStmtNode(
                 target=IdentifierNode(
                   raw=false,
-                  contents=x
+                  contents="x"
                 )
               ),
               PreDecrementStmtNode(
                 target=IdentifierNode(
                   raw=false,
-                  contents=y
+                  contents="y"
                 )
               )
             ]

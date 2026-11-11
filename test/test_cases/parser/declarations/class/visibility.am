@@ -11,7 +11,7 @@ ModuleNode(
     ClassDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=A
+        contents="A"
       ),
       body=ClassBodyNode(
         decls=[
@@ -20,7 +20,7 @@ ModuleNode(
             decl=ClassConstructorNode(
               name=IdentifierNode(
                 raw=false,
-                contents=A
+                contents="A"
               ),
               signature=FunctionSignatureNode(),
               body=FunctionBodyNode(
@@ -34,7 +34,7 @@ ModuleNode(
             decl=ClassFieldNode(
               name=IdentifierNode(
                 raw=false,
-                contents=a
+                contents="a"
               ),
               type=BuiltinTypeNode(
                 kind=int
@@ -46,11 +46,11 @@ ModuleNode(
             decl=ClassFieldNode(
               name=IdentifierNode(
                 raw=false,
-                contents=b
+                contents="b"
               ),
               type=IdentifierNode(
                 raw=false,
-                contents=String
+                contents="String"
               )
             )
           ),
@@ -59,7 +59,7 @@ ModuleNode(
             decl=ClassFieldNode(
               name=IdentifierNode(
                 raw=false,
-                contents=c
+                contents="c"
               ),
               type=BuiltinTypeNode(
                 kind=float

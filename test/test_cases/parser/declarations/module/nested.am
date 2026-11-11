@@ -10,13 +10,13 @@ ModuleNode(
     ModuleDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=a
+        contents="a"
       ),
       decls=[
         ModuleDeclNode(
           name=IdentifierNode(
             raw=false,
-            contents=b
+            contents="b"
           ),
           decls=[
             LetDeclNode(
@@ -25,12 +25,12 @@ ModuleNode(
                   pattern=IdentifierPatternNode(
                     identifier=IdentifierNode(
                       raw=false,
-                      contents=c
+                      contents="c"
                     )
                   ),
                   expr=IdentifierNode(
                     raw=false,
-                    contents=d
+                    contents="d"
                   )
                 )
               ]
@@ -42,7 +42,7 @@ ModuleNode(
         ModuleDeclNode(
           name=IdentifierNode(
             raw=false,
-            contents=b
+            contents="b"
           ),
           decls=[
             LetDeclNode(
@@ -51,12 +51,12 @@ ModuleNode(
                   pattern=IdentifierPatternNode(
                     identifier=IdentifierNode(
                       raw=false,
-                      contents=c
+                      contents="c"
                     )
                   ),
                   expr=IdentifierNode(
                     raw=false,
-                    contents=d
+                    contents="d"
                   )
                 )
               ]
@@ -70,13 +70,13 @@ ModuleNode(
     ModuleDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=a
+        contents="a"
       ),
       decls=[
         ModuleDeclNode(
           name=IdentifierNode(
             raw=false,
-            contents=b
+            contents="b"
           ),
           decls=[
             LetDeclNode(
@@ -85,12 +85,12 @@ ModuleNode(
                   pattern=IdentifierPatternNode(
                     identifier=IdentifierNode(
                       raw=false,
-                      contents=c
+                      contents="c"
                     )
                   ),
                   expr=IdentifierNode(
                     raw=false,
-                    contents=d
+                    contents="d"
                   )
                 )
               ]
@@ -102,7 +102,7 @@ ModuleNode(
         ModuleDeclNode(
           name=IdentifierNode(
             raw=false,
-            contents=b
+            contents="b"
           ),
           decls=[
             LetDeclNode(
@@ -111,12 +111,12 @@ ModuleNode(
                   pattern=IdentifierPatternNode(
                     identifier=IdentifierNode(
                       raw=false,
-                      contents=c
+                      contents="c"
                     )
                   ),
                   expr=IdentifierNode(
                     raw=false,
-                    contents=d
+                    contents="d"
                   )
                 )
               ]

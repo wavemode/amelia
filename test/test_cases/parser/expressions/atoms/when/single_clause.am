@@ -11,13 +11,13 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x
+              contents="x"
             )
           ),
           expr=WhenExprNode(
             expr=IdentifierNode(
               raw=false,
-              contents=y
+              contents="y"
             ),
             clauses=[
               WhenClauseNode(
@@ -25,12 +25,12 @@ ModuleNode(
                   WhenClauseItemNode(
                     is=false,
                     expr=NumberLiteralNode(
-                      contents=5
+                      contents="5"
                     )
                   )
                 ],
                 body=NumberLiteralNode(
-                  contents=10
+                  contents="10"
                 )
               )
             ]

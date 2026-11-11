@@ -12,7 +12,7 @@ ModuleNode(
                 field=IdentifierPatternNode(
                   identifier=IdentifierNode(
                     raw=false,
-                    contents=a
+                    contents="a"
                   )
                 )
               ),
@@ -20,7 +20,7 @@ ModuleNode(
                 field=IdentifierPatternNode(
                   identifier=IdentifierNode(
                     raw=false,
-                    contents=b
+                    contents="b"
                   ),
                   type_annotation=BuiltinTypeNode(
                     kind=int
@@ -31,7 +31,7 @@ ModuleNode(
                 pattern=IdentifierPatternNode(
                   identifier=IdentifierNode(
                     raw=false,
-                    contents=c
+                    contents="c"
                   ),
                   type_annotation=BuiltinTypeNode(
                     kind=int
@@ -40,7 +40,7 @@ ModuleNode(
                 field=IdentifierPatternNode(
                   identifier=IdentifierNode(
                     raw=false,
-                    contents=d
+                    contents="d"
                   )
                 )
               )
@@ -48,7 +48,7 @@ ModuleNode(
           ),
           expr=IdentifierNode(
             raw=false,
-            contents=e
+            contents="e"
           )
         )
       ]

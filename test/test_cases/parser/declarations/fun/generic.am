@@ -6,7 +6,7 @@ ModuleNode(
     FunctionDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=f
+        contents="f"
       ),
       signature=FunctionSignatureNode(
         generic_parameter_list=GenericParameterListNode(
@@ -15,7 +15,7 @@ ModuleNode(
               is_const=false,
               name=IdentifierNode(
                 raw=false,
-                contents=T
+                contents="T"
               )
             )
           ]
@@ -25,17 +25,17 @@ ModuleNode(
             variadic=false,
             name=IdentifierNode(
               raw=false,
-              contents=x
+              contents="x"
             ),
             type=IdentifierNode(
               raw=false,
-              contents=T
+              contents="T"
             )
           )
         ],
         return_type=IdentifierNode(
           raw=false,
-          contents=T
+          contents="T"
         )
       ),
       body=FunctionBodyNode(

@@ -8,7 +8,7 @@ ModuleNode(
     FunctionDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=f
+        contents="f"
       ),
       signature=FunctionSignatureNode(
         parameters=[
@@ -16,7 +16,7 @@ ModuleNode(
             variadic=false,
             name=IdentifierNode(
               raw=false,
-              contents=x
+              contents="x"
             ),
             type=BuiltinTypeNode(
               kind=int
@@ -26,7 +26,7 @@ ModuleNode(
             variadic=false,
             name=IdentifierNode(
               raw=false,
-              contents=y
+              contents="y"
             ),
             type=BuiltinTypeNode(
               kind=float
@@ -43,13 +43,13 @@ ModuleNode(
             expr=FunctionCallExprNode(
               callee=IdentifierNode(
                 raw=false,
-                contents=print
+                contents="print"
               ),
               args=[
                 FunctionArgumentNode(
                   expr=StringLiteralNode(
                     raw=false,
-                    contents=hello, world!
+                    contents="hello, world!"
                   )
                 )
               ]

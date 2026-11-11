@@ -13,7 +13,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=f
+              contents="f"
             )
           ),
           expr=FunctionExprNode(
@@ -23,7 +23,7 @@ ModuleNode(
                   variadic=false,
                   name=IdentifierNode(
                     raw=false,
-                    contents=x
+                    contents="x"
                   ),
                   type=BuiltinTypeNode(
                     kind=int
@@ -33,7 +33,7 @@ ModuleNode(
                   variadic=false,
                   name=IdentifierNode(
                     raw=false,
-                    contents=y
+                    contents="y"
                   ),
                   type=BuiltinTypeNode(
                     kind=float
@@ -50,13 +50,13 @@ ModuleNode(
                   expr=FunctionCallExprNode(
                     callee=IdentifierNode(
                       raw=false,
-                      contents=print
+                      contents="print"
                     ),
                     args=[
                       FunctionArgumentNode(
                         expr=StringLiteralNode(
                           raw=false,
-                          contents=hello, world!
+                          contents="hello, world!"
                         )
                       )
                     ]
@@ -66,13 +66,13 @@ ModuleNode(
                   expr=FunctionCallExprNode(
                     callee=IdentifierNode(
                       raw=false,
-                      contents=print
+                      contents="print"
                     ),
                     args=[
                       FunctionArgumentNode(
                         expr=StringLiteralNode(
                           raw=false,
-                          contents=goodbye, world...
+                          contents="goodbye, world..."
                         )
                       )
                     ]
@@ -80,7 +80,7 @@ ModuleNode(
                 ),
                 ReturnStmtNode(
                   expr=NumberLiteralNode(
-                    contents=10.0
+                    contents="10.0"
                   )
                 )
               ],

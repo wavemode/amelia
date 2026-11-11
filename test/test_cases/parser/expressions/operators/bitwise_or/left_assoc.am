@@ -9,23 +9,23 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=w
+              contents="w"
             )
           ),
           expr=BitwiseOrExprNode(
             left=BitwiseOrExprNode(
               left=IdentifierNode(
                 raw=false,
-                contents=x
+                contents="x"
               ),
               right=IdentifierNode(
                 raw=false,
-                contents=y
+                contents="y"
               )
             ),
             right=IdentifierNode(
               raw=false,
-              contents=z
+              contents="z"
             )
           )
         )

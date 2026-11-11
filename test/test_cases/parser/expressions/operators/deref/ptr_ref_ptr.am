@@ -9,7 +9,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x
+              contents="x"
             ),
             type_annotation=DerefExprNode(
               is_const=false,
@@ -23,7 +23,7 @@ ModuleNode(
                     is_move=false,
                     expr=IdentifierNode(
                       raw=false,
-                      contents=T
+                      contents="T"
                     )
                   )
                 )

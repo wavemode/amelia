@@ -15,7 +15,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=a
+              contents="a"
             )
           ),
           expr=BlockExprNode(
@@ -23,13 +23,13 @@ ModuleNode(
               IfStmtNode(
                 condition=IdentifierNode(
                   raw=false,
-                  contents=x
+                  contents="x"
                 ),
                 then_branch=ExprStmtNode(
                   expr=FunctionCallExprNode(
                     callee=IdentifierNode(
                       raw=false,
-                      contents=y
+                      contents="y"
                     )
                   )
                 ),
@@ -37,7 +37,7 @@ ModuleNode(
                   expr=FunctionCallExprNode(
                     callee=IdentifierNode(
                       raw=false,
-                      contents=z
+                      contents="z"
                     )
                   )
                 )

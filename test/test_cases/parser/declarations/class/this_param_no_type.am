@@ -8,14 +8,14 @@ ModuleNode(
     ClassDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=A
+        contents="A"
       ),
       body=ClassBodyNode(
         decls=[
           FunctionDeclNode(
             name=IdentifierNode(
               raw=false,
-              contents=explicit_this
+              contents="explicit_this"
             ),
             signature=FunctionSignatureNode(
               parameters=[

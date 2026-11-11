@@ -9,19 +9,19 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x
+              contents="x"
             ),
             type_annotation=AnyTypeExprNode(
               type=IndexingExprNode(
                 object=IdentifierNode(
                   raw=false,
-                  contents=T
+                  contents="T"
                 ),
                 indices=[
                   IndexNode(
                     value=IdentifierNode(
                       raw=false,
-                      contents=U
+                      contents="U"
                     )
                   )
                 ]

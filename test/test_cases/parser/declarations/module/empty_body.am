@@ -6,7 +6,7 @@ ModuleNode(
     ModuleDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=a
+        contents="a"
       )
     )
   ],
@@ -14,7 +14,7 @@ ModuleNode(
     ModuleDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=a
+        contents="a"
       )
     )
   ]

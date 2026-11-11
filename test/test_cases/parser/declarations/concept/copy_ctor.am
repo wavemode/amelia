@@ -8,7 +8,7 @@ ModuleNode(
     ConceptDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=A
+        contents="A"
       ),
       body=ClassBodyNode(
         decls=[
@@ -21,7 +21,7 @@ ModuleNode(
                     variadic=false,
                     name=IdentifierNode(
                       raw=false,
-                      contents=o
+                      contents="o"
                     )
                   )
                 ]

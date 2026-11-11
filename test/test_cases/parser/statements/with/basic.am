@@ -11,7 +11,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x
+              contents="x"
             )
           ),
           expr=BlockExprNode(
@@ -21,18 +21,18 @@ ModuleNode(
                   FunctionArgumentNode(
                     name=IdentifierNode(
                       raw=false,
-                      contents=a
+                      contents="a"
                     ),
                     expr=IdentifierNode(
                       raw=false,
-                      contents=b
+                      contents="b"
                     )
                   )
                 ],
                 body=PreIncrementStmtNode(
                   target=IdentifierNode(
                     raw=false,
-                    contents=d
+                    contents="d"
                   )
                 )
               )

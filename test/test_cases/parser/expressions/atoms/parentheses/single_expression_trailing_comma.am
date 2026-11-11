@@ -10,11 +10,11 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x
+              contents="x"
             )
           ),
           expr=NumberLiteralNode(
-            contents=5
+            contents="5"
           )
         )
       ]

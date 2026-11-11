@@ -14,7 +14,7 @@ ModuleNode(
     FunctionDeclNode(
       name=IdentifierNode(
         raw=false,
-        contents=f
+        contents="f"
       ),
       signature=FunctionSignatureNode(
         parameters=[
@@ -22,7 +22,7 @@ ModuleNode(
             variadic=false,
             name=IdentifierNode(
               raw=false,
-              contents=x
+              contents="x"
             ),
             type=BuiltinTypeNode(
               kind=int
@@ -32,7 +32,7 @@ ModuleNode(
             variadic=false,
             name=IdentifierNode(
               raw=false,
-              contents=y
+              contents="y"
             ),
             type=BuiltinTypeNode(
               kind=float
@@ -45,7 +45,7 @@ ModuleNode(
               variadic=false,
               name=IdentifierNode(
                 raw=false,
-                contents=a
+                contents="a"
               ),
               type=BuiltinTypeNode(
                 kind=long
@@ -55,7 +55,7 @@ ModuleNode(
               variadic=false,
               name=IdentifierNode(
                 raw=false,
-                contents=b
+                contents="b"
               ),
               type=BuiltinTypeNode(
                 kind=short

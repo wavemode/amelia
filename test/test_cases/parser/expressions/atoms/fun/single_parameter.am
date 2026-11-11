@@ -9,7 +9,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=f
+              contents="f"
             )
           ),
           expr=FunctionExprNode(
@@ -19,7 +19,7 @@ ModuleNode(
                   variadic=false,
                   name=IdentifierNode(
                     raw=false,
-                    contents=x
+                    contents="x"
                   )
                 )
               ]

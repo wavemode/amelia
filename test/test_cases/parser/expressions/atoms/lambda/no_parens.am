@@ -9,33 +9,33 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x
+              contents="x"
             )
           ),
           expr=FunctionCallExprNode(
             callee=FieldAccessExprNode(
               object=ArrayExprNode(
                 size=NumberLiteralNode(
-                  contents=3
+                  contents="3"
                 ),
                 type_expr=BuiltinTypeNode(
                   kind=int
                 ),
                 elements=[
                   NumberLiteralNode(
-                    contents=1
+                    contents="1"
                   ),
                   NumberLiteralNode(
-                    contents=2
+                    contents="2"
                   ),
                   NumberLiteralNode(
-                    contents=3
+                    contents="3"
                   )
                 ]
               ),
               field=IdentifierNode(
                 raw=false,
-                contents=map
+                contents="map"
               )
             ),
             args=[
@@ -44,16 +44,16 @@ ModuleNode(
                   parameters=[
                     IdentifierNode(
                       raw=false,
-                      contents=x
+                      contents="x"
                     )
                   ],
                   body=AddExprNode(
                     left=IdentifierNode(
                       raw=false,
-                      contents=x
+                      contents="x"
                     ),
                     right=NumberLiteralNode(
-                      contents=1
+                      contents="1"
                     )
                   )
                 )

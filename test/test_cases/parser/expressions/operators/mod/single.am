@@ -9,17 +9,17 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x
+              contents="x"
             )
           ),
           expr=ModuloExprNode(
             left=IdentifierNode(
               raw=false,
-              contents=y
+              contents="y"
             ),
             right=IdentifierNode(
               raw=false,
-              contents=z
+              contents="z"
             )
           )
         )

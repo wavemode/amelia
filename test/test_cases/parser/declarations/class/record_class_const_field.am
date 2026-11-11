@@ -10,7 +10,7 @@ ModuleNode(
       decl=ClassDeclNode(
         name=IdentifierNode(
           raw=false,
-          contents=A
+          contents="A"
         ),
         header_decls=ClassHeaderDeclsNode(
           decls=[
@@ -18,7 +18,7 @@ ModuleNode(
               decl=ClassHeaderFieldDeclNode(
                 name=IdentifierNode(
                   raw=false,
-                  contents=a
+                  contents="a"
                 ),
                 type=BuiltinTypeNode(
                   kind=int

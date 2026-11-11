@@ -15,7 +15,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=z
+              contents="z"
             )
           ),
           expr=BlockExprNode(
@@ -28,28 +28,28 @@ ModuleNode(
                         pattern=IdentifierPatternNode(
                           identifier=IdentifierNode(
                             raw=false,
-                            contents=w
+                            contents="w"
                           )
                         ),
                         expr=ArrayExprNode(
                           size=NumberLiteralNode(
-                            contents=4
+                            contents="4"
                           ),
                           type_expr=BuiltinTypeNode(
                             kind=int
                           ),
                           elements=[
                             NumberLiteralNode(
-                              contents=1
+                              contents="1"
                             ),
                             NumberLiteralNode(
-                              contents=2
+                              contents="2"
                             ),
                             NumberLiteralNode(
-                              contents=3
+                              contents="3"
                             ),
                             NumberLiteralNode(
-                              contents=4
+                              contents="4"
                             )
                           ]
                         )
@@ -62,18 +62,18 @@ ModuleNode(
                         pattern=IdentifierPatternNode(
                           identifier=IdentifierNode(
                             raw=false,
-                            contents=y
+                            contents="y"
                           )
                         ),
                         expr=FunctionCallExprNode(
                           callee=FieldAccessExprNode(
                             object=IdentifierNode(
                               raw=false,
-                              contents=w
+                              contents="w"
                             ),
                             field=IdentifierNode(
                               raw=false,
-                              contents=map
+                              contents="map"
                             )
                           ),
                           args=[
@@ -82,16 +82,16 @@ ModuleNode(
                                 parameters=[
                                   IdentifierNode(
                                     raw=false,
-                                    contents=x
+                                    contents="x"
                                   )
                                 ],
                                 body=MultiplyExprNode(
                                   left=IdentifierNode(
                                     raw=false,
-                                    contents=x
+                                    contents="x"
                                   ),
                                   right=NumberLiteralNode(
-                                    contents=2
+                                    contents="2"
                                   )
                                 )
                               )
@@ -105,18 +105,18 @@ ModuleNode(
                 pattern=IdentifierPatternNode(
                   identifier=IdentifierNode(
                     raw=false,
-                    contents=x
+                    contents="x"
                   )
                 ),
                 iterable=IdentifierNode(
                   raw=false,
-                  contents=y
+                  contents="y"
                 ),
                 body=ExprStmtNode(
                   expr=FunctionCallExprNode(
                     callee=IdentifierNode(
                       raw=false,
-                      contents=a
+                      contents="a"
                     )
                   )
                 )

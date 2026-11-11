@@ -7,28 +7,28 @@ ModuleNode(
       path=ScopeResolutionExprNode(
         scope=IdentifierNode(
           raw=false,
-          contents=a
+          contents="a"
         ),
         name=IdentifierNode(
           raw=false,
-          contents=b
+          contents="b"
         )
       ),
       items=[
         ImportItemNode(
           name=IdentifierNode(
             raw=false,
-            contents=c
+            contents="c"
           ),
           alias=IdentifierNode(
             raw=false,
-            contents=d
+            contents="d"
           )
         ),
         ImportItemNode(
           name=IdentifierNode(
             raw=false,
-            contents=e
+            contents="e"
           )
         )
       ]
@@ -39,28 +39,28 @@ ModuleNode(
       path=ScopeResolutionExprNode(
         scope=IdentifierNode(
           raw=false,
-          contents=a
+          contents="a"
         ),
         name=IdentifierNode(
           raw=false,
-          contents=b
+          contents="b"
         )
       ),
       items=[
         ImportItemNode(
           name=IdentifierNode(
             raw=false,
-            contents=c
+            contents="c"
           ),
           alias=IdentifierNode(
             raw=false,
-            contents=d
+            contents="d"
           )
         ),
         ImportItemNode(
           name=IdentifierNode(
             raw=false,
-            contents=e
+            contents="e"
           )
         )
       ]

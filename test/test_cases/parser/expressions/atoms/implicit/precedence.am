@@ -9,14 +9,14 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x
+              contents="x"
             )
           ),
           expr=FunctionCallExprNode(
             callee=ImplicitExprNode(
               name=IdentifierNode(
                 raw=false,
-                contents=f
+                contents="f"
               )
             )
           )

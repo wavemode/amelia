@@ -13,7 +13,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x
+              contents="x"
             )
           ),
           expr=FunctionCallExprNode(
@@ -24,23 +24,23 @@ ModuleNode(
                     callee=FieldAccessExprNode(
                       object=IdentifierNode(
                         raw=false,
-                        contents=a
+                        contents="a"
                       ),
                       field=IdentifierNode(
                         raw=false,
-                        contents=b
+                        contents="b"
                       )
                     )
                   ),
                   field=IdentifierNode(
                     raw=false,
-                    contents=c
+                    contents="c"
                   )
                 )
               ),
               field=IdentifierNode(
                 raw=false,
-                contents=d
+                contents="d"
               )
             )
           )

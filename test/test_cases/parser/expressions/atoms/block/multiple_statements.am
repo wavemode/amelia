@@ -13,7 +13,7 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=x
+              contents="x"
             )
           ),
           expr=BlockExprNode(
@@ -24,11 +24,11 @@ ModuleNode(
                     pattern=IdentifierPatternNode(
                       identifier=IdentifierNode(
                         raw=false,
-                        contents=y
+                        contents="y"
                       )
                     ),
                     expr=NumberLiteralNode(
-                      contents=1
+                      contents="1"
                     )
                   )
                 ]
@@ -39,11 +39,11 @@ ModuleNode(
                     pattern=IdentifierPatternNode(
                       identifier=IdentifierNode(
                         raw=false,
-                        contents=a
+                        contents="a"
                       )
                     ),
                     expr=NumberLiteralNode(
-                      contents=2
+                      contents="2"
                     )
                   )
                 ]
@@ -51,7 +51,7 @@ ModuleNode(
               ExprStmtNode(
                 expr=IdentifierNode(
                   raw=false,
-                  contents=a
+                  contents="a"
                 )
               )
             ]

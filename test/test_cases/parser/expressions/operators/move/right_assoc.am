@@ -9,14 +9,14 @@ ModuleNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
               raw=false,
-              contents=w
+              contents="w"
             )
           ),
           expr=MoveExprNode(
             expr=MoveExprNode(
               expr=IdentifierNode(
                 raw=false,
-                contents=x
+                contents="x"
               )
             )
           )
