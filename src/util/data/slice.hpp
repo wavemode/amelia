@@ -20,9 +20,6 @@ public:
   template <size_t N>
   explicit Slice(T (&array)[N]) noexcept : m_ptr(array), m_len(N) {}
 
-  explicit Slice(SliceIterator<T> iter) noexcept
-      : m_ptr(iter.ptr()), m_len(iter.size()) {}
-
   SliceIterator<T> begin() { return SliceIterator(*this); }
   ConstSliceIterator<T> begin() const {
     return ConstSliceIterator(m_ptr, m_len);
@@ -100,6 +97,8 @@ public:
     return temp;
   }
 
+  operator ConstSlice<T>() const { return ConstSlice<T>(m_ptr, m_len); }
+
 private:
   T *m_ptr;
   size_t m_len;
@@ -109,16 +108,13 @@ template <typename T> class SliceIterator {
 public:
   SliceIterator() noexcept : m_ptr(nullptr), m_len(0) {}
 
-  SliceIterator(Slice<T> slice) noexcept
-      : m_ptr(slice.ptr()), m_len(slice.size()) {}
-
   SliceIterator(T *m_ptr, size_t m_len) noexcept : m_ptr(m_ptr), m_len(m_len) {}
 
   T *ptr() noexcept { return m_ptr; }
 
   size_t size() const noexcept { return m_len; }
 
-  SliceIterator<T> begin() { return *this; }
+  SliceIterator<T> begin() { return SliceIterator(m_ptr, m_len); }
   ConstSliceIterator<T> begin() const {
     return ConstSliceIterator(m_ptr, m_len);
   }
@@ -191,6 +187,10 @@ public:
     return ConstSliceIterator(m_ptr + offset, m_len - offset);
   }
 
+  operator ConstSliceIterator<T>() const {
+    return ConstSliceIterator<T>(m_ptr, m_len);
+  }
+
 private:
   T *m_ptr;
   size_t m_len;
@@ -203,19 +203,15 @@ public:
   ConstSlice(const T *m_ptr, size_t m_len) noexcept
       : m_ptr(m_ptr), m_len(m_len) {}
 
-  ConstSlice(Slice<T> slice) noexcept
-      : m_ptr(slice.ptr()), m_len(slice.size()) {}
-
-  ConstSlice(const ConstSlice<const T> &slice) noexcept
-      : m_ptr(slice.ptr()), m_len(slice.size()) {}
-
   template <size_t N>
   explicit ConstSlice(const T (&array)[N]) noexcept : m_ptr(array), m_len(N) {}
 
   explicit ConstSlice(ConstSliceIterator<T> iter) noexcept
       : m_ptr(iter.ptr()), m_len(iter.size()) {}
 
-  ConstSliceIterator<T> begin() const { return *this; }
+  ConstSliceIterator<T> begin() const {
+    return ConstSliceIterator(m_ptr, m_len);
+  }
 
   ConstSliceIterator<T> end() const {
     return ConstSliceIterator(m_ptr + m_len, 0);
@@ -274,8 +270,6 @@ public:
     return temp;
   }
 
-  operator Slice<const T>() const { return Slice<const T>(m_ptr, m_len); }
-
 private:
   const T *m_ptr;
   size_t m_len;
@@ -284,15 +278,6 @@ private:
 template <typename T> class ConstSliceIterator {
 public:
   ConstSliceIterator() noexcept : m_ptr(nullptr), m_len(0) {}
-
-  ConstSliceIterator(ConstSlice<T> slice) noexcept
-      : m_ptr(slice.ptr()), m_len(slice.size()) {}
-
-  ConstSliceIterator(Slice<T> slice) noexcept
-      : m_ptr(slice.ptr()), m_len(slice.size()) {}
-
-  ConstSliceIterator(Slice<const T> slice) noexcept
-      : m_ptr(slice.ptr()), m_len(slice.size()) {}
 
   ConstSliceIterator(const T *m_ptr, size_t m_len) noexcept
       : m_ptr(m_ptr), m_len(m_len) {}

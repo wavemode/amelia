@@ -13,9 +13,11 @@
 
 namespace amelia {
 
-CharIterator::CharIterator(ConstSliceIterator<char> str) noexcept
-    : m_slice_iter(str) {}
-CharIterator::CharIterator(Text text) noexcept : m_slice_iter(text.data()) {}
+CharIterator::CharIterator(ConstSlice<char> str) noexcept
+    : m_slice_iter(str.begin()) {}
+
+CharIterator::CharIterator(Text text) noexcept
+    : m_slice_iter(text.data().begin()) {}
 
 CharIterator &CharIterator::operator++() {
   next();
@@ -31,7 +33,9 @@ CharIterator CharIterator::operator++(int) {
 CharIterator CharIterator::begin() const noexcept { return *this; }
 
 CharIterator CharIterator::end() const noexcept {
-  return CharIterator(m_slice_iter.end());
+  auto result = *this;
+  result.m_slice_iter = m_slice_iter.end();
+  return result;
 }
 
 uint32_t CharIterator::operator*() const { return peek(); }

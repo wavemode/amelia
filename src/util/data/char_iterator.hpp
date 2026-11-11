@@ -22,7 +22,7 @@ public:
    * @throws InvalidUTF8Error if the input span is not valid UTF-8 from
    * beginning to end.
    */
-  explicit CharIterator(ConstSliceIterator<char> str) noexcept;
+  explicit CharIterator(ConstSlice<char> str) noexcept;
 
   /**
    * @brief Constructs an iterator over the UTF-8 code points in the given Text

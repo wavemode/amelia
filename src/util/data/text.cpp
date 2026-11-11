@@ -19,7 +19,7 @@ size_t Text::size() const noexcept { return m_slice.size(); }
 
 CharIterator Text::begin() const noexcept { return CharIterator(m_slice); }
 
-CharIterator Text::end() const noexcept { return CharIterator(m_slice.end()); }
+CharIterator Text::end() const noexcept { return begin().end(); }
 
 bool Text::operator==(const Text &other) const noexcept {
   return CharIterator::compare(m_slice, other.m_slice) == 0;

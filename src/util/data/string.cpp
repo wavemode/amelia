@@ -25,11 +25,11 @@ String::String(Text text) {
 const char *String::c_str() const noexcept { return m_str.data().ptr(); }
 
 Slice<char> String::data() noexcept {
-  return Slice(m_str.data().ptr(), m_str.size() - 1);
+  return {m_str.data().ptr(), m_str.size() - 1};
 }
 
 ConstSlice<char> String::data() const noexcept {
-  return ConstSlice(m_str.data().ptr(), m_str.size() - 1);
+  return {m_str.data().ptr(), m_str.size() - 1};
 }
 
 size_t String::size() const noexcept { return m_str.size() - 1; }
@@ -83,7 +83,7 @@ uint64_t String::hash_code() const noexcept { return amelia::hash(text()); }
 
 CharIterator String::begin() const { return CharIterator(data()); }
 
-CharIterator String::end() const { return CharIterator(data().end()); }
+CharIterator String::end() const { return begin().end(); }
 
 String String::operator+(const String &other) const {
   String result(*this);
