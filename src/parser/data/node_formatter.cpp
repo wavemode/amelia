@@ -227,6 +227,16 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "else_stmt", n.else_stmt);
     break;
   }
+  case NodeType::StaticExprNode: {
+    const auto &n = node.as_StaticExprNode();
+    print_node_field(out, "expr", n.expr);
+    break;
+  }
+  case NodeType::StaticStmtNode: {
+    const auto &n = node.as_StaticStmtNode();
+    print_node_field(out, "stmt", n.stmt);
+    break;
+  }
   case NodeType::OrExprNode: {
     const auto &n = node.as_OrExprNode();
     print_node_field(out, "left", n.left);

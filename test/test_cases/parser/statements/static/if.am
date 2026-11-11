@@ -1,0 +1,52 @@
+fun f() {
+  static if (x == 10) {
+    y = 5
+  }
+}
+
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    FunctionDeclNode(
+      name=IdentifierNode(
+        raw=false,
+        contents="f"
+      ),
+      signature=FunctionSignatureNode(),
+      body=FunctionBodyNode(
+        stmts=[
+          StaticStmtNode(
+            stmt=IfStmtNode(
+              condition=EqualsExprNode(
+                left=IdentifierNode(
+                  raw=false,
+                  contents="x"
+                ),
+                right=NumberLiteralNode(
+                  contents="10"
+                )
+              ),
+              then_branch=BlockStmtNode(
+                stmts=[
+                  AssignmentStmtNode(
+                    target=IdentifierNode(
+                      raw=false,
+                      contents="y"
+                    ),
+                    expr=NumberLiteralNode(
+                      contents="5"
+                    )
+                  )
+                ]
+              )
+            )
+          )
+        ],
+        is_default=false,
+        is_deleted=false
+      )
+    )
+  ]
+)
+*/

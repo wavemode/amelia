@@ -1,0 +1,63 @@
+let x = static when (y) {
+    2 => 4,
+    6 => 8,
+    else => 12,
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclNode(
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              raw=false,
+              contents="x"
+            )
+          ),
+          expr=StaticExprNode(
+            expr=WhenExprNode(
+              expr=IdentifierNode(
+                raw=false,
+                contents="y"
+              ),
+              clauses=[
+                WhenClauseNode(
+                  items=[
+                    WhenClauseItemNode(
+                      is=false,
+                      expr=NumberLiteralNode(
+                        contents="2"
+                      )
+                    )
+                  ],
+                  body=NumberLiteralNode(
+                    contents="4"
+                  )
+                ),
+                WhenClauseNode(
+                  items=[
+                    WhenClauseItemNode(
+                      is=false,
+                      expr=NumberLiteralNode(
+                        contents="6"
+                      )
+                    )
+                  ],
+                  body=NumberLiteralNode(
+                    contents="8"
+                  )
+                )
+              ],
+              else_expr=NumberLiteralNode(
+                contents="12"
+              )
+            )
+          )
+        )
+      ]
+    )
+  ]
+)
+*/

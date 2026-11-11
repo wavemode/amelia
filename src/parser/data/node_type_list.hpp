@@ -337,6 +337,14 @@ struct WhenStmtNode {
   Option<NodeId> else_stmt;
 };
 
+struct StaticExprNode {
+  NodeId expr;
+};
+
+struct StaticStmtNode {
+  NodeId stmt;
+};
+
 struct OrExprNode {
   NodeId left;
   NodeId right;
@@ -891,6 +899,8 @@ struct TypeFieldNode {};
   X(WhenClauseNode)                                                            \
   X(WhenExprNode)                                                              \
   X(WhenStmtNode)                                                              \
+  X(StaticExprNode)                                                            \
+  X(StaticStmtNode)                                                            \
   X(OrExprNode)                                                                \
   X(AndExprNode)                                                               \
   X(BitwiseOrExprNode)                                                         \

@@ -438,6 +438,8 @@ public:
       return parse_annotated_statement();
     case TokenType::KEYWORD_WITH:
       return parse_with_stmt();
+    case TokenType::KEYWORD_STATIC:
+      return parse_static_stmt();
     default:
       break;
     }
@@ -446,6 +448,26 @@ public:
       return decl.value();
     }
     return parse_expr_statement();
+  }
+
+  NodeId parse_static_stmt() {
+    auto static_token = next();
+    NodeId result;
+    switch (peek().type) {
+    case TokenType::KEYWORD_IF:
+      result = parse_if_statement();
+      break;
+    case TokenType::KEYWORD_FOR:
+      result = parse_for_in_statement();
+      break;
+    case TokenType::KEYWORD_WHEN:
+      result = parse_when(true);
+      break;
+    default:
+      throw_parser_error_at_current_location("Unexpected token after 'static'");
+    }
+    return m_output.add_node(static_token.id, m_token_index,
+                             StaticStmtNode{result});
   }
 
   NodeId parse_with_stmt() {
@@ -1999,11 +2021,30 @@ public:
       return parse_typeof_expr();
     case TokenType::KEYWORD_IMPLICIT:
       return parse_implicit_expr();
+    case TokenType::KEYWORD_STATIC:
+      return parse_static_expr();
     default:
       String err = "Expected expression, got token ";
       token_type_to_string(err, type);
       throw_parser_error_at_current_location(move(err));
     }
+  }
+
+  NodeId parse_static_expr() {
+    auto static_token = next();
+    NodeId result;
+    switch (peek().type) {
+    case TokenType::KEYWORD_IF:
+      result = parse_if_expr();
+      break;
+    case TokenType::KEYWORD_WHEN:
+      result = parse_when(false);
+      break;
+    default:
+      throw_parser_error_at_current_location("Unexpected token after 'static'");
+    }
+    return m_output.add_node(static_token.id, m_token_index,
+                             StaticExprNode{result});
   }
 
   NodeId parse_when_clause_item() {
@@ -2924,7 +2965,7 @@ private:
     throw_parser_error(m_token_index, move(message));
   }
 
-  [[noreturn]] void throw_parser_error_at_location(Location location,
+  [[noreturn]] void throw_parser_error_at_location(const Location &location,
                                                    String message) const {
     throw ParserError(location, move(message));
   }

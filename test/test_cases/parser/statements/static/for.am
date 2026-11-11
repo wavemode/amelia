@@ -1,0 +1,53 @@
+fun f() {
+  static for (x in y) {
+    z += x
+  }
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    FunctionDeclNode(
+      name=IdentifierNode(
+        raw=false,
+        contents="f"
+      ),
+      signature=FunctionSignatureNode(),
+      body=FunctionBodyNode(
+        stmts=[
+          StaticStmtNode(
+            stmt=ForInStmtNode(
+              pattern=IdentifierPatternNode(
+                identifier=IdentifierNode(
+                  raw=false,
+                  contents="x"
+                )
+              ),
+              iterable=IdentifierNode(
+                raw=false,
+                contents="y"
+              ),
+              body=BlockStmtNode(
+                stmts=[
+                  AddAssignStmtNode(
+                    target=IdentifierNode(
+                      raw=false,
+                      contents="z"
+                    ),
+                    expr=IdentifierNode(
+                      raw=false,
+                      contents="x"
+                    )
+                  )
+                ]
+              )
+            )
+          )
+        ],
+        is_default=false,
+        is_deleted=false
+      )
+    )
+  ]
+)
+*/

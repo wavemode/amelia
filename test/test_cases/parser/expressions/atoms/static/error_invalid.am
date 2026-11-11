@@ -1,0 +1,5 @@
+let x = static f()
+
+/* EXPECTED_OUTPUT:
+ERROR("Unexpected token after 'static' (at test/test_cases/parser/expressions/atoms/static/error_invalid.am:1:16)")
+*/

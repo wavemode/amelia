@@ -1,0 +1,55 @@
+let x = static if (y == 10) {
+    3
+} else {
+    12
+}
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    LetDeclNode(
+      inits=[
+        InitializerNode(
+          pattern=IdentifierPatternNode(
+            identifier=IdentifierNode(
+              raw=false,
+              contents="x"
+            )
+          ),
+          expr=StaticExprNode(
+            expr=IfExprNode(
+              condition=EqualsExprNode(
+                left=IdentifierNode(
+                  raw=false,
+                  contents="y"
+                ),
+                right=NumberLiteralNode(
+                  contents="10"
+                )
+              ),
+              then_branch=BlockExprNode(
+                stmts=[
+                  ExprStmtNode(
+                    expr=NumberLiteralNode(
+                      contents="3"
+                    )
+                  )
+                ]
+              ),
+              else_branch=BlockExprNode(
+                stmts=[
+                  ExprStmtNode(
+                    expr=NumberLiteralNode(
+                      contents="12"
+                    )
+                  )
+                ]
+              )
+            )
+          )
+        )
+      ]
+    )
+  ]
+)
+*/
