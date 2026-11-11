@@ -521,8 +521,6 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   case NodeType::ThisLiteralNode:
   case NodeType::SuperLiteralNode:
   case NodeType::ThisTypeNode:
-  case NodeType::CopyCtorNameNode:
-  case NodeType::MoveCtorNameNode:
     break;
   case NodeType::OperatorIdentAsNode: {
     const auto &n = node.as_OperatorIdentAsNode();
@@ -735,16 +733,6 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   }
   case NodeType::ClassConstDeclNode: {
     const auto &n = node.as_ClassConstDeclNode();
-    print_node_field(out, "decl", n.decl);
-    break;
-  }
-  case NodeType::ClassCopyDeclNode: {
-    const auto &n = node.as_ClassCopyDeclNode();
-    print_node_field(out, "decl", n.decl);
-    break;
-  }
-  case NodeType::ClassMoveDeclNode: {
-    const auto &n = node.as_ClassMoveDeclNode();
     print_node_field(out, "decl", n.decl);
     break;
   }

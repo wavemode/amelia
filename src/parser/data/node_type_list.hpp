@@ -628,14 +628,6 @@ struct ClassConstDeclNode {
   NodeId decl;
 };
 
-struct ClassCopyDeclNode {
-  NodeId decl;
-};
-
-struct ClassMoveDeclNode {
-  NodeId decl;
-};
-
 struct ClassFieldNode {
   NodeId name;
   Option<NodeId> type;
@@ -707,10 +699,6 @@ struct ThisLiteralNode {};
 struct SuperLiteralNode {};
 
 struct ThisTypeNode {};
-
-struct CopyCtorNameNode {};
-
-struct MoveCtorNameNode {};
 
 struct ClassConstructorNode {
   NodeId name;
@@ -1011,8 +999,6 @@ struct TypeFieldNode {};
   X(TypeDeclNode)                                                              \
   X(ClassStaticDeclNode)                                                       \
   X(ClassConstDeclNode)                                                        \
-  X(ClassCopyDeclNode)                                                         \
-  X(ClassMoveDeclNode)                                                         \
   X(ClassFieldNode)                                                            \
   X(ClassDeclNode)                                                             \
   X(ConceptDeclNode)                                                           \
@@ -1037,8 +1023,6 @@ struct TypeFieldNode {};
   X(AsyncExprNode)                                                             \
   X(CopyExprNode)                                                              \
   X(MoveExprNode)                                                              \
-  X(CopyCtorNameNode)                                                          \
-  X(MoveCtorNameNode)                                                          \
   X(ImplicitDeclNode)                                                          \
   X(ImplicitExprNode)                                                          \
   X(OpenDeclNode)                                                              \

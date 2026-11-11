@@ -697,11 +697,6 @@ public:
       return parse_class_static_decl();
     case TokenType::KEYWORD_CONST:
       return parse_class_const_decl();
-    case TokenType::KEYWORD_COPY:
-      return parse_class_copy_decl();
-    case TokenType::KEYWORD_MOVE: {
-      return parse_class_move_decl();
-    }
     case TokenType::IDENTIFIER:
     case TokenType::IDENTIFIER_NO_W:
     case TokenType::QUOTED_IDENTIFIER:
@@ -838,20 +833,6 @@ public:
     NodeId decl = parse_class_body_decl();
     return m_output.add_node(const_token.id, m_token_index,
                              ClassConstDeclNode{decl});
-  }
-
-  NodeId parse_class_copy_decl() {
-    auto copy_token = next();
-    NodeId decl = parse_class_body_decl();
-    return m_output.add_node(copy_token.id, m_token_index,
-                             ClassCopyDeclNode{decl});
-  }
-
-  NodeId parse_class_move_decl() {
-    auto move_token = next();
-    NodeId decl = parse_class_body_decl();
-    return m_output.add_node(move_token.id, m_token_index,
-                             ClassMoveDeclNode{decl});
   }
 
   NodeId parse_class_field() {
