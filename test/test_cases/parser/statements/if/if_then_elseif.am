@@ -14,33 +14,38 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="example"
+              raw=false,
+              contents=example
             )
           ),
           expr=BlockExprNode(
             stmts=[
               IfStmtNode(
                 condition=IdentifierNode(
-                  name="x"
+                  raw=false,
+                  contents=x
                 ),
                 then_branch=BlockStmtNode(
                   stmts=[
                     ExprStmtNode(
                       expr=IdentifierNode(
-                        name="y"
+                        raw=false,
+                        contents=y
                       )
                     )
                   ]
                 ),
                 else_branch=IfStmtNode(
                   condition=IdentifierNode(
-                    name="z"
+                    raw=false,
+                    contents=z
                   ),
                   then_branch=BlockStmtNode(
                     stmts=[
                       ExprStmtNode(
                         expr=IdentifierNode(
-                          name="t"
+                          raw=false,
+                          contents=t
                         )
                       )
                     ]

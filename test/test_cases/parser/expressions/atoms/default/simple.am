@@ -8,7 +8,8 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="a"
+              raw=false,
+              contents=a
             ),
             type_annotation=BuiltinTypeNode(
               kind=int

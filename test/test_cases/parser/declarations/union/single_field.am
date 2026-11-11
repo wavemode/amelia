@@ -7,13 +7,15 @@ ModuleNode(
   decls=[
     UnionDeclNode(
       name=IdentifierNode(
-        name="A"
+        raw=false,
+        contents=A
       ),
       body=ClassBodyNode(
         decls=[
           ClassFieldNode(
             name=IdentifierNode(
-              name="a"
+              raw=false,
+              contents=a
             ),
             type=BuiltinTypeNode(
               kind=int

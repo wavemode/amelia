@@ -6,16 +6,19 @@ ModuleNode(
     ImportDeclNode(
       path=ScopeResolutionExprNode(
         scope=IdentifierNode(
-          name="a"
+          raw=false,
+          contents=a
         ),
         name=IdentifierNode(
-          name="b"
+          raw=false,
+          contents=b
         )
       ),
       items=[
         ImportItemNode(
           name=IdentifierNode(
-            name="c"
+            raw=false,
+            contents=c
           )
         )
       ]
@@ -25,16 +28,19 @@ ModuleNode(
     ImportDeclNode(
       path=ScopeResolutionExprNode(
         scope=IdentifierNode(
-          name="a"
+          raw=false,
+          contents=a
         ),
         name=IdentifierNode(
-          name="b"
+          raw=false,
+          contents=b
         )
       ),
       items=[
         ImportItemNode(
           name=IdentifierNode(
-            name="c"
+            raw=false,
+            contents=c
           )
         )
       ]

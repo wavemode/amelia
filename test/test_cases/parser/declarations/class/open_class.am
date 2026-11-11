@@ -6,7 +6,8 @@ ModuleNode(
     OpenDeclNode(
       decl=ClassDeclNode(
         name=IdentifierNode(
-          name="A"
+          raw=false,
+          contents=A
         ),
         body=ClassBodyNode()
       )

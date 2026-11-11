@@ -8,27 +8,33 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="w"
+              raw=false,
+              contents=w
             )
           ),
           expr=FunctionCallExprNode(
             callee=FunctionCallExprNode(
               callee=IdentifierNode(
-                name="x"
+                raw=false,
+                contents=x
               ),
               args=[
                 FunctionArgumentNode(
                   name=IdentifierNode(
-                    name="y"
+                    raw=false,
+                    contents=y
                   ),
-                  expr=NumberLiteralNode(value=5)
+                  expr=NumberLiteralNode(
+                    contents=5
+                  )
                 )
               ]
             ),
             args=[
               FunctionArgumentNode(
                 expr=IdentifierNode(
-                  name="z"
+                  raw=false,
+                  contents=z
                 )
               )
             ]

@@ -8,7 +8,8 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="x"
+              raw=false,
+              contents=x
             )
           ),
           expr=ArrayExprNode(
@@ -17,9 +18,15 @@ ModuleNode(
               kind=int
             ),
             elements=[
-              NumberLiteralNode(value=1),
-              NumberLiteralNode(value=2),
-              NumberLiteralNode(value=3)
+              NumberLiteralNode(
+                contents=1
+              ),
+              NumberLiteralNode(
+                contents=2
+              ),
+              NumberLiteralNode(
+                contents=3
+              )
             ]
           )
         )

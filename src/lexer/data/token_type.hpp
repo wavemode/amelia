@@ -144,10 +144,15 @@ using TokenId = int32_t;
   X(IDENTIFIER_NO_W)                                                           \
   X(QUOTED_IDENTIFIER)                                                         \
   X(QUOTED_IDENTIFIER_NO_W)                                                    \
+  X(RAW_QUOTED_IDENTIFIER)                                                     \
+  X(RAW_QUOTED_IDENTIFIER_NO_W)                                                \
   X(DOUBLE_COLON_NO_W)                                                         \
   X(AT)                                                                        \
   X(CHAR_LITERAL)                                                              \
   X(STRING_LITERAL)                                                            \
+  X(MULTILINE_STRING_LITERAL)                                                  \
+  X(RAW_STRING_LITERAL)                                                        \
+  X(RAW_MULTILINE_STRING_LITERAL)                                              \
   X(END_OF_FILE)
 
 struct AbstractString;

@@ -5,24 +5,28 @@ ModuleNode(
   decls=[
     ConceptDeclNode(
       name=IdentifierNode(
-        name="A"
+        raw=false,
+        contents=A
       ),
       generic_parameter_list=GenericParameterListNode(
         parameters=[
           GenericParameterNode(
             is_const=false,
             name=IdentifierNode(
-              name="T"
+              raw=false,
+              contents=T
             )
           )
         ],
         additional_constraints=[
           TypeConstraintNode(
             type=IdentifierNode(
-              name="T"
+              raw=false,
+              contents=T
             ),
             constraint=IdentifierNode(
-              name="Movable"
+              raw=false,
+              contents=Movable
             )
           )
         ]

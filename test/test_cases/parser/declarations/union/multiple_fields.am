@@ -9,13 +9,15 @@ ModuleNode(
   decls=[
     UnionDeclNode(
       name=IdentifierNode(
-        name="A"
+        raw=false,
+        contents=A
       ),
       body=ClassBodyNode(
         decls=[
           ClassFieldNode(
             name=IdentifierNode(
-              name="a"
+              raw=false,
+              contents=a
             ),
             type=BuiltinTypeNode(
               kind=int
@@ -23,7 +25,8 @@ ModuleNode(
           ),
           ClassFieldNode(
             name=IdentifierNode(
-              name="b"
+              raw=false,
+              contents=b
             ),
             type=BuiltinTypeNode(
               kind=float
@@ -31,12 +34,15 @@ ModuleNode(
           ),
           ClassFieldNode(
             name=IdentifierNode(
-              name="c"
+              raw=false,
+              contents=c
             ),
             type=BuiltinTypeNode(
               kind=double
             ),
-            initializer=NumberLiteralNode(value=5.4)
+            initializer=NumberLiteralNode(
+              contents=5.4
+            )
           )
         ]
       )

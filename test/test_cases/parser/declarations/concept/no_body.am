@@ -5,7 +5,8 @@ ModuleNode(
   decls=[
     ConceptDeclNode(
       name=IdentifierNode(
-        name="A"
+        raw=false,
+        contents=A
       )
     )
   ]

@@ -8,7 +8,8 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="f"
+              raw=false,
+              contents=f
             )
           ),
           expr=FunctionExprNode(
@@ -17,22 +18,28 @@ ModuleNode(
                 FunctionParameterNode(
                   variadic=false,
                   name=IdentifierNode(
-                    name="x"
+                    raw=false,
+                    contents=x
                   ),
                   type=BuiltinTypeNode(
                     kind=int
                   ),
-                  default_value=NumberLiteralNode(value=4)
+                  default_value=NumberLiteralNode(
+                    contents=4
+                  )
                 ),
                 FunctionParameterNode(
                   variadic=false,
                   name=IdentifierNode(
-                    name="y"
+                    raw=false,
+                    contents=y
                   ),
                   type=BuiltinTypeNode(
                     kind=float
                   ),
-                  default_value=NumberLiteralNode(value=10.0)
+                  default_value=NumberLiteralNode(
+                    contents=10.0
+                  )
                 )
               ]
             ),

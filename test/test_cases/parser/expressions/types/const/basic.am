@@ -8,13 +8,18 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="x"
+              raw=false,
+              contents=x
             ),
             type_annotation=ConstTypeExprNode(
-              expr=NumberLiteralNode(value=5)
+              expr=NumberLiteralNode(
+                contents=5
+              )
             )
           ),
-          expr=NumberLiteralNode(value=5)
+          expr=NumberLiteralNode(
+            contents=5
+          )
         )
       ]
     )

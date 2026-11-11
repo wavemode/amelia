@@ -17,11 +17,10 @@ extern const Map<Text, TokenType> RESERVED_WORDS;
 
 struct Lexer {
   static void tokenize(LexerResult &output, LexerContext ctx, Text input);
-  static void read_string_literal(AbstractString &out, Text input,
-                                  bool escape = false);
-  static Identifier read_quoted_ident(Text input);
-  static uint32_t read_char_literal(Text input);
-  static NumberLiteral read_number_literal(Text input);
+  static void read_string_literal_contents(AbstractString &out, Text input,
+                                           bool raw = false);
+  static uint32_t read_char_literal_contents(Text input);
+  static void read_number_literal_contents(NumberLiteral &result, Text input);
 };
 
 } // namespace amelia

@@ -7,14 +7,16 @@ ModuleNode(
   decls=[
     ClassDeclNode(
       name=IdentifierNode(
-        name="A"
+        raw=false,
+        contents=A
       ),
       body=ClassBodyNode(
         decls=[
           ImplicitDeclNode(
             decl=ClassFieldNode(
               name=IdentifierNode(
-                name="a"
+                raw=false,
+                contents=a
               ),
               type=BuiltinTypeNode(
                 kind=int

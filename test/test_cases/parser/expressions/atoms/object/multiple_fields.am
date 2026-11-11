@@ -8,25 +8,30 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="x"
+              raw=false,
+              contents=x
             )
           ),
           expr=AnonymousStructLiteralNode(
             entries=[
               KeyValueEntryNode(
                 key=IdentifierNode(
-                  name="y"
+                  raw=false,
+                  contents=y
                 ),
                 value=IdentifierNode(
-                  name="z"
+                  raw=false,
+                  contents=z
                 )
               ),
               KeyValueEntryNode(
                 key=IdentifierNode(
-                  name="a"
+                  raw=false,
+                  contents=a
                 ),
                 value=IdentifierNode(
-                  name="b"
+                  raw=false,
+                  contents=b
                 )
               )
             ]

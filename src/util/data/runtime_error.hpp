@@ -18,7 +18,7 @@ public:
   ~RuntimeError() noexcept override;
 
 private:
-  const char *m_message;
+  const char *m_message = nullptr;
 };
 
 } // namespace amelia

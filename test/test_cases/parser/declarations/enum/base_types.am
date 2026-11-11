@@ -5,15 +5,18 @@ ModuleNode(
   decls=[
     EnumDeclNode(
       name=IdentifierNode(
-        name="A"
+        raw=false,
+        contents=A
       ),
       base_type_list=BaseTypeListNode(
         base_classes=[
           IdentifierNode(
-            name="B"
+            raw=false,
+            contents=B
           ),
           IdentifierNode(
-            name="C"
+            raw=false,
+            contents=C
           )
         ]
       )

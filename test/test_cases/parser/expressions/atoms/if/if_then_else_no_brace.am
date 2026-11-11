@@ -8,18 +8,22 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="w"
+              raw=false,
+              contents=w
             )
           ),
           expr=IfExprNode(
             condition=IdentifierNode(
-              name="x"
+              raw=false,
+              contents=x
             ),
             then_branch=IdentifierNode(
-              name="y"
+              raw=false,
+              contents=y
             ),
             else_branch=IdentifierNode(
-              name="z"
+              raw=false,
+              contents=z
             )
           )
         )

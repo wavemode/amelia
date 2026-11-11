@@ -8,10 +8,13 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="x"
+              raw=false,
+              contents=x
             )
           ),
-          expr=NumberLiteralNode(value=5)
+          expr=NumberLiteralNode(
+            contents=5
+          )
         )
       ]
     )

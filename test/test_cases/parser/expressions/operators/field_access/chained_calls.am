@@ -12,7 +12,8 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="x"
+              raw=false,
+              contents=x
             )
           ),
           expr=FunctionCallExprNode(
@@ -22,20 +23,24 @@ ModuleNode(
                   object=FunctionCallExprNode(
                     callee=FieldAccessExprNode(
                       object=IdentifierNode(
-                        name="a"
+                        raw=false,
+                        contents=a
                       ),
                       field=IdentifierNode(
-                        name="b"
+                        raw=false,
+                        contents=b
                       )
                     )
                   ),
                   field=IdentifierNode(
-                    name="c"
+                    raw=false,
+                    contents=c
                   )
                 )
               ),
               field=IdentifierNode(
-                name="d"
+                raw=false,
+                contents=d
               )
             )
           )

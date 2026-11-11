@@ -7,7 +7,8 @@ ModuleNode(
   decls=[
     ClassDeclNode(
       name=IdentifierNode(
-        name="A"
+        raw=false,
+        contents=A
       ),
       body=ClassBodyNode(
         decls=[
@@ -15,7 +16,8 @@ ModuleNode(
             operator_ident=OperatorIdentifierNode(
               op=OperatorIdentAsNode(
                 type=IdentifierNode(
-                  name="T"
+                  raw=false,
+                  contents=T
                 )
               )
             ),
@@ -25,7 +27,8 @@ ModuleNode(
                   GenericParameterNode(
                     is_const=false,
                     name=IdentifierNode(
-                      name="T"
+                      raw=false,
+                      contents=T
                     )
                   )
                 ]
@@ -34,7 +37,8 @@ ModuleNode(
             body=FunctionBodyNode(
               expr=FunctionCallExprNode(
                 callee=IdentifierNode(
-                  name="T"
+                  raw=false,
+                  contents=T
                 )
               ),
               is_default=false,

@@ -10,13 +10,15 @@ ModuleNode(
   decls=[
     ClassDeclNode(
       name=IdentifierNode(
-        name="A"
+        raw=false,
+        contents=A
       ),
       body=ClassBodyNode(
         decls=[
           ClassFieldNode(
             name=IdentifierNode(
-              name="a"
+              raw=false,
+              contents=a
             ),
             type=BuiltinTypeNode(
               kind=int
@@ -24,16 +26,19 @@ ModuleNode(
           ),
           ClassFieldNode(
             name=IdentifierNode(
-              name="b"
+              raw=false,
+              contents=b
             ),
             type=IdentifierNode(
-              name="String"
+              raw=false,
+              contents=String
             )
           ),
           ClassStaticDeclNode(
             decl=ClassFieldNode(
               name=IdentifierNode(
-                name="c"
+                raw=false,
+                contents=c
               ),
               type=BuiltinTypeNode(
                 kind=float
@@ -43,7 +48,8 @@ ModuleNode(
           ClassConstDeclNode(
             decl=ClassFieldNode(
               name=IdentifierNode(
-                name="d"
+                raw=false,
+                contents=d
               ),
               type=BuiltinTypeNode(
                 kind=bool

@@ -8,7 +8,8 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="x"
+              raw=false,
+              contents=x
             ),
             type_annotation=FunctionExprNode(
               signature=FunctionSignatureNode(
@@ -17,7 +18,8 @@ ModuleNode(
                     variadic=false,
                     name=IndexingExprNode(
                       object=IdentifierNode(
-                        name="List"
+                        raw=false,
+                        contents=List
                       ),
                       indices=[
                         IndexNode(
@@ -32,7 +34,8 @@ ModuleNode(
                     variadic=false,
                     name=IndexingExprNode(
                       object=IdentifierNode(
-                        name="List"
+                        raw=false,
+                        contents=List
                       ),
                       indices=[
                         IndexNode(
@@ -46,7 +49,8 @@ ModuleNode(
                 ],
                 return_type=IndexingExprNode(
                   object=IdentifierNode(
-                    name="List"
+                    raw=false,
+                    contents=List
                   ),
                   indices=[
                     IndexNode(

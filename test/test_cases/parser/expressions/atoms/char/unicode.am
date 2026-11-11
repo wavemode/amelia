@@ -8,14 +8,15 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="c"
+              raw=false,
+              contents=c
             ),
             type_annotation=BuiltinTypeNode(
               kind=char
             )
           ),
           expr=CharLiteralNode(
-            lit='\U000065E5'
+            contents=日'
           )
         )
       ]

@@ -5,12 +5,14 @@ ModuleNode(
   decls=[
     ClassDeclNode(
       name=IdentifierNode(
-        name="A"
+        raw=false,
+        contents=A
       ),
       base_class_list=BaseTypeListNode(
         base_classes=[
           IdentifierNode(
-            name="B"
+            raw=false,
+            contents=B
           )
         ]
       ),

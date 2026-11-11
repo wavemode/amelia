@@ -8,13 +8,15 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="x"
+              raw=false,
+              contents=x
             )
           ),
           expr=DerefExprNode(
             is_const=false,
             expr=IdentifierNode(
-              name="y"
+              raw=false,
+              contents=y
             )
           )
         )

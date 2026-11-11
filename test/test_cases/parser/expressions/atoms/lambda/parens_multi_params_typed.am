@@ -8,7 +8,8 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="z"
+              raw=false,
+              contents=z
             )
           ),
           expr=LambdaExprNode(
@@ -16,7 +17,8 @@ ModuleNode(
               FunctionParameterNode(
                 variadic=false,
                 name=IdentifierNode(
-                  name="x"
+                  raw=false,
+                  contents=x
                 ),
                 type=BuiltinTypeNode(
                   kind=int
@@ -25,7 +27,8 @@ ModuleNode(
               FunctionParameterNode(
                 variadic=false,
                 name=IdentifierNode(
-                  name="y"
+                  raw=false,
+                  contents=y
                 ),
                 type=BuiltinTypeNode(
                   kind=float
@@ -34,10 +37,12 @@ ModuleNode(
             ],
             body=AddExprNode(
               left=IdentifierNode(
-                name="x"
+                raw=false,
+                contents=x
               ),
               right=IdentifierNode(
-                name="y"
+                raw=false,
+                contents=y
               )
             )
           )

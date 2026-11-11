@@ -13,7 +13,8 @@ ModuleNode(
   decls=[
     ClassDeclNode(
       name=IdentifierNode(
-        name="A"
+        raw=false,
+        contents=A
       ),
       body=ClassBodyNode(
         decls=[
@@ -27,7 +28,8 @@ ModuleNode(
                   FunctionParameterNode(
                     variadic=false,
                     name=IdentifierNode(
-                      name="o"
+                      raw=false,
+                      contents=o
                     )
                   )
                 ]
@@ -38,16 +40,19 @@ ModuleNode(
                     target=FieldAccessExprNode(
                       object=ThisLiteralNode(),
                       field=IdentifierNode(
-                        name="a"
+                        raw=false,
+                        contents=a
                       )
                     ),
                     expr=CopyExprNode(
                       expr=FieldAccessExprNode(
                         object=IdentifierNode(
-                          name="o"
+                          raw=false,
+                          contents=o
                         ),
                         field=IdentifierNode(
-                          name="a"
+                          raw=false,
+                          contents=a
                         )
                       )
                     )
@@ -56,16 +61,19 @@ ModuleNode(
                     target=FieldAccessExprNode(
                       object=ThisLiteralNode(),
                       field=IdentifierNode(
-                        name="b"
+                        raw=false,
+                        contents=b
                       )
                     ),
                     expr=CopyExprNode(
                       expr=FieldAccessExprNode(
                         object=IdentifierNode(
-                          name="o"
+                          raw=false,
+                          contents=o
                         ),
                         field=IdentifierNode(
-                          name="b"
+                          raw=false,
+                          contents=b
                         )
                       )
                     )
@@ -78,7 +86,8 @@ ModuleNode(
           ),
           ClassFieldNode(
             name=IdentifierNode(
-              name="a"
+              raw=false,
+              contents=a
             ),
             type=BuiltinTypeNode(
               kind=int
@@ -86,10 +95,12 @@ ModuleNode(
           ),
           ClassFieldNode(
             name=IdentifierNode(
-              name="b"
+              raw=false,
+              contents=b
             ),
             type=IdentifierNode(
-              name="String"
+              raw=false,
+              contents=String
             )
           )
         ]

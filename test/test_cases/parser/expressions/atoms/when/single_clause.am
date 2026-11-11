@@ -10,22 +10,28 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="x"
+              raw=false,
+              contents=x
             )
           ),
           expr=WhenExprNode(
             expr=IdentifierNode(
-              name="y"
+              raw=false,
+              contents=y
             ),
             clauses=[
               WhenClauseNode(
                 items=[
                   WhenClauseItemNode(
                     is=false,
-                    expr=NumberLiteralNode(value=5)
+                    expr=NumberLiteralNode(
+                      contents=5
+                    )
                   )
                 ],
-                body=NumberLiteralNode(value=10)
+                body=NumberLiteralNode(
+                  contents=10
+                )
               )
             ]
           )

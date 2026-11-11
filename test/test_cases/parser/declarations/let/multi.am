@@ -8,33 +8,41 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="x"
+              raw=false,
+              contents=x
             )
           )
         ),
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="y"
+              raw=false,
+              contents=y
             ),
             type_annotation=BuiltinTypeNode(
               kind=int
             )
           ),
-          expr=NumberLiteralNode(value=10)
+          expr=NumberLiteralNode(
+            contents=10
+          )
         ),
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="z"
+              raw=false,
+              contents=z
             )
           ),
-          expr=NumberLiteralNode(value=10)
+          expr=NumberLiteralNode(
+            contents=10
+          )
         ),
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="t"
+              raw=false,
+              contents=t
             ),
             type_annotation=BuiltinTypeNode(
               kind=float

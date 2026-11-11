@@ -7,7 +7,7 @@ namespace amelia {
 class Serialize;
 
 struct NumberLiteral {
-  bool has_decimal_point;
+  bool has_decimal_point = false;
   Text base_prefix;
   Text integer_digits;
   Text fractional_digits;

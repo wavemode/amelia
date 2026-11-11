@@ -11,36 +11,47 @@ ModuleNode(
   decls=[
     FunctionDeclNode(
       name=IdentifierNode(
-        name="f"
+        raw=false,
+        contents=f
       ),
       signature=FunctionSignatureNode(),
       body=FunctionBodyNode(
         stmts=[
           WhenExprNode(
             expr=IdentifierNode(
-              name="y"
+              raw=false,
+              contents=y
             ),
             clauses=[
               WhenClauseNode(
                 items=[
                   WhenClauseItemNode(
                     is=false,
-                    expr=NumberLiteralNode(value=1)
+                    expr=NumberLiteralNode(
+                      contents=1
+                    )
                   ),
                   WhenClauseItemNode(
                     is=false,
-                    expr=NumberLiteralNode(value=2)
+                    expr=NumberLiteralNode(
+                      contents=2
+                    )
                   ),
                   WhenClauseItemNode(
                     is=false,
-                    expr=NumberLiteralNode(value=3)
+                    expr=NumberLiteralNode(
+                      contents=3
+                    )
                   )
                 ],
                 body=AssignmentStmtNode(
                   target=IdentifierNode(
-                    name="z"
+                    raw=false,
+                    contents=z
                   ),
-                  expr=NumberLiteralNode(value=10)
+                  expr=NumberLiteralNode(
+                    contents=10
+                  )
                 )
               ),
               WhenClauseNode(
@@ -60,19 +71,24 @@ ModuleNode(
                 ],
                 body=AssignmentStmtNode(
                   target=IdentifierNode(
-                    name="z"
+                    raw=false,
+                    contents=z
                   ),
                   expr=StringLiteralNode(
-                    lit="huh?"
+                    raw=false,
+                    contents=huh?
                   )
                 )
               )
             ],
             else_expr=AssignmentStmtNode(
               target=IdentifierNode(
-                name="z"
+                raw=false,
+                contents=z
               ),
-              expr=NumberLiteralNode(value=30)
+              expr=NumberLiteralNode(
+                contents=30
+              )
             )
           )
         ],

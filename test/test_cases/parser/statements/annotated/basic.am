@@ -11,18 +11,21 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="x"
+              raw=false,
+              contents=x
             )
           ),
           expr=BlockExprNode(
             stmts=[
               AnnotationNode(
                 name=IdentifierNode(
-                  name="anno"
+                  raw=false,
+                  contents=anno
                 ),
                 stmt=PreIncrementStmtNode(
                   target=IdentifierNode(
-                    name="y"
+                    raw=false,
+                    contents=y
                   )
                 )
               )

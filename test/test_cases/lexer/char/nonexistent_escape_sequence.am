@@ -1,0 +1,6 @@
+'\q'
+
+/* EXPECTED_OUTPUT:
+CHAR_LITERAL('\q')
+END_OF_FILE()
+*/

@@ -11,7 +11,4 @@ struct Token {
   Text contents;
 };
 
-String identifier_text(const Token &name, bool quoted = true,
-                       bool escaped = false);
-
 } // namespace amelia

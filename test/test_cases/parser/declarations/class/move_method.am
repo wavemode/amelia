@@ -11,14 +11,16 @@ ModuleNode(
   decls=[
     ClassDeclNode(
       name=IdentifierNode(
-        name="A"
+        raw=false,
+        contents=A
       ),
       body=ClassBodyNode(
         decls=[
           ClassMoveDeclNode(
             decl=FunctionDeclNode(
               name=IdentifierNode(
-                name="say_age"
+                raw=false,
+                contents=say_age
               ),
               signature=FunctionSignatureNode(),
               body=FunctionBodyNode(
@@ -26,12 +28,14 @@ ModuleNode(
                   ExprStmtNode(
                     expr=FunctionCallExprNode(
                       callee=IdentifierNode(
-                        name="println"
+                        raw=false,
+                        contents=println
                       ),
                       args=[
                         FunctionArgumentNode(
                           expr=StringLiteralNode(
-                            lit="I am "
+                            raw=false,
+                            contents=I am 
                           )
                         ),
                         FunctionArgumentNode(
@@ -40,13 +44,15 @@ ModuleNode(
                               expr=ThisLiteralNode()
                             ),
                             field=IdentifierNode(
-                              name="age"
+                              raw=false,
+                              contents=age
                             )
                           )
                         ),
                         FunctionArgumentNode(
                           expr=StringLiteralNode(
-                            lit=" years old"
+                            raw=false,
+                            contents= years old
                           )
                         )
                       ]
@@ -60,7 +66,8 @@ ModuleNode(
           ),
           ClassFieldNode(
             name=IdentifierNode(
-              name="age"
+              raw=false,
+              contents=age
             ),
             type=BuiltinTypeNode(
               kind=int

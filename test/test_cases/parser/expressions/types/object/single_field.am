@@ -8,13 +8,15 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="x"
+              raw=false,
+              contents=x
             ),
             type_annotation=AnonymousStructTypeNode(
               entries=[
                 KeyValueEntryNode(
                   key=IdentifierNode(
-                    name="a"
+                    raw=false,
+                    contents=a
                   ),
                   value=BuiltinTypeNode(
                     kind=int

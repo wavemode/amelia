@@ -5,14 +5,16 @@ ModuleNode(
   decls=[
     ClassDeclNode(
       name=IdentifierNode(
-        name="A"
+        raw=false,
+        contents=A
       ),
       generic_parameter_list=GenericParameterListNode(
         parameters=[
           GenericParameterNode(
             is_const=false,
             name=IdentifierNode(
-              name="T"
+              raw=false,
+              contents=T
             )
           )
         ],
@@ -20,12 +22,14 @@ ModuleNode(
           TypeConstraintNode(
             type=IndexingExprNode(
               object=IdentifierNode(
-                name="Move"
+                raw=false,
+                contents=Move
               ),
               indices=[
                 IndexNode(
                   value=IdentifierNode(
-                    name="T"
+                    raw=false,
+                    contents=T
                   )
                 )
               ]
@@ -33,10 +37,12 @@ ModuleNode(
           ),
           TypeConstraintNode(
             type=IdentifierNode(
-              name="A"
+              raw=false,
+              contents=A
             ),
             constraint=IdentifierNode(
-              name="T"
+              raw=false,
+              contents=T
             )
           )
         ]

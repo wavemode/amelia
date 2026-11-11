@@ -11,7 +11,8 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="example"
+              raw=false,
+              contents=example
             )
           ),
           expr=BlockExprNode(
@@ -20,7 +21,8 @@ ModuleNode(
               ReturnStmtNode(
                 expr=FunctionCallExprNode(
                   callee=IdentifierNode(
-                    name="x"
+                    raw=false,
+                    contents=x
                   )
                 )
               )

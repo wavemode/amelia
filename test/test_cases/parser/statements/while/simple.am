@@ -10,18 +10,21 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="example"
+              raw=false,
+              contents=example
             )
           ),
           expr=BlockExprNode(
             stmts=[
               WhileStmtNode(
                 condition=IdentifierNode(
-                  name="x"
+                  raw=false,
+                  contents=x
                 ),
                 body=ExprStmtNode(
                   expr=IdentifierNode(
-                    name="z"
+                    raw=false,
+                    contents=z
                   )
                 )
               )

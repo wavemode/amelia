@@ -11,11 +11,13 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="x"
+              raw=false,
+              contents=x
             )
           ),
           expr=IdentifierNode(
-            name="y"
+            raw=false,
+            contents=y
           )
         )
       ]
@@ -26,11 +28,13 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="a"
+              raw=false,
+              contents=a
             )
           ),
           expr=IdentifierNode(
-            name="b"
+            raw=false,
+            contents=b
           )
         )
       ]

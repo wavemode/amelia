@@ -5,14 +5,16 @@ ModuleNode(
   decls=[
     ConceptDeclNode(
       name=IdentifierNode(
-        name="A"
+        raw=false,
+        contents=A
       ),
       implicit_parameter_list=ImplicitParameterListNode(
         parameters=[
           FunctionParameterNode(
             variadic=false,
             name=IdentifierNode(
-              name="x"
+              raw=false,
+              contents=x
             ),
             type=BuiltinTypeNode(
               kind=int

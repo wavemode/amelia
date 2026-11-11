@@ -5,20 +5,23 @@ ModuleNode(
   decls=[
     TypeDeclNode(
       name=IdentifierNode(
-        name="A"
+        raw=false,
+        contents=A
       ),
       generic_parameter_list=GenericParameterListNode(
         parameters=[
           GenericParameterNode(
             is_const=false,
             name=IdentifierNode(
-              name="B"
+              raw=false,
+              contents=B
             )
           )
         ]
       ),
       type_expr=IdentifierNode(
-        name="C"
+        raw=false,
+        contents=C
       )
     )
   ]

@@ -14,7 +14,8 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="example"
+              raw=false,
+              contents=example
             )
           ),
           expr=BlockExprNode(
@@ -26,10 +27,13 @@ ModuleNode(
                       InitializerNode(
                         pattern=IdentifierPatternNode(
                           identifier=IdentifierNode(
-                            name="w"
+                            raw=false,
+                            contents=w
                           )
                         ),
-                        expr=NumberLiteralNode(value=10)
+                        expr=NumberLiteralNode(
+                          contents=10
+                        )
                       )
                     ]
                   ),
@@ -38,14 +42,18 @@ ModuleNode(
                       InitializerNode(
                         pattern=IdentifierPatternNode(
                           identifier=IdentifierNode(
-                            name="x"
+                            raw=false,
+                            contents=x
                           )
                         ),
                         expr=AddExprNode(
                           left=IdentifierNode(
-                            name="w"
+                            raw=false,
+                            contents=w
                           ),
-                          right=NumberLiteralNode(value=5)
+                          right=NumberLiteralNode(
+                            contents=5
+                          )
                         )
                       )
                     ]
@@ -53,13 +61,17 @@ ModuleNode(
                 ],
                 condition=GreaterExprNode(
                   left=IdentifierNode(
-                    name="x"
+                    raw=false,
+                    contents=x
                   ),
-                  right=NumberLiteralNode(value=20)
+                  right=NumberLiteralNode(
+                    contents=20
+                  )
                 ),
                 body=ExprStmtNode(
                   expr=IdentifierNode(
-                    name="z"
+                    raw=false,
+                    contents=z
                   )
                 )
               )

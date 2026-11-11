@@ -7,7 +7,8 @@ ModuleNode(
   decls=[
     EnumDeclNode(
       name=IdentifierNode(
-        name="A"
+        raw=false,
+        contents=A
       ),
       repr_type=BuiltinTypeNode(
         kind=uint
@@ -15,18 +16,23 @@ ModuleNode(
       variants=[
         EnumVariantNode(
           name=IdentifierNode(
-            name="X"
+            raw=false,
+            contents=X
           ),
-          value=NumberLiteralNode(value=0)
-        ),
-        EnumVariantNode(
-          name=IdentifierNode(
-            name="Y"
+          value=NumberLiteralNode(
+            contents=0
           )
         ),
         EnumVariantNode(
           name=IdentifierNode(
-            name="Z"
+            raw=false,
+            contents=Y
+          )
+        ),
+        EnumVariantNode(
+          name=IdentifierNode(
+            raw=false,
+            contents=Z
           )
         )
       ]

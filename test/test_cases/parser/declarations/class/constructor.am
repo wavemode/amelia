@@ -13,13 +13,15 @@ ModuleNode(
   decls=[
     ClassDeclNode(
       name=IdentifierNode(
-        name="A"
+        raw=false,
+        contents=A
       ),
       body=ClassBodyNode(
         decls=[
           ClassConstructorNode(
             name=IdentifierNode(
-              name="A"
+              raw=false,
+              contents=A
             ),
             signature=FunctionSignatureNode(),
             body=FunctionBodyNode(
@@ -28,20 +30,25 @@ ModuleNode(
                   target=FieldAccessExprNode(
                     object=ThisLiteralNode(),
                     field=IdentifierNode(
-                      name="a"
+                      raw=false,
+                      contents=a
                     )
                   ),
-                  expr=NumberLiteralNode(value=0)
+                  expr=NumberLiteralNode(
+                    contents=0
+                  )
                 ),
                 AssignmentStmtNode(
                   target=FieldAccessExprNode(
                     object=ThisLiteralNode(),
                     field=IdentifierNode(
-                      name="b"
+                      raw=false,
+                      contents=b
                     )
                   ),
                   expr=StringLiteralNode(
-                    lit="hello"
+                    raw=false,
+                    contents=hello
                   )
                 )
               ],
@@ -51,7 +58,8 @@ ModuleNode(
           ),
           ClassFieldNode(
             name=IdentifierNode(
-              name="a"
+              raw=false,
+              contents=a
             ),
             type=BuiltinTypeNode(
               kind=int
@@ -59,10 +67,12 @@ ModuleNode(
           ),
           ClassFieldNode(
             name=IdentifierNode(
-              name="b"
+              raw=false,
+              contents=b
             ),
             type=IdentifierNode(
-              name="String"
+              raw=false,
+              contents=String
             )
           )
         ]

@@ -19,7 +19,8 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="a"
+              raw=false,
+              contents=a
             )
           ),
           expr=BlockExprNode(
@@ -28,7 +29,8 @@ ModuleNode(
                 introductory_decls=[
                   TypeDeclNode(
                     name=IdentifierNode(
-                      name="T"
+                      raw=false,
+                      contents=T
                     ),
                     type_expr=BuiltinTypeNode(
                       kind=int
@@ -39,13 +41,17 @@ ModuleNode(
                       InitializerNode(
                         pattern=IdentifierPatternNode(
                           identifier=IdentifierNode(
-                            name="w"
+                            raw=false,
+                            contents=w
                           ),
                           type_annotation=IdentifierNode(
-                            name="T"
+                            raw=false,
+                            contents=T
                           )
                         ),
-                        expr=NumberLiteralNode(value=10)
+                        expr=NumberLiteralNode(
+                          contents=10
+                        )
                       )
                     ]
                   ),
@@ -54,14 +60,18 @@ ModuleNode(
                       InitializerNode(
                         pattern=IdentifierPatternNode(
                           identifier=IdentifierNode(
-                            name="x"
+                            raw=false,
+                            contents=x
                           )
                         ),
                         expr=AddExprNode(
                           left=IdentifierNode(
-                            name="w"
+                            raw=false,
+                            contents=w
                           ),
-                          right=NumberLiteralNode(value=5)
+                          right=NumberLiteralNode(
+                            contents=5
+                          )
                         )
                       )
                     ]
@@ -69,15 +79,19 @@ ModuleNode(
                 ],
                 condition=GreaterExprNode(
                   left=IdentifierNode(
-                    name="x"
+                    raw=false,
+                    contents=x
                   ),
-                  right=NumberLiteralNode(value=10)
+                  right=NumberLiteralNode(
+                    contents=10
+                  )
                 ),
                 then_branch=BlockStmtNode(
                   stmts=[
                     PreIncrementStmtNode(
                       target=IdentifierNode(
-                        name="y"
+                        raw=false,
+                        contents=y
                       )
                     )
                   ]
@@ -86,7 +100,8 @@ ModuleNode(
                   stmts=[
                     PreIncrementStmtNode(
                       target=IdentifierNode(
-                        name="z"
+                        raw=false,
+                        contents=z
                       )
                     )
                   ]

@@ -11,22 +11,29 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="z"
+              raw=false,
+              contents=z
             )
           ),
           expr=BlockExprNode(
             stmts=[
               AssignmentStmtNode(
                 target=IdentifierNode(
-                  name="x"
+                  raw=false,
+                  contents=x
                 ),
-                expr=NumberLiteralNode(value=5)
+                expr=NumberLiteralNode(
+                  contents=5
+                )
               ),
               AssignmentStmtNode(
                 target=IdentifierNode(
-                  name="y"
+                  raw=false,
+                  contents=y
                 ),
-                expr=NumberLiteralNode(value=6)
+                expr=NumberLiteralNode(
+                  contents=6
+                )
               )
             ]
           )

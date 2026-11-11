@@ -8,11 +8,14 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="x"
+              raw=false,
+              contents=x
             )
           ),
           expr=LambdaExprNode(
-            body=NumberLiteralNode(value=10)
+            body=NumberLiteralNode(
+              contents=10
+            )
           )
         )
       ]

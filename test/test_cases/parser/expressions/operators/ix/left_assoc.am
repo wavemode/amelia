@@ -8,18 +8,21 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="w"
+              raw=false,
+              contents=w
             )
           ),
           expr=IndexingExprNode(
             object=IndexingExprNode(
               object=IdentifierNode(
-                name="x"
+                raw=false,
+                contents=x
               ),
               indices=[
                 IndexNode(
                   value=IdentifierNode(
-                    name="y"
+                    raw=false,
+                    contents=y
                   )
                 )
               ]
@@ -27,7 +30,8 @@ ModuleNode(
             indices=[
               IndexNode(
                 value=IdentifierNode(
-                  name="z"
+                  raw=false,
+                  contents=z
                 )
               )
             ]

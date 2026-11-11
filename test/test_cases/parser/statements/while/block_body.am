@@ -13,28 +13,32 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="example"
+              raw=false,
+              contents=example
             )
           ),
           expr=BlockExprNode(
             stmts=[
               WhileStmtNode(
                 condition=IdentifierNode(
-                  name="x"
+                  raw=false,
+                  contents=x
                 ),
                 body=BlockStmtNode(
                   stmts=[
                     ExprStmtNode(
                       expr=FunctionCallExprNode(
                         callee=IdentifierNode(
-                          name="z"
+                          raw=false,
+                          contents=z
                         )
                       )
                     ),
                     ExprStmtNode(
                       expr=FunctionCallExprNode(
                         callee=IdentifierNode(
-                          name="t"
+                          raw=false,
+                          contents=t
                         )
                       )
                     )

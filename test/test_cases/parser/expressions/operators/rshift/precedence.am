@@ -8,19 +8,23 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="w"
+              raw=false,
+              contents=w
             )
           ),
           expr=GreaterExprNode(
             left=IdentifierNode(
-              name="x"
+              raw=false,
+              contents=x
             ),
             right=RightShiftExprNode(
               left=IdentifierNode(
-                name="y"
+                raw=false,
+                contents=y
               ),
               right=IdentifierNode(
-                name="z"
+                raw=false,
+                contents=z
               )
             )
           )

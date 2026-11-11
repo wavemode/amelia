@@ -9,28 +9,35 @@ ModuleNode(
   decls=[
     FunctionDeclNode(
       name=IdentifierNode(
-        name="f"
+        raw=false,
+        contents=f
       ),
       signature=FunctionSignatureNode(),
       body=FunctionBodyNode(
         stmts=[
           WhenExprNode(
             expr=IdentifierNode(
-              name="y"
+              raw=false,
+              contents=y
             ),
             clauses=[
               WhenClauseNode(
                 items=[
                   WhenClauseItemNode(
                     is=false,
-                    expr=NumberLiteralNode(value=5)
+                    expr=NumberLiteralNode(
+                      contents=5
+                    )
                   )
                 ],
                 body=AssignmentStmtNode(
                   target=IdentifierNode(
-                    name="z"
+                    raw=false,
+                    contents=z
                   ),
-                  expr=NumberLiteralNode(value=20)
+                  expr=NumberLiteralNode(
+                    contents=20
+                  )
                 )
               )
             ]

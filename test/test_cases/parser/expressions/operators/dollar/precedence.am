@@ -8,22 +8,26 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="x"
+              raw=false,
+              contents=x
             )
           ),
           expr=MultiplyExprNode(
             left=DollarSignExprNode(
               expr=FieldAccessExprNode(
                 object=IdentifierNode(
-                  name="y"
+                  raw=false,
+                  contents=y
                 ),
                 field=IdentifierNode(
-                  name="z"
+                  raw=false,
+                  contents=z
                 )
               )
             ),
             right=IdentifierNode(
-              name="w"
+              raw=false,
+              contents=w
             )
           )
         )

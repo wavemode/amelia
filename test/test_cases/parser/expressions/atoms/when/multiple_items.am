@@ -12,30 +12,40 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="x"
+              raw=false,
+              contents=x
             )
           ),
           expr=WhenExprNode(
             expr=IdentifierNode(
-              name="y"
+              raw=false,
+              contents=y
             ),
             clauses=[
               WhenClauseNode(
                 items=[
                   WhenClauseItemNode(
                     is=false,
-                    expr=NumberLiteralNode(value=1)
+                    expr=NumberLiteralNode(
+                      contents=1
+                    )
                   ),
                   WhenClauseItemNode(
                     is=false,
-                    expr=NumberLiteralNode(value=2)
+                    expr=NumberLiteralNode(
+                      contents=2
+                    )
                   ),
                   WhenClauseItemNode(
                     is=false,
-                    expr=NumberLiteralNode(value=3)
+                    expr=NumberLiteralNode(
+                      contents=3
+                    )
                   )
                 ],
-                body=NumberLiteralNode(value=10)
+                body=NumberLiteralNode(
+                  contents=10
+                )
               ),
               WhenClauseNode(
                 items=[
@@ -53,11 +63,14 @@ ModuleNode(
                   )
                 ],
                 body=StringLiteralNode(
-                  lit="huh?"
+                  raw=false,
+                  contents=huh?
                 )
               )
             ],
-            else_expr=NumberLiteralNode(value=30)
+            else_expr=NumberLiteralNode(
+              contents=30
+            )
           )
         )
       ]

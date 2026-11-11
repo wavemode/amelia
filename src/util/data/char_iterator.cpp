@@ -4,6 +4,8 @@
 
 #include "char_iterator.hpp"
 
+#include "util/data/abstract_string.hpp"
+#include "util/data/invalid_utf16_error.hpp"
 #include "util/data/invalid_utf8_error.hpp"
 #include "util/data/list.hpp"
 #include "util/data/text.hpp"
@@ -32,9 +34,9 @@ CharIterator CharIterator::end() const noexcept {
   return CharIterator(m_slice_iter.end());
 }
 
-uint32_t CharIterator::operator*() { return peek(); }
+uint32_t CharIterator::operator*() const { return peek(); }
 
-uint32_t CharIterator::peek() {
+uint32_t CharIterator::peek() const {
   try {
     return utf8::peek_next(m_slice_iter, m_slice_iter.end());
   } catch (const utf8::invalid_utf8 &) {
@@ -45,13 +47,20 @@ uint32_t CharIterator::peek() {
 }
 
 uint32_t CharIterator::next() {
+  uint32_t result;
+  auto prev = m_slice_iter;
   try {
-    return utf8::next(m_slice_iter, m_slice_iter.end());
+    result = utf8::next(m_slice_iter, m_slice_iter.end());
   } catch (const utf8::invalid_utf8 &) {
-    throw amelia::InvalidUTF8Error();
+    throw InvalidUTF8Error();
   } catch (const utf8::not_enough_room &) {
     throw RuntimeError("Attempted to advance past the end of the string");
   }
+  if (prev == m_slice_iter) {
+    // we're not making progress
+    throw InvalidUTF8Error();
+  }
+  return result;
 }
 
 ConstSlice<char> CharIterator::data() const noexcept {
@@ -88,12 +97,15 @@ void CharIterator::validate(ConstSlice<char> str) {
   auto begin = str.begin();
   auto end = str.end();
   while (begin != end) {
+    auto prev = begin;
     try {
       utf8::next(begin, end);
-    } catch (const utf8::invalid_utf8 &) {
-      throw amelia::InvalidUTF8Error();
-    } catch (const utf8::not_enough_room &) {
-      throw amelia::InvalidUTF8Error();
+    } catch (...) {
+      throw InvalidUTF8Error();
+    }
+    if (prev == begin) {
+      // we're not making progress
+      throw InvalidUTF8Error();
     }
   }
 }
@@ -102,7 +114,26 @@ void CharIterator::append(List<char> &str, uint32_t code_point) {
   try {
     utf8::append(code_point, std::back_inserter(str));
   } catch (const utf8::invalid_code_point &) {
-    throw amelia::InvalidUTF8Error();
+    throw InvalidUTF8Error();
+  }
+}
+
+void CharIterator::utf16_to_utf8(AbstractString &output,
+                                 ConstSlice<uint16_t> input) {
+  auto iter = input.ptr();
+  auto end = input.end().ptr();
+  while (iter != end) {
+    auto prev = iter;
+    try {
+      auto cp = utf8::next16(iter, end);
+      output.append(cp);
+    } catch (...) {
+      throw InvalidUTF16Error();
+    }
+    if (iter == prev) {
+      // we're not making progress
+      throw InvalidUTF16Error();
+    }
   }
 }
 

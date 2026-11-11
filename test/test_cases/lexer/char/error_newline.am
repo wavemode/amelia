@@ -1,5 +1,5 @@
 /* EXPECTED_OUTPUT:
-ERROR("Unterminated character literal - unexpected newline (at test/test_cases/lexer/char/error_newline.am:5:2)")
+ERROR("Unterminated character literal (at test/test_cases/lexer/char/error_newline.am:5:1)")
 */
 
 '

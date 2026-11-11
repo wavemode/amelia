@@ -6,20 +6,27 @@ ModuleNode(
   decls=[
     AnnotationNode(
       name=IdentifierNode(
-        name="anno"
+        raw=false,
+        contents=anno
       ),
       args=[
         FunctionArgumentNode(
           name=IdentifierNode(
-            name="a"
+            raw=false,
+            contents=a
           ),
-          expr=NumberLiteralNode(value=1)
+          expr=NumberLiteralNode(
+            contents=1
+          )
         ),
         FunctionArgumentNode(
           name=IdentifierNode(
-            name="b"
+            raw=false,
+            contents=b
           ),
-          expr=NumberLiteralNode(value=2)
+          expr=NumberLiteralNode(
+            contents=2
+          )
         )
       ],
       stmt=LetDeclNode(
@@ -27,10 +34,13 @@ ModuleNode(
           InitializerNode(
             pattern=IdentifierPatternNode(
               identifier=IdentifierNode(
-                name="x"
+                raw=false,
+                contents=x
               )
             ),
-            expr=NumberLiteralNode(value=4)
+            expr=NumberLiteralNode(
+              contents=4
+            )
           )
         ]
       )

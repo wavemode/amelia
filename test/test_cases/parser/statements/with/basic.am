@@ -10,7 +10,8 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="x"
+              raw=false,
+              contents=x
             )
           ),
           expr=BlockExprNode(
@@ -19,16 +20,19 @@ ModuleNode(
                 args=[
                   FunctionArgumentNode(
                     name=IdentifierNode(
-                      name="a"
+                      raw=false,
+                      contents=a
                     ),
                     expr=IdentifierNode(
-                      name="b"
+                      raw=false,
+                      contents=b
                     )
                   )
                 ],
                 body=PreIncrementStmtNode(
                   target=IdentifierNode(
-                    name="d"
+                    raw=false,
+                    contents=d
                   )
                 )
               )

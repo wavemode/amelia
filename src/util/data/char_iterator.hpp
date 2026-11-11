@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cstddef>
 #include <cstdint>
 
 #include "util/data/slice.hpp"
@@ -10,6 +9,7 @@ namespace amelia {
 template <typename T> class Slice;
 template <typename T> class List;
 class Text;
+struct AbstractString;
 
 /**
  * @class CharIterator
@@ -47,7 +47,7 @@ public:
    * valid UTF-8 sequence.
    * @throws std::out_of_range if the iterator is at the end of the string.
    */
-  uint32_t operator*();
+  uint32_t operator*() const;
 
   /**
    * @brief Returns the next UTF-8 code point in the string without advancing
@@ -56,7 +56,7 @@ public:
    * valid UTF-8 sequence.
    * @throws std::out_of_range if the iterator is at the end of the string.
    */
-  uint32_t peek();
+  uint32_t peek() const;
 
   /**
    * @brief Returns the next UTF-8 code point in the string and advances the
@@ -146,6 +146,12 @@ public:
    * @throws InvalidUTF8Error if the value is not a valid Unicode code point.
    */
   static void append(List<char> &str, uint32_t code_point);
+
+  /**
+   * @brief Convert UTF-16 encoded input to a UTF-8 String.
+   * @throws InvalidUTF16Error if the input does not contain valid UTF-16 data.
+   */
+  static void utf16_to_utf8(AbstractString &output, ConstSlice<uint16_t> input);
 
   /**
    * @brief Compares two UTF-8 encoded slices lexicographically by Unicode code

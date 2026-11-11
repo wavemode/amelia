@@ -10,7 +10,8 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="x"
+              raw=false,
+              contents=x
             )
           ),
           expr=BlockExprNode(
@@ -20,10 +21,13 @@ ModuleNode(
                   InitializerNode(
                     pattern=IdentifierPatternNode(
                       identifier=IdentifierNode(
-                        name="y"
+                        raw=false,
+                        contents=y
                       )
                     ),
-                    expr=NumberLiteralNode(value=1)
+                    expr=NumberLiteralNode(
+                      contents=1
+                    )
                   )
                 ]
               )

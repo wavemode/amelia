@@ -6,7 +6,8 @@ ModuleNode(
     RecordDeclNode(
       decl=ClassDeclNode(
         name=IdentifierNode(
-          name="A"
+          raw=false,
+          contents=A
         ),
         header_decls=ClassHeaderDeclsNode(
           decls=[
@@ -18,7 +19,8 @@ ModuleNode(
             ClassHeaderFieldDeclNode(
               type=IndexingExprNode(
                 object=IdentifierNode(
-                  name="list"
+                  raw=false,
+                  contents=list
                 ),
                 indices=[
                   IndexNode(

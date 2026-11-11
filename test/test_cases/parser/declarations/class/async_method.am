@@ -7,14 +7,16 @@ ModuleNode(
   decls=[
     ClassDeclNode(
       name=IdentifierNode(
-        name="A"
+        raw=false,
+        contents=A
       ),
       body=ClassBodyNode(
         decls=[
           AsyncDeclNode(
             decl=FunctionDeclNode(
               name=IdentifierNode(
-                name="foo"
+                raw=false,
+                contents=foo
               ),
               signature=FunctionSignatureNode(),
               body=FunctionBodyNode(

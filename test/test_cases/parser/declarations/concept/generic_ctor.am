@@ -7,7 +7,8 @@ ModuleNode(
   decls=[
     ConceptDeclNode(
       name=IdentifierNode(
-        name="A"
+        raw=false,
+        contents=A
       ),
       body=ClassBodyNode(
         decls=[
@@ -19,7 +20,8 @@ ModuleNode(
                   GenericParameterNode(
                     is_const=false,
                     name=IdentifierNode(
-                      name="T"
+                      raw=false,
+                      contents=T
                     )
                   )
                 ]
@@ -28,10 +30,12 @@ ModuleNode(
                 FunctionParameterNode(
                   variadic=false,
                   name=IdentifierNode(
-                    name="o"
+                    raw=false,
+                    contents=o
                   ),
                   type=IdentifierNode(
-                    name="T"
+                    raw=false,
+                    contents=T
                   )
                 )
               ]

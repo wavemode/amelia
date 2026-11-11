@@ -12,7 +12,8 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="f"
+              raw=false,
+              contents=f
             )
           ),
           expr=FunctionExprNode(
@@ -21,7 +22,8 @@ ModuleNode(
                 FunctionParameterNode(
                   variadic=false,
                   name=IdentifierNode(
-                    name="x"
+                    raw=false,
+                    contents=x
                   ),
                   type=BuiltinTypeNode(
                     kind=int
@@ -30,7 +32,8 @@ ModuleNode(
                 FunctionParameterNode(
                   variadic=false,
                   name=IdentifierNode(
-                    name="y"
+                    raw=false,
+                    contents=y
                   ),
                   type=BuiltinTypeNode(
                     kind=float
@@ -46,12 +49,14 @@ ModuleNode(
                 ExprStmtNode(
                   expr=FunctionCallExprNode(
                     callee=IdentifierNode(
-                      name="print"
+                      raw=false,
+                      contents=print
                     ),
                     args=[
                       FunctionArgumentNode(
                         expr=StringLiteralNode(
-                          lit="hello, world!"
+                          raw=false,
+                          contents=hello, world!
                         )
                       )
                     ]
@@ -60,19 +65,23 @@ ModuleNode(
                 ExprStmtNode(
                   expr=FunctionCallExprNode(
                     callee=IdentifierNode(
-                      name="print"
+                      raw=false,
+                      contents=print
                     ),
                     args=[
                       FunctionArgumentNode(
                         expr=StringLiteralNode(
-                          lit="goodbye, world..."
+                          raw=false,
+                          contents=goodbye, world...
                         )
                       )
                     ]
                   )
                 ),
                 ReturnStmtNode(
-                  expr=NumberLiteralNode(value=10.0)
+                  expr=NumberLiteralNode(
+                    contents=10.0
+                  )
                 )
               ],
               is_default=false,

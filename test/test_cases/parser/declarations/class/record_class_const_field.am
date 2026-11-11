@@ -9,14 +9,16 @@ ModuleNode(
     RecordDeclNode(
       decl=ClassDeclNode(
         name=IdentifierNode(
-          name="A"
+          raw=false,
+          contents=A
         ),
         header_decls=ClassHeaderDeclsNode(
           decls=[
             ClassHeaderConstDeclNode(
               decl=ClassHeaderFieldDeclNode(
                 name=IdentifierNode(
-                  name="a"
+                  raw=false,
+                  contents=a
                 ),
                 type=BuiltinTypeNode(
                   kind=int

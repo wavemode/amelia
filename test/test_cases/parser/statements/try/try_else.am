@@ -16,7 +16,8 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="example"
+              raw=false,
+              contents=example
             )
           ),
           expr=BlockExprNode(
@@ -29,10 +30,13 @@ ModuleNode(
                         InitializerNode(
                           pattern=IdentifierPatternNode(
                             identifier=IdentifierNode(
-                              name="x"
+                              raw=false,
+                              contents=x
                             )
                           ),
-                          expr=NumberLiteralNode(value=10)
+                          expr=NumberLiteralNode(
+                            contents=10
+                          )
                         )
                       ]
                     )
@@ -41,19 +45,22 @@ ModuleNode(
                 catch_clauses=[
                   CatchClauseNode(
                     exc_type=IdentifierNode(
-                      name="e"
+                      raw=false,
+                      contents=e
                     ),
                     body=BlockStmtNode(
                       stmts=[
                         ExprStmtNode(
                           expr=FunctionCallExprNode(
                             callee=IdentifierNode(
-                              name="println"
+                              raw=false,
+                              contents=println
                             ),
                             args=[
                               FunctionArgumentNode(
                                 expr=StringLiteralNode(
-                                  lit="error"
+                                  raw=false,
+                                  contents=error
                                 )
                               )
                             ]
@@ -68,12 +75,14 @@ ModuleNode(
                     ExprStmtNode(
                       expr=FunctionCallExprNode(
                         callee=IdentifierNode(
-                          name="println"
+                          raw=false,
+                          contents=println
                         ),
                         args=[
                           FunctionArgumentNode(
                             expr=IdentifierNode(
-                              name="x"
+                              raw=false,
+                              contents=x
                             )
                           )
                         ]

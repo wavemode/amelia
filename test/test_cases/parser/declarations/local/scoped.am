@@ -7,10 +7,12 @@ ModuleNode(
       visibility=local,
       scope=ScopeResolutionExprNode(
         scope=IdentifierNode(
-          name="a"
+          raw=false,
+          contents=a
         ),
         name=IdentifierNode(
-          name="b"
+          raw=false,
+          contents=b
         )
       ),
       decl=ConstDeclNode(
@@ -18,13 +20,16 @@ ModuleNode(
           InitializerNode(
             pattern=IdentifierPatternNode(
               identifier=IdentifierNode(
-                name="x"
+                raw=false,
+                contents=x
               ),
               type_annotation=BuiltinTypeNode(
                 kind=int
               )
             ),
-            expr=NumberLiteralNode(value=40)
+            expr=NumberLiteralNode(
+              contents=40
+            )
           )
         ]
       )

@@ -14,7 +14,8 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="z"
+              raw=false,
+              contents=z
             )
           ),
           expr=BlockExprNode(
@@ -26,19 +27,30 @@ ModuleNode(
                       InitializerNode(
                         pattern=IdentifierPatternNode(
                           identifier=IdentifierNode(
-                            name="w"
+                            raw=false,
+                            contents=w
                           )
                         ),
                         expr=ArrayExprNode(
-                          size=NumberLiteralNode(value=4),
+                          size=NumberLiteralNode(
+                            contents=4
+                          ),
                           type_expr=BuiltinTypeNode(
                             kind=int
                           ),
                           elements=[
-                            NumberLiteralNode(value=1),
-                            NumberLiteralNode(value=2),
-                            NumberLiteralNode(value=3),
-                            NumberLiteralNode(value=4)
+                            NumberLiteralNode(
+                              contents=1
+                            ),
+                            NumberLiteralNode(
+                              contents=2
+                            ),
+                            NumberLiteralNode(
+                              contents=3
+                            ),
+                            NumberLiteralNode(
+                              contents=4
+                            )
                           ]
                         )
                       )
@@ -49,16 +61,19 @@ ModuleNode(
                       InitializerNode(
                         pattern=IdentifierPatternNode(
                           identifier=IdentifierNode(
-                            name="y"
+                            raw=false,
+                            contents=y
                           )
                         ),
                         expr=FunctionCallExprNode(
                           callee=FieldAccessExprNode(
                             object=IdentifierNode(
-                              name="w"
+                              raw=false,
+                              contents=w
                             ),
                             field=IdentifierNode(
-                              name="map"
+                              raw=false,
+                              contents=map
                             )
                           ),
                           args=[
@@ -66,14 +81,18 @@ ModuleNode(
                               expr=LambdaExprNode(
                                 parameters=[
                                   IdentifierNode(
-                                    name="x"
+                                    raw=false,
+                                    contents=x
                                   )
                                 ],
                                 body=MultiplyExprNode(
                                   left=IdentifierNode(
-                                    name="x"
+                                    raw=false,
+                                    contents=x
                                   ),
-                                  right=NumberLiteralNode(value=2)
+                                  right=NumberLiteralNode(
+                                    contents=2
+                                  )
                                 )
                               )
                             )
@@ -85,16 +104,19 @@ ModuleNode(
                 ],
                 pattern=IdentifierPatternNode(
                   identifier=IdentifierNode(
-                    name="x"
+                    raw=false,
+                    contents=x
                   )
                 ),
                 iterable=IdentifierNode(
-                  name="y"
+                  raw=false,
+                  contents=y
                 ),
                 body=ExprStmtNode(
                   expr=FunctionCallExprNode(
                     callee=IdentifierNode(
-                      name="a"
+                      raw=false,
+                      contents=a
                     )
                   )
                 )

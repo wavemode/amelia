@@ -11,19 +11,22 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="example"
+              raw=false,
+              contents=example
             )
           ),
           expr=BlockExprNode(
             stmts=[
               PostDecrementStmtNode(
                 target=IdentifierNode(
-                  name="x"
+                  raw=false,
+                  contents=x
                 )
               ),
               PostDecrementStmtNode(
                 target=IdentifierNode(
-                  name="y"
+                  raw=false,
+                  contents=y
                 )
               )
             ]

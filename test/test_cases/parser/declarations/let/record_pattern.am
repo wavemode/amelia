@@ -11,14 +11,16 @@ ModuleNode(
               StructFieldPatternNode(
                 field=IdentifierPatternNode(
                   identifier=IdentifierNode(
-                    name="a"
+                    raw=false,
+                    contents=a
                   )
                 )
               ),
               StructFieldPatternNode(
                 field=IdentifierPatternNode(
                   identifier=IdentifierNode(
-                    name="b"
+                    raw=false,
+                    contents=b
                   ),
                   type_annotation=BuiltinTypeNode(
                     kind=int
@@ -28,7 +30,8 @@ ModuleNode(
               StructFieldPatternNode(
                 pattern=IdentifierPatternNode(
                   identifier=IdentifierNode(
-                    name="c"
+                    raw=false,
+                    contents=c
                   ),
                   type_annotation=BuiltinTypeNode(
                     kind=int
@@ -36,14 +39,16 @@ ModuleNode(
                 ),
                 field=IdentifierPatternNode(
                   identifier=IdentifierNode(
-                    name="d"
+                    raw=false,
+                    contents=d
                   )
                 )
               )
             ]
           ),
           expr=IdentifierNode(
-            name="e"
+            raw=false,
+            contents=e
           )
         )
       ]

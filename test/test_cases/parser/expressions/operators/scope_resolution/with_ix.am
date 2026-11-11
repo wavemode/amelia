@@ -8,24 +8,28 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="x"
+              raw=false,
+              contents=x
             )
           ),
           expr=ScopeResolutionExprNode(
             scope=IndexingExprNode(
               object=IdentifierNode(
-                name="T"
+                raw=false,
+                contents=T
               ),
               indices=[
                 IndexNode(
                   value=IdentifierNode(
-                    name="U"
+                    raw=false,
+                    contents=U
                   )
                 )
               ]
             ),
             name=IdentifierNode(
-              name="V"
+              raw=false,
+              contents=V
             )
           )
         )

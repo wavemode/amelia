@@ -8,20 +8,24 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="w"
+              raw=false,
+              contents=w
             )
           ),
           expr=FieldAccessExprNode(
             object=FieldAccessExprNode(
               object=IdentifierNode(
-                name="x"
+                raw=false,
+                contents=x
               ),
               field=IdentifierNode(
-                name="y"
+                raw=false,
+                contents=y
               )
             ),
             field=IdentifierNode(
-              name="z"
+              raw=false,
+              contents=z
             )
           )
         )

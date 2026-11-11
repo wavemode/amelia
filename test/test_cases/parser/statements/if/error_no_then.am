@@ -3,5 +3,5 @@ let a = {
 }
 
 /* EXPECTED_OUTPUT:
-ERROR("Expected expression, got token RIGHT_BRACE(}) (at test/test_cases/parser/statements/if/error_no_then.am:3:1)")
+ERROR("Expected expression, got token RIGHT_BRACE (at test/test_cases/parser/statements/if/error_no_then.am:3:1)")
 */

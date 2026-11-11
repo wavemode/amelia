@@ -2,5 +2,5 @@
 `
 
 /* EXPECTED_OUTPUT:
-ERROR("Unterminated quoted identifier - unexpected newline (at test/test_cases/lexer/identifier/error_quoted_unescaped_newline.am:1:2)")
+ERROR("Unterminated quoted identifier (at test/test_cases/lexer/identifier/error_quoted_unescaped_newline.am:1:1)")
 */

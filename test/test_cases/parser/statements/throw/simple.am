@@ -10,14 +10,16 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="example"
+              raw=false,
+              contents=example
             )
           ),
           expr=BlockExprNode(
             stmts=[
               ThrowStmtNode(
                 expr=IdentifierNode(
-                  name="x"
+                  raw=false,
+                  contents=x
                 )
               )
             ]

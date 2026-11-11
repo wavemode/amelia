@@ -12,16 +12,22 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="x"
+              raw=false,
+              contents=x
             )
           ),
           expr=ParenthesizedExprNode(
             exprs=[
-              NumberLiteralNode(value=5),
-              StringLiteralNode(
-                lit="hello"
+              NumberLiteralNode(
+                contents=5
               ),
-              NumberLiteralNode(value=6.7)
+              StringLiteralNode(
+                raw=false,
+                contents=hello
+              ),
+              NumberLiteralNode(
+                contents=6.7
+              )
             ]
           )
         )

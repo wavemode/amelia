@@ -7,14 +7,18 @@ ModuleNode(
   decls=[
     EnumDeclNode(
       name=IdentifierNode(
-        name="A"
+        raw=false,
+        contents=A
       ),
       variants=[
         EnumVariantNode(
           name=IdentifierNode(
-            name="FirstOption"
+            raw=false,
+            contents=FirstOption
           ),
-          value=NumberLiteralNode(value=1)
+          value=NumberLiteralNode(
+            contents=1
+          )
         )
       ]
     )

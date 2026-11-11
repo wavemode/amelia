@@ -9,13 +9,15 @@ ModuleNode(
   decls=[
     ClassDeclNode(
       name=IdentifierNode(
-        name="A"
+        raw=false,
+        contents=A
       ),
       body=ClassBodyNode(
         decls=[
           ClassDestructorNode(
             name=IdentifierNode(
-              name="A"
+              raw=false,
+              contents=A
             ),
             signature=FunctionSignatureNode(),
             body=FunctionBodyNode(
@@ -23,12 +25,14 @@ ModuleNode(
                 ExprStmtNode(
                   expr=FunctionCallExprNode(
                     callee=IdentifierNode(
-                      name="println"
+                      raw=false,
+                      contents=println
                     ),
                     args=[
                       FunctionArgumentNode(
                         expr=StringLiteralNode(
-                          lit="destroying"
+                          raw=false,
+                          contents=destroying
                         )
                       )
                     ]

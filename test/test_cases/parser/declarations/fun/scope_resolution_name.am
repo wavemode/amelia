@@ -7,14 +7,17 @@ ModuleNode(
       name=ScopeResolutionExprNode(
         scope=ScopeResolutionExprNode(
           scope=IdentifierNode(
-            name="A"
+            raw=false,
+            contents=A
           ),
           name=IdentifierNode(
-            name="B"
+            raw=false,
+            contents=B
           )
         ),
         name=IdentifierNode(
-          name="c"
+          raw=false,
+          contents=c
         )
       ),
       signature=FunctionSignatureNode(),

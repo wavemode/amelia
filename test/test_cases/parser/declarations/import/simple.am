@@ -6,10 +6,12 @@ ModuleNode(
     ImportDeclNode(
       path=ScopeResolutionExprNode(
         scope=IdentifierNode(
-          name="a"
+          raw=false,
+          contents=a
         ),
         name=IdentifierNode(
-          name="b"
+          raw=false,
+          contents=b
         )
       )
     )
@@ -18,10 +20,12 @@ ModuleNode(
     ImportDeclNode(
       path=ScopeResolutionExprNode(
         scope=IdentifierNode(
-          name="a"
+          raw=false,
+          contents=a
         ),
         name=IdentifierNode(
-          name="b"
+          raw=false,
+          contents=b
         )
       )
     )

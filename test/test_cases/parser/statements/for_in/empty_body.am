@@ -10,7 +10,8 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="z"
+              raw=false,
+              contents=z
             )
           ),
           expr=BlockExprNode(
@@ -18,11 +19,13 @@ ModuleNode(
               ForInStmtNode(
                 pattern=IdentifierPatternNode(
                   identifier=IdentifierNode(
-                    name="x"
+                    raw=false,
+                    contents=x
                   )
                 ),
                 iterable=IdentifierNode(
-                  name="y"
+                  raw=false,
+                  contents=y
                 ),
                 body=EmptyStmtNode()
               )

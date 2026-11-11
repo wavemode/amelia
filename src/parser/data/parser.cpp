@@ -3,10 +3,11 @@
 #include "lexer/data/lexer.hpp"
 #include "lexer/data/lexer_result.hpp"
 #include "lexer/data/token.hpp"
-#include "lexer/data/token_formatter.hpp"
 #include "parser/data/node_type_list.hpp"
 #include "parser/data/parser_error.hpp"
 #include "parser/data/parser_result.hpp"
+#include "source/data/number_literal.hpp"
+#include "util/data/text_utils.hpp"
 
 namespace amelia {
 
@@ -38,8 +39,8 @@ struct TokenWithId {
 class ParserState {
 public:
   ParserState(ParserResult &output, const LexerResult &input)
-      : m_output(output), m_input(input), m_token_index(0),
-        m_token_formatter(input), m_imports(), m_submodules() {}
+      : m_output(output), m_input(input), m_token_index(0), m_imports(),
+        m_submodules() {}
 
 #define COMMA_SEPARATED_UNTIL(TOKEN_TYPE, CODE)                                \
   while (peek().type != TOKEN_TYPE) {                                          \
@@ -1881,11 +1882,11 @@ public:
                                  FieldAccessExprNode{left, ident_id});
       } else if (next_token.type == TokenType::NUMBER_FIELD) {
         m_token_index++; // consume the numeric field token
+        NumberLiteral lit;
+        Lexer::read_number_literal_contents(lit, next_token.contents);
         left = m_output.add_node(
             start_token.id, m_token_index,
-            NumericFieldAccessExprNode{
-                left, String(Lexer::read_number_literal(next_token.contents)
-                                 .fractional_digits)});
+            NumericFieldAccessExprNode{left, String(lit.fractional_digits)});
       } else if (next_token.type == TokenType::LEFT_BRACKET_NO_W) {
         ++m_token_index; // consume the '[' operator
         List<NodeId> indices;
@@ -1940,7 +1941,8 @@ public:
   }
 
   NodeId parse_atom() {
-    switch (peek().type) {
+    auto type = peek().type;
+    switch (type) {
     case TokenType::LEFT_BRACKET:
     case TokenType::LEFT_BRACKET_NO_W:
       return parse_array_type();
@@ -1956,6 +1958,9 @@ public:
     case TokenType::KEYWORD_OPERATOR:
       return parse_identifier();
     case TokenType::STRING_LITERAL:
+    case TokenType::RAW_STRING_LITERAL:
+    case TokenType::MULTILINE_STRING_LITERAL:
+    case TokenType::RAW_MULTILINE_STRING_LITERAL:
       return parse_string_literal();
     case TokenType::CHAR_LITERAL:
       return parse_char_literal();
@@ -2015,7 +2020,7 @@ public:
       return parse_implicit_expr();
     default:
       String err = "Expected expression, got token ";
-      m_token_formatter.format_token(err, m_token_index);
+      token_type_to_string(err, type);
       throw_parser_error_at_current_location(move(err));
     }
   }
@@ -2206,7 +2211,8 @@ public:
   }
 
   NodeId parse_type_atom() {
-    switch (peek().type) {
+    auto type = peek().type;
+    switch (type) {
     case TokenType::LEFT_BRACKET:
     case TokenType::LEFT_BRACKET_NO_W:
       return parse_array_type();
@@ -2247,7 +2253,7 @@ public:
       return parse_typeof_expr();
     default:
       String err = "Expected type expression, got token ";
-      m_token_formatter.format_token(err, m_token_index);
+      token_type_to_string(err, type);
       throw_parser_error_at_current_location(move(err));
     }
   }
@@ -2731,24 +2737,35 @@ public:
 
   NodeId parse_string_literal() {
     auto token = next();
-    String contents;
-    Lexer::read_string_literal(contents, token.contents);
+    bool raw = token.type == TokenType::RAW_STRING_LITERAL ||
+               token.type == TokenType::RAW_MULTILINE_STRING_LITERAL;
+    uint8_t quote_count =
+        (token.type == TokenType::MULTILINE_STRING_LITERAL ||
+         token.type == TokenType::RAW_MULTILINE_STRING_LITERAL)
+            ? 3
+            : 1;
+    size_t contents_start = quote_count + (raw ? 1 : 0);
+    size_t contents_end = token.contents.size() - quote_count;
+    Text contents =
+        TextUtils::substr_bytes(token.contents, contents_start, contents_end);
     return m_output.add_node(token.id, m_token_index,
-                             StringLiteralNode{move(contents)});
+                             StringLiteralNode{raw, String(contents)});
   }
 
   NodeId parse_char_literal() {
     auto token = next();
-    return m_output.add_node(
-        token.id, m_token_index,
-        CharLiteralNode{Lexer::read_char_literal(token.contents)});
+    size_t contents_start = 1;
+    size_t contents_end = token.contents.size() - 1;
+    Text contents =
+        TextUtils::substr_bytes(token.contents, contents_start, contents_end);
+    return m_output.add_node(token.id, m_token_index,
+                             CharLiteralNode{String(contents)});
   }
 
   NodeId parse_number_literal() {
     auto token = next();
-    return m_output.add_node(
-        token.id, m_token_index,
-        NumberLiteralNode{Lexer::read_number_literal(token.contents)});
+    return m_output.add_node(token.id, m_token_index,
+                             NumberLiteralNode{String(token.contents)});
   }
 
   NodeId expect_identifier(Text error_message) {
@@ -2822,9 +2839,18 @@ public:
 
   NodeId parse_single_identifier() {
     auto ident = next();
-    return m_output.add_node(
-        ident.id, m_token_index,
-        IdentifierNode{String(identifier_text(m_input.get_token(ident.id)))});
+    bool raw = ident.type == TokenType::RAW_QUOTED_IDENTIFIER ||
+               ident.type == TokenType::RAW_QUOTED_IDENTIFIER_NO_W;
+    bool quoted = ident.type == TokenType::RAW_QUOTED_IDENTIFIER ||
+                  ident.type == TokenType::RAW_QUOTED_IDENTIFIER_NO_W ||
+                  ident.type == TokenType::QUOTED_IDENTIFIER ||
+                  ident.type == TokenType::QUOTED_IDENTIFIER_NO_W;
+    size_t contents_start = (raw ? 1 : 0) + (quoted ? 1 : 0);
+    size_t contents_end = ident.contents.size() - (quoted ? 1 : 0);
+    Text contents =
+        TextUtils::substr_bytes(ident.contents, contents_start, contents_end);
+    return m_output.add_node(ident.id, m_token_index,
+                             IdentifierNode{raw, String(contents)});
   }
 
   NodeId parse_function_call_argument() {
@@ -2906,7 +2932,6 @@ private:
   ParserResult &m_output;
   const LexerResult &m_input;
   TokenId m_token_index;
-  TokenFormatter m_token_formatter;
 
   List<NodeId> m_imports;
   List<NodeId> m_submodules;

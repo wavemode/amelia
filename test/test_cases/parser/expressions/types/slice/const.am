@@ -8,12 +8,14 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="x"
+              raw=false,
+              contents=x
             ),
             type_annotation=ArrayExprNode(
               is_const=true,
               type_expr=IdentifierNode(
-                name="T"
+                raw=false,
+                contents=T
               )
             )
           )

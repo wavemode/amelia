@@ -6,7 +6,8 @@ ModuleNode(
     AsyncDeclNode(
       decl=FunctionDeclNode(
         name=IdentifierNode(
-          name="f"
+          raw=false,
+          contents=f
         ),
         signature=FunctionSignatureNode(),
         body=FunctionBodyNode(

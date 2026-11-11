@@ -8,16 +8,23 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="y"
+              raw=false,
+              contents=y
             ),
             type_annotation=TypeOfExprNode(
               expr=AddExprNode(
-                left=NumberLiteralNode(value=5),
-                right=NumberLiteralNode(value=5)
+                left=NumberLiteralNode(
+                  contents=5
+                ),
+                right=NumberLiteralNode(
+                  contents=5
+                )
               )
             )
           ),
-          expr=NumberLiteralNode(value=10)
+          expr=NumberLiteralNode(
+            contents=10
+          )
         )
       ]
     )

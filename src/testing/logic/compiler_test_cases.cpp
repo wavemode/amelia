@@ -4,7 +4,6 @@
 #include "lexer/data/lexer_context.hpp"
 #include "lexer/data/lexer_result.hpp"
 #include "lexer/data/token.hpp"
-#include "lexer/data/token_formatter.hpp"
 #include "parser/data/node_formatter.hpp"
 #include "parser/data/parser.hpp"
 #include "parser/data/parser_result.hpp"
@@ -208,11 +207,12 @@ void run_lexer_test_case(AbstractString &output,
                          const CompilerTestCase &test_case) {
   LexerResult result;
   Lexer::tokenize(result, LexerContext{test_case.filename}, test_case.input);
-  const TokenFormatter formatter(result);
   const auto tokens = result.tokens();
-  for (size_t token_id = 0; token_id < tokens.size(); ++token_id) {
-    formatter.format_token(output, token_id);
-    output.append("\n");
+  for (const auto &token : tokens) {
+    token_type_to_string(output, token.type);
+    output.append("(");
+    output.append(token.contents);
+    output.append(")\n");
   }
 }
 

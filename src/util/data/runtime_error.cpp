@@ -7,7 +7,7 @@ namespace amelia {
 RuntimeError::RuntimeError(const char *message) {
   size_t message_length = std::strlen(message);
   char *buffer = new char[message_length + 1];
-  std::strcpy(const_cast<char *>(buffer), message);
+  std::strcpy(buffer, message);
   m_message = buffer;
 }
 

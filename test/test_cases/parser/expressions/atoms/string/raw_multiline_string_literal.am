@@ -10,13 +10,15 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="x"
+              raw=false,
+              contents=x
             )
           ),
           expr=StringLiteralNode(
-            lit="
+            raw=true,
+            contents=
 hello, world\!
-"
+
           )
         )
       ]

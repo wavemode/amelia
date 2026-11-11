@@ -7,13 +7,15 @@ ModuleNode(
   decls=[
     ConceptDeclNode(
       name=IdentifierNode(
-        name="A"
+        raw=false,
+        contents=A
       ),
       body=ClassBodyNode(
         decls=[
           ClassConstructorNode(
             name=IdentifierNode(
-              name="A"
+              raw=false,
+              contents=A
             ),
             signature=FunctionSignatureNode()
           )

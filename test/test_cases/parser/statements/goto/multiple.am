@@ -11,19 +11,22 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="z"
+              raw=false,
+              contents=z
             )
           ),
           expr=BlockExprNode(
             stmts=[
               GotoStmtNode(
                 label=IdentifierNode(
-                  name="x"
+                  raw=false,
+                  contents=x
                 )
               ),
               GotoStmtNode(
                 label=IdentifierNode(
-                  name="y"
+                  raw=false,
+                  contents=y
                 )
               )
             ]

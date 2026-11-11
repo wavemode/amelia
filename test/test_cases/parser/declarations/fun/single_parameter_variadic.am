@@ -5,14 +5,16 @@ ModuleNode(
   decls=[
     FunctionDeclNode(
       name=IdentifierNode(
-        name="f"
+        raw=false,
+        contents=f
       ),
       signature=FunctionSignatureNode(
         parameters=[
           FunctionParameterNode(
             variadic=true,
             name=IdentifierNode(
-              name="x"
+              raw=false,
+              contents=x
             )
           )
         ]

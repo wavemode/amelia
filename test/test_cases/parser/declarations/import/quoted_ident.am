@@ -5,14 +5,16 @@ ModuleNode(
   decls=[
     ImportDeclNode(
       path=IdentifierNode(
-        name="abc"
+        raw=false,
+        contents=abc
       )
     )
   ],
   imports=[
     ImportDeclNode(
       path=IdentifierNode(
-        name="abc"
+        raw=false,
+        contents=abc
       )
     )
   ]

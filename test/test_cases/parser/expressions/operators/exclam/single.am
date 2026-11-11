@@ -8,12 +8,14 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="x"
+              raw=false,
+              contents=x
             )
           ),
           expr=ExclamationMarkExprNode(
             expr=IdentifierNode(
-              name="y"
+              raw=false,
+              contents=y
             )
           )
         )

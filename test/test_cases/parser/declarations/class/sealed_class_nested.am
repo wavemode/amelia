@@ -10,19 +10,22 @@ ModuleNode(
     SealedDeclNode(
       decl=ClassDeclNode(
         name=IdentifierNode(
-          name="A"
+          raw=false,
+          contents=A
         ),
         body=ClassBodyNode(
           decls=[
             RecordDeclNode(
               decl=ClassDeclNode(
                 name=IdentifierNode(
-                  name="B"
+                  raw=false,
+                  contents=B
                 ),
                 base_class_list=BaseTypeListNode(
                   base_classes=[
                     IdentifierNode(
-                      name="A"
+                      raw=false,
+                      contents=A
                     )
                   ]
                 ),
@@ -30,7 +33,8 @@ ModuleNode(
                   decls=[
                     ClassHeaderFieldDeclNode(
                       name=IdentifierNode(
-                        name="b"
+                        raw=false,
+                        contents=b
                       ),
                       type=BuiltinTypeNode(
                         kind=int
@@ -43,12 +47,14 @@ ModuleNode(
             RecordDeclNode(
               decl=ClassDeclNode(
                 name=IdentifierNode(
-                  name="C"
+                  raw=false,
+                  contents=C
                 ),
                 base_class_list=BaseTypeListNode(
                   base_classes=[
                     IdentifierNode(
-                      name="A"
+                      raw=false,
+                      contents=A
                     )
                   ]
                 ),
@@ -56,7 +62,8 @@ ModuleNode(
                   decls=[
                     ClassHeaderFieldDeclNode(
                       name=IdentifierNode(
-                        name="c"
+                        raw=false,
+                        contents=c
                       ),
                       type=BuiltinTypeNode(
                         kind=float
@@ -69,12 +76,14 @@ ModuleNode(
             RecordDeclNode(
               decl=ClassDeclNode(
                 name=IdentifierNode(
-                  name="D"
+                  raw=false,
+                  contents=D
                 ),
                 base_class_list=BaseTypeListNode(
                   base_classes=[
                     IdentifierNode(
-                      name="A"
+                      raw=false,
+                      contents=A
                     )
                   ]
                 ),
@@ -82,7 +91,8 @@ ModuleNode(
                   decls=[
                     ClassHeaderFieldDeclNode(
                       name=IdentifierNode(
-                        name="d"
+                        raw=false,
+                        contents=d
                       ),
                       type=BuiltinTypeNode(
                         kind=double

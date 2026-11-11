@@ -1,5 +1,5 @@
 'ab'
 
 /* EXPECTED_OUTPUT:
-ERROR("Expected closing single quote for character literal (at test/test_cases/lexer/char/error_multiple_chars.am:1:3)")
+ERROR("Character literal contains more than one code point (at test/test_cases/lexer/char/error_multiple_chars.am:1:2)")
 */

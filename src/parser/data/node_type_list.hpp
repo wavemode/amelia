@@ -9,7 +9,6 @@
 #include "builtin/data/builtin_kind.hpp"
 #include "lexer/data/token_type.hpp"
 #include "source/data/declaration_visibility.hpp"
-#include "source/data/number_literal.hpp"
 
 namespace amelia {
 
@@ -24,19 +23,21 @@ struct ModuleNode {
 struct EmptyStmtNode {};
 
 struct IdentifierNode {
-  String name;
+  bool raw;
+  String contents;
 };
 
 struct StringLiteralNode {
+  bool raw;
   String contents;
 };
 
 struct CharLiteralNode {
-  uint32_t code_point;
+  String contents;
 };
 
 struct NumberLiteralNode {
-  NumberLiteral value;
+  String contents;
 };
 
 struct OperatorIdentAddNode {};

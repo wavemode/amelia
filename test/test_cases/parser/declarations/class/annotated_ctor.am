@@ -8,17 +8,20 @@ ModuleNode(
   decls=[
     ClassDeclNode(
       name=IdentifierNode(
-        name="A"
+        raw=false,
+        contents=A
       ),
       body=ClassBodyNode(
         decls=[
           AnnotationNode(
             name=IdentifierNode(
-              name="anno"
+              raw=false,
+              contents=anno
             ),
             stmt=ClassConstructorNode(
               name=IdentifierNode(
-                name="A"
+                raw=false,
+                contents=A
               ),
               signature=FunctionSignatureNode(),
               body=FunctionBodyNode(

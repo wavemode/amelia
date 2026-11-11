@@ -1,6 +1,6 @@
-'\u65e5'
+'\ud83d\udd2e'
 
 /* EXPECTED_OUTPUT:
-CHAR_LITERAL('\U000065e5')
+CHAR_LITERAL('\ud83d\udd2e')
 END_OF_FILE()
 */

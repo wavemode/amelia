@@ -14,26 +14,30 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="a"
+              raw=false,
+              contents=a
             )
           ),
           expr=BlockExprNode(
             stmts=[
               IfStmtNode(
                 condition=IdentifierNode(
-                  name="x"
+                  raw=false,
+                  contents=x
                 ),
                 then_branch=ExprStmtNode(
                   expr=FunctionCallExprNode(
                     callee=IdentifierNode(
-                      name="y"
+                      raw=false,
+                      contents=y
                     )
                   )
                 ),
                 else_branch=ExprStmtNode(
                   expr=FunctionCallExprNode(
                     callee=IdentifierNode(
-                      name="z"
+                      raw=false,
+                      contents=z
                     )
                   )
                 )

@@ -7,13 +7,15 @@ ModuleNode(
   decls=[
     ClassDeclNode(
       name=IdentifierNode(
-        name="A"
+        raw=false,
+        contents=A
       ),
       body=ClassBodyNode(
         decls=[
           FunctionDeclNode(
             name=IdentifierNode(
-              name="explicit_this"
+              raw=false,
+              contents=explicit_this
             ),
             signature=FunctionSignatureNode(
               parameters=[

@@ -8,28 +8,34 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="w"
+              raw=false,
+              contents=w
             )
           ),
           expr=TryExprNode(
             try_block=IdentifierNode(
-              name="x"
+              raw=false,
+              contents=x
             ),
             catch_clauses=[
               CatchClauseNode(
                 exc_type=IdentifierNode(
-                  name="z"
+                  raw=false,
+                  contents=z
                 ),
                 var=IdentifierNode(
-                  name="y"
+                  raw=false,
+                  contents=y
                 ),
                 body=IdentifierNode(
-                  name="t"
+                  raw=false,
+                  contents=t
                 )
               )
             ],
             else_branch=IdentifierNode(
-              name="v"
+              raw=false,
+              contents=v
             )
           )
         )

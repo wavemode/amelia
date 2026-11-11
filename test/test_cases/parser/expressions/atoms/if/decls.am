@@ -13,7 +13,8 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="a"
+              raw=false,
+              contents=a
             )
           ),
           expr=IfExprNode(
@@ -23,10 +24,13 @@ ModuleNode(
                   InitializerNode(
                     pattern=IdentifierPatternNode(
                       identifier=IdentifierNode(
-                        name="w"
+                        raw=false,
+                        contents=w
                       )
                     ),
-                    expr=NumberLiteralNode(value=10)
+                    expr=NumberLiteralNode(
+                      contents=10
+                    )
                   )
                 ]
               ),
@@ -35,14 +39,18 @@ ModuleNode(
                   InitializerNode(
                     pattern=IdentifierPatternNode(
                       identifier=IdentifierNode(
-                        name="x"
+                        raw=false,
+                        contents=x
                       )
                     ),
                     expr=AddExprNode(
                       left=IdentifierNode(
-                        name="w"
+                        raw=false,
+                        contents=w
                       ),
-                      right=NumberLiteralNode(value=5)
+                      right=NumberLiteralNode(
+                        contents=5
+                      )
                     )
                   )
                 ]
@@ -50,15 +58,20 @@ ModuleNode(
             ],
             condition=GreaterExprNode(
               left=IdentifierNode(
-                name="x"
+                raw=false,
+                contents=x
               ),
-              right=NumberLiteralNode(value=10)
+              right=NumberLiteralNode(
+                contents=10
+              )
             ),
             then_branch=IdentifierNode(
-              name="y"
+              raw=false,
+              contents=y
             ),
             else_branch=IdentifierNode(
-              name="z"
+              raw=false,
+              contents=z
             )
           )
         )

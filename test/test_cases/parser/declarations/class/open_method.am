@@ -8,14 +8,16 @@ ModuleNode(
   decls=[
     ClassDeclNode(
       name=IdentifierNode(
-        name="A"
+        raw=false,
+        contents=A
       ),
       body=ClassBodyNode(
         decls=[
           OpenDeclNode(
             decl=FunctionDeclNode(
               name=IdentifierNode(
-                name="say_age"
+                raw=false,
+                contents=say_age
               ),
               signature=FunctionSignatureNode(
                 return_type=BuiltinTypeNode(
@@ -26,7 +28,8 @@ ModuleNode(
           ),
           ClassFieldNode(
             name=IdentifierNode(
-              name="age"
+              raw=false,
+              contents=age
             ),
             type=BuiltinTypeNode(
               kind=int

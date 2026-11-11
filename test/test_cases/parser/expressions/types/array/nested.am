@@ -8,12 +8,17 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="x"
+              raw=false,
+              contents=x
             ),
             type_annotation=ArrayExprNode(
-              size=NumberLiteralNode(value=4),
+              size=NumberLiteralNode(
+                contents=4
+              ),
               type_expr=ArrayExprNode(
-                size=NumberLiteralNode(value=3),
+                size=NumberLiteralNode(
+                  contents=3
+                ),
                 type_expr=BuiltinTypeNode(
                   kind=int
                 )

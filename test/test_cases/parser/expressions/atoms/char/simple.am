@@ -6,11 +6,12 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="c"
+              raw=false,
+              contents=c
             )
           ),
           expr=CharLiteralNode(
-            lit='\U00000034'
+            contents=4'
           )
         )
       ]

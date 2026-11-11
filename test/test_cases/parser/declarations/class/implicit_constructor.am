@@ -10,21 +10,24 @@ ModuleNode(
   decls=[
     ClassDeclNode(
       name=IdentifierNode(
-        name="A"
+        raw=false,
+        contents=A
       ),
       body=ClassBodyNode(
         decls=[
           ImplicitDeclNode(
             decl=ClassConstructorNode(
               name=IdentifierNode(
-                name="A"
+                raw=false,
+                contents=A
               ),
               signature=FunctionSignatureNode(
                 parameters=[
                   FunctionParameterNode(
                     variadic=false,
                     name=IdentifierNode(
-                      name="a"
+                      raw=false,
+                      contents=a
                     ),
                     type=BuiltinTypeNode(
                       kind=int
@@ -38,11 +41,13 @@ ModuleNode(
                     target=FieldAccessExprNode(
                       object=ThisLiteralNode(),
                       field=IdentifierNode(
-                        name="a"
+                        raw=false,
+                        contents=a
                       )
                     ),
                     expr=IdentifierNode(
-                      name="a"
+                      raw=false,
+                      contents=a
                     )
                   )
                 ],
@@ -53,7 +58,8 @@ ModuleNode(
           ),
           ClassFieldNode(
             name=IdentifierNode(
-              name="a"
+              raw=false,
+              contents=a
             ),
             type=BuiltinTypeNode(
               kind=int

@@ -8,22 +8,26 @@ ModuleNode(
         InitializerNode(
           pattern=IdentifierPatternNode(
             identifier=IdentifierNode(
-              name="w"
+              raw=false,
+              contents=w
             )
           ),
           expr=FunctionCallExprNode(
             callee=ScopeResolutionExprNode(
               scope=IdentifierNode(
-                name="x"
+                raw=false,
+                contents=x
               ),
               name=IdentifierNode(
-                name="y"
+                raw=false,
+                contents=y
               )
             ),
             args=[
               FunctionArgumentNode(
                 expr=IdentifierNode(
-                  name="z"
+                  raw=false,
+                  contents=z
                 )
               )
             ]

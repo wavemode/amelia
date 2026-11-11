@@ -1,0 +1,6 @@
+"\q"
+
+/* EXPECTED_OUTPUT:
+STRING_LITERAL("\q")
+END_OF_FILE()
+*/

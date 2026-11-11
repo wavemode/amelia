@@ -5,11 +5,14 @@ ModuleNode(
   decls=[
     FunctionDeclNode(
       name=IdentifierNode(
-        name="f"
+        raw=false,
+        contents=f
       ),
       signature=FunctionSignatureNode(),
       body=FunctionBodyNode(
-        expr=NumberLiteralNode(value=10),
+        expr=NumberLiteralNode(
+          contents=10
+        ),
         is_default=false,
         is_deleted=false
       )
