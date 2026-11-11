@@ -16,7 +16,9 @@ namespace {
 bool is_user_defined_identifier(TokenType type) {
   return type == TokenType::IDENTIFIER || type == TokenType::IDENTIFIER_NO_W ||
          type == TokenType::QUOTED_IDENTIFIER ||
-         type == TokenType::QUOTED_IDENTIFIER_NO_W;
+         type == TokenType::QUOTED_IDENTIFIER_NO_W ||
+         type == TokenType::RAW_QUOTED_IDENTIFIER ||
+         type == TokenType::RAW_QUOTED_IDENTIFIER_NO_W;
 }
 
 bool is_identifier(TokenType type) {
@@ -26,7 +28,8 @@ bool is_identifier(TokenType type) {
 
 bool is_identifier_no_w(TokenType type) {
   return type == TokenType::IDENTIFIER_NO_W ||
-         type == TokenType::QUOTED_IDENTIFIER_NO_W;
+         type == TokenType::QUOTED_IDENTIFIER_NO_W ||
+         type == TokenType::RAW_QUOTED_IDENTIFIER_NO_W;
 }
 
 struct TokenWithId {
@@ -701,6 +704,8 @@ public:
     case TokenType::IDENTIFIER_NO_W:
     case TokenType::QUOTED_IDENTIFIER:
     case TokenType::QUOTED_IDENTIFIER_NO_W:
+    case TokenType::RAW_QUOTED_IDENTIFIER:
+    case TokenType::RAW_QUOTED_IDENTIFIER_NO_W:
     case TokenType::KEYWORD_THIS_TYPE: {
       auto following_token = peek(1);
       if (following_token.type == TokenType::LEFT_PAREN ||
@@ -1412,6 +1417,8 @@ public:
     case TokenType::IDENTIFIER_NO_W:
     case TokenType::QUOTED_IDENTIFIER:
     case TokenType::QUOTED_IDENTIFIER_NO_W:
+    case TokenType::RAW_QUOTED_IDENTIFIER:
+    case TokenType::RAW_QUOTED_IDENTIFIER_NO_W:
       return parse_identifier_pattern();
     case TokenType::LEFT_PAREN:
     case TokenType::LEFT_PAREN_NO_W:
@@ -1934,6 +1941,8 @@ public:
     case TokenType::IDENTIFIER_NO_W:
     case TokenType::QUOTED_IDENTIFIER:
     case TokenType::QUOTED_IDENTIFIER_NO_W:
+    case TokenType::RAW_QUOTED_IDENTIFIER:
+    case TokenType::RAW_QUOTED_IDENTIFIER_NO_W:
       if (is_start_of_lambda_expr()) {
         return parse_lambda_expr();
       }
@@ -2223,6 +2232,8 @@ public:
     case TokenType::IDENTIFIER_NO_W:
     case TokenType::QUOTED_IDENTIFIER:
     case TokenType::QUOTED_IDENTIFIER_NO_W:
+    case TokenType::RAW_QUOTED_IDENTIFIER:
+    case TokenType::RAW_QUOTED_IDENTIFIER_NO_W:
     case TokenType::KEYWORD_THIS_TYPE:
       return parse_identifier();
     case TokenType::LEFT_PAREN:

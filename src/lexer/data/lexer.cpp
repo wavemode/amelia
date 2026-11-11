@@ -927,8 +927,12 @@ private:
   void read_word(const Location &start_location) {
     if (peek() == 'r') {
       next();
-      if (peek() == '"') {
+      auto ch = peek();
+      if (ch == '"') {
         read_quote(start_location, true);
+        return;
+      } else if (ch == '`') {
+        read_quoted_ident(start_location, true);
         return;
       }
     }
