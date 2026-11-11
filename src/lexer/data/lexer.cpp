@@ -72,8 +72,6 @@ const Map<Text, TokenType> RESERVED_WORDS = Map<Text, TokenType>({
     {"copy", TokenType::KEYWORD_COPY},
     {"move", TokenType::KEYWORD_MOVE},
     {"operator", TokenType::KEYWORD_OPERATOR},
-    {"extern", TokenType::KEYWORD_EXTERN},
-    {"inline", TokenType::KEYWORD_INLINE},
     {"delete", TokenType::KEYWORD_DELETE},
     {"new", TokenType::KEYWORD_NEW},
     {"implicit", TokenType::KEYWORD_IMPLICIT},

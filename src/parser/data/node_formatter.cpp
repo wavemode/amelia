@@ -954,11 +954,6 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "decl", n.decl);
     break;
   }
-  case NodeType::ExternDeclNode: {
-    const auto &n = node.as_ExternDeclNode();
-    print_node_field(out, "decl", n.decl);
-    break;
-  }
   case NodeType::RecordDeclNode: {
     const auto &n = node.as_RecordDeclNode();
     print_node_field(out, "decl", n.decl);
@@ -1017,11 +1012,6 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   }
   case NodeType::MutDeclNode: {
     const auto &n = node.as_MutDeclNode();
-    print_node_field(out, "decl", n.decl);
-    break;
-  }
-  case NodeType::InlineDeclNode: {
-    const auto &n = node.as_InlineDeclNode();
     print_node_field(out, "decl", n.decl);
     break;
   }

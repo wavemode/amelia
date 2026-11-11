@@ -56,8 +56,6 @@ enum
 copy
 move
 operator
-extern
-inline
 delete
 new
 implicit
@@ -133,8 +131,6 @@ KEYWORD_ENUM(enum)
 KEYWORD_COPY(copy)
 KEYWORD_MOVE(move)
 KEYWORD_OPERATOR(operator)
-KEYWORD_EXTERN(extern)
-KEYWORD_INLINE(inline)
 KEYWORD_DELETE(delete)
 KEYWORD_NEW(new)
 KEYWORD_IMPLICIT(implicit)

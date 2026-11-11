@@ -153,20 +153,10 @@ public:
       break;
     case TokenType::KEYWORD_IMPORT:
       return parse_import_decl();
-    case TokenType::KEYWORD_EXTERN:
-      return parse_extern_top_level_decl();
     default:
       break;
     }
     return try_parse_decl();
-  }
-
-  NodeId parse_extern_top_level_decl() {
-    auto extern_token = next();
-    auto decl =
-        expect_top_level_decl("Expected top-level decl after 'extern' keyword");
-    return m_output.add_node(extern_token.id, m_token_index,
-                             ExternDeclNode{decl});
   }
 
   NodeId expect_top_level_decl(Text error_message) {
@@ -273,8 +263,6 @@ public:
       return parse_union_decl();
     case TokenType::KEYWORD_ENUM:
       return parse_enum_decl();
-    case TokenType::KEYWORD_INLINE:
-      return parse_inline_decl();
     case TokenType::AT:
       return parse_annotated_decl();
     default:
@@ -288,13 +276,6 @@ public:
     auto decl = expect_decl("Expected declaration after 'abstract' keyword");
     return m_output.add_node(abstract_token.id, m_token_index,
                              AbstractDeclNode{decl});
-  }
-
-  NodeId parse_inline_decl() {
-    auto inline_token = next();
-    auto decl = expect_decl("Expected declaration after 'inline' keyword");
-    return m_output.add_node(inline_token.id, m_token_index,
-                             InlineDeclNode{decl});
   }
 
   NodeId parse_sealed_decl() {

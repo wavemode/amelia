@@ -66,8 +66,6 @@ using TokenId = int32_t;
   X(KEYWORD_COPY)                                                              \
   X(KEYWORD_MOVE)                                                              \
   X(KEYWORD_OPERATOR)                                                          \
-  X(KEYWORD_EXTERN)                                                            \
-  X(KEYWORD_INLINE)                                                            \
   X(KEYWORD_DELETE)                                                            \
   X(KEYWORD_NEW)                                                               \
   X(KEYWORD_IMPLICIT)                                                          \

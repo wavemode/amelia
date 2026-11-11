@@ -800,10 +800,6 @@ struct ModuleDeclNode {
   Option<List<NodeId>> submodules;
 };
 
-struct ExternDeclNode {
-  NodeId decl;
-};
-
 struct RecordDeclNode {
   NodeId decl;
 };
@@ -851,10 +847,6 @@ struct SealedDeclNode {
 };
 
 struct MutDeclNode {
-  NodeId decl;
-};
-
-struct InlineDeclNode {
   NodeId decl;
 };
 
@@ -1050,7 +1042,6 @@ struct TypeFieldNode {};
   X(ImportItemWildcardNode)                                                    \
   X(ModuleDeclNode)                                                            \
   X(AsyncDeclNode)                                                             \
-  X(ExternDeclNode)                                                            \
   X(RecordDeclNode)                                                            \
   X(UnionDeclNode)                                                             \
   X(EnumDeclNode)                                                              \
@@ -1062,7 +1053,6 @@ struct TypeFieldNode {};
   X(ExclamationMarkExprNode)                                                   \
   X(SealedDeclNode)                                                            \
   X(MutDeclNode)                                                               \
-  X(InlineDeclNode)                                                            \
   X(AbstractDeclNode)                                                          \
   X(TypeFieldNode)
 
