@@ -9,14 +9,6 @@ ModuleNode(
         contents="a"
       )
     )
-  ],
-  submodules=[
-    ModuleDeclNode(
-      name=IdentifierNode(
-        raw=false,
-        contents="a"
-      )
-    )
   ]
 )
 */

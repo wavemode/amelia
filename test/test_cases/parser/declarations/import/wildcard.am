@@ -18,23 +18,6 @@ ModuleNode(
         ImportItemWildcardNode()
       ]
     )
-  ],
-  imports=[
-    ImportDeclNode(
-      path=ScopeResolutionExprNode(
-        scope=IdentifierNode(
-          raw=false,
-          contents="a"
-        ),
-        name=IdentifierNode(
-          raw=false,
-          contents="b"
-        )
-      ),
-      items=[
-        ImportItemWildcardNode()
-      ]
-    )
   ]
 )
 */

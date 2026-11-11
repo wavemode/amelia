@@ -27,30 +27,6 @@ ModuleNode(
         )
       ]
     )
-  ],
-  submodules=[
-    ModuleDeclNode(
-      name=IdentifierNode(
-        raw=false,
-        contents="a"
-      ),
-      decls=[
-        FunctionDeclNode(
-          name=IdentifierNode(
-            raw=false,
-            contents="f"
-          ),
-          signature=FunctionSignatureNode(),
-          body=FunctionBodyNode(
-            expr=NumberLiteralNode(
-              contents="10"
-            ),
-            is_default=false,
-            is_deleted=false
-          )
-        )
-      ]
-    )
   ]
 )
 */

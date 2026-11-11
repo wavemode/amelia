@@ -120,8 +120,6 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   case NodeType::ModuleNode: {
     const auto &n = node.as_ModuleNode();
     print_node_field(out, "decls", n.decls);
-    print_node_field(out, "imports", n.imports);
-    print_node_field(out, "submodules", n.submodules);
     break;
   }
   case NodeType::BlockExprNode: {
@@ -946,7 +944,6 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     const auto &n = node.as_ModuleDeclNode();
     print_node_field(out, "name", n.name);
     print_node_field(out, "decls", n.decls);
-    print_node_field(out, "submodules", n.submodules);
     break;
   }
   case NodeType::AsyncDeclNode: {

@@ -42,8 +42,7 @@ struct TokenWithId {
 class ParserState {
 public:
   ParserState(ParserResult &output, const LexerResult &input)
-      : m_output(output), m_input(input), m_token_index(0), m_imports(),
-        m_submodules() {}
+      : m_output(output), m_input(input), m_token_index(0) {}
 
 #define COMMA_SEPARATED_UNTIL(TOKEN_TYPE, CODE)                                \
   while (peek().type != TOKEN_TYPE) {                                          \
@@ -71,13 +70,10 @@ public:
 
   NodeId parse_module() {
     List<NodeId> decls;
-    m_imports.clear();
-    m_submodules.clear();
     auto start_token = peek();
     parse_top_level_decls(decls, TokenType::END_OF_FILE);
-    return m_output.add_node(
-        start_token.id, m_token_index,
-        ModuleNode{move(decls), move(m_imports), move(m_submodules)});
+    return m_output.add_node(start_token.id, m_token_index,
+                             ModuleNode{move(decls)});
   }
 
   void parse_top_level_decls(List<NodeId> &decls, TokenType terminator) {
@@ -182,7 +178,6 @@ public:
     auto alias = try_parse_import_alias();
     auto result = m_output.add_node(import_token.id, m_token_index,
                                     ImportDeclNode{path, move(items), alias});
-    m_imports.push_back(result);
     return result;
   }
 
@@ -380,24 +375,22 @@ public:
         expect_identifier("Expected module name after 'module' keyword");
     if (peek().type == TokenType::LEFT_BRACE) {
       ++m_token_index; // consume the '{' token
-      List<NodeId> decls;
       NodeId result;
       {
-        const auto old_submodules = move(m_submodules);
-        m_submodules = List<NodeId>();
+        List<NodeId> decls;
         parse_top_level_decls(decls, TokenType::RIGHT_BRACE);
         read_token_type(TokenType::RIGHT_BRACE,
                         "Expected '}' to end module declaration");
-        result = m_output.add_node(
-            module_token.id, m_token_index,
-            ModuleDeclNode{name, move(decls), move(m_submodules)});
-        m_submodules = move(old_submodules);
+        result = m_output.add_node(module_token.id, m_token_index,
+                                   ModuleDeclNode{
+                                       name,
+                                       move(decls),
+                                   });
       }
-      m_submodules.push_back(result);
       return result;
     } else {
       return m_output.add_node(module_token.id, m_token_index,
-                               ModuleDeclNode{name, None(), None()});
+                               ModuleDeclNode{name, None()});
     }
   }
 
@@ -2979,9 +2972,6 @@ private:
   ParserResult &m_output;
   const LexerResult &m_input;
   TokenId m_token_index;
-
-  List<NodeId> m_imports;
-  List<NodeId> m_submodules;
 };
 } // namespace
 

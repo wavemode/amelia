@@ -33,38 +33,6 @@ ModuleNode(
         )
       ]
     )
-  ],
-  imports=[
-    ImportDeclNode(
-      path=ScopeResolutionExprNode(
-        scope=IdentifierNode(
-          raw=false,
-          contents="a"
-        ),
-        name=IdentifierNode(
-          raw=false,
-          contents="b"
-        )
-      ),
-      items=[
-        ImportItemNode(
-          name=IdentifierNode(
-            raw=false,
-            contents="c"
-          ),
-          alias=IdentifierNode(
-            raw=false,
-            contents="d"
-          )
-        ),
-        ImportItemNode(
-          name=IdentifierNode(
-            raw=false,
-            contents="e"
-          )
-        )
-      ]
-    )
   ]
 )
 */

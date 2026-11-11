@@ -9,14 +9,6 @@ ModuleNode(
         contents="abc"
       )
     )
-  ],
-  imports=[
-    ImportDeclNode(
-      path=IdentifierNode(
-        raw=false,
-        contents="abc"
-      )
-    )
   ]
 )
 */
