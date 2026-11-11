@@ -13,7 +13,7 @@ ModuleNode(
       ),
       body=ClassBodyNode(
         decls=[
-          ImplicitDeclNode(
+          ClassBodyImplicitDeclNode(
             decl=OperatorFunctionDeclNode(
               operator_ident=OperatorIdentifierNode(
                 op=OperatorIdentAsNode(

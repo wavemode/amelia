@@ -885,12 +885,13 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   }
   case NodeType::ImplicitDeclNode: {
     const auto &n = node.as_ImplicitDeclNode();
-    print_node_field(out, "decl", n.decl);
+    print_node_field(out, "name", n.name);
+    print_node_field(out, "type", n.type);
     break;
   }
-  case NodeType::ImplicitExprNode: {
-    const auto &n = node.as_ImplicitExprNode();
-    print_node_field(out, "name", n.name);
+  case NodeType::ClassBodyImplicitDeclNode: {
+    const auto &n = node.as_ClassBodyImplicitDeclNode();
+    print_node_field(out, "decl", n.decl);
     break;
   }
   case NodeType::OpenDeclNode: {

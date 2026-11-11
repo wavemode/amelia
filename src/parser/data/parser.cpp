@@ -266,12 +266,25 @@ public:
       return parse_union_decl();
     case TokenType::KEYWORD_ENUM:
       return parse_enum_decl();
+    case TokenType::KEYWORD_IMPLICIT:
+      return parse_implicit_decl();
     case TokenType::AT:
       return parse_annotated_decl();
     default:
       break;
     }
     return None();
+  }
+
+  NodeId parse_implicit_decl() {
+    auto start_token = next();
+    auto name =
+        expect_identifier("Expected identifier after 'implicit' keyword");
+    read_token_type(TokenType::COLON,
+                    "Implicit decl must have a type signature");
+    auto type = parse_type_expr();
+    return m_output.add_node(start_token.id, m_token_index,
+                             ImplicitDeclNode{name, type});
   }
 
   NodeId parse_abstract_decl() {
@@ -787,10 +800,15 @@ public:
   }
 
   NodeId parse_class_body_implicit_decl() {
+    if (is_user_defined_identifier(peek(1).type) &&
+        peek(2).type == TokenType::COLON) {
+      return parse_implicit_decl();
+    }
+
     auto implicit_token = next();
     auto decl = parse_class_body_decl();
     return m_output.add_node(implicit_token.id, m_token_index,
-                             ImplicitDeclNode{decl});
+                             ClassBodyImplicitDeclNode{decl});
   }
 
   NodeId parse_class_body_visibility_decl() {
@@ -2009,8 +2027,6 @@ public:
       return parse_with_expr();
     case TokenType::KEYWORD_TYPEOF:
       return parse_typeof_expr();
-    case TokenType::KEYWORD_IMPLICIT:
-      return parse_implicit_expr();
     case TokenType::KEYWORD_STATIC:
       return parse_static_expr();
     default:
@@ -2101,18 +2117,6 @@ public:
     return m_output.add_node(
         when_token.id, m_token_index,
         WhenExprNode{move(introductory_decls), expr, move(clauses), else_body});
-  }
-
-  NodeId parse_implicit_expr() {
-    auto implicit_token = next();
-    read_left_paren(
-        "Expected '(' after 'implicit' keyword in implicit expression");
-    NodeId expr =
-        expect_identifier("Expected identifier in implicit expression");
-    read_token_type(TokenType::RIGHT_PAREN,
-                    "Expected ')' after identifier in implicit expression");
-    return m_output.add_node(implicit_token.id, m_token_index,
-                             ImplicitExprNode{expr});
   }
 
   NodeId parse_type_expr() { return parse_descend_type_expr_prefix(); }

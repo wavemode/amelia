@@ -1,0 +1,17 @@
+implicit x : int
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    ImplicitDeclNode(
+      name=IdentifierNode(
+        raw=false,
+        contents="x"
+      ),
+      type=BuiltinTypeNode(
+        kind=int
+      )
+    )
+  ]
+)
+*/

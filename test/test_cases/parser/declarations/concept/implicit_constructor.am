@@ -12,7 +12,7 @@ ModuleNode(
       ),
       body=ClassBodyNode(
         decls=[
-          ImplicitDeclNode(
+          ClassBodyImplicitDeclNode(
             decl=ClassConstructorNode(
               name=ThisTypeNode(),
               signature=FunctionSignatureNode(

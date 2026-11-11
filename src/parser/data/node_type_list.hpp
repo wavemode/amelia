@@ -727,11 +727,12 @@ struct MoveExprNode {
 };
 
 struct ImplicitDeclNode {
-  NodeId decl;
+  NodeId name;
+  NodeId type;
 };
 
-struct ImplicitExprNode {
-  NodeId name;
+struct ClassBodyImplicitDeclNode {
+  NodeId decl;
 };
 
 struct OpenDeclNode {
@@ -1023,8 +1024,8 @@ struct TypeFieldNode {};
   X(AsyncExprNode)                                                             \
   X(CopyExprNode)                                                              \
   X(MoveExprNode)                                                              \
+  X(ClassBodyImplicitDeclNode)                                                 \
   X(ImplicitDeclNode)                                                          \
-  X(ImplicitExprNode)                                                          \
   X(OpenDeclNode)                                                              \
   X(OverrideDeclNode)                                                          \
   X(DefaultDeclNode)                                                           \
