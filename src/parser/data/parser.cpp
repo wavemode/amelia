@@ -491,7 +491,7 @@ public:
     read_left_paren("Expected '(' after 'with' keyword in with statement");
     List<NodeId> args;
     COMMA_SEPARATED_UNTIL(TokenType::RIGHT_PAREN,
-                          args.push_back(parse_function_call_argument()));
+                          args.push_back(parse_with_assignment()));
     NodeId body = parse_statement();
     return m_output.add_node(with_token.id, m_token_index,
                              WithStmtNode{move(args), body});
@@ -2346,12 +2346,22 @@ public:
                              TypeOfExprNode{expr});
   }
 
+  NodeId parse_with_assignment() {
+    auto start_token = peek();
+    auto var = parse_expr();
+    read_token_type(TokenType::ASSIGN,
+                    "Expected '=' after variable in 'with' block");
+    auto expr = parse_expr();
+    return m_output.add_node(start_token.id, m_token_index,
+                             WithAssignmentNode{var, expr});
+  }
+
   NodeId parse_with_expr() {
     auto with_token = next();
     read_left_paren("Expected '(' after 'with' keyword in with expression");
     List<NodeId> args;
     COMMA_SEPARATED_UNTIL(TokenType::RIGHT_PAREN,
-                          args.push_back(parse_function_call_argument()));
+                          args.push_back(parse_with_assignment()));
     NodeId body = parse_expr();
     return m_output.add_node(with_token.id, m_token_index,
                              WithExprNode{move(args), body});

@@ -14,8 +14,8 @@ ModuleNode(
           ),
           expr=WithExprNode(
             args=[
-              FunctionArgumentNode(
-                name=IdentifierNode(
+              WithAssignmentNode(
+                var=IdentifierNode(
                   raw=false,
                   contents="a"
                 ),

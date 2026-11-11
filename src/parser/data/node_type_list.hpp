@@ -199,6 +199,11 @@ struct BlockExprNode {
   List<NodeId> stmts;
 };
 
+struct WithAssignmentNode {
+  NodeId var;
+  NodeId expr;
+};
+
 struct WithExprNode {
   List<NodeId> args;
   NodeId body;
@@ -873,6 +878,7 @@ struct TypeFieldNode {};
   X(ParenthesizedExprNode)                                                     \
   X(ArrayExprNode)                                                             \
   X(BlockExprNode)                                                             \
+  X(WithAssignmentNode)                                                        \
   X(WithExprNode)                                                              \
   X(WithStmtNode)                                                              \
   X(KeyValueEntryNode)                                                         \

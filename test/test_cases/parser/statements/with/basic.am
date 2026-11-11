@@ -18,8 +18,8 @@ ModuleNode(
             stmts=[
               WithStmtNode(
                 args=[
-                  FunctionArgumentNode(
-                    name=IdentifierNode(
+                  WithAssignmentNode(
+                    var=IdentifierNode(
                       raw=false,
                       contents="a"
                     ),

@@ -135,6 +135,12 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     print_node_field(out, "body", n.body);
     break;
   }
+  case NodeType::WithAssignmentNode: {
+    const auto &n = node.as_WithAssignmentNode();
+    print_node_field(out, "var", n.var);
+    print_node_field(out, "expr", n.expr);
+    break;
+  }
   case NodeType::WithStmtNode: {
     const auto &n = node.as_WithStmtNode();
     print_node_field(out, "args", n.args);
