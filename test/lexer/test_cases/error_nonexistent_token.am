@@ -1,0 +1,5 @@
+—
+
+/* EXPECTED_OUTPUT:
+ERROR("Unexpected character: '—' (at test/lexer/test_cases/error_nonexistent_token.am:1:1)")
+*/

@@ -1,5 +1,0 @@
-implicit f
-
-/* EXPECTED_OUTPUT:
-ERROR("Implicit decl must have a type signature (at test/test_cases/parser/declarations/implicit/error_missing_type.am:6:1)")
-*/

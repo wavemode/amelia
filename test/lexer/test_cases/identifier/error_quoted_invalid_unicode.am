@@ -1,0 +1,5 @@
+`\uD800`
+
+/* EXPECTED_OUTPUT:
+ERROR("Content error: Invalid UTF-16 data (at test/lexer/test_cases/identifier/error_quoted_invalid_unicode.am:1:2)")
+*/

@@ -1,0 +1,5 @@
+'ab'
+
+/* EXPECTED_OUTPUT:
+ERROR("Character literal contains more than one code point (at test/lexer/test_cases/char/error_multiple_chars.am:1:2)")
+*/

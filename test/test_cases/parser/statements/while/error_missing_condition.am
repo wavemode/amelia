@@ -1,7 +1,0 @@
-let example = {
-  while () z
-}
-
-/* EXPECTED_OUTPUT:
-ERROR("Expected expression, got token RIGHT_PAREN (at test/test_cases/parser/statements/while/error_missing_condition.am:2:10)")
-*/

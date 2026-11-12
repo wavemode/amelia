@@ -1,5 +1,0 @@
-let { a, b : int, c : int = d : int, } = e
-
-/* EXPECTED_OUTPUT:
-ERROR("Invalid type annotation on right-hand side of struct field pattern (at test/test_cases/parser/declarations/let/error_record_pattern_type_annotation_rhs.am:1:31)")
-*/

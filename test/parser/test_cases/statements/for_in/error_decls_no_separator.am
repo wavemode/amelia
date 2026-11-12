@@ -1,0 +1,10 @@
+let z = {
+  for (
+    let w = [...]int {1, 2, 3, 4}
+    const y = w.map(x -> x * 2)  x in y
+  ) a()
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("Multiple statements on the same line must be separated by a semicolon (at test/parser/test_cases/statements/for_in/error_decls_no_separator.am:4:34)")
+*/

@@ -1,5 +1,0 @@
-let f = fun {}
-
-/* EXPECTED_OUTPUT:
-ERROR("Expected '(' at the beginning of function parameter list (at test/test_cases/parser/expressions/atoms/fun/error_no_parens.am:1:13)")
-*/

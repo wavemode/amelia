@@ -1,0 +1,5 @@
+'\xe6'
+
+/* EXPECTED_OUTPUT:
+ERROR("Content error: Invalid UTF-8 data (at test/lexer/test_cases/char/error_unixode_x_invalid.am:1:2)")
+*/

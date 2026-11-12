@@ -1,0 +1,5 @@
+import a::b (c as d, e,) as f
+
+/* EXPECTED_OUTPUT:
+ERROR("Import with alias cannot have sub-items. (at test/parser/test_cases/declarations/import/error_items_with_alias.am:1:13)")
+*/

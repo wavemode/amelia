@@ -1,0 +1,5 @@
+const { a, b : int, c : int = d : int, } = e
+
+/* EXPECTED_OUTPUT:
+ERROR("Invalid type annotation on right-hand side of struct field pattern (at test/parser/test_cases/declarations/const/error_record_pattern_type_annotation_rhs.am:1:33)")
+*/

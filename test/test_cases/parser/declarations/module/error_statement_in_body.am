@@ -1,7 +1,0 @@
-module a {
-  a = 10
-}
-
-/* EXPECTED_OUTPUT:
-ERROR("Expected declaration (at test/test_cases/parser/declarations/module/error_statement_in_body.am:2:3)")
-*/

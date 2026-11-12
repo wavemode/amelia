@@ -1,0 +1,7 @@
+let z = {
+  goto 10
+}
+
+/* EXPECTED_OUTPUT:
+ERROR("Expected identifier after 'goto' keyword in goto statement (at test/parser/test_cases/statements/goto/error_not_identifier.am:2:8)")
+*/
