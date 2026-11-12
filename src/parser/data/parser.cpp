@@ -170,8 +170,13 @@ public:
           "Expected identifier after 'import' keyword in import declaration");
     }
     auto path = parse_scoped_name();
+    auto items_token = peek();
     auto items = try_parse_import_items();
     auto alias = try_parse_import_alias();
+    if (alias.has_value() && items.has_value()) {
+      throw_parser_error_at_location(
+          items_token.loc, "Import with alias cannot have sub-items.");
+    }
     auto result = m_output.add_node(import_token.id, m_token_index,
                                     ImportDeclNode{path, move(items), alias});
     return result;
