@@ -1,0 +1,6 @@
+/* EXPECTED_OUTPUT:
+ERROR("Unterminated multi-line comment (at test/lexer/test_cases/comment/error_unterminated_multi_line.am:5:1)")
+*/
+
+/*
+  hello

@@ -897,7 +897,7 @@ private:
       skip_until_end_of_single_line_comment();
     } else if (next_cp == '*') {
       next();
-      skip_until_end_of_multiline_comment();
+      skip_until_end_of_multiline_comment(start_location);
     } else if (next_cp == '=') {
       next();
       emit_token(TokenType::SLASH_EQUAL, start_location);
@@ -912,13 +912,18 @@ private:
     }
   }
 
-  void skip_until_end_of_multiline_comment() {
+  void skip_until_end_of_multiline_comment(const Location &start_location) {
     uint32_t prev = 0;
     uint32_t cp = 0;
-    while (!at_end()) {
+    while (true) {
+      if (at_end()) {
+        throw_lexer_error(start_location, "Unterminated multi-line comment");
+      }
       prev = cp;
       cp = next();
-      if (prev == '*' && cp == '/') {
+      if (prev == '/' && cp == '*') {
+        skip_until_end_of_multiline_comment(start_location);
+      } else if (prev == '*' && cp == '/') {
         break;
       }
     }
