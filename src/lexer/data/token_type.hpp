@@ -31,7 +31,6 @@ using TokenId = int32_t;
   X(KEYWORD_CONST)                                                             \
   X(KEYWORD_IMPL)                                                              \
   X(KEYWORD_ANY)                                                               \
-  X(KEYWORD_GOTO)                                                              \
   X(KEYWORD_ASYNC)                                                             \
   X(KEYWORD_AWAIT)                                                             \
   X(KEYWORD_TRUE)                                                              \
@@ -78,6 +77,7 @@ using TokenId = int32_t;
   X(KEYWORD_FOR)                                                               \
   X(KEYWORD_IN)                                                                \
   X(KEYWORD_LABEL)                                                             \
+  X(KEYWORD_GOTO)                                                              \
   X(KEYWORD_SUPER)                                                             \
   X(KEYWORD_ABSTRACT)                                                          \
   X(KEYWORD_UNDERSCORE)                                                        \

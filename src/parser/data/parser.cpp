@@ -144,12 +144,8 @@ public:
     auto token = peek();
     switch (token.type) {
     case TokenType::KEYWORD_LOCAL:
-      return parse_top_level_visibility_decl();
     case TokenType::KEYWORD_PUBLIC:
-      if (peek(1).type == TokenType::KEYWORD_IMPORT) {
-        return parse_top_level_visibility_decl();
-      }
-      break;
+      return parse_top_level_visibility_decl();
     case TokenType::KEYWORD_IMPORT:
       return parse_import_decl();
     default:

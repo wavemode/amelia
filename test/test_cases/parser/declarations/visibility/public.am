@@ -1,0 +1,26 @@
+public const y = 10
+
+/* EXPECTED_OUTPUT:
+ModuleNode(
+  decls=[
+    VisibilityNode(
+      visibility=public,
+      decl=ConstDeclNode(
+        inits=[
+          InitializerNode(
+            pattern=IdentifierPatternNode(
+              identifier=IdentifierNode(
+                raw=false,
+                contents="y"
+              )
+            ),
+            expr=NumberLiteralNode(
+              contents="10"
+            )
+          )
+        ]
+      )
+    )
+  ]
+)
+*/
