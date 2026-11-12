@@ -784,7 +784,6 @@ struct ImportDeclNode {
 
 struct ImportItemNode {
   NodeId name;
-  Option<List<NodeId>> sub_items;
   Option<NodeId> alias;
 };
 

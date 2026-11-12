@@ -209,14 +209,13 @@ public:
       ++m_token_index; // consume the '...' token
       return m_output.add_node(item_token.id, m_token_index,
                                ImportItemWildcardNode{});
-    } else {
-      auto name =
-          expect_identifier("Expected identifier or '...' in import item list");
-      auto sub_items = try_parse_import_items();
-      auto alias = try_parse_import_alias();
-      return m_output.add_node(item_token.id, m_token_index,
-                               ImportItemNode{name, move(sub_items), alias});
     }
+
+    auto name =
+        expect_identifier("Expected identifier or '...' in import item list");
+    auto alias = try_parse_import_alias();
+    return m_output.add_node(item_token.id, m_token_index,
+                             ImportItemNode{name, alias});
   }
 
   Option<NodeId> try_parse_decl() {
