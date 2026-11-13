@@ -15,7 +15,8 @@ namespace amelia {
 using NodeId = int32_t;
 
 struct ModuleNode {
-  List<NodeId> decls;
+  Option<NodeId> name;
+  Option<List<NodeId>> decls;
 };
 
 struct EmptyStmtNode {};
@@ -564,7 +565,7 @@ struct ImplicitParameterListNode {
   List<NodeId> parameters;
 };
 
-enum class FunctionCaptureKind {
+enum class FunctionCaptureKind : uint8_t {
   Move,
   Copy,
   Ref,
@@ -777,7 +778,7 @@ struct BitIntTypeNode {
 };
 
 struct ImportDeclNode {
-  NodeId path;
+  NodeId module;
   Option<List<NodeId>> items;
   Option<NodeId> alias;
 };
@@ -788,11 +789,6 @@ struct ImportItemNode {
 };
 
 struct ImportItemWildcardNode {};
-
-struct ModuleDeclNode {
-  NodeId name;
-  Option<List<NodeId>> decls;
-};
 
 struct RecordDeclNode {
   NodeId decl;
@@ -1032,7 +1028,6 @@ struct TypeFieldNode {};
   X(ImportDeclNode)                                                            \
   X(ImportItemNode)                                                            \
   X(ImportItemWildcardNode)                                                    \
-  X(ModuleDeclNode)                                                            \
   X(AsyncDeclNode)                                                             \
   X(RecordDeclNode)                                                            \
   X(UnionDeclNode)                                                             \

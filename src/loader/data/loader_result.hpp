@@ -10,7 +10,8 @@ namespace amelia {
 
 struct LoaderResult {
   Map<String, Box<LoadedModuleFile>> module_files; // indexed by file path
-  Map<String, Ref<LoadedModuleDetails>> modules;   // indexed by module name
+  Map<String, Ref<LoadedModuleDetails>>
+      imported_modules; // indexed by module name
 };
 
 } // namespace amelia

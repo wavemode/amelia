@@ -83,7 +83,7 @@ public:
 
   template <typename... Args> T &emplace_back(Args &&...args) {
     ensure_capacity(m_size + 1);
-    initialize(m_size, T(amelia::forward<Args>(args)...));
+    new (&m_buffer[m_size]) T(amelia::forward<Args>(args)...);
     return m_buffer[m_size++];
   }
 

@@ -115,12 +115,12 @@ template <typename K, typename V> struct hash_map_table {
     *this = move(new_table);
   }
 
-  void put(K &&key, V &&value) {
+  V &put(K &&key, V &&value) {
     uint64_t hash = set_2_highest_bits_to_00(amelia::hash(key));
-    put_with_hash(hash, move(key), move(value));
+    return put_with_hash(hash, move(key), move(value));
   }
 
-  void put_with_hash(uint64_t hash, K &&key, V &&value) {
+  V &put_with_hash(uint64_t hash, K &&key, V &&value) {
     if (remaining_elems == 0) {
       grow();
     }
@@ -140,7 +140,7 @@ template <typename K, typename V> struct hash_map_table {
       if (table_elem_hash == hash && table_elem.pair.first == key) {
         // the keys match, so we can simply update the value and return
         table_elem.pair.second = move(value);
-        return;
+        return table_elem.pair.second;
       }
 
       // the keys don't match
@@ -179,6 +179,7 @@ template <typename K, typename V> struct hash_map_table {
     new (&elems[index].pair.first) K(move(key));
     new (&elems[index].pair.second) V(move(value));
     ++live_elems;
+    return elems[index].pair.second;
   }
 
   int64_t index_of(const K &key) const {
@@ -194,7 +195,7 @@ template <typename K, typename V> struct hash_map_table {
 
       if (is_first_bit_set_to_1(table_elem.hash)) {
         if (table_elem_hash == hash && table_elem.pair.first == key) {
-          return index;
+          return static_cast<int64_t>(index);
         }
 
         if (!is_second_bit_set_to_1(table_elem.hash)) {
@@ -254,14 +255,16 @@ public:
 
   template <size_t N> explicit Map(const Pair<K, V> (&array)[N]) {
     for (size_t i = 0; i < N; ++i) {
-      set(array[i].first, array[i].second);
+      Map::set(array[i].first, array[i].second);
     }
   }
 
   bool has(const K &key) const override { return m_table.has(key); }
   size_t size() const noexcept override { return m_table.live_elems; }
 
-  void set(const K &key, V value) override { m_table.put(K(key), move(value)); }
+  V &set(const K &key, V value) override {
+    return m_table.put(K(key), move(value));
+  }
 
   V &get(const K &key) override {
     int64_t index = m_table.index_of(key);

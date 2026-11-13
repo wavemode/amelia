@@ -871,7 +871,7 @@ TEST_CASE("find_all_bytes") {
   SUBCASE("substring present once") {
     Text input = "hello world";
     Text substring = "world";
-    List<int64_t> byte_indices;
+    List<size_t> byte_indices;
     TextUtils::find_all_bytes(byte_indices, input, substring);
     REQUIRE(byte_indices.size() == 1);
     REQUIRE(byte_indices[0] == 6);
@@ -880,7 +880,7 @@ TEST_CASE("find_all_bytes") {
   SUBCASE("substring present multiple times") {
     Text input = "hello world, hello everyone";
     Text substring = "hello";
-    List<int64_t> byte_indices;
+    List<size_t> byte_indices;
     TextUtils::find_all_bytes(byte_indices, input, substring);
     REQUIRE(byte_indices.size() == 2);
     REQUIRE(byte_indices[0] == 0);
@@ -890,7 +890,7 @@ TEST_CASE("find_all_bytes") {
   SUBCASE("substring not present") {
     Text input = "hello world";
     Text substring = "abc";
-    List<int64_t> byte_indices;
+    List<size_t> byte_indices;
     TextUtils::find_all_bytes(byte_indices, input, substring);
     REQUIRE(byte_indices.size() == 0);
   }
@@ -898,7 +898,7 @@ TEST_CASE("find_all_bytes") {
   SUBCASE("empty substring") {
     Text input = "abc";
     Text substring = "";
-    List<int64_t> byte_indices;
+    List<size_t> byte_indices;
     TextUtils::find_all_bytes(byte_indices, input, substring);
     REQUIRE(byte_indices.size() == 3);
     REQUIRE(byte_indices[0] == 0);
@@ -941,7 +941,7 @@ TEST_CASE("find_all_char_bytes") {
   SUBCASE("char present once") {
     Text input = "hello world";
     uint32_t code_point = 'w';
-    List<int64_t> byte_indices;
+    List<size_t> byte_indices;
     TextUtils::find_all_char_bytes(byte_indices, input, code_point);
     REQUIRE(byte_indices.size() == 1);
     REQUIRE(byte_indices[0] == 6);
@@ -950,7 +950,7 @@ TEST_CASE("find_all_char_bytes") {
   SUBCASE("char present multiple times") {
     Text input = "hello world";
     uint32_t code_point = 'l';
-    List<int64_t> byte_indices;
+    List<size_t> byte_indices;
     TextUtils::find_all_char_bytes(byte_indices, input, code_point);
     REQUIRE(byte_indices.size() == 3);
     REQUIRE(byte_indices[0] == 2);
@@ -961,7 +961,7 @@ TEST_CASE("find_all_char_bytes") {
   SUBCASE("char not present") {
     Text input = "hello world";
     uint32_t code_point = 'x';
-    List<int64_t> byte_indices;
+    List<size_t> byte_indices;
     TextUtils::find_all_char_bytes(byte_indices, input, code_point);
     REQUIRE(byte_indices.size() == 0);
   }

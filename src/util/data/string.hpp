@@ -105,7 +105,7 @@ public:
 
   /**
    * @brief Append a single Unicode code point to this String.
-   * @param codePoint The Unicode code point to append.
+   * @param code_point The Unicode code point to append.
    */
   void append(uint32_t code_point) override;
 

@@ -1,10 +1,12 @@
 #pragma once
 
+#include <cstdint>
+
 #include "node_type_list.hpp"
 
 namespace amelia {
 
-enum class NodeType {
+enum class NodeType : uint8_t {
 #define X(NODE_TYPE) NODE_TYPE,
   NODE_TYPE_LIST
 #undef X

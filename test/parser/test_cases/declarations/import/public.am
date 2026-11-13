@@ -6,7 +6,7 @@ ModuleNode(
     VisibilityNode(
       visibility=public,
       decl=ImportDeclNode(
-        path=ScopeResolutionExprNode(
+        module=ScopeResolutionExprNode(
           scope=IdentifierNode(
             raw=false,
             contents="a"

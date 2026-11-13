@@ -1,20 +1,19 @@
 #pragma once
 
-#include "util/data/string.hpp"
+#include "source/data/location.hpp"
 
 namespace amelia {
 
-struct Location;
+class String;
 
 /**
  * @class SourceLocationError
  * @brief Exception associated with a specific location in source code input.
  */
-struct SourceLocationError : public std::exception {
-  const String message;
+struct SourceLocationError : public RuntimeError {
+  SourceLocationError(const Location &loc, String &&message);
 
-  SourceLocationError(Location loc, String message);
-  const char *what() const noexcept override;
+  const Location location;
 };
 
 } // namespace amelia

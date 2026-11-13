@@ -73,7 +73,7 @@ public:
     auto start_token = peek();
     parse_top_level_decls(decls, TokenType::END_OF_FILE);
     return m_output.add_node(start_token.id, m_token_index,
-                             ModuleNode{move(decls)});
+                             ModuleNode{None(), move(decls)});
   }
 
   void parse_top_level_decls(List<NodeId> &decls, TokenType terminator) {
@@ -148,6 +148,8 @@ public:
       return parse_top_level_visibility_decl();
     case TokenType::KEYWORD_IMPORT:
       return parse_import_decl();
+    case TokenType::KEYWORD_MODULE:
+      return parse_module_decl();
     default:
       break;
     }
@@ -226,8 +228,6 @@ public:
   Option<NodeId> try_parse_decl() {
     auto token = peek();
     switch (token.type) {
-    case TokenType::KEYWORD_MODULE:
-      return parse_module_decl();
     case TokenType::KEYWORD_LET:
       return parse_let_decl();
     case TokenType::KEYWORD_CONST:
@@ -382,7 +382,7 @@ public:
         read_token_type(TokenType::RIGHT_BRACE,
                         "Expected '}' to end module declaration");
         result = m_output.add_node(module_token.id, m_token_index,
-                                   ModuleDeclNode{
+                                   ModuleNode{
                                        name,
                                        move(decls),
                                    });
@@ -390,7 +390,7 @@ public:
       return result;
     } else {
       return m_output.add_node(module_token.id, m_token_index,
-                               ModuleDeclNode{name, None()});
+                               ModuleNode{name, None()});
     }
   }
 

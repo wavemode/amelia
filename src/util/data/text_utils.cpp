@@ -324,7 +324,7 @@ void TextUtils::find_all(AbstractList<CharIterator> &output, Text input,
                                : found.plus_bytes(substring.size());
   }
 }
-void TextUtils::find_all_bytes(AbstractList<int64_t> &output, Text input,
+void TextUtils::find_all_bytes(AbstractList<size_t> &output, Text input,
                                Text substring) {
   CharIterator it = input.begin();
   while (!it.at_end()) {
@@ -351,7 +351,7 @@ void TextUtils::find_all_chars(AbstractList<CharIterator> &output, Text input,
   }
 }
 
-void TextUtils::find_all_char_bytes(AbstractList<int64_t> &output, Text input,
+void TextUtils::find_all_char_bytes(AbstractList<size_t> &output, Text input,
                                     uint32_t code_point) {
   CharIterator it = input.begin();
   while (!it.at_end()) {

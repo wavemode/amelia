@@ -155,7 +155,7 @@ using TokenId = int32_t;
 
 struct AbstractString;
 
-enum class TokenType {
+enum class TokenType : uint8_t {
 #define X(name) name,
   TOKEN_TYPE_LIST
 #undef X

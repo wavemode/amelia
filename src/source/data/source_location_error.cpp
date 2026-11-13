@@ -1,12 +1,14 @@
 #include "source_location_error.hpp"
 
 #include "source/data/location.hpp"
+#include "util/data/string.hpp"
 #include "util/data/text_utils.hpp"
 
 namespace amelia {
 
 namespace {
-String make_message(Location loc, String message) {
+
+String make_message(const Location &loc, String &&message) {
   message.append(" (at ");
   message.append(loc.filename);
   message.append(':');
@@ -18,11 +20,7 @@ String make_message(Location loc, String message) {
 }
 } // namespace
 
-SourceLocationError::SourceLocationError(Location loc, String message)
-    : message(make_message(loc, move(message))) {}
-
-const char *SourceLocationError::what() const noexcept {
-  return message.c_str();
-}
+SourceLocationError::SourceLocationError(const Location &loc, String &&message)
+    : RuntimeError(make_message(loc, move(message)).c_str()), location(loc) {}
 
 } // namespace amelia

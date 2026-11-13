@@ -73,12 +73,12 @@ struct TextUtils {
 
   static void find_all(AbstractList<CharIterator> &output, Text input,
                        Text substring);
-  static void find_all_bytes(AbstractList<int64_t> &output, Text input,
+  static void find_all_bytes(AbstractList<size_t> &output, Text input,
                              Text substring);
 
   static void find_all_chars(AbstractList<CharIterator> &output, Text input,
                              uint32_t code_point);
-  static void find_all_char_bytes(AbstractList<int64_t> &output, Text input,
+  static void find_all_char_bytes(AbstractList<size_t> &output, Text input,
                                   uint32_t code_point);
 
   static void replace(AbstractString &text, Text search, Text replacement,

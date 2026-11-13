@@ -119,6 +119,7 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   }
   case NodeType::ModuleNode: {
     const auto &n = node.as_ModuleNode();
+    print_node_field(out, "name", n.name);
     print_node_field(out, "decls", n.decls);
     break;
   }
@@ -925,7 +926,7 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   }
   case NodeType::ImportDeclNode: {
     const auto &n = node.as_ImportDeclNode();
-    print_node_field(out, "path", n.path);
+    print_node_field(out, "module", n.module);
     print_node_field(out, "items", n.items);
     print_node_field(out, "alias", n.alias);
     break;
@@ -937,12 +938,6 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
     break;
   }
   case NodeType::ImportItemWildcardNode: {
-    break;
-  }
-  case NodeType::ModuleDeclNode: {
-    const auto &n = node.as_ModuleDeclNode();
-    print_node_field(out, "name", n.name);
-    print_node_field(out, "decls", n.decls);
     break;
   }
   case NodeType::AsyncDeclNode: {

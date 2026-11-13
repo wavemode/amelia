@@ -1,15 +1,13 @@
 #pragma once
 
-#include "loaded_module_declaration_visibility.hpp"
-#include "util/data/option.hpp"
+#include "loader/data/loaded_module_decl_visibility.hpp"
 #include "util/data/string.hpp"
+#include "util/data/utility.hpp"
 
 namespace amelia {
 
-struct LoadedModuleImport {
-  String module;
+struct AbstractLoadedModuleDecl : Dynamic {
   String name;
-  Option<String> alias;
   LoadedModuleDeclarationVisibility visibility;
 };
 

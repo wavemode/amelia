@@ -4,7 +4,7 @@ import a::b (c as d, e,)
 ModuleNode(
   decls=[
     ImportDeclNode(
-      path=ScopeResolutionExprNode(
+      module=ScopeResolutionExprNode(
         scope=IdentifierNode(
           raw=false,
           contents="a"

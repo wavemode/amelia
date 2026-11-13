@@ -14,7 +14,7 @@ struct LoadedModuleFile {
   String file_contents;
   LexerResult tokens;
   ParserResult ast;
-  NodeId root_node_id;
+  NodeId root_node_id = -1;
   LoadedModuleDetails details;
 };
 

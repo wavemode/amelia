@@ -7,7 +7,7 @@
 namespace amelia {
 
 struct LoadedModuleDeclarationVisibility {
-  DeclarationVisibility visibility;
+  DeclarationVisibility visibility = DeclarationVisibility::Default;
   Option<String> scope;
 };
 

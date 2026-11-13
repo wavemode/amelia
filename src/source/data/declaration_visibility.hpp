@@ -1,10 +1,12 @@
 #pragma once
 
+#include <cstdint>
+
 namespace amelia {
 
 class Serialize;
 
-enum class DeclarationVisibility {
+enum class DeclarationVisibility : uint8_t {
   Public,
   Private,
   Protected,

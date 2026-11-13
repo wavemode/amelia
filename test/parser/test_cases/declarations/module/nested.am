@@ -7,13 +7,13 @@ module a {
 /* EXPECTED_OUTPUT:
 ModuleNode(
   decls=[
-    ModuleDeclNode(
+    ModuleNode(
       name=IdentifierNode(
         raw=false,
         contents="a"
       ),
       decls=[
-        ModuleDeclNode(
+        ModuleNode(
           name=IdentifierNode(
             raw=false,
             contents="b"
