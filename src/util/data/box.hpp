@@ -6,11 +6,8 @@ namespace amelia {
 
 template <typename T> class Box {
 public:
-  template <typename... Args> static Box<T> emplace(Args &&...args) {
-    return Box<T>(T(amelia::forward<Args>(args)...));
-  }
-
-  Box() : m_obj(nullptr) {}
+  template <typename... Args>
+  Box(Args &&...args) : m_obj(new T(amelia::forward<Args>(args)...)) {}
 
   explicit Box(T obj) : m_obj(new T(move(obj))) {}
 
@@ -25,6 +22,13 @@ public:
   ~Box() { delete m_obj; }
 
   bool is_null() const { return m_obj == nullptr; }
+
+  template <typename U> Box<U> move_as() {
+    Box<U> box;
+    box.m_obj = static_cast<U *>(m_obj);
+    m_obj = nullptr;
+    return box;
+  }
 
   Box<T> &operator=(const Box<T> &other) = delete;
 
@@ -44,17 +48,24 @@ public:
     return *this;
   }
 
-  T &operator*() { return *m_obj; }
+  T &operator*() { return *get(); }
 
-  const T &operator*() const { return *m_obj; }
+  const T &operator*() const { return *get(); }
 
-  T *operator->() { return m_obj; }
+  T *operator->() { return get(); }
 
-  const T *operator->() const { return m_obj; }
+  const T *operator->() const { return get(); }
 
   template <typename U> friend class Box;
 
 private:
+  T *get() const {
+    if (m_obj == nullptr) {
+      throw RuntimeError("Attempted to dereference null Box");
+    }
+    return m_obj;
+  }
+
   T *m_obj;
 };
 

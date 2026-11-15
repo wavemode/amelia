@@ -6,8 +6,8 @@
 namespace amelia {
 
 struct LoadedModuleSubmoduleDecl : AbstractLoadedModuleDecl {
-  LoadedModuleSubmoduleDecl(String name, LoadedModuleFile &module_file)
-      : details(move(name), module_file) {}
+  LoadedModuleSubmoduleDecl(LoadedModuleFile &module_file)
+      : details(module_file) {}
 
   LoadedModuleDetails details;
 };
