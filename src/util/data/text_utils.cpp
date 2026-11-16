@@ -11,7 +11,7 @@ namespace amelia {
 
 Text TextUtils::WHITESPACE_CHARS = " \t\n\r";
 
-void TextUtils::split(AbstractList<Text> &output, Text input, Text delimiter,
+void TextUtils::split(List<Text> &output, Text input, Text delimiter,
                       int64_t max_splits) {
   if (delimiter.size() == 0) {
     for (CharIterator it = input.begin(); !it.at_end(); ++it) {
@@ -34,7 +34,7 @@ void TextUtils::split(AbstractList<Text> &output, Text input, Text delimiter,
   output.push_back(substr(input, it, input.end()));
 }
 
-void TextUtils::split(AbstractList<String> &output, Text input, Text delimiter,
+void TextUtils::split(List<String> &output, Text input, Text delimiter,
                       int64_t max_splits) {
   List<Text> temp_output;
   split(temp_output, input, delimiter, max_splits);
@@ -311,7 +311,7 @@ int64_t TextUtils::find_char_before_byte(Text input, uint32_t code_point,
   return it.data().ptr() - input.data().ptr();
 }
 
-void TextUtils::find_all(AbstractList<CharIterator> &output, Text input,
+void TextUtils::find_all(List<CharIterator> &output, Text input,
                          Text substring) {
   CharIterator it = input.begin();
   while (!it.at_end()) {
@@ -324,7 +324,7 @@ void TextUtils::find_all(AbstractList<CharIterator> &output, Text input,
                                : found.plus_bytes(substring.size());
   }
 }
-void TextUtils::find_all_bytes(AbstractList<size_t> &output, Text input,
+void TextUtils::find_all_bytes(List<size_t> &output, Text input,
                                Text substring) {
   CharIterator it = input.begin();
   while (!it.at_end()) {
@@ -338,7 +338,7 @@ void TextUtils::find_all_bytes(AbstractList<size_t> &output, Text input,
   }
 }
 
-void TextUtils::find_all_chars(AbstractList<CharIterator> &output, Text input,
+void TextUtils::find_all_chars(List<CharIterator> &output, Text input,
                                uint32_t code_point) {
   CharIterator it = input.begin();
   while (!it.at_end()) {
@@ -351,7 +351,7 @@ void TextUtils::find_all_chars(AbstractList<CharIterator> &output, Text input,
   }
 }
 
-void TextUtils::find_all_char_bytes(AbstractList<size_t> &output, Text input,
+void TextUtils::find_all_char_bytes(List<size_t> &output, Text input,
                                     uint32_t code_point) {
   CharIterator it = input.begin();
   while (!it.at_end()) {

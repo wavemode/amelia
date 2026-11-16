@@ -6,7 +6,7 @@
 
 namespace amelia {
 
-void FilesystemWalker::walk(AbstractList<String> &output, Text root,
+void FilesystemWalker::walk(List<String> &output, Text root,
                             bool regular_files_only, bool ignore_errors) {
   std::error_code ec;
   for (std::filesystem::recursive_directory_iterator

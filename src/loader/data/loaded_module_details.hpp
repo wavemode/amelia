@@ -16,7 +16,7 @@ using NodeId = int32_t;
 
 struct LoadedModuleDetails {
   LoadedModuleDetails(LoadedModuleFile &module_file)
-      : module_file(module_file) {}
+      : module_file(module_file), imports() {}
 
   String name;
   NodeId root_decl = -1;

@@ -46,7 +46,7 @@ struct LoaderContext {
     }
 
     for (NodeId item_node_id : node->as_ImportDeclNode().items.value()) {
-      auto item = Box<LoadedModuleImportDeclItem>();
+      auto item = Box<LoadedModuleImportDeclItem>::emplace();
       item->visibility = visibility;
     }
   }
@@ -67,24 +67,25 @@ struct LoaderContext {
   }
 
   void process_module_name_decl(NodeId node_id) {
-    // set name decl
-    module_details->name_decl = node_id;
-
-    // process visibility
-    const Node *node = &get_node(node_id);
-    if (node->type() == NodeType::VisibilityNode) {
-      process_visibility(module_details->visibility, node_id);
-      node = &get_node(node->as_VisibilityNode().decl);
-    }
-
-    // validate name
-    String name;
-    get_identifier_text(name, module_file->ast,
-                        node->as_ModuleNode().name.value());
-    if (name != module_details->name) {
-      throw NodeLocationError(
-          node_id, "Module name declaration does not match file name");
-    }
+    throw RuntimeError("not implemented");
+    // // set name decl
+    // module_details->name_decl = node_id;
+    //
+    // // process visibility
+    // const Node *node = &get_node(node_id);
+    // if (node->type() == NodeType::VisibilityNode) {
+    //   process_visibility(module_details->visibility, node_id);
+    //   node = &get_node(node->as_VisibilityNode().decl);
+    // }
+    //
+    // // validate name
+    // String name;
+    // get_identifier_text(name, module_file->ast,
+    //                     node->as_ModuleNode().name.value());
+    // if (name != module_details->name) {
+    //   throw NodeLocationError(
+    //       node_id, "Module name declaration does not match file name");
+    // }
   }
 
   void process_top_level_item_decl(NodeId node_id) {
@@ -104,8 +105,11 @@ struct LoaderContext {
   void process_submodule_decl(NodeId node_id) {
     node_id = unwrap_annotations(node_id);
 
+    // Box<LoadedModuleSubmoduleDecl>::emplace(module_file);
+
     // create submodule decl Box
-    auto decl = Box<LoadedModuleSubmoduleDecl>(module_file);
+    auto decl =
+        Box<LoadedModuleSubmoduleDecl>(LoadedModuleSubmoduleDecl(module_file));
     decl->details.parent_module = module_details;
 
     // process visibility

@@ -7,7 +7,7 @@
 
 namespace amelia {
 
-template <typename T> struct AbstractList;
+template <typename T> class List;
 template <typename T> class Slice;
 template <typename T> class ConstSlice;
 class String;
@@ -17,9 +17,9 @@ class CharIterator;
 struct TextUtils {
   static Text WHITESPACE_CHARS;
 
-  static void split(AbstractList<Text> &output, Text input, Text delimiter,
+  static void split(List<Text> &output, Text input, Text delimiter,
                     int64_t max_splits = -1);
-  static void split(AbstractList<String> &output, Text input, Text delimiter,
+  static void split(List<String> &output, Text input, Text delimiter,
                     int64_t max_splits = -1);
 
   static void join_into(AbstractString &output, ConstSlice<Text> parts,
@@ -71,14 +71,12 @@ struct TextUtils {
   static int64_t find_char_before_byte(Text input, uint32_t code_point,
                                        size_t index_end);
 
-  static void find_all(AbstractList<CharIterator> &output, Text input,
-                       Text substring);
-  static void find_all_bytes(AbstractList<size_t> &output, Text input,
-                             Text substring);
+  static void find_all(List<CharIterator> &output, Text input, Text substring);
+  static void find_all_bytes(List<size_t> &output, Text input, Text substring);
 
-  static void find_all_chars(AbstractList<CharIterator> &output, Text input,
+  static void find_all_chars(List<CharIterator> &output, Text input,
                              uint32_t code_point);
-  static void find_all_char_bytes(AbstractList<size_t> &output, Text input,
+  static void find_all_char_bytes(List<size_t> &output, Text input,
                                   uint32_t code_point);
 
   static void replace(AbstractString &text, Text search, Text replacement,

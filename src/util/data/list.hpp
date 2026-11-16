@@ -3,7 +3,6 @@
 #include <cstddef>
 #include <cstdlib>
 
-#include "util/data/abstract_list.hpp"
 #include "util/data/runtime_error.hpp"
 #include "util/data/utility.hpp"
 
@@ -14,18 +13,21 @@ template <typename T> class SliceIterator;
 template <typename T> class ConstSlice;
 template <typename T> class ConstSliceIterator;
 
-template <typename T> class List : public AbstractList<T> {
+template <typename T> class List {
 public:
   using value_type = T;
 
-  List() noexcept = default;
+  List() noexcept : m_buffer(nullptr), m_size(0), m_capacity(0) {}
 
-  explicit List(ConstSlice<T> slice) noexcept { append(slice); }
+  explicit List(ConstSlice<T> slice)
+      : m_buffer(nullptr), m_size(0), m_capacity(0) {
+    append(slice);
+  }
 
   template <size_t N>
-  explicit List(const T (&array)[N]) noexcept : List(ConstSlice(array, N)) {}
+  explicit List(const T (&array)[N]) : List(ConstSlice(array, N)) {}
 
-  List(const List<T> &other) noexcept : List(other.data()) {}
+  List(const List<T> &other) : List(other.data()) {}
 
   List(List<T> &&other) noexcept
       : m_buffer(other.m_buffer), m_size(other.m_size),
@@ -55,9 +57,9 @@ public:
   Slice<T> data() noexcept { return Slice(m_buffer, m_size); }
   ConstSlice<T> data() const noexcept { return ConstSlice(m_buffer, m_size); }
 
-  size_t size() const noexcept override { return m_size; }
+  size_t size() const noexcept { return m_size; }
 
-  void push_back(T value) override {
+  void push_back(T value) {
     ensure_capacity(m_size + 1);
     initialize(m_size, move(value));
     ++m_size;
@@ -87,9 +89,9 @@ public:
     return m_buffer[m_size++];
   }
 
-  void append(ConstSlice<T> slice) override { *this += slice; }
+  void append(ConstSlice<T> slice) { *this += slice; }
 
-  void assign(ConstSlice<T> slice) override {
+  void assign(ConstSlice<T> slice) {
     clear();
     *this += slice;
   }
@@ -132,7 +134,7 @@ public:
     return *this;
   }
 
-  T &operator[](size_t index) override {
+  T &operator[](size_t index) {
     if (index >= size()) {
       throw RuntimeError("List index out of range");
     }
@@ -237,9 +239,9 @@ private:
     }
   }
 
-  T *m_buffer = nullptr;
-  size_t m_size = 0;
-  size_t m_capacity = 0;
+  T *m_buffer;
+  size_t m_size;
+  size_t m_capacity;
 };
 
 } // namespace amelia
