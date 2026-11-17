@@ -2,7 +2,6 @@
 
 #include <climits>
 
-#include "util/data/runtime_error.hpp"
 #include "util/data/utility.hpp"
 
 namespace amelia {
@@ -241,11 +240,11 @@ private:
 
   T *get() const {
     if (!m_object || !m_ref_count) {
-      throw RuntimeError("Dereferencing null Flex");
+      throw_runtime_error("Dereferencing null Flex");
     } else if (
         // if the strong count is zero, then the object has already been deleted
         !is_strong() && *(m_ref_count - 1) == 0) {
-      throw RuntimeError("Dereferencing expired weak Flex");
+      throw_runtime_error("Dereferencing expired weak Flex");
     }
     return m_object;
   }
@@ -255,7 +254,7 @@ template <typename T> struct FlexFromThis {
 public:
   Flex<T> flex() const {
     if (!m_ref_count) {
-      throw RuntimeError(
+      throw_runtime_error(
           "FlexFromThis::flex() called on an object that was not created with "
           "make_flex or emplace_flex");
     }

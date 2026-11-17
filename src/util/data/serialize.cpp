@@ -239,7 +239,7 @@ void Serialize::set_object_name(String name) {
     m_kind = SerializeKind::Object;
   }
   if (m_kind != SerializeKind::Object) {
-    throw RuntimeError("Cannot set object name on a non-object Serialize");
+    throw_runtime_error("Cannot set object name on a non-object Serialize");
   }
   static_cast<SerializeObject *>(m_data)->name = move(name);
 }
@@ -250,7 +250,7 @@ void Serialize::add_object_field(String field_name, Serialize field_value) {
     m_kind = SerializeKind::Object;
   }
   if (m_kind != SerializeKind::Object) {
-    throw RuntimeError("Cannot add object field to a non-object Serialize");
+    throw_runtime_error("Cannot add object field to a non-object Serialize");
   }
   static_cast<SerializeObject *>(m_data)->fields.push_back(
       {move(field_name), move(field_value)});
@@ -262,7 +262,7 @@ void Serialize::add_list_item(Serialize item) {
     m_kind = SerializeKind::List;
   }
   if (m_kind != SerializeKind::List) {
-    throw RuntimeError("Cannot add tuple item to a non-tuple Serialize");
+    throw_runtime_error("Cannot add tuple item to a non-tuple Serialize");
   }
   static_cast<SerializeList *>(m_data)->items.push_back(move(item));
 }

@@ -5,6 +5,7 @@
 #include "file_loader.hpp"
 
 #include "util/data/option.hpp"
+#include "util/data/runtime_error.hpp"
 #include "util/data/string.hpp"
 
 namespace amelia {
@@ -15,7 +16,7 @@ void FileLoader::load_file(AbstractString &output,
   if (!file) {
     String err("Failed to open file: ");
     err.append(file_path.text());
-    throw RuntimeError(err.c_str());
+    throw_runtime_error(err.c_str());
   }
   std::ostringstream ss;
   ss << file.rdbuf();
@@ -29,7 +30,7 @@ FileLoader::try_load_file(AbstractString &output,
   if (!file) {
     String err("Failed to open file: ");
     err.append(file_path.text());
-    return Some(RuntimeError(err.c_str()));
+    return Some(RuntimeError(move(err)));
   }
   std::ostringstream ss;
   ss << file.rdbuf();

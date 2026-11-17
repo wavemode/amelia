@@ -1,5 +1,6 @@
 #include <doctest.h>
 
+#include "util/data/runtime_error.hpp"
 #include "util/data/set.hpp"
 #include "util/data/string.hpp"
 

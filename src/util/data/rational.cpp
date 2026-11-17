@@ -42,7 +42,7 @@ Rational::Rational(Text value) {
       String error_message = "Invalid rational: '";
       error_message.append(value);
       error_message.append("'");
-      throw RuntimeError(error_message.c_str());
+      throw_runtime_error(error_message.c_str());
     }
 
     String digits(parts[0]);
@@ -75,7 +75,7 @@ Rational::Rational(Text value) {
       String error_message = "Invalid rational: '";
       error_message.append(value);
       error_message.append("'");
-      throw RuntimeError(error_message.c_str());
+      throw_runtime_error(error_message.c_str());
     }
     m_numerator = Integer(String(parts[0]));
     m_denominator = Integer(String(parts[1]));
@@ -93,7 +93,7 @@ Rational::Rational(float value) {
     String error_message = "Invalid rational: '";
     error_message.append(s);
     error_message.append("'");
-    throw RuntimeError(error_message.c_str());
+    throw_runtime_error(error_message.c_str());
   }
   *this = Rational(s);
 }
@@ -105,7 +105,7 @@ Rational::Rational(double value) {
     String error_message = "Invalid rational: '";
     error_message.append(s);
     error_message.append("'");
-    throw RuntimeError(error_message.c_str());
+    throw_runtime_error(error_message.c_str());
   }
   *this = Rational(s);
 }
@@ -340,7 +340,7 @@ void Rational::normalize() {
     String s;
     to_fraction_string(s);
     error_message.append(s.text());
-    throw RuntimeError(error_message.c_str());
+    throw_runtime_error(error_message.c_str());
   }
   if (m_numerator == 0) {
     m_denominator = Integer(1);

@@ -1,6 +1,7 @@
 #include <doctest.h>
 
 #include "util/data/map.hpp"
+#include "util/data/runtime_error.hpp"
 #include "util/data/string.hpp"
 
 TEST_SUITE_BEGIN("Map");

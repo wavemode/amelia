@@ -3,6 +3,7 @@
 #include <cstdint>
 
 #include "loader/data/abstract_loaded_module_decl.hpp"
+#include "loader/data/loaded_module_import_decl.hpp"
 #include "loader/data/loaded_module_import_decl_item.hpp"
 #include "util/data/box.hpp"
 #include "util/data/list.hpp"
@@ -15,15 +16,13 @@ struct LoadedModuleFile;
 using NodeId = int32_t;
 
 struct LoadedModuleDetails {
-  LoadedModuleDetails(LoadedModuleFile &module_file)
-      : module_file(module_file), imports() {}
-
   String name;
-  NodeId root_decl = -1;
+  Option<NodeId> root_decl_node_id;
+  Option<NodeId> name_decl_node_id;
   LoadedModuleDeclarationVisibility visibility;
   Option<Ref<LoadedModuleDetails>> parent_module;
-  Ref<LoadedModuleFile> module_file;
-  List<Box<AbstractLoadedModuleDecl>> imports;
+  Option<Ref<LoadedModuleFile>> module_file;
+  List<Box<LoadedModuleImportDecl>> imports;
   Map<String, Box<AbstractLoadedModuleDecl>> decls;
 };
 

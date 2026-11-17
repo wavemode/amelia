@@ -1,6 +1,7 @@
 #pragma once
 
 #include "source/data/location.hpp"
+#include "util/data/runtime_error.hpp"
 
 namespace amelia {
 

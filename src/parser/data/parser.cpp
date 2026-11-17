@@ -819,7 +819,7 @@ public:
       visibility = DeclarationVisibility::Local;
       break;
     default:
-      throw RuntimeError("Invalid visibility modifier");
+      throw_runtime_error("Invalid visibility modifier");
     }
     NodeId decl = parse_class_body_decl();
     return m_output.add_node(visibility_token.id, m_token_index,
@@ -1919,7 +1919,7 @@ public:
         left = m_output.add_node(start_token.id, m_token_index,
                                  ExclamationMarkExprNode{left});
       } else {
-        throw RuntimeError(
+        throw_runtime_error(
             "parse_descend_expr_postfix: unknown next token type");
       }
       next_token = peek();
@@ -2196,7 +2196,7 @@ public:
             start_token.id, m_token_index,
             ScopeResolutionExprNode{left, parse_identifier()});
       } else {
-        throw RuntimeError(
+        throw_runtime_error(
             "parse_descend_type_expr_postfix: unknown next token type");
       }
       next_token = peek();
@@ -2398,7 +2398,7 @@ public:
       kind = BuiltinKind::Never;
       break;
     default:
-      throw RuntimeError("parse_builtin_type: unknown builtin type");
+      throw_runtime_error("parse_builtin_type: unknown builtin type");
     }
     return m_output.add_node(type_token.id, m_token_index,
                              BuiltinTypeNode{kind});
@@ -2936,7 +2936,7 @@ private:
 
   TokenWithId next() {
     if (m_token_index >= static_cast<TokenId>(m_input.tokens().size())) {
-      throw RuntimeError("Attempting to read past end of token stream");
+      throw_runtime_error("Attempting to read past end of token stream");
     }
     auto token = m_input.get_token(m_token_index);
     TokenWithId result{m_token_index, token.type, token.location,
@@ -2947,7 +2947,7 @@ private:
 
   TokenWithId peek(TokenId n = 0) const {
     if (m_token_index + n >= static_cast<TokenId>(m_input.tokens().size())) {
-      throw RuntimeError("Attempting to peek past end of token stream");
+      throw_runtime_error("Attempting to peek past end of token stream");
     }
     auto token = m_input.get_token(m_token_index + n);
     return TokenWithId{m_token_index + n, token.type, token.location,

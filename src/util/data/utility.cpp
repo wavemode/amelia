@@ -1,8 +1,13 @@
 #include "utility.hpp"
 
+#include "util/data/runtime_error.hpp"
 #include "xxhash.h"
 
 namespace amelia {
+
+[[noreturn]] void throw_runtime_error(const char *message) {
+  throw RuntimeError(String::from(message));
+}
 
 uint64_t hash_str_64(const char *str, size_t len) { return XXH64(str, len, 0); }
 

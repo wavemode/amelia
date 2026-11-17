@@ -1,6 +1,5 @@
 #pragma once
 
-#include "util/data/runtime_error.hpp"
 #include "util/data/utility.hpp"
 
 namespace amelia {
@@ -23,15 +22,15 @@ public:
   Option(None) {}
 
   template <typename U,
-            typename = std::enable_if_t<std::is_convertible_v<U, T>>>
+            typename = amelia::enable_if_t<amelia::is_convertible_v<U, T>>>
   Option(U &&value) {
-    initialize(static_cast<T>(std::forward<U>(value)));
+    initialize(static_cast<T>(amelia::forward<U>(value)));
   }
 
   template <typename U,
-            typename = std::enable_if_t<std::is_convertible_v<U, T>>>
+            typename = amelia::enable_if_t<amelia::is_convertible_v<U, T>>>
   Option(Some<U> &&some) {
-    initialize(static_cast<T>(std::forward<U>(some.value)));
+    initialize(static_cast<T>(amelia::forward<U>(some.value)));
   }
 
   Option(const Option<T> &other) {
@@ -71,16 +70,16 @@ public:
   }
 
   template <typename U,
-            typename = std::enable_if_t<std::is_convertible_v<U, T>>>
+            typename = amelia::enable_if_t<amelia::is_convertible_v<U, T>>>
   Option<T> &operator=(U &&value) {
-    assign(static_cast<T>(std::forward<U>(value)));
+    assign(static_cast<T>(amelia::forward<U>(value)));
     return *this;
   }
 
   template <typename U,
-            typename = std::enable_if_t<std::is_convertible_v<U, T>>>
+            typename = amelia::enable_if_t<amelia::is_convertible_v<U, T>>>
   Option<T> &operator=(Some<U> &&some) {
-    assign(static_cast<T>(std::forward<U>(some.value)));
+    assign(static_cast<T>(amelia::forward<U>(some.value)));
     return *this;
   }
 
@@ -90,14 +89,14 @@ public:
 
   T &value() {
     if (!m_has_value) {
-      throw RuntimeError("Attempted to access value of an empty Option");
+      throw_runtime_error("Attempted to access value of an empty Option");
     }
     return *get();
   }
 
   const T &value() const {
     if (!m_has_value) {
-      throw RuntimeError("Attempted to access value of an empty Option");
+      throw_runtime_error("Attempted to access value of an empty Option");
     }
     return *get();
   }
@@ -108,14 +107,14 @@ public:
 
   T *operator->() {
     if (!m_has_value) {
-      throw RuntimeError("Attempted to access value of an empty Option");
+      throw_runtime_error("Attempted to access value of an empty Option");
     }
     return get();
   }
 
   const T *operator->() const {
     if (!m_has_value) {
-      throw RuntimeError("Attempted to access value of an empty Option");
+      throw_runtime_error("Attempted to access value of an empty Option");
     }
     return get();
   }
@@ -139,7 +138,7 @@ public:
   void clear() { destroy(); }
 
   template <typename U,
-            typename = std::enable_if_t<std::is_convertible_v<T, U>>>
+            typename = amelia::enable_if_t<amelia::is_convertible_v<T, U>>>
   operator Option<U>() const {
     if (m_has_value) {
       return Some(static_cast<U>(value()));

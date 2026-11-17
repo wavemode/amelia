@@ -7,7 +7,6 @@
 #include "util/data/option.hpp"
 #include "util/data/pair.hpp"
 #include "util/data/ref.hpp"
-#include "util/data/runtime_error.hpp"
 #include "util/data/utility.hpp"
 
 namespace amelia {
@@ -269,7 +268,7 @@ public:
   V &get(const K &key) override {
     int64_t index = m_table.index_of(key);
     if (index == -1) {
-      throw RuntimeError(
+      throw_runtime_error(
           "Attempted to get a key that doesn't exist in the Map");
     }
     return m_table.elems[index].pair.second;
@@ -278,7 +277,7 @@ public:
   const V &get(const K &key) const override {
     int64_t index = m_table.index_of(key);
     if (index == -1) {
-      throw RuntimeError(
+      throw_runtime_error(
           "Attempted to get a key that doesn't exist in the Map");
     }
     return m_table.elems[index].pair.second;
@@ -305,7 +304,7 @@ public:
   V remove_and_get(const K &key) {
     int64_t index = m_table.index_of(key);
     if (index == -1) {
-      throw RuntimeError(
+      throw_runtime_error(
           "Attempted to remove_and_get a key that doesn't exist in the Map");
     }
     V value = move(m_table.elems[index].pair.second);
@@ -382,14 +381,14 @@ public:
 
   MapPair<K, V> peek() const {
     if (at_end()) {
-      throw RuntimeError("Attempted to peek past end of iterator");
+      throw_runtime_error("Attempted to peek past end of iterator");
     }
     return MapPair<K, V>{it()->pair.first, it()->pair.second};
   }
 
   MapPair<K, V> next() {
     if (at_end()) {
-      throw RuntimeError("Attempted to next past end of iterator");
+      throw_runtime_error("Attempted to next past end of iterator");
     }
     MapPair<K, V> pair = peek();
     do {

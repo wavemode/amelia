@@ -2,7 +2,7 @@
 
 #include "util/data/list.hpp"
 #include "util/data/pair.hpp"
-#include "util/data/slice.hpp"
+#include "util/data/runtime_error.hpp"
 
 TEST_SUITE_BEGIN("List");
 

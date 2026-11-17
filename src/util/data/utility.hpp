@@ -3,9 +3,64 @@
 #include <cstddef>
 #include <cstdint>
 
-#include "util/data/runtime_error.hpp"
-
 namespace amelia {
+
+[[noreturn]] void throw_runtime_error(const char *message);
+
+template <bool B, typename T = void> struct enable_if {};
+
+template <typename T> struct enable_if<true, T> {
+  using type = T;
+};
+
+template <bool B, typename T = void>
+using enable_if_t = typename enable_if<B, T>::type;
+
+template <typename T, T v> struct integral_constant {
+  static constexpr T value = v;
+  using value_type = T;
+  using type = integral_constant;
+  constexpr operator value_type() const noexcept { return value; }
+};
+
+using true_type = integral_constant<bool, true>;
+using false_type = integral_constant<bool, false>;
+
+template <typename> constexpr bool always_false_v = false;
+
+template <typename T> T &&declval() noexcept {
+  static_assert(always_false_v<T>,
+                "declval must not be used in an evaluated context");
+}
+
+namespace internal {
+
+template <typename To> void test_aux(To) noexcept;
+
+template <typename From, typename To,
+          typename = decltype(test_aux<To>(amelia::declval<From>()))>
+true_type test_convertible(int);
+
+template <typename, typename> false_type test_convertible(...);
+
+template <typename T> struct is_void : false_type {};
+template <> struct is_void<void> : true_type {};
+template <> struct is_void<const void> : true_type {};
+template <> struct is_void<volatile void> : true_type {};
+template <> struct is_void<const volatile void> : true_type {};
+
+} // namespace internal
+
+template <typename From, typename To>
+struct is_convertible
+    : amelia::integral_constant<
+          bool,
+          (decltype(amelia::internal::test_convertible<From, To>(0))::value) ||
+              (amelia::internal::is_void<From>::value &&
+               amelia::internal::is_void<To>::value)> {};
+
+template <typename From, typename To>
+inline constexpr bool is_convertible_v = is_convertible<From, To>::value;
 
 template <typename From, typename To>
 concept matches_type = requires(void (*target)(To)) { target; };
@@ -167,7 +222,7 @@ struct Dynamic {
   template <typename T> T &as() {
     auto *ptr = dynamic_cast<T *>(this);
     if (!ptr) {
-      throw RuntimeError(
+      throw_runtime_error(
           "as() called on a type that is not of the requested type");
     }
     return *ptr;
@@ -176,7 +231,7 @@ struct Dynamic {
   template <typename T> const T &as() const {
     const auto *ptr = dynamic_cast<const T *>(this);
     if (!ptr) {
-      throw RuntimeError(
+      throw_runtime_error(
           "as() called on a type that is not of the requested type");
     }
     return *ptr;

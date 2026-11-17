@@ -64,7 +64,7 @@ private:
 
   T *get() const {
     if (m_obj == nullptr) {
-      throw RuntimeError("Attempted to dereference null Box");
+      throw_runtime_error("Attempted to dereference null Box");
     }
     return m_obj;
   }

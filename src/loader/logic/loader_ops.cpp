@@ -52,7 +52,7 @@ struct LoaderContext {
   }
 
   void process_module_import(NodeId decl_node_id) {
-    throw RuntimeError("not implemented");
+    throw_runtime_error("not implemented");
   }
 
   void process_import_decl(NodeId decl_node_id) {
@@ -67,7 +67,7 @@ struct LoaderContext {
   }
 
   void process_module_name_decl(NodeId node_id) {
-    throw RuntimeError("not implemented");
+    throw_runtime_error("not implemented");
     // // set name decl
     // module_details->name_decl = node_id;
     //
@@ -89,7 +89,7 @@ struct LoaderContext {
   }
 
   void process_top_level_item_decl(NodeId node_id) {
-    throw RuntimeError("not implemented");
+    throw_runtime_error("not implemented");
   }
 
   void process_visibility(LoadedModuleDeclarationVisibility &result,
@@ -180,16 +180,16 @@ struct LoaderContext {
 
 void add_module_file(LoaderResult &result, Text search_path, Text file_name,
                      Text file_contents) {
-  throw RuntimeError("not implemented");
+  throw_runtime_error("not implemented");
 }
 
 void import_module(LoaderResult &result, Text module_name) {
-  throw RuntimeError("not implemented");
+  throw_runtime_error("not implemented");
 }
 
 void load_module(LoaderResult &result, IFileLoader &file_loader,
                  const LoaderSettings &settings, Text module_name) {
-  throw RuntimeError("not implemented");
+  throw_runtime_error("not implemented");
 }
 
 } // namespace amelia

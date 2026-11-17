@@ -1,9 +1,9 @@
 #pragma once
 
-#include "loader/data/abstract_loaded_module_decl.hpp"
+#include "loader/data/abstract_loaded_module_import_item.hpp"
 
 namespace amelia {
 
-struct LoadedModuleImportDeclWildcard : AbstractLoadedModuleDecl {};
+struct LoadedModuleImportDeclWildcard : AbstractLoadedModuleImportItem {};
 
 } // namespace amelia

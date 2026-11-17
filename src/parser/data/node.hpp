@@ -14,14 +14,14 @@ public:
                                                                                \
   NODE_TYPE &as_##NODE_TYPE() {                                                \
     if (m_type != NodeType::NODE_TYPE) {                                       \
-      throw RuntimeError("Node type mismatch");                                \
+      throw_runtime_error("Node type mismatch");                               \
     }                                                                          \
     return m_data.data_##NODE_TYPE;                                            \
   }                                                                            \
                                                                                \
   const NODE_TYPE &as_##NODE_TYPE() const {                                    \
     if (m_type != NodeType::NODE_TYPE) {                                       \
-      throw RuntimeError("Node type mismatch");                                \
+      throw_runtime_error("Node type mismatch");                               \
     }                                                                          \
     return m_data.data_##NODE_TYPE;                                            \
   }
@@ -44,35 +44,9 @@ public:
 
   TokenId end_token() const { return m_end; }
 
-  Node &operator=(const Node &other) {
-    if (this != &other) {
-      m_start = other.m_start;
-      m_end = other.m_end;
-      if (m_type == other.m_type) {
-        m_data.assign(m_type, other.m_data);
-      } else {
-        m_data.destroy(m_type);
-        m_type = other.m_type;
-        new (&m_data) NodeData(m_type, other.m_data);
-      }
-    }
-    return *this;
-  }
+  Node &operator=(const Node &other);
 
-  Node &operator=(Node &&other) {
-    if (this != &other) {
-      m_start = other.m_start;
-      m_end = other.m_end;
-      if (m_type == other.m_type) {
-        m_data.assign(m_type, move(other.m_data));
-      } else {
-        m_data.destroy(m_type);
-        m_type = other.m_type;
-        new (&m_data) NodeData(m_type, move(other.m_data));
-      }
-    }
-    return *this;
-  }
+  Node &operator=(Node &&other);
 
 private:
   union NodeData {
@@ -83,62 +57,12 @@ private:
     NODE_TYPE_LIST
 #undef X
 
-    NodeData(NodeType type, const NodeData &other) {
-      switch (type) {
-#define X(NODE_TYPE)                                                           \
-  case NodeType::NODE_TYPE:                                                    \
-    new (&data_##NODE_TYPE) NODE_TYPE(other.data_##NODE_TYPE);                 \
-    break;
-        NODE_TYPE_LIST
-#undef X
-      }
-    }
-
-    NodeData(NodeType type, NodeData &&other) {
-      switch (type) {
-#define X(NODE_TYPE)                                                           \
-  case NodeType::NODE_TYPE:                                                    \
-    new (&data_##NODE_TYPE) NODE_TYPE(move(other.data_##NODE_TYPE));           \
-    break;
-        NODE_TYPE_LIST
-#undef X
-      }
-    }
-
-    void assign(NodeType type, const NodeData &other) {
-      switch (type) {
-#define X(NODE_TYPE)                                                           \
-  case NodeType::NODE_TYPE:                                                    \
-    data_##NODE_TYPE = other.data_##NODE_TYPE;                                 \
-    break;
-        NODE_TYPE_LIST
-#undef X
-      }
-    }
-
-    void assign(NodeType type, NodeData &&other) {
-      switch (type) {
-#define X(NODE_TYPE)                                                           \
-  case NodeType::NODE_TYPE:                                                    \
-    data_##NODE_TYPE = move(other.data_##NODE_TYPE);                           \
-    break;
-        NODE_TYPE_LIST
-#undef X
-      }
-    }
-
-    void destroy(NodeType type) noexcept {
-      switch (type) {
-#define X(NODE_TYPE)                                                           \
-  case NodeType::NODE_TYPE:                                                    \
-    data_##NODE_TYPE.~NODE_TYPE();                                             \
-    break;
-        NODE_TYPE_LIST
-#undef X
-      }
-    }
-
-    ~NodeData() {}
+    NodeData(NodeType type, const NodeData &other);
+    NodeData(NodeType type, NodeData &&other);
+    void assign(NodeType type, const NodeData &other);
+    void assign(NodeType type, NodeData &&other);
+    void destroy(NodeType type) noexcept;
+    ~NodeData();
   };
 
   TokenId m_start;

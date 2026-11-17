@@ -2,8 +2,8 @@
 
 #include <cstddef>
 #include <cstdlib>
+#include <new>
 
-#include "util/data/runtime_error.hpp"
 #include "util/data/utility.hpp"
 
 namespace amelia {
@@ -67,7 +67,7 @@ public:
 
   void pop_back() {
     if (m_size == 0) {
-      throw RuntimeError("Cannot pop from empty list");
+      throw_runtime_error("Cannot pop from empty list");
     }
     --m_size;
     m_buffer[m_size].~T();
@@ -136,14 +136,14 @@ public:
 
   T &operator[](size_t index) {
     if (index >= size()) {
-      throw RuntimeError("List index out of range");
+      throw_runtime_error("List index out of range");
     }
     return m_buffer[index];
   }
 
   const T &operator[](size_t index) const {
     if (index >= size()) {
-      throw RuntimeError("List index out of range");
+      throw_runtime_error("List index out of range");
     }
     return m_buffer[index];
   }

@@ -9,7 +9,7 @@ class ParserResult : public AbstractNodeRepository {
 public:
   const Node &get_node(NodeId id) const override {
     if (static_cast<size_t>(id) >= m_nodes.size()) {
-      throw RuntimeError("Invalid node ID");
+      throw_runtime_error("Invalid node ID");
     }
     return m_nodes[static_cast<size_t>(id)];
   }

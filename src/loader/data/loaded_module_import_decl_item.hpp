@@ -1,13 +1,13 @@
 #pragma once
 
-#include "loader/data/abstract_loaded_module_decl.hpp"
+#include "loader/data/abstract_loaded_module_import_item.hpp"
 #include "util/data/option.hpp"
 #include "util/data/string.hpp"
 
 namespace amelia {
 
-struct LoadedModuleImportDeclItem : AbstractLoadedModuleDecl {
-  String module;
+struct LoadedModuleImportItem : AbstractLoadedModuleImportItem {
+  String name;
   Option<String> alias;
 };
 

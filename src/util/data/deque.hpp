@@ -4,8 +4,6 @@
 
 #include "util/data/utility.hpp"
 
-#include "util/data/runtime_error.hpp"
-
 namespace amelia {
 
 namespace internal {
@@ -134,7 +132,7 @@ public:
 
   void pop_back() {
     if (m_size == 0) {
-      throw RuntimeError("Cannot pop_back from empty Deque");
+      throw_runtime_error("Cannot pop_back from empty Deque");
     }
     get_item(m_start + m_size - 1)->~T();
     --m_size;
@@ -157,7 +155,7 @@ public:
 
   void pop_front() {
     if (m_size == 0) {
-      throw RuntimeError("Cannot pop_front from empty Deque");
+      throw_runtime_error("Cannot pop_front from empty Deque");
     }
     get_item(m_start)->~T();
     ++m_start;
@@ -166,14 +164,14 @@ public:
 
   T &get(size_t index) {
     if (static_cast<int64_t>(index) >= m_size) {
-      throw RuntimeError("Index out of bounds in Deque::get");
+      throw_runtime_error("Index out of bounds in Deque::get");
     }
     return *get_item(m_start + static_cast<int64_t>(index));
   }
 
   T &get(size_t index) const {
     if (static_cast<int64_t>(index) >= m_size) {
-      throw RuntimeError("Index out of bounds in Deque::get");
+      throw_runtime_error("Index out of bounds in Deque::get");
     }
     return *get_item(m_start + static_cast<int64_t>(index));
   }
@@ -291,7 +289,7 @@ public:
 
   T &next() {
     if (at_end()) {
-      throw RuntimeError("Attempted to advance DequeIterator past the end");
+      throw_runtime_error("Attempted to advance DequeIterator past the end");
     }
     T &item = peek();
     ++m_index;
@@ -337,7 +335,7 @@ public:
 
   const T &next() {
     if (at_end()) {
-      throw RuntimeError(
+      throw_runtime_error(
           "Attempted to advance ConstDequeIterator past the end");
     }
     const T &item = peek();

@@ -2,23 +2,19 @@
 
 #include <exception>
 
+#include "util/data/string.hpp"
+
 namespace amelia {
 
 class RuntimeError : public std::exception {
 public:
-  explicit RuntimeError(const char *message);
+  explicit RuntimeError(String &&message)
+      : m_message(static_cast<String &&>(message)) {}
 
-  RuntimeError(const RuntimeError &);
-  RuntimeError(RuntimeError &&) noexcept;
-  RuntimeError &operator=(const RuntimeError &);
-  RuntimeError &operator=(RuntimeError &&) noexcept;
-
-  const char *what() const noexcept override;
-
-  ~RuntimeError() noexcept override;
+  const char *what() const noexcept override { return m_message.c_str(); }
 
 private:
-  const char *m_message = nullptr;
+  String m_message;
 };
 
 } // namespace amelia

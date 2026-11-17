@@ -24,7 +24,7 @@ Integer binary_string_to_integer(Text binary_string) {
       String error_message = "Invalid binary literal: '";
       error_message.append(binary_string);
       error_message.append("'");
-      throw RuntimeError(error_message.c_str());
+      throw_runtime_error(error_message.c_str());
     }
   }
   return result;
@@ -40,7 +40,7 @@ Integer octal_string_to_integer(Text octal_string) {
       String error_message = "Invalid octal literal: '";
       error_message.append(octal_string);
       error_message.append("'");
-      throw RuntimeError(error_message.c_str());
+      throw_runtime_error(error_message.c_str());
     }
   }
   return result;
@@ -62,7 +62,7 @@ Integer hexadecimal_string_to_integer(Text hexadecimal_string) {
       String error_message = "Invalid hexadecimal literal: '";
       error_message.append(hexadecimal_string);
       error_message.append("'");
-      throw RuntimeError(error_message.c_str());
+      throw_runtime_error(error_message.c_str());
     }
   }
   return result;
@@ -116,7 +116,7 @@ Integer::Integer(Text text_value) : m_value(nullptr) {
         String error_message = "Invalid integer literal: '";
         error_message.append(str_value);
         error_message.append("'");
-        throw RuntimeError(error_message.c_str());
+        throw_runtime_error(error_message.c_str());
       }
     }
   }
@@ -159,7 +159,7 @@ int8_t Integer::to_int8() const {
     String s;
     to_string(s);
     error_message.append(s.text());
-    throw RuntimeError(error_message.c_str());
+    throw_runtime_error(error_message.c_str());
   }
   return static_cast<int8_t>(*static_cast<cpp_int *>(m_value));
 }
@@ -170,7 +170,7 @@ uint8_t Integer::to_uint8() const {
     String s;
     to_string(s);
     error_message.append(s.text());
-    throw RuntimeError(error_message.c_str());
+    throw_runtime_error(error_message.c_str());
   }
   return static_cast<uint8_t>(*static_cast<cpp_int *>(m_value));
 }
@@ -181,7 +181,7 @@ int16_t Integer::to_int16() const {
     String s;
     to_string(s);
     error_message.append(s.text());
-    throw RuntimeError(error_message.c_str());
+    throw_runtime_error(error_message.c_str());
   }
   return static_cast<int16_t>(*static_cast<cpp_int *>(m_value));
 }
@@ -192,7 +192,7 @@ uint16_t Integer::to_uint16() const {
     String s;
     to_string(s);
     error_message.append(s.text());
-    throw RuntimeError(error_message.c_str());
+    throw_runtime_error(error_message.c_str());
   }
   return static_cast<uint16_t>(*static_cast<cpp_int *>(m_value));
 }
@@ -203,7 +203,7 @@ int32_t Integer::to_int32() const {
     String s;
     to_string(s);
     error_message.append(s.text());
-    throw RuntimeError(error_message.c_str());
+    throw_runtime_error(error_message.c_str());
   }
   return static_cast<int32_t>(*static_cast<cpp_int *>(m_value));
 }
@@ -214,7 +214,7 @@ uint32_t Integer::to_uint32() const {
     String s;
     to_string(s);
     error_message.append(s.text());
-    throw RuntimeError(error_message.c_str());
+    throw_runtime_error(error_message.c_str());
   }
   return static_cast<uint32_t>(*static_cast<cpp_int *>(m_value));
 }
@@ -225,7 +225,7 @@ int64_t Integer::to_int64() const {
     String s;
     to_string(s);
     error_message.append(s.text());
-    throw RuntimeError(error_message.c_str());
+    throw_runtime_error(error_message.c_str());
   }
   return static_cast<int64_t>(*static_cast<cpp_int *>(m_value));
 }
@@ -236,7 +236,7 @@ uint64_t Integer::to_uint64() const {
     String s;
     to_string(s);
     error_message.append(s.text());
-    throw RuntimeError(error_message.c_str());
+    throw_runtime_error(error_message.c_str());
   }
   return static_cast<uint64_t>(*static_cast<cpp_int *>(m_value));
 }

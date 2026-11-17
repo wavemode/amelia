@@ -2,6 +2,7 @@
 
 #include "util/data/char_iterator.hpp"
 #include "util/data/option.hpp"
+#include "util/data/runtime_error.hpp"
 #include "util/data/string.hpp"
 
 TEST_SUITE_BEGIN("Option");

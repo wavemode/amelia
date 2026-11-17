@@ -7,7 +7,7 @@ ConstSlice<Token> LexerResult::tokens() const { return m_tokens.data(); }
 
 const Token &LexerResult::get_token(TokenId token_id) const {
   if (token_id >= static_cast<TokenId>(m_tokens.size())) {
-    throw RuntimeError("Invalid token ID");
+    throw_runtime_error("Invalid token ID");
   }
   return m_tokens[token_id];
 }

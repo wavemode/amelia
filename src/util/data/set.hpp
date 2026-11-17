@@ -292,14 +292,14 @@ public:
 
   const T &peek() {
     if (at_end()) {
-      throw RuntimeError("Attempted to peek past end of iterator");
+      throw_runtime_error("Attempted to peek past end of iterator");
     }
     return it()->value;
   }
 
   const T &next() {
     if (at_end()) {
-      throw RuntimeError("Attempted to next past end of iterator");
+      throw_runtime_error("Attempted to next past end of iterator");
     }
     const T &value = peek();
     do {

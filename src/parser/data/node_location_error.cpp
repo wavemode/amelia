@@ -4,7 +4,7 @@
 
 namespace amelia {
 
-NodeLocationError::NodeLocationError(NodeId node_loc, const String &message)
-    : RuntimeError(message.c_str()), node_id(node_loc) {}
+NodeLocationError::NodeLocationError(NodeId node_loc, String &&message)
+    : RuntimeError(move(message)), node_id(node_loc) {}
 
 } // namespace amelia

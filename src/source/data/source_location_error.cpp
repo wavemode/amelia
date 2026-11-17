@@ -21,6 +21,6 @@ String make_message(const Location &loc, String &&message) {
 } // namespace
 
 SourceLocationError::SourceLocationError(const Location &loc, String &&message)
-    : RuntimeError(make_message(loc, move(message)).c_str()), location(loc) {}
+    : RuntimeError(make_message(loc, move(message))), location(loc) {}
 
 } // namespace amelia

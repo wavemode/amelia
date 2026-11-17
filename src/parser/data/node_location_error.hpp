@@ -6,7 +6,6 @@
 
 namespace amelia {
 
-class String;
 using NodeId = int32_t;
 
 /**
@@ -14,7 +13,7 @@ using NodeId = int32_t;
  * @brief Exception associated with a specific node in the AST.
  */
 struct NodeLocationError : public RuntimeError {
-  NodeLocationError(NodeId node_loc, const String &message);
+  NodeLocationError(NodeId node_loc, String &&message);
 
   const NodeId node_id;
 };

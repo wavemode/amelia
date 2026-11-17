@@ -17,7 +17,7 @@ void FilesystemWalker::walk(List<String> &output, Text root,
       if (!ignore_errors) {
         String err("Error iterating directory: ");
         err.append(Text::from(ec.message().c_str()));
-        throw RuntimeError(err.c_str());
+        throw_runtime_error(err.c_str());
       }
       ec.clear();
       continue;

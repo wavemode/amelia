@@ -9,7 +9,7 @@ struct SliceUtils {
   template <typename T>
   static Slice<T> subseq(Slice<T> slice, size_t start, size_t end) {
     if (start > end) {
-      throw RuntimeError("Start index cannot be greater than end index");
+      throw_runtime_error("Start index cannot be greater than end index");
     }
     if (start > slice.size()) {
       start = slice.size();
@@ -23,7 +23,7 @@ struct SliceUtils {
   template <typename T>
   static ConstSlice<T> subseq(ConstSlice<T> slice, size_t start, size_t end) {
     if (start > end) {
-      throw RuntimeError("Start index cannot be greater than end index");
+      throw_runtime_error("Start index cannot be greater than end index");
     }
     if (start > slice.size()) {
       start = slice.size();
