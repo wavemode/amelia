@@ -177,7 +177,7 @@ public:
     auto alias = try_parse_import_alias();
     if (alias.has_value() && items.has_value()) {
       throw_parser_error_at_location(
-          items_token.loc, "Import with alias cannot have sub-items.");
+          items_token.loc, "Import with alias cannot have listed items.");
     }
     auto result = m_output.add_node(import_token.id, m_token_index,
                                     ImportDeclNode{path, move(items), alias});

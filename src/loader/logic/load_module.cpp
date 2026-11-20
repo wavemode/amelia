@@ -384,8 +384,7 @@ struct LoaderContext {
 void load_module(LoaderResult &result, IFileLoader &file_loader,
                  const ModuleName &module_name) {
   module_name.validate();
-  LoaderContext(result, file_loader)
-      .try_load_module_by_name(module_name);
+  LoaderContext(result, file_loader).try_load_module_by_name(module_name);
 }
 
 } // namespace amelia

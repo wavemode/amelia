@@ -206,8 +206,8 @@ bool update_expected_output(ITestCaseRunner &test_case_runner,
 
 void run_lexer_test_case(AbstractString &output,
                          const CompilerTestCase &test_case) {
-  LexerResult result;
-  Lexer::tokenize(result, LexerContext{test_case.filename}, test_case.input);
+  LexerResult result(LexerContext{FilePath(test_case.filename)});
+  Lexer::tokenize(result, test_case.input);
   const auto tokens = result.tokens();
   for (const auto &token : tokens) {
     token_type_to_string(output, token.type);
@@ -219,9 +219,8 @@ void run_lexer_test_case(AbstractString &output,
 
 void run_parser_test_case(AbstractString &output,
                           const CompilerTestCase &test_case) {
-  LexerResult lexer_result;
-  Lexer::tokenize(lexer_result, LexerContext{test_case.filename},
-                  test_case.input);
+  LexerResult lexer_result(LexerContext{FilePath(test_case.filename)});
+  Lexer::tokenize(lexer_result, test_case.input);
   ParserResult parser_result;
   const NodeId root_node_id = Parser::parse_module(parser_result, lexer_result);
   NodeFormatter node_formatter(parser_result);
