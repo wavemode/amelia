@@ -1,12 +1,12 @@
 #pragma once
 
+#include "util/data/file_path.hpp"
 #include "util/data/list.hpp"
-#include "util/data/string.hpp"
 
 namespace amelia {
 
 struct LoaderSettings {
-  List<String> search_path;
+  List<FilePath> search_path;
 };
 
 } // namespace amelia

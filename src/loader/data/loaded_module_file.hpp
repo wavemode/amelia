@@ -3,19 +3,17 @@
 #include "lexer/data/lexer_result.hpp"
 #include "loader/data/loaded_module_details.hpp"
 #include "parser/data/parser_result.hpp"
+#include "util/data/file_path.hpp"
 #include "util/data/string.hpp"
 
 namespace amelia {
 
-using NodeId = int32_t;
-
 struct LoadedModuleFile {
-  String path;
-  String file_contents;
+  FilePath path;
+  String text_contents;
   LexerResult tokens;
   ParserResult ast;
-  Option<NodeId> root_node_id;
   LoadedModuleDetails details;
 };
 
-}; // namespace amelia
+} // namespace amelia

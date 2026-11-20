@@ -10,7 +10,7 @@ namespace {
 
 String make_message(const Location &loc, String &&message) {
   message.append(" (at ");
-  message.append(loc.filename);
+  loc.filename->to_string(message);
   message.append(':');
   TextUtils::to_string(message, loc.line);
   message.append(':');

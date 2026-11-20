@@ -2,28 +2,34 @@
 
 #include <cstdint>
 
-#include "loader/data/abstract_loaded_module_decl.hpp"
+#include "loader/data/loaded_declaration_visibility.hpp"
 #include "loader/data/loaded_module_import_decl.hpp"
-#include "loader/data/loaded_module_import_decl_item.hpp"
+#include "loader/data/loaded_module_item_decl.hpp"
+#include "source/data/module_name.hpp"
 #include "util/data/box.hpp"
-#include "util/data/list.hpp"
 #include "util/data/map.hpp"
-#include "util/data/string.hpp"
+#include "util/data/option.hpp"
+#include "util/data/ref.hpp"
+#include "util/data/text.hpp"
 
 namespace amelia {
 
 struct LoadedModuleFile;
+struct LoadedModuleSubmoduleDecl;
 using NodeId = int32_t;
 
 struct LoadedModuleDetails {
-  String name;
-  Option<NodeId> root_decl_node_id;
-  Option<NodeId> name_decl_node_id;
-  LoadedModuleDeclarationVisibility visibility;
-  Option<Ref<LoadedModuleDetails>> parent_module;
-  Option<Ref<LoadedModuleFile>> module_file;
+  ModuleName name;
+  String short_name;
+  List<NodeId> annotations;
+  Option<Ref<LoadedModuleFile>> file;
+  LoadedDeclarationVisibility visibility;
   List<Box<LoadedModuleImportDecl>> imports;
-  Map<String, Box<AbstractLoadedModuleDecl>> decls;
+  List<Box<LoadedModuleItemDecl>> items;
+  Map<Text, Box<LoadedModuleSubmoduleDecl>> submodules;
+  Option<Ref<LoadedModuleDetails>> parent;
+
+  ~LoadedModuleDetails();
 };
 
 } // namespace amelia

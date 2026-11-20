@@ -43,8 +43,10 @@ public:
   void add_object_field(String field_name, Serialize field_value);
   void add_list_item(Serialize item);
 
-  void to_string(AbstractString &out) const;
   Serialize quoted() const;
+
+  void to_string(AbstractString &out) const;
+  uint64_t hash_code() const;
 
   friend class internal::SerializeState;
 

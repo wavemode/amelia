@@ -1,11 +1,11 @@
 #pragma once
 
-#include "util/data/text.hpp"
+#include "util/data/file_path.hpp"
 
 namespace amelia {
 
 struct LexerContext {
-  Text filename;
+  FilePath filename;
 };
 
 } // namespace amelia

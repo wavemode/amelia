@@ -1,4 +1,4 @@
-record class A (int, list[float])
+record class A (int, List[float])
 
 /* EXPECTED_OUTPUT:
 ModuleNode(
@@ -20,7 +20,7 @@ ModuleNode(
               type=IndexingExprNode(
                 object=IdentifierNode(
                   raw=false,
-                  contents="list"
+                  contents="List"
                 ),
                 indices=[
                   IndexNode(

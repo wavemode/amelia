@@ -5,8 +5,10 @@
 #include "util/data/string.hpp"
 
 namespace amelia {
-struct LoadedModuleDeclarationVisibility {
+
+struct LoadedDeclarationVisibility {
   DeclarationVisibility visibility = DeclarationVisibility::Default;
   Option<String> scope;
 };
+
 } // namespace amelia

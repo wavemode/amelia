@@ -4,6 +4,7 @@
 #include "lexer/data/lexer_context.hpp"
 #include "lexer/data/lexer_result.hpp"
 #include "lexer/data/token.hpp"
+#include "loader/data/loader_result.hpp"
 #include "parser/data/node_formatter.hpp"
 #include "parser/data/parser.hpp"
 #include "parser/data/parser_result.hpp"
@@ -226,6 +227,12 @@ void run_parser_test_case(AbstractString &output,
   NodeFormatter node_formatter(parser_result);
   node_formatter.format_node(output, root_node_id);
   output.append("\n");
+}
+
+void run_loader_test_case(AbstractString &output,
+
+                          const CompilerTestCase &test_case) {
+  LoaderResult loader_result;
 }
 
 } // namespace amelia

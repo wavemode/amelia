@@ -24,13 +24,6 @@ public:
 
   bool is_null() const { return m_obj == nullptr; }
 
-  template <typename U> Box<U> move_as() {
-    Box<U> box(nullptr);
-    box.m_obj = static_cast<U *>(m_obj);
-    m_obj = nullptr;
-    return box;
-  }
-
   Box<T> &operator=(const Box<T> &other) = delete;
 
   Box<T> &operator=(Box<T> &&other) noexcept {

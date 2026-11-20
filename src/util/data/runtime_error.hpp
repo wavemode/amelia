@@ -13,6 +13,8 @@ public:
 
   const char *what() const noexcept override { return m_message.c_str(); }
 
+  const String &message() const noexcept { return m_message; }
+
 private:
   String m_message;
 };

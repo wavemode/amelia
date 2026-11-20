@@ -1,5 +1,6 @@
 #pragma once
 
+#include "util/data/aligned_storage.hpp"
 #include "util/data/utility.hpp"
 
 namespace amelia {
@@ -159,12 +160,6 @@ public:
   bool operator!=(const Option<T> &other) const { return !(*this == other); }
 
 private:
-  union Container {
-    T value;
-    char storage[sizeof(T)];
-    ~Container() {}
-  };
-
   void initialize(T value) {
     new (get()) T(move(value));
     m_has_value = true;
@@ -185,13 +180,11 @@ private:
     }
   }
 
-  T *get() { return reinterpret_cast<T *>(&m_container.storage); }
-  const T *get() const {
-    return reinterpret_cast<const T *>(&m_container.storage);
-  }
+  T *get() { return m_container.get(); }
+  const T *get() const { return m_container.get(); }
 
   bool m_has_value = false;
-  Container m_container{.storage = {}};
+  AlignedStorage<T> m_container;
 };
 
 } // namespace amelia

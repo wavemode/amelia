@@ -132,10 +132,26 @@ inline bool is_second_bit_set_to_1(uint64_t hash) {
   return (hash & 0x4000000000000000ULL) != 0;
 }
 
+constexpr size_t HASH_STATE_SIZE = 303;
+constexpr size_t HASH_BLOCK_SIZE = 512;
+
 } // namespace internal
 
 uint64_t hash_str_64(const char *str, size_t len);
 uint32_t hash_str_32(const char *str, size_t len);
+
+class HashState {
+  alignas(alignof(max_align_t)) char m_data[internal::HASH_BLOCK_SIZE];
+  alignas(alignof(max_align_t)) char m_state[internal::HASH_STATE_SIZE];
+  bool m_initialized;
+  size_t m_length;
+
+public:
+  HashState() noexcept;
+  void init() noexcept;
+  void update(const char *data, size_t len);
+  uint64_t finalize();
+};
 
 template <typename T> inline uint64_t bit_hash(const T &value) {
   return hash_str_64(reinterpret_cast<const char *>(&value), sizeof(T));

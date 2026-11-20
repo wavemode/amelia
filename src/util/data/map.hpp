@@ -291,12 +291,13 @@ public:
     return Some(Ref(m_table.elems[index].pair.second));
   }
 
-  Option<Ref<const V>> find(const K &key) const {
+  Option<ConstRef<V>> find(const K &key) const {
     int64_t index = m_table.index_of(key);
     if (index == -1) {
       return None();
     }
-    return Some(Ref(static_cast<const V &>(m_table.elems[index].pair.second)));
+    return Some(
+        ConstRef(static_cast<const V &>(m_table.elems[index].pair.second)));
   }
 
   void remove(const K &key) override { m_table.remove(key); }

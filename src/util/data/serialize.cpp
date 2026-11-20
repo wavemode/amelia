@@ -267,16 +267,22 @@ void Serialize::add_list_item(Serialize item) {
   static_cast<SerializeList *>(m_data)->items.push_back(move(item));
 }
 
-void Serialize::to_string(AbstractString &out) const {
-  internal::SerializeState(out).serialize(*this);
-}
-
 Serialize Serialize::quoted() const {
   String repr;
   repr.append('"');
   internal::SerializeState(repr).serialize(*this);
   repr.append('"');
   return Serialize::literal(move(repr));
+}
+
+void Serialize::to_string(AbstractString &out) const {
+  internal::SerializeState(out).serialize(*this);
+}
+
+uint64_t Serialize::hash_code() const {
+  String repr;
+  internal::SerializeState(repr).serialize(*this);
+  return repr.hash_code();
 }
 
 void Serialize::clear() {

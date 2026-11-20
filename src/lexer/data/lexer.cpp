@@ -104,8 +104,8 @@ bool is_word_continue(uint32_t cp) noexcept {
 
 class LexerState {
 public:
-  LexerState(LexerResult &output, LexerContext ctx, Text file_contents) noexcept
-      : m_ctx(ctx), m_line(1), m_column(1), m_file_contents(file_contents),
+  LexerState(LexerResult &output, Text file_contents) noexcept
+      : m_line(1), m_column(1), m_file_contents(file_contents),
         m_input_iter(file_contents.begin()),
         m_previous_char_was_whitespace(true), m_result(output) {
     skip_carriage_returns();
@@ -1231,7 +1231,7 @@ private:
   bool at_end() const { return m_input_iter.at_end(); }
 
   Location current_location() const noexcept {
-    return Location{m_ctx.filename, m_input_iter, m_line, m_column};
+    return Location{m_result.filename(), m_input_iter, m_line, m_column};
   }
 
   void set_location(const Location &loc) {
@@ -1280,7 +1280,6 @@ private:
     throw LexerError(loc, move(message));
   }
 
-  LexerContext m_ctx;
   uint32_t m_line;
   uint32_t m_column;
   Text m_file_contents;
@@ -1292,28 +1291,28 @@ private:
 
 } // namespace
 
-void Lexer::tokenize(LexerResult &output, LexerContext ctx, Text input) {
-  LexerState state(output, ctx, input);
+void Lexer::tokenize(LexerResult &output, Text input) {
+  LexerState state(output, input);
   state.read_file();
 }
 
 void Lexer::read_string_literal_contents(AbstractString &out, Text input,
                                          bool raw) {
-  LexerResult result;
-  LexerState state(result, LexerContext{"(anon)"}, input);
+  LexerResult result(LexerContext{"(anon)"});
+  LexerState state(result, input);
   state.read_string_literal_contents(out, raw);
 }
 
 uint32_t Lexer::read_char_literal_contents(Text input) {
   String out;
-  LexerResult result;
-  LexerState state(result, LexerContext{"(anon)"}, input);
+  LexerResult result(LexerContext{"(anon)"});
+  LexerState state(result, input);
   return state.read_char_literal_contents();
 }
 
 void Lexer::read_number_literal_contents(NumberLiteral &result, Text input) {
-  LexerResult lr;
-  LexerState state(lr, LexerContext{"(anon)"}, input);
+  LexerResult lr(LexerContext{"(anon)"});
+  LexerState state(lr, input);
   state.read_number_literal_contents(result);
 }
 

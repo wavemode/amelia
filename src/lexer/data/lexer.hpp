@@ -16,7 +16,7 @@ struct LexerContext;
 extern const Map<Text, TokenType> RESERVED_WORDS;
 
 struct Lexer {
-  static void tokenize(LexerResult &output, LexerContext ctx, Text input);
+  static void tokenize(LexerResult &output, Text input);
   static void read_string_literal_contents(AbstractString &out, Text input,
                                            bool raw = false);
   static uint32_t read_char_literal_contents(Text input);

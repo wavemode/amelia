@@ -3,18 +3,19 @@
 #include <cstdint>
 
 #include "util/data/char_iterator.hpp"
-#include "util/data/text.hpp"
+#include "util/data/file_path.hpp"
+#include "util/data/ref.hpp"
 
 namespace amelia {
 
 struct Location {
-  Text filename;
+  ConstRef<FilePath> filename;
   CharIterator position;
   uint32_t line;
   uint32_t column;
 
   bool operator==(const Location &other) const {
-    return filename == other.filename && line == other.line &&
+    return *filename == *other.filename && line == other.line &&
            column == other.column;
   }
 
