@@ -1,6 +1,7 @@
 #pragma once
 
 #include "loader/data/loaded_declaration_visibility.hpp"
+#include "loader/data/abstract_loaded_module_decl.hpp"
 #include "util/data/list.hpp"
 #include "util/data/string.hpp"
 
@@ -8,11 +9,9 @@ namespace amelia {
 
 using NodeId = int32_t;
 
-struct LoadedModuleItemDecl {
-  NodeId node_id;
+struct LoadedModuleItemDecl : AbstractLoadedModuleDecl {
   LoadedDeclarationVisibility visibility;
   List<String> names;
-  List<NodeId> annotations;
 };
 
 } // namespace amelia

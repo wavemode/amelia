@@ -12,9 +12,7 @@ namespace amelia {
 
 using NodeId = int32_t;
 
-struct LoadedModuleImportDecl {
-  LoadedDeclarationVisibility visibility;
-  List<NodeId> annotations;
+struct LoadedModuleImportDecl : AbstractLoadedModuleDecl {
   ModuleName module;
   Option<List<Box<AbstractLoadedModuleImportItem>>> items;
   Option<String> alias;

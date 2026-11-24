@@ -40,7 +40,4 @@ void run_lexer_test_case(AbstractString &output,
 void run_parser_test_case(AbstractString &output,
                           const CompilerTestCase &test_case);
 
-void run_loader_test_case(AbstractString &output,
-                          const CompilerTestCase &test_case);
-
 } // namespace amelia

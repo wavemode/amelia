@@ -1,16 +1,18 @@
 #pragma once
 
 #include "loader/data/loaded_module_file.hpp"
-#include "loader/data/loader_settings.hpp"
 #include "util/data/box.hpp"
 #include "util/data/file_path.hpp"
+#include "util/data/list.hpp"
 #include "util/data/map.hpp"
+#include "util/data/ref.hpp"
+#include "source/data/module_name.hpp"
 
 namespace amelia {
 
 struct LoaderResult {
   Map<FilePath, Box<LoadedModuleFile>> loaded_files;
-  LoaderSettings settings;
+  Map<ModuleName, List<Ref<LoadedModuleDetails>>> loaded_modules;
 };
 
 } // namespace amelia

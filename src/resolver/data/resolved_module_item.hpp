@@ -1,6 +1,6 @@
 #pragma once
 
-#include "loader/data/abstract_resolved_module_item.hpp"
+#include "abstract_resolved_module_item.hpp"
 #include "loader/data/loaded_module_item_decl.hpp"
 #include "util/data/list.hpp"
 #include "util/data/ref.hpp"

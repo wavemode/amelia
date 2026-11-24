@@ -228,10 +228,4 @@ void run_parser_test_case(AbstractString &output,
   output.append("\n");
 }
 
-void run_loader_test_case(AbstractString &output,
-
-                          const CompilerTestCase &test_case) {
-  LoaderResult loader_result;
-}
-
 } // namespace amelia

@@ -16,6 +16,9 @@ struct ModuleName {
   void add_part(Text part);
   void pop_part() noexcept;
 
+  Text short_name() const noexcept;
+  bool is_submodule_of(const ModuleName &other) const noexcept;
+
   Slice<String> parts() noexcept;
   ConstSlice<String> parts() const noexcept;
   size_t num_parts() const noexcept;

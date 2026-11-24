@@ -29,6 +29,24 @@ void ModuleName::pop_part() noexcept {
   }
 }
 
+Text ModuleName::short_name() const noexcept {
+  return m_parts.size() > 0 ? m_parts[m_parts.size() - 1] : Text();
+}
+
+bool ModuleName::is_submodule_of(const ModuleName &other) const noexcept {
+  if (other.m_parts.size() >= m_parts.size()) {
+    return false;
+  }
+
+  for (size_t i = 0; i < other.m_parts.size(); ++i) {
+    if (m_parts[i] != other.m_parts[i]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 Slice<String> ModuleName::parts() noexcept {
   return {m_parts.data().ptr(), m_parts.size()};
 }

@@ -234,13 +234,15 @@ struct LoaderContext {
     if (decl_annotations.size() > 0) {
       item_decl->annotations = move(decl_annotations);
     }
-    module_details.value()->items.push_back(move(item_decl));
+    auto &module_details.value()->items.push_back(move(item_decl));
+    for (const String &name : item_decl->names) {
+      get_items(name).push_back(item_decl);
+    }
   }
 
   NodeId unwrap_node(NodeId node_id) {
     // unwrap and record all annotations
     decl_annotations.clear();
-
     const Node *node = &get_node(node_id);
     while (node->type() == NodeType::AnnotationNode) {
       const auto &annotation_node = node->as_AnnotationNode();
@@ -251,14 +253,13 @@ struct LoaderContext {
 
     // then unwrap and record visibility
     decl_visibility = None();
-
     if (node->type() == NodeType::VisibilityNode) {
       const auto &visibility_node = node->as_VisibilityNode();
       decl_visibility = LoadedDeclarationVisibility();
       decl_visibility.value().visibility = visibility_node.visibility;
       if (visibility_node.scope.has_value()) {
-        decl_visibility.value().scope = String();
-        get_text(decl_visibility.value().scope.value(),
+        decl_visibility.value().scope = ModuleName();
+        get_module_name(decl_visibility.value().scope.value(),
                  visibility_node.scope.value());
       }
       node_id = visibility_node.decl;
@@ -266,70 +267,69 @@ struct LoaderContext {
 
     // then extract name based on node type
     decl_names.clear();
-
-    read_decl_name(node_id);
+    read_decl_names(node_id);
 
     // then return core node id
     return node_id;
   }
 
-  void read_decl_name(NodeId node_id) {
+  void read_decl_names(NodeId node_id) {
     const Node &node = get_node(node_id);
     switch (node.type()) {
     case NodeType::ClassDeclNode:
       decl_names.push_back(node.as_ClassDeclNode().name);
       break;
     case NodeType::RecordDeclNode:
-      read_decl_name(node.as_RecordDeclNode().decl);
+      read_decl_names(node.as_RecordDeclNode().decl);
       break;
     case NodeType::AbstractDeclNode:
-      read_decl_name(node.as_AbstractDeclNode().decl);
+      read_decl_names(node.as_AbstractDeclNode().decl);
       break;
     case NodeType::OpenDeclNode:
-      read_decl_name(node.as_OpenDeclNode().decl);
+      read_decl_names(node.as_OpenDeclNode().decl);
       break;
     case NodeType::FunctionDeclNode:
       decl_names.push_back(node.as_FunctionDeclNode().name);
       break;
     case NodeType::AsyncDeclNode:
-      read_decl_name(node.as_AsyncDeclNode().decl);
+      read_decl_names(node.as_AsyncDeclNode().decl);
       break;
     case NodeType::ConceptDeclNode:
       decl_names.push_back(node.as_ConceptDeclNode().name);
       break;
     case NodeType::ConstDeclNode:
       for (NodeId init_node_id : node.as_ConstDeclNode().inits) {
-        read_decl_name(init_node_id);
+        read_decl_names(init_node_id);
       }
       break;
     case NodeType::LetDeclNode:
       for (NodeId init_node_id : node.as_LetDeclNode().inits) {
-        read_decl_name(init_node_id);
+        read_decl_names(init_node_id);
       }
       break;
     case NodeType::InitializerNode:
-      read_decl_name(node.as_InitializerNode().pattern);
+      read_decl_names(node.as_InitializerNode().pattern);
       break;
     case NodeType::StructPatternNode:
       for (NodeId field_node_id : node.as_StructPatternNode().elements) {
-        read_decl_name(field_node_id);
+        read_decl_names(field_node_id);
       }
       break;
     case NodeType::StructFieldPatternNode:
       if (node.as_StructFieldPatternNode().pattern.has_value()) {
-        read_decl_name(node.as_StructFieldPatternNode().pattern.value());
+        read_decl_names(node.as_StructFieldPatternNode().pattern.value());
       } else {
-        read_decl_name(node.as_StructFieldPatternNode().field);
+        read_decl_names(node.as_StructFieldPatternNode().field);
       }
       break;
     case NodeType::TuplePatternNode:
       for (NodeId element_node_id : node.as_TuplePatternNode().elements) {
-        read_decl_name(element_node_id);
+        read_decl_names(element_node_id);
       }
       break;
     case NodeType::ArrayPatternNode:
       for (NodeId element_node_id : node.as_ArrayPatternNode().elements) {
-        read_decl_name(element_node_id);
+        read_decl_names(element_node_id);
       }
       break;
     case NodeType::IdentifierPatternNode:
@@ -361,6 +361,22 @@ struct LoaderContext {
 
   const Node &get_node(NodeId node_id) {
     return module_file.value()->ast.get_node(node_id);
+  }
+
+  List<Ref<LoadedModuleItemDecl>> &get_items(Text name) {
+    auto found_items = module_details.value()->items_by_name.find(name);
+    if (!found_items.has_value()) {
+      auto new_item_list = List<Ref<LoadedModuleItemDecl>>();
+      module_details.value()->items_by_name.set(name, move(new_item_list));
+      found_items = module_details.value()->items_by_name.find(name);
+    }
+    return found_items.value();
+  }
+  
+  void get_module_name(ModuleName &output, NodeId node_id) {
+    String module_name_str;
+    get_text(module_name_str, node_id);
+    output = ModuleName(module_name_str);
   }
 
   void get_text(AbstractString &output, NodeId node_id) {
