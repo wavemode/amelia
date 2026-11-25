@@ -13,8 +13,8 @@ void IFileLoader::load_file(AbstractString &output, const FilePath &file_path) {
   load_file(output, path_str);
 }
 
-Option<RuntimeError> IFileLoader::try_load_file(AbstractString &output,
-                                                const FilePath &file_path) {
+Option<RuntimeError>
+IFileLoader::try_load_file(AbstractString &output, const FilePath &file_path) {
   String path_str;
   file_path.to_string(path_str);
   return try_load_file(output, path_str);

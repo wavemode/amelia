@@ -6,13 +6,15 @@
 
 namespace amelia {
 
-void FilesystemWalker::walk(List<String> &output, Text root,
-                            bool regular_files_only, bool ignore_errors) {
+void FilesystemWalker::walk(
+    List<String> &output, Text root, bool regular_files_only, bool ignore_errors
+) {
   std::error_code ec;
   for (std::filesystem::recursive_directory_iterator
            it(String(root).c_str(), ec),
        end;
-       it != end; it.increment(ec)) {
+       it != end;
+       it.increment(ec)) {
     if (ec) {
       if (!ignore_errors) {
         String err("Error iterating directory: ");

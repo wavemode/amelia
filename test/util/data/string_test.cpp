@@ -51,8 +51,9 @@ TEST_CASE("can be assigned from another String") {
 }
 
 TEST_CASE("can be constructed from a Slice of bytes") {
-  const char data[] = {'H', 'e', 'l', 'l', 'o', ',', ' ',
-                       'w', 'o', 'r', 'l', 'd', '!'};
+  const char data[] = {
+      'H', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l', 'd', '!'
+  };
   REQUIRE(sizeof(data) == 13);
 
   String str = String(ConstSlice(data));

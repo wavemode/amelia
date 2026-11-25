@@ -9,9 +9,9 @@ namespace {
 struct ResolverContext {
   Ref<ResolverResult> resolver_result;
 
-  Option<Ref<LoadedModuleDetails>>
-  get_module_details(const FilePath &module_path,
-                     const ModuleName &submodule_name) {
+  Option<Ref<LoadedModuleDetails>> get_module_details(
+      const FilePath &module_path, const ModuleName &submodule_name
+  ) {
     auto module_file =
         resolver_result->loader_result.loaded_files.find(module_path);
     if (!module_file.has_value()) {
@@ -30,8 +30,9 @@ struct ResolverContext {
     return module_details;
   }
 
-  void find_module(List<Ref<LoadedModuleDetails>> &results,
-                   const ModuleName &module_name) {
+  void find_module(
+      List<Ref<LoadedModuleDetails>> &results, const ModuleName &module_name
+  ) {
     for (const FilePath &search_path :
          resolver_result->loader_result.settings.search_path) {
 
@@ -55,7 +56,8 @@ struct ResolverContext {
             const String &submodule_name_part =
                 working_submodule_name_parts[i - 1];
             auto submodule_details = module_details.value()->submodules.find(
-                submodule_name_part.text());
+                submodule_name_part.text()
+            );
 
             if (submodule_details.has_value()) {
               module_details =
@@ -64,17 +66,16 @@ struct ResolverContext {
               module_details = {};
               break;
             }
-
           }
 
           if (module_details.has_value()) {
             results.push_back(module_details.value());
           }
-
         }
 
         working_submodule_name_parts.push_back(
-            move(working_path.parts()[working_path.num_parts() - 1]));
+            move(working_path.parts()[working_path.num_parts() - 1])
+        );
         working_path.pop_part();
       }
     }

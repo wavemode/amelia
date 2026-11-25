@@ -1023,8 +1023,9 @@ void NodeFormatter::format_node(AbstractString &out, NodeId node_id) {
   m_fields_printed = previous_fields_printed;
 }
 
-void NodeFormatter::print_node_field(AbstractString &out, Text name,
-                                     const List<NodeId> &nodes_value) {
+void NodeFormatter::print_node_field(
+    AbstractString &out, Text name, const List<NodeId> &nodes_value
+) {
   if (nodes_value.size() == 0)
     return;
   open_line(out);
@@ -1045,8 +1046,9 @@ void NodeFormatter::print_node_field(AbstractString &out, Text name,
   m_fields_printed = old_fields_printed;
 }
 
-void NodeFormatter::print_node_field(AbstractString &out, Text name,
-                                     const Option<List<NodeId>> &nodes) {
+void NodeFormatter::print_node_field(
+    AbstractString &out, Text name, const Option<List<NodeId>> &nodes
+) {
   if (!nodes.has_value() || nodes.value().size() == 0)
     return;
   open_line(out);
@@ -1068,8 +1070,9 @@ void NodeFormatter::print_node_field(AbstractString &out, Text name,
   m_fields_printed = old_fields_printed;
 }
 
-void NodeFormatter::print_node_field(AbstractString &out, Text name,
-                                     Option<NodeId> node_id) {
+void NodeFormatter::print_node_field(
+    AbstractString &out, Text name, Option<NodeId> node_id
+) {
   if (!node_id.has_value()) {
     return;
   }
@@ -1078,24 +1081,27 @@ void NodeFormatter::print_node_field(AbstractString &out, Text name,
   out.append('=');
   format_node(out, node_id.value());
 }
-void NodeFormatter::print_text_field(AbstractString &out, Text name,
-                                     Text value) {
+void NodeFormatter::print_text_field(
+    AbstractString &out, Text name, Text value
+) {
   open_line(out);
   out.append(name);
   out.append('=');
   out.append(value);
 }
 
-void NodeFormatter::print_numeric_field(AbstractString &out, Text name,
-                                        const Integer &value) {
+void NodeFormatter::print_numeric_field(
+    AbstractString &out, Text name, const Integer &value
+) {
   open_line(out);
   out.append(name);
   out.append('=');
   value.to_string(out);
 }
 
-void NodeFormatter::print_boolean_field(AbstractString &out, Text name,
-                                        bool value) {
+void NodeFormatter::print_boolean_field(
+    AbstractString &out, Text name, bool value
+) {
   open_line(out);
   out.append(name);
   out.append('=');

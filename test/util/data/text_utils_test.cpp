@@ -997,26 +997,30 @@ TEST_CASE("replace_into") {
   String output;
 
   SUBCASE("basic replace_into") {
-    TextUtils::replace_into(output, "hello world, hello everyone", "hello",
-                            "hi", 1);
+    TextUtils::replace_into(
+        output, "hello world, hello everyone", "hello", "hi", 1
+    );
     REQUIRE(output == "hi world, hello everyone");
   }
 
   SUBCASE("replace_into with limit more than occurrences") {
-    TextUtils::replace_into(output, "hello world, hello everyone", "hello",
-                            "hi", 5);
+    TextUtils::replace_into(
+        output, "hello world, hello everyone", "hello", "hi", 5
+    );
     REQUIRE(output == "hi world, hi everyone");
   }
 
   SUBCASE("replace_into with limit zero") {
-    TextUtils::replace_into(output, "hello world, hello everyone", "hello",
-                            "hi", 0);
+    TextUtils::replace_into(
+        output, "hello world, hello everyone", "hello", "hi", 0
+    );
     REQUIRE(output == "hello world, hello everyone");
   }
 
   SUBCASE("replace_into with limit negative") {
-    TextUtils::replace_into(output, "hello world, hello everyone", "hello",
-                            "hi", -1);
+    TextUtils::replace_into(
+        output, "hello world, hello everyone", "hello", "hi", -1
+    );
     REQUIRE(output == "hi world, hi everyone");
   }
 }
@@ -1504,8 +1508,9 @@ TEST_CASE("substr_bytes") {
     Text input = "hello world";
     int64_t start_byte_index = 6;
     int64_t end_byte_index = 5;
-    REQUIRE(TextUtils::substr_bytes(input, start_byte_index, end_byte_index) ==
-            "");
+    REQUIRE(
+        TextUtils::substr_bytes(input, start_byte_index, end_byte_index) == ""
+    );
   }
 }
 
@@ -1750,8 +1755,9 @@ TEST_CASE("count") {
     Text input = "abc";
     Text substring = "";
     int64_t count = TextUtils::count(input, substring);
-    REQUIRE(count ==
-            4); // counts the positions before, between, and after characters
+    REQUIRE(
+        count == 4
+    ); // counts the positions before, between, and after characters
   }
 
   SUBCASE("count with unicode") {

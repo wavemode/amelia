@@ -19,18 +19,20 @@ public:
   void format_node(AbstractString &out, NodeId node_id);
 
 private:
-  void print_node_field(AbstractString &out, Text name,
-                        const List<NodeId> &nodes_value);
+  void print_node_field(
+      AbstractString &out, Text name, const List<NodeId> &nodes_value
+  );
 
-  void print_node_field(AbstractString &out, Text name,
-                        const Option<List<NodeId>> &nodes);
+  void print_node_field(
+      AbstractString &out, Text name, const Option<List<NodeId>> &nodes
+  );
 
   void print_node_field(AbstractString &out, Text name, Option<NodeId> node_id);
 
   void print_text_field(AbstractString &out, Text name, Text value);
 
-  void print_numeric_field(AbstractString &out, Text name,
-                           const Integer &value);
+  void
+  print_numeric_field(AbstractString &out, Text name, const Integer &value);
 
   void print_boolean_field(AbstractString &out, Text name, bool value);
 

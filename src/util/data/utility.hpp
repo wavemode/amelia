@@ -29,16 +29,18 @@ using false_type = integral_constant<bool, false>;
 template <typename> constexpr bool always_false_v = false;
 
 template <typename T> T &&declval() noexcept {
-  static_assert(always_false_v<T>,
-                "declval must not be used in an evaluated context");
+  static_assert(
+      always_false_v<T>, "declval must not be used in an evaluated context"
+  );
 }
 
 namespace internal {
 
 template <typename To> void test_aux(To) noexcept;
 
-template <typename From, typename To,
-          typename = decltype(test_aux<To>(amelia::declval<From>()))>
+template <
+    typename From, typename To,
+    typename = decltype(test_aux<To>(amelia::declval<From>()))>
 true_type test_convertible(int);
 
 template <typename, typename> false_type test_convertible(...);
@@ -239,7 +241,8 @@ struct Dynamic {
     auto *ptr = dynamic_cast<T *>(this);
     if (!ptr) {
       throw_runtime_error(
-          "as() called on a type that is not of the requested type");
+          "as() called on a type that is not of the requested type"
+      );
     }
     return *ptr;
   }
@@ -248,7 +251,8 @@ struct Dynamic {
     const auto *ptr = dynamic_cast<const T *>(this);
     if (!ptr) {
       throw_runtime_error(
-          "as() called on a type that is not of the requested type");
+          "as() called on a type that is not of the requested type"
+      );
     }
     return *ptr;
   }

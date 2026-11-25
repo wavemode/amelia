@@ -167,18 +167,21 @@ public:
       if (!raw && current_char == '\\') {
         if (next_char == -1) {
           throw_lexer_error_at_current_location(
-              "Unexpected end of string after backslash");
+              "Unexpected end of string after backslash"
+          );
         }
 
         if (next_char == 'x') {
           next(); // skip past the 'x'
           if (at_end()) {
             throw_lexer_error_at_current_location(
-                "Unexpected end of input in hexadecimal escape sequence");
+                "Unexpected end of input in hexadecimal escape sequence"
+            );
           }
           if (peek() == '{') {
             x_scratch_buffer.push_back(
-                static_cast<char>(read_hex_chars_in_braces(2)));
+                static_cast<char>(read_hex_chars_in_braces(2))
+            );
           } else {
             x_scratch_buffer.push_back(static_cast<char>(read_hex_chars(2)));
           }
@@ -189,14 +192,17 @@ public:
           next(); // skip past the 'u'
           if (at_end()) {
             throw_lexer_error_at_current_location(
-                "Unexpected end of input in hexadecimal escape sequence");
+                "Unexpected end of input in hexadecimal escape sequence"
+            );
           }
           if (peek() == '{') {
             u_scratch_buffer.push_back(
-                static_cast<uint16_t>(read_hex_chars_in_braces(4)));
+                static_cast<uint16_t>(read_hex_chars_in_braces(4))
+            );
           } else {
             u_scratch_buffer.push_back(
-                static_cast<uint16_t>(read_hex_chars(4)));
+                static_cast<uint16_t>(read_hex_chars(4))
+            );
           }
           continue;
         }
@@ -205,7 +211,8 @@ public:
           next(); // skip past the 'U'
           if (at_end()) {
             throw_lexer_error_at_current_location(
-                "Unexpected end of input in hexadecimal escape sequence");
+                "Unexpected end of input in hexadecimal escape sequence"
+            );
           }
           uint32_t character;
           if (peek() == '{') {
@@ -231,7 +238,8 @@ public:
           switch (next_char) {
           case -1:
             throw_lexer_error_at_current_location(
-                "Unexpected end of input after backslash");
+                "Unexpected end of input after backslash"
+            );
           case 'a':
             result = '\a';
             break;
@@ -278,8 +286,9 @@ public:
     auto base_prefix_start = current_location();
 
     if (at_end()) {
-      throw_lexer_error(start_location,
-                        "Expected number literal, but got empty input");
+      throw_lexer_error(
+          start_location, "Expected number literal, but got empty input"
+      );
     }
 
     if (peek() == '0') {
@@ -318,7 +327,8 @@ public:
       if (ch == '_') {
         if (at_boundary || previous_char_was_underscore) {
           throw_lexer_error_at_current_location(
-              "Single underscore can only appear between digits");
+              "Single underscore can only appear between digits"
+          );
         }
         previous_char_was_underscore = true;
         next();
@@ -359,7 +369,8 @@ public:
 
     if (previous_char_was_underscore) {
       throw_lexer_error_at_current_location(
-          "Single underscore can only appear between digits");
+          "Single underscore can only appear between digits"
+      );
     }
     at_boundary = true;
     previous_char_was_underscore = false;
@@ -386,7 +397,8 @@ public:
         if (ch == '_') {
           if (at_boundary || previous_char_was_underscore) {
             throw_lexer_error_at_current_location(
-                "Single underscore can only appear between digits");
+                "Single underscore can only appear between digits"
+            );
           }
           previous_char_was_underscore = true;
           next();
@@ -430,7 +442,8 @@ public:
 
     if (previous_char_was_underscore) {
       throw_lexer_error_at_current_location(
-          "Single underscore can only appear between digits");
+          "Single underscore can only appear between digits"
+      );
     }
     at_boundary = true;
     previous_char_was_underscore = false;
@@ -442,14 +455,16 @@ public:
         if (base == 16) {
           throw_lexer_error_at_current_location(
               "Hexadecimal literals must use 'p' or 'P' as the exponent "
-              "prefix");
+              "prefix"
+          );
         }
         next();
       } else if (ch == 'p' || ch == 'P') {
         if (base != 16) {
           throw_lexer_error_at_current_location(
               "Only hexadecimal literals may use 'p' or 'P' as the exponent "
-              "prefix");
+              "prefix"
+          );
         }
         next();
       }
@@ -473,7 +488,8 @@ public:
 
       if (base != 10 && base != 16) {
         throw_lexer_error_at_current_location(
-            "Only base 10 or 16 literals may have an exponent");
+            "Only base 10 or 16 literals may have an exponent"
+        );
       }
 
       auto exponent_sign_start = current_location();
@@ -492,7 +508,8 @@ public:
         if (ch == '_') {
           if (at_boundary || previous_char_was_underscore) {
             throw_lexer_error_at_current_location(
-                "Single underscore can only appear between digits");
+                "Single underscore can only appear between digits"
+            );
           }
           previous_char_was_underscore = true;
           next();
@@ -515,13 +532,15 @@ public:
 
     if (previous_char_was_underscore) {
       throw_lexer_error_at_current_location(
-          "Single underscore can only appear between digits");
+          "Single underscore can only appear between digits"
+      );
     }
 
     if (result.integer_digits.size() == 0 &&
         result.fractional_digits.size() == 0) {
       throw_lexer_error_at_current_location(
-          "Number literal must have at least one digit");
+          "Number literal must have at least one digit"
+      );
     }
   }
 
@@ -538,8 +557,9 @@ public:
     if (i == 0) {
       throw_lexer_error(start_location, "Empty character literal");
     } else if (i > 1) {
-      throw_lexer_error(start_location,
-                        "Character literal contains more than one code point");
+      throw_lexer_error(
+          start_location, "Character literal contains more than one code point"
+      );
     }
 
     return result_ch;
@@ -680,8 +700,9 @@ private:
         next();
         emit_token(TokenType::ELLIPSIS, start_location);
       } else {
-        throw_lexer_error(start_location,
-                          "Unexpected token '..' - did you mean '...'?");
+        throw_lexer_error(
+            start_location, "Unexpected token '..' - did you mean '...'?"
+        );
       }
     } else {
       emit_token(TokenType::DOT, start_location);
@@ -968,7 +989,8 @@ private:
         if (at_end()) {
           throw_lexer_error(
               start_location,
-              "Unexpected end of input after backslash in character literal");
+              "Unexpected end of input after backslash in character literal"
+          );
         }
       } else if (ch == '\n') {
         throw_lexer_error(start_location, "Unterminated character literal");
@@ -1017,7 +1039,8 @@ private:
         next();
         if (at_end()) {
           throw_lexer_error_at_current_location(
-              "Unexpected end of input after backslash");
+              "Unexpected end of input after backslash"
+          );
         }
       }
 
@@ -1031,20 +1054,23 @@ private:
     next(); // skip closing '`'
 
     if (raw) {
-      emit_token(previous_char_was_whitespace()
-                     ? TokenType::RAW_QUOTED_IDENTIFIER
-                     : TokenType::RAW_QUOTED_IDENTIFIER_NO_W,
-                 start_location);
+      emit_token(
+          previous_char_was_whitespace()
+              ? TokenType::RAW_QUOTED_IDENTIFIER
+              : TokenType::RAW_QUOTED_IDENTIFIER_NO_W,
+          start_location
+      );
     } else {
       // validate literal contents
       String buffer;
       make_sublexer(content_start, content_end)
           .read_string_literal_contents(buffer, false);
 
-      emit_token(previous_char_was_whitespace()
-                     ? TokenType::QUOTED_IDENTIFIER
-                     : TokenType::QUOTED_IDENTIFIER_NO_W,
-                 start_location);
+      emit_token(
+          previous_char_was_whitespace() ? TokenType::QUOTED_IDENTIFIER
+                                         : TokenType::QUOTED_IDENTIFIER_NO_W,
+          start_location
+      );
     }
   }
 
@@ -1069,7 +1095,8 @@ private:
 
     if (quote_count != 1 && quote_count != 3) {
       throw_lexer_error_at_current_location(
-          "String literal must begin with 1 or 3 quotes");
+          "String literal must begin with 1 or 3 quotes"
+      );
     }
 
     size_t quotes_in_a_row = 0;
@@ -1088,7 +1115,8 @@ private:
         } else if (!raw && ch == '\\') {
           if (at_end()) {
             throw_lexer_error_at_current_location(
-                "Unexpected end of input after backslash");
+                "Unexpected end of input after backslash"
+            );
           }
           next(); // skip over escaped character
         }
@@ -1097,18 +1125,22 @@ private:
     }
 
     if (raw) {
-      emit_token(quote_count == 1 ? TokenType::RAW_STRING_LITERAL
-                                  : TokenType::RAW_MULTILINE_STRING_LITERAL,
-                 start_location);
+      emit_token(
+          quote_count == 1 ? TokenType::RAW_STRING_LITERAL
+                           : TokenType::RAW_MULTILINE_STRING_LITERAL,
+          start_location
+      );
     } else {
       // validate string literal contents
       String buffer;
       make_sublexer(content_start, content_end)
           .read_string_literal_contents(buffer, false);
 
-      emit_token(quote_count == 1 ? TokenType::STRING_LITERAL
-                                  : TokenType::MULTILINE_STRING_LITERAL,
-                 start_location);
+      emit_token(
+          quote_count == 1 ? TokenType::STRING_LITERAL
+                           : TokenType::MULTILINE_STRING_LITERAL,
+          start_location
+      );
     }
   }
 
@@ -1133,7 +1165,8 @@ private:
     for (size_t i = 0; i < count; ++i) {
       if (at_end()) {
         throw_lexer_error_at_current_location(
-            "Hexadecimal escape sequence too short");
+            "Hexadecimal escape sequence too short"
+        );
       }
       auto ch = next();
       result <<= 4;
@@ -1145,7 +1178,8 @@ private:
         result |= (ch - 'A' + 10);
       } else {
         throw_lexer_error_at_current_location(
-            "Invalid character in hexadecimal escape sequence");
+            "Invalid character in hexadecimal escape sequence"
+        );
       }
     }
     return result;
@@ -1157,13 +1191,15 @@ private:
     uint32_t result = 0;
     if (at_end()) {
       throw_lexer_error_at_current_location(
-          "Unterminated hexadecimal escape sequence");
+          "Unterminated hexadecimal escape sequence"
+      );
     }
     auto ch = next();
     while (ch != '}') {
       if (nonzero_count == max_count) {
         throw_lexer_error_at_current_location(
-            "Too many characters in hexadecimal escape sequence");
+            "Too many characters in hexadecimal escape sequence"
+        );
       }
       ++count;
       if (!(nonzero_count == 0 && ch == '0')) { // ignore leading zeros
@@ -1177,18 +1213,21 @@ private:
           result |= (ch - 'A' + 10);
         } else {
           throw_lexer_error_at_current_location(
-              "Invalid character in hexadecimal escape sequence");
+              "Invalid character in hexadecimal escape sequence"
+          );
         }
       }
       if (at_end()) {
         throw_lexer_error_at_current_location(
-            "Unterminated hexadecimal escape sequence");
+            "Unterminated hexadecimal escape sequence"
+        );
       }
       ch = next();
     }
     if (count == 0) {
       throw_lexer_error_at_current_location(
-          "Empty hexadecimal escape sequence");
+          "Empty hexadecimal escape sequence"
+      );
     }
     return result;
   }
@@ -1244,11 +1283,15 @@ private:
     return emit_token(type, loc, current_location());
   }
 
-  size_t emit_token(TokenType type, const Location &start,
-                    const Location &end) {
-    size_t token_id = m_result.add_token(Token{
-        type, start,
-        TextUtils::substr(m_file_contents, start.position, end.position)});
+  size_t
+  emit_token(TokenType type, const Location &start, const Location &end) {
+    size_t token_id = m_result.add_token(
+        Token{
+            type,
+            start,
+            TextUtils::substr(m_file_contents, start.position, end.position)
+        }
+    );
     m_previous_char_was_whitespace = false;
     return token_id;
   }
@@ -1275,8 +1318,8 @@ private:
     throw_lexer_error(current_location(), move(message));
   }
 
-  [[noreturn]] static void throw_lexer_error(const Location &loc,
-                                             String message) {
+  [[noreturn]] static void
+  throw_lexer_error(const Location &loc, String message) {
     throw LexerError(loc, move(message));
   }
 
@@ -1296,8 +1339,9 @@ void Lexer::tokenize(LexerResult &output, Text input) {
   state.read_file();
 }
 
-void Lexer::read_string_literal_contents(AbstractString &out, Text input,
-                                         bool raw) {
+void Lexer::read_string_literal_contents(
+    AbstractString &out, Text input, bool raw
+) {
   LexerResult result(LexerContext{"(anon)"});
   LexerState state(result, input);
   state.read_string_literal_contents(out, raw);

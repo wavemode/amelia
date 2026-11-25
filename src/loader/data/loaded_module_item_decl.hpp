@@ -1,7 +1,7 @@
 #pragma once
 
-#include "loader/data/loaded_declaration_visibility.hpp"
 #include "loader/data/abstract_loaded_module_decl.hpp"
+#include "loader/data/loaded_declaration_visibility.hpp"
 #include "util/data/list.hpp"
 #include "util/data/string.hpp"
 

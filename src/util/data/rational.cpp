@@ -55,12 +55,16 @@ Rational::Rational(Text value) {
       if (TextUtils::starts_with(digits, "0b") ||
           TextUtils::starts_with(digits, "0B")) {
         base = 2;
-      } else if (TextUtils::starts_with(digits, "0x") ||
-                 TextUtils::starts_with(digits, "0X")) {
+      } else if (
+          TextUtils::starts_with(digits, "0x") ||
+          TextUtils::starts_with(digits, "0X")
+      ) {
         base = 16;
-      } else if (TextUtils::starts_with(digits, "0o") ||
-                 TextUtils::starts_with(digits, "0O") ||
-                 (TextUtils::starts_with(digits, "0") && parts[0].size() > 1)) {
+      } else if (
+          TextUtils::starts_with(digits, "0o") ||
+          TextUtils::starts_with(digits, "0O") ||
+          (TextUtils::starts_with(digits, "0") && parts[0].size() > 1)
+      ) {
         base = 8;
       }
       m_denominator = Integer(base).pow(parts[1].size());
@@ -161,8 +165,9 @@ void Rational::to_fraction_string(AbstractString &output) const {
   m_denominator.to_string(output);
 }
 
-void Rational::to_decimal_string(AbstractString &output,
-                                 size_t max_digits_after_decimal_point) const {
+void Rational::to_decimal_string(
+    AbstractString &output, size_t max_digits_after_decimal_point
+) const {
   Rational abs_value = abs();
   Integer num = abs_value.numerator();
   Integer den = abs_value.denominator();
@@ -187,14 +192,19 @@ void Rational::to_decimal_string(AbstractString &output,
     padded_str.append('0');
   }
   padded_str.append(rounded_str);
-  output.append(TextUtils::head_bytes(
-      padded_str.text(), padded_str.size() - max_digits_after_decimal_point));
+  output.append(
+      TextUtils::head_bytes(
+          padded_str.text(), padded_str.size() - max_digits_after_decimal_point
+      )
+  );
   output.append(".");
   Text after_decimal = TextUtils::tail_bytes(
-      padded_str.text(), padded_str.size() - max_digits_after_decimal_point);
+      padded_str.text(), padded_str.size() - max_digits_after_decimal_point
+  );
   output.append(TextUtils::head_bytes(after_decimal, 1));
   output.append(
-      TextUtils::trim_right(TextUtils::tail_bytes(after_decimal, 1), "0"));
+      TextUtils::trim_right(TextUtils::tail_bytes(after_decimal, 1), "0")
+  );
 }
 
 void Rational::negate() { m_numerator.negate(); }
@@ -232,13 +242,15 @@ Rational Rational::operator-(const Rational &other) const {
 }
 
 Rational Rational::operator*(const Rational &other) const {
-  return Rational(m_numerator * other.m_numerator,
-                  m_denominator * other.m_denominator);
+  return Rational(
+      m_numerator * other.m_numerator, m_denominator * other.m_denominator
+  );
 }
 
 Rational Rational::operator/(const Rational &other) const {
-  return Rational(m_numerator * other.m_denominator,
-                  m_denominator * other.m_numerator);
+  return Rational(
+      m_numerator * other.m_denominator, m_denominator * other.m_numerator
+  );
 }
 
 Rational Rational::operator%(const Rational &other) const {

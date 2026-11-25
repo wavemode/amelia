@@ -12,8 +12,9 @@ inline unsigned long long chunk_index(unsigned long long item_index) {
   return (63ULL - __builtin_clzll(item_index + 16ULL)) - 4ULL;
 }
 
-inline unsigned long long chunk_offset(unsigned long long chunk_number,
-                                       unsigned long long global_item_index) {
+inline unsigned long long chunk_offset(
+    unsigned long long chunk_number, unsigned long long global_item_index
+) {
   return global_item_index - ((16ULL << chunk_number) - 16ULL);
 }
 
@@ -336,7 +337,8 @@ public:
   const T &next() {
     if (at_end()) {
       throw_runtime_error(
-          "Attempted to advance ConstDequeIterator past the end");
+          "Attempted to advance ConstDequeIterator past the end"
+      );
     }
     const T &item = peek();
     ++m_index;

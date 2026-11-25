@@ -11,8 +11,9 @@ namespace amelia {
 
 namespace {
 
-void get_single_identifier_text(AbstractString &output, const ParserResult &ast,
-                                NodeId node_id) {
+void get_single_identifier_text(
+    AbstractString &output, const ParserResult &ast, NodeId node_id
+) {
   const Node &n = ast.get_node(node_id);
   if (n.type() != NodeType::IdentifierNode) {
     throw NodeLocationError(node_id, "Expected an identifier");
@@ -23,8 +24,9 @@ void get_single_identifier_text(AbstractString &output, const ParserResult &ast,
 
 } // namespace
 
-void get_identifier_text(AbstractString &output, const ParserResult &ast,
-                         NodeId node_id) {
+void get_identifier_text(
+    AbstractString &output, const ParserResult &ast, NodeId node_id
+) {
   List<String> parts;
   const Node *node = &ast.get_node(node_id);
   while (node->type() == NodeType::ScopeResolutionExprNode) {

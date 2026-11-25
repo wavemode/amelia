@@ -15,7 +15,8 @@ struct FilePath {
   template <size_t N>
   FilePath(const char (&str)[N])
       : FilePath(
-            Text(ConstSlice(str, (N > 0 && str[N - 1] == '\0') ? N - 1 : N))) {}
+            Text(ConstSlice(str, (N > 0 && str[N - 1] == '\0') ? N - 1 : N))
+        ) {}
 
   bool is_absolute() const noexcept;
   void set_absolute(bool absolute) noexcept;

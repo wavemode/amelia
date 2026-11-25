@@ -253,7 +253,8 @@ void Serialize::add_object_field(String field_name, Serialize field_value) {
     throw_runtime_error("Cannot add object field to a non-object Serialize");
   }
   static_cast<SerializeObject *>(m_data)->fields.push_back(
-      {move(field_name), move(field_value)});
+      {move(field_name), move(field_value)}
+  );
 }
 
 void Serialize::add_list_item(Serialize item) {

@@ -96,15 +96,20 @@ Integer::Integer(Text text_value) : m_value(nullptr) {
     if (TextUtils::starts_with(text_value, "0b") ||
         TextUtils::starts_with(text_value, "0B")) {
       result = binary_string_to_integer(TextUtils::tail_bytes(text_value, 2));
-    } else if (TextUtils::starts_with(text_value, "0o") ||
-               TextUtils::starts_with(text_value, "0O")) {
+    } else if (
+        TextUtils::starts_with(text_value, "0o") ||
+        TextUtils::starts_with(text_value, "0O")
+    ) {
       result = octal_string_to_integer(TextUtils::tail_bytes(text_value, 2));
-    } else if (TextUtils::starts_with(text_value, "0x") ||
-               TextUtils::starts_with(text_value, "0X")) {
+    } else if (
+        TextUtils::starts_with(text_value, "0x") ||
+        TextUtils::starts_with(text_value, "0X")
+    ) {
       result =
           hexadecimal_string_to_integer(TextUtils::tail_bytes(text_value, 2));
-    } else if (TextUtils::starts_with(text_value, "0") &&
-               text_value.size() > 1) {
+    } else if (
+        TextUtils::starts_with(text_value, "0") && text_value.size() > 1
+    ) {
       result = octal_string_to_integer(TextUtils::tail_bytes(text_value, 1));
     } else {
       // TODO: simply implement decimal_string_to_integer
@@ -138,7 +143,8 @@ Integer::Integer(Integer &&other) noexcept : m_value(other.m_value) {
 Integer &Integer::operator=(const Integer &other) {
   if (this != &other) {
     static_cast<cpp_int *>(m_value)->operator=(
-        *static_cast<cpp_int *>(other.m_value));
+        *static_cast<cpp_int *>(other.m_value)
+    );
   }
   return *this;
 }
@@ -146,7 +152,8 @@ Integer &Integer::operator=(const Integer &other) {
 Integer &Integer::operator=(Integer &&other) noexcept {
   if (this != &other) {
     static_cast<cpp_int *>(m_value)->operator=(
-        move(*static_cast<cpp_int *>(other.m_value)));
+        move(*static_cast<cpp_int *>(other.m_value))
+    );
   }
   return *this;
 }
@@ -347,8 +354,9 @@ Integer Integer::lcm(const Integer &other) const {
 Integer Integer::pow(uint32_t exponent) const {
   Integer result;
   static_cast<cpp_int *>(result.m_value)
-      ->operator=(boost::multiprecision::pow(*static_cast<cpp_int *>(m_value),
-                                             exponent));
+      ->operator=(
+          boost::multiprecision::pow(*static_cast<cpp_int *>(m_value), exponent)
+      );
   return result;
 }
 
@@ -432,7 +440,8 @@ Integer Integer::operator~() const { return -*this - 1; }
 
 Integer &Integer::operator%=(const Integer &other) {
   static_cast<cpp_int *>(m_value)->operator%=(
-      *static_cast<cpp_int *>(other.m_value));
+      *static_cast<cpp_int *>(other.m_value)
+  );
   return *this;
 }
 
@@ -448,43 +457,50 @@ Integer &Integer::operator>>=(uint32_t other) {
 
 Integer &Integer::operator&=(const Integer &other) {
   static_cast<cpp_int *>(m_value)->operator&=(
-      *static_cast<cpp_int *>(other.m_value));
+      *static_cast<cpp_int *>(other.m_value)
+  );
   return *this;
 }
 
 Integer &Integer::operator|=(const Integer &other) {
   static_cast<cpp_int *>(m_value)->operator|=(
-      *static_cast<cpp_int *>(other.m_value));
+      *static_cast<cpp_int *>(other.m_value)
+  );
   return *this;
 }
 
 Integer &Integer::operator^=(const Integer &other) {
   static_cast<cpp_int *>(m_value)->operator^=(
-      *static_cast<cpp_int *>(other.m_value));
+      *static_cast<cpp_int *>(other.m_value)
+  );
   return *this;
 }
 
 Integer &Integer::operator+=(const Integer &other) {
   static_cast<cpp_int *>(m_value)->operator+=(
-      *static_cast<cpp_int *>(other.m_value));
+      *static_cast<cpp_int *>(other.m_value)
+  );
   return *this;
 }
 
 Integer &Integer::operator-=(const Integer &other) {
   static_cast<cpp_int *>(m_value)->operator-=(
-      *static_cast<cpp_int *>(other.m_value));
+      *static_cast<cpp_int *>(other.m_value)
+  );
   return *this;
 }
 
 Integer &Integer::operator*=(const Integer &other) {
   static_cast<cpp_int *>(m_value)->operator*=(
-      *static_cast<cpp_int *>(other.m_value));
+      *static_cast<cpp_int *>(other.m_value)
+  );
   return *this;
 }
 
 Integer &Integer::operator/=(const Integer &other) {
   static_cast<cpp_int *>(m_value)->operator/=(
-      *static_cast<cpp_int *>(other.m_value));
+      *static_cast<cpp_int *>(other.m_value)
+  );
   return *this;
 }
 

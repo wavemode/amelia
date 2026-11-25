@@ -90,7 +90,8 @@ template <typename T> struct hash_set_table {
     hash_set_table<T> new_table;
     new_table.table_size = table_size == 0 ? 16 : table_size * 2;
     new_table.elems = static_cast<hash_set_table_element<T> *>(
-        std::calloc(new_table.table_size, sizeof(hash_set_table_element<T>)));
+        std::calloc(new_table.table_size, sizeof(hash_set_table_element<T>))
+    );
     if (!new_table.elems) {
       std::abort();
     }
@@ -287,8 +288,9 @@ private:
 template <typename T> class SetIterator {
 public:
   SetIterator(const Set<T> &set)
-      : SetIterator(set.m_table.elems,
-                    set.m_table.elems + set.m_table.table_size) {}
+      : SetIterator(
+            set.m_table.elems, set.m_table.elems + set.m_table.table_size
+        ) {}
 
   const T &peek() {
     if (at_end()) {

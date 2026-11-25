@@ -26,7 +26,8 @@ Text directory_name(Text path) {
   }
   return TextUtils::trim_right(
       TextUtils::head_bytes(path, slash_positions[slash_positions.size() - 1]),
-      "/");
+      "/"
+  );
 }
 
 } // namespace amelia

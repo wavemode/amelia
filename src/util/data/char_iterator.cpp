@@ -122,8 +122,9 @@ void CharIterator::append(List<char> &str, uint32_t code_point) {
   }
 }
 
-void CharIterator::utf16_to_utf8(AbstractString &output,
-                                 ConstSlice<uint16_t> input) {
+void CharIterator::utf16_to_utf8(
+    AbstractString &output, ConstSlice<uint16_t> input
+) {
   auto iter = input.ptr();
   auto end = input.end().ptr();
   while (iter != end) {
@@ -147,9 +148,10 @@ signed char CharIterator::compare(ConstSlice<char> a, ConstSlice<char> b) {
   } else if (b.ptr() == nullptr) {
     return a.size() == 0 ? 0 : 1;
   }
-  int cmp = (a.ptr() == b.ptr()) ? 0
-                                 : std::memcmp(a.ptr(), b.ptr(),
-                                               amelia::min(a.size(), b.size()));
+  int cmp =
+      (a.ptr() == b.ptr())
+          ? 0
+          : std::memcmp(a.ptr(), b.ptr(), amelia::min(a.size(), b.size()));
   if (cmp == 0) {
     if (a.size() < b.size()) {
       return -1;

@@ -22,14 +22,16 @@ public:
 
   Option(None) {}
 
-  template <typename U,
-            typename = amelia::enable_if_t<amelia::is_convertible_v<U, T>>>
+  template <
+      typename U,
+      typename = amelia::enable_if_t<amelia::is_convertible_v<U, T>>>
   Option(U &&value) {
     initialize(static_cast<T>(amelia::forward<U>(value)));
   }
 
-  template <typename U,
-            typename = amelia::enable_if_t<amelia::is_convertible_v<U, T>>>
+  template <
+      typename U,
+      typename = amelia::enable_if_t<amelia::is_convertible_v<U, T>>>
   Option(Some<U> &&some) {
     initialize(static_cast<T>(amelia::forward<U>(some.value)));
   }
@@ -70,15 +72,17 @@ public:
     return *this;
   }
 
-  template <typename U,
-            typename = amelia::enable_if_t<amelia::is_convertible_v<U, T>>>
+  template <
+      typename U,
+      typename = amelia::enable_if_t<amelia::is_convertible_v<U, T>>>
   Option<T> &operator=(U &&value) {
     assign(static_cast<T>(amelia::forward<U>(value)));
     return *this;
   }
 
-  template <typename U,
-            typename = amelia::enable_if_t<amelia::is_convertible_v<U, T>>>
+  template <
+      typename U,
+      typename = amelia::enable_if_t<amelia::is_convertible_v<U, T>>>
   Option<T> &operator=(Some<U> &&some) {
     assign(static_cast<T>(amelia::forward<U>(some.value)));
     return *this;
@@ -138,8 +142,9 @@ public:
 
   void clear() { destroy(); }
 
-  template <typename U,
-            typename = amelia::enable_if_t<amelia::is_convertible_v<T, U>>>
+  template <
+      typename U,
+      typename = amelia::enable_if_t<amelia::is_convertible_v<T, U>>>
   operator Option<U>() const {
     if (m_has_value) {
       return Some(static_cast<U>(value()));

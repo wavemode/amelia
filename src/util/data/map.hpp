@@ -93,8 +93,9 @@ template <typename K, typename V> struct hash_map_table {
   void grow() {
     hash_map_table<K, V> new_table;
     new_table.table_size = table_size == 0 ? 16 : table_size * 2;
-    new_table.elems = static_cast<hash_map_table_element<K, V> *>(std::calloc(
-        new_table.table_size, sizeof(hash_map_table_element<K, V>)));
+    new_table.elems = static_cast<hash_map_table_element<K, V> *>(
+        std::calloc(new_table.table_size, sizeof(hash_map_table_element<K, V>))
+    );
     if (!new_table.elems) {
       std::abort();
     }
@@ -105,9 +106,11 @@ template <typename K, typename V> struct hash_map_table {
       if (is_first_bit_set_to_1(table_elem.hash)) {
         // this slot is in use, so we need to insert this element into the new
         // table
-        new_table.put_with_hash(set_2_highest_bits_to_00(table_elem.hash),
-                                move(table_elem.pair.first),
-                                move(table_elem.pair.second));
+        new_table.put_with_hash(
+            set_2_highest_bits_to_00(table_elem.hash),
+            move(table_elem.pair.first),
+            move(table_elem.pair.second)
+        );
       }
     }
 
@@ -269,7 +272,8 @@ public:
     int64_t index = m_table.index_of(key);
     if (index == -1) {
       throw_runtime_error(
-          "Attempted to get a key that doesn't exist in the Map");
+          "Attempted to get a key that doesn't exist in the Map"
+      );
     }
     return m_table.elems[index].pair.second;
   }
@@ -278,7 +282,8 @@ public:
     int64_t index = m_table.index_of(key);
     if (index == -1) {
       throw_runtime_error(
-          "Attempted to get a key that doesn't exist in the Map");
+          "Attempted to get a key that doesn't exist in the Map"
+      );
     }
     return m_table.elems[index].pair.second;
   }
@@ -297,7 +302,8 @@ public:
       return None();
     }
     return Some(
-        ConstRef(static_cast<const V &>(m_table.elems[index].pair.second)));
+        ConstRef(static_cast<const V &>(m_table.elems[index].pair.second))
+    );
   }
 
   void remove(const K &key) override { m_table.remove(key); }
@@ -306,7 +312,8 @@ public:
     int64_t index = m_table.index_of(key);
     if (index == -1) {
       throw_runtime_error(
-          "Attempted to remove_and_get a key that doesn't exist in the Map");
+          "Attempted to remove_and_get a key that doesn't exist in the Map"
+      );
     }
     V value = move(m_table.elems[index].pair.second);
     m_table.remove(key);
@@ -375,8 +382,9 @@ template <typename K, typename V> class MapPairIterator {
 public:
   template <typename M>
   explicit MapPairIterator(const M &map)
-      : MapPairIterator(map.m_table.elems,
-                        map.m_table.elems + map.m_table.table_size) {}
+      : MapPairIterator(
+            map.m_table.elems, map.m_table.elems + map.m_table.table_size
+        ) {}
 
   bool at_end() const noexcept { return m_it == m_end; }
 

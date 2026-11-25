@@ -49,8 +49,8 @@ struct LoaderContext {
     }
   }
 
-  void try_load_file_by_path(const FilePath &path,
-                             const ModuleName &module_name) {
+  void
+  try_load_file_by_path(const FilePath &path, const ModuleName &module_name) {
     if (loader_result->loaded_files.has(path)) {
       return;
     }
@@ -93,17 +93,21 @@ struct LoaderContext {
         if (!submodule_decl_node.decls.has_value()) {
           // if this is a module name decl, error if item decls have been seen
           if (seen_item_decl) {
-            throw_error_at_node_id(decl_node_id,
-                                   "Module name declaration must come before "
-                                   "any item declarations");
-          } else if (seen_module_name) {
-            throw_error_at_node_id(decl_node_id,
-                                   "Multiple module name declarations in the "
-                                   "same file");
-          } else if (module_details.value()->parent.has_value()) {
             throw_error_at_node_id(
                 decl_node_id,
-                "Module name declaration not allowed in submodule");
+                "Module name declaration must come before "
+                "any item declarations"
+            );
+          } else if (seen_module_name) {
+            throw_error_at_node_id(
+                decl_node_id,
+                "Multiple module name declarations in the "
+                "same file"
+            );
+          } else if (module_details.value()->parent.has_value()) {
+            throw_error_at_node_id(
+                decl_node_id, "Module name declaration not allowed in submodule"
+            );
           }
           seen_module_name = true;
         } else {
@@ -114,8 +118,8 @@ struct LoaderContext {
         const auto &import_decl_node = decl_node.as_ImportDeclNode();
         if (seen_item_decl || seen_module_name) {
           throw_error_at_node_id(
-              decl_node_id,
-              "Import declarations must come first in the module");
+              decl_node_id, "Import declarations must come first in the module"
+          );
         }
         process_import_decl(decl_node_id, import_decl_node);
       } else {
@@ -125,8 +129,9 @@ struct LoaderContext {
     }
   }
 
-  void process_import_decl(NodeId import_decl_node_id,
-                           const ImportDeclNode &import_decl_node) {
+  void process_import_decl(
+      NodeId import_decl_node_id, const ImportDeclNode &import_decl_node
+  ) {
     auto import_decl = Box<LoadedModuleImportDecl>::emplace();
 
     if (decl_visibility.has_value()) {
@@ -160,15 +165,17 @@ struct LoaderContext {
 
           if (import_item_node.alias.has_value()) {
             import_item->alias = String();
-            get_text(import_item->alias.value(),
-                     import_item_node.alias.value());
+            get_text(
+                import_item->alias.value(), import_item_node.alias.value()
+            );
           }
 
           import_decl->items.value().push_back(move(import_item));
         } else {
           // only remaining possibility is a wildcard node
           import_decl->items.value().push_back(
-              Box<LoadedModuleWildcardImport>::emplace());
+              Box<LoadedModuleWildcardImport>::emplace()
+          );
         }
       }
     }
@@ -182,8 +189,9 @@ struct LoaderContext {
     module_details.value()->imports.push_back(move(import_decl));
   }
 
-  void process_module_decl(NodeId module_decl_node_id,
-                           const ModuleNode &module_node) {
+  void process_module_decl(
+      NodeId module_decl_node_id, const ModuleNode &module_node
+  ) {
     if (module_node.decls.has_value()) {
       // submodule declaration
       auto submodule_decl = Box<LoadedModuleSubmoduleDecl>::emplace();
@@ -204,13 +212,15 @@ struct LoaderContext {
       ctx.process_top_level_decls(module_decl_node_id);
 
       module_details.value()->submodules.set(
-          submodule_decl->details.short_name.text(), move(submodule_decl));
+          submodule_decl->details.short_name.text(), move(submodule_decl)
+      );
     } else {
       String declared_name;
       get_text(declared_name, module_node.name.value());
       if (declared_name != module_details.value()->short_name) {
-        throw_error_at_node_id(module_decl_node_id,
-                               "Declared module name does not match file name");
+        throw_error_at_node_id(
+            module_decl_node_id, "Declared module name does not match file name"
+        );
       }
       if (decl_visibility.has_value()) {
         module_details.value()->visibility = move(decl_visibility).value();
@@ -259,8 +269,9 @@ struct LoaderContext {
       decl_visibility.value().visibility = visibility_node.visibility;
       if (visibility_node.scope.has_value()) {
         decl_visibility.value().scope = ModuleName();
-        get_module_name(decl_visibility.value().scope.value(),
-                 visibility_node.scope.value());
+        get_module_name(
+            decl_visibility.value().scope.value(), visibility_node.scope.value()
+        );
       }
       node_id = visibility_node.decl;
     }
@@ -372,7 +383,7 @@ struct LoaderContext {
     }
     return found_items.value();
   }
-  
+
   void get_module_name(ModuleName &output, NodeId node_id) {
     String module_name_str;
     get_text(module_name_str, node_id);
@@ -397,8 +408,10 @@ struct LoaderContext {
 
 } // namespace
 
-void load_module(LoaderResult &result, IFileLoader &file_loader,
-                 const ModuleName &module_name) {
+void load_module(
+    LoaderResult &result, IFileLoader &file_loader,
+    const ModuleName &module_name
+) {
   module_name.validate();
   LoaderContext(result, file_loader).try_load_module_by_name(module_name);
 }

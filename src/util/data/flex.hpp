@@ -8,8 +8,9 @@ namespace amelia {
 
 namespace internal {
 struct ControlBlock {
-  uint32_t ref_counts[3] = {0, 0,
-                            UINT32_MAX}; // strong_count, weak_count, sentinel
+  uint32_t ref_counts[3] = {
+      0, 0, UINT32_MAX
+  }; // strong_count, weak_count, sentinel
 
   static uint32_t *make() {
     ControlBlock *block = new ControlBlock();
@@ -223,7 +224,8 @@ private:
       } else {
         if (
             // if strong count is 0 and weak count is 1
-            *(m_ref_count - 1) == 0 && (*m_ref_count) == 1) {
+            *(m_ref_count - 1) == 0 && (*m_ref_count) == 1
+        ) {
           internal::ControlBlock::destroy(m_ref_count);
           m_ref_count = nullptr;
         } else {
@@ -243,7 +245,8 @@ private:
       throw_runtime_error("Dereferencing null Flex");
     } else if (
         // if the strong count is zero, then the object has already been deleted
-        !is_strong() && *(m_ref_count - 1) == 0) {
+        !is_strong() && *(m_ref_count - 1) == 0
+    ) {
       throw_runtime_error("Dereferencing expired weak Flex");
     }
     return m_object;
@@ -256,7 +259,8 @@ public:
     if (!m_ref_count) {
       throw_runtime_error(
           "FlexFromThis::flex() called on an object that was not created with "
-          "make_flex or emplace_flex");
+          "make_flex or emplace_flex"
+      );
     }
     Flex<T> result;
     result.m_object = const_cast<T *>(static_cast<const T *>(this));

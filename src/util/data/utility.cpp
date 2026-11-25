@@ -39,8 +39,9 @@ HashState::HashState() noexcept
 }
 
 void HashState::init() noexcept {
-  intrinhash_init(reinterpret_cast<intrinhash_state *>(&m_state), SEED,
-                  intrinhash_auto());
+  intrinhash_init(
+      reinterpret_cast<intrinhash_state *>(&m_state), SEED, intrinhash_auto()
+  );
   m_initialized = true;
   m_length = 0;
 }
@@ -53,14 +54,20 @@ void HashState::update(const char *data, size_t len) {
     if (m_length > 0) {
       size_t copy_amount = internal::HASH_BLOCK_SIZE - m_length;
       std::memcpy(m_data, data, copy_amount);
-      intrinhash_update(reinterpret_cast<intrinhash_state *>(&m_state), m_data,
-                        internal::HASH_BLOCK_SIZE);
+      intrinhash_update(
+          reinterpret_cast<intrinhash_state *>(&m_state),
+          m_data,
+          internal::HASH_BLOCK_SIZE
+      );
       data += copy_amount;
       len -= copy_amount;
       m_length = 0;
     } else {
-      intrinhash_update(reinterpret_cast<intrinhash_state *>(&m_state), data,
-                        internal::HASH_BLOCK_SIZE);
+      intrinhash_update(
+          reinterpret_cast<intrinhash_state *>(&m_state),
+          data,
+          internal::HASH_BLOCK_SIZE
+      );
       data += internal::HASH_BLOCK_SIZE;
       len -= internal::HASH_BLOCK_SIZE;
     }
@@ -74,12 +81,14 @@ uint64_t HashState::finalize() {
     throw_runtime_error("HashState not initialized");
   }
   if (m_length) {
-    intrinhash_update(reinterpret_cast<intrinhash_state *>(&m_state), m_data,
-                      m_length);
+    intrinhash_update(
+        reinterpret_cast<intrinhash_state *>(&m_state), m_data, m_length
+    );
   }
   uint64_t result = 0;
-  intrinhash_finalize(reinterpret_cast<intrinhash_state *>(&m_state), &result,
-                      sizeof(result));
+  intrinhash_finalize(
+      reinterpret_cast<intrinhash_state *>(&m_state), &result, sizeof(result)
+  );
   m_initialized = false;
   return result;
 }

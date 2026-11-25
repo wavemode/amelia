@@ -1,8 +1,8 @@
 #pragma once
 
 #include "source/data/declaration_visibility.hpp"
-#include "util/data/option.hpp"
 #include "source/data/module_name.hpp"
+#include "util/data/option.hpp"
 
 namespace amelia {
 
